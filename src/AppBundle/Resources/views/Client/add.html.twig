@@ -15,6 +15,8 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    Client full name {{ client.fullName }}<br />
+    Client case number {{ client.caseNumber }}
     <h2 class="heading-medium flush--top">{{ 'addClient.formHeading' | trans }}</h2>
 
     {{ form_input(form.firstname, 'firstname') }}

@@ -21,7 +21,7 @@ class ClientType extends AbstractType
     public function __construct($options = [])
     {
         if (isset($options['client_validated'])) {
-            $this->client_validated = (bool) $options['client_validated'];
+            $this->setClientValidated((bool) $options['client_validated']);
         }
     }
 

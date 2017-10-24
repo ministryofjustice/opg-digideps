@@ -77,21 +77,19 @@ class ClientController extends AbstractController
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $method = 'put';
             $client_validated = true;
-            $form = $this->createForm(new FormDir\ClientType(['client_validated' => $client_validated]), $client);
-
         } else {
             // new client
             $client = new EntityDir\Client();
             $method = 'post';
             $client_validated = false;
-            $form = $this->createForm(new FormDir\ClientType(), $client);
         }
+
+        $form = $this->createForm(new FormDir\ClientType(['client_validated' => $client_validated]), $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $response = ($method === 'post')
-                      ? $this->getRestClient()->post('client/upsert', $form->getData())
-                      : $this->getRestClient()->put('client/upsert', $form->getData());
+            // $method is set above to either post or put
+            $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
             $url = $this->getUser()->isOdrEnabled() ?
                 $this->generateUrl('odr_index')
@@ -102,7 +100,8 @@ class ClientController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'client_validated' => $client_validated
+            'client_validated' => $client_validated,
+            'client' => $client
         ];
 
     }
