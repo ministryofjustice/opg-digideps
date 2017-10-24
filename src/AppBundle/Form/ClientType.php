@@ -27,7 +27,7 @@ class ClientType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->client_validated) {
+        if ($this->isClientValidated()) {
             $builder->add('firstname', 'text', ['attr'=> ['readonly' => 'readonly']])
                 ->add('lastname', 'text',  ['attr'=> ['readonly' => 'readonly']])
                 ->add('caseNumber', 'text',  ['attr'=> ['readonly' => 'readonly']]);
@@ -74,5 +74,22 @@ class ClientType extends AbstractType
     public function getName()
     {
         return 'client';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClientValidated()
+    {
+        return $this->client_validated;
+    }
+
+    /**
+     * @param bool $client_validated
+     */
+    public function setClientValidated($client_validated)
+    {
+        $this->client_validated = $client_validated;
+        return $this;
     }
 }

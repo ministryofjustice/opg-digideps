@@ -99,7 +99,8 @@ class ClientController extends AbstractController
         }
 
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'client_validated' => $form->isClientValidated()
         ];
 
     }
