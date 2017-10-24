@@ -121,16 +121,13 @@ class CasRecController extends RestController
     {
         $casrecVerifyData = $this->deserializeBodyContent($request);
 
-        try {
-            $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
-                ->validate ( $casrecVerifyData['case_number']
-                           , $casrecVerifyData['client_lastname']
-                           , $casrecVerifyData['deputy_lastname']
-                           , $casrecVerifyData['deputy_postcode']
-                );
-        } catch (\Exception $e) {
-            throw $e;
-        }
+        $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
+            ->validate ( $casrecVerifyData['case_number']
+                       , $casrecVerifyData['client_lastname']
+                       , $casrecVerifyData['deputy_lastname']
+                       , $casrecVerifyData['deputy_postcode']
+            );
+
         return ['verified' => $casrecVerified];
     }
 

@@ -4,20 +4,28 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use Doctrine\ORM\EntityManager;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 class CasrecVerificationService
 {
     /** @var EntityManager */
     private $em;
 
+    /** @var \Doctrine\ORM\EntityRepository */
+    private $casRecRepo;
+
+    private $lastMatchedCasrecUsers;
+
     public function __construct($em)
     {
         $this->em = $em;
+        $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
+        $this->lastMatchedCasrecUsers = [];
     }
 
     /**
      * CASREC checks
-     * Throw error 421 if casrec has no record matching case number,
+     * Throw error 400 if casrec has no record matching case number,
      * client surname, deputy surname, and postcode (if set)
      *
      * @param string $caseNumber
@@ -28,15 +36,14 @@ class CasrecVerificationService
      */
     public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
     {
-        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($caseNumber)
-                    , 'clientLastname' => CasRec::normaliseSurname($clientSurname)
-                    , 'deputySurname'  => CasRec::normaliseSurname($deputySurname)
-                    ];
+        $crMatches = $this->casRecRepo->findBy( [ 'caseNumber'     => CasRec::normaliseCaseNumber($caseNumber)
+                                                , 'clientLastname' => CasRec::normaliseSurname($clientSurname)
+                                                , 'deputySurname'  => CasRec::normaliseSurname($deputySurname)
+                                                ]);
 
-        try {
-            $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
-            $this->checkPostcodeExistsInCasRec($casRecUserMatches, $deputyPostcode);
-        } catch (\Exception $e) {
+        $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($crMatches, $deputyPostcode);
+
+        if (count($this->lastMatchedCasrecUsers) == 0) {
             throw new \RuntimeException('User registration: no matching record in casrec', 400);
         }
 
@@ -44,36 +51,51 @@ class CasrecVerificationService
     }
 
     /**
-     * @param array $criteria
-     * @return CasRec[]
+     * Since co-deputies, multiple deputies may be matched (eg siblings at same postcode)
+     *
+     * @return array
      */
-    private function getCasRecMatchesOrThrowError($criteria)
+    public function getLastMatchedDeputyNumbers()
     {
-        $casRecMatches = $this->em->getRepository('AppBundle\Entity\CasRec')->findBy($criteria);
-        if (count($casRecMatches) == 0) {
-            throw new \RuntimeException();
+        $deputyNumbers = [];
+        foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
+            $deputyNumbers[] = $casRecMatch->getDeputyNo();
         }
-        return $casRecMatches;
+        return $deputyNumbers;
     }
 
     /**
-     * @param array $casRecUsers
-     * @param string $postcode
+     * @param string $caseNumber
+     * @return bool
      */
-    private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
+    public function isMultiDeputyCase($caseNumber)
     {
-        // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
-        // (Or skip this check completely it if one of the postcodes isn't set)
-        $casRecPostcodes = [];
-        foreach ($casRecUsers as $casRecMatch) {
-            if (!empty($casRecMatch->getDeputyPostCode())) {
-                $casRecPostcodes[] = $casRecMatch->getDeputyPostCode();
+        $crMatches = $this->casRecRepo->findByCaseNumber(CasRec::normaliseCaseNumber($caseNumber));
+        return count($crMatches) > 1;
+    }
+
+    /**
+     * @param CasRec[] $crMatches
+     * @param $deputyPostcode
+     * @return CasRec[]
+     */
+    private function applyPostcodeFilter($crMatches, $deputyPostcode)
+    {
+        $deputyPostcode = CasRec::normalisePostCode($deputyPostcode);
+        $crByPostcode = [];
+        $crWithPostcodeCount = 0;
+        foreach ($crMatches as $crMatch) {
+            $crMatchPC = CasRec::normalisePostCode($crMatch->getDeputyPostCode());
+            if (!empty($crMatchPC)) {
+                $crByPostcode[$crMatchPC][] = $crMatch;
+                $crWithPostcodeCount++;
             }
         }
-        if (count($casRecPostcodes) == count($casRecUsers)) {
-            if (!in_array(CasRec::normalisePostCode($postcode), $casRecPostcodes)){
-                throw new \RuntimeException();
-            }
-        }
+
+        $filteredResults  = ($crWithPostcodeCount < count($crMatches))
+            ? $crMatches
+            : $crByPostcode[$deputyPostcode];
+
+        return $filteredResults;
     }
 }

@@ -7,19 +7,19 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 class UserRegistrationService
 {
     /** @var EntityManager */
     private $em;
 
-    /** @var \Doctrine\ORM\EntityRepository */
-    private $casRecRepo;
+    private $casrecVerificationService;
 
-    public function __construct($em)
+    public function __construct($em, $casrecVerificationService)
     {
         $this->em = $em;
-        $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
+        $this->casrecService = $casrecVerificationService;
     }
 
     /**
@@ -33,19 +33,21 @@ class UserRegistrationService
      *
      * @param SelfRegisterData $selfRegisterData
      * @return User
+     * @throws \RuntimeException
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneBy(['caseNumber' => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())]);
+        $isMultiDeputyCase = $this->casrecService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
+        $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
 
         // ward off non-fee-paying codeps trying to self-register
-        if ($this->isMultiDeputyCase($selfRegisterData->getCaseNumber()) && $existingClient instanceof Client) {
+        if ($isMultiDeputyCase && $existingClient instanceof Client) {
             // if client exists with case number, the first codep already registered.
             throw new \RuntimeException("Co-deputy cannot self register.", 403);
         }
 
         // Check the user doesn't already exist
-        $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        $existingUser = $this->em->getRepository('AppBundle\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if ($existingUser) {
             throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
         }
@@ -62,47 +64,27 @@ class UserRegistrationService
         $client = new Client();
         $this->populateClient($client, $selfRegisterData);
 
-        $casRecCriteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
-                          , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
-                          , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
-        ];
-        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($casRecCriteria);
+        $this->casrecService->validate( $selfRegisterData->getCaseNumber()
+                                      , $selfRegisterData->getClientLastname()
+                                      , $selfRegisterData->getLastname()
+                                      , $user->getAddressPostcode()
+                                      );
 
-        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $user->getAddressPostcode());
-
-        // Currently unable to determine which co-deputy is matched (eg siblings at same address), based on information given
-        $deputyNumbers = [];
-        foreach ($casRecUserMatches as $casRecMatch) {
-            $deputyNumbers[] = $casRecMatch->getDeputyNo();
-        }
-        $user->setDeputyNo(implode(',', $deputyNumbers));
-
-        // For multi deputy clients
-        $casRecCaseMatches = $this->getCasRecMatchesOrThrowError(['caseNumber' => CasRec::normaliseCaseNumber($client->getCaseNumber())]);
-        if (count($casRecCaseMatches) > 1) {
-            $user->setCoDeputyClientConfirmed(true);
-        }
+        $user->setDeputyNo(implode(',', $this->casrecService->getLastMatchedDeputyNumbers()));
+        $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
 
         $this->saveUserAndClient($user, $client);
         return $user;
     }
 
     /**
-     * @param string $caseNumber
+     * @param SelfRegisterData $selfRegisterData
      * @return bool
-     */
-    public function isMultiDeputyCase($caseNumber)
-    {
-        $casRecCaseMatches = $this->casRecRepo->findBy(['caseNumber' => CasRec::normaliseCaseNumber($caseNumber)]);
-        return count($casRecCaseMatches) > 1;
-    }
-
-    /**
-     * @return bool
+     * @throws \RuntimeException
      */
     public function validateCoDeputy(SelfRegisterData $selfRegisterData)
     {
-        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email' => $selfRegisterData->getEmail()]);
+        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if (!($user)) {
             throw new \RuntimeException("User registration: not found", 421);
         }
@@ -111,52 +93,23 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        // Check casRec for user
-        $criteria = [ 'caseNumber'     => CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber())
-                    , 'clientLastname' => CasRec::normaliseSurname($selfRegisterData->getClientLastname())
-                    , 'deputySurname'  => CasRec::normaliseSurname($selfRegisterData->getLastname())
-        ];
-
-        $casRecUserMatches = $this->getCasRecMatchesOrThrowError($criteria);
-        $this->checkPostcodeExistsInCasRec($casRecUserMatches, $selfRegisterData->getPostcode());
+        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
+                                                  , $selfRegisterData->getClientLastname()
+                                                  , $selfRegisterData->getLastname()
+                                                  , $selfRegisterData->getPostcode()
+                                                  );
 
         return true;
     }
 
-    private function getCasRecMatchesOrThrowError($criteria)
-    {
-        $casRecMatches = $this->casRecRepo->findBy($criteria);
-        if (count($casRecMatches) == 0) {
-            throw new \RuntimeException('User registration: not found', 421);
-        }
-        return $casRecMatches;
-    }
-
     /**
-     * @param array $casRecUsers
-     * @param string $postcode
+     * @param User $user
+     * @param Client $client
+     * @throws \Exception
      */
-    private function checkPostcodeExistsInCasRec($casRecUsers, $postcode)
-    {
-        // Now that multi deputies are a thing, best we can do is ensure that the given postcode matches ONE of the postcodes
-        // (Or skip this check completely it if one of the postcodes isn't set)
-        $casRecPostcodes = [];
-        foreach ($casRecUsers as $casRecMatch) {
-            if (!empty($casRecMatch->getDeputyPostCode())) {
-                $casRecPostcodes[] = $casRecMatch->getDeputyPostCode();
-            }
-        }
-        if (count($casRecPostcodes) == count($casRecUsers)) {
-            if (!in_array(CasRec::normalisePostCode($postcode), $casRecPostcodes)){
-                throw new \RuntimeException('User registration: postcode mismatch', 424);
-            }
-        }
-    }
-
-    public function saveUserAndClient($user, $client)
+    public function saveUserAndClient(User $user, Client $client)
     {
         $connection = $this->em->getConnection();
-
         $connection->beginTransaction();
 
         try {
@@ -180,6 +133,10 @@ class UserRegistrationService
         }
     }
 
+    /**
+     * @param User $user
+     * @param SelfRegisterData $selfRegisterData
+     */
     public function populateUser(User $user, SelfRegisterData $selfRegisterData)
     {
         $user->setFirstname($selfRegisterData->getFirstname());
@@ -191,6 +148,10 @@ class UserRegistrationService
         $user->setRegistrationDate(new \DateTime());
     }
 
+    /**
+     * @param Client $client
+     * @param SelfRegisterData $selfRegisterData
+     */
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
     {
         $client->setFirstname($selfRegisterData->getClientFirstname());

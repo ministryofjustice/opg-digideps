@@ -21,7 +21,7 @@ services:
 
     user_registration_service:
         class: AppBundle\Service\UserRegistrationService
-        arguments: [ "@em" ]
+        arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
     opg_digideps.user_service:
         class: AppBundle\Service\UserService
