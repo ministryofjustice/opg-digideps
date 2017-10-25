@@ -1,6 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "settings" %}
+{% set translationDomain = "settings" %}
 
 {% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'h1Title.registration-details' | trans }}{% endblock %}
@@ -17,7 +18,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% include 'AppBundle:User:_form_fields.html.twig' %}
+    {% include 'AppBundle:User:_form_fields.html.twig'  with {
+    'translationDomain': translationDomain,
+    'user': user
+    } %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
