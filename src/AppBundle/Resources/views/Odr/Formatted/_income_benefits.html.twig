@@ -4,37 +4,40 @@ or odr.getReceiveStatePension()
 or odr.getReceiveOtherIncome()
 or odr.getExpectCompensationDamages() %}
     <div class="section" id="income-benefits-section">
-        <h2 class="section-heading">Income and Finance</h2>
 
-        <h3>State benefits</h3>
+        <div class="dont-break">
+            <h2 class="section-heading">Income and Finance</h2>
 
-        <div class="box">
-            <table class="checkboxes labelvalue">
+            <h3>State benefits</h3>
+
+            <div class="box">
+                <table class="checkboxes labelvalue">
+                    {% for st in odr.stateBenefits %}
+                        <tr>
+                            <td class="clean-cell">
+                                <span class="checkbox value">
+                                    {{ st.present ? 'X' : '&nbsp;' }}
+                                </span>
+                            </td>
+                            <td class="label soft-half--bottom">{{ ('form.stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
                 {% for st in odr.stateBenefits %}
-                    <tr>
-                        <td class="clean-cell">
-                            <span class="checkbox value">
-                                {{ st.present ? 'X' : '&nbsp;' }}
-                            </span>
-                        </td>
-                        <td class="label soft-half--bottom">{{ ('form.stateBenefits.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</td>
-                    </tr>
+                    {% if st.hasMoreDetails and st.moreDetails %}
+                        <div class="labelvalue">
+                            <div class="label question flush--top">More details on other benefits:</div>
+                            <div class="value">{{ st.moreDetails | nl2br }}</div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
-            </table>
-
-            {% for st in odr.stateBenefits %}
-                {% if st.hasMoreDetails and st.moreDetails %}
-                    <div class="labelvalue">
-                        <div class="label question flush--top">More details on other benefits:</div>
-                        <div class="value">{{ st.moreDetails | nl2br }}</div>
-                    </div>
-                {% endif %}
-            {% endfor %}
+            </div>
         </div>
 
         <div class="dont-break">
 
-            <h3 class="label question bold">Pensions and other income</h3>
+            <h3>Pensions and other income</h3>
 
             <div class="box">
                 <h3 class="label question bold">Does the client receive a state pension?</h3>
@@ -90,21 +93,24 @@ or odr.getExpectCompensationDamages() %}
             </div>
         </div>
 
-        <h3>One off</h3>
+        <div class="dont-break">
 
-        <div class="box">
-            <table class="checkboxes labelvalue">
-                {% for st in odr.oneOff %}
-                    <tr>
-                        <td class="clean-cell">
-                            <span class="checkbox value">
-                                {{ st.present ? 'X' : '&nbsp;' }}
-                            </span>
-                        </td>
-                        <td class="label soft-half--bottom">{{ ('form.oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+            <h3>One off</h3>
+
+            <div class="box">
+                <table class="checkboxes labelvalue">
+                    {% for st in odr.oneOff %}
+                        <tr>
+                            <td class="clean-cell">
+                                <span class="checkbox value">
+                                    {{ st.present ? 'X' : '&nbsp;' }}
+                                </span>
+                            </td>
+                            <td class="label soft-half--bottom">{{ ('form.oneOff.entries.' ~ st.typeId ~ '.label') | trans({}, 'odr-income-benefits') }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
     </div>
 {% endif %}

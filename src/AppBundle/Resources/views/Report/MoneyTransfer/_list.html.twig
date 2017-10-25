@@ -1,6 +1,20 @@
 {% set translationDomain = "report-money-transfer" %}
 {% trans_default_domain translationDomain %}
 
+{% macro accountDetails(account) %}
+    {% if account.requiresBankName %}
+        {{ account.bank }}<br/>
+    {% endif %}
+    <p class="font-xsmall flush--ends">
+        {{ account.accountTypeText }}<br/>
+        {% if account.requiresSortCode %}
+            Sort code: {{ account.sortCode }}<br/>
+        {% endif %}
+        Account number: ****{{ account.accountNumber }}<br/>
+        Joint account: {{ account.isJointAccount == 'no' ? 'No' : 'Yes' }}<br/>
+    </p>
+{% endmacro %}
+
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
         <tr>
@@ -56,28 +70,10 @@
             {% for transfer in report.moneyTransfers %}
                 <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
                     <td class="width-quarter">
-                        {% set account = transfer.accountFrom %}
-                        {% if account.requiresBankName %}
-                            {{ account.bank }}<br/>
-                        {% endif %}
-                        <p class="font-xsmall flush--ends">
-                            {{ account.accountTypeText }}<br/>
-                            Sort code: {{ account.sortCode }}<br/>
-                            Account number: ****{{ account.accountNumber }}<br/>
-                            Joint account: {{ account.isJointAccount == 'no' ? 'No' : 'Yes' }}<br/>
-                        </p>
+                        {{ _self.accountDetails(transfer.accountFrom) }}
                     </td>
                     <td class="width-quarter">
-                        {% set account = transfer.accountTo %}
-                        {% if account.requiresBankName %}
-                            {{ account.bank }}<br/>
-                        {% endif %}
-                        <p class="font-xsmall flush--ends">
-                            {{ account.accountTypeText }}<br/>
-                            Sort code: {{ account.sortCode }}<br/>
-                            Account number: ****{{ account.accountNumber }}<br/>
-                            Joint account: {{ account.isJointAccount == 'no'? 'No' : 'Yes' }}<br/>
-                        </p>
+                        {{ _self.accountDetails(transfer.accountTo) }}
                     </td>
                     <td class="numeric-small">
                         £{{ transfer.amount | money_format }}

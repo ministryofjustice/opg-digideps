@@ -88,14 +88,32 @@ class ClientController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            // $method is set above to either post or put
-            $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
-            $url = $this->getUser()->isOdrEnabled() ?
-                $this->generateUrl('odr_index')
-                : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+            try {
+                if (! $user->isOdrEnabled()) {
+                    // validate against casRec
+                    $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
+                }
+                // $method is set above to either post or put
+                $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
-            return $this->redirect($url);
+                $url = $this->getUser()->isOdrEnabled()
+                    ? $this->generateUrl('odr_index')
+                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                return $this->redirect($url);
+
+            } catch (\Exception $e) {
+                $translator = $this->get('translator');
+                switch ((int)$e->getCode()) {
+                    case 400:
+                        $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                        break;
+
+                    default:
+                        $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
+                }
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+            }
         }
 
         return [

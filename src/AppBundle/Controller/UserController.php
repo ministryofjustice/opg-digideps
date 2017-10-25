@@ -255,7 +255,7 @@ class UserController extends AbstractController
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
 
-                    case 421:
+                    case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
                         break;
 
