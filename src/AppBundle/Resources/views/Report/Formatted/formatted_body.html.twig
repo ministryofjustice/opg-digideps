@@ -46,7 +46,7 @@
 
         {% if report.hasSection('moneyIn') %}
             <div class="section break-before" id="accounts-section">
-                {% if report.bankAccounts | length > 0 %}
+                {% if (report.bankAccounts | length) > 0 %}
                     <h2 class="section-heading">Accounts</h2>
                     {% if report.totalsMatch %}
                         {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
