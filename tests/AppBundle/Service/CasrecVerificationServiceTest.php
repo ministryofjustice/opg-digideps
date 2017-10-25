@@ -6,7 +6,7 @@ use AppBundle\Service\CasrecVerificationService;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 
-class CasreServiceTest extends \PHPUnit_Framework_TestCase
+class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var CasrecVerificationService
@@ -66,7 +66,7 @@ class CasreServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->casrecVerificationService = new CasrecVerificationService($em);
         // test with all 4 correct
-//        $this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123');
+        $this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DPC123');
         // test each fail individually
         // postcode present
         //    test with correct postcode
