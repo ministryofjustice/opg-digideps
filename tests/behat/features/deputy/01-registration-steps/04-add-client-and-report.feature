@@ -1,48 +1,25 @@
 Feature: deputy / user / add client and report
 
-  @deputy
-  Scenario: add client
+  @deputy @shaun
+  Scenario: update client (client name/case number already set)
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
     And I save the page as "deputy-step3"
-      # submit empty form and check errors
+    # submit empty form and check errors
     Then the following fields should have the corresponding values:
       | client_firstname  | Cly      |
       | client_lastname   | Hent     |
       | client_caseNumber | behat001 |
-    When I fill in the following:
-      | client_firstname  |  |
-      | client_lastname   |  |
-      | client_caseNumber |  |
     When I press "client_save"
     Then the following fields should have an error:
-      | client_firstname       |
-      | client_lastname        |
       | client_courtDate_day   |
       | client_courtDate_month |
       | client_courtDate_year  |
-      | client_caseNumber      |
-      | client_caseNumber      |
-      | client_address         |
-      | client_postcode        |
-    And I press "client_save"
-    Then the following fields should have an error:
-      | client_firstname       |
-      | client_lastname        |
-      | client_courtDate_day   |
-      | client_courtDate_month |
-      | client_courtDate_year  |
-      | client_caseNumber      |
-      | client_caseNumber      |
       | client_address         |
       | client_postcode        |
     And I save the page as "deputy-step3-errors-empty"
       # subit invalid values and check errors
-    When I press "client_save"
     When I fill in the following:
-      | client_firstname       | 01234567890-01234567890-01234567890-01234567890-01234567890 more than 50 chars                                                                                                                                                                                   |
-      | client_lastname        | 01234567890-01234567890-01234567890-01234567890-01234567890 more than 50 chars                                                                                                                                                                                   |
-      | client_caseNumber      | 01234567890-01234567890 more than 20 chars                                                                                                                                                                                                                       |
       | client_courtDate_day   | 99                                                                                                                                                                                                                                                               |
       | client_courtDate_month | aa                                                                                                                                                                                                                                                               |
       | client_courtDate_year  | 0986789                                                                                                                                                                                                                                                          |
@@ -53,9 +30,6 @@ Feature: deputy / user / add client and report
       | client_phone           | 01234567890-01234567890 more than 20 chars                                                                                                                                                                                                                       |
     And I press "client_save"
     Then the following fields should have an error:
-      | client_firstname       |
-      | client_lastname        |
-      | client_caseNumber      |
       | client_courtDate_day   |
       | client_courtDate_month |
       | client_courtDate_year  |
@@ -67,8 +41,6 @@ Feature: deputy / user / add client and report
     And I save the page as "deputy-step3-errors"
       # right values
     When I set the client details to:
-      | name       | Peter          | White       |            |         |    |
-      | caseNumber | 12345ABC       |             |            |         |    |
       | courtDate  | 1              | 1           | 2016       |         |    |
       # only tick Property and Affairs
       # if  Personal Welfare  is re-enabled, select the other one, then de-comment next feature block (about changing COT)
@@ -77,9 +49,9 @@ Feature: deputy / user / add client and report
     Then the URL should match "report/create/\d+"
     When I go to "client/add"
     Then the following fields should have the corresponding values:
-      | client_firstname       | Peter          |
-      | client_lastname        | White          |
-      | client_caseNumber      | 12345ABC       |
+      | client_firstname       | Cly          |
+      | client_lastname        | Hent          |
+      | client_caseNumber      | behat001       |
       | client_courtDate_day   | 01             |
       | client_courtDate_month | 01             |
       | client_courtDate_year  | 2016           |

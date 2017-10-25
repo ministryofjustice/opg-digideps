@@ -6,9 +6,9 @@ Feature: deputy / report / edit client
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "user-account, client-show, client-edit"
         Then the following fields should have the corresponding values:
-            | client_firstname | Peter |
-            | client_lastname | White |
-            | client_caseNumber | 12345ABC |
+            | client_firstname | Cly |
+            | client_lastname | Hent |
+            | client_caseNumber | behat001 |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2016 |
