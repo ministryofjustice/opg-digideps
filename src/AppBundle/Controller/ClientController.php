@@ -86,15 +86,35 @@ class ClientController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $response = ($method === 'post')
-                      ? $this->getRestClient()->post('client/upsert', $form->getData())
-                      : $this->getRestClient()->put('client/upsert', $form->getData());
 
-            $url = $this->getUser()->isOdrEnabled() ?
-                $this->generateUrl('odr_index')
-                : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+            // validate against casRec
+            if (! $user->isOdrEnabled()) {
+                try {
+                    $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
+                } catch (\Exception $e) {
+                    $translator = $this->get('translator');
+                    switch ((int)$e->getCode()) {
+                        case 400:
+                            $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                            break;
 
-            return $this->redirect($url);
+                        default:
+                            $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
+                    }
+                    $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                }
+            }
+
+            if ($form->isValid()) {
+                $response = 'post' == $method
+                    ? $this->getRestClient()->post('client/upsert', $form->getData())
+                    : $this->getRestClient()->put('client/upsert', $form->getData());
+
+                $url = $this->getUser()->isOdrEnabled()
+                    ? $this->generateUrl('odr_index')
+                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                return $this->redirect($url);
+            }
         }
 
         return ['form' => $form->createView()];
