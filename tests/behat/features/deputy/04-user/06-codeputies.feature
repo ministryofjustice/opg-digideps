@@ -78,8 +78,7 @@ Feature: Codeputy Self Registration
     Given I fill in the following:
       | self_registration_postcode        | MOOMOOO                               |
     When I press "self_registration_save"
-    Then the following fields should have an error:
-      | self_registration_postcode |
+    Then I should see a "#error-summary" element
     And I should be on "/register"
 
     # Incorrect deputy surname (fails casrec check and non specific error displayed)
