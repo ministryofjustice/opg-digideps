@@ -162,12 +162,19 @@ class FormattedTest extends WebTestCase
             ->setBalanceMismatchExplanation('money lost')
         ;
 
+    }
+
+    /**
+     * @return Crawler
+     */
+    private function renderTemplateAndGetCrawler()
+    {
         $this->html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
 
-        $this->crawler = new Crawler($this->html);
+        return new Crawler($this->html);
     }
 
     private function html($crawler, $expr)
@@ -177,79 +184,58 @@ class FormattedTest extends WebTestCase
 
     public function testReport()
     {
-        $this->assertEquals('1234567t', $this->html($this->crawler, '#caseNumber'));
-        $this->assertContains('01 / 01 / 2015', $this->html($this->crawler, '#report-start-date'));
-        $this->assertContains('31 / 12 / 2015', $this->html($this->crawler, '#report-end-date'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertEquals('1234567t', $this->html($crawler, '#caseNumber'));
+        $this->assertContains('01 / 01 / 2015', $this->html($crawler, '#report-start-date'));
+        $this->assertContains('31 / 12 / 2015', $this->html($crawler, '#report-end-date'));
     }
 
     public function testDeputy()
     {
-        $this->assertContains('John', $this->html($this->crawler, '#deputy-details-subsection'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertContains('John', $this->html($crawler, '#deputy-details-subsection'));
     }
 
     public function testClient()
     {
-        $this->assertContains('Jones', $this->html($this->crawler, '#client-details-subsection'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertContains('Jones', $this->html($crawler, '#client-details-subsection'));
     }
 
-    public function testAccount()
-    {
-//        $this->assertContains('barclays', $this->html($this->crawler, '#account-summary'));
-    }
 
     public function testAssets()
     {
-        $this->assertContains('monna lisa', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('chest of drawers', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('plat house', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('sw1', $this->html($this->crawler, '#assets-section'));
-        //$this->assertContains('£560,000.00', $this->html($this->crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertContains('monna lisa', $this->html($crawler, '#assets-section'));
+        $this->assertContains('chest of drawers', $this->html($crawler, '#assets-section'));
+        $this->assertContains('plat house', $this->html($crawler, '#assets-section'));
+        $this->assertContains('sw1', $this->html($crawler, '#assets-section'));
+        //$this->assertContains('£560,000.00', $this->html($crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
     }
 
     public function testDecisions()
     {
-        $this->assertContains('sold the flat in SW2', $this->html($this->crawler, '#decisions-section'));
-        $this->assertContains('he wanted to leave this area', $this->html($this->crawler, '#decisions-section'));
-        $this->assertContains('bought flat in E1', $this->html($this->crawler, '#decisions-section'));
-        $this->assertContains('he wanted to live here', $this->html($this->crawler, '#decisions-section'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertContains('sold the flat in SW2', $this->html($crawler, '#decisions-section'));
+        $this->assertContains('he wanted to leave this area', $this->html($crawler, '#decisions-section'));
+        $this->assertContains('bought flat in E1', $this->html($crawler, '#decisions-section'));
+        $this->assertContains('he wanted to live here', $this->html($crawler, '#decisions-section'));
     }
 
-    public function testMoneyTransfers()
-    {
-//        $this->assertContains('12,345.00', $this->html($this->crawler, '#money-transfers-table'));
-//        $this->assertContains('98,765.00', $this->html($this->crawler, '#money-transfers-table'));
-    }
-
-    public function testTransactions()
-    {
-//        $this->assertContains('Gas', $this->html($this->crawler, '#moneyIn-transactions'));
-//        $this->assertContains('1,234.00', $this->html($this->crawler, '#moneyIn-transactions'));
-//        $this->assertContains('Electricity', $this->html($this->crawler, '#moneyIn-transactions'));
-//        $this->assertContains('45.00', $this->html($this->crawler, '#moneyIn-transactions'));
-//        $this->assertContains('1,279.00', $this->html($this->crawler, '#moneyIn-transactions'));
-//
-//        $this->assertContains('Anything else paid out', $this->html($this->crawler, '#moneyOut-transactions'));
-//        $this->assertContains('1,233.00', $this->html($this->crawler, '#moneyOut-transactions'));
-    }
-
-    public function testDebts()
-    {
-//        $this->assertContains('Care fees', $this->html($this->crawler, '#debts-section'));
-//        $this->assertContains('123.00', $this->html($this->crawler, '#debts-section'));
-    }
 
     public function testAction()
     {
-        $this->assertContains('sell both flats', $this->html($this->crawler, '#action-section'));
-        $this->assertContains('not able next year', $this->html($this->crawler, '#action-section'));
+        $crawler = $this->renderTemplateAndGetCrawler();
+
+        $this->assertContains('sell both flats', $this->html($crawler, '#action-section'));
+        $this->assertContains('not able next year', $this->html($crawler, '#action-section'));
     }
 
-    public function testBalance()
-    {
-//        $this->assertContains('Accounts not balanced', $this->html($this->crawler, '#accounts-section'));
-//        $this->assertContains('46.00', $this->html($this->crawler, '#accounts-section'));
-//        $this->assertContains('money lost', $this->html($this->crawler, '#accounts-section'));
-    }
 
     public function tearDown()
     {
