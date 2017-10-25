@@ -14,7 +14,7 @@ trait ReportAssetTrait
      *
      * @var Asset[]
      */
-    private $assets;
+    private $assets = [];
 
     /**
      * @JMS\Type("double")

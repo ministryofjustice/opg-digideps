@@ -14,7 +14,7 @@ trait ReportMoneyShortTrait
      * @JMS\Groups({"moneyShortCategoriesIn"})
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyShortCategory>")
      */
-    private $moneyShortCategoriesIn;
+    private $moneyShortCategoriesIn = [];
 
     /**
      * @var MoneyShortCategory[]
@@ -22,21 +22,21 @@ trait ReportMoneyShortTrait
      * @JMS\Groups({"moneyShortCategoriesOut"})
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyShortCategory>")
      */
-    private $moneyShortCategoriesOut;
+    private $moneyShortCategoriesOut = [];
 
     /**
      * @var MoneyTransactionShort[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransactionShort>")
      */
-    private $moneyTransactionsShortIn;
+    private $moneyTransactionsShortIn = [];
 
     /**
      * @var MoneyTransactionShort[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransactionShort>")
      */
-    private $moneyTransactionsShortOut;
+    private $moneyTransactionsShortOut = [];
 
     /**
      * @var string yes|no|null

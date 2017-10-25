@@ -13,7 +13,7 @@ trait ReportMoneyTransactionTrait
      *
      * @var Transaction[]
      */
-    private $moneyTransactionsIn;
+    private $moneyTransactionsIn = [];
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\MoneyTransaction>")
@@ -21,7 +21,7 @@ trait ReportMoneyTransactionTrait
      *
      * @var Transaction[]
      */
-    private $moneyTransactionsOut;
+    private $moneyTransactionsOut = [];
 
     /**
      * @JMS\Type("double")
