@@ -92,9 +92,11 @@ class CasrecVerificationService
             }
         }
 
-        $filteredResults  = ($crWithPostcodeCount < count($crMatches))
-            ? $crMatches
-            : $crByPostcode[$deputyPostcode];
+        if ($crWithPostcodeCount < count($crMatches)) {
+            $filteredResults = $crMatches;
+        } else {
+            $filteredResults = array_key_exists($deputyPostcode, $crByPostcode) ? $crByPostcode[$deputyPostcode] : [];
+        }
 
         return $filteredResults;
     }
