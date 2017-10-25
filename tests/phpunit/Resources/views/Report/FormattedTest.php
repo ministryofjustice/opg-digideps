@@ -79,6 +79,17 @@ class FormattedTest extends WebTestCase
             ->setAmount(1233)
             ->setId('anything-else-paid-out');
 
+        $this->transfer1 = (new MoneyTransfer())
+            ->setAccountFrom($this->account1)
+            ->setAccountTo($this->account2)
+            ->setAmount(10500.60);
+        ;
+        $this->transfer2 = (new MoneyTransfer())
+            ->setAccountFrom($this->account2)
+            ->setAccountTo($this->account1)
+            ->setAmount(45123.00)
+        ;
+
 
         $this->debt1 = new Debt('care-fees', 123, false, '');
 
@@ -195,15 +206,44 @@ class FormattedTest extends WebTestCase
 
     public function testMoneyTransfers()
     {
+        // no accounts -> section not displaying
         $this->report->setBankAccounts([]);
+        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter("#money-transfers"));
+
+        // 1 account => don't show the section (DDPB-1525)
+        $this->report
+            ->setBankAccounts([$this->account1])
+            ->setNoTransfersToAdd(false)
+            ->setMoneyTransfers([$this->transfer1, $this->transfer2]); //should not happen but enforce assertion
+        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter("#money-transfers"));
+
+        // 2 accounts but no transfer -> still show the section
+        $this->report
+            ->setBankAccounts([$this->account1, $this->account2])
+            ->setNoTransfersToAdd(null)
+            ->setMoneyTransfers([]); //should not happen but enforce assertion
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertCount(0, $crawler->filter("#money-transfers"));
+        $this->assertCount(1, $crawler->filter("#money-transfers"));
+        $this->assertNotContains('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
 
-//        $this->report->setBankAccounts([]);
-//        $this->report->setMoneyTransfers([$this->transfer1, $this->transfer2]);
+        // no transfers
+        $this->report
+            ->setBankAccounts([$this->account1, $this->account2])
+            ->setNoTransfersToAdd(true)
+            ->setMoneyTransfers([]); //should not happen but enforce assertion
+        $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertContains('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
 
-//        $this->assertContains('12,345.00', $this->html($crawler, '#money-transfers'));
-//        $this->assertContains('98,765.00', $this->html($crawler, '#money-transfers-table'));
+        // 2 transfers should be rendered properly, and "no transfers hidden"
+        $this->report
+            ->setBankAccounts([$this->account1, $this->account2])
+            ->setNoTransfersToAdd(false)
+            ->setMoneyTransfers([$this->transfer1, $this->transfer2]);
+        $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertCount(0, $crawler->filter("#money-transfers-no-transfers-add"));
+        $html = $this->html($crawler, '#money-transfers');
+        $this->assertContains('10,500.60', $html);
+        $this->assertContains('45,123.00', $html);
     }
 
 
