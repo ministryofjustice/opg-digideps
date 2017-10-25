@@ -821,7 +821,8 @@ class Report
     }
 
     /**
-     * @param bool
+     * @param bool $noTransfersToAdd
+     * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
     {
