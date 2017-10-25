@@ -39,7 +39,20 @@
     {{ form_input(form.address, 'address') }}
     {{ form_input(form.address2, 'address2') }}
     {{ form_input(form.county, 'county') }}
-    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
+
+    {% if form.postcode is defined %}
+        {% if client.postcode is empty or not client_validated %}
+            {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
+        {% else %}
+            {{ form_input(form.postcode, 'postcode', {'formGroupClass':'visually-hidden'}) }}
+
+            <p class="push--bottom">
+            <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
+                {{ client.postcode }}
+            </p>
+        {% endif %}
+    {% endif %}
+
     {{ form_select(form.country, 'country') }}
     {{ form_input(form.phone, 'phone') }}
 
