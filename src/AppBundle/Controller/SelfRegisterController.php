@@ -82,7 +82,7 @@ class SelfRegisterController extends RestController
         return ['verified' => $coDeputyVerified];
     }
 
-    /*
+    /**
      * @param SelfRegisterData $selfRegisterData
      * @param array $data
      */

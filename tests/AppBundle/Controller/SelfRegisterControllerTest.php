@@ -174,7 +174,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => '123abc-deputy',
         ]);
 
-        $this->assertContains('not found', $responseArray['message']);
+        $this->assertContains('no matching record in casrec', $responseArray['message']);
     }
 
     /**

@@ -22,20 +22,16 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldIgnoreMissing(true)
             ->getMock();
 
-        $this->casRec = m::mock('\AppBundle\Entity\CasRec');
-
-        $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(false)
-            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
-            ->getMock();
-
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
 //            ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em);
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+            ->shouldIgnoreMissing(true)
+            ->getMock();
+
+        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
     }
 
     public function tearDown()
@@ -124,7 +120,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em);
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+            ->shouldIgnoreMissing(true)
+            ->getMock();
+
+        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -159,7 +159,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em);
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+            ->shouldIgnoreMissing(true)
+            ->getMock();
+
+        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -195,7 +199,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em);
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+            ->shouldIgnoreMissing(true)
+            ->getMock();
+
+        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
@@ -228,17 +236,8 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn(null)
-            ->getMock();
-
-        $this->casRec = m::mock('\AppBundle\Entity\CasRec')
-            ->shouldReceive('getDeputyPostCode')->andReturn(null)
-            ->shouldReceive('getDeputyNo')->andReturn('D01')
-            ->getMock();
-
-        $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
-            ->shouldIgnoreMissing(false)
-            ->shouldReceive('findBy')->withAnyArgs()->andReturn($this->casRec)
+//            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn(null)
+            ->shouldReceive('findOneByEmail')->with('zac@thetolleys.com')->andReturn(null)
             ->getMock();
 
         $mockClientRepository = m::mock('\Doctrine\ORM\EntityRepository')
@@ -253,11 +252,16 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockUser)
             ->shouldReceive('persist')->with($mockClient)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
-            ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();
 
-        $this->userRegistrationService = new UserRegistrationService($em);
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isMultiDeputyCase')->with('12341234')->andReturn(false)
+            ->shouldReceive('getLastMatchedDeputyNumbers')->andReturn(['123'])
+            ->getMock();
+
+        $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->selfRegisterUser($data);
     }
