@@ -25,6 +25,10 @@ class FormattedTest extends WebTestCase
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     protected $client;
+
+    /**
+     * @var Report
+     */
     protected $report;
     protected $reportClient;
     protected $deputy;
@@ -75,16 +79,6 @@ class FormattedTest extends WebTestCase
             ->setAmount(1233)
             ->setId('anything-else-paid-out');
 
-        $this->transfer1 = (new MoneyTransfer())
-            ->setAccountFrom($this->account1)
-            ->setAccountTo($this->account2)
-            ->setAmount(12345)
-        ;
-        $this->transfer2 = (new MoneyTransfer())
-            ->setAccountFrom($this->account2)
-            ->setAccountTo($this->account1)
-            ->setAmount(98765)
-        ;
 
         $this->debt1 = new Debt('care-fees', 123, false, '');
 
@@ -113,10 +107,9 @@ class FormattedTest extends WebTestCase
             ->setClientInvolvedDetails('he wanted to live here');
 
         $this->report = new Report();
-        $this->report->setType(Report::TYPE_102);
-        // hardcoded section settings (show all for all the reports)
-        $reports = [Report::TYPE_102]; //extend if other types need to be tested
-        $this->report->setAvailableSections([
+        $this->report
+            ->setType(Report::TYPE_102)
+            ->setAvailableSections([//102
             'decisions', 'contacts','visitsCare',
             'lifestyle','balance','bankAccounts',
             'moneyTransfers',
@@ -129,39 +122,7 @@ class FormattedTest extends WebTestCase
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))
             ->setEndDate(new \Datetime('2015-12-31'))
-            ->setBankAccounts([$this->account1, $this->account2])
-            ->setMoneyTransfers([$this->transfer1, $this->transfer2])
-            ->setMoneyTransactionsIn([$this->transactionIn1, $this->transactionIn2])
-            ->setMoneyTransactionsOut([$this->transactionOut1])
-            ->setMoneyInTotal(1234 + 45)
-            ->setMoneyOutTotal(1233)
-            ->setAction($this->action1)
-            ->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2])
-            ->setDecisions([$this->decision1, $this->decision2])
-            ->setHasDebts(true)
-            ->setDebts([$this->debt1])
-            ->setGifts([$this->debt1])
-            ->setAccountsClosingBalanceTotal(
-                $this->account1->getOpeningBalance()
-                + $this->account2->getOpeningBalance()
-            )->setCalculatedBalance(
-                $this->account1->getOpeningBalance()
-                + $this->account2->getOpeningBalance()
-                + 1234 + 45 // money in
-                - 1233 // money out
-            )->setTotalsOffset(
-                $this->account1->getOpeningBalance()
-                + $this->account2->getOpeningBalance()
-                - (
-                    $this->account1->getOpeningBalance()
-                    + $this->account2->getOpeningBalance()
-                    + 1234 + 45 // money in
-                    - 1233
-                )
-            )
-            ->setBalanceMismatchExplanation('money lost')
         ;
-
     }
 
     /**
@@ -169,18 +130,14 @@ class FormattedTest extends WebTestCase
      */
     private function renderTemplateAndGetCrawler()
     {
-        $this->html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
 
-        return new Crawler($this->html);
+        return new Crawler($html);
     }
 
-    private function html($crawler, $expr)
-    {
-        return $crawler->filter($expr)->eq(0)->html();
-    }
 
     public function testReport()
     {
@@ -208,8 +165,13 @@ class FormattedTest extends WebTestCase
 
     public function testAssets()
     {
+        $this->report->setAssets([]);
         $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertCount(0, $crawler->filter("#assets-section"));
 
+
+        $this->report->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2]);
+        $crawler = $this->renderTemplateAndGetCrawler();
         $this->assertContains('monna lisa', $this->html($crawler, '#assets-section'));
         $this->assertContains('chest of drawers', $this->html($crawler, '#assets-section'));
         $this->assertContains('plat house', $this->html($crawler, '#assets-section'));
@@ -219,17 +181,35 @@ class FormattedTest extends WebTestCase
 
     public function testDecisions()
     {
+        $this->report->setDecisions([]);
         $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertCount(0, $crawler->filter("#assets-section"));
 
+        $this->report->setDecisions([$this->decision1, $this->decision2]);
+        $crawler = $this->renderTemplateAndGetCrawler();
         $this->assertContains('sold the flat in SW2', $this->html($crawler, '#decisions-section'));
         $this->assertContains('he wanted to leave this area', $this->html($crawler, '#decisions-section'));
         $this->assertContains('bought flat in E1', $this->html($crawler, '#decisions-section'));
         $this->assertContains('he wanted to live here', $this->html($crawler, '#decisions-section'));
     }
 
+    public function testMoneyTransfers()
+    {
+        $this->report->setBankAccounts([]);
+        $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertCount(0, $crawler->filter("#money-transfers"));
+
+//        $this->report->setBankAccounts([]);
+//        $this->report->setMoneyTransfers([$this->transfer1, $this->transfer2]);
+
+//        $this->assertContains('12,345.00', $this->html($crawler, '#money-transfers'));
+//        $this->assertContains('98,765.00', $this->html($crawler, '#money-transfers-table'));
+    }
+
 
     public function testAction()
     {
+        $this->report->setAction($this->action1);
         $crawler = $this->renderTemplateAndGetCrawler();
 
         $this->assertContains('sell both flats', $this->html($crawler, '#action-section'));
@@ -237,10 +217,73 @@ class FormattedTest extends WebTestCase
     }
 
 
+    public function testDebts()
+    {
+        $this->markTestIncomplete('To implement using fixture below, incuding empty case');
+        $this->report->setHasDebts(true);
+        $this->report->setDebts([$this->debt1]);
+    }
+
+    public function testBankAccounts()
+    {
+        $this->markTestIncomplete('To implement using fixture below, incuding empty case');
+        $this->report->setBankAccounts([$this->account1, $this->account2]);
+    }
+
+    public function testMoneyTransactions()
+    {
+        $this->markTestIncomplete('To implement using fixture below, incuding empty case');
+        $this->report
+            ->setMoneyTransactionsIn([$this->transactionIn1, $this->transactionIn2])
+            ->setMoneyTransactionsOut([$this->transactionOut1])
+            ->setMoneyInTotal(1234 + 45)
+            ->setMoneyOutTotal(1233);
+    }
+
+    public function testGifts()
+    {
+        $this->markTestIncomplete('To implement using fixture below, incuding empty case');
+        $this->report->setGifts([$this->debt1]);
+    }
+
+    public function testBalance()
+    {
+        $this->markTestIncomplete('To implement using fixture below, incuding empty case');
+        $this->report
+            ->setAccountsClosingBalanceTotal(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+            )->setCalculatedBalance(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+                + 1234 + 45 // money in
+                - 1233 // money out
+            )->setTotalsOffset(
+                $this->account1->getOpeningBalance()
+                + $this->account2->getOpeningBalance()
+                - (
+                    $this->account1->getOpeningBalance()
+                    + $this->account2->getOpeningBalance()
+                    + 1234 + 45 // money in
+                    - 1233
+                )
+            )
+            ->setBalanceMismatchExplanation('money lost');
+    }
+
+
+
+
     public function tearDown()
     {
         m::close();
         $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
+    }
+
+
+    private function html(Crawler $crawler, $expr)
+    {
+        return $crawler->filter($expr)->eq(0)->html();
     }
 }
