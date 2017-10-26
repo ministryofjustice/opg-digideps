@@ -14,7 +14,7 @@ class UserRegistrationService
     /** @var EntityManager */
     private $em;
 
-    private $casrecVerificationService;
+    private $casrecService;
 
     public function __construct($em, $casrecVerificationService)
     {
@@ -93,7 +93,7 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
+        $this->casrecService->validate( $selfRegisterData->getCaseNumber()
                                                   , $selfRegisterData->getClientLastname()
                                                   , $selfRegisterData->getLastname()
                                                   , $selfRegisterData->getPostcode()
