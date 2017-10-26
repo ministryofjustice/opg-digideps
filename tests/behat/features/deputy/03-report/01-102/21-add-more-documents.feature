@@ -1,6 +1,6 @@
 Feature: Add more documents after report has been submitted
 
-  @deputy @shaun
+  @deputy
   Scenario: Deputy adds documents after submission
     Given I load the application status from "report-submit-reports"
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"

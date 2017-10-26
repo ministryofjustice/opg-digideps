@@ -1,6 +1,6 @@
 Feature: deputy / user / add client and report
 
-  @deputy @shaun
+  @deputy
   Scenario: update client (client name/case number already set)
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"

@@ -87,7 +87,6 @@ Feature: User Self Registration
       | 11112222 | Cross-Tolley  | D001      | Tolley      | SW1 3RF      | OPG102    |
       | 11113333 | Cross-Tolley2 | D002      | Tolley2     | SW1 3RF2     | OPG102    |
     And I press "self_registration_save"
-    Then the following fields should have an error:
     Then I should see a "#error-summary" element
     And I save the page as "selfreg-error-postcode"
       #
