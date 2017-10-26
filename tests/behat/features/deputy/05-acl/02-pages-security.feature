@@ -17,16 +17,15 @@ Feature: deputy / acl / security on pages
       | name    | Malicious        | User          |        |          |    |
       | address | 102 Petty France | MOJ           | London | SW1H 9AJ | GB |
       | phone   | 020 3334 3555    | 020 1234 5678 |        |          |    |
-    When I set the client details to:
+    When I set the client details with:
       | name       | Malicious      | Client      |            |         |    |
       | caseNumber | 12345ABC       |             |            |         |    |
       | courtDate  | 1              | 1           | 2016       |         |    |
       | address    | 1 South Parade | First Floor | Nottingham | NG1 2HT | GB |
       | phone      | 0123456789     |             |            |         |    |
-    And I set the report start date to "1/1/2016"
-    And I set the report end date to "1/1/2016"
-    Then I should see a "#error-summary" element
-
+    Then I press "client_save"
+    And the form should be invalid
+    And I should see a "#error-summary" element
 
   @deputy
   Scenario: Malicious User cannot access other's pages

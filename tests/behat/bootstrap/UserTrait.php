@@ -131,6 +131,27 @@ trait UserTrait
     }
 
     /**
+     * @When I set the client details with:
+     */
+    public function iSetTheClientDetailsWith(TableNode $table)
+    {
+        $this->visit('/client/add');
+        $rows = $table->getRowsHash();
+        $this->fillField('client_firstname', $rows['name'][0]);
+        $this->fillField('client_lastname', $rows['name'][1]);
+        $this->fillField('client_caseNumber', $rows['caseNumber'][0]);
+        $this->fillField('client_courtDate_day', $rows['courtDate'][0]);
+        $this->fillField('client_courtDate_month', $rows['courtDate'][1]);
+        $this->fillField('client_courtDate_year', $rows['courtDate'][2]);
+        $this->fillField('client_address', $rows['address'][0]);
+        $this->fillField('client_address2', $rows['address'][1]);
+        $this->fillField('client_county', $rows['address'][2]);
+        $this->fillField('client_postcode', $rows['address'][3]);
+        $this->fillField('client_country', $rows['address'][4]);
+        $this->fillField('client_phone', $rows['phone'][0]);
+    }
+
+    /**
      * @Then There should be a lay deputy account with id :userid awaiting activation
      */
     public function thereShouldBeAwaitingActivation($userid)
