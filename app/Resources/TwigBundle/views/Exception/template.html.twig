@@ -19,7 +19,11 @@ Available variables: status_code, status_text, exception, logger,currentContent 
 
     <p>{{ description }}</p>
 
-    <a class="home-link" href="{{path('homepage')}}">{{ 'returnToHomePage' | trans }}</a>
+    {% if app.user %}
+        <a class="home-link" href="{{path('homepage')}}">{{ 'error.backToHomePage' | trans }}</a>
+    {% else %}
+        <a class="home-link" href="{{path('homepage')}}">{{ 'error.createAccountOrSignIn' | trans }}</a>
+    {% endif %}
 
 
 {% endblock %}
