@@ -202,7 +202,7 @@
                                 } %}
 
                                 {% if report.isDue() and report.showBalanceWarning %}
-                                    <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
+                                    <li id="bank_accounts_not_balanced-section" class="section-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
                                             {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                                         </div>
