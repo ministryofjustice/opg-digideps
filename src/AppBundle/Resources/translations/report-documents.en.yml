@@ -33,7 +33,7 @@ attachPage:
   filename: File name
   dateAttached: Date attached
   deleteDocument: Remove
-  continueToSubmit: Continue to submit documents
+  continueToSubmit: Continue to send documents
   pleaseWait: The file is being uploaded.
   uploadHint: |
     If the file takes more than 5 minutes to upload, please refresh the page and try again.
@@ -74,13 +74,12 @@ summaryPage:
 submitMoreDocumentsConfirm:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   supportTitle: Attach documents
-  pageTitle: Submit your documents
+  pageTitle: Send your documents to OPG
   para01: |
-    Below are the documents you have attached but not submitted to OPG. When you have
-    finished attaching all documents you would like to send to OPG, please submit.
-  documentListPrevious: Documents you have already sent
+    Below are the documents you've attached but not yet sent to OPG. When you've finished
+    attaching your documents, please click send to submit them to us.
   documentList: Attached documents
   filename: Filename
   dateAttached: Date attached
   deleteDocument: Remove
-  submitButton: Submit documents
+  submitButton: Send documents
