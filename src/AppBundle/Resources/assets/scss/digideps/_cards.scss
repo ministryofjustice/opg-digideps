@@ -1,13 +1,13 @@
 // ==========================================================================
 // CARDS
-// This is the styling for the boxes on the NDR homepage
-// 'Card-list' is legacy, not longer used as such.
+// The report card styling on the 'Your reports' page
 
 .card {
     overflow: hidden;
     box-sizing: border-box;
     position: relative;
     min-height: 120px;
+    padding: 15px;
     border: 1px solid $border-colour;
 
     &.disabled {
