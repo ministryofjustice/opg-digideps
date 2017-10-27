@@ -4,7 +4,7 @@
     {% if user.firstName is empty %}
         {{ form_input(form.firstname, 'form.editYourDetails.controls.firstname') }}
     {% else %}
-        {{ form_input(form.firstname, 'form.editYourDetails.controls.firstname', {'formGroupClass':'visually-hidden'}) }}
+        {{ form_widget(form.firstname, {'type': 'hidden'}) }}
         <p class="flush--bottom">
             <strong class="bold">{{ 'form.editYourDetails.controls.firstname.label' | trans({}, translationDomain) }}: </strong>
             {{ user.firstName }}
@@ -16,7 +16,7 @@
     {% if user.lastname is empty %}
         {{ form_input(form.lastname, 'form.editYourDetails.controls.lastname') }}
     {% else %}
-        {{ form_input(form.lastname, 'form.editYourDetails.controls.lastname', {'formGroupClass':'visually-hidden'}) }}
+        {{ form_widget(form.lastname, {'type': 'hidden'}) }}
         <p class="push--bottom">
             <strong class="bold">{{ 'form.editYourDetails.controls.lastname.label' | trans({}, translationDomain) }}: </strong>
             {{ user.lastname }}
@@ -39,7 +39,7 @@
         {% if user.addressPostcode is empty or not client_validated %}
             {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', { 'inputClass': 'form-control-1-4' }) }}
         {% else %}
-            {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', {'formGroupClass':'visually-hidden'}) }}
+            {{ form_widget(form.addressPostcode, {'type': 'hidden'}) }}
             <p class="push--bottom">
                 <strong class="bold">{{ 'form.editYourDetails.controls.addressPostcode.label' | trans({}, translationDomain) }}: </strong>
                 {{ user.addressPostcode }}
@@ -63,7 +63,7 @@
     {% if user.email is empty %}
         {{ form_input(form.email, 'form.editYourDetails.controls.email') }}
     {% else %}
-        {{ form_input(form.email, 'form.editYourDetails.controls.email', {'formGroupClass':'visually-hidden'}) }}
+        {{ form_widget(form.email, {'type': 'hidden'}) }}
         <p class="push--bottom">
             <strong class="bold">{{ 'form.editYourDetails.controls.email.label' | trans({}, translationDomain) }}: </strong>
             {{ user.email }}

@@ -16,6 +16,9 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if client_validated %}
+        {{ form_widget(form.firstname, {'type': 'hidden'}) }}
+        {{ form_widget(form.lastname, {'type': 'hidden'}) }}
+
         <p class="flush--bottom">
             <strong class="bold">Name: </strong>
             {{ client.fullName }}
@@ -29,12 +32,10 @@
 
     <h2 class="heading-medium flush--top">{{ 'addClient.formHeading' | trans }}</h2>
 
-    {{ form_input(form.firstname, 'firstname', {
-        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
-    }) }}
-    {{ form_input(form.lastname, 'lastname', {
-        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
-    }) }}
+    {% if not client_validated %}
+        {{ form_input(form.firstname, 'firstname') }}
+        {{ form_input(form.lastname, 'lastname') }}
+    {% endif %}
 
     {{ form_input(form.address, 'address') }}
     {{ form_input(form.address2, 'address2') }}
@@ -44,8 +45,7 @@
         {% if client.postcode is empty or not client_validated %}
             {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
         {% else %}
-            {{ form_input(form.postcode, 'postcode', {'formGroupClass':'visually-hidden'}) }}
-
+            {{ form_widget(form.postcode, {'type': 'hidden'}) }}
             <p class="push--bottom">
             <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
                 {{ client.postcode }}
