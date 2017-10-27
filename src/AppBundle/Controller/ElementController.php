@@ -73,23 +73,7 @@ class ElementController extends AbstractController
      * @Route("/formcomponents", name="elements_form")
      * @Template("AppBundle:Element:forms.html.twig")
      */
-    public function formComponentsAction()
-    {
-        $client = [
-            'fullname' => 'Zac Tolley',
-        ];
-
-        $report = [
-            'id' => 1,
-            'period' => '2014 to 2015',
-            'client' => $client,
-        ];
-
-        return [
-            'report' => $report,
-            'client' => $client,
-        ];
-    }
+    public function formComponentsAction() { return []; }
 
     /**
      * @Route("/hero", name="elements_hero")
@@ -126,10 +110,10 @@ class ElementController extends AbstractController
     }
 
     /**
-     * @Route("/collection", name="elements_collection")
-     * @Template("AppBundle:Element:collection.html.twig")
+     * @Route("/components", name="elements_components")
+     * @Template("AppBundle:Element:components.html.twig")
      */
-    public function collectionAction() { return []; }
+    public function componentsAction() { return []; }
 
     /**
      * @Route("/alerts", name="elements_alerts")

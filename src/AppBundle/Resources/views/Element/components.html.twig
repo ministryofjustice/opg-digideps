@@ -1,0 +1,69 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block htmlTitle %}Components - Digideps Style Guide{% endblock %}
+{% block pageTitle %}Components{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">Digideps style guide</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="/elements">Digideps style guide</a></li>
+            <li>Components</li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block pageContent %}
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+
+<div class="grid-row">
+    <div class="column-full">
+        <h2 class="heading-large">Cards</h2>
+        <div class="example">
+
+            <div class="card">
+                <span class="status status-corner incomplete">Not finished</span>
+                <h3 class="heading-medium flush--ends">
+                    <a href="#">2016 report</a>
+                </h3>
+                <div class="card-body">
+                    <p>
+                        <strong class="bold">Due date: </strong>
+                         30 June 2016
+                    </p>
+                    <a href="#">Edit reporting period</a>
+                </div>
+                <div class="card-actions">
+                    <a href="#" class="button">Continue</a>
+                </div>
+            </div>
+
+        </div>
+
+        <pre><code class="language-markup">&lt;div class=&quot;card&quot;&gt;
+    &lt;span class=&quot;status status-corner incomplete&quot;&gt;Not finished&lt;/span&gt;
+    &lt;h3 class=&quot;heading-medium flush--ends&quot;&gt;
+        &lt;a href=&quot;#&quot;&gt;2016 report&lt;/a&gt;
+    &lt;/h3&gt;
+    &lt;div class=&quot;card-body&quot;&gt;
+        &lt;p&gt;
+            &lt;strong class=&quot;bold&quot;&gt;Due date: &lt;/strong&gt;
+             30 June 2016
+        &lt;/p&gt;
+        &lt;a href=&quot;#&quot;&gt;Edit reporting period&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;card-actions&quot;&gt;
+        &lt;a href=&quot;#&quot; class=&quot;button&quot;&gt;Continue&lt;/a&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+    </div>
+</div>
+
+<script src="/prism/prism.js"></script>
+{% endblock %}
