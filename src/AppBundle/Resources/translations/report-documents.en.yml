@@ -13,7 +13,7 @@ form:
 
 removeDocument:
   htmlTitle: Deputy report - supporting documents | GOV.UK
-  h1Title: Remove document
+  pageTitle: Remove document
   supportTitle: "Supporting documents"
   question: Are you sure you want to remove this document?
   documentFilename: File name
