@@ -71,6 +71,11 @@
 
 
             </ul>
+        {# if the user is logged out due to API failure #}
+        {% elseif isExceptionPage | default(false) %}
+            <ul id="proposition-links" class="behat-region-navbar">
+                <li><a href="{{ path('homepage') }}" class="behat-link-reports reports-link">{{ 'nav.homepage' | trans }}</a></li>
+            </ul>
         {% endif %}
     </nav>
 {% endblock %}
