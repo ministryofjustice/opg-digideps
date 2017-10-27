@@ -150,6 +150,8 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData();
 
+        $client_validated = $this->getFirstClient() instanceof EntityDir\Client;
+
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
@@ -168,6 +170,7 @@ class UserController extends AbstractController
         }
 
         return [
+            'client_validated' => $client_validated,
             'form' => $form->createView(),
             'user' => $user
         ];

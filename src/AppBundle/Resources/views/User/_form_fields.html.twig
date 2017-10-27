@@ -36,7 +36,7 @@
     {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}
 
     {% if form.addressPostcode is defined %}
-        {% if user.addressPostcode is empty %}
+        {% if user.addressPostcode is empty or not client_validated %}
             {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', { 'inputClass': 'form-control-1-4' }) }}
         {% else %}
             {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', {'formGroupClass':'visually-hidden'}) }}
