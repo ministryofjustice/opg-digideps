@@ -313,7 +313,7 @@ class DocumentController extends AbstractController
         // submit the report to generate the submission entry only
         $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
-        $request->getSession()->getFlashBag()->add('notice', 'The attached documents for your 2016 to 2017 report have been sent to OPG');
+        $request->getSession()->getFlashBag()->add('notice', 'The documents attached to your 2016 to 2017 report have been sent to OPG');
 
         if ($this->getUser()->isDeputyPa()) {
             return $this->redirect($this->generateClientProfileLink($report->getClient()));
