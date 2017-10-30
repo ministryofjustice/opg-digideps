@@ -44,7 +44,11 @@ class CasrecVerificationService
         $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($crMatches, $deputyPostcode);
 
         if (count($this->lastMatchedCasrecUsers) == 0) {
-            throw new \RuntimeException('User registration: no matching record in casrec', 400);
+            throw new \RuntimeException('User registration: no matching record in casrec. Matched: ' . count($crMatches) .' Looking up:' .
+            ' Case Number: ' . $this->normaliseCaseNumber($caseNumber) .
+            ' Client Last name: ' . $this->normaliseSurname($clientSurname) .
+            ' Deputy surname:' . $this->normaliseSurname($deputySurname) .
+            ' Filtered by deputy postcode: ' . $deputyPostcode, 400);
         }
 
         return true;
