@@ -48,7 +48,7 @@ class DocumentService
     {
         $reportSubmissions = $this->restClient->apiCall('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false);
         $toDelete = count($reportSubmissions);
-        $this->log('info', "$toDelete old report submission found");
+        $this->log('notice', "$toDelete old report submission found");
         foreach($reportSubmissions as $reportSubmission) {
             try {
                 $reportSubmissionId = $reportSubmission->getId();
@@ -58,13 +58,13 @@ class DocumentService
                 }
                 // set report as undownloadable
                 $this->restClient->apiCall('PUT', 'report-submission/' .$reportSubmissionId. '/set-undownloadable', null, 'array', [], false);
-                $this->log('info', "report submission $reportSubmissionId set undownloadable, and its documents storage ref set to null");
+                $this->log('notice', "report submission $reportSubmissionId set undownloadable, and its documents storage ref set to null");
             } catch (\Exception $e) {
                 $message = "can't cleanup $reportSubmissionId submission. Error: " . $e->getMessage();
                 $this->log('error', $message);
             }
         }
-        $this->log('info', "Done");
+        $this->log('notice', "Done");
     }
 
     /**
@@ -76,12 +76,12 @@ class DocumentService
         $toDelete = count($documents);
         $count = 0;
         /* @var $documents Document[] */
-        $this->log('info', count($documents) . ' documents to delete:');
+        $this->log('notice', count($documents) . ' documents to delete:');
         foreach ($documents as $document) {
             $count += $this->removeSoftDeleteSingle($document, $ignoreS3Failure) ? 1 : 0;
         }
 
-        $this->log('info', "Done. $toDelete to hard-delete, $count deleted");
+        $this->log('notice', "Done. $toDelete to hard-delete, $count deleted");
     }
 
     /**
@@ -98,14 +98,14 @@ class DocumentService
         try {
             $s3Result = $this->deleteFromS3($storageRef, $ignoreS3Failure);
             if ($s3Result) {
-                $this->log('info', "deleting $storageRef from S3: success");
+                $this->log('notice', "deleting $storageRef from S3: success");
             } else {
                 $this->log('error', "deleting $storageRef from S3: " . (($ignoreS3Failure ? 'FAIL (ignored)' : 'FAIL')));
             }
 
             $endpointResult = $this->restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
             if ($endpointResult) {
-                $this->log('info', "Document $documentId deleted successfully from db");
+                $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
             } else {
                 $this->log('error', "Document $documentId delete API failure");
             }
