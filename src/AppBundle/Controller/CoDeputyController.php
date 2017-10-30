@@ -86,7 +86,8 @@ class CoDeputyController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'user' => $user
+            'user' => $user,
+            'client_validated' => false
         ];
     }
 

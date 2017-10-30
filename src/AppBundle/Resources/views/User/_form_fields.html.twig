@@ -1,7 +1,7 @@
 {% set translationDomain = "settings" %}
 
 {% if form.firstname is defined %}
-    {% if user.firstName is empty %}
+    {% if user.firstName is empty or not client_validated %}
         {{ form_input(form.firstname, 'form.editYourDetails.controls.firstname') }}
     {% else %}
         {{ form_widget(form.firstname, {'type': 'hidden'}) }}
@@ -13,7 +13,7 @@
 {%  endif %}
 
 {% if form.lastname is defined %}
-    {% if user.lastname is empty %}
+    {% if user.lastname is empty or not client_validated %}
         {{ form_input(form.lastname, 'form.editYourDetails.controls.lastname') }}
     {% else %}
         {{ form_widget(form.lastname, {'type': 'hidden'}) }}
