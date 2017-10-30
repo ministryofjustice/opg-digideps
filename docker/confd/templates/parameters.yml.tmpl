@@ -13,7 +13,7 @@ parameters:
     session_prefix: dd_session
     use_redis: true
     session_engine: redis
-    log_level: warning
+    log_level: notice
     log_path: /var/log/app/application.log
     ga: {{ getv "/frontend/ga" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
