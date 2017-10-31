@@ -90,10 +90,9 @@ class ClientController extends AbstractController
         if ($form->isValid()) {
 
             try {
-                if (! $user->isOdrEnabled()) {
-                    // validate against casRec
-                    $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
-                }
+                // validate against casRec
+                $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
+
                 // $method is set above to either post or put
                 $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
