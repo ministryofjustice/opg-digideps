@@ -8,7 +8,7 @@ editContact:
   supportTitle: "Client profile:"
 removeContact:
   htmlTitle: Client profile - remove contact | GOV.UK
-  h1Title: Remove contact
+  pageTitle: Remove contact
   supportTitle: "Client profile:"
   question: Are you sure you want to remove this contact?
   organisation: "Organisation:"

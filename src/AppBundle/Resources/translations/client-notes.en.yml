@@ -8,7 +8,7 @@ editNote:
   supportTitle: "Client profile:"
 removeNote:
   htmlTitle: Client profile - remove note | GOV.UK
-  h1Title: Remove note
+  pageTitle: Remove note
   supportTitle: "Client profile:"
   question: Are you sure you want to remove this note?
   noteTitle: "Title:"

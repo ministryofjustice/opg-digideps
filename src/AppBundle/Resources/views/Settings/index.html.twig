@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ (app.user.isDeputyPa() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
-{% block pageTitle %}{{ (app.user.isDeputyPa() ? 'h1Title.pa-settings-page'   : 'h1Title.settings-page')   | trans }}{% endblock %}
+{% block pageTitle %}{{ (app.user.isDeputyPa() ? 'pageTitle.pa-settings-page'   : 'pageTitle.settings-page')   | trans }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings') }}
