@@ -16,7 +16,7 @@ trait ReportDebtsTrait
      *
      * @var Debt[]
      */
-    private $debts;
+    private $debts = [];
 
     /**
      * @JMS\Type("string")

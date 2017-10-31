@@ -13,7 +13,7 @@ trait ReportBankAccountsTrait
      *
      * @var BankAccount[]
      */
-    private $bankAccounts;
+    private $bankAccounts = [];
 
     /**
      * @JMS\Type("double")

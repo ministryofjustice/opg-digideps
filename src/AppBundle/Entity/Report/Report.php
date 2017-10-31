@@ -327,10 +327,13 @@ class Report
 
     /**
      * @param string $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -818,7 +821,8 @@ class Report
     }
 
     /**
-     * @param bool
+     * @param bool $noTransfersToAdd
+     * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
     {
