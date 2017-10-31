@@ -124,25 +124,25 @@ class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
         try {
             $this->casrecVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
         } catch(\RuntimeException $e) {
-            $this->assertEquals($failMessage, $e->getMessage());
+            $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
         } catch(\RuntimeException $e) {
-            $this->assertEquals($failMessage, $e->getMessage());
+            $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
         } catch(\RuntimeException $e) {
-            $this->assertEquals($failMessage, $e->getMessage());
+            $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
         } catch(\RuntimeException $e) {
-            $this->assertEquals($failMessage, $e->getMessage());
+            $this->assertContains($failMessage, $e->getMessage());
         }
     }
 
@@ -179,7 +179,7 @@ class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
         } catch(\RuntimeException $e) {
-            $this->assertEquals('User registration: no matching record in casrec', $e->getMessage());
+            $this->assertContains('User registration: no matching record in casrec', $e->getMessage());
         }
 
         // but if one MLD in casrec, the postcode check is skipped
