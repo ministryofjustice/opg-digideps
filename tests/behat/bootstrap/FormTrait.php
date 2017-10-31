@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Element\NodeElement;
 
 trait FormTrait
 {
@@ -84,9 +85,31 @@ trait FormTrait
     public function followingFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
     {
         foreach ($fields->getRowsHash() as $field => $value) {
+
             $this->assertFieldContains($field, $value);
         }
     }
+
+    /**
+     * @Then the following hidden fields should have the corresponding values:
+     */
+    public function theFollowingHiddenFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
+    {
+        foreach ($fields->getRowsHash() as $field => $value) {
+
+            /** @var NodeElement $elementsFound */
+            $elementsFound = $this->getSession()->getPage()->find('css', '#'.$field);
+
+            if (empty($elementsFound)) {
+                throw new \RuntimeException("Element $field not found");
+            }
+            if ($elementsFound->getAttribute('value') != $value) {
+                throw new \RuntimeException("Element $field value not equal to $value");
+            }
+
+        }
+    }
+
 
     /**
      * Fills in form field with specified id|name|label|value.
