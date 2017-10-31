@@ -150,7 +150,7 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData();
 
-        $client_validated = $this->getFirstClient() instanceof EntityDir\Client;
+        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isPaDeputy();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);

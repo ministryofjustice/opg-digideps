@@ -115,9 +115,13 @@ trait UserTrait
     {
         $this->visit('/client/add');
         $rows = $table->getRowsHash();
-        if (array_key_exists('name', $rows)) {
-            $this->fillField('client_firstname', $rows['name'][0]);
-            $this->fillField('client_lastname', $rows['name'][1]);
+        if (isset($rows['name'])) {
+            if (trim($rows['name'][0]) != 'PREFILLED') {
+                $this->fillField('client_firstname', $rows['name'][0]);
+            }
+            if (trim($rows['name'][1]) != 'PREFILLED') {
+                $this->fillField('client_lastname', $rows['name'][1]);
+            }
         }
         if (array_key_exists('caseNumber', $rows)) {
             $this->fillField('client_caseNumber', $rows['caseNumber'][0]);
@@ -128,7 +132,9 @@ trait UserTrait
         $this->fillField('client_address', $rows['address'][0]);
         $this->fillField('client_address2', $rows['address'][1]);
         $this->fillField('client_county', $rows['address'][2]);
-        $this->fillField('client_postcode', $rows['address'][3]);
+        if (trim($rows['address'][3]) != 'PREFILLED') {
+            $this->fillField('client_postcode', $rows['address'][3]);
+        }
         $this->fillField('client_country', $rows['address'][4]);
         $this->fillField('client_phone', $rows['phone'][0]);
 

@@ -12,7 +12,7 @@ Feature: deputy / report / edit user
              | profile_address1 | 102 Petty France |
              | profile_address2 | MOJ |
              | profile_address3 | London |
-             | profile_addressPostcode | p0stc0d3 |
+             | profile_addressPostcode | P0ST C0D3 |
              | profile_addressCountry | GB |
              | profile_phoneMain | 020 3334 3555  |
              | profile_phoneAlternative | 020 1234 5678  |

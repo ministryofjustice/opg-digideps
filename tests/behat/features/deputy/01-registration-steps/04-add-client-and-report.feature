@@ -1,12 +1,12 @@
 Feature: deputy / user / add client and report
 
   @deputy
-  Scenario: update client (client name/case number already set)
+  Scenario: update client (client name/case number/postcode already set)
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
     And I save the page as "deputy-step3"
     # submit empty form and check errors
-    Then the following fields should have the corresponding values:
+    Then the following hidden fields should have the corresponding values:
       | client_firstname  | Cly      |
       | client_lastname   | Hent     |
       | client_caseNumber | behat001 |
@@ -36,7 +36,6 @@ Feature: deputy / user / add client and report
       | client_address         |
       | client_address2        |
       | client_county          |
-      | client_postcode        |
       | client_phone           |
     And I save the page as "deputy-step3-errors"
       # right values
@@ -48,17 +47,18 @@ Feature: deputy / user / add client and report
       | phone      | 0123456789     |             |            |         |    |
     Then the URL should match "report/create/\d+"
     When I go to "client/add"
-    Then the following fields should have the corresponding values:
-      | client_firstname       | Cly          |
-      | client_lastname        | Hent          |
-      | client_caseNumber      | behat001       |
+    Then the following hidden fields should have the corresponding values:
+      | client_firstname  | Cly      |
+      | client_lastname   | Hent     |
+      | client_caseNumber | behat001 |
+      | client_postcode   | NG1 2HT  |
+    And the following fields should have the corresponding values:
       | client_courtDate_day   | 01             |
       | client_courtDate_month | 01             |
       | client_courtDate_year  | 2016           |
       | client_address         | 1 South Parade |
       | client_address2        | First Floor    |
       | client_county          | Nottingham     |
-      | client_postcode        | NG1 2HT        |
       | client_country         | GB             |
       | client_phone           | 0123456789     |
 

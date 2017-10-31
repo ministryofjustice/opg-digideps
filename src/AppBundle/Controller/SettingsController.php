@@ -119,6 +119,7 @@ class SettingsController extends AbstractController
         return [
             'user'   => $user,
             'form'   => $form->createView(),
+            'client_validated' => false // to allow change of name/postcode/email
         ];
     }
 

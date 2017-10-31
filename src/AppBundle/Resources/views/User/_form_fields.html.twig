@@ -60,7 +60,7 @@
 
 
 {% if form.email is defined %}
-    {% if user.email is empty %}
+    {% if user.email is empty or not client_validated %}
         {{ form_input(form.email, 'form.editYourDetails.controls.email') }}
     {% else %}
         {{ form_widget(form.email, {'type': 'hidden'}) }}
