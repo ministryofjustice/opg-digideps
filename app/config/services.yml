@@ -14,9 +14,14 @@ services:
         tags:
             - { name: doctrine.event_listener, event: prePersist, method: prePersist }
             - { name: doctrine.event_listener, event: preRemove, method: preRemove }
+
+    opg_digideps.casrec_verification_service:
+        class: AppBundle\Service\CasrecVerificationService
+        arguments: [ "@em" ]
+
     user_registration_service:
         class: AppBundle\Service\UserRegistrationService
-        arguments: [ "@em" ]
+        arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
     opg_digideps.user_service:
         class: AppBundle\Service\UserService

@@ -7,6 +7,7 @@ use AppBundle\Service\CsvUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 /**
  * @Route("/casrec")
@@ -109,6 +110,29 @@ class CasRecController extends RestController
 
         return ['added' => $added - 1, 'errors' => $retErrors];
     }
+
+
+    /**
+     * Verify Deputy & Client last names, Postcode, and Case Number
+     *
+     * @Route("/verify")
+     * @Method({"POST"})
+     */
+    public function verify(Request $request)
+    {
+        $clientData = $this->deserializeBodyContent($request);
+        $user = $this->getUser();
+
+        $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
+            ->validate ( $clientData['case_number']
+                       , $clientData['lastname']
+                       , $user->getLastname()
+                       , $user->getAddressPostcode()
+            );
+
+        return ['verified' => $casrecVerified];
+    }
+
 
     /**
      * @Route("/count")

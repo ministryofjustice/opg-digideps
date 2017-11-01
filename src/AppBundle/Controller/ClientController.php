@@ -36,7 +36,6 @@ class ClientController extends RestController
             }
         }
 
-
         $this->hydrateEntityWithArrayData($client, $data, [
             'firstname'   => 'setFirstname',
             'lastname'    => 'setLastname',
