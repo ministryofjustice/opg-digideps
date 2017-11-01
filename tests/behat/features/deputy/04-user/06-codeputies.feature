@@ -157,13 +157,13 @@ Feature: Codeputy Self Registration
     And I click on "invite-codeputy-button"
     Then the URL should match "/codeputy/\d+/add"
     When I fill in the following:
-      | co_deputy_invite_email       | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | co_deputy_invite_email       | behat-jack.goodby+mld2@gmail.com |
     And I press "co_deputy_invite_submit"
     Then the URL should match "/lay"
-    And I should see "behat-jack.goodby+mld2@digital.justice.gov.uk" in the "codeputies" region
+    And I should see "behat-jack.goodby+mld2@gmail.com" in the "codeputies" region
     And I should see "Awaiting registration" in the "codeputies" region
     And I should see "Edit/Resend invite" in the "codeputies" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@digital.justice.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@gmail.com"
 
   @deputy
   Scenario: The first co-deputy re-invites a deputy (same email address)
@@ -173,10 +173,10 @@ Feature: Codeputy Self Registration
     And I click on "resend-invite"
     When I press "co_deputy_invite_submit"
     Then the URL should match "/lay"
-    And I should see "behat-jack.goodby+mld2@digital.justice.gov.uk" in the "codeputies" region
+    And I should see "behat-jack.goodby+mld2@gmail.com" in the "codeputies" region
     And I should see "Awaiting registration" in the "codeputies" region
     And I should see "Edit/Resend invite" in the "codeputies" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@digital.justice.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@gmail.com"
 
   @deputy
   Scenario: A second codeputy of a client is unable to self register (invite not yet sent)
@@ -185,8 +185,8 @@ Feature: Codeputy Self Registration
     When I fill in the following:
       | self_registration_firstname       | Bob                                           |
       | self_registration_lastname        | Hale                                          |
-      | self_registration_email_first     | behat-jack.goodby+mld2@digital.justice.gov.uk |
-      | self_registration_email_second    | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_email_first     | behat-jack.goodby+mld2@gmail.com |
+      | self_registration_email_second    | behat-jack.goodby+mld2@gmail.com |
       | self_registration_postcode        | DY8 1QR                                       |
       | self_registration_clientFirstname | Patricia                                      |
       | self_registration_clientLastname  | Jarvis                                        |
@@ -218,8 +218,8 @@ Feature: Codeputy Self Registration
     When I fill in the following:
       | self_registration_firstname       | Bob                                           |
       | self_registration_lastname        | Hale                                          |
-      | self_registration_email_first     | behat-jack.goodby+mld2@digital.justice.gov.uk |
-      | self_registration_email_second    | behat-jack.goodby+mld2@digital.justice.gov.uk |
+      | self_registration_email_first     | behat-jack.goodby+mld2@gmail.com |
+      | self_registration_email_second    | behat-jack.goodby+mld2@gmail.com |
       | self_registration_postcode        | DY8 1QR                                       |
       | self_registration_clientFirstname | Patricia                                      |
       | self_registration_clientLastname  | Jarvis                                        |
