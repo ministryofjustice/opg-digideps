@@ -74,30 +74,53 @@ class ClientController extends AbstractController
         $client = $this->getFirstClient();
         if (!empty($client)) {
             // update existing client
-            $method = 'put';
             $client = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $method = 'put';
+            $client_validated = true;
         } else {
             // new client
-            $method = 'post';
             $client = new EntityDir\Client();
+            $method = 'post';
+            $client_validated = false;
         }
 
-        $form = $this->createForm(new FormDir\ClientType(), $client);
+        $form = $this->createForm(new FormDir\ClientType(['client_validated' => $client_validated]), $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $response = ($method === 'post')
-                      ? $this->getRestClient()->post('client/upsert', $form->getData())
-                      : $this->getRestClient()->put('client/upsert', $form->getData());
 
-            $url = $this->getUser()->isOdrEnabled() ?
-                $this->generateUrl('odr_index')
-                : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+            try {
+                // validate against casRec
+                $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
 
-            return $this->redirect($url);
+                // $method is set above to either post or put
+                $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
+
+                $url = $this->getUser()->isOdrEnabled()
+                    ? $this->generateUrl('odr_index')
+                    : $this->generateUrl('report_create', ['clientId' => $response['id']]);
+                return $this->redirect($url);
+
+            } catch (\Exception $e) {
+                $translator = $this->get('translator');
+                switch ((int)$e->getCode()) {
+                    case 400:
+                        $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
+                        break;
+
+                    default:
+                        $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
+                }
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+            }
         }
 
-        return ['form' => $form->createView()];
+        return [
+            'form' => $form->createView(),
+            'client_validated' => $client_validated,
+            'client' => $client
+        ];
+
     }
 
 }

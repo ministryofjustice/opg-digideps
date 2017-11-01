@@ -84,19 +84,19 @@ Feature: Report submit
         Then I should see the "report-submission" region exactly 1 times
         # test search
         When I fill in the following:
-            | search | 12345abc |
+            | search | behat001 |
             | created_by_role | ROLE_PA |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 0 times
         When I fill in the following:
-            | search | 12345abc |
+            | search | behat001 |
             | created_by_role | ROLE_LAY_DEPUTY |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 1 times
         # assert submission and download
         Given each text should be present in the corresponding region:
-            | Peter White | report-submission-1 |
-            | 12345abc | report-submission-1 |
+            | Cly Hent | report-submission-1 |
+            | behat001 | report-submission-1 |
             | 4 documents | report-submission-1 |
         When I click on "download" in the "report-submission-1" region
         Then the page content should be a zip file containing files with the following files:
@@ -110,8 +110,8 @@ Feature: Report submit
         When I click on "tab-archived"
         Then I should see the "report-submission" region exactly 1 times
         And each text should be present in the corresponding region:
-            | Peter White | report-submission-1 |
-            | 12345abc | report-submission-1 |
+            | Cly Hent | report-submission-1 |
+            | behat001 | report-submission-1 |
             | 4 documents | report-submission-1 |
             | AU | report-submission-1 |
 
@@ -153,9 +153,9 @@ Feature: Report submit
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I click on "report-review"
         Then the URL should match "report/\d+/review"
-        And the response should contain "12345ABC"
-        And the response should contain "Peter"
-        And the response should contain "White"
+        And the response should contain "behat001"
+        And the response should contain "Cly"
+        And the response should contain "Hent"
         # assert documents
         And I should see "file1.pdf" in the "document-list" region
         #And I should see "file2.pdf" in the "document-list" region

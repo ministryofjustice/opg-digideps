@@ -79,15 +79,22 @@ trait UserTrait
     {
         $this->visit('/user/details');
         $rows = $table->getRowsHash();
-
-        $this->fillField('user_details_firstname', $rows['name'][0]);
-        $this->fillField('user_details_lastname', $rows['name'][1]);
+        if (isset($rows['name'])) {
+            if (trim($rows['name'][0]) != 'PREFILLED') {
+                $this->fillField('user_details_firstname', $rows['name'][0]);
+            }
+            if (trim($rows['name'][1]) != 'PREFILLED') {
+                $this->fillField('user_details_lastname', $rows['name'][1]);
+            }
+        }
 
         if (isset($rows['address'])) {
             $this->fillField('user_details_address1', $rows['address'][0]);
             $this->fillField('user_details_address2', $rows['address'][1]);
             $this->fillField('user_details_address3', $rows['address'][2]);
-            $this->fillField('user_details_addressPostcode', $rows['address'][3]);
+            if (trim($rows['address'][3]) != 'PREFILLED') {
+                $this->fillField('user_details_addressPostcode', $rows['address'][3]);
+            }
             $this->fillField('user_details_addressCountry', $rows['address'][4]);
         }
 
@@ -108,6 +115,49 @@ trait UserTrait
     {
         $this->visit('/client/add');
         $rows = $table->getRowsHash();
+        if (isset($rows['name'])) {
+            if (trim($rows['name'][0]) != 'PREFILLED') {
+                $this->fillField('client_firstname', $rows['name'][0]);
+            }
+            if (trim($rows['name'][1]) != 'PREFILLED') {
+                $this->fillField('client_lastname', $rows['name'][1]);
+            }
+        }
+        if (array_key_exists('caseNumber', $rows)) {
+            $this->fillField('client_caseNumber', $rows['caseNumber'][0]);
+        }
+        $this->fillField('client_courtDate_day', $rows['courtDate'][0]);
+        $this->fillField('client_courtDate_month', $rows['courtDate'][1]);
+        $this->fillField('client_courtDate_year', $rows['courtDate'][2]);
+        $this->fillField('client_address', $rows['address'][0]);
+        $this->fillField('client_address2', $rows['address'][1]);
+        $this->fillField('client_county', $rows['address'][2]);
+        if (trim($rows['address'][3]) != 'PREFILLED') {
+            $this->fillField('client_postcode', $rows['address'][3]);
+        }
+        $this->fillField('client_country', $rows['address'][4]);
+        $this->fillField('client_phone', $rows['phone'][0]);
+
+        $this->pressButton('client_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @When I set the client details with:
+     */
+    public function iSetTheClientDetailsWith(TableNode $table)
+    {
+        $this->visit('/client/add');
+        $rows = $table->getRowsHash();
+        if (isset($rows['name'])) {
+            if ($rows['name'][0] !== 'PREFILLED') {
+                $this->fillField('client_firstname', $rows['name'][0]);
+            }
+            if (isset($rows['name']) && $rows['name'][1] !== 'PREFILLED') {
+                $this->fillField('client_lastname', $rows['name'][1]);
+            }
+        }
         $this->fillField('client_firstname', $rows['name'][0]);
         $this->fillField('client_lastname', $rows['name'][1]);
         $this->fillField('client_caseNumber', $rows['caseNumber'][0]);
@@ -117,13 +167,11 @@ trait UserTrait
         $this->fillField('client_address', $rows['address'][0]);
         $this->fillField('client_address2', $rows['address'][1]);
         $this->fillField('client_county', $rows['address'][2]);
-        $this->fillField('client_postcode', $rows['address'][3]);
+        if ($rows['address'][3] !== 'PREFILLED') {
+            $this->fillField('client_postcode', $rows['address'][3]);
+        }
         $this->fillField('client_country', $rows['address'][4]);
         $this->fillField('client_phone', $rows['phone'][0]);
-
-        $this->pressButton('client_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
     }
 
     /**

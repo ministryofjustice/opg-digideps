@@ -35,6 +35,7 @@ Feature: Browser - add and activate user
       | courtDate  | 1              | 1           | 2014       |         |    |
       | address    | 1 South Parade | First Floor | Nottingham | NG1 2HT | GB |
       | phone      | 0123456789     |             |            |         |    |
+    Then the form should be valid
     And I pause
     And I save the page as "report-period"
     Then I fill in the following:

@@ -150,6 +150,8 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData();
 
+        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyPa();
+
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
@@ -168,6 +170,7 @@ class UserController extends AbstractController
         }
 
         return [
+            'client_validated' => $client_validated,
             'form' => $form->createView(),
             'user' => $user
         ];
@@ -255,7 +258,7 @@ class UserController extends AbstractController
                         $form->get('email')->get('first')->addError(new FormError($translator->trans('email.first.existingError', [], 'register')));
                         break;
 
-                    case 421:
+                    case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
                         break;
 
@@ -318,15 +321,15 @@ class UserController extends AbstractController
         switch ($user->getRoleName()) {
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
-                return [new FormDir\User\UserDetailsBasicType(), ['user_details_basic']];
+                return [new FormDir\User\UserDetailsBasicType($user), ['user_details_basic']];
 
             case EntityDir\User::ROLE_LAY_DEPUTY:
-                return [new FormDir\User\UserDetailsFullType(), ['user_details_full']];
+                return [new FormDir\User\UserDetailsFullType($user), ['user_details_full']];
 
             case EntityDir\User::ROLE_PA:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                return [new FormDir\User\UserDetailsPaType(), ['user_details_pa']];
+                return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
         }
     }
 }
