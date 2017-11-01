@@ -24,7 +24,7 @@ trait ReportGiftTrait
      *
      * @var Gift[]
      */
-    private $gifts;
+    private $gifts = [];
 
     /**
      * @return string

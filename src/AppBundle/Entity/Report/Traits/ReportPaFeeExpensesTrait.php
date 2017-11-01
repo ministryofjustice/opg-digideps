@@ -15,7 +15,7 @@ trait ReportPaFeeExpensesTrait
      *
      * @var Fee[]
      */
-    private $fees;
+    private $fees = [];
 
     /**
      * @JMS\Type("string")

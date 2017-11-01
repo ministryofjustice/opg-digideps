@@ -23,7 +23,7 @@ trait ReportDeputyExpenseTrait
      *
      * @var Expense[]
      */
-    private $expenses;
+    private $expenses = [];
 
     /**
      * @JMS\Type("double")

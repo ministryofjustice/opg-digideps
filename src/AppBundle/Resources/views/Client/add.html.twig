@@ -3,8 +3,8 @@
 {% set translationDomain = "registration" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
-{% block pageTitle %}{{ 'addClient.h1Title' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'addClient.htmlTitle' | trans }} {% endblock %}
+{% block pageTitle %}{{ 'addClient.pageTitle' | trans }}{% endblock %}
 
 {% block progressBar %}
      {{ progress_bar_registration(app.user, 'client_details') }}
