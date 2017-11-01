@@ -18,6 +18,7 @@
     {% if client_validated %}
         {{ form_widget(form.firstname, {'type': 'hidden'}) }}
         {{ form_widget(form.lastname, {'type': 'hidden'}) }}
+        {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
 
         <p class="flush--bottom">
             <strong class="bold">Name: </strong>
@@ -28,9 +29,7 @@
             <strong class="bold">Case number: </strong>
             {{ client.caseNumber }}
         </p>
-    {% endif %}
-
-    {% if not client_validated %}
+    {% else %}
         {{ form_input(form.firstname, 'firstname') }}
         {{ form_input(form.lastname, 'lastname') }}
     {% endif %}
@@ -54,10 +53,12 @@
     {{ form_select(form.country, 'country') }}
     {{ form_input(form.phone, 'phone') }}
 
-    {{ form_input(form.caseNumber, 'caseNumber', {
-        'labelRaw': true,
-        'formGroupClass': (client_validated) ? 'visually-hidden' : ''
-    }) }}
+    {% if not client_validated %}
+        {{ form_input(form.caseNumber, 'caseNumber', {
+            'labelRaw': true
+        }) }}
+    {% endif %}
+
     {{ form_known_date(form.courtDate, 'courtDate') }}
 
     {{ form_submit(form.save,'saveAndContinue') }}
