@@ -493,7 +493,7 @@ odr:
       amount:
         notNumeric: Use numbers only to enter the amount
         minMessage: The amount must be more than £{{ limit }}
-        maxMessage: The amount must be less than £10,000,000
+        maxMessage: The amount must be less than £100,000,000
       moreDetails:
         notEmpty: You must give us more information about this amount
       atLeastOne: You must add at least one debt
