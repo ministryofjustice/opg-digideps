@@ -79,7 +79,7 @@ class User implements AdvancedUserInterface
      * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "user_details_full", "user_details_pa", "pa_team_add", "password_reset", "codeputy_invite", "verify-codeputy"} )
      * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"}, checkMX=false, checkHost=false )
      * @Assert\Length( max=60, maxMessage="user.email.maxLength", groups={"admin_add_user", "password_reset", "user_details_full", "user_details_pa", "pa_team_add", "codeputy_invite", "verify-codeputy"} )
-     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa", "codeputy_invite", "verify-codeputy"})
+     * @EmailSameDomain( message="user.email.invalidDomain", groups={"pa_team_add", "user_details_full", "user_details_pa"})
      *
      * @var string
      */
