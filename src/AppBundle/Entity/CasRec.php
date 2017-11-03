@@ -192,23 +192,16 @@ class CasRec
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
 
-    /**
-     * @param string $caseNumber
-     * @param string $clientLastname
-     * @param string $deputyNo
-     * @param string $deputySurname
-     * @param string $deputyPostCode
-     * @param string $typeOfReport
-     */
-    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport, $corref, array $row = [])
+
+    public function __construct(array $row)
     {
-        $this->caseNumber = self::normaliseCaseNumber($caseNumber);
-        $this->clientLastname = self::normaliseSurname($clientLastname);
-        $this->deputyNo = self::normaliseDeputyNo($deputyNo);
-        $this->deputySurname = self::normaliseSurname($deputySurname);
-        $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
-        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($typeOfReport);
-        $this->corref = self::normaliseCorrefAndTypeOfRep($corref);
+        $this->caseNumber = self::normaliseCaseNumber($row['Case']);
+        $this->clientLastname = self::normaliseSurname($row['Surname']);
+        $this->deputyNo = self::normaliseDeputyNo( $row['Deputy No']);
+        $this->deputySurname = self::normaliseSurname($row['Dep Surname']);
+        $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
+        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep( $row['Typeofrep']);
+        $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
 
         $this->otherColumns = serialize($row);
     }
@@ -345,5 +338,10 @@ class CasRec
     public function getOtherColumns()
     {
         return unserialize($this->otherColumns);
+    }
+
+    public function toArray()
+    {
+        return $this->getOtherColumns();
     }
 }

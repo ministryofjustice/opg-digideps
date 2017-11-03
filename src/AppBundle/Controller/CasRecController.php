@@ -70,16 +70,7 @@ class CasRecController extends RestController
 
             foreach ($data as $dataIndex => $row) {
                 //  Create a CasRec entity from the data and add it to the array of entities
-                $casRecEntities[] = $casRecEntity = new EntityDir\CasRec(
-                    $row['Case'],
-                    $row['Surname'],
-                    $row['Deputy No'],
-                    $row['Dep Surname'],
-                    $row['Dep Postcode'],
-                    $row['Typeofrep'],
-                    $row['Corref'],
-                    $row
-                );
+                $casRecEntities[] = $casRecEntity = new EntityDir\CasRec($row);
 
                 //  Validate the entity before adding it the entity manager to persist
                 $errors = $validator->validate($casRecEntity);
@@ -133,6 +124,25 @@ class CasRecController extends RestController
 
         return ['verified' => $casrecVerified];
     }
+
+
+    /**
+     * @Route("/get-all-with-stats")
+     * @Method({"GET"})
+     */
+    public function getAllWithStats(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+
+        $ret = [];
+        $all = $this->getRepository(EntityDir\CasRec::class)->findAll();
+        foreach($all as $row) {
+            $ret[] = $row->getOtherColumns();
+        }
+
+        return $ret;
+    }
+
 
 
     /**

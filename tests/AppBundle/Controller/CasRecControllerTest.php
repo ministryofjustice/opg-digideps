@@ -39,6 +39,29 @@ class CasRecControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
+
+        $this->c1 = new CasRec([
+            'Case' => '12345678',
+            'Surname' => 'jones',
+            'Deputy No' => 'd1',
+            'Dep Surname' => 'white',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2',
+            'custom' => 'c1',
+            'custom 2' => 'c1',
+        ]);
+        $this->c2 = new CasRec([
+            'Case' => '12345679',
+            'Surname' => 'jones2',
+            'Deputy No' => 'd2',
+            'Dep Surname' => 'red',
+            'Dep Postcode' => 'SW2',
+            'Typeofrep'=>'OPG103',
+            'Corref'=>'L3',
+            'custom' => 'c2',
+            'custom 2' => '',
+        ]);
     }
 
 
@@ -50,7 +73,16 @@ class CasRecControllerTest extends AbstractTestController
     public function testTruncate()
     {
         // just to check it gets truncated
-        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102', 'L2');
+        $casRec = new CasRec([
+            'Case' => 'case',
+            'Surname' => 'I should get deleted',
+            'Deputy No' => 'Deputy No',
+            'Dep Surname' => 'Dep Surname',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2'
+        ]);
+
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
         $this->fixtures()->clear();
@@ -123,17 +155,42 @@ class CasRecControllerTest extends AbstractTestController
 
     }
 
+    public function testGetAll()
+    {
+        $url = '/casrec/get-all-with-stats';
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+
+        $this->fixtures()->deleteReportsData(['casrec']);
+
+        \Fixtures::deleteReportsData(['casrec']);
+        $this->fixtures()->persist($this->c1, $this->c2)->flush($this->c1, $this->c2);
+
+        // check count
+
+        $records = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data']; /* @var $records CasRec[] */
+
+        $this->assertCount(2, $records);
+        $this->assertEquals('12345678', $records[0]['Case']);
+        $this->assertEquals('c1', $records[0]['custom']);
+        $this->assertEquals('c1', $records[0]['custom 2']);
+
+        $this->assertEquals('12345679', $records[1]['Case']);
+        $this->assertEquals('c2', $records[1]['custom']);
+        $this->assertEquals('', $records[1]['custom 2']);
+    }
+
     public function testCount()
     {
         $url = '/casrec/count';
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
-        $this->fixtures()->deleteReportsData(['casrec']);
-
-        $c1 = new CasRec('12345678', 'jones', 'd1', 'jones', 'ha1', '102', 'corref1');
-        $c2 = new CasRec('12345679', 'jones2', 'd2', 'jones2', 'ha2', '103', 'corref2');
-        $this->fixtures()->persist($c1, $c2)->flush($c1, $c2);
+        \Fixtures::deleteReportsData(['casrec']);
+        $this->fixtures()->persist($this->c1, $this->c2)->flush($this->c1, $this->c2);
 
         // check count
 
