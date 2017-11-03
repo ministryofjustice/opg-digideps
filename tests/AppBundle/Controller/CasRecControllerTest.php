@@ -104,7 +104,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Postcode' => '',
                     'Typeofrep' => 'OPG103',
                     'Corref' => 'L3',
-                    'custom2' => 'c2',
+                    'custom 2' => 'c2',
                 ],
 
             ]),
@@ -125,13 +125,19 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
         $this->assertEquals('opg102', $record1->getTypeOfReport());
         $this->assertEquals('l2', $record1->getCorref());
+        $this->assertEquals('c1', $record1->getOtherColumns()['custom1']);
 
         $this->assertEquals('22', $record2->getCaseNumber());
+        $this->assertEquals('c2', $record2->getOtherColumns()['custom 2']);
 
     }
 
     public function testCount()
     {
+        $url = '/casrec/count';
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+
         $this->fixtures()->deleteReportsData(['casrec']);
 
         $c1 = new CasRec('12345678', 'jones', 'd1', 'jones', 'ha1', '102', 'corref1');
@@ -139,7 +145,6 @@ class CasRecControllerTest extends AbstractTestController
         $this->fixtures()->persist($c1, $c2)->flush($c1, $c2);
 
         // check count
-        $url = '/casrec/count';
 
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
@@ -149,17 +154,4 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals(2, $data);
     }
 
-    public function testCountAuth()
-    {
-        $url = '/casrec/count';
-
-        $this->assertEndpointNeedsAuth('GET', $url);
-    }
-
-    public function testCountAllAcl()
-    {
-        $url = '/casrec/count';
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-    }
 }

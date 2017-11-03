@@ -56,7 +56,7 @@ class CasRecController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $this->get('logger')->info('Received ' . count($data) . ' records');
+        $this->get('logger')->notice('Received ' . count($data) . ' records');
 
         $em = $this->getEntityManager();
         $validator = $this->get('validator');
@@ -77,7 +77,8 @@ class CasRecController extends RestController
                     $row['Dep Surname'],
                     $row['Dep Postcode'],
                     $row['Typeofrep'],
-                    $row['Corref']
+                    $row['Corref'],
+                    $row
                 );
 
                 //  Validate the entity before adding it the entity manager to persist
@@ -150,4 +151,5 @@ class CasRecController extends RestController
 
         return $count;
     }
+
 }

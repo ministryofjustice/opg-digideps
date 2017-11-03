@@ -6,6 +6,9 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
+/**
+ * @deprecated Stats are new merged into casrec table and redownloaded
+ */
 class StatsService
 {
     /** @var EntityManager */
