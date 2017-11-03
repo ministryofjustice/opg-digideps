@@ -120,6 +120,65 @@ class CasRec
     private $corref;
 
     /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="other_columns", type="text", nullable=true)
+     */
+    private $otherColumns;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="registration_date", type="datetime", nullable=true)
+     */
+    private $registrationDate;
+
+    /**
+     * Filled from cron
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
+     */
+    private $lastLoggedIn;
+
+    /**
+     * Filled from cron
+     * @var int
+     *
+     * @JMS\Type("string")
+     * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=false)
+     */
+    private $nOfReportsSubmitted = 'n.a.';
+
+    /**
+     * Filled from cron
+     * @var int
+     *
+     * @JMS\Type("string")
+     * @ORM\Column(name="reports_active", type="string", length=4, nullable=false)
+     */
+    private $nOfReportsActive = 'n.a.';
+
+    /**
+     * Filled from cron
      * @var array
      */
     private static $normalizeChars = [
@@ -141,7 +200,7 @@ class CasRec
      * @param string $deputyPostCode
      * @param string $typeOfReport
      */
-    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport, $corref = null)
+    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport, $corref, array $row = [])
     {
         $this->caseNumber = self::normaliseCaseNumber($caseNumber);
         $this->clientLastname = self::normaliseSurname($clientLastname);
@@ -150,6 +209,8 @@ class CasRec
         $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
         $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($typeOfReport);
         $this->corref = self::normaliseCorrefAndTypeOfRep($corref);
+
+        $this->otherColumns = serialize($row);
     }
 
     private static function normaliseCorrefAndTypeOfRep($value)
@@ -276,5 +337,13 @@ class CasRec
         }
 
         throw new \Exception(__METHOD__ . ": user role not recognised to determine report type");
+    }
+
+    /**
+     * @return array
+     */
+    public function getOtherColumns()
+    {
+        return unserialize($this->otherColumns);
     }
 }
