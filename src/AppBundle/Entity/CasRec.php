@@ -166,7 +166,7 @@ class CasRec
      * @JMS\Type("string")
      * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=false)
      */
-    private $nOfReportsSubmitted = 'n.a.';
+    private $nOfReportsSubmitted;
 
     /**
      * Filled from cron
@@ -204,6 +204,13 @@ class CasRec
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
 
         $this->otherColumns = serialize($row);
+        $this->createdAt = new \DateTime();
+        $this->registrationDate = null;
+        $this->updatedAt = null;
+        $this->lastLoggedIn = null;
+        $this->nOfReportsSubmitted = 'n.a.';
+        $this->nOfReportsActive = 'n.a.';
+
     }
 
     private static function normaliseCorrefAndTypeOfRep($value)
@@ -342,6 +349,17 @@ class CasRec
 
     public function toArray()
     {
-        return $this->getOtherColumns();
+        $dateFormat = function($date) {
+            return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : 'n.a';
+        };
+
+        return [
+            "Uploaded at" => $dateFormat($this->createdAt),
+            "Stats updated at" => $dateFormat($this->updatedAt),
+            "Deputy registration date" => $dateFormat($this->registrationDate),
+            "Deputy last logged in" => $dateFormat($this->lastLoggedIn),
+            "Reports submitted" =>  $this->nOfReportsSubmitted ?: 'n.a.',
+            "Reports active" =>  $this->nOfReportsActive ?: 'n.a.'
+        ] + $this->getOtherColumns();
     }
 }

@@ -136,8 +136,8 @@ class CasRecController extends RestController
 
         $ret = [];
         $all = $this->getRepository(EntityDir\CasRec::class)->findAll();
-        foreach($all as $row) {
-            $ret[] = $row->getOtherColumns();
+        foreach($all as $row) { /* @var $row EntityDir\CasRec */
+            $ret[] = $row->toArray();
         }
 
         return $ret;

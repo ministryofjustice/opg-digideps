@@ -114,7 +114,15 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
-        $casRec = new CasRec('12345678', 'Cross-Tolley', 'DEP001', 'Tolley', 'SW1', 'OPG102', 'L2');
+        $casRec = new CasRec([
+            'Case' => '12345678',
+            'Surname' => 'Cross-Tolley',
+            'Deputy No' => 'DEP0011',
+            'Dep Surname' => 'Tolley',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2'
+        ]);
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
