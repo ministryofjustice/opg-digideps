@@ -64,7 +64,7 @@ class CasRecControllerTest extends AbstractTestController
         return base64_encode(gzcompress(json_encode($data), 9));
     }
 
-    public function testTruncateAddBulkCount()
+    public function testTruncate()
     {
         // just to check it gets truncated
         $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102', 'L2');
@@ -72,12 +72,16 @@ class CasRecControllerTest extends AbstractTestController
         $this->fixtures()->flush($casRec);
         $this->fixtures()->clear();
 
-        // truncate
         $this->assertJsonRequest('DELETE', '/casrec/truncate', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
         $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+    }
+
+    public function testAddBulk()
+    {
+        $this->fixtures()->deleteReportsData(['casrec']);
 
         // add
         $this->assertJsonRequest('POST', '/casrec/bulk-add', [
@@ -90,6 +94,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Postcode' => 'SW1 aH3',
                     'Typeofrep' => 'OPG102',
                     'Corref' => 'L2',
+                    'custom1' => 'c1',
                 ],
                 [
                     'Case' => '22',
@@ -99,6 +104,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Postcode' => '',
                     'Typeofrep' => 'OPG103',
                     'Corref' => 'L3',
+                    'custom2' => 'c2',
                 ],
 
             ]),
@@ -121,6 +127,16 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('l2', $record1->getCorref());
 
         $this->assertEquals('22', $record2->getCaseNumber());
+
+    }
+
+    public function testCount()
+    {
+        $this->fixtures()->deleteReportsData(['casrec']);
+
+        $c1 = new CasRec('12345678', 'jones', 'd1', 'jones', 'ha1', '102', 'corref1');
+        $c2 = new CasRec('12345679', 'jones2', 'd2', 'jones2', 'ha2', '103', 'corref2');
+        $this->fixtures()->persist($c1, $c2)->flush($c1, $c2);
 
         // check count
         $url = '/casrec/count';
