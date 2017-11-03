@@ -41,23 +41,6 @@ class CasRecControllerTest extends AbstractTestController
         }
     }
 
-    public function testTruncateAuth()
-    {
-        $url = '/casrec/truncate';
-
-        $this->assertEndpointNeedsAuth('DELETE', $url);
-
-        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
-    }
-
-    public function testAddBulkAuth()
-    {
-        $url = '/casrec/bulk-add';
-
-        $this->assertEndpointNeedsAuth('POST', $url);
-
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
-    }
 
     private function compress($data)
     {
@@ -72,7 +55,11 @@ class CasRecControllerTest extends AbstractTestController
         $this->fixtures()->flush($casRec);
         $this->fixtures()->clear();
 
-        $this->assertJsonRequest('DELETE', '/casrec/truncate', [
+        $url = '/casrec/truncate';
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
+
+        $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
@@ -83,8 +70,12 @@ class CasRecControllerTest extends AbstractTestController
     {
         $this->fixtures()->deleteReportsData(['casrec']);
 
+        $url = '/casrec/bulk-add';
+        $this->assertEndpointNeedsAuth('POST', $url);
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
+
         // add
-        $this->assertJsonRequest('POST', '/casrec/bulk-add', [
+        $this->assertJsonRequest('POST', $url, [
             'rawData' => $this->compress([
                 [
                     'Case' => '11',
