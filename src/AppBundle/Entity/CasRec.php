@@ -349,15 +349,15 @@ class CasRec
 
     public function toArray()
     {
-        $dateFormat = function($date) {
-            return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : 'n.a';
+        $dateFormat = function($date, $default) {
+            return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : $default;
         };
 
         return [
-            "Uploaded at" => $dateFormat($this->createdAt),
-            "Stats updated at" => $dateFormat($this->updatedAt),
-            "Deputy registration date" => $dateFormat($this->registrationDate),
-            "Deputy last logged in" => $dateFormat($this->lastLoggedIn),
+            "Uploaded at" => $dateFormat($this->createdAt, 'n.a.'),
+            "Stats updated at" => $dateFormat($this->updatedAt, '-'),
+            "Deputy registration date" => $dateFormat($this->registrationDate, 'n.a.'),
+            "Deputy last logged in" => $dateFormat($this->lastLoggedIn, 'n.a.'),
             "Reports submitted" =>  $this->nOfReportsSubmitted ?: 'n.a.',
             "Reports active" =>  $this->nOfReportsActive ?: 'n.a.'
         ] + $this->getOtherColumns();
