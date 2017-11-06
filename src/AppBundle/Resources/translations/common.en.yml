@@ -38,6 +38,9 @@ notStarted: Not started
 readyToSubmit: Ready to submit
 notAvailable: Not available
 
+# Breadcrumbs
+yourReports: Your reports
+deputyReportOverview: Deputy report overview
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
