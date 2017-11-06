@@ -12,6 +12,13 @@
         {% else %}
             <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
         {% endif %}
+    {% else %}
+        <div class="breadcrumbs hard--bottom">
+            <ol class="group">
+                <li><a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a></li>
+                <li><a href="{{ path("report_overview" , {'reportId': report.id }) }}">{{ 'deputyReportOverview' | trans({}, 'common' ) }}</a></li>
+            </ol>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -89,7 +96,7 @@
         {% else %}
 
             {# PA deputies #}
-            
+
             {% if report.submitted == false %}
                 {% if reportStatus.isReadyToSubmit and report.isDue %}
                     {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {

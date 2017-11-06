@@ -3,6 +3,7 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% set translationDomain = "report-overview" %}
+{% set isLayDeputy = not user.isDeputyPa %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
@@ -33,18 +34,35 @@
             </ul>
         </div>
 
-        {% if not user.isDeputyPa %}
+        {% if not isLayDeputy %}
             <div class="column-one-half">
                 <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
             </div>
         {% endif %}
     </div>
+    {% if isLayDeputy %}
 
+        {% if report.isDue %}
+
+            {% if reportStatus.isReadyToSubmit %}
+                {# PA report due AND ready to submit #}
+                {% set flashMessage = "completeNotice" %}
+            {% else %}
+                {# PA report due but NOT ready to submit #}
+                {% set flashMessage = "guidanceNotice" %}
+            {% endif %}
+        {% else %}
+            {# report is NOT due #}
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+            {% set flashMessage = "warningNotice" %}
+        {% endif %}
+    {% else %}
+        {% set flashMessage = "guidanceNotice" %}
+    {% endif %}
     <div class="push--top">
-        {{ macros.notification('info', 'guidanceNotice' | trans) }}
+        {{ macros.notification('info', flashMessage | trans(transOptions)) }}
     </div>
-
-
     <ul id="overview-sections" class="overview-sections">
 
         <li id="planning-section" class="overview-section">
@@ -258,54 +276,84 @@
                 } %}
             {% endif %}
 
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'report_submit',
-                linkToSubSection: path('report_review', {reportId: report.id}),
-                report: report,
-                description: false,
-                state: reportStatus.submitState,
-                disableedit: reportStatus.submitState.state != 'done'
-            } %}
+            {% if not isLayDeputy %}
+
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'report_submit',
+                    linkToSubSection: path('report_review', {reportId: report.id}),
+                    report: report,
+                    description: false,
+                    state: reportStatus.submitState,
+                    disableedit: reportStatus.submitState.state != 'done'
+                } %}
+            {% endif %}
         </li>
     </ul>
 
-    {% if user.isDeputyPa %}
-        {# report due but NOT ready to submit #}
-        {% if report.isDue and not reportStatus.isReadyToSubmit %}
-            {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
-        {% endif %}
+    {% if isLayDeputy %}
+        {% if report.isDue %}
+            {% if reportStatus.isReadyToSubmit %}
 
-        {# report is NOT due #}
-        {% if not report.isDue %}
+                {# Lay report due AND ready to submit #}
+                <div class="push--top">
+                    {{ macros.notification('info', 'completeNotice' | trans()) }}
+                </div>
+
+                <div class="column-one-half">
+                    <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
+                </div>
+
+            {% else %}
+                {# Lay report due but NOT ready to submit #}
+                {% set flashMessage = "previewNotice" %}
+
+                <div class="push--top">
+                    {{ macros.notification('info', flashMessage | trans()) }}
+                </div>
+
+                <div class="column-one-half">
+                    <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+                </div>
+
+            {% endif %}
+        {% else %}
+            {# Lay report is NOT due #}
+
             {% set endDate = report.getEndDate() | date(" d F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
-            {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
+
+            {% set flashMessage = "warningNotDue" %}
+            <div class="push--top">
+                {{ macros.notification('info', flashMessage | trans(transOptions)) }}
+            </div>
+
         {% endif %}
     {% else %}
+        {# PA deputy #}
         {% if report.isDue %}
-            {# report due but NOT ready to submit #}
+
             {% if reportStatus.isReadyToSubmit %}
-                <div class="push--top">
-                    {{ macros.notification('info', 'completeNotice' | trans) }}
-                </div>
+                {# PA report due AND ready to submit #}
+                {% set flashMessage = "completeNotice" %}
             {% else %}
-                <div class="push--top">
-                    {{ macros.notification('info', 'previewNotice' | trans) }}
-                </div>
+                {# PA report due but NOT ready to submit #}
+                {% set flashMessage = "previewNotice" %}
             {% endif %}
 
+            <div class="push--top">
+                {{ macros.notification('info', flashMessage | trans) }}
+            </div>
             <div class="column-one-half">
-                <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'labels.previewReport' | trans() }}</a> 
+                <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
             </div>
 
         {% else %}
             {# report is NOT due #}
             {% set endDate = report.getEndDate() | date(" d F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
-            {{ macros.notification('notice', 'previewNotice' | trans()) }}
             <div class="push--top">
-                {{ macros.notification('notice', 'previewNotice' | trans()) }}
+                {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
             </div>
         {% endif %}
     {%  endif %}
