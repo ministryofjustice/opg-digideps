@@ -22,6 +22,7 @@
         {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'timestamp': date().timestamp }) }) | raw }}
     </p>
 
+    <p>Sample data:</p>
     {# dynamically display data #}
     <table class="table-font-xsmall">
         {# header #}

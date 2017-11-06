@@ -29,7 +29,7 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request)
     {
-        $data = $this->getRestClient()->get('stats/users?limit=100', 'array');
+        $data = $this->getRestClient()->get('stats/users?limit=10', 'array');
 
         return [
             'data' => $data,
@@ -44,10 +44,9 @@ class StatsController extends AbstractController
     {
         try {
             $rawCsv = (string)$this->getRestClient()->get("stats/users.csv", 'raw');
-        } catch (\RuntimeException $e) {
-            echo $e;
+        } catch(\Exception $e) {
+            throw new DisplayableException($e);
         }
-
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
