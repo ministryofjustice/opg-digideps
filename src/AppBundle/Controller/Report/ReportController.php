@@ -206,6 +206,7 @@ class ReportController extends AbstractController
             : 'AppBundle:Report/Report:overview.html.twig';
 
         return $this->render($template, [
+            'user' => $user,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
         ]);

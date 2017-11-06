@@ -6,7 +6,6 @@ pageSectionDescription: "Your report:"
 close: "Close"
 help: "Help"
 submitWhenReady: "You can't submit your report until it's complete"
-warningNotDue: "You can't submit your report until %date%"
 reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
@@ -29,13 +28,21 @@ options:
   submitReport: "Submit report"
   viewReport: "View report"
 
+
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
 
+previewNotice: |
+  You may preview your report at anytime. When all sections are complete you will be able to submit the report to us.
+
+completeNotice: |
+  All sections are now complete. Please review then submit your report.
+
 labels:
     not-started: "Not started"
     incomplete: "Not finished"
+    previewReport: "Preview report"
 
 heading.decisionsContacts: "Decisions and contacts"
 decisions:

@@ -33,9 +33,11 @@
             </ul>
         </div>
 
-        <div class="column-one-half">
-            <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
-        </div>
+        {% if not user.isDeputyPa %}
+            <div class="column-one-half">
+                <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
+            </div>
+        {% endif %}
     </div>
 
     <div class="push--top">
@@ -268,16 +270,43 @@
         </li>
     </ul>
 
-    {# report due but NOT ready to submit #}
-    {% if report.isDue and not reportStatus.isReadyToSubmit %}
-        {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
-    {% endif %}
+    {% if user.isDeputyPa %}
+        {# report due but NOT ready to submit #}
+        {% if report.isDue and not reportStatus.isReadyToSubmit %}
+            {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
+        {% endif %}
 
-    {# report is NOT due #}
-    {% if not report.isDue %}
-        {% set endDate = report.getEndDate() | date(" d F Y")  %}
-        {% set transOptions = {'%date%': endDate} %}
-        {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
-    {% endif %}
+        {# report is NOT due #}
+        {% if not report.isDue %}
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+            {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
+        {% endif %}
+    {% else %}
+        {% if report.isDue %}
+            {# report due but NOT ready to submit #}
+            {% if reportStatus.isReadyToSubmit %}
+                <div class="push--top">
+                    {{ macros.notification('info', 'completeNotice' | trans) }}
+                </div>
+            {% else %}
+                <div class="push--top">
+                    {{ macros.notification('info', 'previewNotice' | trans) }}
+                </div>
+            {% endif %}
 
+            <div class="column-one-half">
+                <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'labels.previewReport' | trans() }}</a> 
+            </div>
+
+        {% else %}
+            {# report is NOT due #}
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+            {{ macros.notification('notice', 'previewNotice' | trans()) }}
+            <div class="push--top">
+                {{ macros.notification('notice', 'previewNotice' | trans()) }}
+            </div>
+        {% endif %}
+    {%  endif %}
 {% endblock %}
