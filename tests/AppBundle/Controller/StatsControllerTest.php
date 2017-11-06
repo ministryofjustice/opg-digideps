@@ -4,6 +4,9 @@ namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Report\Report;
 
+/**
+ * @deprecated
+ */
 class StatsControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -48,6 +51,7 @@ class StatsControllerTest extends AbstractTestController
 
     public function setUp()
     {
+        $this->markTestSkipped('deprecated feature');
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();

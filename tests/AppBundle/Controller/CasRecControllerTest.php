@@ -157,9 +157,11 @@ class CasRecControllerTest extends AbstractTestController
 
     public function testGetAllWithStats()
     {
-        $url = '/casrec/get-all-with-stats';
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+        TODO move to stats controller test
+    }
+        $url = '/stats/users';
+//        $this->assertEndpointNeedsAuth('GET', $url);
+//        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
         $this->fixtures()->deleteReportsData(['casrec']);
 
@@ -172,6 +174,8 @@ class CasRecControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data']; /* @var $records CasRec[] */
+
+        print_r($records);die;
 
         $this->assertCount(2, $records);
         $this->assertEquals('12345678', $records[0]['Case']);
@@ -190,7 +194,7 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('c2', $records[1]['custom']);
         $this->assertEquals('', $records[1]['custom 2']);
 
-    }
+//    }
 
     public function testCount()
     {

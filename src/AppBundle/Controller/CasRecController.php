@@ -130,18 +130,18 @@ class CasRecController extends RestController
      * @Route("/get-all-with-stats")
      * @Method({"GET"})
      */
-    public function getAllWithStats(Request $request)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
-        $ret = [];
-        $all = $this->getRepository(EntityDir\CasRec::class)->findAll();
-        foreach($all as $row) { /* @var $row EntityDir\CasRec */
-            $ret[] = $row->toArray();
-        }
-
-        return $ret;
-    }
+//    public function getAllWithStats(Request $request)
+//    {
+//        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+//
+//        $ret = [];
+//        $all = $this->getRepository(EntityDir\CasRec::class)->findBy([], null, 1000);
+//        foreach($all as $row) { /* @var $row EntityDir\CasRec */
+//            $ret[] = $row->toArray();
+//        }
+//
+//        return $ret;
+//    }
 
 
 

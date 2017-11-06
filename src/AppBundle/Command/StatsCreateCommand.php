@@ -27,6 +27,7 @@ class StatsCreateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
         // avoid being executed concurrently on multiple API boxes and stress the db too much
         if ($sleep = rand(0, $input->getOption('sleep', 0))) {
             $output->write("Sleeping $sleep seconds to avoid multiple execution from APIs");
+            sleep($sleep);
         }
 
         $statsService = $this->getContainer()->get('stats_service'); /* @var $statsService StatsService */
