@@ -21,13 +21,13 @@ Available variables: status_code, status_text, exception, logger,currentContent 
 
     <p>{{ description }}</p>
 
-    
+
     {# `if app.user` could be used to detect if the user is logged or not
      #  However, it's not possible to know what the error is about and what pages works or not,
      #  Easier and safer to give the user the link to the homepage, that will decide what to do
      #   (redirect to reports/overview/registratino step, depending on the content)
     #}
-    <a class="home-link" href="{{path('homepage')}}">{{ 'error.backToHomePage' | trans }}</a>
+    <a class="home-link" href="{{path('homepage')}}">{{ 'generic.backToHomePage' | trans }}</a>
 
 
 {% endblock %}
