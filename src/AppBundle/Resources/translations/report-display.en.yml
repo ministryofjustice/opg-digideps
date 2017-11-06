@@ -3,3 +3,13 @@ decisionsMadeAsDeputy: Decisions made as deputy
 page:
     pageSectionTitle: Review report
 
+downloadAsPdf: Download as pdf
+incomplete:
+    introPara: |
+        Use this section to check the details of the report are correct.
+        When all sections are completed you will be able to continue the report submission process.
+    youCanContinue: You can continue when all sections are completed.
+    backToEditingReport: Back to editing report
+button:
+  continue:
+    label: Continue

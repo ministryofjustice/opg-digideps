@@ -17,30 +17,20 @@
 
 {% block pageContent %}
 
-    {% if report.submitted == false %}
-        {% if reportStatus.isReadyToSubmit and report.isDue %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("report_overview" , {'reportId': report.id }),
-            'previousLabel': 'Edit this report',
-            'nextLink': path("report_declaration" , {'reportId': report.id }),
-            'nextLabel': 'Submit report',
-            'position': 'top',
-            'nextAdditionalClass': 'behat-link-declaration-page'
-            } %}
-        {% else  %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("report_overview" , {'reportId': report.id }),
-            'previousLabel': 'Edit this report',
-            'position': 'top'
-            } %}
-        {% endif %}
-    {% endif %}
-    <div id="page-body">
-        <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
-        {% include 'AppBundle:Report/Formatted:formatted.html.twig' %}
-    </div>
+    {% if not user.isDeputyPa %}
+        {% if report.submitted == false %}
+            {% if reportStatus.isReadyToSubmit and report.isDue %}
 
-    <div id="body-footer-nav">
+            {% else  %}
+
+            {% endif %}
+        {% endif %}
+        <div id="page-body">
+            <p>
+                {{ 'incomplete.introPara' | trans() }}
+            </p>
+        </div>
+    {% else %}
         {% if report.submitted == false %}
             {% if reportStatus.isReadyToSubmit and report.isDue %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
@@ -48,16 +38,77 @@
                 'previousLabel': 'Edit this report',
                 'nextLink': path("report_declaration" , {'reportId': report.id }),
                 'nextLabel': 'Submit report',
-                'position': 'bottom'
+                'position': 'top',
+                'nextAdditionalClass': 'behat-link-declaration-page'
                 } %}
             {% else  %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
                 'previousLink': path("report_overview" , {'reportId': report.id }),
                 'previousLabel': 'Edit this report',
-                'position': 'bottom'
+                'position': 'top'
                 } %}
             {% endif %}
         {% endif %}
+        <div id="page-body">
+            <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+        </div>
+    {% endif %}
+
+    <div id="page-body">
+        {% include 'AppBundle:Report/Formatted:formatted.html.twig' %}
+    </div>
+
+    <div id="body-footer-nav">
+        {% if not user.isDeputyPa %}
+
+            {# Lay deputies #}
+
+            {% if report.submitted == false %}
+                {% if reportStatus.isReadyToSubmit and report.isDue %}
+                    {% set continueClass = "disabled" %}
+                {% else  %}
+                    {% set continueClass = "" %}
+
+                    <div class="push--top">
+                        {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
+                    </div>
+
+                {% endif %}
+            {% endif %}
+
+            <div id="page-body">
+                <div class="column-one-half">
+                    <a class="button left {{ continueClass }}" href="{{ path("report_declaration" , {'reportId': report.id }) }}">{{ 'button.continue.label' | trans() }}</a>
+                </div>
+                <a class="" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                    {{ 'incomplete.backToEditingReport' | trans() }}
+                </a>
+                <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+            </div>
+
+        {% else %}
+
+            {# PA deputies #}
+            
+            {% if report.submitted == false %}
+                {% if reportStatus.isReadyToSubmit and report.isDue %}
+                    {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                    'previousLink': path("report_overview" , {'reportId': report.id }),
+                    'previousLabel': 'Edit this report',
+                    'nextLink': path("report_declaration" , {'reportId': report.id }),
+                    'nextLabel': 'Submit report',
+                    'position': 'bottom'
+                    } %}
+                {% else  %}
+                    {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                    'previousLink': path("report_overview" , {'reportId': report.id }),
+                    'previousLabel': 'Edit this report',
+                    'position': 'bottom'
+                    } %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
     </div>
 
     <script>
