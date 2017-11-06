@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="casrec")
+ * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
  */
 class CasRec
@@ -164,7 +164,7 @@ class CasRec
      * @var int
      *
      * @JMS\Type("string")
-     * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=false)
+     * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=true)
      */
     private $nOfReportsSubmitted;
 
@@ -173,9 +173,9 @@ class CasRec
      * @var int
      *
      * @JMS\Type("string")
-     * @ORM\Column(name="reports_active", type="string", length=4, nullable=false)
+     * @ORM\Column(name="reports_active", type="string", length=4, nullable=true)
      */
-    private $nOfReportsActive = 'n.a.';
+    private $nOfReportsActive;
 
     /**
      * Filled from cron
@@ -344,7 +344,7 @@ class CasRec
      */
     public function getOtherColumns()
     {
-        return unserialize($this->otherColumns);
+        return unserialize($this->otherColumns) ?: [];
     }
 
     public function toArray()
@@ -362,4 +362,60 @@ class CasRec
             "Reports active" =>  $this->nOfReportsActive ?: 'n.a.'
         ] + $this->getOtherColumns();
     }
+
+    /**
+     * @param \DateTime $updatedAt
+     * @return CasRec
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $registrationDate
+     * @return CasRec
+     */
+    public function setRegistrationDate($registrationDate)
+    {
+        $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $lastLoggedIn
+     * @return CasRec
+     */
+    public function setLastLoggedIn($lastLoggedIn)
+    {
+        $this->lastLoggedIn = $lastLoggedIn;
+
+        return $this;
+    }
+
+    /**
+     * @param int $nOfReportsSubmitted
+     * @return CasRec
+     */
+    public function setNOfReportsSubmitted($nOfReportsSubmitted)
+    {
+        $this->nOfReportsSubmitted = $nOfReportsSubmitted;
+
+        return $this;
+    }
+
+    /**
+     * @param int $nOfReportsActive
+     * @return CasRec
+     */
+    public function setNOfReportsActive($nOfReportsActive)
+    {
+        $this->nOfReportsActive = $nOfReportsActive;
+
+        return $this;
+    }
+
 }

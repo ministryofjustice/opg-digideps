@@ -23,8 +23,11 @@ class Version156 extends AbstractMigration
         $this->addSql('ALTER TABLE casrec ADD updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE casrec ADD registration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE casrec ADD last_logged_in TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
-        $this->addSql('ALTER TABLE casrec ADD reports_submitted VARCHAR(4) NOT NULL');
-        $this->addSql('ALTER TABLE casrec ADD reports_active VARCHAR(4) NOT NULL');
+        $this->addSql('ALTER TABLE casrec ADD reports_submitted VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD reports_active VARCHAR(4) DEFAULT NULL');
+        $this->addSql('CREATE INDEX updated_at_idx ON casrec (updated_at)');
+
+        $this->addSql('CREATE INDEX deputy_no_idx ON dd_user (deputy_no)');
     }
 
     /**

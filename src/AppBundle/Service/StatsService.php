@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -14,8 +15,46 @@ class StatsService
 
     public function __construct(EntityManager $em)
     {
-        $this->userRepository = $em->getRepository(User::class);
-        $this->casrecRepository = $em->getRepository(CasRec::class);
+        $this->em = $em;
+    }
+
+    public function updateOne(CasRec $casrec)
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['deputyNo' => $casrec->getDeputyNo()]);
+
+        if ($user instanceof User) {
+            $casrec->setLastLoggedIn($user->getLastLoggedIn())->setRegistrationDate($user->getRegistrationDate());
+        }
+
+        $client = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $casrec->getCaseNumber()]);
+        if ($client instanceof Client) {
+            $casrec
+                ->setNOfReportsSubmitted(count($client->getSubmittedReports()))
+                ->setNOfReportsActive(count($client->getUnsubmittedReports()));
+        }
+
+        $casrec->setUpdatedAt(new \DateTime());
+    }
+
+    public function updateAll()
+    {
+        $chunkSize = 100;
+        $ret = 0;
+
+        while ($records = $this->em
+            ->createQuery('SELECT c from ' . CasRec::class . ' c WHERE  (c.updatedAt < :d OR c.updatedAt IS NULL) ORDER BY c.updatedAt ASC')
+            ->setParameter('d', new \DateTime('-5 minutes'))
+            ->setMaxResults($chunkSize)->getResult()) {
+
+            foreach ($records as $record) {
+                /* @var $nextRecordToUpdate CasRec */
+                $this->updateOne($record);
+            }
+            $this->em->flush();
+            $ret++;
+        }
+
+        return $ret;
     }
 
     /**
@@ -26,8 +65,9 @@ class StatsService
     public function getRecords($maxResults = null)
     {
         $ret = [];
-        $all = $this->casrecRepository->findBy([], null, $maxResults);
-        foreach($all as $row) { /* @var $row CasRec */
+        $all = $this->em->getRepository(CasRec::class)->findBy([], null, $maxResults);
+        foreach ($all as $row) {
+            /* @var $row CasRec */
             $ret[] = $row->toArray();
         }
 //

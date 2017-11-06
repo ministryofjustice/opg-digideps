@@ -34,14 +34,20 @@ class StatsController extends RestController
     }
 
     /**
-     * Return CSV file created by crontab
+     * Return CSV file created on the fly
+     *
      * @Route("/users.csv")
      * @Method({"GET"})
      */
     public function usersCsv(Request $request)
     {
+        $filePath = '/tmp/'.time().'users.csv';
         $response = new Response();
-        $response->setContent(readfile('/tmp/stats.csv'));
+        $stats = $this->get('stats_service');
+        /* @var $stats StatsService */
+        $stats->saveCsv($filePath);
+        $response->setContent(readfile($filePath));
+
         return $response;
     }
 }
