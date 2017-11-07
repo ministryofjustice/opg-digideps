@@ -12,6 +12,7 @@
         {% if isLayDeputy %}
             <a id="back-to-reports" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
         {% else %}
+            <a href="{{path('pa_dashboard')}}" class="behat-link-pa-dashboard">Dashboard</a>
             <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
         {% endif %}
     {% else %}
