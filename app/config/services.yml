@@ -38,7 +38,7 @@ services:
 
     casrec_service:
         class: AppBundle\Service\CasrecService
-        arguments: [ "@em" ]
+        arguments: [ "@em", "@logger", "@opg_digideps.report_service", "@validator" ]
 
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService

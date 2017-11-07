@@ -184,11 +184,10 @@ class CasRecControllerTest extends AbstractTestController
         self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenDeputy]);
         $this->assertEquals(403, self::$frameworkBundleClient->getResponse()->getStatusCode());
 
+        ob_start();
         self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenAdmin]);
+        ob_clean(); //delete readfile out
         $this->assertEquals(200, self::$frameworkBundleClient->getResponse()->getStatusCode());
-
-
-//        echo self::$frameworkBundleClient->getResponse()->getContent();
     }
 
 }
