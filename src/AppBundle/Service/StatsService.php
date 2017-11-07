@@ -21,7 +21,6 @@ class StatsService
     public function updateOne(CasRec $casrec)
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['deputyNo' => $casrec->getDeputyNo()]);
-
         if ($user instanceof User) {
             $casrec->setLastLoggedIn($user->getLastLoggedIn())->setRegistrationDate($user->getRegistrationDate());
         }
@@ -49,9 +48,10 @@ class StatsService
             foreach ($records as $record) {
                 /* @var $nextRecordToUpdate CasRec */
                 $this->updateOne($record);
+                $ret++;
             }
             $this->em->flush();
-            $ret++;
+            $this->em->clear();
         }
 
         return $ret;
