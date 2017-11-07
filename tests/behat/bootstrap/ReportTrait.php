@@ -510,7 +510,8 @@ trait ReportTrait
     public function theReportShouldNotBeSubmittable()
     {
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementNotExists('css', '#edit-report_submit');
+        $this->assertSession()->elementExists('css', '#edit-report-preview');
+        $this->assertSession()->elementNotExists('css', '#edit-report-review');
     }
 
     /**
@@ -519,6 +520,7 @@ trait ReportTrait
     public function theReportShouldBeSubmittable()
     {
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementExists('css', '#edit-report_submit');
+        $this->assertSession()->elementExists('css', '#edit-report-review');
+        $this->assertSession()->elementNotExists('css', '#edit-report-preview');
     }
 }

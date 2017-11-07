@@ -32,13 +32,11 @@ Feature: Report submit
         #
         # empty form
         #
-        When I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
             | report_declaration_agreedBehalfDeputy_0 |
             | report_declaration_agreedBehalfDeputy_1 |
             | report_declaration_agreedBehalfDeputy_2 |
-            | report_declaration_agreedBehalfDeputyExplanation |
         #
         # missing explanation
         #

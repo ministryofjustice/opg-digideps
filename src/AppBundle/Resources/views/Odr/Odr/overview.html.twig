@@ -163,7 +163,7 @@
         </div>
 
         <div class="column-one-half">
-            <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
+            <a id="edit-report-review" class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
         </div>
 
     {% else %}
@@ -175,7 +175,7 @@
         </div>
 
         <div class="column-one-half">
-            <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+            <a id="edit-report-preview" class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
         </div>
 
     {% endif %}

@@ -44,4 +44,3 @@ Feature: Report balance
         And I should not see the "balance-view-details" link
         And the report should be submittable
 
-        
