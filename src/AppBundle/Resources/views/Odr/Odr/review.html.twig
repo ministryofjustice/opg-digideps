@@ -33,7 +33,6 @@
         <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
     </div>
 
-{% endif %}
     <div id="page-body">
         {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
     </div>
@@ -46,28 +45,14 @@
                 <div class="push--top">
                     {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
                 </div>
-                <div id="page-body">
-                    <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
-                        {{ 'incomplete.backToEditingReport' | trans() }}
-                    </a>
-                    <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
-                </div>
-
-            {% else %}
-
-                <div id="page-body">
-                    <div class="column-one-half">
-                        <a class="button left behat-link-odr-declaration-page" href="{{ path("odr_declaration" , {'odrId': odr.id }) }}">{{ 'button.continue.label' | trans() }}</a>
-                    </div>
-                    <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
-                        {{ 'incomplete.backToEditingReport' | trans() }}
-                    </a>
-                    <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
-                </div>
 
             {% endif %}
+        {% endif %}
 
         <div id="page-body">
+            <div class="column-one-half">
+                <a class="button left behat-link-odr-declaration-page" href="{{ path("odr_declaration" , {'odrId': odr.id }) }}">{{ 'button.continue.label' | trans() }}</a>
+            </div>
             <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
