@@ -2,7 +2,6 @@
 
 {% set translationDomain = "odr-overview" %}
 {% trans_default_domain translationDomain %}
-{% set isLayDeputy = not app.user.isDeputyPa %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block pageTitle %}{{ client.fullname }}{% endblock %}
@@ -21,8 +20,6 @@
             <div class="message"><a class="button-secondary submit-link behat-link-odr-submit" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
         </div>
     {% endif %}
-
-    {% set showReviewButton = showReviewButton is defined and not isLayDeputy ? showReviewButton : false %}
 
     <div class="grid-row">
         <div class="column-one-half">
@@ -48,26 +45,16 @@
                 {% endif %}
             </ul>
         </div>
-
-        <div class="column-one-half">
-            {% if showReviewButton %}
-                <a class="button right" href="{{ path('odr_review', {'odrId': odr.id}) }}">Review report</a>
-            {% endif %}
-        </div>
     </div>
-    {% if isLayDeputy %}
 
-        {% if odrStatus.isReadyToSubmit %}
-            {# PA report due AND ready to submit #}
-            {% set flashMessage = "completeNotice" %}
-        {% else %}
-            {# PA report due but NOT ready to submit #}
-            {% set flashMessage = "guidanceNotice" %}
-        {% endif %}
-
+    {% if odrStatus.isReadyToSubmit %}
+        {# PA report due AND ready to submit #}
+        {% set flashMessage = "completeNotice" %}
     {% else %}
+        {# PA report due but NOT ready to submit #}
         {% set flashMessage = "guidanceNotice" %}
     {% endif %}
+
     <div class="push--top">
         {{ macros.notification('info', flashMessage | trans()) }}
     </div>
@@ -166,74 +153,31 @@
             state: odrStatus.otherInfoState,
             } %}
         </li>
-
-        {% if not isLayDeputy %}
-            <li id="report-submit-section" class="overview-section">
-                <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
-                {% set sectionParams = {
-                transDomain: translationDomain,
-                subSection: 'odr_submit',
-                odr: odr,
-                linkToSubSection: path('odr_review', {'odrId': odr.id}),
-                description: false,
-                stateOld: odrStatus.isReadyToSubmit ? 'hidden' : 'not-started',
-                state: odrStatus.submitState,
-                editLinkClass: odrStatus.isReadyToSubmit ? 'button' : 'edit-link',
-                } %}
-                {% if odrStatus.isReadyToSubmit  %}
-                    {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
-                    editLinkClass: 'button',
-                    }) %}
-                {%  else %}
-                    {% include 'AppBundle:Odr/Odr:_subsection.html.twig' with sectionParams | merge({
-                    disableedit: true ,
-                    }) %}
-                {%  endif %}
-            </li>
-        {% endif %}
     </ul>
 
-    {% if isLayDeputy %}
-        {% if odrStatus.isReadyToSubmit %}
+    {% if odrStatus.isReadyToSubmit %}
 
-            {# Lay report due AND ready to submit #}
-            <div class="push--top">
-                {{ macros.notification('info', 'completeNotice' | trans()) }}
-            </div>
+        {# Lay report due AND ready to submit #}
+        <div class="push--top">
+            {{ macros.notification('info', 'completeNotice' | trans()) }}
+        </div>
 
-            <div class="column-one-half">
-                <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
-            </div>
-
-        {% else %}
-            {# Lay report due but NOT ready to submit #}
-            {% set flashMessage = "previewNotice" %}
-
-            <div class="push--top">
-                {{ macros.notification('info', flashMessage | trans()) }}
-            </div>
-
-            <div class="column-one-half">
-                <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
-            </div>
-
-        {% endif %}
+        <div class="column-one-half">
+            <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
+        </div>
 
     {% else %}
-        {# PA deputy #}
-            {% if odrStatus.isReadyToSubmit %}
-                {# PA report due AND ready to submit #}
-                {% set flashMessage = "completeNotice" %}
-            {% else %}
-                {# PA report due but NOT ready to submit #}
-                {% set flashMessage = "previewNotice" %}
-            {% endif %}
+        {# Lay report due but NOT ready to submit #}
+        {% set flashMessage = "previewNotice" %}
 
-            <div class="push--top">
-                {{ macros.notification('info', flashMessage | trans) }}
-            </div>
-            <div class="column-one-half">
-                <a class="button left" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
-            </div>
-    {%  endif %}
+        <div class="push--top">
+            {{ macros.notification('info', flashMessage | trans()) }}
+        </div>
+
+        <div class="column-one-half">
+            <a class="button left" href="{{ path('odr_review', {'odrId': odr.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+        </div>
+
+    {% endif %}
+
 {% endblock %}
