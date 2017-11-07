@@ -51,17 +51,6 @@ class CasRecControllerTest extends AbstractTestController
             'custom' => 'c1',
             'custom 2' => 'c1',
         ]);
-        $this->c2 = new CasRec([
-            'Case' => '12345679',
-            'Surname' => 'jones2',
-            'Deputy No' => 'd2',
-            'Dep Surname' => 'red',
-            'Dep Postcode' => 'SW2',
-            'Typeofrep'=>'OPG103',
-            'Corref'=>'L3',
-            'custom' => 'c2',
-            'custom 2' => '',
-        ]);
     }
 
 
@@ -107,7 +96,7 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
 
         // add
-        $this->assertJsonRequest('POST', $url, [
+        $ret = $this->assertJsonRequest('POST', $url, [
             'rawData' => $this->compress([
                 [
                     'Case' => '11',
@@ -117,41 +106,14 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Postcode' => 'SW1 aH3',
                     'Typeofrep' => 'OPG102',
                     'Corref' => 'L2',
-                    'custom1' => 'c1',
-                ],
-                [
-                    'Case' => '22',
-                    'Surname' => 'H1',
-                    'Deputy No' => 'DN2',
-                    'Dep Surname' => 'H2',
-                    'Dep Postcode' => '',
-                    'Typeofrep' => 'OPG103',
-                    'Corref' => 'L3',
-                    'custom 2' => 'c2',
                 ],
 
             ]),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
-        ]);
-
-        $records = $this->fixtures()->clear()->getRepo('CasRec')->findBy([], ['id' => 'ASC']);
-
-        $this->assertCount(2, $records);
-        $record1 = $records[0]; /* @var $record1 CasRec */
-        $record2 = $records[1]; /* @var $record2 CasRec */
-
-        $this->assertEquals('11', $record1->getCaseNumber());
-        $this->assertEquals('r1', $record1->getClientLastname());
-        $this->assertEquals('dn1', $record1->getDeputyNo());
-        $this->assertEquals('r2', $record1->getDeputySurname());
-        $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
-        $this->assertEquals('opg102', $record1->getTypeOfReport());
-        $this->assertEquals('l2', $record1->getCorref());
-        $this->assertEquals('c1', $record1->getOtherColumns()['custom1']);
-
-        $this->assertEquals('22', $record2->getCaseNumber());
-        $this->assertEquals('c2', $record2->getOtherColumns()['custom 2']);
+        ])['data'];
+        $this->assertEmpty($ret['errors'], print_r($ret, 1));
+        $this->assertEquals(1, $ret['added'], print_r($ret, 1));
 
     }
 
@@ -162,7 +124,7 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
         \Fixtures::deleteReportsData(['casrec']);
-        $this->fixtures()->persist($this->c1, $this->c2)->flush($this->c1, $this->c2);
+        $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count
 
@@ -171,7 +133,7 @@ class CasRecControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertEquals(2, $data);
+        $this->assertEquals(1, $data);
     }
 
     public function testGetStatsCsv()
