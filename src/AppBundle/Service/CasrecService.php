@@ -50,28 +50,38 @@ class CasrecService
     }
 
 
-    public function updateOne(CasRec $casrec)
+    private function updateCasrecStatsSingle(CasRec $casrec)
     {
-        $user = $this->em->getRepository(User::class)->findOneBy(['deputyNo' => $casrec->getDeputyNo()]);
-        if ($user instanceof User) {
-            $casrec->setLastLoggedIn($user->getLastLoggedIn())->setRegistrationDate($user->getRegistrationDate());
+        // add user info, by matching DeputyNo
+        $deputyNo = $casrec->getDeputyNo();
+        $results = $this->em->createQuery('SELECT u FROM '.User::class.' u WHERE u.deputyNo = :d1 OR u.deputyNo = :d2')
+            ->setParameter('d1', strtoupper($deputyNo))
+            ->setParameter('d2', strtolower($deputyNo))
+            ->getResult();
+        if ($results && $results[0] instanceof User) {
+            $casrec->setLastLoggedIn($results[0]->getLastLoggedIn())->setRegistrationDate($results[0]->getRegistrationDate());
         }
 
-        $client = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $casrec->getCaseNumber()]);
-        if ($client instanceof Client) {
+        // add report info, by matching case number
+        $caseNumber = $casrec->getCaseNumber();
+        $results = $this->em->createQuery('SELECT c FROM '.Client::class.' c WHERE c.caseNumber = :c1 OR c.caseNumber = :c2')
+            ->setParameter('c1', strtoupper($caseNumber))
+            ->setParameter('c2', strtolower($caseNumber))
+            ->getResult();
+        if ($results && $results[0] instanceof Client) {
             $casrec
-                ->setNOfReportsSubmitted(count($client->getSubmittedReports()))
-                ->setNOfReportsActive(count($client->getUnsubmittedReports()));
+                ->setNOfReportsSubmitted(count($results[0]->getSubmittedReports()))
+                ->setNOfReportsActive(count($results[0]->getUnsubmittedReports()));
         }
 
         $casrec->setUpdatedAt(new \DateTime());
     }
 
     /**
-     * Launhed
+     * Launched from cron
      * @return int number of changed records
      */
-    public function updateAll()
+    public function updateAllCasrecRecordsWithStats()
     {
         $chunkSize = 50;
         $nOfRecordsUpdated = 0;
@@ -83,7 +93,7 @@ class CasrecService
 
             foreach ($records as $record) {
                 /* @var $nextRecordToUpdate CasRec */
-                $this->updateOne($record);
+                $this->updateCasrecStatsSingle($record);
                 $nOfRecordsUpdated++;
             }
             $this->em->flush();
@@ -161,6 +171,7 @@ class CasrecService
                     $retErrors[] = 'ERROR IN LINE ' . ($dataIndex + 2) . ' :' . str_replace('Object(AppBundle\Entity\CasRec).', '', (string) $errors);
                     unset($casRecEntity);
                 } else {
+                    $this->updateCasrecStatsSingle($casRecEntity);
                     $this->em->persist($casRecEntity);
 
                     if (($added++ % $persistEvery) === 0) {

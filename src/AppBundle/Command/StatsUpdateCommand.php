@@ -49,7 +49,7 @@ class StatsUpdateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
         try {
             // update stats
             $statsService = $this->getContainer()->get('casrec_service');
-            $nUpdated = $statsService->updateAll();
+            $nUpdated = $statsService->updateAllCasrecRecordsWithStats();
             $output->writeln($nUpdated ? "Updated $nUpdated CASREC records" : "No more CASREC records to updated");
             $linesCount = $statsService->saveCsv(CasRec::STATS_FILE_PATH);
             $output->writeln("Stats file written. {$linesCount} lines written");
