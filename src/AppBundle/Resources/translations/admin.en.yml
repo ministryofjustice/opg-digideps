@@ -36,6 +36,9 @@ addUserForm:
   lastname:
     label: Last name
     hint: ''
+  addressPostcode:
+    label: Postcode
+    hint: ''
   roleName:
     label: Role
     hint: ''

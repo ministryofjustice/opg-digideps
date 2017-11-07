@@ -188,7 +188,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
+     * @JMS\Groups({"user_details_full", "profile_pa", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy"} )
      * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa", "verify-codeputy"} )
      *

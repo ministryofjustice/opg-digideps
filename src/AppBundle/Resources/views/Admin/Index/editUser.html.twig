@@ -28,6 +28,7 @@
     {{ form_input(form.email,'addUserForm.email') }}
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
+    {{ form_input(form.addressPostcode,'addUserForm.addressPostcode') }}
     {{ form_select(form.roleName,'addUserForm.roleName') }}
     {% if reportsCount > 0 %}
         <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>

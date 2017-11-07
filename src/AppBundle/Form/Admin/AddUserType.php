@@ -36,6 +36,7 @@ class AddUserType extends AbstractType
         $builder->add('email', 'text')
             ->add('firstname', 'text')
             ->add('lastname', 'text')
+            ->add('addressPostcode', 'text')
             ->add('roleName', 'choice', $roleNameOptions)
             ->add('odrEnabled', 'checkbox')
             ->add('save', 'submit');
