@@ -40,7 +40,7 @@ class StatsController extends AbstractController
     {
         try {
             $regenerate = $request->get('regenerate') ? 1 : 0;
-            $rawCsv = (string)$this->getRestClient()->get("stats/stats.csv?regenerate=$regenerate", 'raw');
+            $rawCsv = (string)$this->getRestClient()->get("casrec/stats.csv?regenerate=$regenerate", 'raw');
         } catch(\Exception $e) {
             throw new DisplayableException($e);
         }

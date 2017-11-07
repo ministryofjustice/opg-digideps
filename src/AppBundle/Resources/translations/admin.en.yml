@@ -79,7 +79,7 @@ statsPage:
   pageTitle: Admin
   supportTitle: Download statistics
   heading: Lay deputy's stats
-  limitedTo100: Based on CASREC file + additional columns (instantly added on CASREC upload, and also updated every hour)
+  limitedTo100: Based on CASREC file + additional columns (instantly added on CASREC upload, and updated every hour on weekdays)
   downloadCSV: <a href="%csvFile%">Download</a>
   pleaseWait: Please wait ...
   dataGenerated: |
