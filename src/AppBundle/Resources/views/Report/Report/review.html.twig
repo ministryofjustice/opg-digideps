@@ -66,15 +66,20 @@
     </div>
 
     <div id="body-footer-nav">
+
+
         {% if isLayDeputy %}
 
             {# Lay deputies #}
 
             {% if report.submitted == false %}
                 {% if reportStatus.isReadyToSubmit and report.isDue %}
-                    {% set continueClass = "disabled" %}
+
+                    <div class="column-one-half">
+                        <a class="button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">{{ 'button.continue.label' | trans() }}</a>
+                    </div>
+
                 {% else  %}
-                    {% set continueClass = "" %}
 
                     <div class="push--top">
                         {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
@@ -84,9 +89,7 @@
             {% endif %}
 
             <div id="page-body">
-                <div class="column-one-half">
-                    <a class="button left {{ continueClass }}" href="{{ path("report_declaration" , {'reportId': report.id }) }}">{{ 'button.continue.label' | trans() }}</a>
-                </div>
+
                 <a class="" href="{{ path("report_overview" , {'reportId': report.id }) }}">
                     {{ 'incomplete.backToEditingReport' | trans() }}
                 </a>
