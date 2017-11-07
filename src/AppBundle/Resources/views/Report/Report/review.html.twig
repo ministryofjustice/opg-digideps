@@ -1,11 +1,19 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 {% set translationDomain = "report-display" %}
 {% set isLayDeputy = not user.isDeputyPa %}
+{% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+    {% set preview = true %}
+    {% set page = 'preview' %}
+{% else %}
+    {% set preview = false %}
+    {% set page = 'review' %}
+{% endif %}
 
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
     {% if report.submitted == true %}
@@ -26,43 +34,36 @@
 
 {% block pageContent %}
 
-    <div id="page-body">
-        <p>
-            {{ 'incomplete.introPara' | trans() }}
-        </p>
+    <div class="push--bottom">
+        <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
+        {% if preview %}
+            <a class="link-back" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% endif %}
     </div>
 
-    <div id="page-body">
+    <div class="push--bottom">
         {% include 'AppBundle:Report/Formatted:formatted.html.twig' %}
     </div>
 
-    <div id="body-footer-nav">
-
-        {% if report.submitted == false %}
-            {% if reportStatus.isReadyToSubmit and report.isDue %}
-
-                <div class="column-one-half">
-                    <a class="button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">{{ 'button.continue.label' | trans() }}</a>
-                </div>
-
-            {% else  %}
-
-                <div class="push--top">
-                    {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
-                </div>
-
-            {% endif %}
-        {% endif %}
-
-        <div id="page-body">
-
+    {% if report.submitted == false %}
+        {% if preview %}
             <a class="" href="{{ path("report_overview" , {'reportId': report.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
-            <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
-        </div>
+        {% else %}
+            <a class="button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">
+                {{ 'submitReport' | trans() }}
+            </a>
+            <a class="button-link" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% endif %}
+    {% endif %}
 
-    </div>
+    <br>
+    <a class="pdflink push-half--top" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
 
     <script>
         $(document).ready(function() {

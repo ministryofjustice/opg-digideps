@@ -5,11 +5,20 @@ page:
 
 downloadAsPdf: Download as pdf
 incomplete:
-    introPara: |
-        Use this section to check the details of the report are correct.
-        When all sections are completed you will be able to continue the report submission process.
-    youCanContinue: You can continue when all sections are completed.
-    backToEditingReport: Back to editing report
-button:
-  continue:
-    label: Continue
+  youCanContinue: You can continue when all sections are completed.
+  backToEditingReport: Back to editing report
+
+submitReport: Submit report
+
+preview:
+  htmlTitle: Preview deputy report | GOV.UK
+  pageTitle: Preview report
+  introPara: |
+    Use this section to check the details of the report are correct. When all sections are
+    completed you will be able to continue the report submission process.
+
+review:
+  htmlTitle: Review deputy report | GOV.UK
+  pageTitle: Review report
+  introPara: |
+    Review all section of this report before you submit.

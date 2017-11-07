@@ -5,7 +5,6 @@
 .formatted-report {
 
     width: 800px;
-    margin: 0 auto;
 
     #safeguarding-section table {
         width: auto;
@@ -56,9 +55,9 @@
 }
 
 .pdflink {
+    display: inline-block;
     background: url("/images/pdf.png") top left no-repeat;
     padding-left: 40px;
-    float: right;
     height: 32px;
     padding-top: 5px;
 }

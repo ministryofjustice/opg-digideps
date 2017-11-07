@@ -1,5 +1,11 @@
 .formatted-report {
 
+    @extend %contain-floats;
+    @include core-14();
+    box-sizing: border-box;
+    overflow: hidden;
+    color: $black;
+
     // =======================================================
     // PRINT STYLES - PAGE BREAKS
 
@@ -34,14 +40,6 @@
 
     // =======================================================
     // BASE ELEMENTS
-
-    @extend %contain-floats;
-    @include core-14();
-    box-sizing: border-box;
-    overflow: hidden;
-    color: $black;
-    max-width: 595px;
-    margin: 0 auto;
 
     h1 {
         @include bold-48();
