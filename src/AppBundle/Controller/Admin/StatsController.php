@@ -29,21 +29,18 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request)
     {
-        $data = $this->getRestClient()->get('stats/users?limit=10', 'array');
-
-        return [
-            'data' => $data,
-        ];
+        return [];
     }
 
     /**
-     * @Route("/csv-download", name="admin_stats_csv")
+     * @Route("/dd-stats.csv", name="admin_stats_csv")
      * @Template
      */
     public function statsCsvAction(Request $request)
     {
         try {
-            $rawCsv = (string)$this->getRestClient()->get("stats/users.csv", 'raw');
+            $regenerate = $request->get('regenerate') ? 1 : 0;
+            $rawCsv = (string)$this->getRestClient()->get("stats/stats.csv?regenerate=$regenerate", 'raw');
         } catch(\Exception $e) {
             throw new DisplayableException($e);
         }
@@ -51,7 +48,7 @@ class StatsController extends AbstractController
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-type', 'plain/text');
         $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-' . date('Y-m-d') . '.csv";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats.' . date('Y-m-d') . '.csv";');
         $response->sendHeaders();
         $response->setContent($rawCsv);
 

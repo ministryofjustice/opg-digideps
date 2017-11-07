@@ -77,10 +77,10 @@ editUserForm:
 statsPage:
   htmlTitle: Administration - Statistics
   pageTitle: Admin
-  supportTitle: Statistics
-  heading: Deputy's analysis
-  limitedTo100: Limited to last 100 users.
-  downloadCSV: <a href="%csvFile%">Download the CSV</a> to get the full list (updated to this morning 7am)
+  supportTitle: Download statistics
+  heading: Lay deputy's stats
+  limitedTo100: Based on CASREC file + additional columns (instantly added on CASREC upload, and also updated every hour)
+  downloadCSV: <a href="%csvFile%">Download</a>
   pleaseWait: Please wait ...
   dataGenerated: |
     Data is being generated, Click here to <a href="%csvFile%">download</a>
