@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Service\CsvUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use \Doctrine\Common\Util\Debug as doctrineDebug;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,8 +105,7 @@ class CasRecController extends RestController
             $this->get('casrec_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
         }
 
-        $response = new Response();
-        $response->setContent(readfile(EntityDir\CasRec::STATS_FILE_PATH));
+        $response = new BinaryFileResponse(EntityDir\CasRec::STATS_FILE_PATH);
 
         return $response;
     }
