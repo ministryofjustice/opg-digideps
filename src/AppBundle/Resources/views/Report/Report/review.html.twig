@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 {% set translationDomain = "report-display" %}
+{% set isLayDeputy = not user.isDeputyPa %}
+
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
@@ -10,7 +12,7 @@
         {% if app.user.isDeputyPa() %}
             <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans([], 'report-submitted') }}</a>
         {% else %}
-            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
+            <a id="back-to-reports" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
         {% endif %}
     {% else %}
         <div class="breadcrumbs hard--bottom">
@@ -24,20 +26,16 @@
 
 {% block pageContent %}
 
-    {% if not user.isDeputyPa %}
-        {% if report.submitted == false %}
-            {% if reportStatus.isReadyToSubmit and report.isDue %}
+    {% if isLayDeputy %}
 
-            {% else  %}
-
-            {% endif %}
-        {% endif %}
         <div id="page-body">
             <p>
                 {{ 'incomplete.introPara' | trans() }}
             </p>
         </div>
+
     {% else %}
+        {# PA deputies #}
         {% if report.submitted == false %}
             {% if reportStatus.isReadyToSubmit and report.isDue %}
                 {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {

@@ -1,4 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set isLayDeputy = not app.user.isDeputyPa %}
 
 {% block htmlTitle %}Review new deputy report{% endblock %}
 {% block pageTitle %}Review new deputy report{% endblock %}
@@ -7,30 +8,47 @@
 {% block breadcrumbs %}
     {% if odr.submitted == true %}
         <a id="overview-button" href="{{ path('homepage') }}" class="link-back">Your reports</a>
+    {% else %}
+        <div class="breadcrumbs hard--bottom">
+            <ol class="group">
+                <li><a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a></li>
+                <li><a href="{{ path("odr_overview" , {'odrId': odr.id }) }}">{{ 'deputyReportOverview' | trans({}, 'common' ) }}</a></li>
+            </ol>
+        </div>
     {% endif %}
 {% endblock %}
 
-{% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
-    {% if odr.submitted == false %}
-        {% if odrStatus.isReadyToSubmit %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("odr_overview" , {'odrId': odr.id}),
-            'previousLabel': 'Edit new deputy report',
-            'nextLink': path("odr_declaration", {'odrId': odr.id}),
-            'nextLabel': 'Submit report',
-            'position': position,
-            'nextAdditionalClass': nextAdditionalClass,
-            } %}
-        {% else  %}
-            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
-            'previousLink': path("odr_overview" , {'odrId': odr.id }),
-            'previousLabel': 'Edit new deputy report',
-            'position': position,
-            } %}
+{% if isLayDeputy %}
+    <div id="page-body">
+        <p>
+            {{ 'incomplete.introPara' | trans() }}
+        </p>
+    </div>
+{% else %}
+    {% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
+        {% if odr.submitted == false %}
+            {% if odrStatus.isReadyToSubmit %}
+                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                'previousLink': path("odr_overview" , {'odrId': odr.id}),
+                'previousLabel': 'Edit new deputy report',
+                'nextLink': path("odr_declaration", {'odrId': odr.id}),
+                'nextLabel': 'Submit report',
+                'position': position,
+                'nextAdditionalClass': nextAdditionalClass,
+                } %}
+            {% else  %}
+                {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+                'previousLink': path("odr_overview" , {'odrId': odr.id }),
+                'previousLabel': 'Edit new deputy report',
+                'position': position,
+                } %}
+            {% endif %}
         {% endif %}
-    {% endif %}
-{% endmacro %}
+    {% endmacro %}
+{% else %}
 
+
+{% endif %}
 {% block pageContent %}
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
