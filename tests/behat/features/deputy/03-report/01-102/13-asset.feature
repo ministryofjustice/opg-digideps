@@ -23,11 +23,12 @@ Feature: Report asset with variations
             | asset_value |   | [ERR] |
             | asset_description |   | [ERR] |
         And the step with the following values CANNOT be submitted:
-            | asset_value       | 1000000000001 |  [ERR] |
+            | asset_value       | 100000000000.01 |  [ERR] |
             | asset_description | Alfa Romeo 156 JTD |  [OK] |
             | asset_valuationDate_day | 99 |  [ERR] |
             | asset_valuationDate_month |  |  [ERR] |
             | asset_valuationDate_year | 2016 |  [ERR] |
+        And the "#error-summary" element should contain "100,000,000,000"
         And the step with the following values CAN be submitted:
             | asset_value       | 17,000 |
             | asset_description | Alfa Romeo 156 JTD |
@@ -119,6 +120,10 @@ Feature: Report asset with variations
         And the step with the following values CANNOT be submitted:
             | asset_hasMortgage_0             | yes |       |
             | asset_mortgageOutstandingAmount |     | [ERR] |
+        And the step with the following values CANNOT be submitted:
+            | asset_hasMortgage_0             | yes |       |
+            | asset_mortgageOutstandingAmount | 100000000000.01 | [ERR] |
+        And the "#error-summary" element should contain "100,000,000,000"
         And the step with the following values CAN be submitted:
             | asset_hasMortgage_0             | yes    |
             | asset_mortgageOutstandingAmount | 120500 |

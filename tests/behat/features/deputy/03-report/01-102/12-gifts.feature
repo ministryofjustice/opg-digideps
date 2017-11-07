@@ -23,6 +23,10 @@ Feature: Report gifts
       | gifts_single_explanation |                | [ERR] |
       | gifts_single_amount      | invalid number | [ERR] |
     And the step with the following values CANNOT be submitted:
+      | gifts_single_explanation |                | [ERR] |
+      | gifts_single_amount      | 10000000.01 | [ERR] |
+    And the "#error-summary" element should contain "10,000,000"
+    And the step with the following values CANNOT be submitted:
       | gifts_single_explanation |     | [ERR] |
       | gifts_single_amount      | 0.0 | [ERR] |
     And the step with the following values CAN be submitted:
