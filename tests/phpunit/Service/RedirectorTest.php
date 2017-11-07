@@ -8,7 +8,8 @@ use MockeryStub as m;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class RedirectorTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,9 +24,14 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
     protected $router;
 
     /**
-     * @var SecurityContextInterface
+     * @var AuthorizationCheckerInterface
      */
-    protected $security;
+    protected $authChecker;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
 
     /**
      * @var Session
@@ -35,17 +41,19 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->user = m::mock(User::class);
-        $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
-        $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
+        $this->tokenStorage = m::mock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
+        $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
         $this->router = m::mock('Symfony\Component\Routing\RouterInterface')
             ->shouldReceive('generate')->andReturnUsing(function ($route, $params = []) {
                 return [$route, $params];
             })->getMock();
         $this->session = m::mock('Symfony\Component\HttpFoundation\Session\Session');
 
-        $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
+        $this->tokenStorage->shouldReceive('getToken->getUser')->andReturn($this->user);
 
-        $this->object = new Redirector($this->security, $this->router, $this->session, 'prod');
+        $this->authChecker = m::mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface');
+
+        $this->object = new Redirector($this->tokenStorage, $this->authChecker, $this->router, $this->session, 'prod');
     }
 
     public static function firstPageAfterLoginProvider()
@@ -69,8 +77,8 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
     {
         $this->markTestIncomplete('fix when specs are 100% defined');
 
-        $this->security->shouldIgnoreMissing();
-        $this->security->shouldReceive('isGranted')->with($grantedRole)->andReturn(true);
+        $this->authChecker->shouldIgnoreMissing();
+        $this->authChecker->shouldReceive('isGranted')->with($grantedRole)->andReturn(true);
         foreach ($userMocks as $k => $v) {
             $this->user->shouldReceive($k)->andReturn($v);
         }
