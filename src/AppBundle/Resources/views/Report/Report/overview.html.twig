@@ -34,22 +34,13 @@
         </div>
     </div>
 
-    {% if report.isDue %}
-        {% if reportStatus.isReadyToSubmit %}
-            {% set flashMessage = "completeNotice" %}
-        {% else %}
-            {% set flashMessage = "guidanceNotice" %}
-        {% endif %}
-    {% else %}
-        {# report is NOT due #}
-        {% set endDate = report.getEndDate() | date(" d F Y")  %}
-        {% set transOptions = {'%date%': endDate} %}
-        {% set flashMessage = "warningNotice" %}
+    {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+        <div class="push--top">
+            {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }}
+        </div>
     {% endif %}
 
-    <div class="push--top">
-        {{ macros.notification('info', flashMessage | trans(transOptions)) }}
-    </div>
+
     <ul id="overview-sections" class="overview-sections">
 
         <li id="planning-section" class="overview-section">
@@ -265,41 +256,33 @@
         </li>
     </ul>
 
-    {% if report.isDue %}
-        {% if reportStatus.isReadyToSubmit %}
+    {% if not report.isDue %}
 
-            {# Lay report due AND ready to submit #}
+        <div class="push--top">
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+
+            {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
+        </div>
+        <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+    {% else %}
+        {% if not reportStatus.isReadyToSubmit %}
+
+            <div class="push--top">
+                {{ macros.notification('info', 'previewNotice' | trans()) }}
+            </div>
+            <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+        {% else %}
+
             <div class="push--top">
                 {{ macros.notification('info', 'completeNotice' | trans()) }}
             </div>
 
-            <div class="column-one-half">
-                <a id="edit-report-review" class="button left behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.reviewReport' | trans() }}</a> 
-            </div>
-
-        {% else %}
-            {# Lay report due but NOT ready to submit #}
-            {% set flashMessage = "previewNotice" %}
-
-            <div class="push--top">
-                {{ macros.notification('info', flashMessage | trans()) }}
-            </div>
-
-            <div class="column-one-half">
-                <a id="edit-report-preview" class="button left " href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
-            </div>
+            <a id="edit-report-review" class="button behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a> 
 
         {% endif %}
-    {% else %}
-        {# Lay report is NOT due #}
-
-        {% set endDate = report.getEndDate() | date(" d F Y")  %}
-        {% set transOptions = {'%date%': endDate} %}
-
-        {% set flashMessage = "warningNotDue" %}
-        <div class="push--top">
-            {{ macros.notification('info', flashMessage | trans(transOptions)) }}
-        </div>
 
     {% endif %}
 
