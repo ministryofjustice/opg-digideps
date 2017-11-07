@@ -82,7 +82,7 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.context')->setToken($clientToken); //now the user is logged in
+            $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));

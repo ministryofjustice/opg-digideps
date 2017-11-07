@@ -6,7 +6,8 @@ use AppBundle\Entity as EntityDir;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class Redirector
 {
@@ -16,9 +17,14 @@ class Redirector
     protected $router;
 
     /**
-     * @var SecurityContextInterface
+     * @var TokenStorageInterface
      */
-    protected $security;
+    protected $tokenStorage;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authChecker;
 
     /**
      * @var Session
@@ -51,18 +57,21 @@ class Redirector
 
     /**
      * Redirector constructor.
-     * @param SecurityContextInterface $security
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authChecker
      * @param RouterInterface $router
      * @param Session $session
      * @param $env
      */
     public function __construct(
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authChecker,
         RouterInterface $router,
         Session $session,
         $env
     ) {
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authChecker = $authChecker;
         $this->router = $router;
         $this->session = $session;
         $this->env = $env;
@@ -73,7 +82,7 @@ class Redirector
      */
     private function getLoggedUser()
     {
-        return $this->security->getToken()->getUser();
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**
@@ -83,13 +92,13 @@ class Redirector
     {
         $user = $this->getLoggedUser();
 
-        if ($this->security->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
-        } elseif ($this->security->isGranted(EntityDir\User::ROLE_AD)) {
+        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyPa()) {
             return $this->router->generate('pa_dashboard');
-        } elseif ($this->security->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
+        } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
             return $this->router->generate('access_denied');
@@ -197,27 +206,25 @@ class Redirector
      */
     public function getHomepageRedirect()
     {
-        $securityContext = $this->security;
-
         if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($securityContext->isGranted(EntityDir\User::ROLE_ADMIN)
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)
             ) {
                 return $this->router->generate('admin_homepage');
             }
-            if ($securityContext->isGranted(EntityDir\User::ROLE_AD)) {
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
             }
 
             return $this->router->generate('login');
         }
 
-        if ($securityContext->isGranted(EntityDir\User::ROLE_PA)) {
+        if ($this->authChecker->isGranted(EntityDir\User::ROLE_PA)) {
             return $this->router->generate('pa_dashboard');
         }
 
         // deputy: if logged, redirect to overview pages
-        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
         }
 

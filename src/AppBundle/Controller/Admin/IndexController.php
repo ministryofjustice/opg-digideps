@@ -237,7 +237,7 @@ class IndexController extends AbstractController
     {
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             throw new DisplayableException('Only Admin can delete users');
         }
 

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Constraints;
 class FeedbackType extends AbstractType
 {
     use Traits\HasTranslatorTrait;
-    use Traits\HasSecurityContextTrait;
+    use Traits\TokenStorageTrait;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
