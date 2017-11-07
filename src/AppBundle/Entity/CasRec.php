@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CasRec
 {
+    const STATS_FILE_PATH = '/tmp/dd_stats.csv';
+
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay

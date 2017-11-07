@@ -1,4 +1,4 @@
 #
-# Create stats CSV file every morning at 7am
+# Update stats every 5 minutes + write CSV file
 #
-* * * * * app php /app/app/console digideps:stats-update --env=prod > /dev/null 2>&1
+*/5 * * * * app php /app/app/console digideps:stats-update --env=prod > /dev/null 2>&1

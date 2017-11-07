@@ -15,38 +15,20 @@ use Symfony\Component\HttpFoundation\Response;
 class StatsController extends RestController
 {
     /**
-     * @Route("/users")
-     * @Method({"GET"})
-     */
-    public function users(Request $request)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
-        $stats = $this->get('stats_service');
-        /* @var $stats StatsService */
-        $ret = $stats->getRecords($request->query->get('limit'));
-
-        $this->get('kernel.listener.responseConverter')->addContextModifier(function ($context) {
-            $context->setSerializeNull(true);
-        });
-
-        return $ret;
-    }
-
-    /**
      * Return CSV file created on the fly
      *
-     * @Route("/users.csv")
+     * @Route("/stats.csv")
      * @Method({"GET"})
      */
-    public function usersCsv(Request $request)
+    public function statsCsv(Request $request)
     {
-        $filePath = '/tmp/'.time().'users.csv';
+        // create CSV if not added by the cron, or the "regenerated" is added
+        if (!file_exists(EntityDir\CasRec::STATS_FILE_PATH) || $request->get('regenerate')) {
+            $this->get('stats_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
+        }
+
         $response = new Response();
-        $stats = $this->get('stats_service');
-        /* @var $stats StatsService */
-        $stats->saveCsv($filePath);
-        $response->setContent(readfile($filePath));
+        $response->setContent(readfile(EntityDir\CasRec::STATS_FILE_PATH));
 
         return $response;
     }
