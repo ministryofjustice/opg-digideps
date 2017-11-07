@@ -35,12 +35,9 @@
     </div>
 
     {% if report.isDue %}
-
         {% if reportStatus.isReadyToSubmit %}
-            {# PA report due AND ready to submit #}
             {% set flashMessage = "completeNotice" %}
         {% else %}
-            {# PA report due but NOT ready to submit #}
             {% set flashMessage = "guidanceNotice" %}
         {% endif %}
     {% else %}
