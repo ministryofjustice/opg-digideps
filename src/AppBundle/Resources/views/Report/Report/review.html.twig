@@ -54,9 +54,11 @@
                 } %}
             {% endif %}
         {% endif %}
+
         <div id="page-body">
             <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
         </div>
+
     {% endif %}
 
     <div id="page-body">
@@ -64,7 +66,7 @@
     </div>
 
     <div id="body-footer-nav">
-        {% if not user.isDeputyPa %}
+        {% if isLayDeputy %}
 
             {# Lay deputies #}
 

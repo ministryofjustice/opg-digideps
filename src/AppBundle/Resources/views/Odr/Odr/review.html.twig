@@ -1,5 +1,8 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set translationDomain = "report-display" %}
 {% set isLayDeputy = not app.user.isDeputyPa %}
+
+{% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}Review new deputy report{% endblock %}
 {% block pageTitle %}Review new deputy report{% endblock %}
@@ -18,13 +21,17 @@
     {% endif %}
 {% endblock %}
 
+{% block pageContent %}
+
 {% if isLayDeputy %}
+
     <div id="page-body">
         <p>
             {{ 'incomplete.introPara' | trans() }}
         </p>
     </div>
 {% else %}
+    {# PA deputies #}
     {% macro nextPrevSubmitButtons(odr, odrStatus, position, nextAdditionalClass) %}
         {% if odr.submitted == false %}
             {% if odrStatus.isReadyToSubmit %}
@@ -45,20 +52,54 @@
             {% endif %}
         {% endif %}
     {% endmacro %}
-{% else %}
-
-
-{% endif %}
-{% block pageContent %}
 
     {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'top', 'behat-link-sign-and-submit') }}
+
     <div id="page-body">
         <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
+    </div>
+
+{% endif %}
+    <div id="page-body">
         {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
     </div>
 
     <div id="body-footer-nav">
-        {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'bottom') }}
+        {% if isLayDeputy %}
+
+            {# Lay deputies #}
+
+            {% if odr.submitted == false %}
+                {% if odrStatus.isReadyToSubmit and odr.isDue %}
+                    {% set continueClass = "disabled" %}
+                {% else  %}
+                    {% set continueClass = "" %}
+
+                    <div class="push--top">
+                        {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
+                    </div>
+
+                {% endif %}
+            {% endif %}
+
+            <div id="page-body">
+                <div class="column-one-half">
+                    <a class="button left {{ continueClass }}" href="{{ path("odr_declaration" , {'odrId': odr.id }) }}">{{ 'button.continue.label' | trans() }}</a>
+                </div>
+                <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
+                    {{ 'incomplete.backToEditingReport' | trans() }}
+                </a>
+                <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
+            </div>
+
+        {% else %}
+
+            {# PA deputies #}
+
+            {{ _self.nextPrevSubmitButtons(odr, odrStatus, 'bottom') }}
+
+        {% endif %}
+
     </div>
 
     <script>
