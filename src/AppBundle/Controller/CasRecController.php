@@ -31,7 +31,8 @@ class CasRecController extends RestController
 
     /**
      * Bulk insert
-     * Max 10k otherwise failing (memory reach 128M).
+     * To call multiple times in chunks of maximum 10k records, otherwise failing deu to memory reasons.
+     * Currently used from admin area via a ajax uploader and multiple requests (after an initial truncate)
      *
      * @Route("/bulk-add")
      * @Method({"POST"})
