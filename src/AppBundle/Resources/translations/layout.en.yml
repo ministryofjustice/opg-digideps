@@ -6,5 +6,7 @@ nav:
     clientHome: Your client
     reports: Your reports
     userAccount: Deputyship details
+    # only in case of exception, when it's not clear the user role not the page
+    homepage: Homepage
 helpline: 0115 934 2700
 helplinePA: 0115 934 2817
