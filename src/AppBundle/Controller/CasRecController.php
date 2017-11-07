@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use \Doctrine\Common\Util\Debug as doctrineDebug;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/casrec")
@@ -125,26 +126,6 @@ class CasRecController extends RestController
         return ['verified' => $casrecVerified];
     }
 
-
-    /**
-     * @Route("/get-all-with-stats")
-     * @Method({"GET"})
-     */
-//    public function getAllWithStats(Request $request)
-//    {
-//        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-//
-//        $ret = [];
-//        $all = $this->getRepository(EntityDir\CasRec::class)->findBy([], null, 1000);
-//        foreach($all as $row) { /* @var $row EntityDir\CasRec */
-//            $ret[] = $row->toArray();
-//        }
-//
-//        return $ret;
-//    }
-
-
-
     /**
      * @Route("/count")
      * @Method({"GET"})
@@ -160,6 +141,27 @@ class CasRecController extends RestController
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
+    }
+
+    /**
+     * Return CSV file created on the fly
+     *
+     * @Route("/stats.csv")
+     * @Method({"GET"})
+     */
+    public function getStatsCsv(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
+
+        // create CSV if not added by the cron, or the "regenerated" is added
+        if (!file_exists(EntityDir\CasRec::STATS_FILE_PATH) || $request->get('regenerate')) {
+            $this->get('casrec_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
+        }
+
+        $response = new Response();
+        $response->setContent(readfile(EntityDir\CasRec::STATS_FILE_PATH));
+
+        return $response;
     }
 
 }

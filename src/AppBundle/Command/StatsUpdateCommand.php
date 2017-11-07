@@ -3,23 +3,23 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\CasRec;
-use AppBundle\Service\StatsService;
+use AppBundle\Service\CarecService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * This command is installed in the crontab and executed every X minutes
+ * It could be called by more than one API container, or re-called by the corntab when is already running
+ * A redis-lock mechanism is implemented to only allow one execution a time
+ * The lock expires after a certain amount of time, to allow an execution in case the script is  killed
+ * before it releases the lock
+ *
+ */
 class StatsUpdateCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
     const LOCK_KEY = 'migration_status';
 
-    /**
-     * This command is installed in the crontab and executed every X minutes
-     * It could be called by more than one API container, or re-called by the corntab when is already running
-     * A redis-lock mechanism is implemented to only allow one execution a time
-     * The lock expires after a certain amount of time, to allow an execution in case the script is  killed
-     * before it releases the lock
-     *
-     */
     const LOCK_EXPIRES_SECONDS = 1800; // in order not avoid multiple API containers running this.in case of crashes, in 30 minutes the lock will be released
 
     protected function configure()
@@ -48,7 +48,7 @@ class StatsUpdateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
 
         try {
             // update stats
-            $statsService = $this->getContainer()->get('stats_service');
+            $statsService = $this->getContainer()->get('casrec_service');
             $nUpdated = $statsService->updateAll();
             $output->writeln($nUpdated ? "Updated $nUpdated CASREC records" : "No more CASREC records to updated");
             $linesCount = $statsService->saveCsv(CasRec::STATS_FILE_PATH);

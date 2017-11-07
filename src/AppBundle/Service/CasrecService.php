@@ -9,7 +9,7 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
 
-class StatsService
+class CasrecService
 {
     const STATS_NOT_OLDER_THAN = '-60 minutes';
 

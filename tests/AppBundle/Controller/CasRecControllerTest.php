@@ -155,47 +155,6 @@ class CasRecControllerTest extends AbstractTestController
 
     }
 
-    public function testGetAllWithStats()
-    {
-        TODO move to stats controller test
-    }
-        $url = '/stats/users';
-//        $this->assertEndpointNeedsAuth('GET', $url);
-//        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-
-        $this->fixtures()->deleteReportsData(['casrec']);
-
-        \Fixtures::deleteReportsData(['casrec']);
-        $this->fixtures()->persist($this->c1, $this->c2)->flush($this->c1, $this->c2);
-
-        // check count
-
-        $records = $this->assertJsonRequest('GET', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ])['data']; /* @var $records CasRec[] */
-
-        print_r($records);die;
-
-        $this->assertCount(2, $records);
-        $this->assertEquals('12345678', $records[0]['Case']);
-        $this->assertEquals('c1', $records[0]['custom']);
-        $this->assertEquals('c1', $records[0]['custom 2']);
-        //check stats
-        $this->assertContains(date('d/m/Y'), $records[0]['Uploaded at']);
-        $this->assertEquals('-', $records[0]['Stats updated at']);
-        $this->assertEquals('n.a.', $records[0]['Deputy registration date']);
-        $this->assertEquals('n.a.', $records[0]['Deputy last logged in']);
-        $this->assertEquals('n.a.', $records[0]['Reports submitted']);
-        $this->assertEquals('n.a.', $records[0]['Reports active']);
-
-
-        $this->assertEquals('12345679', $records[1]['Case']);
-        $this->assertEquals('c2', $records[1]['custom']);
-        $this->assertEquals('', $records[1]['custom 2']);
-
-//    }
-
     public function testCount()
     {
         $url = '/casrec/count';
@@ -213,6 +172,23 @@ class CasRecControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals(2, $data);
+    }
+
+    public function testGetStatsCsv()
+    {
+        $url = '/casrec/stats.csv';
+
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => 'WRONG']);
+        $this->assertEquals(419, self::$frameworkBundleClient->getResponse()->getStatusCode());
+
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenDeputy]);
+        $this->assertEquals(403, self::$frameworkBundleClient->getResponse()->getStatusCode());
+
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenAdmin]);
+        $this->assertEquals(200, self::$frameworkBundleClient->getResponse()->getStatusCode());
+
+
+//        echo self::$frameworkBundleClient->getResponse()->getContent();
     }
 
 }
