@@ -116,7 +116,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setReport($report);
 
-        $form = $this->createForm(new FormDir\Report\Asset\AssetTypeOther(), $asset);
+        $form = $this->createForm(FormDir\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -149,7 +149,7 @@ class AssetController extends AbstractController
         }
 
 
-        $form = $this->createForm(new FormDir\Report\Asset\AssetTypeOther(), $asset);
+        $form = $this->createForm(FormDir\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -38,7 +38,7 @@ class IndexController extends AbstractController
     {
         $request = $this->getRequest();
 
-        $form = $this->createForm(new FormDir\LoginType(), null, [
+        $form = $this->createForm(FormDir\LoginType::class, null, [
             'action' => $this->generateUrl('login'),
         ]);
         $form->handleRequest($request);

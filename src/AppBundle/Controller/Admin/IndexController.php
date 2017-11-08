@@ -38,7 +38,7 @@ class IndexController extends AbstractController
             'sort_order'  => 'DESC',
         ];
 
-        $form = $this->createForm(new FormDir\Admin\SearchType(), null, ['method' => 'GET']);
+        $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $filters = $form->getData() + $filters;
@@ -155,7 +155,7 @@ class IndexController extends AbstractController
         if (count($clients)) {
             $odr = $clients[0]->getOdr();
             if ($odr) {
-                $odrForm = $this->createForm(new FormDir\OdrType(), $odr, [
+                $odrForm = $this->createForm(FormDir\OdrType::class, $odr, [
                     'action' => $this->generateUrl('admin_editOdr', ['id' => $odr->getId()]),
                 ]);
             }
@@ -209,7 +209,7 @@ class IndexController extends AbstractController
     public function editOdrAction(Request $request, $id)
     {
         $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'client-users', 'user']);
-        $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
+        $odrForm = $this->createForm(FormDir\OdrType::class, $odr);
         if ($request->getMethod() == 'POST') {
             $odrForm->handleRequest($request);
 
@@ -272,7 +272,7 @@ class IndexController extends AbstractController
     {
         $chunkSize = 1000;
 
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
@@ -344,7 +344,7 @@ class IndexController extends AbstractController
      */
     public function upgradeMldAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
@@ -399,7 +399,7 @@ class IndexController extends AbstractController
         $this->get('pa_service');
         $chunkSize = 100;
 
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 

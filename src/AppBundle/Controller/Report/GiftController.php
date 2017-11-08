@@ -81,7 +81,7 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
 
-        $form = $this->createForm(new FormDir\Report\GiftType(), $gift);
+        $form = $this->createForm(FormDir\Report\GiftType::class, $gift);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -95,7 +95,6 @@ class GiftController extends AbstractController
 
         $backLinkRoute = 'gifts_' . $request->get('from');
         $backLink = $this->routeExists($backLinkRoute) ? $this->generateUrl($backLinkRoute, ['reportId'=>$reportId]) : '';
-
 
         return [
             'backLink' => $backLink,
@@ -139,7 +138,7 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = $this->getRestClient()->get('report/' . $report->getId() . '/gift/' . $giftId, 'Report\Gift');
 
-        $form = $this->createForm(new FormDir\Report\GiftType(), $gift);
+        $form = $this->createForm(FormDir\Report\GiftType::class, $gift);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

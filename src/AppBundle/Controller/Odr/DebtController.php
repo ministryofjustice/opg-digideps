@@ -71,7 +71,7 @@ class DebtController extends AbstractController
     public function editAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Odr\DebtsType(), $odr);
+        $form = $this->createForm(FormDir\Odr\DebtsType::class, $odr);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 

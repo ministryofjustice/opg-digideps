@@ -50,7 +50,7 @@ class PaFeeExpenseController extends AbstractController
     public function feeExistAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Report\PaFeeExistType(), $report);
+        $form = $this->createForm(FormDir\Report\PaFeeExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -84,7 +84,7 @@ class PaFeeExpenseController extends AbstractController
     public function feeEditAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Report\FeesType(), $report);
+        $form = $this->createForm(FormDir\Report\FeesType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
@@ -157,7 +157,7 @@ class PaFeeExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
-        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -224,7 +224,7 @@ class PaFeeExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
-        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

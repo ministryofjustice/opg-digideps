@@ -80,7 +80,7 @@ class DeputyExpenseController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = new EntityDir\Odr\Expense();
 
-        $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Odr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -138,7 +138,7 @@ class DeputyExpenseController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('odr/' . $odr->getId() . '/expense/' . $expenseId, 'Odr\Expense');
 
-        $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Odr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

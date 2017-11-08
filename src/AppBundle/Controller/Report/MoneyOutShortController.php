@@ -171,7 +171,7 @@ class MoneyOutShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->getRestClient()->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $transaction);
+        $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $transaction);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

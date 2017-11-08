@@ -74,7 +74,7 @@ class DebtController extends AbstractController
     public function editAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Report\DebtsType(), $report);
+        $form = $this->createForm(FormDir\Report\DebtsType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 

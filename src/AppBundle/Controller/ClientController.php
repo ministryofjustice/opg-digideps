@@ -39,7 +39,7 @@ class ClientController extends AbstractController
     {
         $client = $this->getFirstClient();
 
-        $form = $this->createForm(new FormDir\ClientType(), $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
+        $form = $this->createForm(FormDir\ClientType::class, $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
 
         // edit client form

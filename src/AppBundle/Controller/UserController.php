@@ -183,7 +183,7 @@ class UserController extends AbstractController
     public function passwordForgottenAction(Request $request)
     {
         $user = new EntityDir\User();
-        $form = $this->createForm(new FormDir\PasswordForgottenType(), $user);
+        $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -222,7 +222,7 @@ class UserController extends AbstractController
     public function registerAction(Request $request)
     {
         $selfRegisterData = new SelfRegisterData();
-        $form = $this->createForm(new FormDir\SelfRegisterDataType(), $selfRegisterData);
+        $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
         $translator = $this->get('translator');
         $vars = [];
 
@@ -296,7 +296,7 @@ class UserController extends AbstractController
     {
         $user = $this->getRestClient()->loadUserByToken($token);
 
-        $form = $this->createForm(new FormDir\User\AgreeTermsType(), $user);
+        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->getRestClient()->agreeTermsUse($token);

@@ -113,7 +113,7 @@ class MoneyInShortController extends AbstractController
         $record = new MoneyTransactionShort('in');
         $record->setReport($report);
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $record);
+        $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $record);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -169,7 +169,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->getRestClient()->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $transaction);
+        $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $transaction);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
