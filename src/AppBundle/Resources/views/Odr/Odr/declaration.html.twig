@@ -9,7 +9,10 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbs(odr) }}
+    <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
+        New deputy report overview</a>
+    <a href="{{ path('odr_review', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-review">
+        Review report</a>
 {% endblock %}
 
 {% block pageContent %}
