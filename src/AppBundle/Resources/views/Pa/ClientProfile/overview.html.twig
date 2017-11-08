@@ -7,13 +7,22 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'htmlTitlePA' | trans }}{% endblock %}
-{% block pageTitle %}{% endblock %}
+{% block pageTitle %}
+    {{ 'pageTitle' | trans({}, 'client-profile') }} {{ report.client.fullname | title }}
+{% endblock %}
+{% block pageTitleClass %}heading-large flush--bottom behat-region-report-title{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('pa_dashboard') }}">Dashboard</a></li>
+        </ol>
+    </div>
+{% endblock %}
 
 {% block pageContent %}
 
-    {% block pageHeader %}
-        {% include 'AppBundle:Pa/ClientProfile:_header.html.twig' %}
-    {% endblock %}
+    <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ report.client.caseNumber }}</p>
 
     <div class="panel panel-admin hard">
         <div class="panel-heading">
@@ -48,11 +57,12 @@
                             <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
-                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans() }}</a><br>
                             {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                                 <p class="push--top">
-                                    <a class="behat-link-edit-report_submit button" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.submitReport' | trans() }}</a>
+                                    <a class="behat-link-edit-report_submit button" id="edit-report_submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a>
                                 </p>
+                            {% else %}
+                                <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
                             {% endif %}
                         </dd>
                     </dl>
