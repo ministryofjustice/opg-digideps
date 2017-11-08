@@ -27,6 +27,8 @@ Feature: Report 104 start
     And I should not see the "edit-money_in_short" link
     And I should not see the "edit-money_out_short" link
     And I should not see the "edit-gifts" link
+    And the lay report should not be submittable
+
 
 
 

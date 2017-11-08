@@ -41,6 +41,7 @@ notAvailable: Not available
 # Breadcrumbs
 yourReports: Your reports
 deputyReportOverview: Deputy report overview
+newDeputyReportOverview: New deputy report overview
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
