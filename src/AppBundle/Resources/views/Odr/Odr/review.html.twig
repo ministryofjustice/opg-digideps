@@ -21,12 +21,7 @@
     {% if odr.submitted == true %}
         <a id="overview-button" href="{{ path('homepage') }}" class="link-back">{{ 'yourReports' | trans({}, 'common' ) }}</a>
     {% else %}
-        <div class="breadcrumbs hard--bottom">
-            <ol class="group">
-                <li><a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a></li>
-                <li><a href="{{ path("odr_overview" , {'odrId': odr.id }) }}">{{ 'newDeputyReportOverview' | trans({}, 'common' ) }}</a></li>
-            </ol>
-        </div>
+        {{ macros.breadcrumbs(odr) }}
     {% endif %}
 {% endblock %}
 
