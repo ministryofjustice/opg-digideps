@@ -45,7 +45,7 @@
         <p>{{ 'page.descriptionPara04' | trans }}</p>
     </div>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
@@ -61,11 +61,10 @@
             ]
         }) }}
 
+        <div id="agreed-behalf-deputy-explanation-section" class="panel panel-border-narrow js-hidden">
+            {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation') }}
+        </div>
 
-    </div>
-
-    <div id="agreed-behalf-deputy-explanation-section" class="panel panel-border-narrow js-hidden">
-        {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation') }}
     </div>
 
     <div class="push--top">
