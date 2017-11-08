@@ -9,10 +9,16 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
-        New deputy report overview</a>
-    <a href="{{ path('odr_review', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-review">
-        Review report</a>
+
+<div class="breadcrumbs hard--bottom">
+    <ol class="group">
+        <li><a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a></li>
+        <li><a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="behat-link-breadcrumbs-odr-overview">
+                {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}</a></li>
+        <li><a href="{{ path('odr_review', {'odrId': odr.id}) }}" class="behat-link-breadcrumbs-odr-review">
+                {{ 'reviewReport' | trans({}, 'common' ) }}</a></li>
+    </ol>
+</div>
 {% endblock %}
 
 {% block pageContent %}
