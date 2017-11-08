@@ -25,6 +25,8 @@ Feature: NDR/ account
       | account_isJointAccount_1          | no                  |
     And the step with the following values CANNOT be submitted:
       | account_balanceOnCourtOrderDate | invalid | [ERR] |
+      | account_balanceOnCourtOrderDate | 10000000000.01 | [ERR] |
+    And the "#error-summary" element should contain "10,000,000,000"
     And the step with the following values CAN be submitted:
       | account_balanceOnCourtOrderDate | 100.40 |
     # add another: yes

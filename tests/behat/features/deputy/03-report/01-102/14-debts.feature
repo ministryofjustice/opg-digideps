@@ -24,10 +24,11 @@ Feature: Report debts
             | debt_debts_3_amount |  |
         And the step with the following values CANNOT be submitted:
             | debt_debts_0_amount       | abc                         |   [ERR]   |
-            | debt_debts_1_amount       | 76235746253746253746253746  |   [ERR]   |
+            | debt_debts_1_amount       | 100000000.01                |   [ERR]   |
             | debt_debts_2_amount       | -1                          |   [ERR]   |
             | debt_debts_3_amount       | 1                           |   [OK]   |
             | debt_debts_3_moreDetails  |                             |   [ERR]   |
+        And the "#error-summary" element should contain "100,000,000"
         And the step with the following values CAN be submitted:
             | debt_debts_0_amount | 12331.234 |
             | debt_debts_1_amount |  |
