@@ -9,7 +9,31 @@
 {% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 {% block breadcrumbs %}
-    {{ macros.breadcrumbs(report) }}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li>
+                {% if app.user.isDeputyPa() %}
+                    <a href="{{ path('pa_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                {% else %}
+                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                {% endif %}
+            </li>
+            <li>
+                <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">
+                    {% if app.user.isDeputyPa() %}
+                        {{ 'clientProfile' | trans({}, 'common' ) }}
+                    {% else %}
+                        {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                    {% endif %}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-review">
+                    {{ 'reviewReport' | trans({}, 'common' ) }}
+                </a>
+            </li>
+        </ol>
+    </div>
 {% endblock %}
 
 {% block pageContent %}
