@@ -1,11 +1,20 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% set translationDomain = "report-display" %}
-{% set isLayDeputy = not app.user.isDeputyPa %}
 
+{% set translationDomain = "report-display" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}Review new deputy report{% endblock %}
-{% block pageTitle %}Review new deputy report{% endblock %}
+{% set isLayDeputy = not app.user.isDeputyPa %}
+
+{% if not odrStatus.isReadyToSubmit %}
+    {% set preview = true %}
+    {% set page = 'ndr-preview' %}
+{% else %}
+    {% set preview = false %}
+    {% set page = 'ndr-review' %}
+{% endif %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
@@ -23,44 +32,34 @@
 
 {% block pageContent %}
 
-    <div id="page-body">
-        <p>
-            {{ 'incomplete.introPara' | trans() }}
-        </p>
-    </div>
-
-    <div id="page-body">
-        <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
-    </div>
-
-{% endif %}
-    <div id="page-body">
-        {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
-    </div>
-
-    <div id="body-footer-nav">
-
-        {% if odr.submitted == false %}
-            {% if not odrStatus.isReadyToSubmit or not odr.isDue %}
-
-                <div class="push--top">
-                    {{ macros.notification('info', 'incomplete.youCanContinue' | trans) }}
-                </div>
-
-            {% endif %}
-        {% endif %}
-
-        <div id="page-body">
-            <div class="column-one-half">
-                <a class="button left behat-link-declaration-page" href="{{ path("odr_declaration" , {'odrId': odr.id }) }}">{{ 'button.continue.label' | trans() }}</a>
-            </div>
+    <div class="push--bottom">
+        <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
+        {% if preview %}
             <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
-            <a class="pdflink" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">Download as PDF</a>
-        </div>
-
+        {% endif %}
     </div>
+
+    <div class="push--bottom">
+        {% include 'AppBundle:Odr/Formatted:formatted.html.twig' %}
+    </div>
+
+    {% if odr.submitted == false %}
+        {% if preview %}
+            <a class="" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% else %}
+            <a class="button behat-link-odr-declaration-page" href="{{ path("odr_declaration" , {'odrId': odr.id }) }}">{{ 'submitReport' | trans() }}</a>
+            <a class="button-link" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <br>
+    <a class="pdflink push-half--top" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
 
     <script>
         $(document).ready(function() {

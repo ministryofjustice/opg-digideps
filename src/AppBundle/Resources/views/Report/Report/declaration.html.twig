@@ -37,14 +37,15 @@
             ]
         }) }}
 
-        <div class="push--top">
-            {{ macros.notification('info', 'unableToEditAfterSubmission' | trans) }}
-        </div>
 
     </div>
 
     <div id="agreed-behalf-deputy-explanation-section" class="panel panel-border-narrow js-hidden">
         {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation') }}
+    </div>
+
+    <div class="push--top">
+        {{ macros.notification('info', 'unableToEditAfterSubmission' | trans) }}
     </div>
 
     <div class="form-group push-half--top">
