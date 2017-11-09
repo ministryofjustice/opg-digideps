@@ -4,7 +4,7 @@ namespace AppBundle\Form\Odr\Asset;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Asset form.
@@ -45,7 +45,7 @@ abstract class AbstractAssetType extends AbstractType
         return 'oasset';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'odr-assets',
