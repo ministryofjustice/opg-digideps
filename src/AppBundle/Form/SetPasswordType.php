@@ -19,15 +19,18 @@ class SetPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('password', 'repeated', [
-                    'type' => 'password',
-                    'invalid_message' => $this->options['passwordMismatchMessage'],
-                ])
-                ->add('showTermsAndConditions', 'checkbox', [
-                    'mapped'=>false,
-                    'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups'=>['user_set_password']])]
-                ])
-                ->add('save', 'submit');
+            ->add('password', 'repeated', [
+                'type' => 'password',
+                'invalid_message' => $this->options['passwordMismatchMessage'],
+            ]);
+
+        if (!empty($this->options['showTermsAndConditions'])) {
+            $builder->add('showTermsAndConditions', 'checkbox', [
+                'mapped'=>false,
+                'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups'=>['user_set_password']])]
+            ]);
+        }
+        $builder->add('save', 'submit');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
