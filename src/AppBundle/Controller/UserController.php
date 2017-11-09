@@ -58,6 +58,7 @@ class UserController extends AbstractController
             $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
             $form = $this->createForm(new FormDir\SetPasswordType([
                 'passwordMismatchMessage' => $passwordMismatchMessage,
+                'showTermsAndConditions'  => $user->isDeputy()
             ]), $user);
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'

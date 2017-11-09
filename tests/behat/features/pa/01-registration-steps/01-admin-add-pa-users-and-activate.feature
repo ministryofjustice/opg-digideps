@@ -32,6 +32,7 @@ Feature: Add PA users and activate PA user (journey)
     When I fill in the following:
       | set_password_password_first  | Abcd1234 |
       | set_password_password_second | Abcd1234 |
+    And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
     # assert pre-fill

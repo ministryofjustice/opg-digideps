@@ -70,6 +70,7 @@ trait UserTrait
 
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
+        $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
