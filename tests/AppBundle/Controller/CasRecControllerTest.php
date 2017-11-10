@@ -39,48 +39,64 @@ class CasRecControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
+
+        $this->c1 = new CasRec([
+            'Case' => '12345678',
+            'Surname' => 'jones',
+            'Deputy No' => 'd1',
+            'Dep Surname' => 'white',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2',
+            'custom' => 'c1',
+            'custom 2' => 'c1',
+        ]);
     }
 
-    public function testTruncateAuth()
-    {
-        $url = '/casrec/truncate';
-
-        $this->assertEndpointNeedsAuth('DELETE', $url);
-
-        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
-    }
-
-    public function testAddBulkAuth()
-    {
-        $url = '/casrec/bulk-add';
-
-        $this->assertEndpointNeedsAuth('POST', $url);
-
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
-    }
 
     private function compress($data)
     {
         return base64_encode(gzcompress(json_encode($data), 9));
     }
 
-    public function testTruncateAddBulkCount()
+    public function testTruncate()
     {
         // just to check it gets truncated
-        $casRec = new CasRec('case', 'I should get deleted', 'Deputy No', 'Dep Surname', 'SW1', 'OPG102', 'L2');
+        $casRec = new CasRec([
+            'Case' => 'case',
+            'Surname' => 'I should get deleted',
+            'Deputy No' => 'Deputy No',
+            'Dep Surname' => 'Dep Surname',
+            'Dep Postcode' => 'SW1',
+            'Typeofrep'=>'OPG102',
+            'Corref'=>'L2'
+        ]);
+
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
         $this->fixtures()->clear();
 
-        // truncate
-        $this->assertJsonRequest('DELETE', '/casrec/truncate', [
+        $url = '/casrec/truncate';
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
+
+        $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ]);
         $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+    }
+
+    public function testAddBulk()
+    {
+        $this->fixtures()->deleteReportsData(['casrec']);
+
+        $url = '/casrec/bulk-add';
+        $this->assertEndpointNeedsAuth('POST', $url);
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
 
         // add
-        $this->assertJsonRequest('POST', '/casrec/bulk-add', [
+        $ret = $this->assertJsonRequest('POST', $url, [
             'rawData' => $this->compress([
                 [
                     'Case' => '11',
@@ -91,59 +107,49 @@ class CasRecControllerTest extends AbstractTestController
                     'Typeofrep' => 'OPG102',
                     'Corref' => 'L2',
                 ],
-                [
-                    'Case' => '22',
-                    'Surname' => 'H1',
-                    'Deputy No' => 'DN2',
-                    'Dep Surname' => 'H2',
-                    'Dep Postcode' => '',
-                    'Typeofrep' => 'OPG103',
-                    'Corref' => 'L3',
-                ],
 
             ]),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
-        ]);
+        ])['data'];
+        $this->assertEmpty($ret['errors'], print_r($ret, 1));
+        $this->assertEquals(1, $ret['added'], print_r($ret, 1));
 
-        $records = $this->fixtures()->clear()->getRepo('CasRec')->findBy([], ['id' => 'ASC']);
+    }
 
-        $this->assertCount(2, $records);
-        $record1 = $records[0]; /* @var $record1 CasRec */
-        $record2 = $records[1]; /* @var $record2 CasRec */
+    public function testCount()
+    {
+        $url = '/casrec/count';
+        $this->assertEndpointNeedsAuth('GET', $url);
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
-        $this->assertEquals('11', $record1->getCaseNumber());
-        $this->assertEquals('r1', $record1->getClientLastname());
-        $this->assertEquals('dn1', $record1->getDeputyNo());
-        $this->assertEquals('r2', $record1->getDeputySurname());
-        $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
-        $this->assertEquals('opg102', $record1->getTypeOfReport());
-        $this->assertEquals('l2', $record1->getCorref());
-
-        $this->assertEquals('22', $record2->getCaseNumber());
+        \Fixtures::deleteReportsData(['casrec']);
+        $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count
-        $url = '/casrec/count';
 
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertEquals(2, $data);
+        $this->assertEquals(1, $data);
     }
 
-    public function testCountAuth()
+    public function testGetStatsCsv()
     {
-        $url = '/casrec/count';
+        $url = '/casrec/stats.csv';
 
-        $this->assertEndpointNeedsAuth('GET', $url);
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => 'WRONG']);
+        $this->assertEquals(419, self::$frameworkBundleClient->getResponse()->getStatusCode());
+
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenDeputy]);
+        $this->assertEquals(403, self::$frameworkBundleClient->getResponse()->getStatusCode());
+
+        ob_start();
+        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenAdmin]);
+        ob_clean(); //delete readfile out
+        $this->assertEquals(200, self::$frameworkBundleClient->getResponse()->getStatusCode());
     }
 
-    public function testCountAllAcl()
-    {
-        $url = '/casrec/count';
-
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-    }
 }

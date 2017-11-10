@@ -36,9 +36,9 @@ services:
         tags:
               - { name: monolog.processor, method: processRecord }
 
-    stats_service:
-        class: AppBundle\Service\StatsService
-        arguments: [ "@em" ]
+    casrec_service:
+        class: AppBundle\Service\CasrecService
+        arguments: [ "@em", "@logger", "@opg_digideps.report_service", "@validator" ]
 
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService

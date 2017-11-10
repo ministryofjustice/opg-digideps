@@ -62,7 +62,6 @@ class ReportControllerTest extends AbstractTestController
             'setSubmitted'   => true,
             'setSubmittedBy' => self::$deputy1,
         ]);
-        self::$casRec1 = self::fixtures()->createCasRec(self::$client1, self::$deputy1, self::$report1);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();

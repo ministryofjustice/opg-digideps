@@ -8,11 +8,13 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="casrec")
+ * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
  */
 class CasRec
 {
+    const STATS_FILE_PATH = '/tmp/dd_stats.csv';
+
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay
@@ -120,6 +122,65 @@ class CasRec
     private $corref;
 
     /**
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="other_columns", type="text", nullable=true)
+     */
+    private $otherColumns;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="uploaded_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="registration_date", type="datetime", nullable=true)
+     */
+    private $registrationDate;
+
+    /**
+     * Filled from cron
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
+     */
+    private $lastLoggedIn;
+
+    /**
+     * Filled from cron
+     * @var int
+     *
+     * @JMS\Type("string")
+     * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=true)
+     */
+    private $nOfReportsSubmitted;
+
+    /**
+     * Filled from cron
+     * @var int
+     *
+     * @JMS\Type("string")
+     * @ORM\Column(name="reports_active", type="string", length=4, nullable=true)
+     */
+    private $nOfReportsActive;
+
+    /**
+     * Filled from cron
      * @var array
      */
     private static $normalizeChars = [
@@ -133,23 +194,25 @@ class CasRec
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
 
-    /**
-     * @param string $caseNumber
-     * @param string $clientLastname
-     * @param string $deputyNo
-     * @param string $deputySurname
-     * @param string $deputyPostCode
-     * @param string $typeOfReport
-     */
-    public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode, $typeOfReport, $corref = null)
+
+    public function __construct(array $row)
     {
-        $this->caseNumber = self::normaliseCaseNumber($caseNumber);
-        $this->clientLastname = self::normaliseSurname($clientLastname);
-        $this->deputyNo = self::normaliseDeputyNo($deputyNo);
-        $this->deputySurname = self::normaliseSurname($deputySurname);
-        $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
-        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($typeOfReport);
-        $this->corref = self::normaliseCorrefAndTypeOfRep($corref);
+        $this->caseNumber = self::normaliseCaseNumber($row['Case']);
+        $this->clientLastname = self::normaliseSurname($row['Surname']);
+        $this->deputyNo = self::normaliseDeputyNo( $row['Deputy No']);
+        $this->deputySurname = self::normaliseSurname($row['Dep Surname']);
+        $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
+        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep( $row['Typeofrep']);
+        $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
+
+        $this->otherColumns = serialize($row);
+        $this->createdAt = new \DateTime();
+        $this->registrationDate = null;
+        $this->updatedAt = null;
+        $this->lastLoggedIn = null;
+        $this->nOfReportsSubmitted = 'n.a.';
+        $this->nOfReportsActive = 'n.a.';
+
     }
 
     private static function normaliseCorrefAndTypeOfRep($value)
@@ -276,5 +339,84 @@ class CasRec
         }
 
         throw new \Exception(__METHOD__ . ": user role not recognised to determine report type");
+    }
+
+    /**
+     * @return array
+     */
+    public function getOtherColumns()
+    {
+        return unserialize($this->otherColumns) ?: [];
+    }
+
+    public function toArray()
+    {
+        $dateFormat = function($date, $default) {
+            return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : $default;
+        };
+
+        return [
+            "Uploaded at" => $dateFormat($this->createdAt, 'n.a.'),
+            "Stats updated at" => $dateFormat($this->updatedAt, '-'),
+            "Deputy registration date" => $dateFormat($this->registrationDate, 'n.a.'),
+            "Deputy last logged in" => $dateFormat($this->lastLoggedIn, 'n.a.'),
+            "Reports submitted" =>  $this->nOfReportsSubmitted ?: 'n.a.',
+            "Reports active" =>  $this->nOfReportsActive ?: 'n.a.'
+        ] + $this->getOtherColumns();
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     * @return CasRec
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $registrationDate
+     * @return CasRec
+     */
+    public function setRegistrationDate($registrationDate)
+    {
+        $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $lastLoggedIn
+     * @return CasRec
+     */
+    public function setLastLoggedIn($lastLoggedIn)
+    {
+        $this->lastLoggedIn = $lastLoggedIn;
+
+        return $this;
+    }
+
+    /**
+     * @param int $nOfReportsSubmitted
+     * @return CasRec
+     */
+    public function setNOfReportsSubmitted($nOfReportsSubmitted)
+    {
+        $this->nOfReportsSubmitted = $nOfReportsSubmitted;
+
+        return $this;
+    }
+
+    /**
+     * @param int $nOfReportsActive
+     * @return CasRec
+     */
+    public function setNOfReportsActive($nOfReportsActive)
+    {
+        $this->nOfReportsActive = $nOfReportsActive;
+
+        return $this;
     }
 }
