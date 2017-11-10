@@ -26,18 +26,12 @@ class IncomeBenefitType extends AbstractType
      */
     private $clientFirstName;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step, TranslatorInterface $translator, $clientFirstName)
-    {
-        $this->step = (int) $step;
-        $this->translator = $translator;
-        $this->clientFirstName = $clientFirstName;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step            = (int) $options['step'];
+        $this->translator      = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
+
         if ($this->step === 1) {
             $builder
                 ->add('id', 'hidden')
@@ -108,7 +102,10 @@ class IncomeBenefitType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step', 'translator', 'clientFirstName'])
+        ->setAllowedTypes('translator', TranslatorInterface::class)
+        ;
     }
 
     public function getName()

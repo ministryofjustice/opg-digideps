@@ -110,11 +110,14 @@ class ReportController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
-        $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
-            'translation_domain' => 'report',
-        ]);
-        $returnLink = $this->getUser()->isDeputyPa() ?
-            $this->generateClientProfileLink($report->getClient())
+        $editReportDatesForm = $this->createForm( FormDir\Report\ReportType::class
+                                                , $report
+                                                , [ 'translation_domain' => 'report'
+                                                  , 'name'               => 'report_edit'
+                                                  ]
+        );
+        $returnLink = $this->getUser()->isDeputyPa()
+            ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
@@ -158,10 +161,12 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType('report'), $report, [
-                'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
-        ]);
+        $form = $this->createForm( FormDir\Report\ReportType::class
+                                 , $report
+                                 , [ 'translation_domain' => 'registration'
+                                   , 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {

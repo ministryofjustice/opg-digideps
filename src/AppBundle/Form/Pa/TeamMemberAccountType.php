@@ -30,20 +30,12 @@ class TeamMemberAccountType extends AbstractType
      */
     private $targetUser = null;
 
-    /**
-     * @param $team
-     * @param $loggedInUser
-     * @param $targetUser
-     */
-    public function __construct(Team $team, User $loggedInUser, User $targetUser = null)
-    {
-        $this->team = $team;
-        $this->loggedInUser = $loggedInUser;
-        $this->targetUser = $targetUser;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->team         = $options['team'];
+        $this->loggedInUser = $options['loggedInUser'];
+        $this->targetUser   = $options['targetUser'];
+
         $builder
             ->add('firstname', 'text', ['required' => true])
             ->add('lastname', 'text', ['required' => true])
@@ -70,7 +62,13 @@ class TeamMemberAccountType extends AbstractType
             'translation_domain' => 'pa-team',
             'validation_groups'  => $this->determineValidationGroups(),
             'data_class'         => User::class,
-        ]);
+            'targetUser'         => null
+        ])
+        ->setRequired(['team','loggedInUser'])
+        ->setAllowedTypes('team'        , Team::class)
+        ->setAllowedTypes('loggedInUser', User::class)
+        ->setAllowedTypes('targetUser'  , User::class)
+        ;
     }
 
     /**

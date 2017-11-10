@@ -84,7 +84,7 @@ class ClientController extends AbstractController
             $client_validated = false;
         }
 
-        $form = $this->createForm(new FormDir\ClientType(['client_validated' => $client_validated]), $client);
+        $form = $this->createForm(FormDir\ClientType::class, $client, ['client_validated' => $client_validated]);
 
         $form->handleRequest($request);
         if ($form->isValid()) {

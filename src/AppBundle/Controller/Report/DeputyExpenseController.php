@@ -44,7 +44,10 @@ class DeputyExpenseController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('paidForAnything', 'report-deputy-expenses', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field' => 'paidForAnything', 'translationDomain' => 'report-deputy-expenses']
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -110,7 +113,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-deputy-expenses'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-deputy-expenses']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

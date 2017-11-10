@@ -13,18 +13,10 @@ class ReportType extends AbstractType
      */
     private $name;
 
-    /**
-     * ReportType constructor.
-     * @param string $name //TODO not clear why this is passed. Try to remove and update behat tests
-     *                     but using different translations
-     */
-    public function __construct($name = 'report')
-    {
-        $this->name = $name;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->name = $options['name'];
+
         $builder
                 ->add('id', 'hidden')
                 ->add('startDate', 'date', ['widget' => 'text',
@@ -43,13 +35,11 @@ class ReportType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            // since used to create and edit report, this has to be set from the controller
-        ]);
+        $resolver->setDefaults(['name' => 'report']);
     }
 
     public function getName()
     {
-        return  $this->name;
+        return $this->name;
     }
 }

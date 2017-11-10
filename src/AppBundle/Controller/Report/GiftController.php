@@ -45,7 +45,10 @@ class GiftController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('giftsExist', 'report-gifts', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field' => 'giftsExist', 'translationDomain' => 'report-gifts']
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -111,7 +114,7 @@ class GiftController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-gifts'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-gifts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

@@ -12,16 +12,10 @@ class ActionType extends AbstractType
 {
     private $step;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
         $builder
             ->add('id', 'hidden');
 
@@ -80,6 +74,7 @@ class ActionType extends AbstractType
                     4 => ['action-property-buy'],
                 ][$this->step];
             },
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 }

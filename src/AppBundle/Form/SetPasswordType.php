@@ -8,20 +8,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SetPasswordType extends AbstractType
 {
-    protected $options;
-
-    public function __construct($options)
-    {
-        $this->options = $options;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('password', 'repeated', [
-                    'type' => 'password',
-                    'invalid_message' => $this->options['passwordMismatchMessage'],
-                ])
+                ->add('password'
+                     , 'repeated'
+                     , [ 'type'            => 'password'
+                       , 'invalid_message' => $options['passwordMismatchMessage']
+                       ]
+                     )
                 ->add('save', 'submit');
     }
 
@@ -30,7 +25,8 @@ class SetPasswordType extends AbstractType
         $resolver->setDefaults([
               'translation_domain' => 'user-activate',
                'validation_groups' => ['user_set_password'],
-        ]);
+        ])
+        ->setRequired(['passwordMismatchMessage']);
     }
 
     public function getName()

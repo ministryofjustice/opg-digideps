@@ -190,7 +190,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-decisions'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-decisions']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

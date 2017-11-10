@@ -68,11 +68,13 @@ class IndexController extends AbstractController
             $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
         }
 
-
-        $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'        => $availableRoles,
-            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-        ]), new EntityDir\User());
+        $form = $this->createForm(FormDir\Admin\AddUserType::class
+                                 , new EntityDir\User()
+                                 , [ 'options' => [ 'roleChoices'        => $availableRoles
+                                                  , 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
+                                                  ]
+                                   ]
+                                 );
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -137,7 +139,7 @@ class IndexController extends AbstractController
         if ($user->getId() == $this->getUser()->getId() || $user->getRoleName() == EntityDir\User::ROLE_PA) {
             $roleNameSetTo = $user->getRoleName();
         }
-        $form = $this->createForm(new FormDir\Admin\AddUserType([
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, $user, ['options' => [
             'roleChoices'        => [
                 EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
                 EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
@@ -147,7 +149,7 @@ class IndexController extends AbstractController
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
             'roleNameSetTo'      => $roleNameSetTo, //can't edit current user's role
             'odrEnabledType'     => $user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY ? 'checkbox' : 'hidden',
-        ]), $user);
+        ]]);
 
         $clients = $user->getClients();
         $odr = null;

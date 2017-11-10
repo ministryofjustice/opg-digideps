@@ -50,7 +50,13 @@ class AssetController extends AbstractController
         if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
             $report->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(new FormDir\YesNoType('noAssetToAdd', 'report-assets', [0 => 'Yes', 1 => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field'             => 'noAssetToAdd'
+                                   , 'translationDomain' => 'report-assets'
+                                   , 'choices'           => [0 => 'Yes', 1 => 'No']
+                                   ]
+                                 );
 
         $form->handleRequest($request);
 
@@ -176,7 +182,7 @@ class AssetController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-assets'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-assets']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -247,7 +253,7 @@ class AssetController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\Asset\AssetTypeProperty($step), $asset);
+        $form = $this->createForm(FormDir\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

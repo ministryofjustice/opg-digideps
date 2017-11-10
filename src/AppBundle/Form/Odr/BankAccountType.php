@@ -18,16 +18,10 @@ class BankAccountType extends AbstractType
 {
     private $step;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
@@ -99,6 +93,7 @@ class BankAccountType extends AbstractType
                     3 => ['bank-account-balance-on-cot'],
                 ][$this->step];
             },
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 }

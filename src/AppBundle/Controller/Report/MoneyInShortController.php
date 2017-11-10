@@ -44,7 +44,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortType('moneyShortCategoriesIn'), $report);
+        $form = $this->createForm(FormDir\Report\MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesIn']);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -80,7 +80,10 @@ class MoneyInShortController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('moneyTransactionsShortInExist', 'report-money-short', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+            , $report
+            , [ 'field' => 'moneyTransactionsShortInExist', 'translationDomain' => 'report-money-short']
+        );
         $form->handleRequest($request);
         $fromSummaryPage = $request->get('from') == 'summary';
 
@@ -142,7 +145,7 @@ class MoneyInShortController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-short'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-money-short']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

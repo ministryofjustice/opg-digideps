@@ -8,10 +8,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Type;
 
 class MoneyTransactionType extends AbstractType
 {
+    private $clientFirstName;
     private $step;
     private $type;
     private $selectedGroup;
@@ -21,26 +21,6 @@ class MoneyTransactionType extends AbstractType
      * @var TranslatorInterface
      */
     private $translator;
-
-    /**
-     * MoneyTransactionType constructor.
-     *
-     * @param $step
-     * @param $type
-     * @param TranslatorInterface $translator
-     * @param $clientFirstName
-     * @param $selectedGroup
-     * @param null $selectedCategory
-     */
-    public function __construct($step, $type, TranslatorInterface $translator, $clientFirstName, $selectedGroup, $selectedCategory = null)
-    {
-        $this->step = (int) $step;
-        $this->type = $type;
-        $this->selectedGroup = $selectedGroup;
-        $this->selectedCategory = $selectedCategory;
-        $this->translator = $translator;
-        $this->clientFirstName = $clientFirstName;
-    }
 
     private function getGroups()
     {
@@ -90,6 +70,13 @@ class MoneyTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step             = (int) $options['step'];
+        $this->type             = $options['type'];
+        $this->selectedGroup    = $options['selectedGroup'];
+        $this->selectedCategory = $options['selectedCategory'];
+        $this->translator       = $options['translator'];
+        $this->clientFirstName  = $options['clientFirstName'];
+
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
@@ -137,11 +124,10 @@ class MoneyTransactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'selectedCategory' => null,
             'translation_domain' => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Report\MoneyTransaction */
 
                 $validationGroups = [];
 
@@ -160,6 +146,8 @@ class MoneyTransactionType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step', 'type', 'translator', 'clientFirstName', 'selectedGroup'])
+        ->setAllowedTypes('translator', [TranslatorInterface::class]);
     }
 }

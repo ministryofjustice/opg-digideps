@@ -11,18 +11,10 @@ class AddAnotherRecordType extends AbstractType
 {
     protected $translationDomain;
 
-    /**
-     * AddAnotherRecordType constructor.
-     *
-     * @param string $translationDomain
-     */
-    public function __construct($translationDomain)
-    {
-        $this->translationDomain = $translationDomain;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->translationDomain = $options['translationDomain'];
+
         $builder
             ->add('addAnother', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
@@ -35,9 +27,9 @@ class AddAnotherRecordType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'translation_domain' => $this->translationDomain,
-        ]);
+        $resolver
+            ->setDefaults(['translation_domain' => $this->translationDomain])
+            ->setRequired(['translationDomain']);
     }
 
     public function getName()

@@ -28,18 +28,12 @@ class VisitsCareType extends AbstractType
      */
     private $clientFirstName;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step, TranslatorInterface $translator, $clientFirstName)
-    {
-        $this->step = (int) $step;
-        $this->translator = $translator;
-        $this->clientFirstName = $clientFirstName;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step            = (int) $options['step'];
+        $this->translator      = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
+
         if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
@@ -63,7 +57,6 @@ class VisitsCareType extends AbstractType
                 'expanded' => true,
             ]);
         }
-
 
         if ($this->step === 3) {
             $builder->add('whoIsDoingTheCaring', 'textarea');
@@ -132,7 +125,9 @@ class VisitsCareType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step', 'translator', 'clientFirstName'])
+        ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
     public function getName()
