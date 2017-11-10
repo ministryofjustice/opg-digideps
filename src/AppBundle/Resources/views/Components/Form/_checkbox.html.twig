@@ -17,7 +17,11 @@
             {{ form_widget(element, {'attr': {'class': class, 'aria-invalid':'true' }}) }}
         {% endif %}
         <label class="{{ labelClass }}" for="{{ element.vars.id }}">
-            {{ labelText }}
+            {% if labelRaw %}
+                {{ labelText | raw }}
+            {% else %}
+                {{ labelText }}
+            {% endif %}
         </label>
     </div>
 

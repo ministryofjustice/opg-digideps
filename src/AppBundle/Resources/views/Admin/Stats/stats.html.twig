@@ -19,31 +19,7 @@
 
     <p>{{ (page ~ '.limitedTo100') | trans }}</p>
     <p>
-        {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'timestamp': date().timestamp }) }) | raw }}
+        {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'regenerate': 0 })}) | raw }}
     </p>
-
-    {# dynamically display data #}
-    <table class="table-font-xsmall">
-        {# header #}
-        <thead>
-            <tr>
-                {% for key, column in data|first %}
-                    <th>{{ key  | replace({'_': ' '}) | capitalize }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-        {# rows #}
-        {% for row in data %}
-            <tr>
-                {% for column in row %}
-                    <td>
-                        {{ column }}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
 {% endblock %}

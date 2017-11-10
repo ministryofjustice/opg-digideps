@@ -22,6 +22,10 @@ Feature: Report money 102
     And the step with the following values CANNOT be submitted:
       | account_description |  | 0   |
       | account_amount      |  | [ERR] |
+    And the step with the following values CANNOT be submitted:
+      | account_description |  | 0   |
+      | account_amount      | 10000000.01 | [ERR] |
+    And the "#error-summary" element should contain "10,000,000"
     And the step with the following values CAN be submitted:
       | account_description | pension received |
       | account_amount      | 12345.67         |

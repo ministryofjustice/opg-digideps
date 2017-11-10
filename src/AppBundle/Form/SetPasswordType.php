@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints as Constraints;
 
 class SetPasswordType extends AbstractType
 {
@@ -21,6 +22,10 @@ class SetPasswordType extends AbstractType
                 ->add('password', 'repeated', [
                     'type' => 'password',
                     'invalid_message' => $this->options['passwordMismatchMessage'],
+                ])
+                ->add('showTermsAndConditions', 'checkbox', [
+                    'mapped'=>false,
+                    'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups'=>['user_set_password']])]
                 ])
                 ->add('save', 'submit');
     }

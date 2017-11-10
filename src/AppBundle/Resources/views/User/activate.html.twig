@@ -20,6 +20,13 @@
 
     {{ form_input(form.password.second,'password_confirm' ) }}
 
+    {% if form.showTermsAndConditions is defined %}
+        {{ form_checkbox(form.showTermsAndConditions, '', {
+            'labelText': 'terms_conditions.label' | trans({'%link%': path('terms')}) | raw,
+            'labelRaw': true
+        } ) }}
+    {% endif %}
+
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}

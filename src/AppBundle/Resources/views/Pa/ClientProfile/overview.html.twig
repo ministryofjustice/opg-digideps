@@ -53,7 +53,7 @@
                             </span>
                         </dd>
 
-                        <dt class="visuallyhidden">
+                        <dt class="visually-hidden">
                             <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
                         </dt>
                         <dd class="push--bottom">
@@ -100,7 +100,7 @@
                 <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
             </p>
 
-            <div id="overview-sections" class="overview-sections">
+            <div id="overview-sections" class="push--bottom">
 
                 <div class="grid-row">
                     <div class="column-one-half">
@@ -212,7 +212,7 @@
                                 } %}
 
                                 {% if report.isDue() and report.showBalanceWarning %}
-                                    <li id="bank_accounts_not_balanced-section" class="descriptive-list-item">
+                                    <li id="bank_accounts_not_balanced-section" class="section-list-item">
                                         <div id="bank_accounts_not_balanced-sub-section">
                                             {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                                         </div>

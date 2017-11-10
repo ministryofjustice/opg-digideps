@@ -184,6 +184,7 @@ Feature: User Self Registration
     When I fill in the following:
       | set_password_password_first  | Abcd1234 |
       | set_password_password_second | Abcd1234 |
+    And I check "set_password_showTermsAndConditions"
     And I press "set_password_save"
       #Then the response status code should be 200
     Then the URL should match "/user/details"

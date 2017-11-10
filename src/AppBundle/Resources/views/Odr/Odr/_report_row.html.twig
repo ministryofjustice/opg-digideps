@@ -6,7 +6,7 @@
 {% if odr.submitted %}
     {# CLICKABLE REPORT #}
     {% set status = reportActive ? reportActive.getStatus().status : 'notCreated' %}
-    <div class="card soft-half">
+    <div class="card">
         <span class="status status-corner {{ status }}">{{ (status) | trans({}, 'common') }}</span>
         {% if reportActive %}
             <h3 class="heading-medium flush--ends">
@@ -36,7 +36,7 @@
     </div>
 {% else %}
     {# REPORT NOT ACTIVE #}
-    <div class="card disabled soft-half">
+    <div class="card disabled">
         <span class="status status-corner not-available">{{ 'notAvailable' | trans({}, 'common') }}</span>
         <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
         <div class="card-body soft-half--top">

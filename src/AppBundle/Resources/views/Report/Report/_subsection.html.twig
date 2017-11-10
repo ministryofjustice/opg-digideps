@@ -12,7 +12,7 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" class="descriptive-list-item">
+<div id="{{ subSection }}-sub-section" class="section-list-item">
     {% if allowEdit == true %}
         <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
     {% endif %}

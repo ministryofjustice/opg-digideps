@@ -18,14 +18,17 @@ trait UserTrait
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
      *
-     * @When I create a new :odrType :role user :firstname :lastname with email :email
+     * @When I create a new :odrType :role user :firstname :lastname with email :email and postcode :postcode
      */
-    public function iCreateTheUserWithEmail($odrType, $role, $firstname, $lastname, $email)
+    public function iCreateTheUserWithEmailAndPostcode($odrType, $role, $firstname, $lastname, $email, $postcode = '')
     {
         $this->clickOnBehatLink('user-add-new');
         $this->fillField('admin_email', $email);
         $this->fillField('admin_firstname', $firstname);
         $this->fillField('admin_lastname', $lastname);
+        if (!empty($postcode)) {
+            $this->fillField('admin_addressPostcode', $postcode);
+        }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
         $this->fillField('admin_roleName', $roleName);
         switch ($odrType) {
@@ -67,6 +70,7 @@ trait UserTrait
 
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
+        $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
