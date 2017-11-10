@@ -20,8 +20,5 @@ password_confirm:
     label: Confirm password
 terms_conditions:
     label: I have read and understood the <a href="%link%" target="_blank">terms and conditions</a>
-#following deprecated ?
-#agree:
-#    label: I agree to the <a href="{link}">Terms and conditions policy</a>
 submit:
     label: Submit
