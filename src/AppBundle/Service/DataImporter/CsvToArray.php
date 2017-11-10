@@ -28,6 +28,8 @@ class CsvToArray
      */
     private $normaliseNewLines;
 
+    private $firstRow = [];
+
     /**
      * @param string $file              path to file
      * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No' ...]
@@ -76,6 +78,18 @@ class CsvToArray
     }
 
     /**
+     * @return array
+     */
+    public function getFirstRow()
+    {
+        if (empty($this->firstRow)) {
+            $this->firstRow = $this->getRow();
+        }
+
+        return $this->firstRow;
+    }
+
+    /**
      * Returns.
      *
      * @return array
@@ -85,13 +99,13 @@ class CsvToArray
         $ret = [];
 
         // parse header
-        $header = $this->getRow();
+        $header = $this->getFirstRow();
         if (!$header) {
             throw new \RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find header columns ' . implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find expected header columns ' . implode(', ', $missingColumns));
         }
 
         // read rows
