@@ -20,7 +20,7 @@ preview:
 review:
   htmlTitle: Review deputy report | GOV.UK
   pageTitle: Review report
-  introPara: Review all section of this report before you submit.
+  introPara: Please review all sections of this report before continuing to the deputy declaration.
 
 ndr-preview:
   htmlTitle: Preview new deputy report | GOV.UK
@@ -32,4 +32,4 @@ ndr-preview:
 ndr-review:
   htmlTitle: Review new deputy report | GOV.UK
   pageTitle: Review report
-  introPara: Review all section of this report before you submit.
+  introPara: Please review all sections of this report before continuing to the deputy declaration.

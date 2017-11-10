@@ -34,9 +34,10 @@
     <div class="push--bottom">
         <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
         {% if preview %}
-            <a class="" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+            <a class="button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
+            <a class="link-icon link-icon-pdf button-link" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
         {% endif %}
     </div>
 
@@ -46,12 +47,12 @@
 
     {% if report.submitted == false %}
         {% if preview %}
-            <a class="" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+            <a class="button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
         {% else %}
             <a class="button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">
-                {{ 'submitReport' | trans() }}
+                {{ 'continue' | trans({}, 'common') }}
             </a>
             <a class="button-link" href="{{ path("report_overview" , {'reportId': report.id }) }}">
                 {{ 'incomplete.backToEditingReport' | trans() }}
@@ -59,13 +60,12 @@
         {% endif %}
     {% endif %}
 
-    <br>
-    <a class="pdflink push-half--top" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+    <a class="link-icon link-icon-pdf button-link" href="{{ path('report_pdf', {'reportId': report.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
 
     <script>
         $(document).ready(function() {
             var ga = new opg.Ga({'timeout': 250});
-            ga.trackDownloadableLink($('.pdflink'));
+            ga.trackDownloadableLink($('.link-icon-pdf'));
         });
     </script>
 {% endblock %}

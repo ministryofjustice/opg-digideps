@@ -54,10 +54,16 @@
 
 }
 
-.pdflink {
+.link-icon {
     display: inline-block;
-    background: url("/images/pdf.png") top left no-repeat;
     padding-left: 40px;
-    height: 32px;
-    padding-top: 5px;
+
+    &.button-link {
+        line-height: 2em;
+        top: 3px;
+    }
+}
+
+.link-icon-pdf {
+    background: url("/images/pdf.png") top left no-repeat;
 }
