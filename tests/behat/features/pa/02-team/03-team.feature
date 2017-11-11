@@ -41,16 +41,7 @@ Feature: PA team
 
   Scenario: activate PA_ADMIN user
     Given emails are sent from "deputy" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-    # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    And I check "set_password_showTermsAndConditions"
-    When I click on "save"
-    Then the form should be valid
+    And I activate the user with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Markk Admin |
@@ -245,14 +236,7 @@ Feature: PA team
     Then the form should be valid
     Then I should see the "team-user-behat-pa3-adminpublicguardiangsigovuk" region
     When emails are sent from "deputy" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    When I click on "save"
-    Then the form should be valid
+    And I activate the user with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor assistant |
       | user_details_phoneMain | 20000000002         |
