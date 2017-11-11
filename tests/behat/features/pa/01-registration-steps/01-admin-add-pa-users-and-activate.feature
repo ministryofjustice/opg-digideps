@@ -96,7 +96,17 @@ Feature: Add PA users and activate PA user (journey)
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangsigovuk" region
-    And I activate the user with password "Abcd1234"
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    # terms
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+    # password step
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    When I click on "save"
+    Then the form should be valid
     # correct
     And I fill in the following:
       | user_details_firstname  | Pa User     |
