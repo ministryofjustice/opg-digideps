@@ -96,9 +96,7 @@ Feature: PA team
     And I open the "/user/activate/" link from the email
     Then the response status code should be 200
     # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
+    When I fill in the password fields with "Abcd1234"
     When I click on "save"
     Then the form should be valid
     # assert pre-fill
@@ -258,9 +256,7 @@ Feature: PA team
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
     Then the response status code should be 200
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
+    When I fill in the password fields with "Abcd1234"
     When I click on "save"
     Then the form should be valid
     When I fill in the following:

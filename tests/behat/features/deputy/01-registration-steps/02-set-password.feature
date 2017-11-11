@@ -10,9 +10,7 @@ Feature: deputy / user / set password
         Then the response status code should be 200
         When I save the page as "deputy-step1"
          # empty
-        When I fill in the following: 
-            | set_password_password_first   |  |
-            | set_password_password_second  |  |
+        When I fill in the password fields with ""
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
@@ -24,30 +22,22 @@ Feature: deputy / user / set password
         And I press "set_password_save"
         Then the form should be invalid
         # nolowercase
-        When I fill in the following: 
-            | set_password_password_first   | ABCD1234 |
-            | set_password_password_second  | ABCD1234 |
+        When I fill in the password fields with "ABCD1234"
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         # nouppercase
-        When I fill in the following: 
-            | set_password_password_first   | abcd1234 |
-            | set_password_password_second  | abcd1234 |
+        When I fill in the password fields with "abcd1234"
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         # no number
-        When I fill in the following: 
-            | set_password_password_first   | Abcdefgh |
-            | set_password_password_second  | Abcdefgh |
+        When I fill in the password fields with "Abcdefgh"
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         And I save the page as "deputy-step1-error"
          # not agreed on TC
-        When I fill in the following:
-            | set_password_password_first   | Abcd1234 |
-            | set_password_password_second  | Abcd1234 |
+        When I fill in the password fields with "Abcd1234"
         And I uncheck "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
