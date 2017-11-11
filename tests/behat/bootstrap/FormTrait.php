@@ -110,17 +110,6 @@ trait FormTrait
         }
     }
 
-    /**
-     * Fills in 2 form fields with specified
-     *
-     * @When /^(?:|I )fill in "(?P<field1>(?:[^"]|\\")*)" and "(?P<field2>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
-     */
-    public function fillTwoFieldsWith($field1, $field2, $value)
-    {
-        $this->fillField($field1, $value);
-        $this->fillField($field2, $value);
-    }
-
 
     /**
      * Fills in form field with specified id|name|label|value.
