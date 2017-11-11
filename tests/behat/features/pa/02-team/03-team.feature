@@ -92,13 +92,7 @@ Feature: PA team
 
   Scenario: activate ROLE_PA_TEAM_MEMBER user
     Given emails are sent from "deputy" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-    # password step
-    When I fill in the password fields with "Abcd1234"
-    When I click on "save"
-    Then the form should be valid
+    And I activate the user with password "Abcd1234"
     # assert pre-fill
     Then the following fields should have the corresponding values:
       | user_details_firstname | Robertt Team member |
@@ -253,12 +247,7 @@ Feature: PA team
     And I press "team_member_account_save"
     Then the form should be valid
     When emails are sent from "deputy" area
-    And I go to "/logout"
-    And I open the "/user/activate/" link from the email
-    Then the response status code should be 200
-    When I fill in the password fields with "Abcd1234"
-    When I click on "save"
-    Then the form should be valid
+    And I activate the user with password "Abcd1234"
     When I fill in the following:
       | user_details_jobTitle  | Solicitor helper   |
       | user_details_phoneMain | 30000000003        |
