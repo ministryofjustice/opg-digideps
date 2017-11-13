@@ -102,11 +102,17 @@
                     - incomplete: when bank accounts or money section are incomplete
                     - not-started: when bank accounts and money section are incomplete but balance is incorrect (not matching or explanation missing)
                     #}
-                {% if report.isDue() and report.showBalanceWarning %}
+                {% if report.isDue() %}
+                    {# show balance warning when accounts do not balance AND we have no explanation#}
+                    {% if report.showBalanceWarning %}
+                        
+                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
 
-                    {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                    {% elseif report.balanceMismatchExplanation is defined %}
 
-                    {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                        {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% endif %}
                 {% endif %}
 
                 {% if report.hasSection('deputyExpenses') %}
