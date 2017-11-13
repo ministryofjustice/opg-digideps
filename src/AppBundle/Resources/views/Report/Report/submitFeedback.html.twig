@@ -2,18 +2,30 @@
 
 {% set translationDomain = "report-submitted" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'thanksForFeedback' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'thanks.thankYouForsubmitting' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.thankYou') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block pageContent %}
 
-        <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
+    <div class="text">
+
+        <p>Thank you for giving us your feedback about completing your deputy report online. We regularly update the service and pay careful attention to all the comments we receive.</p>
+
+        <p>If you have a question that needs a response, please email <a href="mailto:customerservices@publicguardian.gsi.gov.uk">customerservices@publicguardian.gsi.gov.uk</a> or call the helpline.</p>
+
+        <a href="{{ path('lay_home')}}" class="button behat-link-return-to-client-page">{{ 'continue' | trans }}</a>
+
+    </div>
+
+
+        <!-- <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
             {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
         </a><br>
         {% if not app.user.isDeputyPa() %}
         <a href="{{ path('lay_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToHomepage' | trans }}</a>
-        {% endif %}
+        {% endif %} -->
 
 {% endblock %}
