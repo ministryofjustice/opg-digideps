@@ -276,11 +276,7 @@
 
         {% else %}
 
-            <div class="push--top">
-                {{ macros.notification('info', 'completeNotice' | trans()) }}
-            </div>
-
-            <a id="edit-report-review" class="button behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a> 
+            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a> 
 
         {% endif %}
 

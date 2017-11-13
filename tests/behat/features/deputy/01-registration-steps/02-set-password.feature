@@ -13,33 +13,44 @@ Feature: deputy / user / set password
         When I fill in the following: 
             | set_password_password_first   |  |
             | set_password_password_second  |  |
+        And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         #password mismatch
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |
             | set_password_password_second  | Abcd12345 |
+        And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         # nolowercase
         When I fill in the following: 
             | set_password_password_first   | ABCD1234 |
             | set_password_password_second  | ABCD1234 |
+        And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         # nouppercase
         When I fill in the following: 
             | set_password_password_first   | abcd1234 |
             | set_password_password_second  | abcd1234 |
+        And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
         # no number
         When I fill in the following: 
             | set_password_password_first   | Abcdefgh |
             | set_password_password_second  | Abcdefgh |
+        And I check "set_password_showTermsAndConditions"
+        And I press "set_password_save"
+        And I save the page as "deputy-step1-error"
+         # not agreed on TC
+        When I fill in the following:
+            | set_password_password_first   | Abcd1234 |
+            | set_password_password_second  | Abcd1234 |
+        And I uncheck "set_password_showTermsAndConditions"
         And I press "set_password_save"
         Then the form should be invalid
-        And I save the page as "deputy-step1-error"
         # correct !!
         When I load the application status from "activation-link-before-opening"
         And I activate the user with password "Abcd1234"

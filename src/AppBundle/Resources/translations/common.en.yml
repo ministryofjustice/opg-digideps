@@ -43,6 +43,8 @@ yourReports: Your reports
 deputyReportOverview: Deputy report overview
 newDeputyReportOverview: New deputy report overview
 reviewReport: Review report
+dashboard: Dashboard
+clientProfile: Client profile
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
