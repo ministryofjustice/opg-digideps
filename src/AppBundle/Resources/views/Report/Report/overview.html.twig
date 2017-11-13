@@ -103,7 +103,10 @@
                     - not-started: when bank accounts and money section are incomplete but balance is incorrect (not matching or explanation missing)
                     #}
                 {% if report.isDue() and report.showBalanceWarning %}
+
                     {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
                 {% endif %}
 
                 {% if report.hasSection('deputyExpenses') %}
