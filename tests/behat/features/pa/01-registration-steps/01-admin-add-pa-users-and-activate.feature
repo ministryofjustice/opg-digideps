@@ -29,11 +29,9 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
+    When I fill in the password fields with "Abcd1234"
     And I check "set_password_showTermsAndConditions"
-    When I click on "save"
+    And I click on "save"
     Then the form should be valid
     # assert pre-fill
     Then the following fields should have the corresponding values:
@@ -78,10 +76,9 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    When I click on "save"
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    And I click on "save"
     Then the form should be valid
     # correct
     When I fill in the following:
@@ -106,13 +103,12 @@ Feature: Add PA users and activate PA user (journey)
     And I press "agree_terms_save"
     Then the form should be valid
     # password step
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
     When I click on "save"
     Then the form should be valid
     # correct
-    When I fill in the following:
+    And I fill in the following:
       | user_details_firstname  | Pa User     |
       | user_details_lastname   | Three       |
       | user_details_jobTitle   | Solicitor   |

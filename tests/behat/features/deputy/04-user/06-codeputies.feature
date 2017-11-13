@@ -30,12 +30,7 @@ Feature: Codeputy Self Registration
       | self_registration_caseNumber      | 00000000                                          |
     And I press "self_registration_save"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+noncodep@digital.justice.gov.uk"
-    When I open the "/user/activate/" link from the email
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    And I check "set_password_showTermsAndConditions"
-    And I press "set_password_save"
+    When I activate the user with password "Abcd1234"
     And I fill in the following:
       | user_details_address1       | Address1     |
       | user_details_addressCountry | GB           |
@@ -119,11 +114,7 @@ Feature: Codeputy Self Registration
     # 1st codep registers fully
     When I open the "/user/activate/" link from the email
     Then the response status code should be 200
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    And I press "set_password_save"
-      #Then the response status code should be 200
+    When I activate the user with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
       | user_details_address1       | Address1     |
@@ -232,11 +223,7 @@ Feature: Codeputy Self Registration
   @deputy
   Scenario: A second codeputy of a client is able to follow invite link
     Given emails are sent from "deputy" area
-    When I open the "/user/activate/" link from the email
-    When I fill in the following:
-      | set_password_password_first  | Abcd1234 |
-      | set_password_password_second | Abcd1234 |
-    And I press "set_password_save"
+    When I activate the user with password "Abcd1234"
     Then the URL should match "/codeputy/verification"
 
     #nothing
