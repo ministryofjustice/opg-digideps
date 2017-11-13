@@ -8,15 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReportType extends AbstractType
 {
-    /**
-     * @var string
-     */
-    private $name;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->name = $options['name'];
-
         $builder
                 ->add('id', 'hidden')
                 ->add('startDate', 'date', ['widget' => 'text',
@@ -36,10 +29,5 @@ class ReportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['name' => 'report']);
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 }
