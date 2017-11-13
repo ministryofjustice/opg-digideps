@@ -76,7 +76,7 @@ class ActionType extends AbstractType
             },
         ])
         ->setRequired(['step', 'translator', 'clientFirstName'])
-        ->setAllowedTypes(['translator', TranslatorInterface::class]);
+        ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
     public function getName()

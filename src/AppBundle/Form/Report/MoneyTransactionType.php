@@ -148,6 +148,6 @@ class MoneyTransactionType extends AbstractType
             },
         ])
         ->setRequired(['step', 'type', 'translator', 'clientFirstName', 'selectedGroup'])
-        ->setAllowedTypes('translator', [TranslatorInterface::class]);
+        ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 }
