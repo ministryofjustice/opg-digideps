@@ -94,23 +94,21 @@
             {% endif %}
         </li>
 
-
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {# balance status values:
                     - incomplete: when bank accounts or money section are incomplete
-                    - not-started: when bank accounts and money section are incomplete but balance is incorrect (not matching or explanation missing)
+                    - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
                     #}
-                {% if report.isDue() %}
-                    {# show balance warning when accounts do not balance AND we have no explanation#}
-                    {% if report.showBalanceWarning %}
-
-                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
-
-                    {% elseif report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation  %}
+                {% if report.isDue and report.status.balanceState['state'] != "done" %}
+                    {% if report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation  %}
 
                         {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% else %}
+
+                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
 
                     {% endif %}
                 {% endif %}

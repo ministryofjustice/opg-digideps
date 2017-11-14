@@ -10,7 +10,7 @@ trait ReportBalanceTrait
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"balance_mismatch_explanation"})
+     * @JMS\Groups({"balance"})
      * @Assert\NotBlank(message="report.balanceMismatchExplanation.notBlank", groups={"balance"})
      * @Assert\Length( min=10, minMessage="report.balanceMismatchExplanation.length", groups={"balance"})
      *
