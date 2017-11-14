@@ -186,7 +186,7 @@ class ReportController extends AbstractController
 
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'user', 'client', 'client-reports', 'balance-state']);
+        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state']);
 
         // 1711 take client->users with a separate call to avoid recursion
         // neede for clientContactVoter
