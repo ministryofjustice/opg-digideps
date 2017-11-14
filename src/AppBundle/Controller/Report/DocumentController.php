@@ -68,7 +68,7 @@ class DocumentController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\DocumentType::class, $report, ['translator' => $this->get('translator')]);
+        $form = $this->createForm(FormDir\Report\DocumentType::class, $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
