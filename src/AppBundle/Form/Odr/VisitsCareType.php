@@ -139,7 +139,7 @@ class VisitsCareType extends AbstractType
                 return $validationGroups;
             },
         ])
-        ->setRequired(['step', 'translator', 'clientFirstname'])
+        ->setRequired(['step', 'translator', 'clientFirstName'])
         ->setAllowedTypes('translator', TranslatorInterface::class)
         ;
     }
