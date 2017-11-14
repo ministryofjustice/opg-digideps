@@ -11,7 +11,7 @@ trait BalanceTrait
     /**
      * @var string reason required if balance calculation mismatches
      *
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "balance-explanation"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)

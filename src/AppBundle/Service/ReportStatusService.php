@@ -434,7 +434,7 @@ class ReportStatusService
     public function getRemainingSections()
     {
         return array_filter($this->getSectionStatus(), function ($e) {
-            return $e != self::STATE_DONE;
+            return ($e != self::STATE_DONE) && ($e != self::STATE_EXPLAINED);
         }) ?: [];
     }
 
