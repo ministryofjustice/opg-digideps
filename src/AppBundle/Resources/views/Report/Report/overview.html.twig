@@ -93,7 +93,6 @@
                 } %}
             {% endif %}
         </li>
-
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
@@ -102,7 +101,7 @@
                     - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
                     - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
                     #}
-                {% if report.isDue %}
+                {% if report.isDue and report.shouldShowBalanceWarning %}
                     {% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}
 
                         {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
