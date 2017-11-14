@@ -12,6 +12,7 @@ class ReportStatusService
     const STATE_INCOMPLETE = 'incomplete';
     const STATE_DONE = 'done';
     const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
+    const STATE_EXPLAINED = 'explained'; //only used for balance section
 
 
     /**
@@ -238,7 +239,7 @@ class ReportStatusService
         }
 
         if ($this->report->getBalanceMismatchExplanation()) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+            return ['state' => self::STATE_EXPLAINED, 'nOfRecords' => 0];
         }
 
         //TODO assert
