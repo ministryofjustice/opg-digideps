@@ -60,37 +60,14 @@ class TeamMemberAccountType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups'  => $this->determineValidationGroups(),
             'data_class'         => User::class,
             'targetUser'         => null
         ])
-        ->setRequired(['team','loggedInUser'])
+        ->setRequired(['team','loggedInUser','validation_groups'])
         ->setAllowedTypes('team'        , Team::class)
         ->setAllowedTypes('loggedInUser', User::class)
-        ->setAllowedTypes('targetUser'  , User::class)
+        ->setAllowedTypes('validation_groups'  , 'array')
         ;
-    }
-
-    /**
-     * Determine the validation groups for the form. All validate against firstname, lastname and email.
-     * Edit users adds phone and job title. If role name is displayed, then also validate.
-     *
-     * @return array
-     */
-    private function determineValidationGroups()
-    {
-        $validationGroups = [];
-        if (!empty($this->targetUser)) {
-            array_push($validationGroups, 'user_details_pa');
-        } else {
-            array_push($validationGroups, 'pa_team_add');
-        }
-
-        if ($this->team->canAddAdmin()) {
-            array_push($validationGroups, 'pa_team_role_name');
-        }
-
-        return $validationGroups;
     }
 
     public function getName()
