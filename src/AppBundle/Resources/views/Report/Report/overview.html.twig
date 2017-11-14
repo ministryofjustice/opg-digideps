@@ -100,13 +100,14 @@
                 {# balance status values:
                     - incomplete: when bank accounts or money section are incomplete
                     - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
+                    - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
                     #}
-                {% if report.isDue and report.status.balanceState['state'] != "done" %}
-                    {% if report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation  %}
+                {% if report.isDue %}
+                    {% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}
 
                         {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
 
-                    {% else %}
+                    {% elseif report.status.balanceState['state'] != "done" %}
 
                         {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
 
