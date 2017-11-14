@@ -17,7 +17,7 @@ class SetPasswordType extends AbstractType
                        , 'invalid_message' => $options['passwordMismatchMessage']
                        ]
                      );
-        if (!empty($this->options['showTermsAndConditions'])) {
+        if (!empty($options['showTermsAndConditions'])) {
             $builder->add('showTermsAndConditions', 'checkbox', [
                 'mapped'=>false,
                 'constraints' => [new Constraints\NotBlank(['message' => 'user.agreeTermsUse.notBlank', 'groups'=>['user_set_password']])]
@@ -29,8 +29,9 @@ class SetPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain' => 'user-activate',
-               'validation_groups' => ['user_set_password'],
+              'translation_domain'     => 'user-activate',
+              'validation_groups'      => ['user_set_password'],
+              'showTermsAndConditions' => false
         ])
         ->setRequired(['passwordMismatchMessage']);
     }
