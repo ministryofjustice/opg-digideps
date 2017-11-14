@@ -272,7 +272,7 @@ class IndexController extends AbstractController
      */
     public function uploadUsersAction(Request $request)
     {
-        $chunkSize = 1000;
+        $chunkSize = 2000;
 
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
@@ -283,8 +283,8 @@ class IndexController extends AbstractController
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
-                $data = (new CsvToArray($fileName, true))
-                    ->setExpectedColumns([
+                $csvToArray = new CsvToArray($fileName, true);
+                $data = $csvToArray->setExpectedColumns([
                         'Case',
                         'Surname',
                         'Deputy No',
@@ -293,6 +293,7 @@ class IndexController extends AbstractController
                         'Typeofrep',
                         'Corref',
                     ])
+                    ->setOptionalColumns($csvToArray->getFirstRow())
                     ->getData();
 
                 // small amount of data -> immediate posting and redirect (needed for behat)
@@ -315,7 +316,7 @@ class IndexController extends AbstractController
                     return $this->redirect($this->generateUrl('casrec_upload'));
                 }
 
-                // big amount of data => redirect with nOfChunks for ajax upload in chunks
+                // big amount of data => store in redis + redirect
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);

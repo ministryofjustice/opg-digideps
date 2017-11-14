@@ -67,12 +67,21 @@ trait UserTrait
         $this->visit('/logout');
         $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
         $this->assertResponseStatus(200);
-
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
+        $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @When I fill in the password fields with :password
+     */
+    public function iFillThePasswordFieldsWith($password)
+    {
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
     }
 
     /**

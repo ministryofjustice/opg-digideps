@@ -29,9 +29,8 @@ Feature: admin / admin
         Then the response status code should be 200
         And I save the page as "admin-step1"
         # only testing the correct case, as the form is the same for deputy
-        When I fill in the following: 
-            | set_password_password_first   | Abcd1234 |
-            | set_password_password_second  | Abcd1234 |
+        # note: no TC box here
+        When I fill in the password fields with "Abcd1234"
         And I press "set_password_save"
         Then I should not see an "#error-summary" element
         And I should be on "/user/details"
