@@ -4,21 +4,26 @@
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
-            {% if not isPaUser %}
-                <li><a href="{{ path('homepage') }}">Your reports</a></li>
-            {% endif %}
+            <li>
+                {% if isPaUser %}
+                    <a href="{{ path('pa_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                {% else %}
+                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                {% endif %}
+            </li>
             <li>
                 {% if report.type == 'ndr' %}
                     <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
-                        New deputy report overview</a>
+                        {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                    </a>
 
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
                        class="behat-link-breadcrumbs-report-overview">
                         {% if isPaUser %}
-                            Client profile
+                            {{ 'clientProfile' | trans({}, 'common' ) }}
                         {% else %}
-                            Deputy report overview
+                            {{ 'deputyReportOverview' | trans({}, 'common' ) }}
                         {% endif %}
                     </a>
                 {% endif %}

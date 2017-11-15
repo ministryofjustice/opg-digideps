@@ -3,19 +3,18 @@ report: "New deputy report"
 pageSectionTitle: "New deputy report"
 pageSectionDescription: "Your new deputy report:"
 heading:
-    title: "New deputy report"
-    planningTitle: ""
-    careAndWelfare: ""
-    finances: ""
-    finishYourReport: ""
+  title: "New deputy report"
+  planningTitle: ""
+  careAndWelfare: ""
+  finances: ""
+  finishYourReport: ""
 
-
-signAndSubmit: "Check and submit"
 cantSubmitUntilComplete: You can't submit your report until it's complete
 
 dueDate: "Due date"
 
 odrReady: Report ready to submit
+reviewAndSubmit: "Review and submit"
 
 sectionsRemaining: "sections remaining"
 overview: New deputy report
@@ -25,14 +24,24 @@ status:
     notFinished: "Not finished"
     readyToSubmit: "Ready to submit"
 
+options:
+  previewReport: "Preview report"
+
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
+
+previewNotice: |
+  You may preview your report at anytime. When all sections are complete you will be able to submit the report to us.
+
+completeNotice: |
+  All sections are now complete. Please review then submit your report.
 
 labels:
     not-started: "Not started"
     incomplete: "Not finished"
     done: "Finished"
+    previewReport: "Preview report"
 
 visits_care:
     subSectionTitle: "Visits and care"

@@ -282,7 +282,7 @@ trait ReportTrait
 
         // expand form if collapsed
         //if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
-            $this->clickOnBehatLink('add-account');
+        $this->clickOnBehatLink('add-account');
         //}
 
         $rows = $table->getRowsHash();
@@ -505,20 +505,40 @@ trait ReportTrait
     }
 
     /**
-     * @Given the report should not be submittable
+     * @Given the :usertype report should not be submittable
      */
-    public function theReportShouldNotBeSubmittable()
+    public function theReportShouldNotBeSubmittable($usertype = 'lay')
     {
+        $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementNotExists('css', '#edit-report_submit');
+        if ($usertype == 'lay') {
+            # Lay report
+            $this->assertSession()->elementExists('css', '#edit-report-preview');
+            $this->assertSession()->elementNotExists('css', '#edit-report-review');
+        } elseif ($usertype == 'pa') {
+            # PA
+            $this->assertSession()->elementNotExists('css', '#edit-report_submit');
+        } else {
+            throw new \RuntimeException("usertype not specified. Usage: the PA|Lay report should not be submittable");
+        }
     }
 
     /**
-     * @Given the report should be submittable
+     * @Given the :usertype report should be submittable
      */
-    public function theReportShouldBeSubmittable()
+    public function theReportShouldBeSubmittable($usertype = 'lay')
     {
+        $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
-        $this->assertSession()->elementExists('css', '#edit-report_submit');
+        if ($usertype == 'lay') {
+            # Lay report
+            $this->assertSession()->elementExists('css', '#edit-report-review');
+            $this->assertSession()->elementNotExists('css', '#edit-report-preview');
+        } elseif ($usertype == 'pa') {
+            # PA
+            $this->assertSession()->elementExists('css', '#edit-report_submit');
+        } else {
+            throw new \RuntimeException("usertype not specified. Usage: the PA|Lay report should be submittable");
+        }
     }
 }
