@@ -153,6 +153,9 @@ balance:
       Accounts not balanced
       <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
     notBalancedWarningPA: Accounts not balanced
+    notBalancedWithExplanationWarning: |
+      Your accounts are not balanced, but you've given us an explanation.
+      <a href="%detailsLink%" class="behat-link-balance-view-details">View or edit</a>
     edit: "Edit"
     start: "Start"
     label:

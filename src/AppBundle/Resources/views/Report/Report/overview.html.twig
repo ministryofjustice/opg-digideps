@@ -91,17 +91,24 @@
                 } %}
             {% endif %}
         </li>
-
-
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {# balance status values:
                     - incomplete: when bank accounts or money section are incomplete
-                    - not-started: when bank accounts and money section are incomplete but balance is incorrect (not matching or explanation missing)
+                    - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
+                    - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
                     #}
-                {% if report.isDue() and report.showBalanceWarning %}
-                    {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                {% if report.isDue and report.shouldShowBalanceWarning %}
+                    {% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}
+
+                        {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% elseif report.status.balanceState['state'] != "done" %}
+
+                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% endif %}
                 {% endif %}
 
                 {% if report.hasSection('deputyExpenses') %}

@@ -6,7 +6,8 @@ Feature: Report balance
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert report not submittable
         And I click on "report-start"
-        Then the lay report should not be submittable
+        And I should see an "#finances-section .behat-alert-message" element
+        And the lay report should not be submittable
         # check balance mismatch difference
         When I click on "balance-view-details"
         Then I should see the "balance-bad" region
@@ -33,6 +34,7 @@ Feature: Report balance
         And I load the application status from "balance-before-adding-explanation"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "report-start"
+        And I should see an "#finances-section .behat-alert-message" element
         And I click on "balance-view-details"
         And I should see the "balance-bad" region
         # add explanation
@@ -41,6 +43,6 @@ Feature: Report balance
             | balance_balanceMismatchExplanation    | short | [ERR] |
         And the step with the following values CAN be submitted:
             | balance_balanceMismatchExplanation    | lost 110 pounds on the road |
-        And I should not see the "balance-view-details" link
+        And I should see an "#finances-section .behat-alert-message" element
         And the lay report should be submittable
 
