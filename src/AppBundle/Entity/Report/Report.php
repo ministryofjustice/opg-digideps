@@ -1108,14 +1108,8 @@ class Report
                     return false;
                 }
                 break;
-            case Report::TYPE_103:
-            case Report::TYPE_103_4:
-                // if a money section not started, dont show warning
-                if ($this->getStatus()->getMoneyInShortState()['state'] == Status::STATE_NOT_STARTED ||
-                    $this->getStatus()->getMoneyOutShortState()['state'] == Status::STATE_NOT_STARTED) {
-                    return false;
-                }
-                break;
+            default:
+                return false;
         }
 
         return true;

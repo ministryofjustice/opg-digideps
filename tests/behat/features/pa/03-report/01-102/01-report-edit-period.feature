@@ -5,6 +5,7 @@ Feature: PA report
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-1000014" region
+
     And I click on "edit-report-period"
     # check the form loads teh right value (should match with the behat CSV fixtures)
     Then the following fields should have the corresponding values:
