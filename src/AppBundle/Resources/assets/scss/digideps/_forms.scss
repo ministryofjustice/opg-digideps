@@ -21,39 +21,6 @@ input[type=text]::-ms-clear {
     }
 }
 
-.form-group__checkbox-group {
-    margin-left: 2px;
-
-    // @deprecated
-    // @refactor
-    // Only used on client add where a hint description is
-    // forced between radio inputs in a group
-    .vertical {
-        .description {
-            float: left;
-            clear: both;
-        }
-
-        label {
-            clear: both;
-
-            + p {
-                margin-top: 30px;
-            }
-
-            &.disabled {
-                color: $grey-1;
-            }
-        }
-
-        p + p {
-            margin-top: 30px;
-        }
-
-    }
-
-}
-
 .form-label {
     @include media(mobile) {
         width: auto;
@@ -62,14 +29,6 @@ input[type=text]::-ms-clear {
     .bold {
         font-weight: bold;
     }
-}
-
-legend .form-label {
-    width: 85%;
-}
-
-ul.form-hint {
-    margin-left: 10px;
 }
 
 .input-group-prefix {
