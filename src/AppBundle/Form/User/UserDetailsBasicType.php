@@ -5,7 +5,7 @@ namespace AppBundle\Form\User;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserDetailsBasicType extends AbstractType
 {
@@ -23,7 +23,7 @@ class UserDetailsBasicType extends AbstractType
                 ->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'settings',

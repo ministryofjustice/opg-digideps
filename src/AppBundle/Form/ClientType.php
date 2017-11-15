@@ -6,27 +6,18 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClientType extends AbstractType
 {
-    private $client_validated = false;
+    private $clientValidated = false;
 
-    /**
-     * ClientType constructor.
-     * Setting client_validated = true renders the firstname, lastname and case_number as read only fields
-     * 
-     * @param array $options
-     */
-    public function __construct($options = [])
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (isset($options['client_validated'])) {
             $this->setClientValidated((bool) $options['client_validated']);
         }
-    }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
         if ($this->isClientValidated()) {
             $builder->add('firstname', 'text', ['attr'=> ['readonly' => 'readonly']])
                 ->add('lastname', 'text',  ['attr'=> ['readonly' => 'readonly']])
@@ -63,11 +54,12 @@ class ClientType extends AbstractType
         });
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'registration',
-            'validation_groups' => 'lay-deputy-client',
+            'validation_groups'  => 'lay-deputy-client',
+            'client_validated'   => null
         ]);
     }
 
@@ -81,15 +73,15 @@ class ClientType extends AbstractType
      */
     public function isClientValidated()
     {
-        return $this->client_validated;
+        return $this->clientValidated;
     }
 
     /**
-     * @param bool $client_validated
+     * @param bool $clientValidated
      */
-    public function setClientValidated($client_validated)
+    public function setClientValidated($clientValidated)
     {
-        $this->client_validated = $client_validated;
+        $this->clientValidated = $clientValidated;
         return $this;
     }
 }

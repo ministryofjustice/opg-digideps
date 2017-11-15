@@ -514,7 +514,7 @@ class RestClient
         if ($this->userId) {
             return $this->userId;
         } elseif (
-            ($token = $this->container->get('security.context')->getToken())
+            ($token = $this->container->get('security.token_storage')->getToken())
             && ($token->getUser() instanceof User)
         ) {
             return $token->getUser()->getId();

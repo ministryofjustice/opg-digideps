@@ -4,7 +4,7 @@ namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 class ReasonForNoContactType extends AbstractType
@@ -18,7 +18,7 @@ class ReasonForNoContactType extends AbstractType
         $builder->setAction($options['action']);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
               'translation_domain' => 'report-contacts',

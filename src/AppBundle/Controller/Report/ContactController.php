@@ -46,7 +46,7 @@ class ContactController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\Report\ContactExistType(), $report);
+        $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -83,7 +83,7 @@ class ContactController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $contact = new EntityDir\Report\Contact();
 
-        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
+        $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -114,7 +114,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-contacts'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-contacts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -142,7 +142,7 @@ class ContactController extends AbstractController
         $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
         $contact->setReport($report);
 
-        $form = $this->createForm(new FormDir\Report\ContactType(), $contact);
+        $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

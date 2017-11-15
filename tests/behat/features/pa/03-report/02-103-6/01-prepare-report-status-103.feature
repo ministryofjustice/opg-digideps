@@ -28,7 +28,7 @@ Feature: Report 103-6 start
     Then I should see the "edit-other_info" link
     Then I should see the "edit-documents" link
     # check not submittable (as 103 money section it not completed yet)
-    Then the report should not be submittable
+    Then the PA report should not be submittable
 
 
 

@@ -27,7 +27,7 @@ Feature: Report 104 start
     Then I should not see the "edit-assets" link
     Then I should not see the "edit-debts" link
     # check not submittable (as 104 lifestyle it not completed yet)
-    Then the report should not be submittable
+    Then the PA report should not be submittable
 
 
 

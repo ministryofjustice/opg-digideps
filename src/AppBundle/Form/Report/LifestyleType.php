@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class LifestyleType extends AbstractType
@@ -18,18 +18,10 @@ class LifestyleType extends AbstractType
      */
     private $step;
 
-    /**
-     * LifestyleType constructor.
-     *
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
         if ($this->step === 1) {
             $builder->add('careAppointments', 'textarea', []);
         }
@@ -47,7 +39,7 @@ class LifestyleType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-lifestyle',
@@ -69,7 +61,8 @@ class LifestyleType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 
     public function getName()

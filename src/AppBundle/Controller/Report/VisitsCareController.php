@@ -48,14 +48,19 @@ class VisitsCareController extends AbstractController
         $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('visits_care', 'visits_care_step', 'visits_care_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\VisitsCareType($step, $this->get('translator'), $report->getClient()->getFirstname()), $visitsCare);
+        $form = $this->createForm(FormDir\Report\VisitsCareType::class
+                                 , $visitsCare
+                                 , [ 'step'            => $step
+                                   , 'translator'      => $this->get('translator')
+                                   , 'clientFirstName' => $report->getClient()->getFirstname()
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

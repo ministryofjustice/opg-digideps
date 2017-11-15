@@ -2,11 +2,11 @@
 
 namespace AppBundle\Form\Odr\Asset;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AssetTypeTitle extends \AppBundle\Form\Report\Asset\AssetTypeTitle
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'odr-assets',

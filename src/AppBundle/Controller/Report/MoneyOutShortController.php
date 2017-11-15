@@ -45,7 +45,7 @@ class MoneyOutShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortType('moneyShortCategoriesOut'), $report);
+        $form = $this->createForm(FormDir\Report\MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesOut']);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -65,7 +65,6 @@ class MoneyOutShortController extends AbstractController
             return $this->redirectToRoute('money_out_short_exist', ['reportId'=>$reportId]);
         }
 
-
         return [
             'report' => $report,
             'form' => $form->createView(),
@@ -81,7 +80,10 @@ class MoneyOutShortController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('moneyTransactionsShortOutExist', 'report-money-short', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field' => 'moneyTransactionsShortOutExist', 'translationDomain' => 'report-money-short']
+                                 );
         $form->handleRequest($request);
         $fromSummaryPage = $request->get('from') == 'summary';
 
@@ -115,7 +117,7 @@ class MoneyOutShortController extends AbstractController
         $record = new MoneyTransactionShort('out');
         $record->setReport($report);
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $record);
+        $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $record);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -144,7 +146,7 @@ class MoneyOutShortController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-short'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-money-short']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -171,7 +173,7 @@ class MoneyOutShortController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $transaction = $this->getRestClient()->get('report/' . $report->getId() . '/money-transaction-short/' . $transactionId, 'Report\MoneyTransactionShort');
 
-        $form = $this->createForm(new FormDir\Report\MoneyShortTransactionType(), $transaction);
+        $form = $this->createForm(FormDir\Report\MoneyShortTransactionType::class, $transaction);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

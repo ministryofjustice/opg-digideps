@@ -44,7 +44,10 @@ class DeputyExpenseController extends AbstractController
     public function existAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('paidForAnything', 'odr-deputy-expenses', ['yes' => 'Yes', 'no' => 'No']), $odr);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $odr
+                                 , [ 'field' => 'paidForAnything', 'translationDomain' => 'odr-deputy-expenses']
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -80,7 +83,7 @@ class DeputyExpenseController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = new EntityDir\Odr\Expense();
 
-        $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Odr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -111,7 +114,7 @@ class DeputyExpenseController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-deputy-expenses'), $odr);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translationDomain' => 'odr-deputy-expenses']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -138,7 +141,7 @@ class DeputyExpenseController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('odr/' . $odr->getId() . '/expense/' . $expenseId, 'Odr\Expense');
 
-        $form = $this->createForm(new FormDir\Odr\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Odr\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

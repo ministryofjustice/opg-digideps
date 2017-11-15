@@ -56,16 +56,16 @@ class UserController extends AbstractController
         // define form and template that differs depending on the action (activate or password-reset)
         if ($isActivatePage) {
             $passwordMismatchMessage = $translator->trans('password.validation.passwordMismatch', [], 'user-activate');
-            $form = $this->createForm(new FormDir\SetPasswordType([
-                'passwordMismatchMessage' => $passwordMismatchMessage,
-                'showTermsAndConditions'  => $user->isDeputy()
-            ]), $user);
+            $form = $this->createForm( FormDir\SetPasswordType::class
+                                     , $user
+                                     , [ 'passwordMismatchMessage' => $passwordMismatchMessage
+                                       , 'showTermsAndConditions'  => $user->isDeputy()
+                                       ]
+                                     );
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
             $passwordMismatchMessage = $translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
-            $form = $this->createForm(new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $passwordMismatchMessage,
-            ]), $user);
+            $form = $this->createForm(FormDir\ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
 
@@ -83,7 +83,7 @@ class UserController extends AbstractController
 
             // log in
             $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.context')->setToken($clientToken); //now the user is logged in
+            $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
@@ -184,7 +184,7 @@ class UserController extends AbstractController
     public function passwordForgottenAction(Request $request)
     {
         $user = new EntityDir\User();
-        $form = $this->createForm(new FormDir\PasswordForgottenType(), $user);
+        $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -223,7 +223,7 @@ class UserController extends AbstractController
     public function registerAction(Request $request)
     {
         $selfRegisterData = new SelfRegisterData();
-        $form = $this->createForm(new FormDir\SelfRegisterDataType(), $selfRegisterData);
+        $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
         $translator = $this->get('translator');
         $vars = [];
 
@@ -297,7 +297,7 @@ class UserController extends AbstractController
     {
         $user = $this->getRestClient()->loadUserByToken($token);
 
-        $form = $this->createForm(new FormDir\User\AgreeTermsType(), $user);
+        $form = $this->createForm(FormDir\User\AgreeTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->getRestClient()->agreeTermsUse($token);

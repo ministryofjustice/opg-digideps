@@ -110,11 +110,10 @@ class ReportController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
-        $editReportDatesForm = $this->createForm(new FormDir\Report\ReportType('report_edit'), $report, [
-            'translation_domain' => 'report',
-        ]);
-        $returnLink = $this->getUser()->isDeputyPa() ?
-            $this->generateClientProfileLink($report->getClient())
+
+        $editReportDatesForm = $this->get('form.factory')->createNamed( 'report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
+        $returnLink = $this->getUser()->isDeputyPa()
+            ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
         $editReportDatesForm->handleRequest($request);
@@ -158,10 +157,15 @@ class ReportController extends AbstractController
         }
         $report->setClient($client);
 
-        $form = $this->createForm(new FormDir\Report\ReportType('report'), $report, [
-                'translation_domain' => 'registration',
-                'action' => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
-        ]);
+        $formFactory = $this->get('form.factory');
+        $form = $this->get('form.factory')->createNamed( 'report'
+                                 , FormDir\Report\ReportType::class
+                                 , $report
+                                 , [ 'translation_domain' => 'registration'
+                                   , 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+                                   ]
+                                 );
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -206,6 +210,7 @@ class ReportController extends AbstractController
             : 'AppBundle:Report/Report:overview.html.twig';
 
         return $this->render($template, [
+            'user' => $user,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
         ]);
@@ -232,7 +237,7 @@ class ReportController extends AbstractController
         $clients = $user->getClients();
         $client = $clients[0];
 
-        $form = $this->createForm(new FormDir\Report\ReportDeclarationType(), $report);
+        $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
@@ -347,6 +352,7 @@ class ReportController extends AbstractController
         }
 
         return [
+            'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink

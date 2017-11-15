@@ -75,7 +75,7 @@ class BankAccountController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Odr\BankAccountType($step), $account);
+        $form = $this->createForm(FormDir\Odr\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -134,7 +134,7 @@ class BankAccountController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-bank-accounts'), $odr);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translationDomain' => 'odr-bank-accounts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

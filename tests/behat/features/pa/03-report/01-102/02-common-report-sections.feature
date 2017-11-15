@@ -93,7 +93,7 @@ Feature: PA user edits common report sections common to ALL report types
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
     # Check report is not submittable until documents section complete
-    And the report should not be submittable
+    And the PA report should not be submittable
     And I click on "edit-documents, start"
     # chose "yes documents"
     Then the URL should match "report/\d+/documents"

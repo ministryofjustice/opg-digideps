@@ -3,7 +3,7 @@
 namespace AppBundle\Form\User;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserDetailsPaType extends UserDetailsBasicType
 {
@@ -15,7 +15,7 @@ class UserDetailsPaType extends UserDetailsBasicType
             ->add('phoneMain', 'text');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'settings',

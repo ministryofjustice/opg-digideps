@@ -6,15 +6,15 @@ use AppBundle\Service\Client\RestClient;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $security;
+    private $tokenStorage;
 
     /**
      * @var Router
@@ -26,16 +26,16 @@ class LogoutListener implements LogoutSuccessHandlerInterface
      */
     private $restClient;
 
-    public function __construct(SecurityContext $security, RestClient $restClient, Router $router)
+    public function __construct(TokenStorageInterface $tokenStorage, RestClient $restClient, Router $router)
     {
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->restClient = $restClient;
         $this->router = $router;
     }
 
     public function onLogoutSuccess(Request $request)
     {
-        if ($this->security->getToken()) {
+        if ($this->tokenStorage->getToken()) {
             $this->restClient->logout();
         }
 

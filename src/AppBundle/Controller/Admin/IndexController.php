@@ -38,7 +38,7 @@ class IndexController extends AbstractController
             'sort_order'  => 'DESC',
         ];
 
-        $form = $this->createForm(new FormDir\Admin\SearchType(), null, ['method' => 'GET']);
+        $form = $this->createForm(FormDir\Admin\SearchType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         if ($form->isValid()) {
             $filters = $form->getData() + $filters;
@@ -68,11 +68,13 @@ class IndexController extends AbstractController
             $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
         }
 
-
-        $form = $this->createForm(new FormDir\Admin\AddUserType([
-            'roleChoices'        => $availableRoles,
-            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-        ]), new EntityDir\User());
+        $form = $this->createForm(FormDir\Admin\AddUserType::class
+                                 , new EntityDir\User()
+                                 , [ 'options' => [ 'roleChoices'        => $availableRoles
+                                                  , 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
+                                                  ]
+                                   ]
+                                 );
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -137,7 +139,7 @@ class IndexController extends AbstractController
         if ($user->getId() == $this->getUser()->getId() || $user->getRoleName() == EntityDir\User::ROLE_PA) {
             $roleNameSetTo = $user->getRoleName();
         }
-        $form = $this->createForm(new FormDir\Admin\AddUserType([
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, $user, ['options' => [
             'roleChoices'        => [
                 EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
                 EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
@@ -147,7 +149,7 @@ class IndexController extends AbstractController
             'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
             'roleNameSetTo'      => $roleNameSetTo, //can't edit current user's role
             'odrEnabledType'     => $user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY ? 'checkbox' : 'hidden',
-        ]), $user);
+        ]]);
 
         $clients = $user->getClients();
         $odr = null;
@@ -155,7 +157,7 @@ class IndexController extends AbstractController
         if (count($clients)) {
             $odr = $clients[0]->getOdr();
             if ($odr) {
-                $odrForm = $this->createForm(new FormDir\OdrType(), $odr, [
+                $odrForm = $this->createForm(FormDir\OdrType::class, $odr, [
                     'action' => $this->generateUrl('admin_editOdr', ['id' => $odr->getId()]),
                 ]);
             }
@@ -209,7 +211,7 @@ class IndexController extends AbstractController
     public function editOdrAction(Request $request, $id)
     {
         $odr = $this->getRestClient()->get('odr/' . $id, 'Odr\Odr', ['odr', 'client', 'client-users', 'user']);
-        $odrForm = $this->createForm(new FormDir\OdrType(), $odr);
+        $odrForm = $this->createForm(FormDir\OdrType::class, $odr);
         if ($request->getMethod() == 'POST') {
             $odrForm->handleRequest($request);
 
@@ -237,7 +239,7 @@ class IndexController extends AbstractController
     {
         $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
 
-        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             throw new DisplayableException('Only Admin can delete users');
         }
 
@@ -272,7 +274,7 @@ class IndexController extends AbstractController
     {
         $chunkSize = 2000;
 
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
@@ -345,7 +347,7 @@ class IndexController extends AbstractController
      */
     public function upgradeMldAction(Request $request)
     {
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 
@@ -400,7 +402,7 @@ class IndexController extends AbstractController
         $this->get('pa_service');
         $chunkSize = 100;
 
-        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+        $form = $this->createForm(FormDir\UploadCsvType::class, null, [
             'method' => 'POST',
         ]);
 

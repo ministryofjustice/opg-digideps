@@ -7,22 +7,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AssetTypeProperty extends AbstractType
 {
     private $step;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
         if ($this->step === 1) {
             $builder
                 ->add('address', 'text')
@@ -149,11 +142,12 @@ class AssetTypeProperty extends AbstractType
         return 'odr_asset';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
             'validation_groups' => $this->getValidationGroups(),
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 }

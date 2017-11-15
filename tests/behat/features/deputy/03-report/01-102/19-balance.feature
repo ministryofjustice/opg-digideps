@@ -7,7 +7,7 @@ Feature: Report balance
         # assert report not submittable
         And I click on "report-start"
         And I should see an "#finances-section .behat-alert-message" element
-        And the report should not be submittable
+        And the lay report should not be submittable
         # check balance mismatch difference
         When I click on "balance-view-details"
         Then I should see the "balance-bad" region
@@ -25,7 +25,7 @@ Feature: Report balance
         Then I should not see the "balance-bad" region
         # assert report can be sumbmitted
         # When I set the report 1 end date to 3 days ago
-        Then the report should be submittable
+        Then the lay report should be submittable
 
     @deputy
     Scenario: balance explanation
@@ -44,5 +44,5 @@ Feature: Report balance
         And the step with the following values CAN be submitted:
             | balance_balanceMismatchExplanation    | lost 110 pounds on the road |
         And I should see an "#finances-section .behat-alert-message" element
-        And the report should be submittable
+        And the lay report should be submittable
 

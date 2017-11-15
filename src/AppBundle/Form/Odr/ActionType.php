@@ -6,22 +6,16 @@ use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActionType extends AbstractType
 {
     private $step;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
         $builder
             ->add('id', 'hidden');
 
@@ -63,7 +57,7 @@ class ActionType extends AbstractType
         return 'actions';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'odr-actions',
@@ -80,6 +74,7 @@ class ActionType extends AbstractType
                     4 => ['action-property-buy'],
                 ][$this->step];
             },
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 }

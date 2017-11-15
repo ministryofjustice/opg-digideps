@@ -32,15 +32,13 @@
                 </li>
             </ul>
         </div>
+    </div>
 
-        <div class="column-one-half">
-            <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
+    {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+        <div class="push--top">
+            {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }}
         </div>
-    </div>
-
-    <div class="push--top">
-        {{ macros.notification('info', 'guidanceNotice' | trans) }}
-    </div>
+    {% endif %}
 
 
     <ul id="overview-sections" class="push--bottom">
@@ -262,29 +260,33 @@
                     list: true
                 } %}
             {% endif %}
-
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'report_submit',
-                linkToSubSection: path('report_review', {reportId: report.id}),
-                report: report,
-                description: false,
-                state: reportStatus.submitState,
-                disableedit: reportStatus.submitState.state != 'done'
-            } %}
         </li>
     </ul>
 
-    {# report due but NOT ready to submit #}
-    {% if report.isDue and not reportStatus.isReadyToSubmit %}
-        {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
-    {% endif %}
-
-    {# report is NOT due #}
     {% if not report.isDue %}
-        {% set endDate = report.getEndDate() | date(" d F Y")  %}
-        {% set transOptions = {'%date%': endDate} %}
-        {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
+
+        <div class="push--top">
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+
+            {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
+        </div>
+        <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+    {% else %}
+        {% if not reportStatus.isReadyToSubmit %}
+
+            <div class="push--top">
+                {{ macros.notification('info', 'previewNotice' | trans()) }}
+            </div>
+            <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+        {% else %}
+
+            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a> 
+
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

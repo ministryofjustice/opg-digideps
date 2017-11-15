@@ -4,24 +4,16 @@ namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MoneyShortType extends AbstractType
 {
-    /**
-     private $field;
-
-     /**
-     * MoneyShortType constructor.
-     * @param $field moneyShortCategoriesIn | moneyShortCategoriesOut
-     */
-    public function __construct($field)
-    {
-        $this->field = $field;
-    }
+    private $field;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->field = $options['field'];
+
         $builder
             ->add('id', 'hidden')
             ->add($this->field, 'collection', [
@@ -29,17 +21,16 @@ class MoneyShortType extends AbstractType
             ])
         ;
 
-
         $builder->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'translation_domain' => 'report-money-short',
-            'cascade_validation' => true,
-            'validation_groups'  => ['xxx'],
-        ]);
+        $resolver->setDefaults([ 'translation_domain' => 'report-money-short'
+                               , 'cascade_validation' => true
+                               , 'validation_groups'  => ['xxx']
+                               ])
+                 ->setRequired(['field']);
     }
 
     public function getName()

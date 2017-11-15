@@ -78,10 +78,16 @@ class MoneyInController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\MoneyTransactionType(
-            $step, 'in', $this->get('translator'), $report->getClient()->getFirstname(),
-            $transaction->getGroup(), $transaction->getCategory()
-        ), $transaction);
+        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class
+                                 , $transaction
+                                 , [ 'step'             => $step
+                                   , 'type'             => 'in'
+                                   , 'translator'       => $this->get('translator')
+                                   , 'clientFirstName'  => $report->getClient()->getFirstname()
+                                   , 'selectedGroup'    => $transaction->getGroup()
+                                   , 'selectedCategory' => $transaction->getCategory()
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -130,7 +136,7 @@ class MoneyInController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transaction'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-money-transaction']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

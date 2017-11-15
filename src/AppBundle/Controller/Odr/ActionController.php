@@ -53,7 +53,7 @@ class ActionController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId' => $odrId]);
 
-        $form = $this->createForm(new FormDir\Odr\ActionType($step, $this->get('translator'), $odr->getClient()->getFirstname()), $odr);
+        $form = $this->createForm(FormDir\Odr\ActionType::class, $odr, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

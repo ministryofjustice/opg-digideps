@@ -54,7 +54,7 @@ class LifestyleController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\LifestyleType($step), $lifestyle);
+        $form = $this->createForm(FormDir\Report\LifestyleType::class, $lifestyle, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

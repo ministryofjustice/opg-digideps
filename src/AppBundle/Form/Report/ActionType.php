@@ -6,11 +6,13 @@ use AppBundle\Entity\Report\Action;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ActionType extends AbstractType
 {
+    private $clientFirstName;
+
     /**
      * @var int
      */
@@ -21,18 +23,12 @@ class ActionType extends AbstractType
      */
     private $translator;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step, TranslatorInterface $translator, $clientFirstName)
-    {
-        $this->step = (int) $step;
-        $this->translator = $translator;
-        $this->clientFirstName = $clientFirstName;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step            = (int) $options['step'];
+        $this->translator      = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
+
         if ($this->step === 1) {
             $builder
                 ->add('doYouExpectFinancialDecisions', 'choice', [
@@ -51,7 +47,7 @@ class ActionType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-actions',
@@ -78,7 +74,9 @@ class ActionType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step', 'translator', 'clientFirstName'])
+        ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
     public function getName()
