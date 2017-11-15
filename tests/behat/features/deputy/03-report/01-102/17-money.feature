@@ -87,7 +87,7 @@ Feature: Report money 102
   Scenario: money out
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start"
-    And I should not see "#finances-section .alert-message"
+    And I should not see "#finances-section .behat-alert-message"
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
@@ -163,7 +163,7 @@ Feature: Report money 102
   Scenario: Test balance warning now showing
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start"
-    And the "#finances-section .alert-message" element should contain "accounts are not balanced"
+    And I should see an "#finances-section .behat-alert-message" element
 
   @deputy
   # save status in order to be restore to continue 102
