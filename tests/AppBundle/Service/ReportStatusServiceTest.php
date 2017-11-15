@@ -500,7 +500,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_INCOMPLETE],
             [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_DONE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
             [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>true], StatusService::STATE_DONE],
         ];
     }
