@@ -6,13 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 class FeedbackType extends AbstractType
 {
     use Traits\HasTranslatorTrait;
-    use Traits\HasSecurityContextTrait;
+    use Traits\TokenStorageTrait;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -53,7 +53,7 @@ class FeedbackType extends AbstractType
         });
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
               'translation_domain' => 'feedback',

@@ -5,7 +5,7 @@ namespace AppBundle\Form\Odr;
 use AppBundle\Entity\Odr\OneOff;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OneOffType extends AbstractType
 {
@@ -16,7 +16,7 @@ class OneOffType extends AbstractType
                  ->add('present', 'checkbox');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
              'data_class' => OneOff::class,

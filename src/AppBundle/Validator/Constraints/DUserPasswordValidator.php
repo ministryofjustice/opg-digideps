@@ -5,6 +5,7 @@ namespace AppBundle\Validator\Constraints;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
@@ -15,15 +16,20 @@ class DUserPasswordValidator extends UserPasswordValidator
      */
     private $restClient;
 
-    public function __construct($securityContext, $restClient)
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    public function __construct(TokenStorageInterface $tokenStorage, $restClient)
     {
         $this->restClient = $restClient;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function validate($password, Constraint $constraint)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if (!$user instanceof UserInterface) {
             throw new ConstraintDefinitionException('The User object must implement the UserInterface interface.');

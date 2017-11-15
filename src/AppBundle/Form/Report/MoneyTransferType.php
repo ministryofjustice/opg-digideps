@@ -5,39 +5,29 @@ namespace AppBundle\Form\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MoneyTransferType extends AbstractType
 {
     private $step;
 
-    private $banks;
-
-    /**
-     * MoneyTransferType constructor.
-     *
-     * @param $step
-     * @param \BankAccount[] $banks
-     */
-    public function __construct($step, array $banks)
-    {
-        $this->step = (int) $step;
-        $this->banks = [];
-
-        foreach ($banks as $bank) {
-            /* $var $bank \AppBundle\Entity\Report\BankAccount */
-            $this->banks[$bank->getId()] = $bank->getBank() . ' ' . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-        }
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
+        $banks = [];
+        foreach ($options['banks'] as $bank) {
+            /* $var $bank \AppBundle\Entity\Report\BankAccount */
+            $banks[$bank->getId()] = $bank->getBank() . ' ' . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
+        }
+
+
         if ($this->step == 1) {
             $builder
                 ->add('accountFromId', 'choice', [
-                        'choices' => $this->banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'empty_value' => 'Please select',]
                 )->add('accountToId', 'choice', [
-                        'choices' => $this->banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'empty_value' => 'Please select',]
                 );
         }
         if ($this->step == 2) {
@@ -54,7 +44,7 @@ class MoneyTransferType extends AbstractType
             ->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-money-transfer',
@@ -74,7 +64,10 @@ class MoneyTransferType extends AbstractType
 
                 return $validationGroups;
             },
-        ]);
+        ])
+        ->setRequired(['step', 'banks'])
+        ->setAllowedTypes('banks', 'array')
+        ;
     }
 
     public function getName()

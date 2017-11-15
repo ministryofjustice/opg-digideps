@@ -54,7 +54,7 @@ class OtherInfoController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\OtherInfoType(), $report);
+        $form = $this->createForm(FormDir\Report\OtherInfoType::class, $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

@@ -56,7 +56,13 @@ class IncomeBenefitController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId' => $odrId]);
 
-        $form = $this->createForm(new FormDir\Odr\IncomeBenefitType($step, $this->get('translator'), $odr->getClient()->getFirstname()), $odr);
+        $form = $this->createForm(FormDir\Odr\IncomeBenefitType::class
+                                 , $odr
+                                 , [ 'step'            => $step
+                                   , 'translator'      => $this->get('translator')
+                                   , 'clientFirstName' => $odr->getClient()->getFirstname()
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

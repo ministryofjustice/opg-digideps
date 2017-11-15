@@ -38,7 +38,7 @@ class IndexController extends AbstractController
     {
         $request = $this->getRequest();
 
-        $form = $this->createForm(new FormDir\LoginType(), null, [
+        $form = $this->createForm(FormDir\LoginType::class, null, [
             'action' => $this->generateUrl('login'),
         ]);
         $form->handleRequest($request);
@@ -71,7 +71,7 @@ class IndexController extends AbstractController
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.context')->setToken($token);
+            $this->get('security.token_storage')->setToken($token);
 
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
@@ -120,7 +120,7 @@ class IndexController extends AbstractController
         $this->get('deputy_provider')->login(['token' => $userToken]);
 
         $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->get('security.context')->setToken($clientToken); //now the user is logged in
+        $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
 
         $session = $this->get('session');
         $session->set('_security_secured_area', serialize($clientToken));
@@ -217,7 +217,7 @@ class IndexController extends AbstractController
      */
     public function logoutAction(Request $request)
     {
-        $this->get('security.context')->setToken(null);
+        $this->get('security.token_storage')->setToken(null);
         $request->getSession()->invalidate();
         return $this->redirect(
             $this->generateUrl('homepage')

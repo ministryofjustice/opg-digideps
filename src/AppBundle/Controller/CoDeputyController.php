@@ -25,7 +25,7 @@ class CoDeputyController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $form = $this->createForm(new FormDir\CoDeputyVerificationType(), $user);
+        $form = $this->createForm(FormDir\CoDeputyVerificationType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()){
@@ -106,7 +106,7 @@ class CoDeputyController extends AbstractController
 
         $invitedUser = new EntityDir\User();
 
-        $form = $this->createForm(new FormDir\CoDeputyInviteType(), $invitedUser);
+        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
         $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')
@@ -156,7 +156,7 @@ class CoDeputyController extends AbstractController
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
         $invitedUser = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
 
-        $form = $this->createForm(new FormDir\CoDeputyInviteType(), $invitedUser, ['translation_domain' => 'codeputy-resend-invite']);
+        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser, ['translation_domain' => 'codeputy-resend-invite']);
 
         $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')

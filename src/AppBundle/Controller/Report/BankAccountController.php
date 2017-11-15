@@ -79,7 +79,7 @@ class BankAccountController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Report\BankAccountType($step), $account);
+        $form = $this->createForm( FormDir\Report\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -152,7 +152,7 @@ class BankAccountController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-bank-accounts'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-bank-accounts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

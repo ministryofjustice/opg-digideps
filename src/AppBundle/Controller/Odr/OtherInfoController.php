@@ -52,7 +52,7 @@ class OtherInfoController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId' => $odrId]);
 
-        $form = $this->createForm(new FormDir\Odr\OtherInfoType(), $odr);
+        $form = $this->createForm(FormDir\Odr\OtherInfoType::class, $odr);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

@@ -4,7 +4,7 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -16,50 +16,30 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class YesNoType extends AbstractType
 {
     /**
-     * @var string field name
-     */
-    private $field;
-
-    /**
      * @var string translation domain used for labels
      */
     private $translationDomain;
 
-    /**
-     * @var array
-     */
-    private $choices;
-
-    /**
-     * YesNoType constructor.
-     * @param $field
-     * @param string $translationDomain
-     * @param array  $choices
-     */
-    public function __construct($field, $translationDomain, array $choices)
-    {
-        $this->field = $field;
-        $this->translationDomain = $translationDomain;
-        $this->choices = $choices;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->translationDomain = $options['translationDomain'];
+
         $builder
-            ->add($this->field, 'choice', [
-                'choices' => $this->choices,
-                'expanded' => true,
+            ->add($options['field'], 'choice', [
+                'choices'     => $options['choices'],
+                'expanded'    => true,
                 'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'", 'groups'=>'yesno_type_custom'])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'translation_domain' => $this->translationDomain,
-            'validation_groups' => ['yesno_type_custom']
-        ]);
+        $resolver->setDefaults([ 'translation_domain' => $this->translationDomain
+                               , 'validation_groups'  => ['yesno_type_custom']
+                               , 'choices'            => ['yes' => 'Yes', 'no' => 'No']
+                               ])
+                 ->setRequired(['field', 'translationDomain']);
     }
 
     public function getName()
