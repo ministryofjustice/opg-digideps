@@ -190,7 +190,7 @@
                     } %}
                 {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
-                {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
+                <!-- {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
@@ -199,7 +199,7 @@
                         warning: true,
                         description: true
                     } %}
-                {% endif %}
+                {% endif %} -->
                 {% if report.hasSection('assets') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
