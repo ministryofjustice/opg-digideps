@@ -10,6 +10,6 @@ page:
   returnToDashboard: Return to dashboard
   feedback:
     title: Give us your feedback
-thanks:
-  thankYouForsubmitting: Thank you for your feedback
+thanksForFeedback:
+  thankYou: Thank you
   more: If you want to give us more detailed feedback, use [linkStart]this form[linkEnd] to contact us
