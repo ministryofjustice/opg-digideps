@@ -134,7 +134,7 @@ class BankAccountController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translationDomain' => 'odr-bank-accounts']);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translation_domain' => 'odr-bank-accounts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

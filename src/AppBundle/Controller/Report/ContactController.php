@@ -114,7 +114,7 @@ class ContactController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translationDomain' => 'report-contacts']);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

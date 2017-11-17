@@ -9,12 +9,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AddAnotherRecordType extends AbstractType
 {
-    protected $translationDomain;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->translationDomain = $options['translationDomain'];
-
         $builder
             ->add('addAnother', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
@@ -28,8 +24,9 @@ class AddAnotherRecordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setDefaults(['translation_domain' => $this->translationDomain])
-            ->setRequired(['translationDomain']);
+            ->setDefaults([])
+            ->setRequired(['translation_domain'])
+            ->setAllowedTypes('translation_domain','string');
     }
 
     public function getName()
