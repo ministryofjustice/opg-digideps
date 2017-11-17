@@ -177,7 +177,7 @@ class AssetController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translationDomain' => 'odr-assets']);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translation_domain' => 'odr-assets']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
