@@ -5,20 +5,192 @@
 {% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'page.backLink' | trans) }}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
 {% endblock %}
 
 {% block pageContent %}
 
-    {% if report.isTotalsMatch %}
+    <!-- {% if report.isTotalsMatch %}
         {% include 'AppBundle:Report/Balance:_balance-good.html.twig' %}
     {% else %}
         {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
-    {% endif %}
+    {% endif %} -->
+
+    <!-- <div id="header-report-submit" class="hero hero-small orange">
+        <h2 class="heading">Accounts not balanced</h2>
+    </div> -->
+
+    <div class="panel panel-border-narrow">
+        <h3 class="heading-medium">
+            <i class="icon icon-cross"></i>
+        Accounts not balanced</h3>
+        <div class="data">
+            <span class="data-item bold-xlarge">£2,000</span>
+            <span class="data-item bold-xsmall">missing</span>
+        </div>
+    </div>
+
+    <div class="alert-error panel panel-border-narrow">
+        <span class="icon icon-cross"></span>
+        <div class="alert-message">
+            <p class="bold">Accounts not balanced</p>
+            <div class="data">
+                <span class="data-item bold-xlarge">£2,000</span>
+                <span class="data-item bold-xsmall">missing</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-border-narrow">
+        <h3 class="heading-medium">
+            <i class="icon icon-tick"></i>
+        Accounts balanced</h3>
+    </div>
+
+    <div class="alert-success panel panel-border-narrow">
+        <span class="icon icon-tick"></span>
+        <div class="alert-message">
+            <p class="bold">Accounts balanced</p>
+        </div>
+    </div>
+
+    <h3 class="heading-medium">Balance after incoming and outgoing payments</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Section</th>
+                <th class="numeric">In</th>
+                <th class="numeric">Out</th>
+                <th class="numeric">Balance</th>
+                <th>
+                    <span class="visually-hidden">Action</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Accounts opening balance (21 April 2016)</td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric">£12,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money in</td>
+                <td class="numeric">£1,000.00</td>
+                <td class="numeric"></td>
+                <td class="numeric">£13,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money out</td>
+                <td class="numeric"></td>
+                <td class="numeric">£1,500.00</td>
+                <td class="numeric">£11,500.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Deputy expenses</td>
+                <td class="numeric"></td>
+                <td class="numeric">£500.00</td>
+                <td class="numeric">£11,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Gifts</td>
+                <td class="numeric"></td>
+                <td class="numeric">£0.00</td>
+                <td class="numeric">£11,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <span class="bold">Balance after incoming and outgoing payments</span>
+                </td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric bold">
+                    <span class="bold">£11,000.00</span>
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <h3 class="heading-medium">Balance differences</h3>
+
+    <table class="push--ends">
+        <thead class="visually-hidden">
+            <tr>
+                <th>Section</th>
+                <th class="numeric"></th>
+                <th class="numeric"></th>
+                <th class="numeric">Balance</th>
+                <th>
+                    <span class="visually-hidden">Action</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Accounts closing balance (21 April 2016)</td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric">£13,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Report closing balance (see above)</td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric">£11,000.00</td>
+                <td class="numeric"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <span class="bold">Missing amount</span>
+                </td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric bold">
+                    <span class="bold">£2,000.00</span>
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text">
+        <p>After you have entered all of Garth's income and outgoing payments, you should have a sum of money that matches the one you entered in the closing balance in bank accounts.</p>
+
+        <p>The balance of income and outgoing payments doesn't match the balance of accounts, to rectify please check:</p>
+
+        <ul class="list list-bullet">
+            <li>The figures entered for opening and closing balances are correct</li>
+            <li>All of Garth's incomings and outgoings correctly entered in the money in, money out, gifts and expenses sections</li>
+        </ul>
+    </div>
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'balance') }}
