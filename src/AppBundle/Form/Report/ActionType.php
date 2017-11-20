@@ -70,8 +70,6 @@ class ActionType extends AbstractType
                     }
                 }
 
-
-
                 return $validationGroups;
             },
         ])

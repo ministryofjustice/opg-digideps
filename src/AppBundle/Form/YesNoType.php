@@ -31,7 +31,7 @@ class YesNoType extends AbstractType
         $resolver->setDefaults([ 'validation_groups'  => ['yesno_type_custom']
                                , 'choices'            => ['yes' => 'Yes', 'no' => 'No']
                                ])
-                 ->setRequired(['field', 'translation_domain'])
+                 ->setRequired(['field'])
                  ->setAllowedTypes('translation_domain', 'string');
     }
 
