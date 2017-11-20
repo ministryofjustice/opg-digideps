@@ -83,10 +83,20 @@
             <tr>
                 <td>Gifts</td>
                 <td class="numeric"></td>
-                <td class="numeric">-</td>
+                <td class="numeric">
+                    {% if reportStatus.giftsState['state'] == 'not-started' %}
+                        -
+                    {% else %}
+                        £{{ report.giftsTotalValue | money_format }}
+                    {% endif %}
+                    {# consider the case where section is done, but user say "no gifts" #}
+                </td>
                 <td class="numeric">-</td>
                 <td class="numeric">
-                    <a href="#" class="bold">Start</a>
+                    <a href="#" class="bold">
+                        {# Use start/Edit depending on reportStatus.giftsState['state']  with#}
+                        <a href="{{ path('gifts', {'reportId': report.id}) }}">Start</a>
+                    </a>
                 </td>
             </tr>
 
