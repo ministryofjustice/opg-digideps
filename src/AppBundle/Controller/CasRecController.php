@@ -40,13 +40,15 @@ class CasRecController extends RestController
      */
     public function addBulk(Request $request)
     {
+        $casrecService = $this->get('casrec_service');
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
 
         $data = CsvUploader::decompressData($request->getContent());
 
-        $ret = $this->get('casrec_service')->addBulk($data);
+        $ret = $casrecService->addBulk($data);
+        $casrecService->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
 
         return $ret;
     }
@@ -100,7 +102,7 @@ class CasRecController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
-        // create CSV if not added by the cron, or the "regenerated" is added
+        // create CSV if not added by the cron, or the "regenerated" param is true
         if (!file_exists(EntityDir\CasRec::STATS_FILE_PATH) || $request->get('regenerate')) {
             $this->get('casrec_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
         }

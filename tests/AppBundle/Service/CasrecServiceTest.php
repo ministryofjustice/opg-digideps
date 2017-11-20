@@ -51,7 +51,6 @@ class CasrecServiceTest extends WebTestCase
     public function setup()
     {
         $this->logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-//        $this->reportService = m::mock(ReportService::class)->shouldIgnoreMissing;
         $this->reportService = self::$frameworkBundleClient->getContainer()->get('opg_digideps.report_service');
         $this->validator = self::$frameworkBundleClient->getContainer()->get('validator');
 
@@ -67,8 +66,10 @@ class CasrecServiceTest extends WebTestCase
             ->setRegistrationDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'))
             ->setLastLoggedIn(\DateTime::createFromFormat('d/m/Y', '02/11/2017'))
         ;
+        // create Client C! with two submitted report + one active report
         $c1 = self::$fixtures->createClient($u1)->setCaseNumber('1234567t');
-        self::$fixtures->createReport($c1)->setSubmitted(true);
+        self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2016'));
+        self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2017'));
         self::$fixtures->createReport($c1)->setSubmitted(false);
         self::$em->flush();
         self::$em->clear();
@@ -119,7 +120,8 @@ class CasrecServiceTest extends WebTestCase
         $this->assertContains(date('d/m/Y'), $casrecArray['Stats updated at']);
         $this->assertContains('01/11/2017', $casrecArray['Deputy registration date']);
         $this->assertContains('02/11/2017', $casrecArray['Deputy last logged in']);
-        $this->assertEquals(1, $casrecArray['Reports submitted']);
+        $this->assertEquals(2, $casrecArray['Reports submitted']);
+        $this->assertContains('05/06/2017', $casrecArray['Last report submitted at']);
         $this->assertEquals(1, $casrecArray['Reports active']);
         $this->assertContains('c1', $casrecArray['custom1']); // custom data is kepy
         $this->assertContains('DN1', $casrecArray['Deputy No']);
@@ -131,10 +133,11 @@ class CasrecServiceTest extends WebTestCase
         $this->assertContains('n.a.', $casrecArray['Deputy registration date']);
         $this->assertContains('n.a.', $casrecArray['Deputy last logged in']);
         $this->assertEquals('n.a.', $casrecArray['Reports submitted']);
+        $this->assertEquals('n.a.', $casrecArray['Last report submitted at']);
         $this->assertEquals('n.a.', $casrecArray['Reports active']);
 
         // test CSV
-        $file ='/tmp/dd_statstest.csv';
+        $file ='/tmp/dd_stats.unittest.csv';
         $this->object->saveCsv($file);
         $this->assertCount(3, file($file));
     }
