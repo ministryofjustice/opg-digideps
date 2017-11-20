@@ -4,6 +4,17 @@
 
 {% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
+{% if
+    reportStatus.giftsState['state'] != 'not-started' and
+    reportStatus.expensesState['state'] != 'not-started' and
+    reportStatus.bankAccountsState['state'] != 'not-started' and
+    reportStatus.moneyInState['state'] != 'not-started' and
+    reportStatus.moneyOutState['state'] != 'not-started'
+%}
+    {% set readyToBalance = true %}
+{% else %}
+    {% set readyToBalance = false %}
+{% endif %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
@@ -20,13 +31,40 @@
         {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
     {% endif %} -->
 
-    <!-- Not started, some started -->
-    <div class="alert-info panel panel-border-narrow">
-        <span class="icon icon-information"></span>
-        <div class="alert-message">
-            <p class="">Once you've added a bank account and started the money in and out, deputy details and gifts sections, you'll be able to check your account balance here.</p>
+    {% if not readyToBalance %}
+        <div class="alert-info panel panel-border-narrow">
+            <span class="icon icon-information"></span>
+            <div class="alert-message">
+                <p class="">Once you've added a bank account and started the money in and out, deputy details and gifts sections, you'll be able to check your account balance here.</p>
+            </div>
         </div>
-    </div>
+    {% else %}
+        {% if report.isTotalsMatch %}
+            <div class="alert-success panel panel-border-narrow">
+                <span class="icon icon-tick"></span>
+                <div class="alert-message">
+                    <p class="bold">Accounts balanced</p>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow">
+                {% if report.isDue %}
+                    <span class="icon icon-cross"></span>
+                {% endif %}
+                <div class="alert-message">
+                    {% if report.isDue %}
+                        <p class="bold">Accounts not balanced</p>
+                    {% endif %}
+                    <div class="data">
+                        <span class="data-item bold-xlarge">
+                            £{{ (report.accountsClosingBalanceTotal - (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue)) | money_format }}
+                        </span>
+                        <span class="data-item bold-xsmall">missing</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
     <h3 class="heading-medium">Balance after incoming and outgoing payments</h3>
 
@@ -46,38 +84,110 @@
 
             <!-- SOME STARTED -->
             <tr>
-                <td>Accounts opening balance</td>
+                <td>
+                    Accounts opening balance
+                    {% if reportStatus.bankAccountsState['state'] != 'not-started' %}
+                        ({{ report.startDate | date("j F Y") }})
+                    {% endif %}
+                </td>
                 <td class="numeric" colspan="2"></td>
-                <td class="numeric">£12,374.00</td>
                 <td class="numeric">
-                    <a href="#" class="bold">Edit</a>
+                    {% if reportStatus.bankAccountsState['state'] == 'not-started' %}
+                        -
+                    {% else %}
+                        £{{ report.accountsOpeningBalanceTotal | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+
+                    <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="bold">
+                        {% if reportStatus.bankAccountsState['state'] == 'not-started' %}
+                            {{ 'start' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'edit' | trans({}, 'common') }}
+                        {% endif %}
+                    </a>
                 </td>
             </tr>
             <tr>
                 <td>Money in</td>
-                <td class="numeric">-</td>
-                <td class="numeric"></td>
-                <td class="numeric">-</td>
                 <td class="numeric">
-                    <a href="#" class="bold">Start</a>
+                    {% if reportStatus.moneyInState['state'] == 'not-started' %}
+                        -
+                    {% else %}
+                        £{{ report.moneyInTotal | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric"></td>
+                <td class="numeric">
+                    {% if not readyToBalance %}
+                        -
+                    {% else %}
+                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal) | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    <a href="{{ path('money_in', {'reportId': report.id}) }}" class="bold">
+                        {% if reportStatus.moneyInState['state'] == 'not-started' %}
+                            {{ 'start' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'edit' | trans({}, 'common') }}
+                        {% endif %}
+                    </a>
                 </td>
             </tr>
             <tr>
                 <td>Money out</td>
                 <td class="numeric"></td>
-                <td class="numeric">-</td>
-                <td class="numeric">-</td>
                 <td class="numeric">
-                    <a href="#" class="bold">Start</a>
+                    {% if reportStatus.moneyOutState['state'] == 'not-started' %}
+                        -
+                    {% else %}
+                        £{{ report.moneyOutTotal | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    {% if not readyToBalance %}
+                        -
+                    {% else %}
+                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal) | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    <a href="{{ path('money_out', {'reportId': report.id}) }}" class="bold">
+                        {% if reportStatus.moneyOutState['state'] == 'not-started' %}
+                            {{ 'start' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'edit' | trans({}, 'common') }}
+                        {% endif %}
+                    </a>
                 </td>
             </tr>
             <tr>
                 <td>Deputy expenses</td>
                 <td class="numeric"></td>
-                <td class="numeric">£4,530.00</td>
-                <td class="numeric">-</td>
                 <td class="numeric">
-                    <a href="#" class="bold">Edit</a>
+                    {% if reportStatus.expensesState['state'] == 'not-started' %}
+                        -
+                    {% else %}
+                        £{{ report.expensesTotal | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    {% if not readyToBalance %}
+                        -
+                    {% else %}
+                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal) | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="bold">
+                        {% if reportStatus.expensesState['state'] == 'not-started' %}
+                            {{ 'start' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'edit' | trans({}, 'common') }}
+                        {% endif %}
+                    </a>
                 </td>
             </tr>
             <tr>
@@ -91,81 +201,104 @@
                     {% endif %}
                     {# consider the case where section is done, but user say "no gifts" #}
                 </td>
-                <td class="numeric">-</td>
                 <td class="numeric">
-                    <a href="#" class="bold">
-                        {# Use start/Edit depending on reportStatus.giftsState['state']  with#}
-                        <a href="{{ path('gifts', {'reportId': report.id}) }}">Start</a>
+                    {% if not readyToBalance %}
+                        -
+                    {% else %}
+                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                   <a href="{{ path('gifts', {'reportId': report.id}) }}" class="bold">
+                        {% if reportStatus.giftsState['state'] == 'not-started' %}
+                            {{ 'start' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'edit' | trans({}, 'common') }}
+                        {% endif %}
                     </a>
                 </td>
             </tr>
 
         </tbody>
 
-        <!-- <tfoot>
-            <tr>
-                <td>
-                    <span class="bold">Balance after incoming and outgoing payments</span>
-                </td>
-                <td class="numeric"></td>
-                <td class="numeric"></td>
-                <td class="numeric bold">
-                    <span class="bold">£13,000.00</span>
-                </td>
-                <td></td>
-            </tr>
-        </tfoot> -->
+        {% if readyToBalance %}
+
+            <tfoot>
+                <tr>
+                    <td>
+                        <span class="bold">Balance after incoming and outgoing payments</span>
+                    </td>
+                    <td class="numeric" colspan="2"></td>
+                    <td class="numeric bold">
+                        <span class="bold">
+                            £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                        </span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+
+        {% endif %}
 
     </table>
 
-    <!-- Balance difference -->
+    {% if readyToBalance %}
 
-    <!-- <h3 class="heading-medium">Balance differences</h3>
+        <h3 class="heading-medium">Balance differences</h3>
 
-    <table class="push--ends">
-        <thead class="visually-hidden">
-            <tr>
-                <th>Section</th>
-                <th class="numeric"></th>
-                <th class="numeric"></th>
-                <th class="numeric">Balance</th>
-                <th>
-                    <span class="visually-hidden">Action</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Accounts closing balance (21 April 2016)</td>
-                <td class="numeric"></td>
-                <td class="numeric"></td>
-                <td class="numeric">£13,000.00</td>
-                <td class="numeric">
-                    <a href="#" class="bold">Edit</a>
-                </td>
-            </tr>
-            <tr>
-                <td>Report closing balance (see above)</td>
-                <td class="numeric"></td>
-                <td class="numeric"></td>
-                <td class="numeric">£11,000.00</td>
-                <td class="numeric"></td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>
-                    <span class="bold">Missing amount</span>
-                </td>
-                <td class="numeric"></td>
-                <td class="numeric"></td>
-                <td class="numeric bold">
-                    <span class="bold">£2000.00</span>
-                </td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table> -->
+        <table class="push--ends">
+            <thead class="visually-hidden">
+                <tr>
+                    <th>Section</th>
+                    <th class="numeric"></th>
+                    <th class="numeric"></th>
+                    <th class="numeric">Balance</th>
+                    <th>
+                        <span class="visually-hidden">Action</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Accounts closing balance ({{ report.endDate | date("j F Y") }})</td>
+                    <td class="numeric"></td>
+                    <td class="numeric"></td>
+                    <td class="numeric">
+                        £{{ report.accountsClosingBalanceTotal | money_format }}
+                    </td>
+                    <td class="numeric">
+                        <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="bold">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Report closing balance (see above)</td>
+                    <td class="numeric"></td>
+                    <td class="numeric"></td>
+                    <td class="numeric">
+                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                    </td>
+                    <td class="numeric"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        <span class="bold">Missing amount</span>
+                    </td>
+                    <td class="numeric"></td>
+                    <td class="numeric"></td>
+                    <td class="numeric bold">
+                        <span class="bold">
+                            £{{ (report.accountsClosingBalanceTotal - (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue)) | money_format }}
+                        </span>
+                    </td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    {% endif %}
 
     <h3 class="heading-medium">More details</h3>
 
