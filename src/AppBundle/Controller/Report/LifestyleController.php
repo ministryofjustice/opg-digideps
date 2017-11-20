@@ -51,7 +51,8 @@ class LifestyleController extends AbstractController
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('lifestyle', 'lifestyle_step', 'lifestyle_summary')
             ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
+            ->setCurrentStep($step)
+            ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(FormDir\Report\LifestyleType::class, $lifestyle, ['step' => $step]);
@@ -79,7 +80,6 @@ class LifestyleController extends AbstractController
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
-
 
         return [
             'report'       => $report,

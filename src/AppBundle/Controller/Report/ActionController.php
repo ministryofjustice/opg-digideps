@@ -48,7 +48,6 @@ class ActionController extends AbstractController
         $action = $report->getAction() ?: new EntityDir\Report\Action();
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
