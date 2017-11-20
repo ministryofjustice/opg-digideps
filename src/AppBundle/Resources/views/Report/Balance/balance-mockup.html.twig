@@ -20,13 +20,36 @@
         {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
     {% endif %} -->
 
+    <!-- HEADER / ALERTS -->
+
     <!-- Not started, some started -->
-    <div class="alert-info panel panel-border-narrow">
+    <!-- <div class="alert-info panel panel-border-narrow">
         <span class="icon icon-information"></span>
         <div class="alert-message">
             <p class="">Once you've added a bank account and started the money in and out, deputy details and gifts sections, you'll be able to check your account balance here.</p>
         </div>
+    </div> -->
+
+    <!-- NOT BALANCED -->
+    <div class="alert-error panel panel-border-narrow">
+        <span class="icon icon-cross"></span>
+        <div class="alert-message">
+            <p class="bold">Accounts not balanced</p>
+            <div class="data">
+                <span class="data-item bold-xlarge">£2,000</span>
+                <span class="data-item bold-xsmall">missing</span>
+            </div>
+        </div>
     </div>
+
+    <!-- BALANCED -->
+    <!-- <div class="alert-success panel panel-border-narrow">
+        <span class="icon icon-tick"></span>
+        <div class="alert-message">
+            <p class="bold">Accounts balanced</p>
+        </div>
+    </div> -->
+
 
     <h3 class="heading-medium">Balance after incoming and outgoing payments</h3>
 
@@ -45,7 +68,7 @@
         <tbody>
 
             <!-- SOME STARTED -->
-            <tr>
+            <!-- <tr>
                 <td>Accounts opening balance</td>
                 <td class="numeric" colspan="2"></td>
                 <td class="numeric">£12,374.00</td>
@@ -88,10 +111,104 @@
                 <td class="numeric">
                     <a href="#" class="bold">Start</a>
                 </td>
+            </tr> -->
+
+            <!-- BALANCED -->
+            <!-- <tr>
+                <td>Accounts opening balance (21 April 2016)</td>
+                <td class="numeric" colspan="2"></td>
+                <td class="numeric">£12,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money in</td>
+                <td class="numeric">£3,000.00</td>
+                <td class="numeric"></td>
+                <td class="numeric">£15,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money out</td>
+                <td class="numeric"></td>
+                <td class="numeric">£1,500.00</td>
+                <td class="numeric">£13,500.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Deputy expenses</td>
+                <td class="numeric"></td>
+                <td class="numeric">£500.00</td>
+                <td class="numeric">£13,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Gifts</td>
+                <td class="numeric"></td>
+                <td class="numeric">£0.00</td>
+                <td class="numeric">£13,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr> -->
+
+            <!-- NOT BALANCED -->
+            <tr>
+                <td>Accounts opening balance (21 April 2016)</td>
+                <td class="numeric" colspan="2"></td>
+                <td class="numeric">£12,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money in</td>
+                <td class="numeric">£1,000.00</td>
+                <td class="numeric"></td>
+                <td class="numeric">£13,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Money out</td>
+                <td class="numeric"></td>
+                <td class="numeric">£1,500.00</td>
+                <td class="numeric">£11,500.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Deputy expenses</td>
+                <td class="numeric"></td>
+                <td class="numeric">£500.00</td>
+                <td class="numeric">£11,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Gifts</td>
+                <td class="numeric"></td>
+                <td class="numeric">£0.00</td>
+                <td class="numeric">£11,000.00</td>
+                <td class="numeric">
+                    <a href="#" class="bold">Edit</a>
+                </td>
             </tr>
 
         </tbody>
 
+
+        <!-- BALANCED -->
         <!-- <tfoot>
             <tr>
                 <td>
@@ -106,11 +223,26 @@
             </tr>
         </tfoot> -->
 
+        <!-- NOT BALANCED -->
+        <tfoot>
+            <tr>
+                <td>
+                    <span class="bold">Balance after incoming and outgoing payments</span>
+                </td>
+                <td class="numeric"></td>
+                <td class="numeric"></td>
+                <td class="numeric bold">
+                    <span class="bold">£11,000.00</span>
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+
     </table>
 
     <!-- Balance difference -->
 
-    <!-- <h3 class="heading-medium">Balance differences</h3>
+    <h3 class="heading-medium">Balance differences</h3>
 
     <table class="push--ends">
         <thead class="visually-hidden">
@@ -155,7 +287,7 @@
                 <td></td>
             </tr>
         </tfoot>
-    </table> -->
+    </table>
 
     <h3 class="heading-medium">More details</h3>
 
@@ -163,15 +295,15 @@
         <p>After you have entered all of Garth's income and outgoing payments, you should have a sum of money that matches the one you entered in the closing balance in bank accounts.</p>
 
         <!-- Not balanced -->
-       <!--  <p class="bold">The balance of income and outgoing payments doesn't match the balance of accounts, to rectify please check:</p>
+        <p class="bold">The balance of income and outgoing payments doesn't match the balance of accounts, to rectify please check:</p>
 
         <ul class="list list-bullet">
             <li>The figures entered for opening and closing balances are correct</li>
             <li>All of Garth's incomings and outgoings correctly entered in the money in, money out, gifts and expenses sections</li>
-        </ul> -->
+        </ul>
     </div>
 
-    <!-- <h3 class="heading-medium">Still can't find the problem?</h3>
+    <h3 class="heading-medium">Still can't find the problem?</h3>
 
     <form name="balance" method="post" novalidate="novalidate">
 
@@ -181,12 +313,15 @@
         </div>
         <button type="submit" id="balance_save" name="balance[save]" class="button behat-link-save-and-continue">Save and continue</button><a href="#" class="button-link">Back to report overview</a>
 
-    </form> -->
+    </form>
 
-    <a href="#" class="button">Back to report overview</a>
+    <!-- <a href="#" class="button">Back to report overview</a> -->
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'balance') }}
 
 
 {% endblock %}
+
+
+
