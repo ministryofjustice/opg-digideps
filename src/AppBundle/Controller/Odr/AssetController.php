@@ -47,9 +47,9 @@ class AssetController extends AbstractController
         }
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $odr
-                                 , [ 'field'             => 'noAssetToAdd'
-                                   , 'translationDomain' => 'odr-assets'
-                                   , 'choices'           => [0 => 'Yes', 1 => 'No']
+                                 , [ 'field'              => 'noAssetToAdd'
+                                   , 'translation_domain' => 'odr-assets'
+                                   , 'choices'            => [0 => 'Yes', 1 => 'No']
                                    ]
                                  );
 

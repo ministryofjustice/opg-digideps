@@ -46,7 +46,7 @@ class DeputyExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $report
-                                 , [ 'field' => 'paidForAnything', 'translationDomain' => 'report-deputy-expenses']
+                                 , [ 'field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
                                  );
         $form->handleRequest($request);
 

@@ -54,9 +54,9 @@ class MoneyTransferController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $report
-                                 , [ 'field'             => 'noTransfersToAdd'
-                                   , 'translationDomain' => 'report-money-transfer'
-                                   , 'choices'           => [0 => 'Yes', 1 => 'No']
+                                 , [ 'field'              => 'noTransfersToAdd'
+                                   , 'translation_domain' => 'report-money-transfer'
+                                   , 'choices'            => [0 => 'Yes', 1 => 'No']
                                    ]
                                  );
         $form->handleRequest($request);

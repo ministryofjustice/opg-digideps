@@ -118,7 +118,7 @@ class PaFeeExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $report
-                                 , [ 'field' => 'paidForAnything', 'translationDomain' => 'report-pa-fee-expense']
+                                 , [ 'field' => 'paidForAnything', 'translation_domain' => 'report-pa-fee-expense']
                                  );
         $form->handleRequest($request);
 

@@ -47,7 +47,7 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $report
-                                 , [ 'field' => 'giftsExist', 'translationDomain' => 'report-gifts']
+                                 , [ 'field' => 'giftsExist', 'translation_domain' => 'report-gifts']
                                  );
         $form->handleRequest($request);
 
