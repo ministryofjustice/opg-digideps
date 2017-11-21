@@ -305,28 +305,36 @@
     <div class="text">
         <p>After you have entered all of Garth's income and outgoing payments, you should have a sum of money that matches the one you entered in the closing balance in bank accounts.</p>
 
-        <!-- Not balanced -->
-       <!--  <p class="bold">The balance of income and outgoing payments doesn't match the balance of accounts, to rectify please check:</p>
+        {% if not report.isTotalsMatch %}
 
-        <ul class="list list-bullet">
-            <li>The figures entered for opening and closing balances are correct</li>
-            <li>All of Garth's incomings and outgoings correctly entered in the money in, money out, gifts and expenses sections</li>
-        </ul> -->
+            <p class="bold">The balance of income and outgoing payments doesn't match the balance of accounts, to rectify please check:</p>
+
+            <ul class="list list-bullet">
+                <li>The figures entered for opening and closing balances are correct</li>
+                <li>All of Garth's incomings and outgoings correctly entered in the money in, money out, gifts and expenses sections</li>
+            </ul>
+        {% endif %}
     </div>
 
-    <!-- <h3 class="heading-medium">Still can't find the problem?</h3>
+    {% if report.isDue %}
 
-    <form name="balance" method="post" novalidate="novalidate">
+        <h3 class="heading-medium">Can't find the problem?</h3>
 
-        <div id="form-group-balance_balanceMismatchExplanation" class="form-group ">
-            <label class="form-label text  required" for="balance_balanceMismatchExplanation">If, having checked, you still can't see what's gone wrong, you can use the form below to explain why you weren't able to make the sums add up. You can still submit your report, and we may be able to help.</label>
-            <textarea id="balance_balanceMismatchExplanation" name="balance[balanceMismatchExplanation]" required="required" class=" form-control "></textarea>
-        </div>
-        <button type="submit" id="balance_save" name="balance[save]" class="button behat-link-save-and-continue">Save and continue</button><a href="#" class="button-link">Back to report overview</a>
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    </form> -->
+            {{ form_input(form.balanceMismatchExplanation, 'balance.bad.explanation', {
+                'labelText': 'balance.bad.form.explanation.label' | trans( {'%difference%': report.totalsOffset  | abs | money_format})
+            }) }}
 
-    <a href="#" class="button">Back to report overview</a>
+            {{ macros.saveAndContinueButton(form.save) }}
+
+        {{ form_end(form) }}
+
+    {% else %}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">Back to report overview</a>
+
+    {% endif %}
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'balance') }}
