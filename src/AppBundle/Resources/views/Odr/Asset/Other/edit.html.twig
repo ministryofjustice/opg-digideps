@@ -4,7 +4,8 @@
 
 {% set translationDomain = "odr-assets" %}
 {% trans_default_domain translationDomain %}
-{% if 'National' in asset.title %}
+
+{% if 'National' in asset.title or 'Premium' in asset.title %}
     {% set assetTitle = asset.title %}
 {% else %}
     {% set assetTitle = asset.title | lcfirst %}
