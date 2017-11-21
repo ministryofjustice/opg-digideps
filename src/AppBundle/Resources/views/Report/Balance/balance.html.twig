@@ -47,7 +47,7 @@
                 </div>
             </div>
         {% else %}
-            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow">
+            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow behat-region-balance-bad">
                 {% if report.isDue %}
                     <span class="icon icon-cross"></span>
                 {% endif %}
@@ -55,7 +55,7 @@
                     {% if report.isDue %}
                         <p class="bold">Accounts not balanced</p>
                     {% endif %}
-                    <div class="data">
+                    <div class="data behat-region-unaccounted-for">
                         <span class="data-item bold-xlarge">
                             £{{ (report.accountsClosingBalanceTotal - (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue)) | money_format }}
                         </span>
