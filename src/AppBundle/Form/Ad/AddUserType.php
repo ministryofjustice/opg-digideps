@@ -15,8 +15,8 @@ class AddUserType extends AbstractType
             ->add('lastname', 'text')
             ->add('roleName', 'choice', [
                     'empty_value' => null,
-                    'choices'     => $options['options']['roleChoices'],
-                    'data'        => $options['options']['roleNameSetTo'],
+                    'choices'     => $options['roleChoices'],
+                    'data'        => $options['roleNameSetTo'],
                 ]
             )
             ->add('odrEnabled', 'checkbox', [
@@ -31,7 +31,7 @@ class AddUserType extends AbstractType
             'translation_domain' => 'ad',
             'validation_groups'  => ['ad_add_user'],
         ])
-            ->setRequired(['options']);
+            ->setRequired(['roleChoices', 'roleNameSetTo']);
     }
 
     public function getName()

@@ -35,11 +35,9 @@ class AdController extends AbstractController
         // form add
         $form = $this->createForm(FormDir\Ad\AddUserType::class
                                  , new EntityDir\User()
-                                 , [ 'options' => [ 'roleChoices'        => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
-                                                    'roleNameSetTo'      => EntityDir\User::ROLE_LAY_DEPUTY,
-                                                  ]
-                                   ]
-                                 );
+                                 , [ 'roleChoices'        => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
+                                     'roleNameSetTo'      => EntityDir\User::ROLE_LAY_DEPUTY,
+                                   ]);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
