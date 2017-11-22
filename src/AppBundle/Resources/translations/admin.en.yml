@@ -16,7 +16,6 @@ home:
     assistedState: Assisted
     loggedInState: (currenty logged)
     sendEmail: (Re)send activation email
-    codepNameNotSet: Invited co-deputy
 
 homeForm:
   clear: Clear filters
