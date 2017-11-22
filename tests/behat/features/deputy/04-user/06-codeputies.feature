@@ -157,6 +157,11 @@ Feature: Codeputy Self Registration
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@gmail.com"
 
   @deputy
+  Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then I should see "Invited co-deputy" in the "users" region
+
+  @deputy
   Scenario: The first co-deputy re-invites a deputy (same email address)
     Given emails are sent from "deputy" area
     And I reset the email log
