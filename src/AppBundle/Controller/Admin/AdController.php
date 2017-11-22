@@ -37,7 +37,6 @@ class AdController extends AbstractController
                                  , new EntityDir\User()
                                  , [ 'options' => [ 'roleChoices'        => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
                                                     'roleNameSetTo'      => EntityDir\User::ROLE_LAY_DEPUTY,
-                                                    'roleNameEmptyValue' => null,
                                                   ]
                                    ]
                                  );
