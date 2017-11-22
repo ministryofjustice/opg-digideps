@@ -299,8 +299,8 @@ class UserController extends RestController
         }
         $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
-        if ($type == 'pass-reset' && $user->getRoleName() == EntityDir\User::ROLE_ADMIN) {
-            throw new \RuntimeException('Admin email addresses are not acceptable.', 403);
+        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+            throw new \RuntimeException('Admin emails not accepted.', 403);
         }
         
         $user->recreateRegistrationToken();

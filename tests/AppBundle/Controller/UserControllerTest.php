@@ -378,6 +378,29 @@ class UserControllerTest extends AbstractTestController
         ];
     }
 
+    public static function recreateTokenProviderForRole()
+    {
+        return [
+            ['activate', ['ClientSecret' => '123abc-deputy'], 'admin@publicguardian.gsi.gov.uk', false],
+            ['activate', ['ClientSecret' => '123abc-deputy'], 'ad@publicguardian.gsi.gov.uk', false],
+            ['activate', ['ClientSecret' => '123abc-deputy'], 'laydeputy@publicguardian.gsi.gov.uk', false], // user already active
+
+            ['activate', ['ClientSecret' => '123abc-admin'], 'admin@publicguardian.gsi.gov.uk', false], // user already active
+            ['activate', ['ClientSecret' => '123abc-admin'], 'ad@publicguardian.gsi.gov.uk', false], // user already active
+            ['activate', ['ClientSecret' => '123abc-admin'], 'laydeputy@publicguardian.gsi.gov.uk', false], // user already active
+
+            ['pass-reset', ['ClientSecret' => '123abc-deputy'], 'admin@publicguardian.gsi.gov.uk', false],
+            ['pass-reset', ['ClientSecret' => '123abc-deputy'], 'ad@publicguardian.gsi.gov.uk', false],
+            //['pass-reset', ['ClientSecret' => '123abc-deputy'], 'laydeputy@publicguardian.gsi.gov.uk', true],
+
+            //['pass-reset', ['ClientSecret' => '123abc-admin'], 'admin@publicguardian.gsi.gov.uk', true],
+            ['pass-reset', ['ClientSecret' => '123abc-admin'], 'ad@publicguardian.gsi.gov.uk', false],
+            ['pass-reset', ['ClientSecret' => '123abc-admin'], 'laydeputy@publicguardian.gsi.gov.uk', false],
+
+            /** @to-do put some PA tests in here once users are added as part of test run */
+        ];
+    }
+
     /**
      * @dataProvider recreateTokenProvider
      */
@@ -399,6 +422,24 @@ class UserControllerTest extends AbstractTestController
             'mustFail' => true,
             'ClientSecret' => '123abc-deputy',
         ]);
+    }
+
+    /**
+     * @dataProvider recreateTokenProviderForRole
+     */
+    public function testRecreateTokenUserIsAdmin($urlPart, $secret, $email, $passOrFail)
+    {
+        if ($passOrFail) {
+            $this->assertJsonRequest('PUT', '/user/recreate-token/' . $email . '/' . $urlPart, [
+                'mustSucceed' => true,
+                $secret
+            ]);
+        } else {
+            $this->assertJsonRequest('PUT', '/user/recreate-token/' . $email . '/' . $urlPart, [
+                'mustFail' => true,
+                $secret
+            ]);
+        }
     }
 
     /**
