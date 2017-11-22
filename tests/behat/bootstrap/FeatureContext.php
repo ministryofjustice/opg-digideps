@@ -81,18 +81,18 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         return getenv('FRONTEND_NONADMIN_HOST');
     }
 
-     /**
-      * @BeforeSuite
-      */
-     public static function prepare(\Behat\Testwork\Hook\Scope\BeforeSuiteScope $scope)
-     {
-         $suiteName = $scope->getSuite()->getName();
-         echo "\n\n"
-              . strtoupper($suiteName) . "\n"
-              . str_repeat('=', strlen($suiteName)) . "\n"
-              . $scope->getSuite()->getSetting('description') . "\n"
-              . "\n";
-     }
+    /**
+     * @BeforeSuite
+     */
+    public static function prepare(\Behat\Testwork\Hook\Scope\BeforeSuiteScope $scope)
+    {
+        $suiteName = $scope->getSuite()->getName();
+        echo "\n\n"
+            . strtoupper($suiteName) . "\n"
+            . str_repeat('=', strlen($suiteName)) . "\n"
+            . $scope->getSuite()->getSetting('description') . "\n"
+            . "\n";
+    }
 
     /**
      * @Then the page title should be :text
@@ -129,7 +129,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
         // search in
         $found = false;
-        foreach ((array) $responseHeaders[$header] as $currentValue) {
+        foreach ((array)$responseHeaders[$header] as $currentValue) {
             if (strpos($currentValue, $value) !== false) {
                 $found = true;
             }
@@ -144,15 +144,35 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function iChecktheAppParameterFile($area)
     {
-        if ($area === 'deputy') {
-            $baseUrl = $this->getSiteUrl();
-        } else if ($area === 'admin') {
-            $baseUrl = $this->getAdminUrl();
-        } else {
-            throw new \RuntimeException(__METHOD__ . ': area not valid');
-        }
+        $baseUrl = $this->getAreaUrl($area);
 
         $this->visitPath($baseUrl . '/manage/availability');
         $this->assertResponseStatus(200);
     }
+
+    /**
+     * @Given I should be in the :area area
+     */
+    public function iShouldBeInTheArea($area)
+    {
+        $baseUrl = $this->getAreaUrl($area);
+
+        $currentUrl = $this->getSession()->getCurrentUrl();
+        if (substr($currentUrl, 0, strlen($baseUrl)) !== $baseUrl) {
+            throw new \RuntimeException("$currentUrl does not start with $baseUrl");
+        }
+    }
+
+
+    private function getAreaUrl($area)
+    {
+        if ($area === 'deputy') {
+            return $this->getSiteUrl();
+        } else if ($area === 'admin') {
+            return $this->getAdminUrl();
+        } else {
+            throw new \RuntimeException(__METHOD__ . ': area not valid');
+        }
+    }
+
 }
