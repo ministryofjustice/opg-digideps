@@ -73,7 +73,7 @@
             <tbody>
             {% for user in users %}
                 {% set fullName = (user.isCoDeputy and user.firstname is empty and user.lastname is empty)
-                    ? (page ~ '.userTable.coepNameNotSet') | trans
+                    ? (page ~ '.userTable.codepNameNotSet') | trans
                     : user.firstname ~ ' ' ~ user.lastname
                 %}
                 <tr class="behat-region-user-{{ user.email | behat_namify }}">
