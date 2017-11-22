@@ -42,9 +42,9 @@ Feature: admin / AD
     And I click on "back"
     # login as AD user ad check page loads OK
     When I click on "login-as"
-    Then I should be in the "deputy" area
-    And the response status code should be 200
+    Then the response status code should be 200
     And the URL should match "user/details"
+    And I should be in the "deputy" area
 
   @ad
   Scenario: Login on behalf of a newly created (not activated) Lay deputy
@@ -56,8 +56,8 @@ Feature: admin / AD
     And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
     # login on behalf
     And I click on "login-as"
-    Then I should be in the "deputy" area
-    And the response status code should be 200
+    Then the response status code should be 200
     And the URL should match "user/details"
+    And I should be in the "deputy" area
 
 
