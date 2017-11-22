@@ -23,7 +23,7 @@ Feature: admin / AD
     Then I should be on "/ad/"
 
   @ad
-  Scenario: Add assisted Lay
+  Scenario: Add new assisted Lay and login on behalf
     Given I am logged in to admin as "behat-ad@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "/ad/"
     # add assisted Lay
@@ -45,4 +45,19 @@ Feature: admin / AD
     Then I should be in the "deputy" area
     And the response status code should be 200
     And the URL should match "user/details"
+
+  @ad
+  Scenario: Login on behalf of a newly created (not activated) Lay deputy
+    Given I am logged in to admin as "behat-ad@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    # behat-lay-assisted@publicguardian.gsi.gov.uk
+    # find user
+    And I go to admin page "/admin"
+    And I create a new "ODR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gsi.gov.uk" and postcode "HA4"
+    And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
+    # login on behalf
+    And I click on "login-as"
+    Then I should be in the "deputy" area
+    And the response status code should be 200
+    And the URL should match "user/details"
+
 
