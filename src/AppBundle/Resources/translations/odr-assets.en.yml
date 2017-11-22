@@ -52,7 +52,7 @@ addAnotherPage:
 stepPageProperty:
   htmlTitle: "New deputy report - Property | GOV.UK"
   supportTitle: Assets
-  pageSectionTitle: "Add an asset: Property"
+  pageSectionTitle: "Add an asset: property"
 
 summaryPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
