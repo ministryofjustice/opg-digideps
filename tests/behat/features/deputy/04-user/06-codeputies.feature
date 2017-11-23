@@ -156,7 +156,7 @@ Feature: Codeputy Self Registration
     And I should see "Edit/Resend invite" in the "codeputies" region
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-jack.goodby+mld2@gmail.com"
 
-  @deputy @jack
+  @deputy
   Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "Invited co-deputy" in the "users" region
