@@ -31,12 +31,6 @@
 
 {% block pageContent %}
 
-    {# {% if report.isTotalsMatch %}
-        {% include 'AppBundle:Report/Balance:_balance-good.html.twig' %}
-    {% else %}
-        {% include 'AppBundle:Report/Balance:_balance-bad.html.twig' %}
-    {% endif %} #}
-
     {% if not readyToBalance %}
         <div class="alert-info panel panel-border-narrow">
             <span class="icon icon-information"></span>
@@ -319,7 +313,7 @@
         <p>We take the accounts opening balance, add the incoming payments you’ve told us about, and subtract the outgoing payments. The result is called the report closing balance.</p>
         <p>The report closing balance should be the same as the accounts closing balance.</p>
 
-        {% if not report.isTotalsMatch %}
+        {% if readyToBalance and not report.isTotalsMatch %}
 
             <p class="bold">The accounts don’t balance: the report closing balance is {{ moreless }} than the accounts closing balance.</p>
             <p>To fix this, please check that:</p>
@@ -353,7 +347,13 @@
 
     {% else %}
 
-        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">Back to report overview</a>
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">
+            {% if app.user.isDeputyPa() %}
+                Back to report overview
+            {% else %}
+                Back to client profile
+            {% endif %}
+        </a>
 
     {% endif %}
 
