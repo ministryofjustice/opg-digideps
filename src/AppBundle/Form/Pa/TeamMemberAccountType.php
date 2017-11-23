@@ -15,26 +15,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TeamMemberAccountType extends AbstractType
 {
-    /**
-     * @var Team
-     */
-    private $team;
-
-    /**
-     * @var User
-     */
-    private $loggedInUser = null;
-
-    /**
-     * @var User|null
-     */
-    private $targetUser = null;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->team         = $options['team'];
-        $this->loggedInUser = $options['loggedInUser'];
-        $this->targetUser   = $options['targetUser'];
+        $team         = $options['team'];
+        $loggedInUser = $options['loggedInUser'];
+        $targetUser   = $options['targetUser'];
 
         $builder
             ->add('firstname', 'text', ['required' => true])
@@ -42,10 +27,10 @@ class TeamMemberAccountType extends AbstractType
             ->add('email', 'text', [
                 'required' => true
             ])
-            ->add('jobTitle', 'text', ['required' => !empty($this->targetUser)])
-            ->add('phoneMain', 'text', ['required' => !empty($this->targetUser)]);
+            ->add('jobTitle', 'text', ['required' => !empty($targetUser)])
+            ->add('phoneMain', 'text', ['required' => !empty($targetUser)]);
 
-        if (!$this->loggedInUser->isTeamMember() && $this->team->canAddAdmin($this->targetUser)) {
+        if (!$loggedInUser->isTeamMember() && $team->canAddAdmin($targetUser)) {
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,

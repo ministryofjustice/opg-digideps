@@ -42,7 +42,7 @@ class DebtController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $report
-                                 , [ 'field' => 'hasDebts', 'translationDomain' => 'report-debts']
+                                 , [ 'field' => 'hasDebts', 'translation_domain' => 'report-debts']
                                  );
         $form->handleRequest($request);
 

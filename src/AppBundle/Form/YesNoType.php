@@ -15,15 +15,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class YesNoType extends AbstractType
 {
-    /**
-     * @var string translation domain used for labels
-     */
-    private $translationDomain;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->translationDomain = $options['translationDomain'];
-
         $builder
             ->add($options['field'], 'choice', [
                 'choices'     => $options['choices'],
@@ -35,11 +28,11 @@ class YesNoType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([ 'translation_domain' => $this->translationDomain
-                               , 'validation_groups'  => ['yesno_type_custom']
+        $resolver->setDefaults([ 'validation_groups'  => ['yesno_type_custom']
                                , 'choices'            => ['yes' => 'Yes', 'no' => 'No']
                                ])
-                 ->setRequired(['field', 'translationDomain']);
+                 ->setRequired(['field'])
+                 ->setAllowedTypes('translation_domain', 'string');
     }
 
     public function getName()

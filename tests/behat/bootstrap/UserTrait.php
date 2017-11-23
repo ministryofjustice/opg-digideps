@@ -76,6 +76,22 @@ trait UserTrait
     }
 
     /**
+     * @TODO to use in places where needed
+     * @When I activate the user with password :password - no T&C expected
+     */
+    public function iActivateTheUserAndSetThePasswordToNoTcExpected($password)
+    {
+        $this->visit('/logout');
+        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->assertResponseStatus(200);
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
+        $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+
+    /**
      * @When I fill in the password fields with :password
      */
     public function iFillThePasswordFieldsWith($password)

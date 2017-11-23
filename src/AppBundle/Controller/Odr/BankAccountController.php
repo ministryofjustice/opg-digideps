@@ -48,13 +48,11 @@ class BankAccountController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_bank_accounts', 'odr_bank_accounts_step', 'odr_bank_accounts_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId'=>$odrId, 'accountId' => $accountId]);
-
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {

@@ -76,7 +76,7 @@
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id }) }}'
-                                class="behat-link-user-{{ user.email | behat_namify }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
+                               class="behat-link-user-{{ user.email | behat_namify }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
                         {% endif %}
                         <div class="text-secondary">
                             {{ user.roleFullName }}
@@ -84,7 +84,7 @@
                             {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}
                         </div>
                         {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
-                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}">{{ 'view' | trans({}, 'common') }}</a>
+                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}" class="behat-link-view">{{ 'view' | trans({}, 'common') }}</a>
                         {% endif %}
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>

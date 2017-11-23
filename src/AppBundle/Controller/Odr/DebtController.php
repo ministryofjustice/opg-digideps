@@ -39,7 +39,7 @@ class DebtController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class
                                  , $odr
-                                 , [ 'field' => 'hasDebts', 'translationDomain' => 'odr-debts']
+                                 , [ 'field' => 'hasDebts', 'translation_domain' => 'odr-debts']
                                  );
         $form->handleRequest($request);
 
