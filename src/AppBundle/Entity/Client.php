@@ -716,4 +716,18 @@ class Client
         }
         return array_values($coDeps);
     }
+
+    /**
+     * @return array $submittedReports an array of submitted reports
+     */
+    public function getSubmittedReports()
+    {
+        $submittedReports = [];
+        foreach ($this->getReports() as $report) {
+            if ($report->isSubmitted()) {
+                $submittedReports[] = $report;
+            }
+        }
+        return $submittedReports;
+    }
 }
