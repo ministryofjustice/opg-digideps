@@ -49,7 +49,12 @@ class CasrecService
         $this->validator = $validator;
     }
 
-
+    /**
+     * Updates a single CASREC record, with stats
+     * Called when records are uploaded, or "updateAllCasrecRecordsWithStats" is called via cron
+     *
+     * @param CasRec $casrec
+     */
     private function updateCasrecStatsSingle(CasRec $casrec)
     {
         // add user info, by matching DeputyNo
@@ -69,8 +74,14 @@ class CasrecService
             ->setParameter('c2', strtolower($caseNumber))
             ->getResult();
         if ($results && $results[0] instanceof Client) {
+            $client = $results[0]; /* @var $client Client */
+            // last report is currently ordered
+            $submittedReports = $client->getSubmittedReports();
+            $lastReport = count($submittedReports) > 0  ? $submittedReports->first() : null;
+
             $casrec
-                ->setNOfReportsSubmitted(count($results[0]->getSubmittedReports()))
+                ->setNOfReportsSubmitted(count($submittedReports))
+                ->setLastReportSubmittedAt($lastReport ? $lastReport->getSubmitDate() : null)
                 ->setNOfReportsActive(count($results[0]->getUnsubmittedReports()));
         }
 
@@ -111,13 +122,14 @@ class CasrecService
      */
     public function saveCsv($filePath)
     {
+        $filePathTmp = $filePath . '.tmp';
         $linesWritten = 0;
 
         /* @var $it IterableResult */
         // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/batch-processing.html
         $it = $this->em->createQuery('SELECT c FROM '.CasRec::class.' c')->iterate();
 
-        $f = fopen($filePath, 'w');
+        $f = fopen($filePathTmp, 'w');
         foreach ($it as $itRow) {
             $row = $itRow[0]->toArray();
             if ($it->key() === 0) { // write header (only for first row)
@@ -127,6 +139,10 @@ class CasrecService
             $linesWritten++;
         }
         fclose($f);
+
+        // replace file instantly
+        @unlink($filePath);
+        rename($filePathTmp, $filePath);
 
         return $linesWritten;
     }
