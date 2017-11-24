@@ -2,6 +2,7 @@
 
 namespace AppBundle\Command;
 
+use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -60,6 +61,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
         $email = $data['email'];
+        $casRecEntities = [];
 
         $output->write("User $email: ");
 
@@ -94,6 +96,11 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
+        if ($data['roleId'] != 1) {
+            $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
+            $em->persist($casRecEntity);
+        }
+
         // check params
         $violations = $this->getContainer()->get('validator')->validate($user, 'admin_add_user'); /* @var $violations ConstraintViolationList */
         if ($violations->count()) {
@@ -103,11 +110,31 @@ class AddSingleUserCommand extends ContainerAwareCommand
         }
 
         $em->persist($user);
+
         if ($options['flush']) {
-            $em->flush($user);
+            $em->flush();
         }
 
         $output->writeln('created.');
+    }
+
+    /**
+     * Method to convert user fixture data into Casrec CSV data required by constructor
+     * 
+     * @param $data
+     * @return mixed
+     */
+    private function extractDataToRow($data)
+    {
+        $row['Case'] = $data['caseNumber'];
+        $row['Surname'] = $data['clientSurname'];
+        $row['Deputy No'] = $data['deputyNo'];
+        $row['Dep Surname'] = $data['lastname'];
+        $row['Dep Postcode'] = $data['deputyPostcode'];
+        $row['Typeofrep'] = $data['typeOfReport'];
+        $row['Corref'] = $data['corref'];
+
+        return $row;
     }
 
     /**
