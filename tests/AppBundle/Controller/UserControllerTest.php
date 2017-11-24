@@ -449,7 +449,6 @@ class UserControllerTest extends AbstractTestController
     public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
     {
         $url = '/user/recreate-token/deputy@example.org/' . $urlPart;
-        echo $url;
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
