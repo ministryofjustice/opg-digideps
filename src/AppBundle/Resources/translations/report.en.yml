@@ -6,6 +6,7 @@ homepage:
   reportingPeriod: Reporting period
   submissionDate: Submission date
   attachDocuments: Attach documents
+  noActiveReportException: No active report found for this client
 
 codeputy:
   inviteAnotherDeputy: Invite another deputy

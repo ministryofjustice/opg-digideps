@@ -730,4 +730,18 @@ class Client
         }
         return $submittedReports;
     }
+
+    /**
+     * @return Report
+     */
+    public function getActiveReport()
+    {
+        $activeReport = null;
+        foreach ($this->getReports() as $report) {
+            if (!$report->isSubmitted()) {
+                $activeReport = $report;
+            }
+        }
+        return $activeReport;
+    }
 }
