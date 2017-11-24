@@ -20,19 +20,126 @@ parameters:
             password: Abcd1234
             roleId: 1
             activated: true
+            odrEnabled: false
+
+        ad@publicguardian.gsi.gov.uk:
+            firstname: "AD user"
+            lastname: "AD surname"
+            password: Abcd1234
+            roleId: 5
+            activated: true
+            odrEnabled: false
+            deputyNo: 0001
+            deputyPostcode: AB1 2CD
+            caseNumber: 10000000
+            clientSurname: ADClient
+            typeOfReport: OPG102
+            corref: L2
+
         laydeputy@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy"
             lastname: User
             password: Abcd1234
             roleId: 2
             activated: true
-        ad@publicguardian.gsi.gov.uk:
-            firstname: "AD user"
-            lastname: "AD surname"
+            odrEnabled: false
+            caseNumber: 10000002
+            deputyNo: 1000
+            deputyPostcode: AB1 2CD
+            caseNumber: 10000001
+            clientSurname: LayClient
+            typeOfReport: OPG102
+            corref: L2
+
+        laydeputyodr@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy ODR"
+            lastname: User
             password: Abcd1234
-            roleId: 3
+            roleId: 2
             activated: true
-            codeputyClientConfirmed: false
+            odrEnabled: true
+            caseNumber: 10000003
+            deputyNo: 1003
+            deputyPostcode: AA1 2AA
+            caseNumber: 10000003
+            clientSurname: LayODRClient
+            typeOfReport: OPG102
+            corref: L2
+
+        laydeputy102@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy 102"
+            lastname: User
+            password: Abcd1234
+            roleId: 2
+            activated: true
+            odrEnabled: false
+            caseNumber: 10000102
+            deputyNo: 1020
+            deputyPostcode: AB1 2CD
+            caseNumber: 10000102
+            clientSurname: LayClient102
+            typeOfReport: OPG102
+            corref: L2
+
+        laydeputy103@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy 103"
+            lastname: User
+            password: Abcd1234
+            roleId: 2
+            activated: true
+            odrEnabled: false
+            caseNumber: 10000103
+            deputyNo: 1030
+            deputyPostcode: AB1 3CD
+            caseNumber: 10000103
+            clientSurname: LayClient103
+            typeOfReport: OPG103
+            corref: L3
+
+        laydeputy104@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy 104"
+            lastname: User
+            password: Abcd1234
+            roleId: 2
+            activated: true
+            odrEnabled: false
+            caseNumber: 10000104
+            deputyNo: 1040
+            deputyPostcode: AB1 4CD
+            caseNumber: 10000104
+            clientSurname: LayClient104
+            typeOfReport:
+            corref: hw
+
+        laydeputy102-4@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy 102-4"
+            lastname: User
+            password: Abcd1234
+            roleId: 2
+            activated: true
+            odrEnabled: false
+            caseNumber: 10001024
+            deputyNo: 1024
+            deputyPostcode: AA2 4BB
+            caseNumber: 10001024
+            clientSurname: LayClient102-4
+            typeOfReport: OPG102
+            corref: hw
+
+        laydeputy103-4@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy 103-4"
+            lastname: User
+            password: Abcd1234
+            roleId: 2
+            activated: true
+            odrEnabled: false
+            caseNumber: 10001034
+            deputyNo: 1034
+            deputyPostcode: AA1 3BB
+            caseNumber: 10001034
+            clientSurname: LayClient103-4
+            typeOfReport: OPG103
+            corref: hw
 
 
     client_secrets:
