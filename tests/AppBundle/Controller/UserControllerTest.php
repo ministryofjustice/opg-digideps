@@ -378,29 +378,6 @@ class UserControllerTest extends AbstractTestController
         ];
     }
 
-    public static function recreateTokenProviderForRole()
-    {
-        return [
-            ['activate', ['ClientSecret' => '123abc-deputy'], 'admin@publicguardian.gsi.gov.uk', false],
-            ['activate', ['ClientSecret' => '123abc-deputy'], 'ad@publicguardian.gsi.gov.uk', false],
-            ['activate', ['ClientSecret' => '123abc-deputy'], 'laydeputy@publicguardian.gsi.gov.uk', false], // user already active
-
-            ['activate', ['ClientSecret' => '123abc-admin'], 'admin@publicguardian.gsi.gov.uk', false], // user already active
-            ['activate', ['ClientSecret' => '123abc-admin'], 'ad@publicguardian.gsi.gov.uk', false], // user already active
-            ['activate', ['ClientSecret' => '123abc-admin'], 'laydeputy@publicguardian.gsi.gov.uk', false], // user already active
-
-            ['pass-reset', ['ClientSecret' => '123abc-deputy'], 'admin@publicguardian.gsi.gov.uk', false],
-            ['pass-reset', ['ClientSecret' => '123abc-deputy'], 'ad@publicguardian.gsi.gov.uk', false],
-            //['pass-reset', ['ClientSecret' => '123abc-deputy'], 'laydeputy@publicguardian.gsi.gov.uk', true],
-
-            //['pass-reset', ['ClientSecret' => '123abc-admin'], 'admin@publicguardian.gsi.gov.uk', true],
-            ['pass-reset', ['ClientSecret' => '123abc-admin'], 'ad@publicguardian.gsi.gov.uk', false],
-            ['pass-reset', ['ClientSecret' => '123abc-admin'], 'laydeputy@publicguardian.gsi.gov.uk', false],
-
-            /** @to-do put some PA tests in here once users are added as part of test run */
-        ];
-    }
-
     /**
      * @dataProvider recreateTokenProvider
      */
@@ -424,20 +401,42 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
+    public static function recreateTokenProviderForRole()
+    {
+        return [
+            ['activate', '123abc-admin', 'admin@example.org', true],
+            ['activate', '123abc-admin', 'deputy@example.org', true],
+            ['pass-reset', '123abc-admin', 'deputy@example.org', true],
+            ['pass-reset', '123abc-admin', 'admin@example.org', true],
+
+            ['activate', '123abc-deputy', 'deputy@example.org', true],
+            ['activate', '123abc-deputy', 'admin@example.org', false],
+            ['pass-reset', '123abc-deputy', 'deputy@example.org', true],
+            ['pass-reset', '123abc-deputy', 'admin@example.org', false],
+        ];
+    }
+
     /**
      * @dataProvider recreateTokenProviderForRole
      */
-    public function testRecreateTokenUserIsAdmin($urlPart, $secret, $email, $passOrFail)
+    public function testRecreateTokenAcceptsClientSecret($urlPart, $secret, $email, $passOrFail)
     {
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail($email);
+        $deputy->setRegistrationToken(null);
+        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        self::fixtures()->flush($deputy);
+
+        $url = '/user/recreate-token/' . $email . '/' . $urlPart;
+
         if ($passOrFail) {
-            $this->assertJsonRequest('PUT', '/user/recreate-token/' . $email . '/' . $urlPart, [
+            $this->assertJsonRequest('PUT', $url, [
                 'mustSucceed' => true,
-                $secret
+                'ClientSecret' => $secret
             ]);
         } else {
-            $this->assertJsonRequest('PUT', '/user/recreate-token/' . $email . '/' . $urlPart, [
+            $this->assertJsonRequest('PUT', $url, [
                 'mustFail' => true,
-                $secret
+                'ClientSecret' => $secret
             ]);
         }
     }
@@ -448,6 +447,7 @@ class UserControllerTest extends AbstractTestController
     public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
     {
         $url = '/user/recreate-token/deputy@example.org/' . $urlPart;
+        echo $url;
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
