@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\Report\Status;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -1083,5 +1084,34 @@ class Report
             ($this->getType() === '104' || $this->getType() === '104-6' ?
                 '-104' : ''
             );
+    }
+
+    public function shouldShowBalanceWarning()
+    {
+        // if not due dont show warning
+        if (!$this->isDue()) {
+            return false;
+        }
+
+        // if accounts not started don't show warning
+        if ($this->getStatus()->getBankAccountsState()['state'] == Status::STATE_NOT_STARTED) {
+            return false;
+        }
+
+        switch ($this->getType())
+        {
+            case Report::TYPE_102:
+            case Report::TYPE_102_4:
+                // if a money section not started, dont show warning
+                if ($this->getStatus()->getMoneyInState()['state'] == Status::STATE_NOT_STARTED ||
+                    $this->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
+                    return false;
+                }
+                break;
+            default:
+                return false;
+        }
+
+        return true;
     }
 }

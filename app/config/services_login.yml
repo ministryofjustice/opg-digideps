@@ -1,7 +1,7 @@
 services:
     security.validator.d_user_password:
         class: AppBundle\Validator\Constraints\DUserPasswordValidator
-        arguments: [ "@security.context", "@rest_client" ]
+        arguments: [ "@security.token_storage", "@rest_client" ]
         tags:
             - { name: validator.constraint_validator, alias: security.validator.d_user_password }
 

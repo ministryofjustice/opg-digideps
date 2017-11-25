@@ -45,7 +45,13 @@ class AssetController extends AbstractController
         if ($request->getMethod() == 'GET' && $odr->getAssets()) { // if assets are added, set form default to "Yes"
             $odr->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(new FormDir\YesNoType('noAssetToAdd', 'odr-assets', [0 => 'Yes', 1 => 'No']), $odr);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $odr
+                                 , [ 'field'              => 'noAssetToAdd'
+                                   , 'translation_domain' => 'odr-assets'
+                                   , 'choices'            => [0 => 'Yes', 1 => 'No']
+                                   ]
+                                 );
 
         $form->handleRequest($request);
 
@@ -111,7 +117,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setodr($odr);
 
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetTypeOther(), $asset);
+        $form = $this->createForm(FormDir\Odr\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -144,7 +150,7 @@ class AssetController extends AbstractController
         }
 
 
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetTypeOther(), $asset);
+        $form = $this->createForm(FormDir\Odr\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -171,7 +177,7 @@ class AssetController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-assets'), $odr);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translation_domain' => 'odr-assets']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -240,7 +246,7 @@ class AssetController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Odr\Asset\AssetTypeProperty($step), $asset);
+        $form = $this->createForm(FormDir\Odr\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

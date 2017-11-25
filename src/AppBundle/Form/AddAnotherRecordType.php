@@ -4,23 +4,11 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AddAnotherRecordType extends AbstractType
 {
-    protected $translationDomain;
-
-    /**
-     * AddAnotherRecordType constructor.
-     *
-     * @param string $translationDomain
-     */
-    public function __construct($translationDomain)
-    {
-        $this->translationDomain = $translationDomain;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -33,11 +21,12 @@ class AddAnotherRecordType extends AbstractType
             ->add('save', 'submit', ['label' => 'save.label']);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'translation_domain' => $this->translationDomain,
-        ]);
+        $resolver
+            ->setDefaults([])
+            ->setRequired(['translation_domain'])
+            ->setAllowedTypes('translation_domain','string');
     }
 
     public function getName()

@@ -44,7 +44,10 @@ class DeputyExpenseController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('paidForAnything', 'report-deputy-expenses', ['yes' => 'Yes', 'no' => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field' => 'paidForAnything', 'translation_domain' => 'report-deputy-expenses']
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -80,7 +83,7 @@ class DeputyExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
-        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -110,7 +113,7 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-deputy-expenses'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-deputy-expenses']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -137,7 +140,7 @@ class DeputyExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
-        $form = $this->createForm(new FormDir\Report\DeputyExpenseType(), $expense);
+        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

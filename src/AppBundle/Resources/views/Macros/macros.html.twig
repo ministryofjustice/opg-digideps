@@ -4,21 +4,26 @@
 
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
-            {% if not isPaUser %}
-                <li><a href="{{ path('homepage') }}">Your reports</a></li>
-            {% endif %}
+            <li>
+                {% if isPaUser %}
+                    <a href="{{ path('pa_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                {% else %}
+                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                {% endif %}
+            </li>
             <li>
                 {% if report.type == 'ndr' %}
                     <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
-                        New deputy report overview</a>
+                        {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                    </a>
 
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
                        class="behat-link-breadcrumbs-report-overview">
                         {% if isPaUser %}
-                            Client profile
+                            {{ 'clientProfile' | trans({}, 'common' ) }}
                         {% else %}
-                            Deputy report overview
+                            {{ 'deputyReportOverview' | trans({}, 'common' ) }}
                         {% endif %}
                     </a>
                 {% endif %}
@@ -192,36 +197,36 @@
         {% if alertType == 'notice' %}
             <div class="alert-notice panel panel-border-narrow">
                 <span class="icon icon-notification"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="alert-success panel panel-border-narrow">
                 <span class="icon icon-tick"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="alert-error panel panel-border-narrow">
                 <span class="icon icon-cross"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="alert-info panel panel-border-narrow">
                 <span class="icon icon-information"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'important' %}
             <div class="alert-important panel panel-border-narrow">
                 <span class="icon icon-important-small"></span>
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% else %}
             <div class="alert panel panel-border-narrow">
-                <div class="alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% endif %}
     {% else %}
         <div class="alert panel panel-border-narrow">
-            <div class="alert-message">
+            <div class="behat-alert-message alert-message">
                 <p>{{ message | raw }}</p>
             </div>
         </div>

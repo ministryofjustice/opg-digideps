@@ -1,15 +1,14 @@
 <?php
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Form\Traits\HasSecurityContextTrait;
+use AppBundle\Form\Traits\TokenStorageTrait;
 use AppBundle\Form\Traits\HasTranslatorTrait;
-use AppBundle\Model\Email;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class EmailSameDomainValidator extends ConstraintValidator
 {
-    use HasSecurityContextTrait;
+    use TokenStorageTrait;
     use HasTranslatorTrait;
 
     /**

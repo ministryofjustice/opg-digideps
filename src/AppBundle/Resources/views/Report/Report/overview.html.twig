@@ -32,15 +32,13 @@
                 </li>
             </ul>
         </div>
+    </div>
 
-        <div class="column-one-half">
-            <a class="button right" href="{{ path('report_review', {'reportId': report.id}) }}">Review report</a>
+    {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+        <div class="push--top">
+            {{ macros.notification('info', 'guidanceNotice' | trans(transOptions)) }}
         </div>
-    </div>
-
-    <div class="push--top">
-        {{ macros.notification('info', 'guidanceNotice' | trans) }}
-    </div>
+    {% endif %}
 
 
     <ul id="overview-sections" class="push--bottom">
@@ -93,17 +91,24 @@
                 } %}
             {% endif %}
         </li>
-
-
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
                 {# balance status values:
                     - incomplete: when bank accounts or money section are incomplete
-                    - not-started: when bank accounts and money section are incomplete but balance is incorrect (not matching or explanation missing)
+                    - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
+                    - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
                     #}
-                {% if report.isDue() and report.showBalanceWarning %}
-                    {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+                {% if report.isDue and report.shouldShowBalanceWarning %}
+                    {% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}
+
+                        {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% elseif report.status.balanceState['state'] != "done" %}
+
+                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
+
+                    {% endif %}
                 {% endif %}
 
                 {% if report.hasSection('deputyExpenses') %}
@@ -185,7 +190,7 @@
                     } %}
                 {% endif %}
                 {# show balance section only for editing, when an explanation is given #}
-                {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
+                <!-- {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
@@ -194,7 +199,7 @@
                         warning: true,
                         description: true
                     } %}
-                {% endif %}
+                {% endif %} -->
                 {% if report.hasSection('assets') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
@@ -255,29 +260,33 @@
                     list: true
                 } %}
             {% endif %}
-
-            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'report_submit',
-                linkToSubSection: path('report_review', {reportId: report.id}),
-                report: report,
-                description: false,
-                state: reportStatus.submitState,
-                disableedit: reportStatus.submitState.state != 'done'
-            } %}
         </li>
     </ul>
 
-    {# report due but NOT ready to submit #}
-    {% if report.isDue and not reportStatus.isReadyToSubmit %}
-        {{ macros.notification('notice', 'submitWhenReady' | trans()) }}
-    {% endif %}
-
-    {# report is NOT due #}
     {% if not report.isDue %}
-        {% set endDate = report.getEndDate() | date(" d F Y")  %}
-        {% set transOptions = {'%date%': endDate} %}
-        {{ macros.notification('notice', 'warningNotDue' | trans(transOptions)) }}
+
+        <div class="push--top">
+            {% set endDate = report.getEndDate() | date(" d F Y")  %}
+            {% set transOptions = {'%date%': endDate} %}
+
+            {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
+        </div>
+        <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+    {% else %}
+        {% if not reportStatus.isReadyToSubmit %}
+
+            <div class="push--top">
+                {{ macros.notification('info', 'previewNotice' | trans()) }}
+            </div>
+            <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+        {% else %}
+
+            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a> 
+
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}

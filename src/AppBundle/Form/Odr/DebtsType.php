@@ -2,9 +2,10 @@
 
 namespace AppBundle\Form\Odr;
 
+use AppBundle\Entity\Odr\Odr;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DebtsType extends AbstractType
 {
@@ -19,11 +20,11 @@ class DebtsType extends AbstractType
             ->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Odr\Odr',
-            'validation_groups' => ['debts'],
+            'data_class'         => Odr::class,
+            'validation_groups'  => ['debts'],
             'cascade_validation' => true,
             'translation_domain' => 'odr-debts',
         ]);

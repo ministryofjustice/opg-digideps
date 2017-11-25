@@ -6,12 +6,10 @@ use AppBundle\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OtherInfoType extends AbstractType
 {
-    protected $translationDomain = 'report-more-info';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -24,7 +22,7 @@ class OtherInfoType extends AbstractType
             ->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'validation_groups' => function (FormInterface $form) {
@@ -38,7 +36,7 @@ class OtherInfoType extends AbstractType
 
                 return $validationGroups;
             },
-            'translation_domain' => $this->translationDomain,
+            'translation_domain' => 'report-more-info',
         ]);
     }
 

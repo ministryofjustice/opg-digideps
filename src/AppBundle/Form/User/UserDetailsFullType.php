@@ -3,7 +3,7 @@
 namespace AppBundle\Form\User;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserDetailsFullType extends UserDetailsBasicType
 {
@@ -24,7 +24,7 @@ class UserDetailsFullType extends UserDetailsBasicType
         ->add('email', 'text');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'settings',

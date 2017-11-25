@@ -48,13 +48,11 @@ class BankAccountController extends AbstractController
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('odr_bank_accounts', 'odr_bank_accounts_step', 'odr_bank_accounts_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId'=>$odrId, 'accountId' => $accountId]);
-
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
@@ -75,7 +73,7 @@ class BankAccountController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(new FormDir\Odr\BankAccountType($step), $account);
+        $form = $this->createForm(FormDir\Odr\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -134,7 +132,7 @@ class BankAccountController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('odr-bank-accounts'), $odr);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $odr, ['translation_domain' => 'odr-bank-accounts']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

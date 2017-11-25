@@ -6,7 +6,7 @@ use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class TeamMemberAccountType
@@ -15,45 +15,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class TeamMemberAccountType extends AbstractType
 {
-    /**
-     * @var Team
-     */
-    private $team;
-
-    /**
-     * @var User
-     */
-    private $loggedInUser = null;
-
-    /**
-     * @var User|null
-     */
-    private $targetUser = null;
-
-    /**
-     * @param $team
-     * @param $loggedInUser
-     * @param $targetUser
-     */
-    public function __construct(Team $team, User $loggedInUser, User $targetUser = null)
-    {
-        $this->team = $team;
-        $this->loggedInUser = $loggedInUser;
-        $this->targetUser = $targetUser;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $team         = $options['team'];
+        $loggedInUser = $options['loggedInUser'];
+        $targetUser   = $options['targetUser'];
+
         $builder
             ->add('firstname', 'text', ['required' => true])
             ->add('lastname', 'text', ['required' => true])
             ->add('email', 'text', [
                 'required' => true
             ])
-            ->add('jobTitle', 'text', ['required' => !empty($this->targetUser)])
-            ->add('phoneMain', 'text', ['required' => !empty($this->targetUser)]);
+            ->add('jobTitle', 'text', ['required' => !empty($targetUser)])
+            ->add('phoneMain', 'text', ['required' => !empty($targetUser)]);
 
-        if (!$this->loggedInUser->isTeamMember() && $this->team->canAddAdmin($this->targetUser)) {
+        if (!$loggedInUser->isTeamMember() && $team->canAddAdmin($targetUser)) {
             $builder->add('roleName', 'choice', [
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,
@@ -64,35 +41,18 @@ class TeamMemberAccountType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'pa-team',
-            'validation_groups'  => $this->determineValidationGroups(),
             'data_class'         => User::class,
-        ]);
-    }
-
-    /**
-     * Determine the validation groups for the form. All validate against firstname, lastname and email.
-     * Edit users adds phone and job title. If role name is displayed, then also validate.
-     *
-     * @return array
-     */
-    private function determineValidationGroups()
-    {
-        $validationGroups = [];
-        if (!empty($this->targetUser)) {
-            array_push($validationGroups, 'user_details_pa');
-        } else {
-            array_push($validationGroups, 'pa_team_add');
-        }
-
-        if ($this->team->canAddAdmin()) {
-            array_push($validationGroups, 'pa_team_role_name');
-        }
-
-        return $validationGroups;
+            'targetUser'         => null
+        ])
+        ->setRequired(['team','loggedInUser','validation_groups'])
+        ->setAllowedTypes('team'        , Team::class)
+        ->setAllowedTypes('loggedInUser', User::class)
+        ->setAllowedTypes('validation_groups'  , 'array')
+        ;
     }
 
     public function getName()

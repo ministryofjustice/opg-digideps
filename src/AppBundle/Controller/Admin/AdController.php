@@ -33,11 +33,11 @@ class AdController extends AbstractController
         $users = $this->getRestClient()->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         // form add
-        $form = $this->createForm(new FormDir\Ad\AddUserType([
-            'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
-            'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
-            'roleNameEmptyValue' => null,
-        ]), new EntityDir\User());
+        $form = $this->createForm(FormDir\Ad\AddUserType::class
+                                 , new EntityDir\User()
+                                 , [ 'roleChoices'        => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
+                                     'roleNameSetTo'      => EntityDir\User::ROLE_LAY_DEPUTY,
+                                   ]);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -86,13 +86,13 @@ class AdController extends AbstractController
         try {
             $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'odr']);
         } catch (\Exception $e) {
-            return $this->render('AppBundle:Ad:error.html.twig', [
+            return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => 'User not found',
             ]);
         }
 
         if ($user->getRoleName() != EntityDir\User::ROLE_LAY_DEPUTY) {
-            return $this->render('AppBundle:Ad:error.html.twig', [
+            return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => 'You can only view Lay deputies',
             ]);
         }
@@ -139,7 +139,7 @@ class AdController extends AbstractController
 
             return $this->redirect($redirectUrl);
         } catch (\Exception $e) {
-            return $this->render('AppBundle:Ad:error.html.twig', [
+            return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => $e->getMessage(),
             ]);
         }

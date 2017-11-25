@@ -11,7 +11,7 @@ imports:
 services:
     redirector_service:
         class: AppBundle\Service\Redirector
-        arguments: [ "@security.context", "@router", "@session", "%env%" ]
+        arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator

@@ -121,6 +121,33 @@
 
         }
     }
+
+    &.hero-small {
+        margin: $gutter-half 0 $gutter 0;
+        padding: $gutter-half;
+
+        h2,
+        .message {
+            margin: 0;
+        }
+
+        h2 {
+            @include bold-36();
+        }
+
+        .message {
+            @include core-19();
+            padding: $gutter-half 0 10px 0;
+
+            .button {
+                margin-left: 10px;
+            }
+
+            b {
+                @include bold-24();
+            }
+        }
+    }
 }
 
 

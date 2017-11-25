@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Odr;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
-use AppBundle\Form\Odr\ReportDeclarationType;
+use AppBundle\Form as FormDir;
 use AppBundle\Service\OdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -186,7 +186,7 @@ class OdrController extends AbstractController
         $clients = $user->getClients();
         $client = $clients[0];
 
-        $form = $this->createForm(new ReportDeclarationType(), $odr);
+        $form = $this->createForm(FormDir\Odr\ReportDeclarationType::class, $odr);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // set report submitted with date

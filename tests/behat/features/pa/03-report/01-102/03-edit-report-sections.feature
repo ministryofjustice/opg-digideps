@@ -159,5 +159,5 @@ Feature: PA user edits report sections
     Given I save the application status into "pa-report-balance-before"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-1000014" region
-    Then the report should be submittable
+    Then the PA report should be submittable
     And I save the application status into "pa-report-completed"

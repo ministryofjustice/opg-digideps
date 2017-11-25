@@ -48,14 +48,19 @@ class ActionController extends AbstractController
         $action = $report->getAction() ?: new EntityDir\Report\Action();
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('actions', 'actions_step', 'actions_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(new FormDir\Report\ActionType($step, $this->get('translator'), $report->getClient()->getFirstname()), $action);
+        $form = $this->createForm(FormDir\Report\ActionType::class
+                                 , $action
+                                 , [ 'step'            => $step
+                                   , 'translator'      => $this->get('translator')
+                                   , 'clientFirstName' => $report->getClient()->getFirstname()
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

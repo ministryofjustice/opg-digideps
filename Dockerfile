@@ -12,8 +12,9 @@ RUN  apt-add-repository ppa:brightbox/ruby-ng && \
         apt-get clean && apt-get autoremove && \
         rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
+USER root
 #upgrade npm
-RUN  npm install npm@4.6.1 -g
+RUN  npm install npm@4.6.1 -g && npm -g set progress=false
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN  npm install --global gulp
@@ -26,7 +27,8 @@ COPY composer.lock /app/
 WORKDIR /app
 USER app
 ENV  HOME /app
-RUN  composer install --prefer-source --no-interaction --no-scripts
+RUN  composer global require hirak/prestissimo
+RUN  composer install --prefer-dist --no-interaction --no-scripts
 RUN  composer dump-autoload --optimize
 COPY package.json /app/
 RUN  npm install

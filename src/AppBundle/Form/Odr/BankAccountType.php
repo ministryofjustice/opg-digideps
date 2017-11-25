@@ -9,7 +9,7 @@ use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -18,16 +18,10 @@ class BankAccountType extends AbstractType
 {
     private $step;
 
-    /**
-     * @param $step
-     */
-    public function __construct($step)
-    {
-        $this->step = (int) $step;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->step = (int) $options['step'];
+
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
@@ -79,7 +73,7 @@ class BankAccountType extends AbstractType
         return 'account';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'odr-bank-accounts',
@@ -99,6 +93,7 @@ class BankAccountType extends AbstractType
                     3 => ['bank-account-balance-on-cot'],
                 ][$this->step];
             },
-        ]);
+        ])
+        ->setRequired(['step']);
     }
 }

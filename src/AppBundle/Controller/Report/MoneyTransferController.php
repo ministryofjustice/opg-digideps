@@ -52,7 +52,13 @@ class MoneyTransferController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(new FormDir\YesNoType('noTransfersToAdd', 'report-money-transfer', [0 => 'Yes', 1 => 'No']), $report);
+        $form = $this->createForm(FormDir\YesNoType::class
+                                 , $report
+                                 , [ 'field'              => 'noTransfersToAdd'
+                                   , 'translation_domain' => 'report-money-transfer'
+                                   , 'choices'            => [0 => 'Yes', 1 => 'No']
+                                   ]
+                                 );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -122,10 +128,8 @@ class MoneyTransferController extends AbstractController
             'data' => $dataFromUrl
         ]);
 
-        // crete and handle form
-        $form = $this->createForm(new FormDir\Report\MoneyTransferType(
-            $step, $report->getBankAccounts()
-        ), $transfer);
+        // create and handle form
+        $form = $this->createForm(FormDir\Report\MoneyTransferType::class, $transfer, ['step' => $step, 'banks' => $report->getBankAccounts()]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -174,7 +178,7 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\AddAnotherRecordType('report-money-transfer'), $report);
+        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transfer']);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

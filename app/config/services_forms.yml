@@ -15,7 +15,7 @@ services:
         class: AppBundle\Form\FeedbackType
         calls:
             - [ setTranslator, ["@translator"] ]
-            - [ setSecurityContext, ["@security.context"] ]
+            - [ setTokenStorage, ["@security.token_storage"] ]
         tags:
             - { name: form.type, alias: feedback }
 
@@ -29,6 +29,6 @@ services:
     app.form.validator.email_same_domain:
         class: AppBundle\Validator\Constraints\EmailSameDomainValidator
         calls:
-            - [ setSecurityContext, ["@security.context"] ]
+            - [ setTokenStorage, ["@security.token_storage"] ]
         tags:
             - { name: validator.constraint_validator, alias: email_same_domain }
