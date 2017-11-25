@@ -68,3 +68,21 @@ input[type=text]::-ms-clear {
         margin-top: -20px;
     }
 }
+
+// Horizontally lined up form-groups
+// Currently only used on the admin search (Search, Role, NDR check)
+.form-groups-inline {
+    .form-group {
+        float: left;
+        margin-right: 30px;
+
+        @include media(mobile) {
+            width: 100% !important; // Overriding manual width classes
+            float: none;
+        }
+
+        &.form-group__checkbox {
+            margin-top: 27px;
+        }
+    }
+}
