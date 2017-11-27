@@ -299,7 +299,7 @@ class UserController extends RestController
         }
         $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
-        if ($user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY && $type == 'pass-reset' && !$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+        if ($type == 'pass-reset' && !$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
         
