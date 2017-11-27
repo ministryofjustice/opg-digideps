@@ -39,7 +39,7 @@
 {% block pageContent %}
 
     {% if not readyToBalance %}
-        <div class="alert-info panel panel-border-narrow">
+        <div class="alert-info panel panel-border-narrow" id="alert-not-started">
             <span class="icon icon-information"></span>
             <div class="alert-message">
                 <p>{{ 'alerts.notStarted' | trans(transOptions) }}</p>
@@ -47,14 +47,14 @@
         </div>
     {% else %}
         {% if report.isTotalsMatch %}
-            <div class="alert-success panel panel-border-narrow">
+            <div class="alert-success panel panel-border-narrow"  id="alert-balanced">
                 <span class="icon icon-tick"></span>
                 <div class="alert-message">
                     <p class="bold">{{ 'alerts.balanced' | trans }}</p>
                 </div>
             </div>
         {% else %}
-            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow behat-region-balance-bad">
+            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow behat-region-balance-bad" id="alert-not-balanced">
                 {% if report.isDue %}
                     <span class="icon icon-cross"></span>
                 {% endif %}

@@ -1057,7 +1057,7 @@ class Report
      */
     public function hasSection($section)
     {
-        return in_array($section, $this->availableSections);
+        return in_array($section, $this->getAvailableSections());
     }
 
     /**
