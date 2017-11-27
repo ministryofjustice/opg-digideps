@@ -75,6 +75,7 @@
 .text--right    { text-align: right  !important; }
 
 // Percentage widths
+.width-full             { width: 100%; }
 .width-three-quarters   { width: $three-quarters; } // 75%
 .width-two-thirds       { width: $two-thirds; }     // 66.67%
 .width-half             { width: $half; }           // 50%
@@ -84,6 +85,7 @@
 .width-sixth            { width: $full-width / 6; } // 16.67%
 .width-eighth           { width: $full-width / 8; } // 12.5%
 .width-tenth            { width: $full-width / 10; } // 10%
+.width-twentieth        { width: $full-width / 20; } // 5%
 
 // scss-lint:enable SpaceBeforeBrace, SpaceAfterPropertyColon
 
