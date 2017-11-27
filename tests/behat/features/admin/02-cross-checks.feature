@@ -15,7 +15,6 @@ Feature: admin / acl
         Then I should see an "#error-summary" element
         And I should be on "/login"
 
-
     Scenario: An admin cannot reset password from the deputy area
         # check admin can recover password from admin site
         Given emails are sent from "admin" area
@@ -33,5 +32,4 @@ Feature: admin / acl
         Then I should be on "/password-managing/forgotten"
         When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
         And I press "password_forgotten_submit"
-        #Then the response status code should be 200
         And no email should have been sent
