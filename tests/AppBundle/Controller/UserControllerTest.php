@@ -401,6 +401,11 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
+    /**
+     * Provides type, clientSecret, user email and whether the recreateToken should pass or fail (true|false)
+     *
+     * @return array
+     */
     public static function recreateTokenProviderForRole()
     {
         return [
