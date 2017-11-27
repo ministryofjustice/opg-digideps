@@ -43,7 +43,7 @@ Feature: admin / AD
     # login as AD user ad check page loads OK
     When I click on "login-as"
     Then the response status code should be 200
-    And the URL should match "/ad/login-as-deputy/6"
+    And the URL should match "user/details"
     And I should be in the "deputy" area
 
   @ad
