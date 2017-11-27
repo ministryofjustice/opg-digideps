@@ -22,3 +22,7 @@ table {
         @include core-16;
     }
 }
+
+tfoot {
+  border-top: 2px solid $black;
+}
