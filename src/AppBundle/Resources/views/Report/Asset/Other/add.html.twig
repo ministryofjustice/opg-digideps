@@ -4,7 +4,14 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e, '%assetTitle%': asset.title } %}
+
+{% if 'National' in asset.title or 'Premium' in asset.title %}
+    {% set assetTitle = asset.title %}
+{% else %}
+    {% set assetTitle = asset.title | lcfirst %}
+{% endif %}
+
+{% set transOptions = {'%client%': report.client.firstname | e, '%assetTitle%': assetTitle } %}
 
 {% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'addPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}

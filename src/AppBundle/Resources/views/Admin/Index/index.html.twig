@@ -17,23 +17,30 @@
 
     {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-    <div class="grid-row">
-        <div class="column-one-third">
-            {{ form_input(form.q, 'Search', {
-                'labelRaw': true,
-                'labelText':'Search',
-                'inputClass': 'form-control--full'}) }}
-        </div>
-        <div class="column-one-half">
-            {{ form_select(form.role_name, '', {
-                'labelText': 'Role',
-                'inputClass': 'left'}) }}
-            {{ form_checkbox(form.odr_enabled, '', {'labelText': 'NDR enabled'}) }}
-        </div>
+    <div class="form-group form-groups-inline flush--bottom">
+        {{ form_input(form.q, 'Search', {
+            'labelRaw': true,
+            'labelText':'Search',
+            'inputClass': 'width-full',
+            'formGroupClass': 'width-third'}) }}
+
+        {{ form_select(form.role_name, '', {
+            'labelText': 'Role',
+            'inputClass': 'width-full',
+            'formGroupClass': 'width-quarter'}) }}
+
+        {{ form_checkbox(form.odr_enabled, '', {
+            'labelText': 'NDR enabled',
+            'inputClass': 'width-full',
+            'formGroupClass': 'width-quarter'}) }}
     </div>
-    {{ form_submit(form.search, 'Search', {
-        'labelText': 'Search'}) }}
-    <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+
+    <div class="form-group">
+        {{ form_submit(form.search, 'Search', {
+            'labelText': 'Search'}) }}
+        <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+    </div>
+
     {{ form_end(form) }}
 
     <hr>
@@ -72,11 +79,15 @@
             </thead>
             <tbody>
             {% for user in users %}
+                {% set fullName = (user.isCoDeputy and user.firstname is empty and user.lastname is empty)
+                ? (page ~ '.userTable.codepNameNotSet') | trans
+                : user.firstname ~ ' ' ~ user.lastname
+                %}
                 <tr class="behat-region-user-{{ user.email | behat_namify }}">
                     <td>
                         {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
                             <a href='{{ path('admin_editUser', { what: 'user_id', filter: user.id }) }}'
-                               class="behat-link-user-{{ user.email | behat_namify }} bold">{{ user.firstname }} {{ user.lastname }}</a><br>
+                               class="behat-link-user-{{ user.email | behat_namify }} bold">{{ fullName }}</a><br>
                         {% endif %}
                         <div class="text-secondary">
                             {{ user.roleFullName }}

@@ -75,6 +75,7 @@
 .text--right    { text-align: right  !important; }
 
 // Percentage widths
+.width-full             { width: 100%; }
 .width-three-quarters   { width: $three-quarters; } // 75%
 .width-two-thirds       { width: $two-thirds; }     // 66.67%
 .width-half             { width: $half; }           // 50%
