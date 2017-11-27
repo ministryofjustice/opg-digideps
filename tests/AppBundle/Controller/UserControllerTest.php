@@ -408,7 +408,7 @@ class UserControllerTest extends AbstractTestController
             ['activate', '123abc-admin', 'deputy@example.org', true],
 
             ['activate', '123abc-deputy', 'deputy@example.org', true],
-            //['activate', '123abc-deputy', 'admin@example.org', false],
+            ['activate', '123abc-deputy', 'admin@example.org', false],
 
             ['pass-reset', '123abc-admin', 'deputy@example.org', true],
             ['pass-reset', '123abc-admin', 'admin@example.org', true],

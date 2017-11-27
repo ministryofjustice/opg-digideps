@@ -297,9 +297,13 @@ class UserController extends RestController
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
+
+        /** @var EntityDir\User $user */
         $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
 
-        if ($type == 'pass-reset' && !$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
+        $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request);
+
+        if (!$hasAdminSecret && $user->getRoleName()==EntityDir\User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
         
