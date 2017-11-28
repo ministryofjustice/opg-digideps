@@ -24,6 +24,12 @@ parameters:
             roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
             odrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
+            deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}
+            deputyPostcode: {{ getv (printf "/fixtures/%s/deputypostcode" .) }}
+            caseNumber: {{ getv (printf "/fixtures/%s/casenumber" .) }}
+            clientSurname: {{ getv (printf "/fixtures/%s/clientsurname" .) }}
+            typeOfReport: {{ getv (printf "/fixtures/%s/typeofreport" .) }}
+            corref: {{ getv (printf "/fixtures/%s/corref" .) }}
 {{ end }}
 {{ end }}
 
