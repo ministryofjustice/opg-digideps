@@ -78,16 +78,9 @@ class ReportController extends AbstractController
         $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
 
         $reports = $client ? $client->getReports() : [];
-        arsort($reports);
-
-        $reportActive = null;
-        $reportsSubmitted = [];
-        foreach ($reports as $currentReport) {
-            if ($currentReport->getSubmitted()) {
-                $reportsSubmitted[] = $currentReport;
-            } else {
-                $reportActive = $currentReport;
-            }
+        $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
+        if (!($reportActive = $client->getActiveReport())) {
+            throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
         }
 
         return [
