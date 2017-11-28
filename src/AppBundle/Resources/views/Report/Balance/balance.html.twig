@@ -17,17 +17,14 @@
     '%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
 } %}
 
-{% if
+{# readey to balance when gifts, expenses, bank account, money in/out #}
+{%  set readyToBalance =
     reportStatus.giftsState['state'] != 'not-started' and
     reportStatus.expensesState['state'] != 'not-started' and
     reportStatus.bankAccountsState['state'] != 'not-started' and
     reportStatus.moneyInState['state'] != 'not-started' and
     reportStatus.moneyOutState['state'] != 'not-started'
 %}
-    {% set readyToBalance = true %}
-{% else %}
-    {% set readyToBalance = false %}
-{% endif %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
@@ -37,7 +34,6 @@
 {% endblock %}
 
 {% block pageContent %}
-
     {% if not readyToBalance %}
         <div class="alert-info panel panel-border-narrow" id="alert-not-started">
             <span class="icon icon-information"></span>
