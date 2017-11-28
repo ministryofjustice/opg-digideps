@@ -402,6 +402,53 @@ class UserControllerTest extends AbstractTestController
     }
 
     /**
+     * Provides type, clientSecret, user email and whether the recreateToken should pass or fail (true|false)
+     *
+     * @return array
+     */
+    public static function recreateTokenProviderForRole()
+    {
+        return [
+            ['activate', '123abc-admin', 'admin@example.org', true],
+            ['activate', '123abc-admin', 'deputy@example.org', true],
+
+            ['activate', '123abc-deputy', 'deputy@example.org', true],
+            ['activate', '123abc-deputy', 'admin@example.org', false],
+
+            ['pass-reset', '123abc-admin', 'deputy@example.org', true],
+            ['pass-reset', '123abc-admin', 'admin@example.org', true],
+
+            ['pass-reset', '123abc-deputy', 'deputy@example.org', true],
+            ['pass-reset', '123abc-deputy', 'admin@example.org', false],
+        ];
+    }
+
+    /**
+     * @dataProvider recreateTokenProviderForRole
+     */
+    public function testRecreateTokenAcceptsClientSecret($urlPart, $secret, $email, $passOrFail)
+    {
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail($email);
+        $deputy->setRegistrationToken(null);
+        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        self::fixtures()->flush($deputy);
+
+        $url = '/user/recreate-token/' . $email . '/' . $urlPart;
+
+        if ($passOrFail) {
+            $this->assertJsonRequest('PUT', $url, [
+                'mustSucceed' => true,
+                'ClientSecret' => $secret
+            ]);
+        } else {
+            $this->assertJsonRequest('PUT', $url, [
+                'mustFail' => true,
+                'ClientSecret' => $secret
+            ]);
+        }
+    }
+
+    /**
      * @dataProvider recreateTokenProvider
      */
     public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
