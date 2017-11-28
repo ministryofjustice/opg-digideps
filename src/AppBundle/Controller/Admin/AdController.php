@@ -126,7 +126,7 @@ class AdController extends AbstractController
             $this->getRestClient()->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
-            $deputy = $this->getRestClient()->userRecreateToken($deputy->getEmail());
+            $deputy = $this->getRestClient()->userRecreateToken($deputy->getEmail(), 'activate');
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->container->getParameter('non_admin_host'), '/');
