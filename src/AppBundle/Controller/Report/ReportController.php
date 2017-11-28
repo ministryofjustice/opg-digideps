@@ -79,7 +79,6 @@ class ReportController extends AbstractController
 
         $reports = $client ? $client->getReports() : [];
         $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
-        arsort($reportsSubmitted);
         if (!($reportActive = $client->getActiveReport())) {
             throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
         }
