@@ -14,14 +14,6 @@ parameters:
     anonymous: true
     redis_dsn: redis://localhost
     fixtures:
-        admin@publicguardian.gsi.gov.uk:
-            firstname: Admin
-            lastname: User
-            password: Abcd1234
-            roleId: 1
-            activated: true
-            odrEnabled: false
-
         ad@publicguardian.gsi.gov.uk:
             firstname: "AD user"
             lastname: "AD surname"
@@ -30,11 +22,25 @@ parameters:
             activated: true
             odrEnabled: false
             deputyNo: 0001
-            deputyPostcode: AB1 2CD
+            deputyPostcode: SW1
             caseNumber: 10000000
-            clientSurname: ADClient
+            clientSurname: AD
             typeOfReport: OPG102
             corref: L2
+
+        admin@publicguardian.gsi.gov.uk:
+            firstname: Admin
+            lastname: User
+            password: Abcd1234
+            roleId: 1
+            activated: true
+            odrEnabled: false
+            deputyNo:
+            deputyPostcode:
+            caseNumber:
+            clientSurname:
+            typeOfReport:
+            corref:
 
         laydeputy@publicguardian.gsi.gov.uk:
             firstname: "Lay Deputy"
@@ -43,11 +49,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10000002
-            deputyNo: 1000
-            deputyPostcode: AB1 2CD
-            caseNumber: 10000001
-            clientSurname: LayClient
+            deputyNo: 1002
+            deputyPostcode: SW1
+            caseNumber: TEST1020
+            clientSurname: 102
             typeOfReport: OPG102
             corref: L2
 
@@ -58,11 +63,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: true
-            caseNumber: 10000003
-            deputyNo: 1003
-            deputyPostcode: AA1 2AA
-            caseNumber: 10000003
-            clientSurname: LayODRClient
+            deputyNo: 1000
+            deputyPostcode: SW1
+            caseNumber: TESTNDR1
+            clientSurname: NDR
             typeOfReport: OPG102
             corref: L2
 
@@ -73,11 +77,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10000102
             deputyNo: 1020
-            deputyPostcode: AB1 2CD
-            caseNumber: 10000102
-            clientSurname: LayClient102
+            deputyPostcode: SW1
+            caseNumber: TEST1020
+            clientSurname: 102
             typeOfReport: OPG102
             corref: L2
 
@@ -88,11 +91,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10000103
             deputyNo: 1030
-            deputyPostcode: AB1 3CD
-            caseNumber: 10000103
-            clientSurname: LayClient103
+            deputyPostcode: SW1
+            caseNumber: TEST1030
+            clientSurname: 103
             typeOfReport: OPG103
             corref: L3
 
@@ -103,11 +105,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10000104
             deputyNo: 1040
-            deputyPostcode: AB1 4CD
-            caseNumber: 10000104
-            clientSurname: LayClient104
+            deputyPostcode: SW1
+            caseNumber: TEST1040
+            clientSurname: 104
             typeOfReport:
             corref: hw
 
@@ -118,11 +119,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10001024
             deputyNo: 1024
-            deputyPostcode: AA2 4BB
-            caseNumber: 10001024
-            clientSurname: LayClient102-4
+            deputyPostcode: SW1
+            caseNumber: TEST1024
+            clientSurname: 102-4
             typeOfReport: OPG102
             corref: hw
 
@@ -133,11 +133,10 @@ parameters:
             roleId: 2
             activated: true
             odrEnabled: false
-            caseNumber: 10001034
             deputyNo: 1034
-            deputyPostcode: AA1 3BB
-            caseNumber: 10001034
-            clientSurname: LayClient103-4
+            deputyPostcode: SW1
+            caseNumber: TEST1034
+            clientSurname: 103-4
             typeOfReport: OPG103
             corref: hw
 
