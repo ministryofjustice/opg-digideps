@@ -144,18 +144,21 @@ money_out_short:
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 balance:
-    subSectionTitle: "Balance"
-    subSectionDescription: ""
-    notBalancedWarning: |
-      Your accounts are not balanced.
-      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
-    notBalancedWarningPAWithLink: |
-      Accounts not balanced
-      <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
-    notBalancedWarningPA: Accounts not balanced
-    notBalancedWithExplanationWarning: |
-      Your accounts are not balanced.
-      <a href="%detailsLink%" class="behat-link-balance-view-details">View/edit explanation</a>
+    subSectionTitle: "Account balance check"
+    subSectionDescription:
+      default: Check that %client%'s accounts balance.
+      withAddExplanation: Check that %client%'s accounts balance.<br/><a href="%editExplanationLink%">Add explanation</a>
+      withEditExplanation: Check that %client%'s accounts balance.<br/><a href="%editExplanationLink%">Edit explanation</a>
+#    notBalancedWarning: |
+#      Your accounts are not balanced.
+#      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
+#    notBalancedWarningPAWithLink: |
+#      Accounts not balanced
+#      <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
+#    notBalancedWarningPA: Accounts not balanced
+#    notBalancedWithExplanationWarning: |
+#      Your accounts are not balanced.
+#      <a href="%detailsLink%" class="behat-link-balance-view-details">View/edit explanation</a>
     edit: "Edit"
     start: "Start"
     label:

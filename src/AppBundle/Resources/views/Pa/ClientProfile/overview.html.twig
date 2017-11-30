@@ -28,16 +28,17 @@
         <div class="panel-heading">
             <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
             {% if report.hasSection('balance') %}
-                {% if report.isDue() and report.showBalanceWarning %}
-                    <div class="alert alert-important">
-                        <span class="icon icon-important-small"></span>
-                        <div class="alert-message">
-                            <p class="font-small">
-                                {{ ('balance.notBalancedWarningPA') | trans }}
-                            </p>
-                        </div>
-                    </div>
-                {% endif %}
+                {# TODO MOVE TO SECTION as per 1758 #}
+                {#{% if report.isDue() and report.showBalanceWarning %}#}
+                    {#<div class="alert alert-important">#}
+                        {#<span class="icon icon-important-small"></span>#}
+                        {#<div class="alert-message">#}
+                            {#<p class="font-small">#}
+                                {#{{ ('balance.notBalancedWarningPA') | trans }}#}
+                            {#</p>#}
+                        {#</div>#}
+                    {#</div>#}
+                {#{% endif %}#}
             {% endif %}
         </div>
         <div class="panel-body soft-half">
@@ -211,13 +212,13 @@
                                     description: true
                                 } %}
 
-                                {% if report.isDue() and report.showBalanceWarning %}
-                                    <li id="bank_accounts_not_balanced-section" class="section-list-item">
-                                        <div id="bank_accounts_not_balanced-sub-section">
-                                            {{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
-                                        </div>
-                                    </li>
-                                {% endif %}
+                                {#{% if report.isDue() and report.showBalanceWarning %}#}
+                                    {#<li id="bank_accounts_not_balanced-section" class="section-list-item">#}
+                                        {#<div id="bank_accounts_not_balanced-sub-section">#}
+                                            {#{{ macros.notification('important', 'balance.notBalancedWarningPAWithLink' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}#}
+                                        {#</div>#}
+                                    {#</li>#}
+                                {#{% endif %}#}
                             {% endif %}
 
                             {% if report.hasSection('moneyTransfers') %}

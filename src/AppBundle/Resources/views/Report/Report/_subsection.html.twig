@@ -2,6 +2,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{# TODO disableedit not needed anymore. Delete along with allowEdit #}
 {% if disableedit is defined and disableedit == true %}
     {% set allowEdit = false %}
 {% else %}
@@ -33,8 +34,14 @@
         {% endif %}
     </span>
 
-    {%  if description is defined and description %}
-        <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}</p>
+    {%  if description | default(false) %}
+        <p class="description text">
+            {% if descriptionRaw | default(false)  %}
+                {{ descriptionRaw | raw }}
+            {% else %}
+                {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
+            {% endif %}
+        </p>
     {%  endif %}
 
 

@@ -114,11 +114,11 @@ trait ReportBalanceTrait
     }
 
 
-    /**
-     * @return boolean
-     */
-    public function showBalanceWarning()
-    {
-        return $this->getStatus()->getBalanceState()['state'] === 'not-matching';
-    }
+//    /**
+//     * @return boolean
+//     */
+//    public function showBalanceWarning()
+//    {
+//        return $this->getStatus()->getBalanceState()['state'] === 'not-matching';
+//    }
 }
