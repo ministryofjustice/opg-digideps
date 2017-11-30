@@ -121,8 +121,8 @@ balance:
     subSectionTitle: "Account balance check"
     subSectionDescription:
       default: Check that %client%'s accounts balance.
-      withAddExplanation: Check that %client%'s accounts balance.<br/><a href="%editExplanationLink%">Add explanation</a>
-      withEditExplanation: Check that %client%'s accounts balance.<br/><a href="%editExplanationLink%">Edit explanation</a>
+      addExplanation: "Add explanation"
+      editExplanation: "Edit explanation"
 #    notBalancedWarning: |
 #      Your accounts are not balanced.
 #      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
