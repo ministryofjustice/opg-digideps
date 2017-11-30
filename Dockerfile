@@ -1,5 +1,14 @@
 FROM registry.service.opg.digital/opguk/digi-deps-api-base:nightly
 
+# build app dependencies
+COPY composer.json /app/
+COPY composer.lock /app/
+WORKDIR /app
+USER app
+ENV  HOME /app
+RUN  composer global require hirak/prestissimo
+RUN  composer install --prefer-dist --no-interaction --no-scripts
+
 # install remaining parts of app
 ADD  . /app
 USER root
@@ -28,3 +37,4 @@ ADD  docker/my_init.d /etc/my_init.d
 RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE api
+
