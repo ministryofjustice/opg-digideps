@@ -242,7 +242,6 @@ class ReportStatusService
             return ['state' => self::STATE_EXPLAINED, 'nOfRecords' => 0];
         }
 
-        //TODO assert
         return ['state' => self::STATE_NOT_MATCHING, 'nOfRecords' => 0];
     }
 
