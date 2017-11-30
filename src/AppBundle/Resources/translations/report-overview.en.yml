@@ -162,7 +162,10 @@ balance:
     edit: "Edit"
     start: "Start"
     label:
-      done: "Finished"
+      not-started: "not ready"
+      not-matching: "not balanced"
+      done: "balanced"
+      explained: "explained"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Tell us about %client%'s property, investments and other valuables"

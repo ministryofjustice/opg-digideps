@@ -19,7 +19,7 @@
     {% endif %}
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
     <span class="status flush--bottom {{ state.state }}">
-        {% if state.state == 'done' %}
+        {% if state.state == 'done' or customiseAllLabels | default(false) %}
             {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
         {% else %}
             {{ ('labels.' ~ state.state) | trans }}
