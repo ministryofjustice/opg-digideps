@@ -188,7 +188,7 @@
                     - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
                     #}
                 {% if report.hasSection('balance')%}
-                    [DEBUG INFO: status {{ reportStatus.balanceState['state'] }}, due: {{ report.isDue() ? 't':'f' }}]<br/>
+                    <!--[DEBUG INFO: status {{ reportStatus.balanceState['state'] }}, due: {{ report.isDue() ? 't':'f' }}] -->
 
                     {# calculate description text based on scenario (https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291) #}
                     {% set labelIndex = 'default' %}
