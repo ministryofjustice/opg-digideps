@@ -85,9 +85,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
             );
 
         // role
-        if (!empty($data['roleId'])) { //deprecated
+        if (isset($data['roleId']) && !empty($data['roleId'])) { //deprecated
             $user->setRoleName(User::roleIdToName($data['roleId']));
-        } elseif (!empty($data['roleName'])) {
+        } elseif (isset($data['roleName']) && !empty($data['roleName'])) {
             $user->setRoleName($data['roleName']);
         } else {
             $output->write('roleId or roleName must be defined');
@@ -96,7 +96,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
-        if ($data['roleId'] != 1) {
+        if ($data['roleId'] != 1 || $data['roleName'] != User::ROLE_ADMIN) {
             $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
             $em->persist($casRecEntity);
         }

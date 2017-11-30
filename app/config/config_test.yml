@@ -49,59 +49,29 @@ parameters:
         deputy@example.org:
             firstname: test
             lastname: deputy
-            roleId: 2
+            roleName: ROLE_LAY_DEPUTY
             password: Abcd1234
-            deputyNo:
-            deputyPostcode:
-            caseNumber:
-            clientSurname:
-            typeOfReport:
-            corref:
         
         admin@example.org:
             firstname: test
             lastname: admin
-            roleId: 1
+            roleName: ROLE_ADMIN
             password: Abcd1234
-            deputyNo:
-            deputyPostcode:
-            caseNumber:
-            clientSurname:
-            typeOfReport:
-            corref:
 
         pa@example.org:
             firstname: test
             lastname: pa
-            roleId: 6
+            roleName: ROLE_PA
             password: Abcd1234
-            deputyNo:
-            deputyPostcode:
-            caseNumber:
-            clientSurname:
-            typeOfReport:
-            corref:
 
         pa_admin@example.org:
             firstname: test
             lastname: pa-admin
-            roleId: 7
+            roleName: ROLE_PA_ADMIN
             password: Abcd1234
-            deputyNo:
-            deputyPostcode:
-            caseNumber:
-            clientSurname:
-            typeOfReport:
-            corref:
 
         pa_team_member@example.org:
             firstname: test
             lastname: pa-team-member
-            roleId: 8
+            roleName: ROLE_PA_TEAM_MEMBER
             password: Abcd1234
-            deputyNo:
-            deputyPostcode:
-            caseNumber:
-            clientSurname:
-            typeOfReport:
-            corref:
