@@ -1,5 +1,17 @@
 FROM registry.service.opg.digital/opguk/digi-deps-frontend-base:nightly
 
+# build app dependencies
+COPY composer.json /app/
+COPY composer.lock /app/
+WORKDIR /app
+USER app
+ENV  HOME /app
+RUN  composer global require hirak/prestissimo
+RUN  composer install --prefer-dist --no-interaction --no-scripts
+RUN  composer dump-autoload --optimize
+COPY package.json /app/
+RUN  npm install
+
 # install remaining parts of app
 ADD  . /app
 USER root
