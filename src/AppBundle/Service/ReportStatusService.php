@@ -231,7 +231,7 @@ class ReportStatusService
         }
 
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
         if ($this->report->getTotalsMatch()) {

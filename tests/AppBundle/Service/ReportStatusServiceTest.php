@@ -498,7 +498,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function balanceProvider()
     {
         return [
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_INCOMPLETE],
+            [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_NOT_STARTED],
             [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
             [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
             [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>true], StatusService::STATE_DONE],
