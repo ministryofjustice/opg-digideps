@@ -17,7 +17,7 @@
         <a class="behat-link-edit-{{ subSection }} link-edit soft-half--ends" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
             {{ (subSection ~ '.subSectionTitle') | trans }}
             <span class="right status flush--bottom {{ state.state }}">
-                {% if state.state == 'done' %}
+                {% if state.state == 'done' or customiseAllLabels | default(false) %}
                     {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
                 {% else %}
                     {{ ('labels.' ~ state.state) | trans }}
