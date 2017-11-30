@@ -26,13 +26,19 @@
         {% endif %}
     </span>
 
-    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %} >
-        {% if state.state == 'not-started' %}
-            {{ (subSection ~ '.start') | trans }}
-        {% else %}
-            {{ (subSection ~ '.edit') | trans }}
-        {% endif %}
-    </span>
+    {% if allowEdit == true %}
+        <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+            {% if subSection == 'balance' %}
+                {{ 'view' | trans({}, 'common') | capitalize }}
+            {% else %}
+                {% if state.state == 'not-started' %}
+                    {{ 'start' | trans({}, 'common') | capitalize }}
+                {% else %}
+                    {{ 'edit' | trans({}, 'common') | capitalize }}
+                {% endif %}
+            {% endif %}
+        </a>
+    {% endif %}
 
     {%  if description | default(false) %}
         <p class="description text">
