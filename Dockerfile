@@ -1,22 +1,4 @@
-FROM registry.service.opg.digital/opguk/php-fpm
-
-RUN  apt-get update && apt-get install -y \
-     php-pear php5-curl php5-redis php5-pgsql \
-     dos2unix postgresql-client && \
-     apt-get clean && apt-get autoremove && \
-     rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
-
-RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
-
-# build app dependencies
-RUN  composer self-update
-COPY composer.json /app/
-COPY composer.lock /app/
-WORKDIR /app
-USER app
-ENV  HOME /app
-RUN  composer global require hirak/prestissimo
-RUN  composer install --prefer-dist --no-interaction --no-scripts
+FROM registry.service.opg.digital/opguk/digi-deps-api-base:nightly
 
 # install remaining parts of app
 ADD  . /app
