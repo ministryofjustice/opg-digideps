@@ -21,7 +21,7 @@
             {% if reportActive %}
                 <p>
                     <strong class="bold">Due date: </strong>
-                    {{ reportActive.dueDate | date(" d F Y") }}
+                    {{ reportActive.dueDate | date(" j F Y") }}
                 </p>
                 <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
             {% endif %}

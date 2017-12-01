@@ -34,7 +34,7 @@
         <div class="card-body">
             <p>
                 <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
-                {{ reportActive.dueDate | date(" d F Y") }}
+                {{ reportActive.dueDate | date("j F Y") }}
             </p>
             <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
         </div>

@@ -17,7 +17,7 @@
             <td>{{ asset.description | nl2br }}</td>
             <td class="numeric-small width-fifth">
                 {% if asset.valuationDate %}
-                    {{ asset.valuationDate | date('d F Y') }}
+                    {{ asset.valuationDate | date('j F Y') }}
                 {% else %}
                     -
                 {% endif %}
