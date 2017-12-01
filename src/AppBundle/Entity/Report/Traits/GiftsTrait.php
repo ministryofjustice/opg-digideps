@@ -69,7 +69,7 @@ trait GiftsTrait
      */
     public function giftsSectionCompleted()
     {
-        return count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no';
+        return count($this->getGifts()) > 0 || $this->getGiftsExist() === 'no';
     }
 
     /**
