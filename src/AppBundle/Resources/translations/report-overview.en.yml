@@ -118,7 +118,7 @@ money_out_short:
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 balance:
-    subSectionTitle: "Account balance check"
+    subSectionTitle: "Accounts balance check"
     subSectionDescription:
       default: Check that %client%'s accounts balance.
       addExplanation: "Add explanation"
@@ -134,10 +134,10 @@ balance:
 #      Your accounts are not balanced.
 #      <a href="%detailsLink%" class="behat-link-balance-view-details">View/edit explanation</a>
     label:
-      not-started: "not ready"
+      not-started: "more information needed"
       not-matching: "not balanced"
       done: "balanced"
-      explained: "explained"
+      explained: "not balanced"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Tell us about %client%'s property, investments and other valuables"

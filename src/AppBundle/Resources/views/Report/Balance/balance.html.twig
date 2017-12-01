@@ -121,7 +121,7 @@
                     {% if not readyToBalance %}
                         -
                     {% else %}
-                        {% set partialBalance = partialBalance + report.accountsOpeningBalanceTotal %}
+                        {% set partialBalance = partialBalance + report.moneyInTotal %}
                         £{{ partialBalance  | money_format }}
                     {% endif %}
                 </td>
