@@ -79,6 +79,7 @@
         <tbody>
 
             <!-- SOME STARTED -->
+            {%  set partialBalance = 0 %}
             <tr>
                 <td class="width-half">
                     {{ 'balanceTable.accountsOpeningBalance' | trans }}
@@ -91,7 +92,8 @@
                     {% if reportStatus.bankAccountsState['state'] == 'not-started' %}
                         -
                     {% else %}
-                        £{{ report.accountsOpeningBalanceTotal | money_format }}
+                        {%  set partialBalance = partialBalance + report.accountsOpeningBalanceTotal %}
+                        £{{ partialBalance | money_format }}
                     {% endif %}
                 </td>
                 <td class="numeric width-twentieth">
@@ -119,7 +121,8 @@
                     {% if not readyToBalance %}
                         -
                     {% else %}
-                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal) | money_format }}
+                        {% set partialBalance = partialBalance + report.accountsOpeningBalanceTotal %}
+                        £{{ partialBalance  | money_format }}
                     {% endif %}
                 </td>
                 <td class="numeric">
@@ -146,7 +149,8 @@
                     {% if not readyToBalance %}
                         -
                     {% else %}
-                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal) | money_format }}
+                        {% set partialBalance = partialBalance - report.moneyOutTotal %}
+                        £{{ partialBalance  | money_format }}
                     {% endif %}
                 </td>
                 <td class="numeric">
@@ -174,7 +178,8 @@
                         {% if not readyToBalance %}
                             -
                         {% else %}
-                            £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal) | money_format }}
+                            {% set partialBalance = partialBalance - report.expensesTotal%}
+                            £{{ partialBalance  | money_format }}
                         {% endif %}
                     </td>
                     <td class="numeric">
@@ -189,7 +194,35 @@
                 </tr>
             {% endif %}
             {% if report.hasSection('paDeputyExpenses') %}
-                 {# biggs add me#}
+                {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal  %}
+                <tr>
+                    <td>{{ 'balanceTable.paDeputyExpenses' | trans }}</td>
+                    <td></td>
+                    <td class="numeric">
+                        {% if reportStatus.paFeesExpensesState['state'] == 'not-started' %}
+                            -
+                        {% else %}
+                            £{{ feesAndExpensesTotal | money_format }}
+                        {% endif %}
+                    </td>
+                    <td class="numeric">
+                        {% if not readyToBalance %}
+                            -
+                        {% else %}
+                            {% set partialBalance = partialBalance - feesAndExpensesTotal %}
+                            £{{ partialBalance  | money_format }}
+                        {% endif %}
+                    </td>
+                    <td class="numeric">
+                        <a href="{{ path('pa_fee_expense', {'reportId': report.id}) }}" class="bold">
+                            {% if reportStatus.paFeesExpensesState['state'] == 'not-started' %}
+                                {{ 'start' | trans({}, 'common') }}
+                            {% else %}
+                                {{ 'edit' | trans({}, 'common') }}
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
             {% endif %}
             <tr>
                 <td>{{ 'balanceTable.gifts' | trans }}</td>
@@ -205,7 +238,8 @@
                     {% if not readyToBalance %}
                         -
                     {% else %}
-                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                        {% set partialBalance = partialBalance - report.giftsTotalValue %}
+                        £{{ partialBalance  | money_format }}
                     {% endif %}
                 </td>
                 <td class="numeric">
@@ -230,7 +264,7 @@
                     </td>
                     <td class="numeric bold">
                         <span class="bold">
-                            £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                            £{{ report.calculatedBalance | money_format }}
                         </span>
                     </td>
                     <td></td>
@@ -279,7 +313,7 @@
                     <td>{{ 'differenceTable.reportClosingBalance' | trans }}</td>
                     <td colspan="2"></td>
                     <td class="numeric">
-                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal - report.giftsTotalValue) | money_format }}
+                        £{{ report.calculatedBalance | money_format }}
                     </td>
                     <td></td>
                 </tr>
