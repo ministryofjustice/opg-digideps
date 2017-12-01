@@ -96,7 +96,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
-        if ($data['roleId'] != 1 || $data['roleName'] != User::ROLE_ADMIN) {
+        if ($data['roleName'] != User::ROLE_ADMIN) {
             $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
             $em->persist($casRecEntity);
         }

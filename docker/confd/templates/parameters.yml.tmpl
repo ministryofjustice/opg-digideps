@@ -13,7 +13,6 @@ parameters:
     secret: {{ getv "/secret" }}
     anonymous: {{ getv "/security/anonymous" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
-    
 {{ if lsdir "/fixtures" }}
     fixtures:
 {{ range lsdir "/fixtures" }}
@@ -21,35 +20,15 @@ parameters:
             firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
             lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
             password: {{ getv (printf "/fixtures/%s/password" .) }}
-            {{ if exists "/fixtures/%s/roleid" }}
-                roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/roleName" }}
-                roleName: {{ getv (printf "/fixtures/%s/roleName" .) }}
-            {{ end }}
-
+            roleName: {{ getv (printf "/fixtures/%s/rolename" .) }}
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
             odrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
-
-            {{ if exists "/fixtures/%s/deputyno" }}
-                deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/deputypostcode" }}
-                deputyPostcode: {{ getv (printf "/fixtures/%s/deputypostcode" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/casenumber" }}
-                caseNumber: {{ getv (printf "/fixtures/%s/casenumber" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/clientsurname" }}
-                clientSurname: {{ getv (printf "/fixtures/%s/clientsurname" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/typeofreport" }}
-                typeOfReport: {{ getv (printf "/fixtures/%s/typeofreport" .) }}
-            {{ end }}
-            {{ if exists "/fixtures/%s/corref" }}
-                corref: {{ getv (printf "/fixtures/%s/corref" .) }}
-            {{ end }}
-
+            {{ if exists (printf "/fixtures/%s/deputyno" . ) }}deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/deputypostcode" . ) }}deputyPostcode: {{ getv (printf "/fixtures/%s/deputypostcode" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/casenumber" . ) }}caseNumber: {{ getv (printf "/fixtures/%s/casenumber" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/clientsurname" . ) }}clientSurname: {{ getv (printf "/fixtures/%s/clientsurname" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/typeofreport" . ) }}typeOfReport: {{ getv (printf "/fixtures/%s/typeofreport" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/corref" . ) }}corref: {{ getv (printf "/fixtures/%s/corref" .) }}{{ end }}
 {{ end }}
 {{ end }}
 
