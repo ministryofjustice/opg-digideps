@@ -233,7 +233,9 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance() || !$this->report->giftsSectionCompleted()) {
+        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()
+            || $this->getGiftsState()['state'] == self::STATE_NOT_STARTED
+        ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -310,6 +312,11 @@ class ReportStatusService
      */
     public function getPaFeesExpensesState()
     {
+        // if the section is not relevant for the report, then it's done
+        if (!$this->report->hasSection(Report::SECTION_PA_DEPUTY_EXPENSES)) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
         $countValidFees = count($this->report->getFeesWithValidAmount());
         $countExpenses = count($this->report->getExpenses());
 
@@ -403,6 +410,11 @@ class ReportStatusService
      */
     public function getExpensesState()
     {
+        // if the section is not relevant for the report, then it's "done"
+        if (!$this->report->hasSection(Report::SECTION_DEPUTY_EXPENSES)) {
+            return ['state' => self::STATE_DONE];
+        }
+
         if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getExpenses())];
         }

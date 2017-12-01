@@ -372,7 +372,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function expenses($mocks, $state)
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $report = $this->getReportMocked($mocks);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+
+        $object = new StatusService($report);
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
@@ -403,7 +406,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function paFeeExpenses($mocks, $state)
     {
-        $object = new StatusService($this->getReportMocked(['has106Flag'=>true] + $mocks));
+        $report = $this->getReportMocked(['has106Flag'=>true] + $mocks);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(true);
+
+        $object = new StatusService($report);
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }
 
@@ -513,6 +519,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function balance($mocks, $state)
     {
         $report = $this->getReportMocked($mocks);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
 
         $object = new StatusService($report);
         $this->assertEquals($state, $object->getBalanceState()['state']);
@@ -572,6 +579,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRemainingSectionsAndStatus()
     {
+
         $ret = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0]
             + array_pop($this->contactsProvider())[0]
@@ -593,6 +601,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         // all empty
         $report = $this->getReportMocked();
         $report->shouldReceive('isDue')->andReturn(true);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
         $object = new StatusService($report);
         $this->assertNotEquals([], $object->getRemainingSections());
         $this->assertEquals('notStarted', $object->getStatus());
@@ -601,12 +610,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $retPartial = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0];
         $report = $this->getReportMocked($retPartial);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
         $object = new StatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('notFinished', $object->getStatus());
 
         // not due, complete
         $report = $this->getReportMocked($ret);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
         $object = new StatusService($report);
         $this->assertEquals([], $object->getRemainingSections());
         $report->shouldReceive('isDue')->andReturn(false);
@@ -614,6 +625,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         // due, complete
         $report = $this->getReportMocked($ret);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
         $object = new StatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('readyToSubmit', $object->getStatus());
