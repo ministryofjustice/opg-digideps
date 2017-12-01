@@ -49,7 +49,7 @@
                             <span title="{{ note.createdBy.firstname }} {{ note.createdBy.lastname }}">{{ note.createdBy.firstname|first }}{{ note.createdBy.lastname|first }}</span>
                             {% endif %}
                         </td>
-                        <td class="width-sixth">{{ note.createdOn | date(" d M Y") }}</td>
+                        <td class="width-sixth">{{ note.createdOn | date("j M Y") }}</td>
                         <td class="width-eighth  text--right hard--right">
                             <a href="{{ path('edit_note', {'noteId': note.id}) }}" class="behat-link-edit-notes-button">{{ (page ~ '.editNote') | trans }}</a>
                             <a href="{{ path('delete_note', {'noteId': note.id}) }}" class="behat-link-delete-notes-button">{{ (page ~ '.deleteNote') | trans }}</a>
