@@ -201,8 +201,6 @@
                         {% set linkAction = '' %}
                     {% endif %}
 
-                    <p>{{ reportStatus.balanceState['state'] }}</p>
-
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
