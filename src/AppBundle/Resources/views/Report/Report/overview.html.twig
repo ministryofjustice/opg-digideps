@@ -73,14 +73,14 @@
         <li id="welfare-section" class="overview-section">
             <h2 class="heading">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
-                            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'visits_care',
-                                report: report,
-                                info: true,
-                                description: true,
-                                state: reportStatus.visitsCareState
-                            } %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'visits_care',
+                    report: report,
+                    info: true,
+                    description: true,
+                    state: reportStatus.visitsCareState
+                } %}
             {% endif %}
             {% if report.hasSection('lifestyle') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -95,19 +95,7 @@
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
-                <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
-
-                {#{% if report.isDue and report.shouldShowBalanceWarning %}#}
-                    {#{% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}#}
-
-                        {#{{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}#}
-
-                    {#{% elseif report.status.balanceState['state'] != "done" %}#}
-
-                        {#{{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}#}
-
-                    {#{% endif %}#}
-                {#{% endif %}#}
+                <h2 class="heading">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('deputyExpenses') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
