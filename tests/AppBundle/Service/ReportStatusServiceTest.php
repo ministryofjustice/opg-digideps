@@ -499,13 +499,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function balanceProvider()
     {
-        $sectionsAllIncomplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>true, 'giftsSectionCompleted'=>false];
-        $onlyBankAccountComplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'giftsSectionCompleted'=>false];
         $allComplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'giftsSectionCompleted'=>true];
+        $banksNotStarted = ['isMissingMoneyOrAccountsOrClosingBalance'=>true] + $allComplete;
+        $giftsNotStarted = ['giftsSectionCompleted'=>false] + $allComplete;
 
         return [
-            [$sectionsAllIncomplete, StatusService::STATE_NOT_STARTED],
-            [$onlyBankAccountComplete, StatusService::STATE_NOT_STARTED],
+            [$banksNotStarted, StatusService::STATE_NOT_STARTED],
+            [$giftsNotStarted, StatusService::STATE_NOT_STARTED],
             [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
             [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
             [$allComplete + ['getTotalsMatch'=>true], StatusService::STATE_DONE],
