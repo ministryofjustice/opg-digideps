@@ -1,7 +1,9 @@
 homepage:
   htmlTitle: Deputy report - Your reports | GOV.UK
   pageTitle: Your reports
-  editReportingPeriod: Edit reporting period
+  editReportingPeriodPara: |
+    Your reporting period is %startDate% to %endDate%. If these dates are wrong,
+  editReportingPeriodLink: edit your reporting period
   reportType: Report type
   reportingPeriod: Reporting period
   submissionDate: Submission date

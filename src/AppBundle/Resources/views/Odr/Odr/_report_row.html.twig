@@ -1,5 +1,11 @@
 {% set translationDomain = "odr-homepage" %}
 {% trans_default_domain translationDomain %}
+{% if reportActive %}
+    {% set transOptions = {
+        '%startDate%': reportActive.startDate | date("j F Y"),
+        '%endDate%': reportActive.endDate | date("j F Y")
+    } %}
+{% endif %}
 
 <h2 class="heading-large">Current deputy report</h2>
 
@@ -21,9 +27,11 @@
             {% if reportActive %}
                 <p>
                     <strong class="bold">Due date: </strong>
-                    {{ reportActive.dueDate | date(" d F Y") }}
+                    {{ reportActive.dueDate | date(" j F Y") }}
                 </p>
-                <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriod' | trans }}</a>
+                <p class="text flush--bottom">
+                    {{ 'report.editReportingPeriodPara' | trans(transOptions) }} <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriodLink' | trans }}</a>
+                </p>
             {% endif %}
         </div>
         {% set link = reportActive ?
