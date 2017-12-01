@@ -65,6 +65,14 @@ trait GiftsTrait
     }
 
     /**
+     * @return bool
+     */
+    public function giftsSectionCompleted()
+    {
+        return count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no';
+    }
+
+    /**
      * @param Gift $gift
      *
      * @return Report

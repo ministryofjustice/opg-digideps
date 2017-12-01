@@ -228,11 +228,12 @@ class ReportStatusService
      */
     public function getBalanceState()
     {
+        // if the section does not exist, "done" is returned. Although in that case this method shouldn't be called/needed
         if (!$this->report->hasSection(Report::SECTION_BALANCE)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()) {
+        if ($this->report->isMissingMoneyOrAccountsOrClosingBalance() || !$this->report->giftsSectionCompleted()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -418,7 +419,7 @@ class ReportStatusService
      */
     public function getGiftsState()
     {
-        if (count($this->report->getGifts()) > 0 || $this->report->getGiftsExist() === 'no') {
+        if ($this->report->giftsSectionCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getGifts())];
         }
 

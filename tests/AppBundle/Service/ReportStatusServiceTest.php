@@ -27,7 +27,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getExpenses'                       => [],
                 'getPaidForAnything'                => null,
                 'getGifts'                          => [],
-                'getGiftsExist'                     => null,
+                'giftsSectionCompleted'             => null,
                 'getMoneyTransfers'                 => [],
                 'getNoTransfersToAdd'               => null,
                 'getAssets'                         => [],
@@ -409,13 +409,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function giftsProvider()
     {
-        $expense = m::mock(Gift::class);
-
         return [
-            [['getGifts' => []], StatusService::STATE_NOT_STARTED],
-            [['getGiftsExist' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
-            [['getGiftsExist' => 'no'], StatusService::STATE_DONE],
-            [['getGifts' => [$expense], 'getGiftsExist' => 'yes'], StatusService::STATE_DONE],
+            [['giftsSectionCompleted' => false], StatusService::STATE_NOT_STARTED],
+            [['giftsSectionCompleted' => true], StatusService::STATE_DONE],
         ];
     }
 
@@ -497,11 +493,16 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function balanceProvider()
     {
+        $sectionsAllIncomplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>true, 'giftsSectionCompleted'=>false];
+        $onlyBankAccountComplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'giftsSectionCompleted'=>false];
+        $allComplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'giftsSectionCompleted'=>true];
+
         return [
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>true], StatusService::STATE_NOT_STARTED],
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
-            [['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'getTotalsMatch'=>true], StatusService::STATE_DONE],
+            [$sectionsAllIncomplete, StatusService::STATE_NOT_STARTED],
+            [$onlyBankAccountComplete, StatusService::STATE_NOT_STARTED],
+            [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
+            [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
+            [$allComplete + ['getTotalsMatch'=>true], StatusService::STATE_DONE],
         ];
     }
 
