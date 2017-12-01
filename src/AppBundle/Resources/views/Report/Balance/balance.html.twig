@@ -17,14 +17,7 @@
     '%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
 } %}
 
-{# readey to balance when gifts, expenses, bank account, money in/out #}
-{%  set readyToBalance =
-    reportStatus.giftsState['state'] != 'not-started' and
-    reportStatus.expensesState['state'] != 'not-started' and
-    reportStatus.bankAccountsState['state'] != 'not-started' and
-    reportStatus.moneyInState['state'] != 'not-started' and
-    reportStatus.moneyOutState['state'] != 'not-started'
-%}
+{%  set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
@@ -166,33 +159,38 @@
                     </a>
                 </td>
             </tr>
-            <tr>
-                <td>{{ 'balanceTable.deputyExpenses' | trans }}</td>
-                <td></td>
-                <td class="numeric">
-                    {% if reportStatus.expensesState['state'] == 'not-started' %}
-                        -
-                    {% else %}
-                        £{{ report.expensesTotal | money_format }}
-                    {% endif %}
-                </td>
-                <td class="numeric">
-                    {% if not readyToBalance %}
-                        -
-                    {% else %}
-                        £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal) | money_format }}
-                    {% endif %}
-                </td>
-                <td class="numeric">
-                    <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="bold">
+            {% if report.hasSection('deputyExpenses') %}
+                <tr>
+                    <td>{{ 'balanceTable.deputyExpenses' | trans }}</td>
+                    <td></td>
+                    <td class="numeric">
                         {% if reportStatus.expensesState['state'] == 'not-started' %}
-                            {{ 'start' | trans({}, 'common') }}
+                            -
                         {% else %}
-                            {{ 'edit' | trans({}, 'common') }}
+                            £{{ report.expensesTotal | money_format }}
                         {% endif %}
-                    </a>
-                </td>
-            </tr>
+                    </td>
+                    <td class="numeric">
+                        {% if not readyToBalance %}
+                            -
+                        {% else %}
+                            £{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal - report.moneyOutTotal - report.expensesTotal) | money_format }}
+                        {% endif %}
+                    </td>
+                    <td class="numeric">
+                        <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="bold">
+                            {% if reportStatus.expensesState['state'] == 'not-started' %}
+                                {{ 'start' | trans({}, 'common') }}
+                            {% else %}
+                                {{ 'edit' | trans({}, 'common') }}
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if report.hasSection('paDeputyExpenses') %}
+                 {# biggs add me#}
+            {% endif %}
             <tr>
                 <td>{{ 'balanceTable.gifts' | trans }}</td>
                 <td></td>
