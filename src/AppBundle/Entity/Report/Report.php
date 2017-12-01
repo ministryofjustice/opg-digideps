@@ -23,14 +23,13 @@ class Report
     use ReportTraits\BalanceTrait;
     use ReportTraits\ContactTrait;
     use ReportTraits\DecisionTrait;
-    use ReportTraits\ExpensesTrait;
+    use ReportTraits\FeeExpensesTrait;
     use ReportTraits\GiftsTrait;
     use ReportTraits\MoneyShortTrait;
     use ReportTraits\MoneyTransactionTrait;
     use ReportTraits\MoneyTransferTrait;
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
-    use ReportTraits\PaFeeExpensesTrait;
 
     /**
      * Reports with total amount of assets
