@@ -2,6 +2,10 @@
 
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%startDate%': reportActive.startDate | date("j F Y"),
+    '%endDate%': reportActive.endDate | date("j F Y")
+} %}
 {% set page = 'homepage' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
@@ -36,7 +40,9 @@
                 <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
                 {{ reportActive.dueDate | date("j F Y") }}
             </p>
-            <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriod') | trans }}</a>
+            <p class="text flush--bottom">
+                {{ (page ~ '.editReportingPeriodPara') | trans(transOptions) }} <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriodLink') | trans }}</a>
+            </p>
         </div>
         {% set buttonText = reportActive.status.status != 'notStarted' ? 'continue' : 'startNow' %}
         <div class="card-actions">
