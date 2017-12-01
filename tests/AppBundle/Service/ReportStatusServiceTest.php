@@ -26,6 +26,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getBankAccountsIncomplete'         => [],
                 'getExpenses'                       => [],
                 'getPaidForAnything'                => null,
+                'expensesSectionCompleted'          => null,
                 'getGifts'                          => [],
                 'giftsSectionCompleted'             => null,
                 'getMoneyTransfers'                 => [],
@@ -76,8 +77,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getType'                           => Report::TYPE_102,
                 // 106
                 'has106Flag'                        => false,
-                'getFeesWithValidAmount'                           => [],
-                'getReasonForNoFees'                => null,
+//                'getFeesWithValidAmount'                           => [],
+//                'getReasonForNoFees'                => null,
+                'paFeesExpensesNotStarted'      => null,
+                'paFeesExpensesCompleted'       => null,
                 'isMissingMoneyOrAccountsOrClosingBalance' => true,
 //                'hasSection' => false,
                 //'getExpenses'                       => [],
@@ -359,10 +362,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $expense = m::mock(Expense::class);
 
         return [
-            [['getExpenses' => []], StatusService::STATE_NOT_STARTED],
-            [['getPaidForAnything' => 'yes'], StatusService::STATE_NOT_STARTED], //should never happen
-            [['getPaidForAnything' => 'no'], StatusService::STATE_DONE],
-            [['getExpenses' => [$expense], 'getPaidForAnything' => 'yes'], StatusService::STATE_DONE],
+            [['expensesSectionCompleted' => false], StatusService::STATE_NOT_STARTED],
+            [['expensesSectionCompleted' => true], StatusService::STATE_DONE],
         ];
     }
 
@@ -381,22 +382,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function paFeesExpensesProvider()
     {
-        $fee = m::mock(Fee::class);
-        $expense = m::mock(Expense::class);
-
-        $feeDone1 = ['getFeesWithValidAmount'=>[$fee]];
-        $feeDone2 = ['getReasonForNoFees'=>'x'];
-        $expenseDone1 = ['getExpenses'=>[$expense], 'getPaidForAnything'=>'yes'];
-        $expenseDone2 = ['getPaidForAnything'=>'no'];
-
         return [
-            [[], StatusService::STATE_NOT_STARTED],
-            [$feeDone1, StatusService::STATE_INCOMPLETE],
-            [$feeDone2, StatusService::STATE_INCOMPLETE],
-            [$expenseDone1, StatusService::STATE_INCOMPLETE],
-            [$expenseDone2, StatusService::STATE_INCOMPLETE],
-            [$feeDone1 + $expenseDone1, StatusService::STATE_DONE],// no need to test all the combinations
-            [$feeDone2 + $expenseDone2, StatusService::STATE_DONE],
+            [['paFeesExpensesNotStarted'=>true], StatusService::STATE_NOT_STARTED],
+            [['paFeesExpensesNotStarted'=>false, 'paFeesExpensesCompleted'=>false], StatusService::STATE_INCOMPLETE],
+            [['paFeesExpensesNotStarted'=>false, 'paFeesExpensesCompleted'=>true], StatusService::STATE_DONE],
         ];
     }
 
@@ -499,13 +488,24 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function balanceProvider()
     {
-        $allComplete = ['isMissingMoneyOrAccountsOrClosingBalance'=>false, 'giftsSectionCompleted'=>true];
-        $banksNotStarted = ['isMissingMoneyOrAccountsOrClosingBalance'=>true] + $allComplete;
-        $giftsNotStarted = ['giftsSectionCompleted'=>false] + $allComplete;
+        // if any of the dependend section is not completed, status should be not-started
+        $allComplete = [
+            'isMissingMoneyOrAccountsOrClosingBalance'=>false,
+            'giftsSectionCompleted'=>true,
+            'expensesSectionCompleted'=>true,
+            'paFeesExpensesNotStarted'=>false,
+            'paFeesExpensesCompleted'=>true,
+        ];
+        $banksNotCompleted = ['isMissingMoneyOrAccountsOrClosingBalance'=>true] + $allComplete;
+        $giftsNotCompleted = ['giftsSectionCompleted'=>false] + $allComplete;
+        $deputyExpensesNotCompleted = ['expensesSectionCompleted'=>false] + $allComplete;
+        $paFeesExpensesNotCompleted = ['paFeesExpensesCompleted'=>false] + $allComplete;
 
         return [
-            [$banksNotStarted, StatusService::STATE_NOT_STARTED],
-            [$giftsNotStarted, StatusService::STATE_NOT_STARTED],
+            [$banksNotCompleted, StatusService::STATE_NOT_STARTED],
+            [$giftsNotCompleted, StatusService::STATE_NOT_STARTED],
+            [$deputyExpensesNotCompleted, StatusService::STATE_NOT_STARTED],
+            [$paFeesExpensesNotCompleted, StatusService::STATE_NOT_STARTED],
             [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>''], StatusService::STATE_NOT_MATCHING],
             [$allComplete + ['getTotalsMatch'=>false, 'getBalanceMismatchExplanation'=>'reason'], StatusService::STATE_EXPLAINED],
             [$allComplete + ['getTotalsMatch'=>true], StatusService::STATE_DONE],
@@ -519,7 +519,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function balance($mocks, $state)
     {
         $report = $this->getReportMocked($mocks);
+        // never happening with any report, but simpler to test them in a fake report type with both
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(true);
 
         $object = new StatusService($report);
         $this->assertEquals($state, $object->getBalanceState()['state']);
@@ -580,7 +582,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetRemainingSectionsAndStatus()
     {
 
-        $ret = ['getType' => Report::TYPE_102]
+        $mocksCompletingReport = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0]
             + array_pop($this->contactsProvider())[0]
             + array_pop($this->visitsCareProvider())[0]
@@ -597,7 +599,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
             + array_pop($this->MoneyInProvider())[0]
             + array_pop($this->MoneyOutProvider())[0];
 
-
         // all empty
         $report = $this->getReportMocked();
         $report->shouldReceive('isDue')->andReturn(true);
@@ -610,22 +611,25 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $retPartial = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0];
         $report = $this->getReportMocked($retPartial);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
         $object = new StatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('notFinished', $object->getStatus());
 
         // not due, complete
-        $report = $this->getReportMocked($ret);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+        $report = $this->getReportMocked($mocksCompletingReport);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
         $object = new StatusService($report);
         $this->assertEquals([], $object->getRemainingSections());
         $report->shouldReceive('isDue')->andReturn(false);
         $this->assertEquals('notFinished', $object->getStatus());
 
         // due, complete
-        $report = $this->getReportMocked($ret);
-        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
+        $report = $this->getReportMocked($mocksCompletingReport);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
         $object = new StatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('readyToSubmit', $object->getStatus());

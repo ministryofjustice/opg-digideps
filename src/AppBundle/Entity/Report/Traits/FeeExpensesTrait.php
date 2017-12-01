@@ -228,4 +228,41 @@ trait FeeExpensesTrait
         return $ret;
     }
 
+    /**
+     * //TODO unit test
+     * @return bool
+     */
+    public function expensesSectionCompleted()
+    {
+        return count($this->getExpenses()) > 0 || $this->getPaidForAnything() === 'no';
+    }
+
+    /**
+     * //TODO unit test
+     * @return bool
+     */
+    public function paFeesExpensesNotStarted()
+    {
+        return 0 === count($this->getFeesWithValidAmount())
+            && empty($this->getReasonForNoFees())
+            && 0 === count($this->getExpenses())
+            && empty($this->getPaidForAnything());
+    }
+
+    /**
+     * //TODO unit test
+     * @return bool
+     */
+    public function paFeesExpensesCompleted()
+    {
+        $countValidFees = count($this->getFeesWithValidAmount());
+        $countExpenses = count($this->getExpenses());
+
+        $feeComplete = $countValidFees || !empty($this->getReasonForNoFees());
+        $expenseComplete = $this->getPaidForAnything() === 'no'
+            || ($this->getPaidForAnything() === 'yes' && count($countExpenses));
+
+        return $feeComplete && $expenseComplete;
+    }
+
 }

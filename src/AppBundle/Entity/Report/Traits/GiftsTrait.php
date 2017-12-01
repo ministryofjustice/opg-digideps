@@ -65,6 +65,7 @@ trait GiftsTrait
     }
 
     /**
+     * //TODO unit test
      * @return bool
      */
     public function giftsSectionCompleted()

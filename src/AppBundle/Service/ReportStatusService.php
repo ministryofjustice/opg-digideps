@@ -234,7 +234,9 @@ class ReportStatusService
         }
 
         if ($this->report->isMissingMoneyOrAccountsOrClosingBalance()
-            || $this->getGiftsState()['state'] == self::STATE_NOT_STARTED
+            || $this->getGiftsState()['state'] != self::STATE_DONE
+            || $this->getExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
+            || $this->getPaFeesExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
         ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
@@ -317,22 +319,11 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        $countValidFees = count($this->report->getFeesWithValidAmount());
-        $countExpenses = count($this->report->getExpenses());
-
-        if (0 === $countValidFees
-            && empty($this->report->getReasonForNoFees())
-            && 0 === $countExpenses
-            && empty($this->report->getPaidForAnything())
-        ) {
+        if ($this->report->paFeesExpensesNotStarted()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-        $feeComplete = $countValidFees || !empty($this->report->getReasonForNoFees());
-        $expenseComplete = $this->report->getPaidForAnything() === 'no'
-            || ($this->report->getPaidForAnything() === 'yes' && count($countExpenses));
-
-        if ($feeComplete && $expenseComplete) {
+        if ($this->report->paFeesExpensesCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
@@ -415,7 +406,7 @@ class ReportStatusService
             return ['state' => self::STATE_DONE];
         }
 
-        if (count($this->report->getExpenses()) > 0 || $this->report->getPaidForAnything() === 'no') {
+        if ($this->report->expensesSectionCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getExpenses())];
         }
 
