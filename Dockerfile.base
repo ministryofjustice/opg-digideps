@@ -10,11 +10,8 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 
 # build app dependencies
 RUN  composer self-update
-COPY composer.json /app/
-COPY composer.lock /app/
 WORKDIR /app
 USER app
 ENV  HOME /app
 RUN  composer global require hirak/prestissimo
-RUN  composer install --prefer-dist --no-interaction --no-scripts
 

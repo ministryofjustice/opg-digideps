@@ -1,12 +1,11 @@
 FROM registry.service.opg.digital/opguk/digi-deps-api-base:nightly
 
 # build app dependencies
-COPY composer.json /app/
-COPY composer.lock /app/
 WORKDIR /app
 USER app
 ENV  HOME /app
-RUN  composer global require hirak/prestissimo
+COPY composer.json /app/
+COPY composer.lock /app/
 RUN  composer install --prefer-dist --no-interaction --no-scripts
 
 # install remaining parts of app
