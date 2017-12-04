@@ -20,7 +20,7 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "guzzlehttp/guzzle": "~5.0",
         "jms/serializer-bundle": "0.13.*",
-        "behat/behat": "3.*",
+        "behat/behat": "3.3.1",
         "behat/common-contexts": "*",
         "behat/mink": "1.6.*",
         "behat/mink-goutte-driver": "*",
