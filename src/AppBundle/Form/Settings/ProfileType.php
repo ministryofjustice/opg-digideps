@@ -14,17 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ProfileType extends AbstractType
 {
-    protected $validationGroups;
-
-    /**
-     * ProfileType constructor.
-     * @param $validationGroups array
-     */
-    public function __construct($validationGroups)
-    {
-        $this->validationGroups = $validationGroups;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $loggedInUser = $builder->getData();
@@ -62,9 +51,9 @@ class ProfileType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'settings',
-            'validation_groups'  => $this->validationGroups,
             'data_class'         => User::class,
-        ]);
+        ])
+        ;
     }
 
     public function getName()

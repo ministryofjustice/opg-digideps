@@ -3,7 +3,7 @@
 {% set append104 = report.get104TransSuffix %}
 
 <div class="section" id="action-section">
-    <h2 class="section-heading">Next reporting period</h2>
+    <h2 class="section-heading">Actions you plan to take</h2>
 
     {{ macros.answerYesNo({
         question: ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions'),
