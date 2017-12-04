@@ -81,16 +81,19 @@
 
         <!-- SOME STARTED -->
         {% set partialBalance = 0 %}
+
+        {# BANK ACCOUNTS #}
+        {% set started = reportStatus.bankAccountsState['state'] != 'not-started' %}
         <tr>
             <td class="width-half">
                 {{ 'balanceTable.accountsOpeningBalance' | trans }}
-                {% if reportStatus.bankAccountsState['state'] != 'not-started' %}
+                {% if started %}
                     ({{ report.startDate | date("j F Y") }})
                 {% endif %}
             </td>
             <td colspan="2"></td>
             <td class="numeric">
-                {% if reportStatus.bankAccountsState['state'] == 'not-started' %}
+                {% if not started %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance + report.accountsOpeningBalanceTotal %}
@@ -100,18 +103,17 @@
             <td class="numeric width-twentieth">
 
                 <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="bold">
-                    {% if reportStatus.bankAccountsState['state'] == 'not-started' %}
-                        {{ 'start' | trans({}, 'common') }}
-                    {% else %}
-                        {{ 'edit' | trans({}, 'common') }}
-                    {% endif %}
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                 </a>
             </td>
         </tr>
+
+        {# MONEY IN #}
+        {% set started = reportStatus.moneyInState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.moneyIn' | trans }}</td>
             <td class="numeric">
-                {% if reportStatus.moneyInState['state'] == 'not-started' %}
+                {% if not started %}
                     -
                 {% else %}
                     £{{ report.moneyInTotal | money_format }}
@@ -128,19 +130,18 @@
             </td>
             <td class="numeric">
                 <a href="{{ path('money_in', {'reportId': report.id}) }}" class="bold">
-                    {% if reportStatus.moneyInState['state'] == 'not-started' %}
-                        {{ 'start' | trans({}, 'common') }}
-                    {% else %}
-                        {{ 'edit' | trans({}, 'common') }}
-                    {% endif %}
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                 </a>
             </td>
         </tr>
+
+        {# MONEY OUT #}
+        {% set started = reportStatus.moneyOutState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.moneyOut' | trans }}</td>
             <td></td>
             <td class="numeric">
-                {% if reportStatus.moneyOutState['state'] == 'not-started' %}
+                {% if not started %}
                     -
                 {% else %}
                     £{{ report.moneyOutTotal | money_format }}
@@ -156,20 +157,19 @@
             </td>
             <td class="numeric">
                 <a href="{{ path('money_out', {'reportId': report.id}) }}" class="bold">
-                    {% if reportStatus.moneyOutState['state'] == 'not-started' %}
-                        {{ 'start' | trans({}, 'common') }}
-                    {% else %}
-                        {{ 'edit' | trans({}, 'common') }}
-                    {% endif %}
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                 </a>
             </td>
         </tr>
+
         {% if report.hasSection('deputyExpenses') %}
+            {# DEPUTY EXPENSES (LAY) #}
+            {% set started = reportStatus.expensesState['state'] != 'not-started'%}
             <tr>
                 <td>{{ 'balanceTable.deputyExpenses' | trans }}</td>
                 <td></td>
                 <td class="numeric">
-                    {% if reportStatus.expensesState['state'] == 'not-started' %}
+                    {% if not started %}
                         -
                     {% else %}
                         £{{ report.expensesTotal | money_format }}
@@ -185,22 +185,21 @@
                 </td>
                 <td class="numeric">
                     <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="bold">
-                        {% if reportStatus.expensesState['state'] == 'not-started' %}
-                            {{ 'start' | trans({}, 'common') }}
-                        {% else %}
-                            {{ 'edit' | trans({}, 'common') }}
-                        {% endif %}
+                        {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                     </a>
                 </td>
             </tr>
         {% endif %}
+
         {% if report.hasSection('paDeputyExpenses') %}
+            {# FEES/EXPENSES (PA) #}
+            {% set started = reportStatus.paFeesExpensesState['state'] != 'not-started' %}
             {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
             <tr>
                 <td>{{ 'balanceTable.paDeputyExpenses' | trans }}</td>
                 <td></td>
                 <td class="numeric">
-                    {% if reportStatus.paFeesExpensesState['state'] == 'not-started' %}
+                    {% if not started %}
                         -
                     {% else %}
                         £{{ feesAndExpensesTotal | money_format }}
@@ -216,20 +215,19 @@
                 </td>
                 <td class="numeric">
                     <a href="{{ path('pa_fee_expense', {'reportId': report.id}) }}" class="bold">
-                        {% if reportStatus.paFeesExpensesState['state'] == 'not-started' %}
-                            {{ 'start' | trans({}, 'common') }}
-                        {% else %}
-                            {{ 'edit' | trans({}, 'common') }}
-                        {% endif %}
+                        {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                     </a>
                 </td>
             </tr>
         {% endif %}
+
+        {# GIFTS #}
+        {% set state = reportStatus.giftsState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.gifts' | trans }}</td>
             <td></td>
             <td class="numeric">
-                {% if reportStatus.giftsState['state'] == 'not-started' %}
+                {% if not started %}
                     -
                 {% else %}
                     £{{ report.giftsTotalValue | money_format }}
@@ -245,11 +243,7 @@
             </td>
             <td class="numeric">
                 <a href="{{ path('gifts', {'reportId': report.id}) }}" class="bold">
-                    {% if reportStatus.giftsState['state'] == 'not-started' %}
-                        {{ 'start' | trans({}, 'common') }}
-                    {% else %}
-                        {{ 'edit' | trans({}, 'common') }}
-                    {% endif %}
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
                 </a>
             </td>
         </tr>
