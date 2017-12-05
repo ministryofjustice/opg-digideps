@@ -112,13 +112,4 @@ trait ReportBalanceTrait
     {
         $this->totalsMatch = $totalsMatch;
     }
-
-
-//    /**
-//     * @return boolean
-//     */
-//    public function showBalanceWarning()
-//    {
-//        return $this->getStatus()->getBalanceState()['state'] === 'not-matching';
-//    }
 }
