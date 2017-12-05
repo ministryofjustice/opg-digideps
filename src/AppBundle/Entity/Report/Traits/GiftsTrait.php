@@ -65,6 +65,15 @@ trait GiftsTrait
     }
 
     /**
+     * //TODO unit test
+     * @return bool
+     */
+    public function giftsSectionCompleted()
+    {
+        return count($this->getGifts()) > 0 || $this->getGiftsExist() === 'no';
+    }
+
+    /**
      * @param Gift $gift
      *
      * @return Report
