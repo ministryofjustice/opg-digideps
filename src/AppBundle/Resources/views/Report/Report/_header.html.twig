@@ -10,7 +10,7 @@
 {% trans_default_domain translationDomain %}
 
 {% if reportStatus.isReadyToSubmit and report.isDue %}
-    <div id="header-report-submit" class="hero hero-small">
+    <div id="header-report-submit" class="hero hero-small behat-region-report-ready-banner">
         <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
         <div class="message"><a class="button behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a></div>
     </div>

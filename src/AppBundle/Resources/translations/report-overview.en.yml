@@ -49,15 +49,11 @@ heading.decisionsContacts: "Decisions and contacts"
 decisions:
     subSectionTitle: "Decisions"
     subSectionDescription: "Tell us about the significant decisions you've made for %client%"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
 contacts:
     subSectionTitle: "Contacts"
     subSectionDescription: "Give us details of the people you consulted about %client%"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
@@ -65,128 +61,92 @@ heading.healthAndWelfare: "Health and welfare"
 visits_care:
     subSectionTitle: "Visits and care"
     subSectionDescription: "Give us an overview of who is looking after %client%"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "Finished"
 lifestyle:
     subSectionTitle: "Health and lifestyle"
     subSectionDescription: "Describe %client%'s health and any activities %client% is involved in"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "Finished"
 heading.propFinance: "%client%'s property and finances"
 deputy_expenses:
     subSectionTitle: "Deputy expenses"
     subSectionDescription: "Claim for things you paid for on %client%'s behalf"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
 pa_fee_expense:
     subSectionTitle: "Deputy fees and expenses"
     subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "Finished"
 gifts:
     subSectionTitle: "Gifts"
     subSectionDescription: "Gifts you've given to other people on %client%'s behalf"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
     subSectionTitle: "Accounts"
     subSectionTitleNotBalanced: "Accounts not balanced"
     subSectionDescription: "Add %client%'s bank, building society and savings accounts"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
       addReason: "Add reason"
 money_transfers:
     subSectionTitle: "Money transfers"
     subSectionDescription: "Provide details of money transferred between %client%'s accounts"
-    edit: "Edit"
-    start: "Start"
     label:
        done: "{0} no transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
 money_in:
     subSectionTitle: "Money in"
     subSectionDescription: "Enter details of money paid into %client%'s accounts"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 money_out:
     subSectionTitle: "Money out"
     subSectionDescription: "Enter details of money you've spent on %client%'s living and other costs"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 
 money_in_short:
     subSectionTitle: "Money in"
     subSectionDescription: "Tell us about money paid into %client%'s accounts"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 money_out_short:
     subSectionTitle: "Money out"
     subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
 balance:
-    subSectionTitle: "Balance"
-    subSectionDescription: ""
-    notBalancedWarning: |
-      Your accounts are not balanced.
-      <a href="%detailsLink%" class="behat-link-balance-view-details">View details</a>
-    notBalancedWarningPAWithLink: |
-      Accounts not balanced
-      <a href="%detailsLink%" class="behat-link-balance-view-details right">View details</a>
-    notBalancedWarningPA: Accounts not balanced
-    notBalancedWithExplanationWarning: |
-      Your accounts are not balanced.
-      <a href="%detailsLink%" class="behat-link-balance-view-details">View/edit explanation</a>
-    edit: "Edit"
-    start: "Start"
+    subSectionTitle: "Accounts balance check"
+    subSectionDescription:
+      default: Check that %client%'s accounts balance.
+      addExplanation: "Add explanation"
+      editExplanation: "Edit explanation"
     label:
-      done: "Finished"
+      not-started: "more information needed"
+      not-matching: "not balanced"
+      done: "balanced"
+      explained: "not balanced"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Tell us about %client%'s property, investments and other valuables"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
 debts:
     subSectionTitle: "Debts"
     subSectionDescription: "Let us know about any debts %client% owes"
-    edit: "Edit"
-    start: "Start"
     label:
        done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
 heading.other: "Other information"
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "What major decisions will you need to take for %client% in the next year?"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "Finished"
 other_info:
     subSectionTitle: "Any other information"
     subSectionDescription: "Is there anything else you want to tell us about the deputyship?"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "Finished"
 
@@ -194,17 +154,8 @@ heading.caseDocuments: "Case documents"
 documents:
     subSectionTitle: "Supporting documents"
     subSectionDescription: "Provide documents to support your report, for example bank statements"
-    edit: "Edit"
-    start: "Start"
     label:
       done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
-
-report_submit:
-    subSectionTitle: "Submit report"
-    edit: "Submit report"
-    start: "Submit report"
-    label:
-      done: "Ready to submit"
 
 additionalInformation:
   subSectionTitle: More information

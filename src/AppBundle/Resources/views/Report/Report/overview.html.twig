@@ -4,7 +4,9 @@
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e
+} %}
 
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
@@ -22,10 +24,10 @@
         <div class="column-one-half">
             <ul>
                 <li>{{ 'reportingPeriod' | trans() }}:
-                    <span class="bold-small">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
+                    <span class="bold-small">{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</span>
                 </li>
                 <li>{{ 'dueDate' | trans() }}:
-                    <span class="bold-small">{{ report.dueDate | date(" j F Y") }}</span>
+                    <span class="bold-small">{{ report.dueDate | date("j F Y") }}</span>
                 </li>
                 <li>Report status:
                     <span class="bold-small">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
@@ -71,14 +73,14 @@
         <li id="welfare-section" class="overview-section">
             <h2 class="heading">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
-                            {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'visits_care',
-                                report: report,
-                                info: true,
-                                description: true,
-                                state: reportStatus.visitsCareState
-                            } %}
+                {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'visits_care',
+                    report: report,
+                    info: true,
+                    description: true,
+                    state: reportStatus.visitsCareState
+                } %}
             {% endif %}
             {% if report.hasSection('lifestyle') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -93,23 +95,7 @@
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
-                <h2 class="heading push-half--bottom">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
-                {# balance status values:
-                    - incomplete: when bank accounts or money section are incomplete
-                    - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
-                    - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
-                    #}
-                {% if report.isDue and report.shouldShowBalanceWarning %}
-                    {% if (report.status.balanceState['state'] == 'explained' and report.balanceMismatchExplanation is defined and report.balanceMismatchExplanation) %}
-
-                        {{ macros.notification('important', 'balance.notBalancedWithExplanationWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
-
-                    {% elseif report.status.balanceState['state'] != "done" %}
-
-                        {{ macros.notification('error', 'balance.notBalancedWarning' | trans({'%detailsLink%': path('balance', {'reportId': report.id}) })) }}
-
-                    {% endif %}
-                {% endif %}
+                <h2 class="heading">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('deputyExpenses') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -139,7 +125,6 @@
                         subSection: 'bank_accounts',
                         report: report,
                         state: reportStatus.bankAccountsState,
-                        warning: true,
                         description: true
                     } %}
                 {% endif %}
@@ -149,7 +134,6 @@
                         subSection: 'money_transfers',
                         report: report,
                         state: reportStatus.moneyTransferState,
-                        warning: true,
                         description: true
                     } %}
                     {% endif %}
@@ -159,7 +143,6 @@
                     subSection: 'money_in',
                     report: report,
                     state: reportStatus.moneyInState,
-                    warning: true,
                     description: true
                     } %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -167,7 +150,6 @@
                     subSection: 'money_out',
                     report: report,
                     state: reportStatus.moneyOutState,
-                    warning: true,
                     description: true
                     } %}
                 {% endif %}
@@ -177,7 +159,6 @@
                     subSection: 'money_in_short',
                     report: report,
                     state: reportStatus.MoneyInShortState,
-                    warning: true,
                     description: true
                     } %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -185,21 +166,42 @@
                     subSection: 'money_out_short',
                     report: report,
                     state: reportStatus.MoneyOutShortState,
-                    warning: true,
                     description: true
                     } %}
                 {% endif %}
-                {# show balance section only for editing, when an explanation is given #}
-                <!-- {% if report.hasSection('balance') and report.balanceMismatchExplanation %}
+                {# balance status values:
+                    - incomplete: when bank accounts or money section are incomplete
+                    - not-matching: when bank accounts and money section are complete but balance is incorrect (not matching or explanation missing)
+                    - explained: when we have an explanation (effectively done but allows us to distinguish users that explain and then proceed to balance
+                    #}
+                {% if report.hasSection('balance')%}
+                    <!-- [DEBUG INFO: status {{ reportStatus.balanceState['state'] }}, due: {{ report.isDue() ? 't':'f' }}] -->
+
+                    {# calculate description text based on scenario (https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291) #}
+                    {% set labelIndex = 'default' %}
+                    {% if report.isDue() and reportStatus.balanceState['state'] == 'not-matching' %}
+                        {% set descLink = true %}
+                        {% set linkAction = 'add' %}
+                    {% elseif report.isDue() and reportStatus.balanceState['state'] == 'explained' %}
+                        {% set descLink = true %}
+                        {% set linkAction = 'edit' %}
+                    {% else %}
+                        {% set linkAction = '' %}
+                    {% endif %}
+
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
                         report: report,
                         state: reportStatus.balanceState,
-                        warning: true,
-                        description: true
+                        description: true,
+                        descriptionRaw: ('balance.subSectionDescription.' ~ labelIndex) | trans(transOptions),
+                        customiseAllLabels: true,
+                        descriptionLink: descLink | default(false),
+                        descriptionLinkAction: linkAction
                     } %}
-                {% endif %} -->
+                {% endif %}
+
                 {% if report.hasSection('assets') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
@@ -266,7 +268,7 @@
     {% if not report.isDue %}
 
         <div class="push--top">
-            {% set endDate = report.getEndDate() | date(" j F Y")  %}
+            {% set endDate = report.getEndDate() | date("j F Y")  %}
             {% set transOptions = {'%date%': endDate} %}
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}

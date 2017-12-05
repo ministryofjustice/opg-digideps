@@ -16,6 +16,7 @@ balanceTable:
   moneyIn: Money in
   moneyOut: Money out
   deputyExpenses: Deputy expenses
+  paDeputyExpenses: Deputy fees and expenses
   gifts: Gifts
   footer: Report closing balance after incoming and outgoing payments
 
