@@ -8,7 +8,7 @@ use AppBundle\Entity\Report\Report as Report;
 use AppBundle\Entity\Report\Status;
 use AppBundle\Entity\User;
 use AppBundle\Form\Report\ReasonForBalanceType;
-use MockeryStub as ms;
+use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\Form;
@@ -50,11 +50,11 @@ class BalanceTest extends WebTestCase
      */
     private function getMockedReport(array $methods)
     {
-        $client = ms::stub(Client::class)
+        $client = m::mock(Client::class)
             ->shouldReceive('getFirstname')->andReturn('Peter')
             ->getMock();
 
-        return ms::mock(Report::class, $methods + [
+        return m::mock(Report::class, $methods + [
             'getId' => 1,
             'getClient' => $client,
             'getTotalsOffset' => null,
@@ -84,7 +84,7 @@ class BalanceTest extends WebTestCase
      */
     private function getMockedStatus(array $methods)
     {
-        return ms::stub(Status::class, $methods + [
+        return m::mock(Status::class, $methods + [
             'getBankAccountsState' => ['state'=>'not-started'],
             'getMoneyInState' => ['state'=>'not-started'],
             'getMoneyOutState' => ['state'=>'not-started'],
@@ -197,13 +197,13 @@ class BalanceTest extends WebTestCase
             'form' => $form->createView(),
             'backLink' => '[backLinkUrl]',
             'app'=> [
-                'session' => ms::mock(Session::class)
+                'session' => m::mock(Session::class)
                     ->shouldReceive('get')->andReturn(false)
                     ->shouldReceive('getFlashBag')->andReturn(
-                        ms::mock(FlashBagInterface::class)->shouldIgnoreMissing()
+                        m::mock(FlashBagInterface::class)->shouldIgnoreMissing()
                     )
                     ->getMock(),
-                'user' => ms::mock(User::class)->shouldIgnoreMissing()
+                'user' => m::mock(User::class)->shouldIgnoreMissing()
             ]
         ]);
 
@@ -214,14 +214,9 @@ class BalanceTest extends WebTestCase
 
     public function tearDown()
     {
-        ms::close();
+        m::close();
         $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
     }
 
-
-    private function html(Crawler $crawler, $expr)
-    {
-        return $crawler->filter($expr)->eq(0)->html();
-    }
 }
