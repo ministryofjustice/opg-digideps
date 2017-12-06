@@ -14,6 +14,9 @@ class CasrecVerificationService
     /** @var \Doctrine\ORM\EntityRepository */
     private $casRecRepo;
 
+    /**
+     * @var CasRec[]
+     */
     private $lastMatchedCasrecUsers;
 
     public function __construct($em)
@@ -66,6 +69,20 @@ class CasrecVerificationService
             $deputyNumbers[] = $casRecMatch->getDeputyNo();
         }
         return $deputyNumbers;
+    }
+
+    /**
+     * //TODO 
+     * @return true if at least one matched CASREC contains NDR flag set to true
+     */
+    public function getLastMachedDeputyIsNdrEnabled()
+    {
+        foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
+            if ($casRecMatch->getColumn('NDR')) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
