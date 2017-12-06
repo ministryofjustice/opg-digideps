@@ -7,19 +7,21 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManager;
-use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 class UserRegistrationService
 {
     /** @var EntityManager */
     private $em;
 
-    private $casrecService;
+    /**
+     * @var CasrecVerificationService
+     */
+    private $casrecVerificationService;
 
-    public function __construct($em, $casrecVerificationService)
+    public function __construct(EntityManager $em, CasrecVerificationService $casrecVerificationService)
     {
         $this->em = $em;
-        $this->casrecService = $casrecVerificationService;
+        $this->casrecVerificationService = $casrecVerificationService;
     }
 
     /**
@@ -37,7 +39,7 @@ class UserRegistrationService
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-        $isMultiDeputyCase = $this->casrecService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
+        $isMultiDeputyCase = $this->casrecVerificationService->isMultiDeputyCase($selfRegisterData->getCaseNumber());
         $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
 
         // ward off non-fee-paying codeps trying to self-register
@@ -64,13 +66,13 @@ class UserRegistrationService
         $client = new Client();
         $this->populateClient($client, $selfRegisterData);
 
-        $this->casrecService->validate( $selfRegisterData->getCaseNumber()
+        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
                                       , $selfRegisterData->getClientLastname()
                                       , $selfRegisterData->getLastname()
                                       , $user->getAddressPostcode()
                                       );
 
-        $user->setDeputyNo(implode(',', $this->casrecService->getLastMatchedDeputyNumbers()));
+        $user->setDeputyNo(implode(',', $this->casrecVerificationService->getLastMatchedDeputyNumbers()));
         $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
 
         $this->saveUserAndClient($user, $client);
@@ -93,7 +95,7 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->casrecService->validate( $selfRegisterData->getCaseNumber()
+        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
                                                   , $selfRegisterData->getClientLastname()
                                                   , $selfRegisterData->getLastname()
                                                   , $selfRegisterData->getPostcode()
