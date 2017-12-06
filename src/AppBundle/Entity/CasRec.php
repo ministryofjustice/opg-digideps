@@ -358,6 +358,17 @@ class CasRec
         return unserialize($this->otherColumns) ?: [];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getColumn($key)
+    {
+        $row = unserialize($this->otherColumns) ?: [];
+
+        return array_key_exists($key, $row) ? $row[$key] : null;
+    }
+
+
     public function toArray()
     {
         $dateFormat = function($date, $default) {

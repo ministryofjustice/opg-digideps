@@ -85,6 +85,7 @@ class CasrecServiceTest extends WebTestCase
                 'Typeofrep' => 'OPG102',
                 'Corref' => 'L2',
                 'custom1' => 'c1',
+                'NDR' => 1,
             ],
             [
                 'Case' => '22',
@@ -95,6 +96,7 @@ class CasrecServiceTest extends WebTestCase
                 'Typeofrep' => 'OPG103',
                 'Corref' => 'L3',
                 'custom 2' => 'c2',
+                'NDR' => '',
             ],
 
         ]);
@@ -110,6 +112,7 @@ class CasrecServiceTest extends WebTestCase
 
         $this->assertEquals('r1', $record1->getClientLastname());
         $this->assertEquals('r2', $record1->getDeputySurname());
+        $this->assertEquals('1', $record1->getColumn('NDR'));
         $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
         $this->assertEquals('opg102', $record1->getTypeOfReport());
         $this->assertEquals('l2', $record1->getCorref());
@@ -126,6 +129,7 @@ class CasrecServiceTest extends WebTestCase
         $this->assertContains('c1', $casrecArray['custom1']); // custom data is kepy
         $this->assertContains('DN1', $casrecArray['Deputy No']);
         $this->assertContains('1234567T', $casrecArray['Case']);
+        $this->assertEquals('1', $casrecArray['NDR']);
 
         $casrecArray = $record2->toArray();
         $this->assertContains(date('d/m/Y'), $casrecArray['Uploaded at']);
@@ -135,6 +139,7 @@ class CasrecServiceTest extends WebTestCase
         $this->assertEquals('n.a.', $casrecArray['Reports submitted']);
         $this->assertEquals('n.a.', $casrecArray['Last report submitted at']);
         $this->assertEquals('n.a.', $casrecArray['Reports active']);
+        $this->assertEquals('', $casrecArray['NDR']);
 
         // test CSV
         $file ='/tmp/dd_stats.unittest.csv';
