@@ -18,6 +18,7 @@
 } %}
 
 {% set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}
+{% set showBalanceCalculations = reportStatus.bankAccountsState['state'] != 'not-started' %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
@@ -121,7 +122,7 @@
             </td>
             <td></td>
             <td class="numeric">
-                {% if not readyToBalance %}
+                {% if not showBalanceCalculations %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance + report.moneyInTotal %}
@@ -148,7 +149,7 @@
                 {% endif %}
             </td>
             <td class="numeric">
-                {% if not readyToBalance %}
+                {% if not showBalanceCalculations %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance - report.moneyOutTotal %}
@@ -176,7 +177,7 @@
                     {% endif %}
                 </td>
                 <td class="numeric">
-                    {% if not readyToBalance %}
+                    {% if not showBalanceCalculations %}
                         -
                     {% else %}
                         {% set partialBalance = partialBalance - report.expensesTotal %}
@@ -206,7 +207,7 @@
                     {% endif %}
                 </td>
                 <td class="numeric">
-                    {% if not readyToBalance %}
+                    {% if not showBalanceCalculations %}
                         -
                     {% else %}
                         {% set partialBalance = partialBalance - feesAndExpensesTotal %}
@@ -234,7 +235,7 @@
                 {% endif %}
             </td>
             <td class="numeric">
-                {% if not readyToBalance %}
+                {% if not showBalanceCalculations %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance - report.giftsTotalValue %}
@@ -252,7 +253,7 @@
 
         {# Rppot balance #}
         {# to show as soon as bank accounts are started (see DDPB-1790) #}
-        {% if reportStatus.bankAccountsState['state'] != 'not-started' %}
+        {% if showBalanceCalculations %}
 
             <tfoot >
             <tr id="calculated_balance_foot">
