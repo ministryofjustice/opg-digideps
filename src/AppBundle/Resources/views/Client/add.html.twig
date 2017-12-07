@@ -16,6 +16,10 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if client_validated %}
+
+        <h3 class="heading-medium">Client's details we already have</h3>
+        <p class="text">You can edit your client's details under 'Deputyship details' after you've completed activating your account.</p>
+
         {{ form_widget(form.firstname, {'type': 'hidden'}) }}
         {{ form_widget(form.lastname, {'type': 'hidden'}) }}
         {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
@@ -29,9 +33,24 @@
             <strong class="bold">Case number: </strong>
             {{ client.caseNumber }}
         </p>
+
+        {% if form.postcode is defined %}
+            {% if client.postcode is not empty %}
+                {{ form_widget(form.postcode, {'type': 'hidden'}) }}
+                <p class="push--bottom">
+                <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
+                    {{ client.postcode }}
+                </p>
+            {% endif %}
+        {% endif %}
+
     {% else %}
         {{ form_input(form.firstname, 'firstname') }}
         {{ form_input(form.lastname, 'lastname') }}
+    {% endif %}
+
+    {% if client_validated %}
+        <h3 class="heading-medium">Further client's details required</h3>
     {% endif %}
 
     {{ form_input(form.address, 'address') }}
@@ -41,12 +60,6 @@
     {% if form.postcode is defined %}
         {% if client.postcode is empty or not client_validated %}
             {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
-        {% else %}
-            {{ form_widget(form.postcode, {'type': 'hidden'}) }}
-            <p class="push--bottom">
-            <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
-                {{ client.postcode }}
-            </p>
         {% endif %}
     {% endif %}
 
