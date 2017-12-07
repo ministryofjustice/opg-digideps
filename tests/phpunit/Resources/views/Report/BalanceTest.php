@@ -74,7 +74,8 @@ class BalanceTest extends WebTestCase
             'getExpensesTotal' => null,
             'getType' => null, // irrelevant
             'getEndDate' => new \DateTime(),
-            'getBalanceMismatchExplanation'=>'explanation-content'
+            'getBalanceMismatchExplanation'=>'explanation-content',
+            'getStartDate' => new \Datetime(),
         ]);
     }
 
@@ -124,13 +125,12 @@ class BalanceTest extends WebTestCase
             ])
         );
 
-        $html = $crawler->html();
+        $crawler->html();
 
         $this->assertCount(0, $crawler->filter('#alert-not-started'));
         $this->assertCount(0, $crawler->filter('#alert-balanced'));
         $this->assertCount(1, $crawler->filter('#alert-not-balanced'));
 
-        $this->assertCount(1, $crawler->filter('#calculated_balance_foot'));
         $this->assertCount(1, $crawler->filter('#calculated_balance_table'));
     }
 
@@ -146,14 +146,53 @@ class BalanceTest extends WebTestCase
             ])
         );
 
-        $html = $crawler->html();
+        $crawler->html();
 
         $this->assertCount(0, $crawler->filter('#alert-not-started'));
         $this->assertCount(1, $crawler->filter('#alert-balanced'));
         $this->assertCount(0, $crawler->filter('#alert-not-balanced'));
 
-        $this->assertCount(1, $crawler->filter('#calculated_balance_foot'));
         $this->assertCount(1, $crawler->filter('#calculated_balance_table'));
+    }
+
+
+    public function testCalculatedBalanceFoot()
+    {
+        // accounts not started -> no balance shown
+        $crawler = $this->renderTemplateAndGetCrawler(
+            $this->getMockedReport([
+                'isDue'=>false,
+                'isTotalsMatch'=>false
+            ]),
+            $this->getMockedStatus([
+                'getBankAccountsState' => ['state'=>'not-started'],
+                'getBalanceState' => ['state'=>'not-started']
+            ])
+        );
+        $this->assertCount(0, $crawler->filter('#calculated_balance_foot'));
+
+
+        // accounts started -> no balance shown
+        $crawler = $this->renderTemplateAndGetCrawler(
+            $this->getMockedReport([
+                'isDue'=>false,
+                'isTotalsMatch'=>false,
+                'getAccountsOpeningBalanceTotal' => 100,
+                'getCalculatedBalance' => 456.75,
+            ]),
+            $this->getMockedStatus([
+                'getBankAccountsState' => ['state'=>'started'],
+                'getMoneyInState' => ['state'=>'done'],
+                'getMoneyOutState' => ['state'=>'done'],
+                'getBalanceState' => ['state'=>'not-started'],
+
+                'getExpensesState' => ['state'=>'done'],
+                'getPaFeesExpensesState' => ['state'=>'done'],
+                'getGiftsState' => ['state'=>'done'],
+            ])
+        );
+        $this->assertContains('456.75', $this->html($crawler, '#calculated_balance_foot_value'));
+
     }
 
     public static function explanationFormProvider()
@@ -217,6 +256,11 @@ class BalanceTest extends WebTestCase
         m::close();
         $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
+    }
+
+    private function html(Crawler $crawler, $expr)
+    {
+        return $crawler->filter($expr)->eq(0)->html();
     }
 
 }
