@@ -33,11 +33,11 @@
             <span class="icon icon-information"></span>
             <div class="alert-message">
                 <p>
-                    {% if not app.user.isDeputyPa() %}
-                        {{ 'alerts.notStarted' | trans(transOptions) }}</p>
-                    {% else %}
+                     {% if report.hasSection('paDeputyExpenses') %}
                         {{ 'alerts.notStartedPA' | trans(transOptions) }}</p>
-                    {% endif %}
+                     {% else %}
+                        {{ 'alerts.notStarted' | trans(transOptions) }}</p>
+                     {% endif %}
             </div>
         </div>
     {% else %}
