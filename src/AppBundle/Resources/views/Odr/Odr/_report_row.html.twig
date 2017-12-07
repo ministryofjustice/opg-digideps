@@ -29,7 +29,7 @@
                     {{ reportActive.dueDate | date("j F Y") }}
                 </p>
                 <p class="text flush--bottom">
-                   {{ 'report.editReportingPeriodPara' | trans(transOptions) }} <a href="{{ path('lay_home', {'reportId': reportActive.id, 'type': reportActive.type}) }}">{{ 'report.editReportingPeriodLink' | trans }}</a>
+                   {{ 'report.editReportingPeriodPara' | trans(transOptions) }} <a href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ 'report.editReportingPeriodLink' | trans }}</a>
                 </p>
             {% endif %}
         </div>
