@@ -3,7 +3,11 @@ pageTitle: Accounts balance check
 
 alerts:
   notStarted: |
-    Once you've added a bank account and started the money in and out, deputy details and
+    Once you've added a bank account and started the money in and out, deputy expenses and
+    gifts sections, you can use this page to check that %client%'s accounts
+    balance
+  notStartedPA: |
+    Once you've added a bank account and started the money in and out, deputy fees and expenses and
     gifts sections, you can use this page to check that %client%'s accounts
     balance
   balanced: Accounts balanced
