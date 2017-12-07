@@ -31,7 +31,12 @@
         <div class="alert-info panel panel-border-narrow" id="alert-not-started">
             <span class="icon icon-information"></span>
             <div class="alert-message">
-                <p>{{ 'alerts.notStarted' | trans(transOptions) }}</p>
+                <p>
+                    {% if not app.user.isDeputyPa() %}
+                        {{ 'alerts.notStarted' | trans(transOptions) }}</p>
+                    {% else %}
+                        {{ 'alerts.notStartedPA' | trans(transOptions) }}</p>
+                    {% endif %}
             </div>
         </div>
     {% else %}
