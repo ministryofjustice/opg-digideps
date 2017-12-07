@@ -222,7 +222,7 @@
         {% endif %}
 
         {# GIFTS #}
-        {% set state = reportStatus.giftsState['state'] != 'not-started' %}
+        {% set started = reportStatus.giftsState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.gifts' | trans }}</td>
             <td></td>
@@ -250,7 +250,9 @@
 
         </tbody>
 
-        {% if readyToBalance %}
+        {# Rppot balance #}
+        {# to show as soon as bank accounts are started (see DDPB-1790) #}
+        {% if reportStatus.bankAccountsState['state'] != 'not-started' %}
 
             <tfoot >
             <tr id="calculated_balance_foot">
