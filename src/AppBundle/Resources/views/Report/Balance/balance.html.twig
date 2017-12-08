@@ -127,7 +127,7 @@
                     {% endif %}
                 </td>
                 <td class="numeric">
-                    {% if not showBalanceCalculations %}
+                    {% if not started %}
                         -
                     {% else %}
                         {% set partialBalance = partialBalance - report.expensesTotal %}
@@ -157,7 +157,7 @@
                     {% endif %}
                 </td>
                 <td class="numeric">
-                    {% if not showBalanceCalculations %}
+                    {% if not started %}
                         -
                     {% else %}
                         {% set partialBalance = partialBalance - feesAndExpensesTotal %}
@@ -185,7 +185,7 @@
                 {% endif %}
             </td>
             <td class="numeric">
-                {% if not showBalanceCalculations %}
+                {% if not started %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance - report.giftsTotalValue %}
@@ -213,7 +213,7 @@
             </td>
             <td></td>
             <td class="numeric">
-                {% if not showBalanceCalculations %}
+                {% if not started %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance + report.moneyInTotal %}
@@ -240,7 +240,7 @@
                 {% endif %}
             </td>
             <td class="numeric">
-                {% if not showBalanceCalculations %}
+                {% if not started %}
                     -
                 {% else %}
                     {% set partialBalance = partialBalance - report.moneyOutTotal %}
