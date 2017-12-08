@@ -246,7 +246,6 @@ class BalanceTest extends WebTestCase
             'report' => $report,
             'reportStatus' => $status,
             'form' => $form->createView(),
-            'backLink' => '[backLinkUrl]',
         ]);
 
         return new Crawler($html);
