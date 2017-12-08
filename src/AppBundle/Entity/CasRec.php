@@ -359,13 +359,15 @@ class CasRec
     }
 
     /**
-     * @return mixed
+     * @param $key
+     *
+     * @return mixed|null
      */
     public function getColumn($key)
     {
         $row = unserialize($this->otherColumns) ?: [];
 
-        return array_key_exists($key, $row) ? $row[$key] : null;
+        return isset($row[$key]) ? $row[$key] : null;
     }
 
 

@@ -72,7 +72,6 @@ class CasrecVerificationService
     }
 
     /**
-     * //TODO 
      * @return true if at least one matched CASREC contains NDR flag set to true
      */
     public function isLastMachedDeputNdrEnabled()
