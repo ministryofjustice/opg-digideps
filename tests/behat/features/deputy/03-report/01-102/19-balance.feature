@@ -14,7 +14,7 @@ Feature: Report balance
         And I should see "£191.11" in the "unaccounted-for" region
         # fix balance (adding closing bank account)
         And I save the application status into "balance-before-adding-explanation"
-        And I click on "step-back, edit-bank_accounts"
+        And I click on "breadcrumbs-report-overview, edit-bank_accounts"
         And I click on "edit" in the "account-11cf" region
         And I submit the step
         And I submit the step
