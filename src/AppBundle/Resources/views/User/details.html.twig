@@ -14,9 +14,7 @@
 
 {% block pageContent %}
 
-    <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
-
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig'  with {
     'translationDomain': translationDomain,

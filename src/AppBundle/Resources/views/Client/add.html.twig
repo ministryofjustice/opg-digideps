@@ -4,7 +4,13 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'addClient.htmlTitle' | trans }} {% endblock %}
-{% block pageTitle %}{{ 'addClient.pageTitle' | trans }}{% endblock %}
+{% block pageTitle %}
+    {% if client_validated %}
+        {{ 'addClient.pageTitleWithClient' | trans({'%client%': client.firstName }) }}
+    {% else %}
+        {{ 'addClient.pageTitle' | trans }}
+    {% endif %}
+{% endblock %}
 
 {% block progressBar %}
      {{ progress_bar_registration(app.user, 'client_details') }}
@@ -17,8 +23,8 @@
 
     {% if client_validated %}
 
-        <h3 class="heading-medium">Client's details we already have</h3>
-        <p class="text">You can edit your client's details under 'Deputyship details' after you've completed activating your account.</p>
+        <h3 class="heading-medium">Details we already have</h3>
+        <p class="text">Once you've finished activating your account, you can edit these details by going to the "Deputyship details" section.</p>
 
         {{ form_widget(form.firstname, {'type': 'hidden'}) }}
         {{ form_widget(form.lastname, {'type': 'hidden'}) }}
@@ -50,7 +56,7 @@
     {% endif %}
 
     {% if client_validated %}
-        <h3 class="heading-medium">Further client's details required</h3>
+        <h3 class="heading-medium">Further details needed</h3>
     {% endif %}
 
     {{ form_input(form.address, 'address') }}
