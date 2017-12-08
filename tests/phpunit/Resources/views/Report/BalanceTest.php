@@ -30,7 +30,7 @@ class BalanceTest extends WebTestCase
     protected $report;
     protected $reportClient;
     protected $deputy;
-    protected $twig;
+    protected $templating;
 
     public function setUp()
     {
@@ -40,7 +40,19 @@ class BalanceTest extends WebTestCase
         $request->create('/');
         $this->container = $this->frameworkBundleClient->getContainer();
         $this->container->set('request', $request, 'request');
-        $this->twig = $this->frameworkBundleClient->getContainer()->get('templating');
+        // set global variable
+        $this->container->get('twig')->addGlobal('app', [
+            'session' => m::mock(Session::class, [
+                'get' => false,
+                'getFlashBag' =>  m::mock(FlashBagInterface::class)->shouldIgnoreMissing()
+            ]),
+            'user' => m::mock(User::class, [
+                'getGaTrackingId'=>null,
+                'isDeputyPa'=>false,
+                'isOdrEnabled'=>false,
+            ])
+        ]);
+        $this->templating = $this->container->get('templating');
         $this->container->get('request_stack')->push(Request::createFromGlobals());
     }
 
@@ -230,20 +242,11 @@ class BalanceTest extends WebTestCase
     {
         $form = $this->container->get('form.factory')->create(ReasonForBalanceType::class, $report);
 
-        $html = $this->twig->render('AppBundle:Report/Balance:balance.html.twig', [
+        $html = $this->templating->render('AppBundle:Report/Balance:balance.html.twig', [
             'report' => $report,
             'reportStatus' => $status,
             'form' => $form->createView(),
             'backLink' => '[backLinkUrl]',
-            'app'=> [
-                'session' => m::mock(Session::class)
-                    ->shouldReceive('get')->andReturn(false)
-                    ->shouldReceive('getFlashBag')->andReturn(
-                        m::mock(FlashBagInterface::class)->shouldIgnoreMissing()
-                    )
-                    ->getMock(),
-                'user' => m::mock(User::class)->shouldIgnoreMissing()
-            ]
         ]);
 
         return new Crawler($html);
