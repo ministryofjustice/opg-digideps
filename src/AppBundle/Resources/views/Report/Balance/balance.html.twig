@@ -112,59 +112,6 @@
             </td>
         </tr>
 
-        {# MONEY IN #}
-        {% set started = reportStatus.moneyInState['state'] != 'not-started' %}
-        <tr>
-            <td>{{ 'balanceTable.moneyIn' | trans }}</td>
-            <td class="numeric">
-                {% if not started %}
-                    -
-                {% else %}
-                    £{{ report.moneyInTotal | money_format }}
-                {% endif %}
-            </td>
-            <td></td>
-            <td class="numeric">
-                {% if not showBalanceCalculations %}
-                    -
-                {% else %}
-                    {% set partialBalance = partialBalance + report.moneyInTotal %}
-                    £{{ partialBalance  | money_format }}
-                {% endif %}
-            </td>
-            <td class="numeric">
-                <a href="{{ path('money_in', {'reportId': report.id}) }}" class="bold">
-                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
-                </a>
-            </td>
-        </tr>
-
-        {# MONEY OUT #}
-        {% set started = reportStatus.moneyOutState['state'] != 'not-started' %}
-        <tr>
-            <td>{{ 'balanceTable.moneyOut' | trans }}</td>
-            <td></td>
-            <td class="numeric">
-                {% if not started %}
-                    -
-                {% else %}
-                    £{{ report.moneyOutTotal | money_format }}
-                {% endif %}
-            </td>
-            <td class="numeric">
-                {% if not showBalanceCalculations %}
-                    -
-                {% else %}
-                    {% set partialBalance = partialBalance - report.moneyOutTotal %}
-                    £{{ partialBalance  | money_format }}
-                {% endif %}
-            </td>
-            <td class="numeric">
-                <a href="{{ path('money_out', {'reportId': report.id}) }}" class="bold">
-                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
-                </a>
-            </td>
-        </tr>
 
         {% if report.hasSection('deputyExpenses') %}
             {# DEPUTY EXPENSES (LAY) #}
@@ -252,9 +199,64 @@
             </td>
         </tr>
 
+
+        {# MONEY IN #}
+        {% set started = reportStatus.moneyInState['state'] != 'not-started' %}
+        <tr>
+            <td>{{ 'balanceTable.moneyIn' | trans }}</td>
+            <td class="numeric">
+                {% if not started %}
+                    -
+                {% else %}
+                    £{{ report.moneyInTotal | money_format }}
+                {% endif %}
+            </td>
+            <td></td>
+            <td class="numeric">
+                {% if not showBalanceCalculations %}
+                    -
+                {% else %}
+                    {% set partialBalance = partialBalance + report.moneyInTotal %}
+                    £{{ partialBalance  | money_format }}
+                {% endif %}
+            </td>
+            <td class="numeric">
+                <a href="{{ path('money_in', {'reportId': report.id}) }}" class="bold">
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                </a>
+            </td>
+        </tr>
+
+        {# MONEY OUT #}
+        {% set started = reportStatus.moneyOutState['state'] != 'not-started' %}
+        <tr>
+            <td>{{ 'balanceTable.moneyOut' | trans }}</td>
+            <td></td>
+            <td class="numeric">
+                {% if not started %}
+                    -
+                {% else %}
+                    £{{ report.moneyOutTotal | money_format }}
+                {% endif %}
+            </td>
+            <td class="numeric">
+                {% if not showBalanceCalculations %}
+                    -
+                {% else %}
+                    {% set partialBalance = partialBalance - report.moneyOutTotal %}
+                    £{{ partialBalance  | money_format }}
+                {% endif %}
+            </td>
+            <td class="numeric">
+                <a href="{{ path('money_out', {'reportId': report.id}) }}" class="bold">
+                    {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                </a>
+            </td>
+        </tr>
+
         </tbody>
 
-        {# Rppot balance #}
+        {# Report balance #}
         {# to show as soon as bank accounts are started (see DDPB-1790) #}
         {% if showBalanceCalculations %}
 
