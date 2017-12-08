@@ -51,6 +51,8 @@ page:
 form:
   editYourDetails:
     subSectionTitle: "Edit your details"
+    detailsEntered: "Details you've already entered"
+    furtherDetailsNeeded: "Further details needed"
     controls:
       cancel:
         label: Cancel

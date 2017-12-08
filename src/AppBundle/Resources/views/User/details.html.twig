@@ -17,9 +17,9 @@
     {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig'  with {
-    'translationDomain': translationDomain,
-    'user': user,
-    'client_validated': client_validated
+        'translationDomain': translationDomain,
+        'user': user,
+        'client_validated': client_validated
     } %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
