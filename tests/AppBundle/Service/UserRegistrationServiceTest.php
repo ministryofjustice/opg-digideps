@@ -5,7 +5,9 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Service\CasrecVerificationService;
 use AppBundle\Service\UserRegistrationService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 
@@ -22,22 +24,17 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldIgnoreMissing(true)
             ->getMock();
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
 //            ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
+        $mockCasrecVerificationService = m::mock(CasrecVerificationService::class);
+        $mockCasrecVerificationService->shouldIgnoreMissing();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
     }
 
-    public function tearDown()
-    {
-        m::close();
-    }
 
     /**
      * @test
@@ -112,7 +109,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('commit')->once()
             ->getMock();
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('flush')->twice()
@@ -120,9 +117,8 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)->once()
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
@@ -153,15 +149,14 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('persist')->with($mockUser)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
@@ -192,16 +187,15 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('persist')->with($mockUser)->once()
             ->shouldReceive('persist')->with($mockClient)->once()->andThrow($exception)
             ->getMock();
 
-        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService')
-            ->shouldIgnoreMissing(true)
-            ->getMock();
+        $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
+        $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
@@ -245,7 +239,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('findOneBy')->withAnyArgs()->andReturn(false)
             ->getMock();
 
-        $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
+        $em = m::mock(EntityManager::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
             ->shouldReceive('flush')->twice()
@@ -264,5 +258,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->selfRegisterUser($data);
+    }
+
+
+    public function tearDown()
+    {
+        m::close();
     }
 }

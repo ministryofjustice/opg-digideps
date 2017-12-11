@@ -4,6 +4,7 @@ namespace Tests\AppBundle\Controller;
 
 use AppBundle\Controller\SelfRegisterController;
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\User;
 use AppBundle\Model\SelfRegisterData;
 use Mockery as m;
 
@@ -121,7 +122,8 @@ class SelfRegisterControllerTest extends AbstractTestController
             'Dep Surname' => 'Tolley',
             'Dep Postcode' => 'SW1',
             'Typeofrep'=>'OPG102',
-            'Corref'=>'L2'
+            'Corref'=>'L2',
+            'NDR' => 1
         ]);
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
@@ -145,11 +147,12 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /** @var $user User */
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
         $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
+        $this->assertEquals(true, $user->getOdrEnabled());
 
         /** @var \AppBundle\Entity\Client $theClient */
         $theClient = $user->getClients()->first();
