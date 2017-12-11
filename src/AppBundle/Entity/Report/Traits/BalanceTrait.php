@@ -77,6 +77,16 @@ trait BalanceTrait
     }
 
     /**
+     * Calculate the balance
+     * Account opening balance
+     * + money in
+     * - money out
+     * - expense (that includes Fees for PAs)
+     * - gifts
+     *
+     * Return null if any of the opening balance is null
+     * (that shouldn't be allowed anymore after a recent change. Refactor when/if convenient)
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"balance"})
      * @JMS\Type("double")
@@ -98,6 +108,12 @@ trait BalanceTrait
     }
 
     /**
+     * Return the difference between getCalculatedBalance and getAccountsClosingBalanceTotal
+     * if 0, then the report financial section are balanced
+     * accounts are balanced and ready for busmission
+     *
+     * Return null if sections are not ready or closing accounts are not added yet
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"balance"})
      * @JMS\Type("double")
