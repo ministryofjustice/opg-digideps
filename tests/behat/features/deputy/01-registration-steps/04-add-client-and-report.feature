@@ -36,6 +36,7 @@ Feature: deputy / user / add client and report
       | client_address         |
       | client_address2        |
       | client_county          |
+      | client_postcode        |
       | client_phone           |
     And I save the page as "deputy-step3-errors"
       # right values
