@@ -74,7 +74,7 @@ class CasrecVerificationService
     /**
      * @return true if at least one matched CASREC contains NDR flag set to true
      */
-    public function isLastMachedDeputNdrEnabled()
+    public function isLastMachedDeputyNdrEnabled()
     {
         foreach ($this->lastMatchedCasrecUsers as $casRecMatch) {
             if ($casRecMatch->getColumn('NDR')) {
