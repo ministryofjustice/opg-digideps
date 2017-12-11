@@ -4,46 +4,36 @@
     <h3 class="heading-medium">{{ 'form.editYourDetails.detailsEntered' | trans({}, translationDomain) }}</h3>
 {% endif %}
 
-{% if form.firstname is defined %}
-    {% if client_validated %}
-        {{ form_widget(form.firstname, {'type': 'hidden'}) }}
-        <p class="flush--bottom">
-            <strong class="bold">{{ 'form.editYourDetails.controls.firstname.label' | trans({}, translationDomain) }}: </strong>
-            {{ user.firstName }}
-        </p>
-    {% endif %}
+{% if form.firstname is defined and client_validated %}
+    {{ form_widget(form.firstname, {'type': 'hidden'}) }}
+    <p class="flush--bottom">
+        <strong class="bold">{{ 'form.editYourDetails.controls.firstname.label' | trans({}, translationDomain) }}: </strong>
+        {{ user.firstName }}
+    </p>
 {%  endif %}
 
-{% if form.lastname is defined %}
-    {% if client_validated %}
-        {{ form_widget(form.lastname, {'type': 'hidden'}) }}
-        <p class="flush--bottom">
-            <strong class="bold">{{ 'form.editYourDetails.controls.lastname.label' | trans({}, translationDomain) }}: </strong>
-            {{ user.lastname }}
-        </p>
-    {% endif %}
+{% if form.lastname is defined and client_validated %}
+    {{ form_widget(form.lastname, {'type': 'hidden'}) }}
+    <p class="flush--bottom">
+        <strong class="bold">{{ 'form.editYourDetails.controls.lastname.label' | trans({}, translationDomain) }}: </strong>
+        {{ user.lastname }}
+    </p>
 {% endif %}
 
-{% if form.address1 is defined %}
-    {% if form.addressPostcode is defined %}
-        {% if client_validated %}
-            {{ form_widget(form.addressPostcode, {'type': 'hidden'}) }}
-            <p class="flush--bottom">
-                <strong class="bold">{{ 'form.editYourDetails.controls.addressPostcode.label' | trans({}, translationDomain) }}: </strong>
-                {{ user.addressPostcode }}
-            </p>
-        {% endif %}
-    {% endif %}
+{% if form.address1 is defined and form.addressPostcode is defined and client_validated %}
+    {{ form_widget(form.addressPostcode, {'type': 'hidden'}) }}
+    <p class="flush--bottom">
+        <strong class="bold">{{ 'form.editYourDetails.controls.addressPostcode.label' | trans({}, translationDomain) }}: </strong>
+        {{ user.addressPostcode }}
+    </p>
 {% endif %}
 
-{% if form.email is defined %}
-    {% if client_validated %}
-        {{ form_widget(form.email, {'type': 'hidden'}) }}
-        <p class="push--bottom">
-            <strong class="bold">{{ 'form.editYourDetails.controls.email.label' | trans({}, translationDomain) }}: </strong>
-            {{ user.email }}
-        </p>
-    {% endif %}
+{% if form.email is defined and client_validated %}
+    {{ form_widget(form.email, {'type': 'hidden'}) }}
+    <p class="push--bottom">
+        <strong class="bold">{{ 'form.editYourDetails.controls.email.label' | trans({}, translationDomain) }}: </strong>
+        {{ user.email }}
+    </p>
 {% endif %}
 
 {% if client_validated %}

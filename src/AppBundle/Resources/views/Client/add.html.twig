@@ -39,14 +39,12 @@
             {{ client.caseNumber }}
         </p>
 
-        {% if form.postcode is defined %}
-            {% if client.postcode is not empty %}
-                {{ form_widget(form.postcode, {'type': 'hidden'}) }}
-                <p class="push--bottom">
-                <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
-                    {{ client.postcode }}
-                </p>
-            {% endif %}
+        {% if form.postcode is defined and client.postcode is not empty %}
+            {{ form_widget(form.postcode, {'type': 'hidden'}) }}
+            <p class="push--bottom">
+            <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
+                {{ client.postcode }}
+            </p>
         {% endif %}
 
     {% else %}
