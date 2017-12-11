@@ -1,6 +1,7 @@
 addClient:
     htmlTitle: "Deputy report - add your client's details | GOV.UK"
     pageTitle: Add your client's details
+    pageTitleWithClient: Add %client%'s details
     formHeading: Client's details
 courtDate:
     legend: Court order date
