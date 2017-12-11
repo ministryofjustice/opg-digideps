@@ -39,14 +39,6 @@
             {{ client.caseNumber }}
         </p>
 
-        {% if form.postcode is defined and client.postcode is not empty %}
-            {{ form_widget(form.postcode, {'type': 'hidden'}) }}
-            <p class="push--bottom">
-            <strong class="bold">{{ 'postcode.label' | trans({}, translationDomain) }}: </strong>
-                {{ client.postcode }}
-            </p>
-        {% endif %}
-
     {% else %}
         {{ form_input(form.firstname, 'firstname') }}
         {{ form_input(form.lastname, 'lastname') }}
@@ -59,13 +51,7 @@
     {{ form_input(form.address, 'address') }}
     {{ form_input(form.address2, 'address2') }}
     {{ form_input(form.county, 'county') }}
-
-    {% if form.postcode is defined %}
-        {% if client.postcode is empty or not client_validated %}
-            {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
-        {% endif %}
-    {% endif %}
-
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
     {{ form_select(form.country, 'country') }}
     {{ form_input(form.phone, 'phone') }}
 
