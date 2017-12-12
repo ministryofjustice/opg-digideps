@@ -14,7 +14,7 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // manual data
-        exec('echo "truncate dd_user, dd_team, casrec, client cascade;" > '.$sqlFile);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, dd_team, casrec, client cascade;" > '.$sqlFile);
         exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
