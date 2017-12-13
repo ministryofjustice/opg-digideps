@@ -84,6 +84,10 @@ class AddSingleUserCommand extends ContainerAwareCommand
                     false
             );
 
+        if (isset($data['deputyPostcode'])) {
+            $user->setAddressPostcode($data['deputyPostcode']);
+        }
+        
         // role
         if (isset($data['roleId']) && !empty($data['roleId'])) { //deprecated
             $user->setRoleName(User::roleIdToName($data['roleId']));
