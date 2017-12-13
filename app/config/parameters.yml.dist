@@ -16,19 +16,6 @@ parameters:
     session_expire_seconds: 3900
     session_popup_show_after: 3600
     session_cookie_secure: false
-    fixtures: 
-      admin@publicguardian.gsi.gov.uk:
-        firstname: "Admin"
-        lastname: "User"
-        password: Abcd1234
-        roleId: 1
-        activated: true
-      laydeputy@publicguardian.gsi.gov.uk:
-        firstname: "Lay Deputy"
-        lastname: "User"
-        password: Abcd1234
-        roleId: 2
-        activated: true
 
     use_redis: true
     session_prefix: application_session
