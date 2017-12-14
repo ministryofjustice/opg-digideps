@@ -60,6 +60,7 @@ Feature: Report submit
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
+        And I save the application status into "report-submit-submittedreport"
         # assert report display page is not broken
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
@@ -69,6 +70,27 @@ Feature: Report submit
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
+
+    @deputy
+    Scenario: deputy gives feedback after submitting report
+    Given I load the application status from "report-submit-submittedreport"
+    And emails are sent from "deputy" area
+    And I reset the email log
+    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I go to "report/1/submitted"
+    When I press "feedback_report_save"
+    Then the following fields should have an error:
+        | feedback_report_satisfactionLevel_0 |
+        | feedback_report_satisfactionLevel_1 |
+        | feedback_report_satisfactionLevel_2 |
+        | feedback_report_satisfactionLevel_3 |
+        | feedback_report_satisfactionLevel_4 |
+    When I fill in the following:
+        | feedback_report_satisfactionLevel_0 | Very satisfied |
+    And I press "feedback_report_save"
+    Then I should be on "/report/1/submit_feedback"
+    And the last email should contain "how did you feel about the service"
+    And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
