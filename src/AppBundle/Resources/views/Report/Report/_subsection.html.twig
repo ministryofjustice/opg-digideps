@@ -14,6 +14,9 @@
 {% endif %}
 
 <div id="{{ subSection }}-sub-section" class="section-list-item">
+    {% if allowEdit == true %}
+        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+    {% endif %}
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
     <span class="status flush--bottom {{ state.state }} behat-region-{{ subSection }}-state-{{ state.state }}">
         {% if state.state == 'done' or customiseAllLabels | default(false) %}
@@ -23,33 +26,28 @@
         {% endif %}
     </span>
 
-    {% if allowEdit == true %}
-        <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
-            {% if subSection == 'balance' %}
-                {{ 'view' | trans({}, 'common') | capitalize }}
-            {% else %}
-                {% if state.state == 'not-started' %}
-                    {{ 'start' | trans({}, 'common') | capitalize }}
-                {% else %}
-                    {{ 'edit' | trans({}, 'common') | capitalize }}
-                {% endif %}
-            {% endif %}
-        </a>
+    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %} >
+    {% if subSection == 'balance' %}
+        {{ 'view' | trans({}, 'common') | capitalize }}
+    {% else %}
+        {% if state.state == 'not-started' %}
+            {{ 'start' | trans({}, 'common') | capitalize }}
+        {% else %}
+            {{ 'edit' | trans({}, 'common') | capitalize }}
+        {% endif %}
     {% endif %}
+    </span>
 
-    {%  if description | default(false) %}
-        <p class="description text {%  if descriptionLink | default(false) %}flush--bottom{% endif %}
-        ">
+    {% if description | default(false) %}
+        <p class="description text">
             {% if descriptionRaw | default(false)  %}
                 {{ descriptionRaw | raw }}
             {% else %}
                 {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
             {% endif %}
         </p>
-    {%  endif %}
-    {%  if descriptionLink | default(false) %}
-        <p class="description">
-            <a href="{{ linkToSubSection }}#cantFindTheProblem">{{ (subSection ~ '.subSectionDescription.' ~ descriptionLinkAction ~ 'Explanation') | trans(transOptions) }}</a>
-        </p>
+    {% endif %}
+    {% if allowEdit == true %}
+        </a>
     {% endif %}
 </div>
