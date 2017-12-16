@@ -4,7 +4,7 @@ Feature: deputy / user / add details
   Scenario: add user details (deputy)
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "/user/details"
-    And I save the page as "deputy-step2"
+    #And I save the page as "deputy-step2"
       # wrong form
     Then the following hidden fields should have the corresponding values:
       | user_details_firstname       | John      |
@@ -21,7 +21,7 @@ Feature: deputy / user / add details
       | user_details_phoneMain       |
     And I press "user_details_save"
     Then the form should be invalid
-    And I save the page as "deputy-step2-empty-error"
+    #And I save the page as "deputy-step2-empty-error"
       # test length validators
     When I fill in the following:
       | user_details_phoneMain       | 1234567890-1234567890 more than 20 chars |
@@ -32,7 +32,7 @@ Feature: deputy / user / add details
       | user_details_phoneMain       |
     And I press "user_details_save"
     Then the form should be invalid
-    And I save the page as "deputy-step2-error"
+    #And I save the page as "deputy-step2-error"
       # right values
     When I set the user details to:
       | address | 102 Petty France | MOJ           | London | PREFILLED | GB |
@@ -55,7 +55,7 @@ Feature: deputy / user / add details
   Scenario: add user details (deputy odr)
     Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "/user/details"
-    And I save the page as "odr-deputy-step2"
+    #And I save the page as "odr-deputy-step2"
     When I set the user details to:
       | name    | John ODR         | Doe ODR       |        |          |    |
       | address | 102 Petty France | MOJ           | London | p0stc0d3 | GB |

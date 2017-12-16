@@ -11,7 +11,7 @@ Feature: Report submit
         Then the URL should match "/report/\d+/review"
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
-        And I save the page as "report-submit-declaration"
+        #And I save the page as "report-submit-declaration"
 
     @deputy
     Scenario: report submission
@@ -59,7 +59,7 @@ Feature: Report submit
         And I press "report_declaration_save"
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
-        And I save the page as "report-submit-submitted"
+        #And I save the page as "report-submit-submitted"
         # assert report display page is not broken
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
@@ -118,7 +118,7 @@ Feature: Report submit
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "report-start"
-        And I save the page as "report-property-affairs-homepage"
+        #And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
         And I should see a "#edit-bank_accounts" element

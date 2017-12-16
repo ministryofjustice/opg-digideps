@@ -11,7 +11,7 @@ Feature: Report submit (client 1000014)
         Then the URL should match "/report/\d+/review"
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
-        And I save the page as "report-submit-declaration"
+        #And I save the page as "report-submit-declaration"
 
     Scenario: 102 report submission
         Given emails are sent from "deputy" area
@@ -26,7 +26,7 @@ Feature: Report submit (client 1000014)
         And I press "report_declaration_save"
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
-        And I save the page as "report-submit-submitted"
+        #And I save the page as "report-submit-submitted"
         And I should not see the "report-submit-submitted" link
         # assert report display page is not broken
         When I click on "return-to-pa-dashboard"
