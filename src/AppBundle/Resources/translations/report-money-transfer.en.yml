@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
-  pageSectionTitle: Money transfers
+  pageTitle: Money transfers
   pageSectionDescription1: |
     Use this section to tell us about money you've transferred between %client%'s accounts.
   pageSectionDescription2: |
@@ -10,7 +10,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
-  pageSectionTitle: Money transfers
+  pageTitle: Money transfers
   form:
     noTransfersToAdd:
       label: Have you made any money transfers between %client%'s accounts in this reporting period?
@@ -19,7 +19,7 @@ existPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add another transfer | GOV.UK"
-  pageSectionTitle: Money transfers
+  pageTitle: Money transfers
   form:
     addAnother:
       label: The transfer has been saved. Would you like to add another transfer now?
@@ -30,18 +30,18 @@ addAnotherPage:
 stepPage:
   htmlTitle: "Deputy report - Money transfer | GOV.UK"
   supportTitle: Money transfers
-  pageSectionTitle: Add a money transfer
+  pageTitle: Add a money transfer
 
 summaryPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
-  pageSectionTitle: Money transfers
+  pageTitle: Money transfers
   weAskAbout: In this section, we ask you about money you've transferred between %client%'s accounts.
   addButton: Add a transfer
   edit: Edit
 
 errorPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
-  pageSectionTitle: Money transfers
+  pageTitle: Money transfers
   errors:
     atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
   backToOverview: Back to overview page

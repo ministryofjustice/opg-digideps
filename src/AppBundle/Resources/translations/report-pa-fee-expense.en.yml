@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Deputy fees and expenses
+  pageTitle: Deputy fees and expenses
   #TODO format me
   pageSectionDescription1: |
     Public authority deputies can be paid, or claim expenses, for the following
@@ -20,7 +20,7 @@ startPage:
 
 feeExistPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Deputy fees and expenses
+  pageTitle: Deputy fees and expenses
   form:
     hasFees:
       label: Have you charged the client any fees for your services during the reporting period?
@@ -31,13 +31,13 @@ feeExistPage:
 
 editPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Deputy fees and expenses
+  pageTitle: Deputy fees and expenses
   pageSectionDescription: Please tell us about any fees or expenses you've claimed from the client's funds in line with the practice direction.
 
 
 otherExistPage:
   htmlTitle: "Deputy report - Deputy fees and expenses  | GOV.UK"
-  pageSectionTitle: Deputy fees and expenses
+  pageTitle: Deputy fees and expenses
   form:
     paidForAnything:
       label: Have you claimed any other expenses or fees outside of the practice direction?
@@ -48,11 +48,11 @@ otherExistPage:
 
 otherAddPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Add an expense
+  pageTitle: Add an expense
 
 otherAddAnotherPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Add an expense
+  pageTitle: Add an expense
   form:
     addAnother:
       label: The expense has been saved. Would you like to add another expense now?
@@ -62,11 +62,11 @@ otherAddAnotherPage:
 
 otherEditPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageSectionTitle: Edit expense
+  pageTitle: Edit expense
 
 summaryPage:
   htmlTitle: "Deputy report -  Deputy fees and expenses | GOV.UK"
-  pageSectionTitle:  Deputy fees and expenses
+  pageTitle:  Deputy fees and expenses
   pageSectionDescription: |
     In this section, we asked you to tell us about any fees or expenses you have charged in line with the practice direction.
   addButton: Add a deputy expense
