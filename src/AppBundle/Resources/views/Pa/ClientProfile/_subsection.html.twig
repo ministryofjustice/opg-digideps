@@ -2,12 +2,6 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% if disableedit is defined and disableedit == true %}
-    {% set allowEdit = false %}
-{% else %}
-    {% set allowEdit = true %}
-{% endif %}
-
 {% if linkToSubSection is not defined %}
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}

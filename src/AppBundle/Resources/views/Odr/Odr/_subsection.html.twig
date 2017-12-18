@@ -1,43 +1,31 @@
 {% set translationDomain = "odr-overview" %}
 {% trans_default_domain translationDomain %}
 
-{% if disableedit is defined and disableedit == true %}
-    {% set allowEdit = false %}
-{% else %}
-    {% set allowEdit = true %}
-{% endif %}
-
 <div id="{{ subSection }}-sub-section" class="section-list-item">
-    {% if allowEdit == true %}
-    <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
+
+    <a href="{{ linkToSubSection }}" class="edit-heading-link">
+        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
+    </a>
+
+    <span class="status flush--bottom {{ state.state }}">
+        {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+            {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+        {% else %}
+            {{ ('labels.' ~ state.state) | trans }}
         {% endif %}
+    </span>
 
-        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
-        <span class="status flush--bottom {{ state.state }}">
-            {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
-                {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
-            {% else %}
-                {{ ('labels.' ~ state.state) | trans }}
-            {% endif %}
-        </span>
-
-    <span  class="{{ editLinkClass | default('edit-link') }}
-            {% if allowEdit == false %}disabled{% endif %}"
-           {% if allowEdit == true %}href="{{ linkToSubSection }}"{% endif %}
-    >
+    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
         {% if state.state == 'not-started' %}
             {{ (subSection ~ '.start') | trans({}, translationDomain) }}
         {% else %}
             {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
         {% endif %}
-    </span>
-
-        {%  if description is defined and description %}
-            <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
-        {%  endif %}
-
-
-        {% if allowEdit == true %}
     </a>
-    {% endif %}
+
+    {%  if description is defined and description %}
+        <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+    {%  endif %}
+
+
 </div>
