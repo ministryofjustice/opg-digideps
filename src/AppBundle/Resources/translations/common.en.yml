@@ -18,6 +18,8 @@ status:
   notStarted: Start now
   notFinished: Continue
   readyToSubmit: Continue
+next: Next
+previous: Previous
 
 # Report headings
 annualDeputyReport: Annual deputy report
