@@ -5,8 +5,20 @@ imports:
 #    validation:
 #        cache: apc
 
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
+services:
+  doctrine_redis_cache:
+    class: Doctrine\Common\Cache\PredisCache
+    arguments: [ "@snc_redis.default" ]
+
+doctrine:
+    orm:
+      # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
+      metadata_cache_driver:
+            type:                 service
+            id:                   doctrine_redis_cache
+
+# check JMS\SerializerBundle\DependencyInjection for options
+#jms_serializer:
+#    metadata:
+#        cache2: redis2
+#        debug: true
