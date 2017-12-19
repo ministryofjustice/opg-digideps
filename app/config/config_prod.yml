@@ -12,18 +12,17 @@ services:
 
   jms_redis_cache_doctrine_adapter:
     class: Metadata\Cache\DoctrineCacheAdapter
-    arguments: [ "dd_", "@doctrine_redis_cache" ]
-
+    arguments: [ "dd_jms_", "@doctrine_redis_cache" ]
 
 doctrine:
-    orm:
-      # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
-      metadata_cache_driver:
-            type:                 service
-            id:                   doctrine_redis_cache
+  orm:
+    # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
+    metadata_cache_driver:
+      type: service
+      id:   doctrine_redis_cache
 
 # check \JMS\SerializerBundle\DependencyInjection\Configuration for options
 jms_serializer:
-    metadata:
-        cache: jms_redis_cache_doctrine_adapter
-        debug: false
+  metadata:
+    cache: jms_redis_cache_doctrine_adapter
+    debug: false
