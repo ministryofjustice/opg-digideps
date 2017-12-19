@@ -371,7 +371,7 @@ debt:
 
 fee:
     reasonForNoFees:
-       notBlank: Enter a reason why you don't have charged the client any fees for your services
+       notBlank: Explain why you haven't charged any fees for your services
     noFeesChoice.notBlank: Please select either 'Yes' or 'No'
     mustHaveAtLeastOneFee: You must enter at least one fee
     amount:
