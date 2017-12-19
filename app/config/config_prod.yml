@@ -10,6 +10,11 @@ services:
     class: Doctrine\Common\Cache\PredisCache
     arguments: [ "@snc_redis.default" ]
 
+  jms_redis_cache_doctrine_adapter:
+    class: Metadata\Cache\DoctrineCacheAdapter
+    arguments: [ "dd_", "@doctrine_redis_cache" ]
+
+
 doctrine:
     orm:
       # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
@@ -17,8 +22,8 @@ doctrine:
             type:                 service
             id:                   doctrine_redis_cache
 
-# check JMS\SerializerBundle\DependencyInjection for options
-#jms_serializer:
-#    metadata:
-#        cache2: redis2
-#        debug: true
+# check \JMS\SerializerBundle\DependencyInjection\Configuration for options
+jms_serializer:
+    metadata:
+        cache: jms_redis_cache_doctrine_adapter
+        debug: false
