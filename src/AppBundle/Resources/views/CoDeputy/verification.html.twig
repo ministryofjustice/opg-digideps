@@ -1,6 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% trans_default_domain "settings" %}
+{% set page = "verifyDeputy" %}
 
 {% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
 {% block pageTitle %}Enter your information{% endblock %}
@@ -13,13 +14,13 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium flush--top">Your details</h2>
+    <h2 class="heading-medium flush--top">{{ (page ~ '.yourDetails') | trans }}</h2>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:User:_form_fields.html.twig' %}
 
-    <h2 class="heading-medium flush--top">Your client's details</h2>
+    <h2 class="heading-medium flush--top">{{ (page ~ '.yourClientsDetails') | trans }}</h2>
 
     {{ form_input(form.clientLastname,   'clientLastname') }}
     {{ form_input(form.clientCaseNumber, 'clientCaseNumber', { 'labelRaw': true }) }}
