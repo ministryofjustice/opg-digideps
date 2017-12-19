@@ -30,6 +30,16 @@ trait ReportDebtsTrait
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"debt-management"})
+     *
+     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
+     *
+     * @var string
+     */
+    private $debtManagement;
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
      * @var decimal
@@ -121,6 +131,30 @@ trait ReportDebtsTrait
     public function setHasDebts($hasDebts)
     {
         $this->hasDebts = $hasDebts;
+
+        return $this;
+    }
+
+    /**
+     * Get debt management text
+     *
+     * @return mixed
+     */
+    public function getDebtManagement()
+    {
+        return $this->debtManagement;
+    }
+
+    /**
+     * Set debt management text
+     *
+     * @param string $debtManagement
+     *
+     * @return $this
+     */
+    public function setDebtManagement($debtManagement)
+    {
+        $this->debtManagement = $debtManagement;
 
         return $this;
     }
