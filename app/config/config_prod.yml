@@ -30,5 +30,7 @@ doctrine:
 # check \JMS\SerializerBundle\DependencyInjection\Configuration for options
 jms_serializer:
   metadata:
-    cache: jms_redis_cache_doctrine_adapter
+    # not clear if loaded (buggy library ?)
+    # cache: jms_redis_cache_doctrine_adapter
+    cache: file
     debug: false
