@@ -46,12 +46,6 @@ doctrine:
 doctrine_migrations:
     table_name: migrations
 
-#jms_serializer:
-#    metadata:
-##        cache: none
-##        cache: file
-#        debug: "%kernel.debug%"
-
 snc_redis:
     clients:
         default:
