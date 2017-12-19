@@ -6,18 +6,18 @@ default:
         %startDate% to %endDate%.
     currentlyReviewing: We're currently reviewing it, and we'll contact you when we've finished.
     reportAccess: <strong>Download a pdf of your report</strong>
-    downloadInstructions: |
-        To view and download a copy of the report for your records, <a style="word-wrap:
-        break-word;" href="%homepageUrl%">sign back into the deputy report service</a>. Go to
-        the 'Your reports' homepage, where you'll find a link to download a pdf of your report.
+    downloadInstructions01: |
+        To view and download a copy of the report for your records, sign back into the deputy report
+        service at:
+    downloadInstructions02: |
+        Go to the 'Your reports' homepage, where you'll find a link to download a pdf of your report.
     whatNext: What happens next
     startNextReport: |
         If you like, you can start working on your next annual deputy report (for %startDate%
         to %endDate%) right away.
     signInToKeepTrack: |
-        Sign in to <a style="word-wrap: break-word;"
-        href="%homepageUrl%">complete-deputy-report.service.gov.uk</a> to keep track
-        of your deputyship decisions and spending throughout the year.
+        Sign in to <a style="word-wrap: break-word;" href="%homepageUrl%">%homepageUrl%</a> to keep
+        track of your deputyship decisions and spending throughout the year.
     reportReminder: |
         We'll send you a reminder about your next report nearer the due date (your due date
         is the anniversary of your court order).
