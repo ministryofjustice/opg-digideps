@@ -26,7 +26,7 @@ annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
 submittedReports: Submitted reports
 
-# Table Headings / Labels
+# Labels and table headings
 name: Name
 role: Role
 address: Address
@@ -38,6 +38,7 @@ in: In
 out: Out
 balance: Balance
 actions: Actions
+caseNumber: Case number
 
 # Statuses
 notCreated: Not created
