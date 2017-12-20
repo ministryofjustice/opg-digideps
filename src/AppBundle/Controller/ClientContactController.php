@@ -6,7 +6,6 @@ use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 /**
  * @Route("")
@@ -54,7 +53,6 @@ class ClientContactController extends RestController
         return ['id' => $clientContact->getId()];
     }
 
-
     /**
      * Update contact
      * Only the creator can update the note
@@ -93,7 +91,6 @@ class ClientContactController extends RestController
         return $clientContact->getId();
     }
 
-
     /**
      * @Route("/clientcontacts/{id}")
      * @Method({"GET"})
@@ -118,8 +115,6 @@ class ClientContactController extends RestController
 
         return $clientContact;
     }
-
-
 
     /**
      * Delete contact

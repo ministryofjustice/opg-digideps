@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\VisitsCare;
 use JMS\Serializer\Annotation as JMS;
 
 class ReportStatusService
@@ -180,7 +179,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
-        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortIn()) > 0));
+        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortIn()) > 0));
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortIn())];
@@ -204,7 +203,7 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
-        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist AND count($this->report->getMoneyTransactionsShortOut()) > 0));
+        $isCompleted = ('no' == $transactionsExist || ('yes' == $transactionsExist and count($this->report->getMoneyTransactionsShortOut()) > 0));
 
         if ($isCompleted) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsShortOut())];
@@ -252,7 +251,6 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_MATCHING, 'nOfRecords' => 0];
     }
 
-
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("boolean")
@@ -298,7 +296,7 @@ class ReportStatusService
     public function getDebtsState()
     {
         $hasDebts = $this->report->getHasDebts();
-        if ('no' == $hasDebts || ('yes' == $hasDebts AND count($this->report->getDebtsWithValidAmount()) > 0)) {
+        if ('no' == $hasDebts || ('yes' == $hasDebts and count($this->report->getDebtsWithValidAmount()) > 0)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
         } else {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
@@ -390,7 +388,6 @@ class ReportStatusService
 
         return array_merge($status, ['nOfRecords' => $numRecords]);
     }
-
 
     /**
      * @JMS\VirtualProperty
@@ -487,12 +484,13 @@ class ReportStatusService
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState()['state'];
             default:
-                throw new \InvalidArgumentException(__METHOD__." $section section not defined");
+                throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
         }
     }
 
     /**
      * Get section for the specific report type, along with the status
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("array")
      * @JMS\Groups({"status"})
@@ -502,7 +500,7 @@ class ReportStatusService
     public function getSectionStatus()
     {
         $ret = [];
-        foreach($this->report->getAvailableSections() as $sectionId) {
+        foreach ($this->report->getAvailableSections() as $sectionId) {
             $ret[$sectionId] = $this->getSectionState($sectionId);
         }
 
@@ -534,7 +532,6 @@ class ReportStatusService
         }
     }
 
-
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
@@ -562,10 +559,10 @@ class ReportStatusService
         unset($sectionStatus['moneyTransfers']);
 
         return count(array_filter($sectionStatus, function ($e) {
-                return $e != self::STATE_NOT_STARTED;
-            })) > 0;
+            return $e != self::STATE_NOT_STARTED;
+        })) > 0;
     }
-    
+
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("string")

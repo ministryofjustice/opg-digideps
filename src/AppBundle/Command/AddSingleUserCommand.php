@@ -87,7 +87,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
         if (isset($data['deputyPostcode'])) {
             $user->setAddressPostcode($data['deputyPostcode']);
         }
-        
+
         // role
         if (isset($data['roleId']) && !empty($data['roleId'])) { //deprecated
             $user->setRoleName(User::roleIdToName($data['roleId']));
@@ -124,8 +124,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
     /**
      * Method to convert user fixture data into Casrec CSV data required by constructor
-     * 
+     *
      * @param $data
+     *
      * @return mixed
      */
     private function extractDataToRow($data)

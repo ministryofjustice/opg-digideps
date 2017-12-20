@@ -4,7 +4,6 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Service\CasrecService;
-use AppBundle\Service\PaService;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Fixtures;
@@ -12,8 +11,6 @@ use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CasrecServiceTest extends WebTestCase
 {
@@ -54,7 +51,7 @@ class CasrecServiceTest extends WebTestCase
         $this->reportService = self::$frameworkBundleClient->getContainer()->get('opg_digideps.report_service');
         $this->validator = self::$frameworkBundleClient->getContainer()->get('validator');
 
-        $this->object = new CasrecService(self::$em, $this->logger,  $this->reportService, $this->validator);
+        $this->object = new CasrecService(self::$em, $this->logger, $this->reportService, $this->validator);
         Fixtures::deleteReportsData(['dd_user', 'client', 'report']);
         self::$em->clear();
     }

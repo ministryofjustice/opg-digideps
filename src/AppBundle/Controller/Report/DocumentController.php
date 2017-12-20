@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
 {
-
     /**
      * @Route("/report/{reportId}/document", requirements={"reportId":"\d+"})
      * @Method({"POST"})
@@ -46,7 +45,6 @@ class DocumentController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['documents'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -58,7 +56,6 @@ class DocumentController extends RestController
 
         return $document;
     }
-
 
     /**
      * Soft Delete document.
@@ -137,5 +134,4 @@ class DocumentController extends RestController
 
         return $repo->retrieveSoftDeleted();
     }
-
 }

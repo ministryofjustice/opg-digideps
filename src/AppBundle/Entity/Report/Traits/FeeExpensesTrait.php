@@ -2,12 +2,11 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-
 
 trait FeeExpensesTrait
 {
@@ -53,7 +52,6 @@ trait FeeExpensesTrait
      * @var Expense[]
      */
     private $expenses;
-
 
     /**
      * @return Fee[]
@@ -230,6 +228,7 @@ trait FeeExpensesTrait
 
     /**
      * //TODO unit test
+     *
      * @return bool
      */
     public function expensesSectionCompleted()
@@ -239,6 +238,7 @@ trait FeeExpensesTrait
 
     /**
      * //TODO unit test
+     *
      * @return bool
      */
     public function paFeesExpensesNotStarted()
@@ -251,6 +251,7 @@ trait FeeExpensesTrait
 
     /**
      * //TODO unit test
+     *
      * @return bool
      */
     public function paFeesExpensesCompleted()
@@ -264,5 +265,4 @@ trait FeeExpensesTrait
 
         return $feeComplete && $expenseComplete;
     }
-
 }

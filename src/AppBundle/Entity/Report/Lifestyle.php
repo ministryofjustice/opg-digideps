@@ -141,6 +141,7 @@ class Lifestyle
 
     /**
      * @param string $activityDetailsYes
+     *
      * @return Lifestyle
      */
     public function setActivityDetailsYes($activityDetailsYes)
@@ -160,6 +161,7 @@ class Lifestyle
 
     /**
      * @param string $activityDetailsNo
+     *
      * @return Lifestyle
      */
     public function setActivityDetailsNo($activityDetailsNo)
@@ -168,7 +170,6 @@ class Lifestyle
 
         return $this;
     }
-
 
     /**
      * checks if report is missing lifestyle

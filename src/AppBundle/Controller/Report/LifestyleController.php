@@ -110,8 +110,8 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @param array                       $data
-     * @param EntityDir\Report\Lifestyle  $lifestyle
+     * @param array                      $data
+     * @param EntityDir\Report\Lifestyle $lifestyle
      *
      * @return \AppBundle\Entity\Report\Report $report
      */

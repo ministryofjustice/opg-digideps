@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use Doctrine\ORM\EntityManager;
-use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 class CasrecVerificationService
 {
@@ -35,19 +34,18 @@ class CasrecVerificationService
      * @param string $clientSurname
      * @param string $deputySurname
      * @param string $deputyPostcode
+     *
      * @return bool
      */
     public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
     {
-        $crMatches = $this->casRecRepo->findBy( [ 'caseNumber'     => $this->normaliseCaseNumber($caseNumber)
-                                                , 'clientLastname' => $this->normaliseSurname($clientSurname)
-                                                , 'deputySurname'  => $this->normaliseSurname($deputySurname)
+        $crMatches = $this->casRecRepo->findBy([ 'caseNumber'     => $this->normaliseCaseNumber($caseNumber), 'clientLastname' => $this->normaliseSurname($clientSurname), 'deputySurname'  => $this->normaliseSurname($deputySurname)
                                                 ]);
 
         $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($crMatches, $deputyPostcode);
 
         if (count($this->lastMatchedCasrecUsers) == 0) {
-            throw new \RuntimeException('User registration: no matching record in casrec. Matched: ' . count($crMatches) .' Looking up:' .
+            throw new \RuntimeException('User registration: no matching record in casrec. Matched: ' . count($crMatches) . ' Looking up:' .
             ' Case Number: ' . $this->normaliseCaseNumber($caseNumber) .
             ' Client Last name: ' . $this->normaliseSurname($clientSurname) .
             ' Deputy surname:' . $this->normaliseSurname($deputySurname) .
@@ -86,6 +84,7 @@ class CasrecVerificationService
 
     /**
      * @param string $caseNumber
+     *
      * @return bool
      */
     public function isMultiDeputyCase($caseNumber)
@@ -97,6 +96,7 @@ class CasrecVerificationService
     /**
      * @param CasRec[] $crMatches
      * @param $deputyPostcode
+     *
      * @return CasRec[]
      */
     private function applyPostcodeFilter($crMatches, $deputyPostcode)
@@ -123,6 +123,7 @@ class CasrecVerificationService
 
     /**
      * @param $value
+     *
      * @return mixed|string
      */
     private function normaliseCaseNumber($value)
@@ -136,6 +137,7 @@ class CasrecVerificationService
 
     /**
      * @param $value
+     *
      * @return mixed|string
      */
     private function normalisePostcode($value)
@@ -152,6 +154,7 @@ class CasrecVerificationService
 
     /**
      * @param $value
+     *
      * @return mixed|string
      */
     private function normaliseSurname($value)

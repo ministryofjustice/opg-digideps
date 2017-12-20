@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\Document;
-use Doctrine\ORM\EntityRepository;
 
 class DocumentRepository extends AbstractEntityRepository
 {
@@ -23,5 +22,4 @@ class DocumentRepository extends AbstractEntityRepository
 
         return $records;
     }
-
 }

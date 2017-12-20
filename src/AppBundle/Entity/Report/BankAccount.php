@@ -422,7 +422,7 @@ class BankAccount
     /**
      * Bank name required.
      *
-     * @return boolean
+     * @return bool
      */
     public function requiresBankName()
     {
@@ -432,7 +432,7 @@ class BankAccount
     /**
      * Sort code required.
      *
-     * @return boolean
+     * @return bool
      */
     public function requiresSortCode()
     {

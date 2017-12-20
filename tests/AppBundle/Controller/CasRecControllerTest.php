@@ -53,7 +53,6 @@ class CasRecControllerTest extends AbstractTestController
         ]);
     }
 
-
     private function compress($data)
     {
         return base64_encode(gzcompress(json_encode($data), 9));
@@ -114,7 +113,6 @@ class CasRecControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEmpty($ret['errors'], print_r($ret, 1));
         $this->assertEquals(1, $ret['added'], print_r($ret, 1));
-
     }
 
     public function testCount()
@@ -151,5 +149,4 @@ class CasRecControllerTest extends AbstractTestController
         ob_clean(); //delete readfile out
         $this->assertEquals(200, self::$frameworkBundleClient->getResponse()->getStatusCode());
     }
-
 }

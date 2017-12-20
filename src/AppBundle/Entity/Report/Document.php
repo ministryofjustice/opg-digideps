@@ -189,6 +189,7 @@ class Document
 
     /**
      * @param ReportSubmission $reportSubmission
+     *
      * @return Document
      */
     public function setReportSubmission(ReportSubmission $reportSubmission)
@@ -200,7 +201,7 @@ class Document
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsReportPdf()
     {
@@ -208,7 +209,8 @@ class Document
     }
 
     /**
-     * @param boolean $isReportPdf
+     * @param bool $isReportPdf
+     *
      * @return Document
      */
     public function setIsReportPdf($isReportPdf)
@@ -217,5 +219,4 @@ class Document
 
         return $this;
     }
-
 }

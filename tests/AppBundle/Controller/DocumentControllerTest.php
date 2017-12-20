@@ -4,7 +4,6 @@ namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Report\Document;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
-use Tests\AppBundle\Controller\AbstractTestController;
 
 class DocumentControllerTest extends AbstractTestController
 {
@@ -69,7 +68,7 @@ class DocumentControllerTest extends AbstractTestController
         $document = self::fixtures()->getRepo('Report\Document')->find($data['id']);
 
         $this->assertEquals($data['id'], $document->getId());
-        $this->assertEquals(self::$deputy1->getId() , $document->getCreatedBy()->getId());
+        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
@@ -122,11 +121,11 @@ class DocumentControllerTest extends AbstractTestController
     public function testHardDelete($d2Id)
     {
         // hard delete document1
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/'.$d2Id, [
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
             'mustFail' => true,
             'ClientSecret' => '123abc-deputy',
         ]);
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/'.$d2Id, [
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
             'mustSucceed' => true,
             'ClientSecret' => '123abc-admin',
         ]);
@@ -147,7 +146,7 @@ class DocumentControllerTest extends AbstractTestController
      */
     public function testHardDeleteFailOnNonSoftDeleteDocument($existingDoocId)
     {
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/'.$existingDoocId, [
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $existingDoocId, [
             'mustFail' => true,
             'ClientSecret' => '123abc-admin',
         ]);
@@ -156,5 +155,4 @@ class DocumentControllerTest extends AbstractTestController
         $repo->clear();
         $this->assertInstanceOf(Document::class, $repo->find($existingDoocId));
     }
-
 }

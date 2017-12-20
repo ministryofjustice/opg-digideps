@@ -36,9 +36,10 @@ class CasrecService
 
     /**
      * CasrecService constructor.
-     * @param EntityManager $em
-     * @param LoggerInterface $logger
-     * @param ReportService $reportService
+     *
+     * @param EntityManager      $em
+     * @param LoggerInterface    $logger
+     * @param ReportService      $reportService
      * @param ValidatorInterface $validator
      */
     public function __construct(EntityManager $em, LoggerInterface $logger, ReportService $reportService, ValidatorInterface $validator)
@@ -59,7 +60,7 @@ class CasrecService
     {
         // add user info, by matching DeputyNo
         $deputyNo = $casrec->getDeputyNo();
-        $results = $this->em->createQuery('SELECT u FROM '.User::class.' u WHERE u.deputyNo = :d1 OR u.deputyNo = :d2')
+        $results = $this->em->createQuery('SELECT u FROM ' . User::class . ' u WHERE u.deputyNo = :d1 OR u.deputyNo = :d2')
             ->setParameter('d1', strtoupper($deputyNo))
             ->setParameter('d2', strtolower($deputyNo))
             ->getResult();
@@ -69,7 +70,7 @@ class CasrecService
 
         // add report info, by matching case number
         $caseNumber = $casrec->getCaseNumber();
-        $results = $this->em->createQuery('SELECT c FROM '.Client::class.' c WHERE c.caseNumber = :c1 OR c.caseNumber = :c2')
+        $results = $this->em->createQuery('SELECT c FROM ' . Client::class . ' c WHERE c.caseNumber = :c1 OR c.caseNumber = :c2')
             ->setParameter('c1', strtoupper($caseNumber))
             ->setParameter('c2', strtolower($caseNumber))
             ->getResult();
@@ -90,6 +91,7 @@ class CasrecService
 
     /**
      * Launched from cron
+     *
      * @return int number of changed records
      */
     public function updateAllCasrecRecordsWithStats()
@@ -101,7 +103,6 @@ class CasrecService
             ->createQuery('SELECT c from ' . CasRec::class . ' c WHERE  (c.updatedAt < :d OR c.updatedAt IS NULL) ORDER BY c.updatedAt ASC')
             ->setParameter('d', new \DateTime(self::STATS_NOT_OLDER_THAN))
             ->setMaxResults($chunkSize)->getResult()) {
-
             foreach ($records as $record) {
                 /* @var $nextRecordToUpdate CasRec */
                 $this->updateCasrecStatsSingle($record);
@@ -116,7 +117,7 @@ class CasrecService
 
     /**
      * @param string $filePath
-     * @param int $maxResults
+     * @param int    $maxResults
      *
      * @return string
      */
@@ -127,7 +128,7 @@ class CasrecService
 
         /* @var $it IterableResult */
         // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/batch-processing.html
-        $it = $this->em->createQuery('SELECT c FROM '.CasRec::class.' c')->iterate();
+        $it = $this->em->createQuery('SELECT c FROM ' . CasRec::class . ' c')->iterate();
 
         $f = fopen($filePathTmp, 'w');
         foreach ($it as $itRow) {
@@ -166,7 +167,7 @@ class CasrecService
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $this->logger->notice(__METHOD__.': Received ' . count($data) . ' records');
+        $this->logger->notice(__METHOD__ . ': Received ' . count($data) . ' records');
 
         $retErrors = [];
         try {
@@ -198,11 +199,11 @@ class CasrecService
             }
 
             $this->em->flush();
-            $this->logger->notice(__METHOD__.': flushed');
+            $this->logger->notice(__METHOD__ . ': flushed');
 
             //  Before committing the CasRec entities use the report service to update any report types if necessary
             $this->reportService->updateCurrentReportTypes($casRecEntities, User::ROLE_LAY_DEPUTY);
-            $this->logger->notice(__METHOD__.': report types updated');
+            $this->logger->notice(__METHOD__ . ': report types updated');
 
             $this->em->commit();
             $this->em->clear();

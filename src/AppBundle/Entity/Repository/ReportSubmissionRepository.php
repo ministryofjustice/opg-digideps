@@ -9,11 +9,11 @@ use Doctrine\ORM\EntityRepository;
 class ReportSubmissionRepository extends EntityRepository
 {
     /**
-     * @param string $status string new|archived
-     * @param string $q serach string
+     * @param string $status        string new|archived
+     * @param string $q             serach string
      * @param string $createdByRole see values in USER::ROLE_*
-     * @param integer $offset
-     * @param integer $limit
+     * @param int    $offset
+     * @param int    $limit
      *
      * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
      */
@@ -107,7 +107,7 @@ class ReportSubmissionRepository extends EntityRepository
 
     /**
      * @param \DateTime $olderThan
-     * @param integer $limit
+     * @param int       $limit
      *
      * @return ReportSubmission[]
      */
@@ -123,7 +123,6 @@ class ReportSubmissionRepository extends EntityRepository
 
         $qb->setMaxResults($limit);
 
-       return $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
-
+        return $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
     }
 }

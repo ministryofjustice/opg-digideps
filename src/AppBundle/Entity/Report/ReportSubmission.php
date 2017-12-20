@@ -5,7 +5,6 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -78,8 +77,9 @@ class ReportSubmission
 
     /**
      * ReportSubmission constructor.
+     *
      * @param Report $report
-     * @param User $createdBy
+     * @param User   $createdBy
      */
     public function __construct(Report $report, User $createdBy)
     {
@@ -100,6 +100,7 @@ class ReportSubmission
 
     /**
      * @param int $id
+     *
      * @return ReportSubmission
      */
     public function setId($id)
@@ -119,6 +120,7 @@ class ReportSubmission
 
     /**
      * @param Report $report
+     *
      * @return ReportSubmission
      */
     public function setReport(Report $report)
@@ -138,6 +140,7 @@ class ReportSubmission
 
     /**
      * @param Document $document
+     *
      * @return $this
      */
     public function addDocument(Document $document)
@@ -159,6 +162,7 @@ class ReportSubmission
 
     /**
      * @param User|null $archivedBy
+     *
      * @return ReportSubmission
      */
     public function setArchivedBy(User $archivedBy = null)
@@ -178,6 +182,7 @@ class ReportSubmission
 
     /**
      * @param mixed $downloadable
+     *
      * @return ReportSubmission
      */
     public function setDownloadable($downloadable)
@@ -186,6 +191,4 @@ class ReportSubmission
 
         return $this;
     }
-
-
 }

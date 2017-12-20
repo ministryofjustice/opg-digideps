@@ -4,18 +4,16 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Casrec as CasRecEntity;
-use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
+use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Report as ReportEntity;
-
+use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\Report;
+
+use AppBundle\Entity\Report\Report as ReportEntity;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
-use Fixtures;
 use MockeryStub as m;
-use Symfony\Bundle\FrameworkBundle\Client;
 
 class ReportServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,7 +77,6 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->sut = new ReportService($this->repos[ReportEntity::class], $this->repos[CasRecEntity::class], $this->em);
     }
 
-
     public function testSubmitInvalid()
     {
         $this->report->setAgreedBehalfDeputy(false);
@@ -92,19 +89,19 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         // mocks
         $this->em->shouldReceive('detach');
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
             return $report instanceof Report;
         }));
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
             return $report instanceof EntityDir\Report\ReportSubmission;
         }));
         // assert asset and bank accounts are copied. can't get from the returned report as they are added form the "Many" side
         // TODO add a "Report.add<Entity>()" with $this->contains so that it can be tested from the report itself
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function($asset) {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset) {
             return $asset instanceof EntityDir\Report\AssetProperty && $asset->getAddress() === 'SW1';
         }))->once();
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function($bankAccount) {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount) {
             return $bankAccount instanceof EntityDir\Report\BankAccount && $bankAccount->getAccountNumber() === '1234';
         }))->once();
         $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
@@ -124,12 +121,11 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->report->getType(), $newYearReport->getType());
         $this->assertEquals('2016-01-01', $newYearReport->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
-
     }
 
     public function testSubmitAdditionalDocuments()
     {
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function($report) {
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
             return $report instanceof EntityDir\Report\ReportSubmission;
         }));
         $this->em->shouldReceive('flush')->with()->once();
@@ -147,5 +143,4 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
     {
         m::close();
     }
-
 }

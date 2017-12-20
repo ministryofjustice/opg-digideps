@@ -4,11 +4,9 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\CsvUploader;
-use JMS\Serializer\Exception\RuntimeException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-
 
 /**
  * @Route("/codeputy/")
@@ -69,7 +67,6 @@ class CoDeputyController extends RestController
         return $newUser;
     }
 
-
     /**
      * @Route("{id}")
      * @Method({"PUT"})
@@ -79,10 +76,9 @@ class CoDeputyController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
 
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-        if ( !$user->isCoDeputy()
+        if (!$user->isCoDeputy()
             || !$this->getUser()->isCoDeputy()
-            || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails()))
-        {
+            || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails())) {
             throw $this->createAccessDeniedException("User not authorised to update other user's data");
         }
 
@@ -125,23 +121,21 @@ class CoDeputyController extends RestController
         }
 
         $deputyNumbers = [];
-        foreach($data as $deputy) {
-            if (array_key_exists('Deputy No', $deputy)){
+        foreach ($data as $deputy) {
+            if (array_key_exists('Deputy No', $deputy)) {
                 $deputyNumbers[] = $deputy['Deputy No'];
             }
         }
 
         $conn = $this->getEntityManager()->getConnection();
         $affected = 0;
-        foreach(array_chunk($deputyNumbers, 500) as $chunk){
+        foreach (array_chunk($deputyNumbers, 500) as $chunk) {
             $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('" . implode("','", $chunk) . "')";
             $affected += $conn->exec($sql);
         }
 
-        $this->get('logger')->info('Received '.count($data).' records, of which '.$affected.' were updated');
-        return [ 'requested_mld_upgrades' => count($deputyNumbers)
-               , 'updated' => $affected
-               , 'errors' => $retErrors
+        $this->get('logger')->info('Received ' . count($data) . ' records, of which ' . $affected . ' were updated');
+        return [ 'requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors
                ];
     }
 }

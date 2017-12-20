@@ -53,7 +53,6 @@ class Fixtures
         return $user;
     }
 
-
     /**
      * @return EntityDir\Client
      */

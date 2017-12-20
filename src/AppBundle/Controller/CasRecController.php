@@ -8,8 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use \Doctrine\Common\Util\Debug as doctrineDebug;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/casrec")
@@ -53,7 +51,6 @@ class CasRecController extends RestController
         return $ret;
     }
 
-
     /**
      * Verify Deputy & Client last names, Postcode, and Case Number
      *
@@ -66,10 +63,7 @@ class CasRecController extends RestController
         $user = $this->getUser();
 
         $casrecVerified = $this->container->get('opg_digideps.casrec_verification_service')
-            ->validate ( $clientData['case_number']
-                       , $clientData['lastname']
-                       , $user->getLastname()
-                       , $user->getAddressPostcode()
+            ->validate($clientData['case_number'], $clientData['lastname'], $user->getLastname(), $user->getAddressPostcode()
             );
 
         return ['verified' => $casrecVerified];
@@ -111,5 +105,4 @@ class CasRecController extends RestController
 
         return $response;
     }
-
 }

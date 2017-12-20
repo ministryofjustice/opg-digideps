@@ -34,8 +34,10 @@ class UserRegistrationService
      * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      *
      * @param SelfRegisterData $selfRegisterData
-     * @return User
+     *
      * @throws \RuntimeException
+     *
+     * @return User
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
@@ -45,7 +47,7 @@ class UserRegistrationService
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && $existingClient instanceof Client) {
             // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException("Co-deputy cannot self register.", 403);
+            throw new \RuntimeException('Co-deputy cannot self register.', 403);
         }
 
         // Check the user doesn't already exist
@@ -66,15 +68,12 @@ class UserRegistrationService
         $client = new Client();
         $this->populateClient($client, $selfRegisterData);
 
-        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
-                                      , $selfRegisterData->getClientLastname()
-                                      , $selfRegisterData->getLastname()
-                                      , $user->getAddressPostcode()
+        $this->casrecVerificationService->validate($selfRegisterData->getCaseNumber(), $selfRegisterData->getClientLastname(), $selfRegisterData->getLastname(), $user->getAddressPostcode()
                                       );
 
         $user->setDeputyNo(implode(',', $this->casrecVerificationService->getLastMatchedDeputyNumbers()));
         $user->setCoDeputyClientConfirmed($isMultiDeputyCase);
-        $user->setOdrEnabled( $this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
+        $user->setOdrEnabled($this->casrecVerificationService->isLastMachedDeputyNdrEnabled());
 
         $this->saveUserAndClient($user, $client);
         return $user;
@@ -82,32 +81,32 @@ class UserRegistrationService
 
     /**
      * @param SelfRegisterData $selfRegisterData
-     * @return bool
+     *
      * @throws \RuntimeException
+     *
+     * @return bool
      */
     public function validateCoDeputy(SelfRegisterData $selfRegisterData)
     {
         $user = $this->em->getRepository('AppBundle\Entity\User')->findOneByEmail($selfRegisterData->getEmail());
         if (!($user)) {
-            throw new \RuntimeException("User registration: not found", 421);
+            throw new \RuntimeException('User registration: not found', 421);
         }
 
         if ($user->getCoDeputyClientConfirmed()) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
 
-        $this->casrecVerificationService->validate( $selfRegisterData->getCaseNumber()
-                                                  , $selfRegisterData->getClientLastname()
-                                                  , $selfRegisterData->getLastname()
-                                                  , $selfRegisterData->getPostcode()
+        $this->casrecVerificationService->validate($selfRegisterData->getCaseNumber(), $selfRegisterData->getClientLastname(), $selfRegisterData->getLastname(), $selfRegisterData->getPostcode()
                                                   );
 
         return true;
     }
 
     /**
-     * @param User $user
+     * @param User   $user
      * @param Client $client
+     *
      * @throws \Exception
      */
     public function saveUserAndClient(User $user, Client $client)
@@ -137,7 +136,7 @@ class UserRegistrationService
     }
 
     /**
-     * @param User $user
+     * @param User             $user
      * @param SelfRegisterData $selfRegisterData
      */
     public function populateUser(User $user, SelfRegisterData $selfRegisterData)
@@ -152,7 +151,7 @@ class UserRegistrationService
     }
 
     /**
-     * @param Client $client
+     * @param Client           $client
      * @param SelfRegisterData $selfRegisterData
      */
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)

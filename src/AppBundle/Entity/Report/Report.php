@@ -326,11 +326,12 @@ class Report
 
     /**
      * Report constructor.
+     *
      * @param Client $client
      * @param $type
      * @param \DateTime $startDate
      * @param \DateTime $endDate
-     * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
+     * @param bool      $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
     public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
     {
@@ -356,7 +357,7 @@ class Report
             $endDateLastReport = $unsubmittedEndDates[0];
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
-            $daysDiff = (int)$expectedStartDate->diff($this->startDate)->format('%a');
+            $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
             if ($daysDiff !== 0) {
                 throw new \RuntimeException(sprintf(
                     'Incorrect start date. Last submitted report was on %s, '
@@ -408,7 +409,6 @@ class Report
         return $this;
     }
 
-
     /**
      * Get sections based on the report type
      *
@@ -419,7 +419,7 @@ class Report
     public function getAvailableSections()
     {
         $ret = [];
-        foreach(self::getSectionsSettings() as $sectionId => $reportTypes) {
+        foreach (self::getSectionsSettings() as $sectionId => $reportTypes) {
             if (in_array($this->getType(), $reportTypes)) {
                 $ret[] = $sectionId;
             }
@@ -500,6 +500,7 @@ class Report
 
     /**
      * For check reasons
+     *
      * @return string
      */
     public function hasSamePeriodAs(Report $report)
@@ -832,6 +833,7 @@ class Report
      *
      * if it has the 106 flag, the deputy expense section is replaced with a more detailed "PA deputy expense" section
      * //TODO remove from mocks
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("boolean")
      * @JMS\SerializedName("has106flag")
@@ -937,6 +939,7 @@ class Report
 
     /**
      * @param ReportSubmission $submissions
+     *
      * @return Report
      */
     public function addReportSubmission(ReportSubmission $submission)
@@ -956,6 +959,7 @@ class Report
 
     /**
      * @param mixed $wishToProvideDocumentation
+     *
      * @return $this
      */
     public function setWishToProvideDocumentation($wishToProvideDocumentation)

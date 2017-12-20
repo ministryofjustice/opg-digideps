@@ -282,8 +282,8 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
-            if ( 'yes' == $data['wish_to_provide_documentation']
-            || ( 'no'  == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
+            if ('yes' == $data['wish_to_provide_documentation']
+            || ('no'  == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
         }
@@ -384,5 +384,4 @@ class ReportController extends RestController
         //response to pass back
         return ['reportId' => $currentReport->getId()];
     }
-
 }

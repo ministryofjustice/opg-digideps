@@ -327,7 +327,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
         $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
-        
+
         // assert submission is created
         $data = $this->assertJsonRequest('GET', '/report-submission?status=new', [
             'mustSucceed' => true,
@@ -336,7 +336,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
     }
-
 
     public function testUpdateAuth()
     {

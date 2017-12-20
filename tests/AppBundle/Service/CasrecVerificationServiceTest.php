@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Service\CasrecVerificationService;
-use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 
 class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
@@ -123,25 +122,25 @@ class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
         $failMessage = 'User registration: no matching record in casrec';
         try {
             $this->casrecVerificationService->validate('WRONG678', 'CSurn', 'DSurn', 'DPC123');
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'WRONG', 'DSurn', 'DPC123'));
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DPC123'));
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains($failMessage, $e->getMessage());
         }
 
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'WRONG'));
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains($failMessage, $e->getMessage());
         }
     }
@@ -178,14 +177,13 @@ class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
         // if all MLD postcodes are in casrec, the postcode check is run
         try {
             $this->assertTrue($this->casrecVerificationService->validate('11111111', 'CSurn', 'DSurn', 'DOEsnT MatteR'));
-        } catch(\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertContains('User registration: no matching record in casrec', $e->getMessage());
         }
 
         // but if one MLD in casrec, the postcode check is skipped
         $this->assertTrue($this->casrecVerificationService->validate('44444444', 'CSurn', 'Sibling', 'DOEsnT MatteR'));
     }
-
 
     /**
      * @test
@@ -197,5 +195,4 @@ class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
         $this->casrecVerificationService->validate('33333333', 'CSurn', 'Sibling', 'MLD 1BB');
         $this->assertEquals(['MLDB','MLDC'], $this->casrecVerificationService->getLastMatchedDeputyNumbers());
     }
-
 }

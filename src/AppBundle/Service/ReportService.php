@@ -12,7 +12,6 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -121,7 +120,7 @@ class ReportService
     /**
      * Using an array of CasRec entities update any corresponding report type if it has been changed
      *
-     * @param array $casRecEntities
+     * @param array  $casRecEntities
      * @param string $userRoleName
      *
      * @throws \Exception
@@ -172,8 +171,8 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report $currentReport
-     * @param User $user
+     * @param Report    $currentReport
+     * @param User      $user
      * @param \DateTime $submitDate
      *
      * @return Report new year's report
@@ -192,7 +191,7 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        foreach($currentReport->getDocuments() as $document){
+        foreach ($currentReport->getDocuments() as $document) {
             if (!$document->getReportSubmission()) {
                 $document->setReportSubmission($submission);
             }
@@ -207,12 +206,11 @@ class ReportService
         return $newYearReport;
     }
 
-
     /**
      * Set report submission for additional documents
      *
-     * @param Report $currentReport
-     * @param User $user
+     * @param Report    $currentReport
+     * @param User      $user
      * @param \DateTime $submitDate
      *
      * @return Report new year's report
@@ -221,7 +219,7 @@ class ReportService
     {
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        foreach($currentReport->getDocuments() as $document){
+        foreach ($currentReport->getDocuments() as $document) {
             if (!$document->getReportSubmission()) {
                 $document->setReportSubmission($submission);
             }
@@ -235,7 +233,6 @@ class ReportService
         return $currentReport;
     }
 
-
     /**
      * If one report started, return the other nonStarted reports with the same start/end date
      *
@@ -247,7 +244,7 @@ class ReportService
     public function findDeleteableReports(Collection $reports)
     {
         $reportIdToStatus = [];
-        foreach($reports as $ur) {
+        foreach ($reports as $ur) {
             $reportIdToStatus[$ur->getId()] = [
                 'status'=> $ur->getStatus()->getStatus(),
                 'start'=> $ur->getStartDate()->format('Y-m-d'),
@@ -257,21 +254,20 @@ class ReportService
         }
 
         $ret = [];
-        foreach($reports as $report1) {
-            foreach($reports as $report2) {
+        foreach ($reports as $report1) {
+            foreach ($reports as $report2) {
                 if ($report1->getId() === $report2->getId()) {
                     continue;
                 }
                 // find report with same date that have not started
                 if ($report1->getStatus()->hasStarted()
                     && $report1->hasSamePeriodAs($report2)
-                    && !$report2->getStatus()->hasStarted() ) {
+                    && !$report2->getStatus()->hasStarted()) {
                     $ret[$report2->getId()] = $report2;
                 }
             }
         }
 
         return $ret;
-
     }
 }

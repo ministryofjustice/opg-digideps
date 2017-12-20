@@ -154,6 +154,7 @@ class CasRec
 
     /**
      * Filled from cron
+     *
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
@@ -163,6 +164,7 @@ class CasRec
 
     /**
      * Filled from cron
+     *
      * @var int
      *
      * @JMS\Type("string")
@@ -172,6 +174,7 @@ class CasRec
 
     /**
      * Filled from cron
+     *
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
@@ -181,6 +184,7 @@ class CasRec
 
     /**
      * Filled from cron
+     *
      * @var int
      *
      * @JMS\Type("string")
@@ -190,6 +194,7 @@ class CasRec
 
     /**
      * Filled from cron
+     *
      * @var array
      */
     private static $normalizeChars = [
@@ -203,15 +208,14 @@ class CasRec
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
 
-
     public function __construct(array $row)
     {
         $this->caseNumber = self::normaliseCaseNumber($row['Case']);
         $this->clientLastname = self::normaliseSurname($row['Surname']);
-        $this->deputyNo = self::normaliseDeputyNo( $row['Deputy No']);
+        $this->deputyNo = self::normaliseDeputyNo($row['Deputy No']);
         $this->deputySurname = self::normaliseSurname($row['Dep Surname']);
         $this->deputyPostCode = self::normaliseSurname($row['Dep Postcode']);
-        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep( $row['Typeofrep']);
+        $this->typeOfReport = self::normaliseCorrefAndTypeOfRep($row['Typeofrep']);
         $this->corref = self::normaliseCorrefAndTypeOfRep($row['Corref']);
 
         $this->otherColumns = serialize($row);
@@ -221,7 +225,6 @@ class CasRec
         $this->lastLoggedIn = null;
         $this->nOfReportsSubmitted = 'n.a.';
         $this->nOfReportsActive = 'n.a.';
-
     }
 
     private static function normaliseCorrefAndTypeOfRep($value)
@@ -312,15 +315,14 @@ class CasRec
         return $this->corref;
     }
 
-
     /**
      * Determine type of report based on 'Typeofrep' and 'Corref' columns in the Casrec CSV
      * 103: when corref = l3/l3g and typeofRep = opg103
      * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
      * 103: all the other cases;
      *
-     * @param string $typeOfRep e.g. opg103
-     * @param string $corref e.g. l3, l3g
+     * @param string $typeOfRep    e.g. opg103
+     * @param string $corref       e.g. l3, l3g
      * @param string $userRoleName e.g. ROLE_PA
      *
      * @return string Report::TYPE_*
@@ -347,7 +349,7 @@ class CasRec
                 return Report::TYPE_102_6;
         }
 
-        throw new \Exception(__METHOD__ . ": user role not recognised to determine report type");
+        throw new \Exception(__METHOD__ . ': user role not recognised to determine report type');
     }
 
     /**
@@ -370,26 +372,26 @@ class CasRec
         return isset($row[$key]) ? $row[$key] : null;
     }
 
-
     public function toArray()
     {
-        $dateFormat = function($date, $default) {
+        $dateFormat = function ($date, $default) {
             return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : $default;
         };
 
         return [
-            "Uploaded at" => $dateFormat($this->createdAt, 'n.a.'),
-            "Stats updated at" => $dateFormat($this->updatedAt, '-'),
-            "Deputy registration date" => $dateFormat($this->registrationDate, 'n.a.'),
-            "Deputy last logged in" => $dateFormat($this->lastLoggedIn, 'n.a.'),
-            "Reports submitted" =>  $this->nOfReportsSubmitted ?: 'n.a.',
-            "Last report submitted at" =>  $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
-            "Reports active" =>  $this->nOfReportsActive ?: 'n.a.'
+            'Uploaded at' => $dateFormat($this->createdAt, 'n.a.'),
+            'Stats updated at' => $dateFormat($this->updatedAt, '-'),
+            'Deputy registration date' => $dateFormat($this->registrationDate, 'n.a.'),
+            'Deputy last logged in' => $dateFormat($this->lastLoggedIn, 'n.a.'),
+            'Reports submitted' =>  $this->nOfReportsSubmitted ?: 'n.a.',
+            'Last report submitted at' =>  $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
+            'Reports active' =>  $this->nOfReportsActive ?: 'n.a.'
         ] + $this->getOtherColumns();
     }
 
     /**
      * @param \DateTime $updatedAt
+     *
      * @return CasRec
      */
     public function setUpdatedAt($updatedAt)
@@ -401,6 +403,7 @@ class CasRec
 
     /**
      * @param \DateTime $registrationDate
+     *
      * @return CasRec
      */
     public function setRegistrationDate($registrationDate)
@@ -412,6 +415,7 @@ class CasRec
 
     /**
      * @param \DateTime $lastLoggedIn
+     *
      * @return CasRec
      */
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
@@ -423,6 +427,7 @@ class CasRec
 
     /**
      * @param int $nOfReportsSubmitted
+     *
      * @return CasRec
      */
     public function setNOfReportsSubmitted($nOfReportsSubmitted)
@@ -434,6 +439,7 @@ class CasRec
 
     /**
      * @param \DateTime $lastReportSubmittedAt
+     *
      * @return CasRec
      */
     public function setLastReportSubmittedAt(\DateTime $lastReportSubmittedAt = null)
@@ -445,6 +451,7 @@ class CasRec
 
     /**
      * @param int $nOfReportsActive
+     *
      * @return CasRec
      */
     public function setNOfReportsActive($nOfReportsActive)

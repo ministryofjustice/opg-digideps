@@ -38,13 +38,13 @@ class CleanDataCommand extends ContainerAwareCommand
         do {
             $output->write('.');
             $clients = $em->getRepository(Client::class)->findBy([], ['id'=>'ASC'], $limit, $offset);
-            foreach($clients as $c) {
+            foreach ($clients as $c) {
 
                 /**
                  * delete client without users. Recursively (so reports will be deleted too)
                  */
                 if (count($c->getUsers()) === 0) {
-                    $output->writeln("client ".$c->getId()." and related reports flagged for deletion (reason: no users)");
+                    $output->writeln('client ' . $c->getId() . ' and related reports flagged for deletion (reason: no users)');
                     $clientsToRemove[] = $c;
                 } else {
                     /**
@@ -53,31 +53,28 @@ class CleanDataCommand extends ContainerAwareCommand
                     $unsubmittedReports = $c->getUnsubmittedReports();
                     if (count($unsubmittedReports) > 1) {
                         if ($deleteableReports = $rs->findDeleteableReports($unsubmittedReports)) {
-                            foreach($deleteableReports as $deleteableReport) {
-                                $output->writeln("report ".$deleteableReport->getId()." flagged for deletion (reason: duplicate)");
+                            foreach ($deleteableReports as $deleteableReport) {
+                                $output->writeln('report ' . $deleteableReport->getId() . ' flagged for deletion (reason: duplicate)');
                                 $reportsToRemove[] = $deleteableReport;
                             }
                         }
                     }
                 }
-
-
             }
             $offset += $limit;
-        } while(!empty($clients));
+        } while (!empty($clients));
 
-        $output->write("Performing deletion...");
+        $output->write('Performing deletion...');
         // remove !
-        foreach($clientsToRemove as $c) {
+        foreach ($clientsToRemove as $c) {
             $em->remove($c);
             $em->flush($c);
         }
-        foreach($reportsToRemove as $r) {
+        foreach ($reportsToRemove as $r) {
             $em->remove($r);
             $em->flush($r);
         }
 
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
-
 }

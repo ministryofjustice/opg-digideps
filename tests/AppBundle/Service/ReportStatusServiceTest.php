@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\Gift;
 use AppBundle\Entity\Report\MoneyShortCategory;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\Report;
@@ -193,7 +191,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
-
 
     public function lifestyleProvider()
     {
@@ -485,7 +482,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
-
     public function balanceProvider()
     {
         // if any of the dependend section is not completed, status should be not-started
@@ -581,7 +577,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRemainingSectionsAndStatus()
     {
-
         $mocksCompletingReport = ['getType' => Report::TYPE_102]
             + array_pop($this->decisionsProvider())[0]
             + array_pop($this->contactsProvider())[0]
@@ -634,5 +629,4 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('readyToSubmit', $object->getStatus());
     }
-
 }

@@ -219,7 +219,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ReportStatusService::class, $status);
     }
 
-
     public static function sectionsSettingsProvider()
     {
         return [
@@ -238,14 +237,13 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'));
 
-        foreach($expectedSections as $section) {
+        foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());
             $this->assertTrue($this->report->hasSection($section));
         }
-        foreach($unExpectedSections as $section) {
+        foreach ($unExpectedSections as $section) {
             $this->assertNotContains($section, $this->report->getAvailableSections(), "$type should NOT have $section section ");
             $this->assertFalse($this->report->hasSection($section));
         }
-
     }
 }

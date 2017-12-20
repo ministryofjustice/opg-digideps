@@ -306,7 +306,7 @@ class UserController extends RestController
         if (!$hasAdminSecret && $user->getRoleName()==EntityDir\User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
-        
+
         $user->recreateRegistrationToken();
 
         $this->getEntityManager()->flush($user);
@@ -364,8 +364,8 @@ class UserController extends RestController
     /**
      * call setters on User when $data contains values.
      *
-     * @param EntityDir\User  $user
-     * @param array $data
+     * @param EntityDir\User $user
+     * @param array          $data
      */
     private function populateUser(EntityDir\User $user, array $data)
     {
@@ -416,11 +416,11 @@ class UserController extends RestController
      * Update both the team and other teammembers to have same address
      *
      * @param EntityDir\User $user
-     * @param array $data
+     * @param array          $data
      */
     private function updateTeamAddresses(EntityDir\User $user, array $data)
     {
-        if ( !empty($data['address1'])
+        if (!empty($data['address1'])
             && !empty($data['address_postcode'])
             && !empty($data['address_country'])
         ) {

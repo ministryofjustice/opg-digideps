@@ -111,7 +111,7 @@ class AttemptsIncrementalWaitingChecker
     /**
      * For testing reasons.
      *
-     * @param integer $timestamp
+     * @param int $timestamp
      */
     public function overrideTimestamp($timestamp)
     {

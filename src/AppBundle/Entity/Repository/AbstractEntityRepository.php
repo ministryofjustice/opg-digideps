@@ -27,5 +27,4 @@ abstract class AbstractEntityRepository extends EntityRepository
 
         return $result;
     }
-
 }

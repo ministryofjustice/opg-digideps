@@ -109,7 +109,6 @@ class ClientContact
      */
     private $client;
 
-
     /**
      * @return Client
      */

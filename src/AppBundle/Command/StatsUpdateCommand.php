@@ -3,7 +3,6 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\CasRec;
-use AppBundle\Service\CarecService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,7 +49,7 @@ class StatsUpdateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
             // update stats
             $statsService = $this->getContainer()->get('casrec_service');
             $nUpdated = $statsService->updateAllCasrecRecordsWithStats();
-            $output->writeln($nUpdated ? "Updated $nUpdated CASREC records" : "No more CASREC records to updated");
+            $output->writeln($nUpdated ? "Updated $nUpdated CASREC records" : 'No more CASREC records to updated');
             $linesCount = $statsService->saveCsv(CasRec::STATS_FILE_PATH);
             $output->writeln("Stats file written. {$linesCount} lines written");
         } catch (\Exception $e) {
@@ -58,6 +57,6 @@ class StatsUpdateCommand extends \Symfony\Bundle\FrameworkBundle\Command\Contain
         }
 
         $redis->del(self::LOCK_KEY); // delete lock
-        $output->writeln("Job end. lock released");
+        $output->writeln('Job end. lock released');
     }
 }

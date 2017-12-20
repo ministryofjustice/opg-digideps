@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use Doctrine\Tests\ORM\Mapping\User;
@@ -25,7 +24,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
         // create 5 submitted reports
-        for($i=0; $i<5; $i++) {
+        for ($i=0; $i<5; $i++) {
             $client = self::fixtures()->createClient(
                 self::$pa1,
                 ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
@@ -54,7 +53,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
         }
     }
-
 
     public function testGetAllWithFiltersGetOneArchive()
     {
@@ -135,7 +133,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     private function getOrderedCaseNumbersFromSubmissions($submissions)
     {
-        $ret = array_map(function($submission) {
+        $ret = array_map(function ($submission) {
             return $submission['report']['client']['case_number'];
         }, $submissions);
 
@@ -145,12 +143,10 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     private function getSubmissionByCaseNumber(array $submissions, $caseNumber)
     {
-        $ret = array_filter($submissions, function($submission) use ($caseNumber) {
+        $ret = array_filter($submissions, function ($submission) use ($caseNumber) {
             return $submission['report']['client']['case_number'] == $caseNumber;
         });
 
         return array_shift($ret);
     }
-
-
 }

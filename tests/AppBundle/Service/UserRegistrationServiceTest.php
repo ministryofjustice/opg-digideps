@@ -35,7 +35,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
     }
 
-
     /**
      * @test
      */
@@ -259,7 +258,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userRegistrationService->selfRegisterUser($data);
     }
-
 
     public function tearDown()
     {

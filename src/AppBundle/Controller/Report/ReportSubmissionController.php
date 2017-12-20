@@ -64,7 +64,6 @@ class ReportSubmissionController extends RestController
         return $ret;
     }
 
-
     /**
      * Update documents
      * return array of storage references, for admin area to delete if needed
@@ -88,7 +87,6 @@ class ReportSubmissionController extends RestController
 
         return $reportSubmission->getId();
     }
-
 
     /**
      * Get old report submissions.
@@ -122,13 +120,13 @@ class ReportSubmissionController extends RestController
     public function setUndownloadable($id, Request $request)
     {
         if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
-        foreach($reportSubmission->getDocuments() as $document) {
+        foreach ($reportSubmission->getDocuments() as $document) {
             $document->setStorageReference(null);
         }
 

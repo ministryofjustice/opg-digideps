@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\AuditLogEntry;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
@@ -42,7 +41,6 @@ class BehatController extends RestController
             $report->setType($data['current_report_type']);
             $this->get('em')->flush($report);
         }
-
     }
 
     /**
@@ -74,7 +72,6 @@ class BehatController extends RestController
 
         return true;
     }
-
 
     /**
      * @Route("/user/{email}")
