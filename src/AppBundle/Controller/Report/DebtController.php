@@ -75,7 +75,7 @@ class DebtController extends AbstractController
     public function editAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\DebtsType::class, $report);
+        $form = $this->createForm(FormDir\Report\Debt\DebtsType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
@@ -88,7 +88,7 @@ class DebtController extends AbstractController
 
             }
 
-            return $this->redirect($this->generateUrl('debts_manage', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId]));
         }
 
         $backLink = $this->generateUrl('debts_exist', ['reportId'=>$reportId]);
@@ -107,13 +107,13 @@ class DebtController extends AbstractController
     /**
      * How debts are managed question.
      *
-     * @Route("/report/{reportId}/debts/manage", name="debts_manage")
+     * @Route("/report/{reportId}/debts/management", name="debts_management")
      * @Template()
      */
-    public function manageAction(Request $request, $reportId)
+    public function managementAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\DebtManagementType::class, $report);
+        $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
