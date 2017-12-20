@@ -8,7 +8,13 @@
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
 {% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
-{% set transOptions = clientTransOptions | merge({'%group%': groupString, '%category%': categoryString}) %}
+{% set transOptions = clientTransOptions | merge({
+    '%group%': groupString,
+    '%category%': categoryString,
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
+    '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%giftsPath%': path('gifts', {reportId: report.id})
+}) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
@@ -45,16 +51,18 @@
         <p class="text">
             {{ 'stepPage.moneyOut.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
+        {{ macros.notification('default', 'stepPage.moneyOut.pageSectionDescription.differentSections' | trans(transOptions) ) }}
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.moneyOut.legend' | trans(transOptions)
+            'legendText' : 'form.group.moneyOut.legend' | trans(transOptions),
+            'formGroupClass': 'push--top'
         }) }}
     {% endif %}
 
     {% if step == 2 %}
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.moneyOut.legend' | trans,
+            'legendText' : 'form.category.moneyOut.legend' | trans
         }) }}
     {% endif %}
 

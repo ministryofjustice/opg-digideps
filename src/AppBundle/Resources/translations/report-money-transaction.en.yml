@@ -21,15 +21,23 @@ startPage:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageTitle: Money out
     pageSectionDescription1: |
-      Use this section to tell us about money you have spent between %startDate% and %endDate%
-      on %client% that you have not told us about in the money transfers, deputy expenses or
-      gift sections of this report.
+      In this section, we ask you about money paid out of %client%'s accounts between %startDate%
+      and %endDate%.
     pageSectionDescription2: |
-      You can enter a total for each type of payment, or you can enter
-      individual amounts and we'll add them up for you.
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+      deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2PA: |
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+      deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
-      Be sure to enter each individual payment into one category only,
-      so we don't count them twice when we do the calculation.
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      You can enter a total amount or individual amounts for each type of payment.
+    totalOrIndividualPara: |
+      For example, you can add one payment that covers the cost of rent for the whole reporting
+      period, or you can add 12 payments - one for each month's rent.
     startButton: Start money out
 
 
@@ -44,11 +52,15 @@ stepPage:
         Don't include transfers between %client%'s accounts here. Enter them in the
         <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
-      htmlTitle: "Deputy report - Money out | GOV.UK"
-      pageTitle: Add a payment
-      supportTitle: Money out
-      pageSectionDescription:
-         step1: You can add one or more types of payment and come back to complete the section later.
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Add a payment
+    supportTitle: Money out
+    pageSectionDescription:
+      step1: You can add one or more types of payment and come back to complete the section later.
+      differentSections: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+        deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
 
 addAnotherPage:
   moneyIn:
@@ -65,8 +77,8 @@ addAnotherPage:
     pageSectionTitle: Add a payment
     form:
       addAnother:
-        label: The payment has been saved. Would you like to add another payment now?
-        hint: If you prefer, you can come back to this section later to add more types of payment
+        label: The payment has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more payments
       save:
          label: Continue
 
@@ -79,12 +91,7 @@ summaryPage:
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
-    supportTitle: ""
-    weAskAbout: |
-      In this section, we ask you about money you have spent between %startDate% and %endDate%
-      on %client% that you have not told us about in the money transfers, deputy expenses or
-      gift sections of this report.
-    # similar to start page, but expecting to evolve differently
+    moreDetails: More details about this section
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
@@ -98,13 +105,13 @@ form:
       one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
-      household-bills: Household bill
+      household-bills: Household bills and expenses
       accommodation: Accommodation (mortgage or rent)
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
-      fees: Professional fee
-      major-purchases: Major purchase
-      debt-and-charges: Tax, debt or charge
+      fees: OPG and other professional fees
+      major-purchases: Major purchase over £1,000
+      debt-and-charges: Tax or charge
       moving-money: Moving money
       moneyout-other: Other
   amount:
@@ -290,7 +297,7 @@ form:
       bank-charges:
         label: Bank charge
       loans:
-        label: Loans
+        label: Loan repayments
       credit-cards-charges:
         label: Credit card charge
       unpaid-care-fees:
