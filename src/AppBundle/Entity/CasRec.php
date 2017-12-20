@@ -185,6 +185,16 @@ class CasRec
     /**
      * Filled from cron
      *
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="ndr_submitted_at", type="datetime", nullable=true)
+     */
+    private $ndrSubmittedAt;
+
+    /**
+     * Filled from cron
+     *
      * @var int
      *
      * @JMS\Type("string")
@@ -385,6 +395,7 @@ class CasRec
             'Deputy last logged in' => $dateFormat($this->lastLoggedIn, 'n.a.'),
             'Reports submitted' =>  $this->nOfReportsSubmitted ?: 'n.a.',
             'Last report submitted at' =>  $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
+            'NDR submitted at' =>  $dateFormat($this->ndrSubmittedAt, 'n.a.'),
             'Reports active' =>  $this->nOfReportsActive ?: 'n.a.'
         ] + $this->getOtherColumns();
     }
@@ -448,6 +459,18 @@ class CasRec
 
         return $this;
     }
+
+    /**
+     * @param \DateTime $ndrSubmittedAt
+     * @return CasRec
+     */
+    public function setNdrSubmittedAt($ndrSubmittedAt)
+    {
+        $this->ndrSubmittedAt = $ndrSubmittedAt;
+
+        return $this;
+    }
+
 
     /**
      * @param int $nOfReportsActive
