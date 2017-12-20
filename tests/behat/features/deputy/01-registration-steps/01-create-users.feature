@@ -4,15 +4,12 @@ Feature: deputy / user / add user
   # remove when ODR-enabled deputy and 103-enabled deputy can be created via registration page
   Scenario: admin login
     Given I am on admin login page
-    #And I save the page as "admin-login"
-      #Then the response status code should be 200
       # test wrong credentials
     When I fill in the following:
       | login_email    | admin@publicguardian.gsi.gov.uk |
       | login_password | WRONG PASSWORD !!               |
     And I click on "login"
     Then I should see an "#error-summary" element
-    #And I save the page as "admin-login-error1"
       # test user email in caps
     When I fill in the following:
       | login_email    | admin@publicguardian.gsi.gov.uk |
@@ -59,7 +56,6 @@ Feature: deputy / user / add user
     When I create a new "ODR-enabled" "Lay Deputy" user "John ODR" "Doe ODR" with email "behat-user-odr@publicguardian.gsi.gov.uk" and postcode "AB12CD"
     Then I should see "behat-user-odr@publicguardian.gsi.gov.uk" in the "users" region
     And I should see "yes" in the "behat-user-odrpublicguardiangsigovuk-odr-enabled" region
-    #And I save the page as "admin-deputy-added"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
 
 
