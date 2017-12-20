@@ -6,9 +6,8 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Mockery as m;
+use Psr\Log\LoggerInterface;
 
 class FileUploaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,7 +38,6 @@ class FileUploaderTest extends \PHPUnit_Framework_TestCase
         $this->assertStringMatchesFormat('dd_doc_1_%d', $doc->getStorageReference());
         $this->assertEquals($fileName, $doc->getFileName());
         $this->assertEquals(false, $doc->isReportPdf());
-
     }
 
     public function tearDown()

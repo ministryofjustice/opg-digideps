@@ -3,9 +3,9 @@
 namespace AppBundle\Validator\Constraints;
 
 use AppBundle\Service\Client\RestClient;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 

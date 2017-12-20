@@ -3,7 +3,6 @@
 namespace AppBundle\Resources\views\Report;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Account;
 use AppBundle\Entity\Report\Report as Report;
 use AppBundle\Entity\Report\Status;
 use AppBundle\Entity\User;
@@ -12,7 +11,6 @@ use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -57,7 +55,7 @@ class BalanceTest extends WebTestCase
     }
 
     /**
-     * @param array $methods
+     * @param  array  $methods
      * @return Report
      */
     private function getMockedReport(array $methods)
@@ -92,7 +90,7 @@ class BalanceTest extends WebTestCase
     }
 
     /**
-     * @param array $methods
+     * @param  array  $methods
      * @return Status
      */
     private function getMockedStatus(array $methods)
@@ -107,7 +105,6 @@ class BalanceTest extends WebTestCase
 
         ]);
     }
-
 
     public function testNotReadyNotDue()
     {
@@ -167,7 +164,6 @@ class BalanceTest extends WebTestCase
         $this->assertCount(1, $crawler->filter('#calculated_balance_table'));
     }
 
-
     public function testCalculatedBalanceFoot()
     {
         // accounts not started -> no balance shown
@@ -204,7 +200,6 @@ class BalanceTest extends WebTestCase
             ])
         );
         $this->assertContains('456.75', $this->html($crawler, '#calculated_balance_foot_value'));
-
     }
 
     public static function explanationFormProvider()
@@ -251,8 +246,6 @@ class BalanceTest extends WebTestCase
         return new Crawler($html);
     }
 
-
-
     public function tearDown()
     {
         m::close();
@@ -264,5 +257,4 @@ class BalanceTest extends WebTestCase
     {
         return $crawler->filter($expr)->eq(0)->html();
     }
-
 }

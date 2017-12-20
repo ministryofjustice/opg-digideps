@@ -593,5 +593,4 @@ class Status
             case 'readyToSubmit': return Status::STATE_DONE;
         }
     }
-
 }

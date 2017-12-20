@@ -54,11 +54,7 @@ class ActionController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\ActionType::class
-                                 , $action
-                                 , [ 'step'            => $step
-                                   , 'translator'      => $this->get('translator')
-                                   , 'clientFirstName' => $report->getClient()->getFirstname()
+        $form = $this->createForm(FormDir\Report\ActionType::class, $action, [ 'step'            => $step, 'translator'      => $this->get('translator'), 'clientFirstName' => $report->getClient()->getFirstname()
                                    ]
                                  );
         $form->handleRequest($request);

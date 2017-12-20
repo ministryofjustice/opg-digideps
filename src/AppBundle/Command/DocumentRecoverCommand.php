@@ -2,15 +2,10 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Exception\RestClientException;
-use AppBundle\Service\DocumentService;
 use Aws\S3\Exception\S3Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-
 
 /**
  * Used to compile a list of deleted files
@@ -43,7 +38,7 @@ class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         $ok = 0;
         $denied = 0;
 
-        foreach($refs as $ref) {
+        foreach ($refs as $ref) {
             try {
                 $object = $s3->getObject([
                     'Bucket' => $bucketName,
@@ -54,11 +49,8 @@ class DocumentRecoverCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
                 $output->writeln($e->getMessage());
                 $denied++;
             }
-
         }
 
         $output->writeln("ok $ok - denied $denied");
     }
-
-
 }

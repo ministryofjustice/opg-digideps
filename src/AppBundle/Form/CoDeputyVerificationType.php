@@ -20,12 +20,12 @@ class CoDeputyVerificationType extends AbstractType
                 'preferred_choices' => ['', 'GB'],
                 'empty_value' => 'Please select ...',
             ])
-            ->add('phoneMain'       , 'text')
+            ->add('phoneMain', 'text')
             ->add('phoneAlternative', 'text')
-            ->add('email'           , 'text')
-            ->add('clientLastname'  , 'text', ['mapped' => false])
+            ->add('email', 'text')
+            ->add('clientLastname', 'text', ['mapped' => false])
             ->add('clientCaseNumber', 'text', ['mapped' => false])
-            ->add('save'            , 'submit');
+            ->add('save', 'submit');
     }
 
     public function configureOptions(OptionsResolver $resolver)

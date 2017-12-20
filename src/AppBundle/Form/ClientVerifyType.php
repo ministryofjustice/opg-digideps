@@ -10,9 +10,9 @@ class ClientVerifyType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('lastname'  , 'text')
+        $builder->add('lastname', 'text')
                 ->add('caseNumber', 'text')
-                ->add('save'      , 'submit');
+                ->add('save', 'submit');
     }
 
     public function configureOptions(OptionsResolver $resolver)

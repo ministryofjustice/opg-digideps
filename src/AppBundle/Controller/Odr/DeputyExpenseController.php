@@ -44,9 +44,7 @@ class DeputyExpenseController extends AbstractController
     public function existAction(Request $request, $odrId)
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\YesNoType::class
-                                 , $odr
-                                 , [ 'field' => 'paidForAnything', 'translation_domain' => 'odr-deputy-expenses']
+        $form = $this->createForm(FormDir\YesNoType::class, $odr, [ 'field' => 'paidForAnything', 'translation_domain' => 'odr-deputy-expenses']
                                  );
         $form->handleRequest($request);
 

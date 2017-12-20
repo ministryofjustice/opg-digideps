@@ -57,10 +57,10 @@ class Redirector
 
     /**
      * Redirector constructor.
-     * @param TokenStorageInterface $tokenStorage
+     * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authChecker
-     * @param RouterInterface $router
-     * @param Session $session
+     * @param RouterInterface               $router
+     * @param Session                       $session
      * @param $env
      */
     public function __construct(
@@ -106,27 +106,27 @@ class Redirector
     }
 
     /**
-     * @param EntityDir\User $user
-     * @param string $currentRoute
+     * @param  EntityDir\User $user
+     * @param  string         $currentRoute
      * @return bool|string
      */
     public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home','odr_index'])){
+        if (in_array($currentRoute, ['lay_home','odr_index'])) {
             $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
         }
 
         //none of these corrections apply to admin
         if (EntityDir\User::ROLE_ADMIN != $user->getRoleName()) {
-            if ($user->getIsCoDeputy()){
+            if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
                     $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
                 }
 
                 // unverified codeputy invitation
-                if (!$user->getCoDeputyClientConfirmed()){
+                if (!$user->getCoDeputyClientConfirmed()) {
                     $route = 'codep_verification';
                 }
             } else {

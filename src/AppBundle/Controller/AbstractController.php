@@ -28,7 +28,7 @@ abstract class AbstractController extends Controller
      *
      * @return User
      */
-    protected function getUserWithData(array $jmsGroups = array())
+    protected function getUserWithData(array $jmsGroups = [])
     {
         $jmsGroups[] = 'user';
         $jmsGroups = array_unique($jmsGroups);
@@ -88,7 +88,7 @@ abstract class AbstractController extends Controller
     }
 
     /**
-     * @param int $reportId
+     * @param int   $reportId
      * @param array $groups
      *
      * @throws \RuntimeException if report is submitted

@@ -128,7 +128,6 @@ class MoneyTransactionType extends AbstractType
             'translation_domain' => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function (FormInterface $form) {
-
                 $validationGroups = [];
 
                 if ($this->step === 1) {

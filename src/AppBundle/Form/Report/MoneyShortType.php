@@ -26,9 +26,7 @@ class MoneyShortType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([ 'translation_domain' => 'report-money-short'
-                               , 'cascade_validation' => true
-                               , 'validation_groups'  => ['xxx']
+        $resolver->setDefaults([ 'translation_domain' => 'report-money-short', 'cascade_validation' => true, 'validation_groups'  => ['xxx']
                                ])
                  ->setRequired(['field']);
     }

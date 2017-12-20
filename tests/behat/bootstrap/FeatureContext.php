@@ -129,7 +129,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
         // search in
         $found = false;
-        foreach ((array)$responseHeaders[$header] as $currentValue) {
+        foreach ((array) $responseHeaders[$header] as $currentValue) {
             if (strpos($currentValue, $value) !== false) {
                 $found = true;
             }
@@ -163,16 +163,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
 
-
     private function getAreaUrl($area)
     {
         if ($area === 'deputy') {
             return $this->getSiteUrl();
-        } else if ($area === 'admin') {
+        } elseif ($area === 'admin') {
             return $this->getAdminUrl();
         } else {
             throw new \RuntimeException(__METHOD__ . ': area not valid');
         }
     }
-
 }

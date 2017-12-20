@@ -1,8 +1,8 @@
 <?php
 namespace AppBundle\Validator\Constraints;
 
-use AppBundle\Form\Traits\TokenStorageTrait;
 use AppBundle\Form\Traits\HasTranslatorTrait;
+use AppBundle\Form\Traits\TokenStorageTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

@@ -2,8 +2,6 @@
 
 namespace AppBundle\Command;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Service\DocumentService;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -104,7 +102,6 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         return $this->getContainer()->get('snc_redis.default');
     }
 
-
     /**
      * Log message using the internal logger
      *
@@ -119,5 +116,4 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
             'cron' => 'digideps:documents-cleanup',
         ]]);
     }
-
 }

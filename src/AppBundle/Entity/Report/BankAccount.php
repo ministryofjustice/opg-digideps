@@ -322,7 +322,6 @@ class BankAccount
         return !in_array($this->getAccountType(), self::$typesNotRequiringSortCode);
     }
 
-
     /**
      * Bank name required.
      *

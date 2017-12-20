@@ -19,7 +19,7 @@ trait FileTrait
         foreach ($table->getRowsHash() as $file => $data) {
             list($check, $value) = $data;
             $lines = [];
-            switch($check) {
+            switch ($check) {
                 case 'exactFileName+md5sum':
                     $expectedChecksum = $value;
                     exec("unzip -c $tmpFile $file | md5sum", $lines);
@@ -38,7 +38,7 @@ trait FileTrait
                     if (empty($lines)) {
                         throw new \RuntimeException("File matching $file not found in ZIP file");
                     }
-                    $sizeBytes = array_shift(array_filter(explode(' ',$lines[0])));
+                    $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
                     if ($sizeBytes < $sizeAtLeast) {
                         throw new \RuntimeException("File matching $file is $sizeBytes bytes, at least $sizeAtLeast expected");
                     }

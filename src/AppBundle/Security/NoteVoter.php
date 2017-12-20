@@ -93,5 +93,4 @@ class NoteVoter extends Voter
 
         return false;
     }
-
 }

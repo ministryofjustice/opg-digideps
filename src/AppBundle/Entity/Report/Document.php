@@ -5,8 +5,8 @@ namespace AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
@@ -51,7 +51,6 @@ class Document
             return;
         }
     }
-
 
     /**
      * @var int
@@ -119,7 +118,7 @@ class Document
     }
 
     /**
-     * @param int $id
+     * @param  int      $id
      * @return Document
      */
     public function setId($id)
@@ -138,7 +137,7 @@ class Document
     }
 
     /**
-     * @param string $fileName
+     * @param  string   $fileName
      * @return Document
      */
     public function setFileName($fileName)
@@ -157,7 +156,7 @@ class Document
     }
 
     /**
-     * @param string $storageReference
+     * @param  string   $storageReference
      * @return Document
      */
     public function setStorageReference($storageReference)
@@ -166,7 +165,6 @@ class Document
 
         return $this;
     }
-
 
     /**
      * @return UploadedFile
@@ -185,7 +183,7 @@ class Document
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isReportPdf()
     {
@@ -193,7 +191,7 @@ class Document
     }
 
     /**
-     * @param boolean $isReportPdf
+     * @param bool $isReportPdf
      */
     public function setIsReportPdf($isReportPdf)
     {

@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
-use AppBundle\Entity\Report\Status;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -246,7 +245,7 @@ class Report
      * @var string
      */
     private $metadata;
-    
+
     /**
      * @var Document[]
      * @JMS\Groups({"report-documents"})
@@ -327,7 +326,7 @@ class Report
     }
 
     /**
-     * @param string $type
+     * @param  string $type
      * @return $this
      */
     public function setType($type)
@@ -551,7 +550,7 @@ class Report
     }
 
     /**
-     * @param array $transfers
+     * @param  array $transfers
      * @return $this
      */
     public function setMoneyTransfers(array $transfers)
@@ -822,7 +821,7 @@ class Report
     }
 
     /**
-     * @param bool $noTransfersToAdd
+     * @param  bool  $noTransfersToAdd
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -841,7 +840,7 @@ class Report
     }
 
     /**
-     * @param boolean $submitted
+     * @param bool $submitted
      *
      * @return Report
      */
@@ -853,7 +852,7 @@ class Report
     }
 
     /**
-     * @param boolean $reportSeen
+     * @param bool $reportSeen
      *
      * @return Report
      */
@@ -863,7 +862,7 @@ class Report
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getReportSeen()
     {
@@ -1015,7 +1014,6 @@ class Report
         return $attachmentName;
     }
 
-
     /**
      * @return string
      */
@@ -1041,7 +1039,7 @@ class Report
     }
 
     /**
-     * @param array $availableSections
+     * @param  array  $availableSections
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1052,7 +1050,7 @@ class Report
     }
 
     /**
-     * @param string $section
+     * @param  string $section
      * @return bool
      */
     public function hasSection($section)
@@ -1067,14 +1065,14 @@ class Report
      */
     public function isSubmitted()
     {
-        return (bool)$this->getSubmitted();
+        return (bool) $this->getSubmitted();
     }
 
     /**
      * Generates the translation suffic to use depending on report type,
      *
      * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
-     * 
+     *
      * @return string
      */
     public function get104TransSuffix()
@@ -1098,8 +1096,7 @@ class Report
             return false;
         }
 
-        switch ($this->getType())
-        {
+        switch ($this->getType()) {
             case Report::TYPE_102:
             case Report::TYPE_102_4:
                 // if a money section not started, dont show warning

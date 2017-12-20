@@ -2,9 +2,6 @@
 
 namespace AppBundle\Service\File\Types;
 
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-
 class Pdf extends UploadableFile
 {
     protected $scannerEndpoint = 'upload/pdf';
@@ -19,4 +16,3 @@ class Pdf extends UploadableFile
         parent::callFileCheckers();
     }
 }
-

@@ -28,20 +28,19 @@ class CoDeputyController extends AbstractController
         $form = $this->createForm(FormDir\CoDeputyVerificationType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
+        if ($form->isSubmitted()) {
 
             // get client validation errors, if any, and add to the form
             $client = new EntityDir\Client();
             $client->setLastName($form['clientLastname']->getData());
             $client->setCaseNumber($form['clientCaseNumber']->getData());
             $errors = $this->get('validator')->validate($client, ['verify-codeputy']);
-            foreach($errors as $error) {
+            foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
-                $form->get('client'.ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
+                $form->get('client' . ucfirst($clientProperty))->addError(new FormError($error->getMessage()));
             }
 
             if ($form->isValid()) {
-
                 $selfRegisterData = new SelfRegisterData();
                 $selfRegisterData->setFirstname($form['firstname']->getData());
                 $selfRegisterData->setLastname($form['lastname']->getData());
@@ -118,7 +117,7 @@ class CoDeputyController extends AbstractController
                 $invitedUser = $this->getRestClient()->post('codeputy/add', $form->getData(), ['codeputy'], 'User');
 
                 // Regular deputies should become coDeputies via a CSV import, but at least for testing handle the change from non co-dep to co-dep here
-                $this->getRestClient()->put('user/'.$loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
+                $this->getRestClient()->put('user/' . $loggedInUser->getId(), ['co_deputy_client_confirmed' => true], []);
 
                 $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
                 $this->getMailSender()->send($invitationEmail);
@@ -146,7 +145,6 @@ class CoDeputyController extends AbstractController
         ];
     }
 
-
     /**
      * @Route("/codeputy/re-invite/{email}", name="codep_resend_activation")
      * @Template()
@@ -167,7 +165,7 @@ class CoDeputyController extends AbstractController
             try {
                 //email was updated on the fly
                 if ($form->getData()->getEmail() != $email) {
-                    $this->getRestClient()->put('codeputy/'.$invitedUser->getId(), $form->getData(), []);
+                    $this->getRestClient()->put('codeputy/' . $invitedUser->getId(), $form->getData(), []);
                 }
                 $invitationEmail = $this->getMailFactory()->createCoDeputyInvitationEmail($invitedUser, $loggedInUser);
                 $this->getMailSender()->send($invitationEmail);

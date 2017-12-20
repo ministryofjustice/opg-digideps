@@ -2,11 +2,10 @@
 
 namespace AppBundle\Service\File\Checker;
 
-use AppBundle\Service\File\Types\UploadableFileInterface;
-use AppBundle\Service\File\Types\Pdf;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
+use AppBundle\Service\File\Types\Pdf;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use \Mockery as m;
+use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -44,7 +43,6 @@ class PdfCheckerTest extends MockeryTestCase
         $file->setUploadedFile($uploadedFile);
 
         $result = $this->sut->checkFile($file);
-
     }
 
     public function testCheckFileForBadPdf()

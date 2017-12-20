@@ -731,11 +731,11 @@ class User implements AdvancedUserInterface
      */
     public function hasAddressDetails()
     {
-        return ( !empty($this->getAddress1())
+        return  !empty($this->getAddress1())
               && !empty($this->getAddressCountry())
               && !empty($this->getAddressPostcode())
               && !empty($this->getPhoneMain())
-        );
+        ;
     }
 
     /**

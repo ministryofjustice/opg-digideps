@@ -340,7 +340,6 @@ class MailFactory
         return $attachmentName;
     }
 
-
     /**
      * @param \AppBundle\Entity\User $user
      *
