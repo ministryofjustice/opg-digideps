@@ -17,10 +17,14 @@ class MoneyTransaction
     public static $categories = [
         // category | hasMoreDetails | order | group | type (in/out)
 
+        // Money In
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
         ['salary-or-wages', false, '60', 'income-and-earnings', 'in'],
+
+        ['personal-pension', false, '190', 'pensions', 'in'],
+        ['state-pension', false, '200', 'pensions', 'in'],
 
         ['attendance-allowance', false, '70', 'state-benefits', 'in'],
         ['disability-living-allowance', false, '80', 'state-benefits', 'in'],
@@ -35,9 +39,6 @@ class MoneyTransaction
         ['winter-fuel-cold-weather-payment', false, '170', 'state-benefits', 'in'],
         ['other-benefits', true, '180', 'state-benefits', 'in'],
 
-        ['personal-pension', false, '190', 'pensions', 'in'],
-        ['state-pension', false, '200', 'pensions', 'in'],
-
         ['compensation-or-damages-award', true, '210', 'damages', 'in'],
 
         ['bequest-or-inheritance', false, '220', 'one-off', 'in'],
@@ -49,6 +50,7 @@ class MoneyTransaction
 
         ['anything-else', true, '290', 'moneyin-other', 'in'],
 
+        // Money Out
         ['broadband', false, '300', 'household-bills', 'out'],
         ['council-tax', false, '310', 'household-bills', 'out'],
         ['electricity', false, '320', 'household-bills', 'out'],
@@ -81,19 +83,19 @@ class MoneyTransaction
 
         ['deputy-security-bond', false, '560', 'fees', 'out'],
         ['opg-fees', false, '570', 'fees', 'out'],
-        ['other-fees', true, '580', 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, '590', 'fees', 'out'],
+        ['other-fees', true, '580', 'fees', 'out'],
 
         ['investment-bonds-purchased', true, '610', 'major-purchases', 'out'],
         ['investment-account-purchased', true, '620', 'major-purchases', 'out'],
-        ['purchase-over-1000', true, '630', 'major-purchases', 'out'],
         ['stocks-and-shares-purchased', true, '640', 'major-purchases', 'out'],
+        ['purchase-over-1000', true, '630', 'major-purchases', 'out'],
 
         ['bank-charges', false, '660', 'debt-and-charges', 'out'],
         ['credit-cards-charges', false, '670', 'debt-and-charges', 'out'],
-        ['unpaid-care-fees', false, '680', 'debt-and-charges', 'out'],
         ['loans', false, '690', 'debt-and-charges', 'out'],
         ['tax-payments-to-hmrc', false, '700', 'debt-and-charges', 'out'],
+        ['unpaid-care-fees', false, '680', 'debt-and-charges', 'out'],
         ['debt-and-charges-other', true, '710', 'debt-and-charges', 'out'],
 
         ['cash-withdrawn', true, '720', 'moving-money', 'out'],
