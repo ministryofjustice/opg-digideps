@@ -8,7 +8,6 @@ Feature: deputy / user / set password
         When I save the application status into "activation-link-before-opening"
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200
-        When I save the page as "deputy-step1"
          # empty
         When I fill in the password fields with ""
         And I check "set_password_showTermsAndConditions"
@@ -35,7 +34,6 @@ Feature: deputy / user / set password
         When I fill in the password fields with "Abcdefgh"
         And I check "set_password_showTermsAndConditions"
         And I press "set_password_save"
-        And I save the page as "deputy-step1-error"
          # not agreed on TC
         When I fill in the password fields with "Abcd1234"
         And I uncheck "set_password_showTermsAndConditions"
@@ -62,7 +60,6 @@ Feature: deputy / user / set password
        # follow link as it is
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200
-        And I save the page as "odr-deputy-step1"
         And I activate the user with password "Abcd1234"
        # test login
         When I go to "logout"

@@ -50,7 +50,6 @@ Feature: odr / report submit
         And I press "odr_declaration_save"
         Then the form should be valid
         And the URL should match "/odr/\d+/submitted"
-        And I save the page as "odr-submit-submitted"
         And the response status code should be 200
         # return to homepage
         When I click on "return-homepage"
@@ -82,7 +81,6 @@ Feature: odr / report submit
         # create report
         When I click on "report-start"
         Then the URL should match "report/create/\d+"
-        And I save the page as "odr-create-report"
         # simple validation check. Same form already tested from deputy, not need to check validation cases again
         When I fill in the following:
             | report_startDate_day |  |

@@ -110,3 +110,4 @@ Feature: Report accounts
       | 445566                | account-02ca |
       | £101.40               | account-02ca |
       | £201.50               | account-02ca |
+    And I save the application status into "bank-accounts-done"
