@@ -9,7 +9,11 @@
 {% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
 {% set category = transaction.category %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
-{% set transOptions = clientTransOptions | merge({'%group%': groupString, '%category%': categoryString}) %}
+{% set transOptions = clientTransOptions | merge({
+    '%group%': groupString,
+    '%category%': categoryString,
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
+}) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
@@ -44,9 +48,11 @@
         <p class="text">
             {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
+        {{ macros.notification('default', 'stepPage.moneyIn.pageSectionDescription.transferWarning' | trans(transOptions) ) }}
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.moneyIn.legend' | trans(transOptions)
+            'legendText' : 'form.group.moneyIn.legend' | trans(transOptions),
+            'formGroupClass': 'push--top'
         }) }}
     {% endif %}
 

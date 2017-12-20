@@ -238,14 +238,14 @@ account:
         notBlank: Please select either 'Yes' or 'No'
 
 moneyTransaction:
-  addAnother.notBlank: Please choose one option
+  addAnother.notBlank: Please choose an option
   form:
     category:
-      notBlank: Please choose one option
+      notBlank: Please choose an option
     id:
-      notBlank: Please choose one option
+      notBlank: Please choose an option
     amount:
-      notBlank: Please specify an amount
+      notBlank: Please enter an amount
       type: Enter a valid amount
       minMessage: Please input a value of at least £{{ limit }}
       maxMessage: The amount must be less than £10,000,000
@@ -253,9 +253,9 @@ moneyTransaction:
       notBlank: Please give us some more information about this amount
 
 moneyTransactionShort:
-  exist.notBlank: Please choose one option
+  exist.notBlank: Please choose an option
   amount:
-      notBlank: Please specify an amount
+      notBlank: Please enter an amount
       type: Enter a valid amount
       minMessage: Please input a value of at least £1,000
       maxMessage: The amount must be less than £10,000,000
@@ -270,7 +270,7 @@ expenses:
     explanation:
       notBlank: Please enter a description
     amount:
-      notBlank: Please specify an amount
+      notBlank: Please enter an amount
       type: Enter a valid amount
       minMessage: Please input a value of at least £{{ limit }}
       maxMessage: The amount must be less than £10,000,000
@@ -281,7 +281,7 @@ gifts:
     explanation:
       notBlank: Please enter a description
     amount:
-      notBlank: Please specify an amount
+      notBlank: Please enter an amount
       type: Enter a valid amount
       minMessage: Please input a value of at least £{{ limit }}
       maxMessage: The amount must be less than £10,000,000

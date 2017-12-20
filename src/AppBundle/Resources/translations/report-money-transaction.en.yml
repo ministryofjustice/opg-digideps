@@ -3,13 +3,19 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in
     pageSectionDescription1: |
-      Please tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+      In this section, we ask you about money paid into %client%'s accounts between %startDate%
+      and %endDate%.
     pageSectionDescription2: |
-      You can enter a total for each type of income, or you can enter
-      individual amounts and we'll add them up for you.
+      Transfers between %client%'s accounts should be entered in the
+      <a href="%moneyTransfersPath%">money transfers</a> section.
     pageSectionDescription3: |
-      Be sure to enter each individual source of income into one category only,
-      so we don't count them twice when we do the calculation.
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      You can enter a total amount or individual amounts for each type of income.
+    totalOrIndividualPara: |
+      For example, you can add one item of income that covers the total amount of state pension
+      received over the reporting period, or you can add 12 items - one for each month's pension
+      payment.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
@@ -33,7 +39,10 @@ stepPage:
     pageTitle: Add an item of income
     supportTitle: Money in
     pageSectionDescription:
-       step1: You can add one or more items and come back to complete the section later.
+      step1: You can add one or more items and come back to complete the section later.
+      transferWarning: |
+        Don't include transfers between %client%'s accounts here. Enter them in the
+        <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
       htmlTitle: "Deputy report - Money out | GOV.UK"
       pageTitle: Add a payment
@@ -47,8 +56,8 @@ addAnotherPage:
     pageSectionTitle: Add another item
     form:
       addAnother:
-        label: The item of income has been saved. Would you like to add another item of income now?
-        hint: If you prefer, you can come back to this section later to add more items of income
+        label: The item has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more items
       save:
          label: Continue
   moneyOut:
@@ -66,9 +75,7 @@ summaryPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageSectionTitle: Money in
-    # similar to start page, but expecting to evolve differently
-    supportTitle: ""
-    weAskAbout: In this section, we ask you about money paid into %client%'s account between %startDate% and %endDate%.
+    moreDetails: More details about this section
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageSectionTitle: Money out
@@ -84,11 +91,11 @@ form:
     moneyOut.legend: What category does the payment come under?
     entries:
       # money in
-      income-and-earnings: Income from investment
-      state-benefits: State benefit
+      income-and-earnings: Income from interest, investments, or property
       pensions: Pension
-      damages: Damages
-      one-off: One-off
+      state-benefits: State benefit
+      damages: Compensation or damages award
+      one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
       household-bills: Household bill
@@ -121,7 +128,7 @@ form:
       dividends:
         label: Dividends
       account-interest:
-        label: Account interest
+        label: Interest on savings and other accounts
       salary-or-wages:
         label: Salary or wages
       other-incomes:
