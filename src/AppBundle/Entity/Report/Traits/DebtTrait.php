@@ -31,6 +31,16 @@ trait DebtTrait
      */
     private $hasDebts;
 
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"debt-management"})
+     * @ORM\Column( name="debt_management", type="text", nullable=true)
+     */
+    private $debtManagement;
+
     /**
      * @param mixed $debts
      */
@@ -45,6 +55,22 @@ trait DebtTrait
     public function getDebts()
     {
         return $this->debts;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDebtManagement()
+    {
+        return $this->debtManagement;
+    }
+
+    /**
+     * @param mixed $debtManagement
+     */
+    public function setDebtManagement($debtManagement)
+    {
+        $this->debtManagement = $debtManagement;
     }
 
     /**

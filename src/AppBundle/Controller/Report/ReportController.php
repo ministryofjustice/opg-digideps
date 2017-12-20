@@ -147,6 +147,9 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($debt);
                 }
             }
+            if ($data['debtManagement']) {
+                $report->setDebtManagement($data['debtManagement']);
+            }
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
         }
 
