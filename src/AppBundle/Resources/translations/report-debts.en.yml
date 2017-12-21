@@ -24,7 +24,6 @@ managementPage:
     debtManagement:
       label: How is the debt being managed or reduced?
       hint: For example, give details of any regular payments to creditors or payment plans
-
 editPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
   pageSectionTitle: Debts
