@@ -147,10 +147,12 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($debt);
                 }
             }
-            if ($data['debtManagement']) {
-                $report->setDebtManagement($data['debtManagement']);
-            }
+
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+        }
+
+        if (array_key_exists('debt_management', $data)) {
+            $report->setDebtManagement($data['debt_management']);
         }
 
         if (array_key_exists('fees', $data)) {
