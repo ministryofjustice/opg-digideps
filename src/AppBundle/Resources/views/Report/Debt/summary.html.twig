@@ -117,6 +117,29 @@
                 </tbody>
             </table>
         {% endif %}
+
+        {% if report.debtManagement %}
+            <table class="check-your-answers push--top">
+                <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>
+                        <span class="visually-hidden">Actions</span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="behat-region-debt-management-details">
+                    <td>{{ 'managementPage.form.debtManagement.label' | trans }}</td>
+                    <td>{{ report.debtManagement | nl2br }}</td>
+                    <td class="change-answer">
+                        <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        {% endif %}
     {% endif %}
 
     {# Pagination #}
