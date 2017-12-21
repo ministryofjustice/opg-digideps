@@ -133,8 +133,8 @@
                 <tr class="behat-region-debt-management-details">
                     <td>{{ 'managementPage.form.debtManagement.label' | trans }}</td>
                     <td>{{ report.debtManagement | nl2br }}</td>
-                    <td class="change-answer">
-                        <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <td>
+                        <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit-debt-management action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
                     </td>
                 </tr>
                 </tbody>

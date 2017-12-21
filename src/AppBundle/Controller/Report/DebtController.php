@@ -15,6 +15,7 @@ class DebtController extends AbstractController
     private static $jmsGroups = [
         'debt',
         'debt-state',
+        'debt-management'
     ];
 
     /**
