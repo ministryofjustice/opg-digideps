@@ -35,6 +35,17 @@
                             </tr>
                         {% endif %}
                     {% endfor %}
+
+                    {% if report.debtManagement %}
+                        <tr>
+                            <td colspan="2" class="hard noborder">
+                                <div class="labelvalue soft-half--top">
+                                    <div class="label">{{ ('managementPage.form.debtManagement.label' | trans) }}</div>
+                                    <div class="value">{{ report.debtManagement | nl2br }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </table>
             </div>
 

@@ -134,6 +134,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
+            'skipLink' => $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
             'report' => $report,
             'form' => $form->createView(),
         ];
