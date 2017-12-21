@@ -16,6 +16,9 @@ class UserService
     /** @var EntityRepository */
     protected $teamRepository;
 
+    /** @var EntityManager */
+    protected $_em;
+
     public function __construct(
         UserRepository $userRepository,
         TeamRepository $teamRepository,
