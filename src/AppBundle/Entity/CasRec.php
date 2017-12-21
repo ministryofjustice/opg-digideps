@@ -462,6 +462,7 @@ class CasRec
 
     /**
      * @param \DateTime $ndrSubmittedAt
+     *
      * @return CasRec
      */
     public function setNdrSubmittedAt($ndrSubmittedAt)
@@ -470,7 +471,6 @@ class CasRec
 
         return $this;
     }
-
 
     /**
      * @param int $nOfReportsActive

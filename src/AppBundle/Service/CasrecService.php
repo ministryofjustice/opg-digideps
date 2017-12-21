@@ -85,7 +85,6 @@ class CasrecService
                 ->setLastReportSubmittedAt($lastReport ? $lastReport->getSubmitDate() : null)
                 ->setNdrSubmittedAt($client->getOdr() && $client->getOdr()->getSubmitted() ? $client->getOdr()->getSubmitDate() : null)
                 ->setNOfReportsActive(count($results[0]->getUnsubmittedReports()));
-
         }
 
         $casrec->setUpdatedAt(new \DateTime());

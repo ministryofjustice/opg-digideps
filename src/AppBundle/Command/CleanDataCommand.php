@@ -67,7 +67,7 @@ class CleanDataCommand extends ContainerAwareCommand
                 $fixed++;
             } catch (\Exception $e) {
                 $error = $e->getCode() === 400 ? 'CASREC match not found' : $e->getMessage();
-                $output->writeln(" ERROR: ".$error);
+                $output->writeln(' ERROR: ' . $error);
                 $mismatch++;
             }
         }
