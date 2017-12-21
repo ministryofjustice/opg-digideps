@@ -126,7 +126,7 @@ class CsvToArray
                 $index = array_search($optionalColumn, $header);
                 if ($index !== false) {
                     // fix for CSV with last two columns being empty and not having commas
-                    if (!isset( $row[$index])) {
+                    if (!isset($row[$index])) {
                         $row[$index] = '';
                     }
                     $rowArray[$optionalColumn] = $row[$index];
