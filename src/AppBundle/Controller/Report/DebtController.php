@@ -15,6 +15,7 @@ class DebtController extends AbstractController
     private static $jmsGroups = [
         'debt',
         'debt-state',
+        'debt-management'
     ];
 
     /**
@@ -51,6 +52,7 @@ class DebtController extends AbstractController
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
 
+            $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -75,12 +77,49 @@ class DebtController extends AbstractController
     public function editAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\DebtsType::class, $report);
+        $form = $this->createForm(FormDir\Report\Debt\DebtsType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt']);
+
+            if ($fromPage == 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+                return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
+            }
+
+            return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId]));
+        }
+
+        $backLink = $this->generateUrl('debts_exist', ['reportId'=>$reportId]);
+        if ($fromPage == 'summary') {
+            $backLink = $this->generateUrl('debts_summary', ['reportId'=>$reportId]);
+        }
+
+        return [
+            'backLink' => $backLink,
+            'report' => $report,
+            'form' => $form->createView(),
+        ];
+    }
+
+
+    /**
+     * How debts are managed question.
+     *
+     * @Route("/report/{reportId}/debts/management", name="debts_management")
+     * @Template()
+     */
+    public function managementAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
+        $form->handleRequest($request);
+        $fromPage = $request->get('from');
+
+        if ($form->isValid()) {
+            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
 
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
@@ -96,6 +135,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
+            'skipLink' => $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
             'report' => $report,
             'form' => $form->createView(),
         ];
