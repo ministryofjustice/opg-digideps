@@ -341,7 +341,7 @@ class Odr
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDebtManagement()
     {
@@ -349,7 +349,7 @@ class Odr
     }
 
     /**
-     * @param mixed $debtManagement
+     * @param string $debtManagement
      */
     public function setDebtManagement($debtManagement)
     {
