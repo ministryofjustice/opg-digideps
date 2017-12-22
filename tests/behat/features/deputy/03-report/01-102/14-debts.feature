@@ -40,11 +40,11 @@ Feature: Report debts
         Then the following fields should have an error:
             | debtManagement_debtManagement       |
         When the step with the following values CAN be submitted:
-            | debtManagement_debtManagement | £100 per month payment plan |
+            | debtManagement_debtManagement | 100 per month payment plan |
         Then the URL should match "report/\d+/debts/summary"
         # check record in summary page
         And each text should be present in the corresponding region:
-            | £100 per month payment plan       | debt-management-details |
+            | 100 per month payment plan        | debt-management-details |
             | £12,331.23                        | debt-care-fees |
             | £0.00                             | debt-credit-cards |
             | £1.00                             | debt-loans |
@@ -72,10 +72,10 @@ Feature: Report debts
             | 5 mr  | debt-other-more-details |
         When I click on "edit-debt-management"
         Then the following fields should have the corresponding values:
-            | debtManagement_debtManagement    | £100 per month payment plan |
+            | debtManagement_debtManagement    | 100 per month payment plan |
         When the step with the following values CAN be submitted:
-            | debtManagement_debtManagement | £200 per month payment plan |
+            | debtManagement_debtManagement | 200 per month payment plan |
         Then the URL should match "report/\d+/debts/summary"
         # check record in summary page
         And each text should be present in the corresponding region:
-            | £200 per month payment plan    | debt-management-details |
+            | 200 per month payment plan    | debt-management-details |
