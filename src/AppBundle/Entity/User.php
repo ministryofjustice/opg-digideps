@@ -891,7 +891,7 @@ class User implements UserInterface
     /**
      * @return null|Client
      */
-    private function getFirstClient()
+    public function getFirstClient()
     {
         $clients = $this->getClients();
         if (count($clients) === 0) {

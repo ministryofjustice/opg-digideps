@@ -68,6 +68,7 @@ class CasrecServiceTest extends WebTestCase
         self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2016'));
         self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2017'));
         self::$fixtures->createReport($c1)->setSubmitted(false);
+        self::$fixtures->createOdr($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '04/06/2016'));
         self::$em->flush();
         self::$em->clear();
 
@@ -114,7 +115,7 @@ class CasrecServiceTest extends WebTestCase
         $this->assertEquals('opg102', $record1->getTypeOfReport());
         $this->assertEquals('l2', $record1->getCorref());
 
-        //check stats
+        // record1
         $casrecArray = $record1->toArray();
         $this->assertContains(date('d/m/Y'), $casrecArray['Uploaded at']);
         $this->assertContains(date('d/m/Y'), $casrecArray['Stats updated at']);
@@ -122,12 +123,14 @@ class CasrecServiceTest extends WebTestCase
         $this->assertContains('02/11/2017', $casrecArray['Deputy last logged in']);
         $this->assertEquals(2, $casrecArray['Reports submitted']);
         $this->assertContains('05/06/2017', $casrecArray['Last report submitted at']);
+        $this->assertContains('04/06/2016', $casrecArray['NDR submitted at']);
         $this->assertEquals(1, $casrecArray['Reports active']);
         $this->assertContains('c1', $casrecArray['custom1']); // custom data is kepy
         $this->assertContains('DN1', $casrecArray['Deputy No']);
         $this->assertContains('1234567T', $casrecArray['Case']);
         $this->assertEquals('1', $casrecArray['NDR']);
 
+        // record 2 (no match at all in the DB)
         $casrecArray = $record2->toArray();
         $this->assertContains(date('d/m/Y'), $casrecArray['Uploaded at']);
         $this->assertContains(date('d/m/Y'), $casrecArray['Stats updated at']);
@@ -135,6 +138,7 @@ class CasrecServiceTest extends WebTestCase
         $this->assertContains('n.a.', $casrecArray['Deputy last logged in']);
         $this->assertEquals('n.a.', $casrecArray['Reports submitted']);
         $this->assertEquals('n.a.', $casrecArray['Last report submitted at']);
+        $this->assertEquals('n.a.', $casrecArray['NDR submitted at']);
         $this->assertEquals('n.a.', $casrecArray['Reports active']);
         $this->assertEquals('', $casrecArray['NDR']);
 

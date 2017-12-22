@@ -221,10 +221,14 @@ class Odr
 
     /**
      * @param bool $submitted
+     *
+     * @return self
      */
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+
+        return $this;
     }
 
     /**

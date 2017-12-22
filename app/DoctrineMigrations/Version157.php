@@ -18,8 +18,7 @@ class Version157 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql("DELETE FROM migrations WHERE version in ('144', '145', '146', '147', '148', '149', '150', '151', '152', '153', '154', '155', '156')");
-        $this->addSql('CREATE SEQUENCE money_transfer_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+       $this->addSql('CREATE SEQUENCE money_transfer_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE dd_team (id SERIAL NOT NULL, team_name VARCHAR(50) DEFAULT NULL, address1 VARCHAR(200) DEFAULT NULL, address2 VARCHAR(200) DEFAULT NULL, address3 VARCHAR(200) DEFAULT NULL, address_postcode VARCHAR(10) DEFAULT NULL, address_country VARCHAR(10) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE odr_income_state_benefit (id SERIAL NOT NULL, odr_id INT DEFAULT NULL, type_id VARCHAR(255) NOT NULL, present BOOLEAN DEFAULT NULL, has_more_details VARCHAR(255) NOT NULL, more_details VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_1C1A04A77CE4B994 ON odr_income_state_benefit (odr_id)');
