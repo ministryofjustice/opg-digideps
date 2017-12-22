@@ -58,7 +58,7 @@ trait DebtTrait
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDebtManagement()
     {
@@ -66,7 +66,7 @@ trait DebtTrait
     }
 
     /**
-     * @param mixed $debtManagement
+     * @param string $debtManagement
      */
     public function setDebtManagement($debtManagement)
     {
