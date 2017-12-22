@@ -70,6 +70,15 @@ class Odr
     private $debts;
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"debt-management"})
+     * @ORM\Column( name="debt_management", type="text", nullable=true)
+     */
+    private $debtManagement;
+
+    /**
      * @var bool
      *
      * @JMS\Type("string")
@@ -329,6 +338,22 @@ class Odr
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDebtManagement()
+    {
+        return $this->debtManagement;
+    }
+
+    /**
+     * @param mixed $debtManagement
+     */
+    public function setDebtManagement($debtManagement)
+    {
+        $this->debtManagement = $debtManagement;
     }
 
     /**
