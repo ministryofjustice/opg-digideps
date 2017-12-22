@@ -109,7 +109,7 @@ class CsvToArray
         }
 
         // read rows
-        $rowNumber = 0;
+        $rowNumber = 1;
         while (($row = $this->getRow()) !== false) {
             $rowNumber++;
             $rowArray = [];
@@ -125,6 +125,10 @@ class CsvToArray
             foreach ($this->optionalColumns as $optionalColumn) {
                 $index = array_search($optionalColumn, $header);
                 if ($index !== false) {
+                    // fix for CSV with last two columns being empty and not having commas
+                    if (!isset($row[$index])) {
+                        $row[$index] = '';
+                    }
                     $rowArray[$optionalColumn] = $row[$index];
                 }
             }
