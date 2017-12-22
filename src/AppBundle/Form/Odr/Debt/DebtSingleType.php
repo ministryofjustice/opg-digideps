@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Odr;
+namespace AppBundle\Form\Odr\Debt;
 
 use AppBundle\Entity\Debt;
 use Symfony\Component\Form\AbstractType;

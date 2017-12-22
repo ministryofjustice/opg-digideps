@@ -80,6 +80,16 @@ class Odr
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"debt-management"})
+     *
+     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
+     *
+     * @var string
+     */
+    private $debtManagement;
+
+    /**
+     * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
      * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
@@ -409,6 +419,22 @@ class Odr
         if ($this->getHasDebts() == 'yes'  && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('odr.debt.mustHaveAtLeastOneDebt');
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getDebtManagement()
+    {
+        return $this->debtManagement;
+    }
+
+    /**
+     * @param string $debtManagement
+     */
+    public function setDebtManagement($debtManagement)
+    {
+        $this->debtManagement = $debtManagement;
     }
 
     /**
