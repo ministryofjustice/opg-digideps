@@ -36,7 +36,7 @@ Feature: NDR debts
       | debt_debts_2_amount      | 1         |
       | debt_debts_3_amount      | 2         |
       | debt_debts_3_moreDetails | mr        |
-    Then the URL should match "report/\d+/debts/summary"
+    Then the URL should match "odr/\d+/debts/summary"
         # check record in summary page
     And each text should be present in the corresponding region:
       | £12,331.23 | debt-care-fees          |

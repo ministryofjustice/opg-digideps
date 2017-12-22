@@ -52,6 +52,7 @@ class DebtController extends AbstractController
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
 
+            $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -86,7 +87,6 @@ class DebtController extends AbstractController
             if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
                 return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
-
             }
 
             return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId]));
