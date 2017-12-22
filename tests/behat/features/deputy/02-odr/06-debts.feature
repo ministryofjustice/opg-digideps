@@ -76,7 +76,7 @@ Feature: NDR debts
       | debtManagement_debtManagement    | £100 per month payment plan |
     When the step with the following values CAN be submitted:
       | debtManagement_debtManagement | £200 per month payment plan |
-    Then the URL should match "report/\d+/debts/summary"
+    Then the URL should match "odr/\d+/debts/summary"
         # check record in summary page
     And each text should be present in the corresponding region:
       | £200 per month payment plan    | debt-management-details |
