@@ -103,6 +103,10 @@ class OdrController extends RestController
             }
         }
 
+        if (array_key_exists('debt_management', $data)) {
+            $odr->setDebtManagement($data['debt_management']);
+        }
+
         if (array_key_exists('state_benefits', $data)) {
             foreach ($data['state_benefits'] as $row) {
                 $e = $odr->getStateBenefitByTypeId($row['type_id']);
