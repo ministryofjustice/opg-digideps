@@ -44,12 +44,12 @@ Feature: Report debts
         Then the URL should match "report/\d+/debts/summary"
         # check record in summary page
         And each text should be present in the corresponding region:
-            | £100 per month payment plan    | debt-management-details |
-            | £12,331.23    | debt-care-fees |
-            | £0.00         | debt-credit-cards |
-            | £1.00         | debt-loans |
-            | £2.00         | debt-other |
-            | mr            | debt-other-more-details |
+            | £100 per month payment plan       | debt-management-details |
+            | £12,331.23                        | debt-care-fees |
+            | £0.00                             | debt-credit-cards |
+            | £1.00                             | debt-loans |
+            | £2.00                             | debt-other |
+            | mr                                | debt-other-more-details |
         # edit debts again
         When I click on "edit" in the "debts-list" region
         Then the following fields should have the corresponding values:
