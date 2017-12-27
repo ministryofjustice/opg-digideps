@@ -3,12 +3,14 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
@@ -58,6 +60,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
      */
     protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
+//        print_r($data);die;
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
         $email = $data['email'];
@@ -65,12 +68,14 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $output->write("User $email: ");
 
+        /**
+         * create User entity
+         */
         if ($userRepo->findBy(['email' => $email])) {
             $output->writeln('skip.');
 
             return;
         }
-
         $user = (new User())
             ->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
@@ -82,13 +87,16 @@ class AddSingleUserCommand extends ContainerAwareCommand
                 isset($data['codeputyClientConfirmed']) ?
                     (bool) $data['codeputyClientConfirmed'] :
                     false
-            );
+            )
+            ->setPhoneMain('07911111111111')
+            ->setAddress1('Victoria Road')
+            ->setAddressCountry('GB')
+        ;
 
         if (isset($data['deputyPostcode'])) {
             $user->setAddressPostcode($data['deputyPostcode']);
         }
 
-        // role
         if (isset($data['roleId']) && !empty($data['roleId'])) { //deprecated
             $user->setRoleName(User::roleIdToName($data['roleId']));
         } elseif (isset($data['roleName']) && !empty($data['roleName'])) {
@@ -100,21 +108,38 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
-        if ($data['roleName'] != User::ROLE_ADMIN) {
-            $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
-            $em->persist($casRecEntity);
-        }
-
-        // check params
         $violations = $this->getContainer()->get('validator')->validate($user, 'admin_add_user'); /* @var $violations ConstraintViolationList */
         if ($violations->count()) {
             $output->writeln("error: $violations");
 
             return;
         }
-
         $em->persist($user);
 
+        /**
+         * Add CASREC entry, mainly to match the report type
+         */
+        if ($data['roleName'] != User::ROLE_ADMIN) {
+            $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
+            $em->persist($casRecEntity);
+        }
+
+        /**
+         * add Client to the user
+         */
+        $client = new Client();
+        $client
+            ->setCaseNumber($data['caseNumber'])
+            ->setFirstname('John')
+            ->setLastname($data['clientSurname'])
+            ->setPhone('022222222222222')
+            ->setAddress('Victoria road')
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+
+        $em->persist($client);
+        $user->addClient($client);
+
+        
         if ($options['flush']) {
             $em->flush();
         }
