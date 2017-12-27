@@ -23,7 +23,6 @@ Feature: odr / report submit
         And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "odr-start, odr-submit, odr-declaration-page"
         Then the URL should match "/odr/\d+/declaration"
-        And I save the application status into "odr-submit-pre"
         #
         # empty form
         #
@@ -58,7 +57,6 @@ Feature: odr / report submit
         And the "last" email should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
-        And I save the application status into "odr-submit-confirmation"
 
 
     @odr
