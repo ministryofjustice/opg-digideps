@@ -24,6 +24,13 @@ class ReportSubmission
     private $report;
 
     /**
+     * @var Report
+     *
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     */
+    private $ndr;
+
+    /**
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
     private $documents;
@@ -79,6 +86,26 @@ class ReportSubmission
 
         return $this;
     }
+
+    /**
+     * @return Report
+     */
+    public function getNdr()
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Report $ndr
+     * @return ReportSubmission
+     */
+    public function setNdr($ndr)
+    {
+        $this->ndr = $ndr;
+
+        return $this;
+    }
+    
 
     /**
      * @return Document[]
