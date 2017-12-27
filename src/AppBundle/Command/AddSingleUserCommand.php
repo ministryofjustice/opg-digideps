@@ -60,11 +60,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
      */
     protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
-//        print_r($data);die;
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
         $email = $data['email'];
-        $casRecEntities = [];
 
         $output->write("User $email: ");
 
@@ -117,27 +115,26 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $em->persist($user);
 
         /**
-         * Add CASREC entry, mainly to match the report type
+         * Deputy:
+         * Add CASREC entry + Client
          */
         if ($data['roleName'] != User::ROLE_ADMIN) {
             $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
             $em->persist($casRecEntity);
+
+            // add client
+            $client = new Client();
+            $client
+                ->setCaseNumber($data['caseNumber'])
+                ->setFirstname('John')
+                ->setLastname($data['clientSurname'])
+                ->setPhone('022222222222222')
+                ->setAddress('Victoria road')
+                ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+
+            $em->persist($client);
+            $user->addClient($client);
         }
-
-        /**
-         * add Client to the user
-         */
-        $client = new Client();
-        $client
-            ->setCaseNumber($data['caseNumber'])
-            ->setFirstname('John')
-            ->setLastname($data['clientSurname'])
-            ->setPhone('022222222222222')
-            ->setAddress('Victoria road')
-            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
-
-        $em->persist($client);
-        $user->addClient($client);
 
         
         if ($options['flush']) {
