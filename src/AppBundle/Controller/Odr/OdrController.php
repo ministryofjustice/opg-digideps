@@ -191,6 +191,22 @@ class OdrController extends AbstractController
         if ($form->isValid()) {
             // set report submitted with date
             $odr->setSubmitted(true)->setSubmitDate(new \DateTime());
+
+            // store PDF as a document
+            $pdfBinaryContent = $this->getPdfBinaryContent($odr);
+            $fileUploader = $this->get('file_uploader');
+
+            throw new \Exception('NDR.documents not supported. need implementation or re-thinking');
+
+            $fileUploader->uploadFile(
+                $odr->getId(),
+                $pdfBinaryContent,
+                'ndr.pdf', //$report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
+                true
+            );
+
+
+
             $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($odr);
