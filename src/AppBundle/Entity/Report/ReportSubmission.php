@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,6 +46,17 @@ class ReportSubmission
     private $report;
 
     /**
+     * @var Report
+     *
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     *
+     * @JMS\Groups({"report-submission"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $ndr;
+
+    /**
      * @var ArrayCollection
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
@@ -78,12 +90,18 @@ class ReportSubmission
     /**
      * ReportSubmission constructor.
      *
-     * @param Report $report
+     * @param Report\Odr $report
      * @param User   $createdBy
      */
-    public function __construct(Report $report, User $createdBy)
+    public function __construct($report, User $createdBy)
     {
-        $this->report = $report;
+        if ($report instanceof Report) {
+            $this->report = $report;
+        } else if ($report instanceof Odr) {
+            $this->ndr = $report;
+        } else {
+            throw new \InvalidArgumentException(__METHOD__.' first argumnt should be a Report or an Ndr');
+        }
         $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;

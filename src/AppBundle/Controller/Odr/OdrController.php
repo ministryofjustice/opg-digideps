@@ -59,7 +59,10 @@ class OdrController extends RestController
         $odr->setSubmitted(true);
         $odr->setSubmitDate(new \DateTime($data['submit_date']));
 
-        $this->getEntityManager()->flush($odr);
+        $submission = new EntityDir\Report\ReportSubmission($odr, $this->getUser());
+        $this->getEntityManager()->persist($submission);
+
+        $this->getEntityManager()->flush();
 
         //response to pass back
         return [];
