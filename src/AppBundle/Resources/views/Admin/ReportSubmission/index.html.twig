@@ -99,6 +99,7 @@
             <tbody>
                 {% for reportSubmission in records %}
                     {% set report = reportSubmission.report %}
+                    {% set ndr = reportSubmission.ndr %}
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
@@ -113,7 +114,12 @@
                             {% endif %}
                         </td>
                         <td class="width-eighth">
-                            {{ report.period | replace({'to': '-'}) }}
+                            {% if report %}
+                                {{ report.period | replace({'to': '-'}) }}
+                            {% endif %}
+                            {% if ndr %}
+                                NDR
+                            {% endif %}
                         </td>
                         <td>
                             <details class="push--bottom">
