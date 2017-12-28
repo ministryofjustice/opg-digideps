@@ -63,6 +63,7 @@ class ClientController extends RestController
         $this->persistAndFlush($client);
 
         //add ODR if not added yet
+        // TODO move to listener or service
         if (!$client->getOdr()) {
             $odr = new EntityDir\Odr\Odr($client);
             $this->persistAndFlush($odr);
