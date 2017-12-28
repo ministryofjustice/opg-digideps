@@ -118,28 +118,41 @@
             </table>
         {% endif %}
 
-        {% if report.debtManagement %}
-            <table class="check-your-answers push--top">
-                <thead>
-                <tr>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>
-                        <span class="visually-hidden">Actions</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="behat-region-debt-management-details">
-                    <td>{{ 'managementPage.form.debtManagement.label' | trans }}</td>
-                    <td>{{ report.debtManagement | nl2br }}</td>
+        <table class="check-your-answers push--top">
+            <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
+                    <span class="visually-hidden">Actions</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="behat-region-debt-management-details">
+                {% if report.debtManagement %}
                     <td>
-                        <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit-debt-management action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                        {{ 'managementPage.form.debtManagement.label' | trans }}
                     </td>
-                </tr>
-                </tbody>
-            </table>
-        {% endif %}
+                    <td>
+                        {{ report.debtManagement | nl2br }}
+                    </td>
+                {% else %}
+                    <td>
+                        <span class="error">
+                        {{ 'managementPage.form.debtManagement.label' | trans }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="error-message">Please answer this question</span>
+                    </td>
+                {% endif %}
+                <td>
+                    <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit-debt-management action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     {% endif %}
 
     {# Pagination #}
