@@ -193,7 +193,7 @@ class ClientControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
         ])['data'];
-        $this->assertEquals(self::$pa1->getId(), $data['id']);
+        $this->assertEquals(self::$pa1Client1->getId(), $data['id']);
         $this->assertEquals('f', $data['firstname']);
         $this->assertEquals(self::$pa1Client1Report1->getId(), $data['current_report']['id']);
     }
