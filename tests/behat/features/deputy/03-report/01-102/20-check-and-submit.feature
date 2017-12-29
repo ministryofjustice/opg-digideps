@@ -94,7 +94,11 @@ Feature: Report submit
         When I fill in the following:
             | feedback_report_satisfactionLevel_0 | Very satisfied |
         And I press "feedback_report_save"
-        Then the URL should match "/report/\d+/submit_feedback"
+        Then the form should be valid
+        And the URL should match "/report/\d+/submit_feedback"
+        When I click on "return-to-reports-page"
+        Then the URL should match "/lay"
+        And the response status code should be 200
         And the last email should contain "how did you feel about the service"
         And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
 
