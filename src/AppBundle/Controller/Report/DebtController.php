@@ -120,6 +120,7 @@ class DebtController extends AbstractController
         $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
@@ -138,7 +139,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
-            'skipLink' => $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
             'report' => $report,
             'form' => $form->createView(),
         ];
