@@ -10,8 +10,14 @@
     '%endDate%': report.endDate | date("j F Y"),
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
     '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id})
 } %}
+{% if report.hasSection('deputyExpenses') %}
+    {% set appendPA = '' %}
+{% elseif report.hasSection('paDeputyExpenses') %}
+    {% set appendPA = 'PA' %}
+{% endif %}
 
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
@@ -34,7 +40,7 @@
             <span class="summary">{{ 'summaryPage.moneyOut.moreDetails' |trans }}</span>
         </summary>
         <div class="panel panel-border-narrow text">
-            <p>{{ 'startPage.moneyOut.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+            <p>{{ ('startPage.moneyOut.pageSectionDescription2' ~ appendPA) | trans(transOptions) | raw }}</p>
             <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
             <h2 class="heading-small">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
             <p>{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
