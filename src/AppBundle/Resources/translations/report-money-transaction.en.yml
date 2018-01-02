@@ -29,7 +29,7 @@ startPage:
       deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription2PA: |
       There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
       deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we don't count it twice.
@@ -61,6 +61,10 @@ stepPage:
         There are different sections for you to tell us about <a href="%moneyTransfersPath%">
         money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
         deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+      differentSectionsPA: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
+        deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
 
 addAnotherPage:
   moneyIn:
@@ -259,7 +263,7 @@ form:
       day-trips:
         label: Day trips
       tax-payments-to-hmrc:
-        label: Tax payments to HMRC
+        label: Tax payment to HMRC
       debt-and-charges-other:
         label: Other
         moreInformations: Please give us more information
@@ -297,15 +301,13 @@ form:
       bank-charges:
         label: Bank charge
       loans:
-        label: Loan repayments
+        label: Loan repayment
       credit-cards-charges:
         label: Credit card charge
       unpaid-care-fees:
         label: Unpaid care fee
       arrears:
         label: Arrears
-      tax-payments-to-hmrc:
-        label: Tax payment to HMRC
       transfers-out-to-other-accounts:
         label: Transfers from %client%'s account to other accounts
         moreInformations: Please enter the bank or building society name, the last 4 digits of the account number and the amount transferred

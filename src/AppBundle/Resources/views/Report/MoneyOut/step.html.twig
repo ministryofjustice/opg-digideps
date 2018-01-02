@@ -13,13 +13,25 @@
     '%category%': categoryString,
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
     '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
+{% if report.hasSection('deputyExpenses') %}
+    {% set appendPA = '' %}
+{% elseif report.hasSection('paDeputyExpenses') %}
+    {% set appendPA = 'PA' %}
+{% endif %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
-    {% if step == 2 %}{{ groupString | lower }}{% endif %}
+    {% if step == 2 %}
+        {% if transaction.group == "fees" %}
+            {{ groupString }}
+        {% else %}
+            {{ groupString | lower }}
+        {% endif %}
+    {% endif %}
     {% if step == 3 %}
         {% if categoryString == "TV services" or categoryString == "OPG's fees" %}
             {{ categoryString }}
@@ -51,7 +63,7 @@
         <p class="text">
             {{ 'stepPage.moneyOut.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
-        {{ macros.notification('default', 'stepPage.moneyOut.pageSectionDescription.differentSections' | trans(transOptions) ) }}
+        {{ macros.notification('default', ('stepPage.moneyOut.pageSectionDescription.differentSections' ~ appendPA) | trans(transOptions) ) }}
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
             'legendText' : 'form.group.moneyOut.legend' | trans(transOptions),

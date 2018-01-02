@@ -18,7 +18,13 @@
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
-    {% if step == 2 %}{{ groupString | lower }}{% endif %}
+    {% if step == 2 %}
+        {% if transaction.group == 'one-off' %}
+            one-off
+        {% else %}
+            {{ groupString | lower }}
+        {% endif %}
+    {% endif %}
     {% if step == 3 %}
         {% if transaction.group == 'state-benefits' %}
             {% if categoryString == 'Other benefits' %}
