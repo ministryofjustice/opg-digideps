@@ -149,7 +149,6 @@ class FormattedTest extends WebTestCase
         return new Crawler($html);
     }
 
-
     public function testReport()
     {
         $crawler = $this->renderTemplateAndGetCrawler();
@@ -173,12 +172,11 @@ class FormattedTest extends WebTestCase
         $this->assertContains('Jones', $this->html($crawler, '#client-details-subsection'));
     }
 
-
     public function testAssets()
     {
         $this->report->setAssets([]);
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertCount(0, $crawler->filter("#assets-section"));
+        $this->assertCount(0, $crawler->filter('#assets-section'));
 
 
         $this->report->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2]);
@@ -194,7 +192,7 @@ class FormattedTest extends WebTestCase
     {
         $this->report->setDecisions([]);
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertCount(0, $crawler->filter("#assets-section"));
+        $this->assertCount(0, $crawler->filter('#assets-section'));
 
         $this->report->setDecisions([$this->decision1, $this->decision2]);
         $crawler = $this->renderTemplateAndGetCrawler();
@@ -208,14 +206,14 @@ class FormattedTest extends WebTestCase
     {
         // no accounts -> section not displaying
         $this->report->setBankAccounts([]);
-        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter("#money-transfers"));
+        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter('#money-transfers'));
 
         // 1 account => don't show the section (DDPB-1525)
         $this->report
             ->setBankAccounts([$this->account1])
             ->setNoTransfersToAdd(false)
             ->setMoneyTransfers([$this->transfer1, $this->transfer2]); //should not happen but enforce assertion
-        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter("#money-transfers"));
+        $this->assertCount(0, $this->renderTemplateAndGetCrawler()->filter('#money-transfers'));
 
         // 2 accounts but no transfer -> still show the section
         $this->report
@@ -223,7 +221,7 @@ class FormattedTest extends WebTestCase
             ->setNoTransfersToAdd(null)
             ->setMoneyTransfers([]); //should not happen but enforce assertion
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertCount(1, $crawler->filter("#money-transfers"));
+        $this->assertCount(1, $crawler->filter('#money-transfers'));
         $this->assertNotContains('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
 
         // no transfers
@@ -240,12 +238,11 @@ class FormattedTest extends WebTestCase
             ->setNoTransfersToAdd(false)
             ->setMoneyTransfers([$this->transfer1, $this->transfer2]);
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertCount(0, $crawler->filter("#money-transfers-no-transfers-add"));
+        $this->assertCount(0, $crawler->filter('#money-transfers-no-transfers-add'));
         $html = $this->html($crawler, '#money-transfers');
         $this->assertContains('10,500.60', $html);
         $this->assertContains('45,123.00', $html);
     }
-
 
     public function testAction()
     {
@@ -255,7 +252,6 @@ class FormattedTest extends WebTestCase
         $this->assertContains('sell both flats', $this->html($crawler, '#action-section'));
         $this->assertContains('not able next year', $this->html($crawler, '#action-section'));
     }
-
 
     public function testDebts()
     {
@@ -311,16 +307,12 @@ class FormattedTest extends WebTestCase
             ->setBalanceMismatchExplanation('money lost');
     }
 
-
-
-
     public function tearDown()
     {
         m::close();
         $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
     }
-
 
     private function html(Crawler $crawler, $expr)
     {

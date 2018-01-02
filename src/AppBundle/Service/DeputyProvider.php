@@ -96,7 +96,7 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @param string $class
      *
-     * @return boolean
+     * @return bool
      */
     public function supportsClass($class)
     {

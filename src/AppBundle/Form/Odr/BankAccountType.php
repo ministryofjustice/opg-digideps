@@ -78,7 +78,6 @@ class BankAccountType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'odr-bank-accounts',
             'validation_groups'  => function (FormInterface $form) {
-
                 $step2Options = ['bank-account-number', 'bank-account-is-joint'];
                 if ($form->getData()->requiresSortCode()) {
                     $step2Options[] = 'sortcode';

@@ -127,7 +127,6 @@ class ClientContact
      */
     private $phone;
 
-
     /**
      * Constructor.
      */
@@ -135,7 +134,6 @@ class ClientContact
     {
         $this->setClient($client);
     }
-
 
     /**
      * @return int

@@ -20,8 +20,8 @@ class ClientType extends AbstractType
 
         if ($this->isClientValidated()) {
             $builder->add('firstname', 'text', ['attr'=> ['readonly' => 'readonly']])
-                ->add('lastname', 'text',  ['attr'=> ['readonly' => 'readonly']])
-                ->add('caseNumber', 'text',  ['attr'=> ['readonly' => 'readonly']]);
+                ->add('lastname', 'text', ['attr'=> ['readonly' => 'readonly']])
+                ->add('caseNumber', 'text', ['attr'=> ['readonly' => 'readonly']]);
         } else {
             $builder->add('firstname', 'text')
                 ->add('lastname', 'text')

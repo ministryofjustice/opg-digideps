@@ -116,6 +116,8 @@ report:
     hasDebts:
         notBlank: You must select one option
         mustHaveAtLeastOneDebt: You must enter at least one debt
+    debts-management:
+        notBlank: Please tell us how the debt is being managed or reduced
     balanceMismatchExplanation:
       notBlank: You must give an explanation for balance mismatching
       length: This explanation must be at least {{ limit }} letters long

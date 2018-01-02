@@ -53,11 +53,7 @@ class VisitsCareController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['odrId'=>$odrId]);
 
-        $form = $this->createForm(FormDir\Odr\VisitsCareType::class
-                                 , $visitsCare
-                                 , [ 'step'            => $step
-                                   , 'translator'      => $this->get('translator')
-                                   , 'clientFirstName' => $odr->getClient()->getFirstname()
+        $form = $this->createForm(FormDir\Odr\VisitsCareType::class, $visitsCare, [ 'step'            => $step, 'translator'      => $this->get('translator'), 'clientFirstName' => $odr->getClient()->getFirstname()
                                    ]
                                  );
         $form->handleRequest($request);

@@ -54,7 +54,6 @@ Feature: PA user edits 103-6 report sections
       | december rent | transaction-december-rent |
       | £1,401.00     | transaction-december-rent |
       | £1,401.00     | transaction-total         |
-    And I save the application status into "pa-report-103-completed"
 
   @103-6
   Scenario: PA 103-6 debts

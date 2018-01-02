@@ -25,4 +25,3 @@ Feature: Report submit (client 1000011)
         And I click on "pa-report-open" in the "client-1000014" region
         Then I should see a "#edit-money_in_short" element
         And I should see a "#edit-money_out_short" element
-        And I save the application status into "pa-report-103-submitted"

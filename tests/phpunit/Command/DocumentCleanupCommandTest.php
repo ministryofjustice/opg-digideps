@@ -4,9 +4,9 @@ namespace AppBundle\Command;
 
 use AppBundle\Service\DocumentService;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 class DocumentCleanupCommandTest extends KernelTestCase
 {

@@ -62,7 +62,7 @@ trait ReportMoneyTransactionTrait
 //    }
 
     /**
-     * @param Transaction[] $moneyTransactionsIn
+     * @param  Transaction[] $moneyTransactionsIn
      * @return Report
      */
     public function setMoneyTransactionsIn($moneyTransactionsIn)
@@ -81,7 +81,7 @@ trait ReportMoneyTransactionTrait
     }
 
     /**
-     * @param Transaction[] $moneyTransactionsOut
+     * @param  Transaction[] $moneyTransactionsOut
      * @return Report
      */
     public function setMoneyTransactionsOut($moneyTransactionsOut)

@@ -3,15 +3,13 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
-use AppBundle\Service\File\FileUploader;
-use AppBundle\Service\File\Types\UploadableFileInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -39,7 +37,7 @@ class DocumentController extends AbstractController
             $referer = $request->headers->get('referer');
             $redirectResponse = false !== strpos($referer, '/step/1')
                 ? $this->redirectToRoute('report_overview', ['reportId' => $reportId])
-                : $this->redirectToRoute('report_documents_summary' , ['reportId' => $reportId, 'step' => 1]);
+                : $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId, 'step' => 1]);
             return $redirectResponse;
         }
 
@@ -57,7 +55,8 @@ class DocumentController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $step = 1; $totalSteps = 3;
+        $step = 1;
+        $totalSteps = 3;
 
         $fromPage = $request->get('from');
 
@@ -84,7 +83,7 @@ class DocumentController extends AbstractController
             $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
             $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
-                ? $this->generateUrl('report_documents'        , ['reportId' => $report->getId()])
+                ? $this->generateUrl('report_documents', ['reportId' => $report->getId()])
                 : $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
             return $this->redirect($redirectUrl);
         }
@@ -313,7 +312,7 @@ class DocumentController extends AbstractController
         // submit the report to generate the submission entry only
         $this->getRestClient()->put('report/' . $report->getId() . '/submit-documents', $report, ['submit']);
 
-        $request->getSession()->getFlashBag()->add('notice', 'The documents attached for your '.$report->getPeriod().' report have been sent to OPG');
+        $request->getSession()->getFlashBag()->add('notice', 'The documents attached for your ' . $report->getPeriod() . ' report have been sent to OPG');
 
         if ($this->getUser()->isDeputyPa()) {
             return $this->redirect($this->generateClientProfileLink($report->getClient()));

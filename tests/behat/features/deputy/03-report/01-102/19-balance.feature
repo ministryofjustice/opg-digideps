@@ -2,8 +2,7 @@ Feature: Report balance
 
     @deputy
     Scenario: balance fix
-        Given I save the application status into "report-balance-before"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert report not submittable
         And I click on "report-start"
         #And I should see an "#finances-section .behat-alert-message" element
@@ -31,8 +30,7 @@ Feature: Report balance
     @deputy
     Scenario: balance explanation
         # restore previous bad balance, add explanation
-        Given I save the application status into "report-balance-explanation-before"
-        And I load the application status from "balance-before-adding-explanation"
+        Given I load the application status from "balance-before-adding-explanation"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "report-start, edit-balance"
         And I should see the "balance-bad" region

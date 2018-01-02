@@ -80,9 +80,7 @@ class MoneyInShortController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\YesNoType::class
-            , $report
-            , [ 'field' => 'moneyTransactionsShortInExist', 'translation_domain' => 'report-money-short']
+        $form = $this->createForm(FormDir\YesNoType::class, $report, [ 'field' => 'moneyTransactionsShortInExist', 'translation_domain' => 'report-money-short']
         );
         $form->handleRequest($request);
         $fromSummaryPage = $request->get('from') == 'summary';

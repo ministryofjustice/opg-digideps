@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Form\Odr;
+namespace AppBundle\Form\Report\Debt;
 
-use AppBundle\Entity\Debt;
+use AppBundle\Entity\Report\Debt;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -39,10 +39,10 @@ class DebtSingleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Odr\Debt',
+            'data_class' => 'AppBundle\Entity\Report\Debt',
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Odr\Debt */
+                /* @var $data \AppBundle\Entity\Report\Debt */
                 $validationGroups = ['debts'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {
@@ -51,7 +51,7 @@ class DebtSingleType extends AbstractType
 
                 return $validationGroups;
             },
-            'translation_domain' => 'odr-debts',
+            'translation_domain' => 'report-debts',
         ]);
     }
 

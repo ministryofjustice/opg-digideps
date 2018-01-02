@@ -165,11 +165,6 @@ Feature: Report money 102
     And I click on "report-start"
     And I should see the "balance-state-not-matching" region
 
-  @deputy
-  # save status in order to be restore to continue 102
-  Scenario: save status aftermoney 102
-    Given I save the application status into "money-transactions-after"
-
 
 
 

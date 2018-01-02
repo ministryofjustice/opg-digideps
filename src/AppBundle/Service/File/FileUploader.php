@@ -5,10 +5,8 @@ namespace AppBundle\Service\File;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\Checker\FileCheckerInterface;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
 {
@@ -47,10 +45,10 @@ class FileUploader
     /**
      * Uploads a file into S3 + create and persist a Document entity using that reference
      *
-     * @param integer $reportId
+     * @param int    $reportId
      * @param string $body
      * @param string $fileName
-     * @param boolean $isReportPdf
+     * @param bool   $isReportPdf
      *
      * @return Document
      */
@@ -59,7 +57,7 @@ class FileUploader
         $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
 
         $this->storage->store($storageReference, $body);
-        $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body)." bytes");
+        $this->logger->debug("FileUploder : stored $storageReference, " . strlen($body) . ' bytes');
 
         $document = new Document();
         $document

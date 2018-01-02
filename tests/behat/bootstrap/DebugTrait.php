@@ -2,9 +2,6 @@
 
 namespace DigidepsBehat;
 
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-
 trait DebugTrait
 {
     /**
@@ -14,7 +11,6 @@ trait DebugTrait
     {
         $this->printLastResponse();
     }
-
 
     /**
      * Empty behat log before each step
@@ -46,7 +42,7 @@ trait DebugTrait
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
         $this->visitBehatLink('logs/view');
-        echo " - Log content (scenario only): " . $this->getSession()->getPage()->getContent();
+        echo ' - Log content (scenario only): ' . $this->getSession()->getPage()->getContent();
     }
 
     /**

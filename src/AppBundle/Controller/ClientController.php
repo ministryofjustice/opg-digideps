@@ -88,7 +88,6 @@ class ClientController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-
             try {
                 // validate against casRec
                 $this->getRestClient()->apiCall('post', 'casrec/verify', $client, 'array', []);
@@ -100,10 +99,9 @@ class ClientController extends AbstractController
                     ? $this->generateUrl('odr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
-
             } catch (\Exception $e) {
                 $translator = $this->get('translator');
-                switch ((int)$e->getCode()) {
+                switch ((int) $e->getCode()) {
                     case 400:
                         $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
                         break;
@@ -120,7 +118,5 @@ class ClientController extends AbstractController
             'client_validated' => $client_validated,
             'client' => $client
         ];
-
     }
-
 }
