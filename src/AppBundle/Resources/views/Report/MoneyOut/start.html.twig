@@ -7,8 +7,17 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e,
     '%startDate%': report.startDate | date("j F Y"),
-    '%endDate%': report.endDate | date("j F Y")
+    '%endDate%': report.endDate | date("j F Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
+    '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
+    '%giftsPath%': path('gifts', {reportId: report.id})
 } %}
+{% if report.hasSection('deputyExpenses') %}
+    {% set appendPA = '' %}
+{% elseif report.hasSection('paDeputyExpenses') %}
+    {% set appendPA = 'PA' %}
+{% endif %}
 
 {% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
@@ -20,8 +29,10 @@
 
     <div class="text">
         <p>{{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.moneyOut.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans(transOptions) }}</p>
+        <p>{{ ('startPage.moneyOut.pageSectionDescription2' ~ appendPA) | trans(transOptions) | raw }}</p>
+        <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
+        <h2 class="heading-small">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
+        <p>{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
     </div>
 
     <a href="{{ path('money_out_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.moneyOut.startButton' | trans }}</a>

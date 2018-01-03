@@ -7,7 +7,8 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e,
     '%startDate%': report.startDate | date("j M Y"),
-    '%endDate%': report.endDate | date("j M Y")
+    '%endDate%': report.endDate | date("j M Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
 } %}
 
 {% block htmlTitle %}{{ 'startPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
@@ -20,8 +21,10 @@
 
     <div class="text">
         <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) }}</p>
-        <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+        <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+        <h2 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h2>
+        <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
     </div>
 
     <a href="{{ path('money_in_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.moneyIn.startButton' | trans }}</a>
