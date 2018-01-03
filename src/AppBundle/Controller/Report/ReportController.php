@@ -366,6 +366,7 @@ class ReportController extends AbstractController
 
         return $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
             'report' => $report,
+            'showSummary' => true
         ]);
     }
 
@@ -402,6 +403,7 @@ class ReportController extends AbstractController
     {
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
+                'showSummary' => true
             ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
