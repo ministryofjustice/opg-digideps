@@ -123,7 +123,7 @@ class CoDeputyController extends RestController
         $deputyNumbers = [];
         foreach ($data as $deputy) {
             if (array_key_exists('Deputy No', $deputy)) {
-                $deputyNumbers[] = $deputy['Deputy No'];
+                $deputyNumbers[] = str_pad($deputy['Deputy No'], 8, "0", STR_PAD_LEFT);
             }
         }
 
@@ -135,7 +135,6 @@ class CoDeputyController extends RestController
         }
 
         $this->get('logger')->info('Received ' . count($data) . ' records, of which ' . $affected . ' were updated');
-        return [ 'requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors
-               ];
+        return ['requested_mld_upgrades' => count($deputyNumbers), 'updated' => $affected, 'errors' => $retErrors];
     }
 }
