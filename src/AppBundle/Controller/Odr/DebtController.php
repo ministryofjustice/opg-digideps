@@ -113,6 +113,7 @@ class DebtController extends AbstractController
 
         $form->handleRequest($request);
         $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isValid()) {
             $this->getRestClient()->put('odr/' . $odr->getId(), $form->getData(), ['odr-debt-management']);
@@ -131,7 +132,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
-            'skipLink' => $this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]),
             'odr' => $odr,
             'form' => $form->createView(),
         ];
