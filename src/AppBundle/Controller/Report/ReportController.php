@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
@@ -348,6 +349,24 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink
         ];
+    }
+
+    /**
+     * Used for active and archived report.
+     *
+     * @Route("/report/{reportId}/pdf-debug")
+     */
+    public function pdfDebugAction($reportId)
+    {
+        if (!$this->getParameter('kernel.debug') ) {
+            throw new DisplayableException('Route only visite in debug mode');
+        }
+        /** @var EntityDir\Report\Report $report */
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
+
+        return $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
+            'report' => $report,
+        ]);
     }
 
     /**
