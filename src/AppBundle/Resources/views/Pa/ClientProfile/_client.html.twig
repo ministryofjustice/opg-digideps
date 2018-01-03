@@ -28,22 +28,14 @@
                         <strong class="bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {% if client.dateOfBirth %}
-                             {{ client.dateOfBirth | date(" j F Y") }} (aged {{ client.getAge() }})
-                        {% else %}
-                            -
-                        {% endif %}
+                        {{ (client.dateOfBirth) ? client.dateOfBirth | date(" j F Y") ~ ' (aged ' ~ client.getAge() ~ ')' : '-' }}
                     </dd>
 
                     <dt>
                         <strong class="bold">{{ (page ~ '.phone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {% if client.phone %}
-                            {{ client.phone }}
-                        {% else %}
-                            -
-                        {% endif %}
+                        {{ (client.phone) ? client.phone : '-' }}
                     </dd>
 
                 </dl>
@@ -55,22 +47,14 @@
                         <strong class="bold">{{ (page ~ '.email') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom dont-break-out">
-                        {% if client.email %}
-                            {{ client.email }}
-                        {% else %}
-                            -
-                        {% endif %}
+                        {{ (client.email) ? client.email : '-' }}
                     </dd>
 
                     <dt>
                         <strong class="bold">{{ (page ~ '.address') | trans }}</strong>
                     </dt>
                     <dd>
-                        {% if client.addressNotEmptyParts %}
-                            {{ client.addressNotEmptyParts | join('<br/>') | raw }}
-                        {% else %}
-                            -
-                        {% endif %}
+                        {{ (client.addressNotEmptyParts) ? client.addressNotEmptyParts | join('<br/>') | raw : '-' }}
                     </dd>
                 </dl>
             </div>
