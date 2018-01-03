@@ -119,7 +119,7 @@ class DebtController extends AbstractController
             $this->getRestClient()->put('odr/' . $odr->getId(), $form->getData(), ['odr-debt-management']);
 
             if ($fromPage == 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]));
