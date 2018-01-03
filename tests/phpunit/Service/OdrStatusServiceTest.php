@@ -40,6 +40,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getBankAccounts' => [],
                 'getHasDebts' => null,
                 'getDebtsWithValidAmount' => [],
+                'getDebtManagement' => null,
                 'getNoAssetToAdd' => null,
                 'getAssets' => [],
                 'incomeBenefitsStatus' => 'not-started',
@@ -143,9 +144,13 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
     public function debtsProvider()
     {
         return [
-            [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes'], StatusService::STATE_DONE],
             [['getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>''], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>'Payment plan'], StatusService::STATE_DONE],
         ];
     }
 
