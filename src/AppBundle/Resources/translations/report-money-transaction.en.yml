@@ -291,7 +291,7 @@ form:
         label: Investment account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
-        label: Other purchases over £1,000
+        label: Other purchase over £1,000
         moreInformations: Please give us more information
       deputy-expenses:
         label: Deputy expenses
