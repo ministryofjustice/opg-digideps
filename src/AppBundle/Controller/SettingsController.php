@@ -129,7 +129,6 @@ class SettingsController extends AbstractController
 
             $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
             return $this->redirectToRoute($redirectRoute);
-
         }
 
         return [

@@ -2,16 +2,16 @@
 
 namespace AppBundle\Service\File\Checker;
 
-use AppBundle\Service\File\Types\UploadableFileInterface;
-use AppBundle\Service\File\Types\Pdf;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Types\Pdf;
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Post\PostFile;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use \Mockery as m;
+use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -66,7 +66,6 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $this->assertSame($file, $result);
         $this->assertEquals($file->getScanResult(), ['file_scanner_result' => 'PASS']);
-
     }
 
     public function testCheckFileScannerNotAvailable()
@@ -96,7 +95,6 @@ class ClamAVCheckerTest extends MockeryTestCase
         $this->setExpectedException(\RuntimeException::class);
 
         $result = $this->sut->checkFile($file);
-
     }
 
     public function testCheckFileStatusNotAvailable()
@@ -260,5 +258,4 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         return $mockLogger;
     }
-
 }

@@ -3,17 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Exception\RestClientException;
-use AppBundle\Form as FormDir;
-use AppBundle\Model\Email;
-use AppBundle\Service\CsvUploader;
-use AppBundle\Service\DataImporter\CsvToArray;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class StatsController extends AbstractController
 {
-
     /**
      * @Route("", name="admin_stats")
      * @Template
@@ -40,8 +31,8 @@ class StatsController extends AbstractController
     {
         try {
             $regenerate = $request->get('regenerate') ? 1 : 0;
-            $rawCsv = (string)$this->getRestClient()->get("casrec/stats.csv?regenerate=$regenerate", 'raw');
-        } catch(\Exception $e) {
+            $rawCsv = (string) $this->getRestClient()->get("casrec/stats.csv?regenerate=$regenerate", 'raw');
+        } catch (\Exception $e) {
             throw new DisplayableException($e);
         }
         $response = new Response();
@@ -54,5 +45,4 @@ class StatsController extends AbstractController
 
         return $response;
     }
-
 }

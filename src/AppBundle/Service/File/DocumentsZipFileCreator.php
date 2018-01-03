@@ -83,7 +83,7 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @param Document $document
+     * @param  Document $document
      * @return string
      */
     private static function createDocumentTmpFilePath(Document $document)
@@ -92,14 +92,13 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @param ReportSubmission $reportSubmission
+     * @param  ReportSubmission $reportSubmission
      * @return string
      */
     private static function createZipFilePath(ReportSubmission $reportSubmission)
     {
         return self::TMP_ROOT_PATH . $reportSubmission->getZipName();
     }
-
 
     public function __destruct()
     {

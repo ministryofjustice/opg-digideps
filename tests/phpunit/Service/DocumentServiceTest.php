@@ -2,19 +2,13 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Mockery\Exception;
 use MockeryStub as m;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class DocumentServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -48,7 +42,6 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
         $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger);
     }
 
-
     public function testremoveOldReportSubmissions()
     {
         $this->s3Storage
@@ -73,7 +66,6 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->object->removeOldReportSubmissions(false);
     }
-
 
     public function testremoveSoftDeleted()
     {
@@ -121,7 +113,6 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->object->removeSoftDeleted($ignoreS3Failures);
     }
-
 
     public function tearDown()
     {

@@ -15,7 +15,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
         try {
             $response = $container->get('guzzle_file_scanner_client')->get('/ping/json');
             if (200 !== $response->getStatusCode()) {
-                throw new \RuntimeException("returned HTTP code " . $response->getStatusCode());
+                throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }
 
             $this->isHealthy = true;

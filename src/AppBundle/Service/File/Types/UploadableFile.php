@@ -2,14 +2,12 @@
 
 namespace AppBundle\Service\File\Types;
 
-use AppBundle\Service\File\Checker\ClamAVChecker;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadableFile implements UploadableFileInterface
 {
-
     protected $scannerEndpoint = 'UNDEFINED';
 
     /**
@@ -39,8 +37,7 @@ class UploadableFile implements UploadableFileInterface
         FileCheckerInterface $virusChecker,
         FileCheckerInterface $fileChecker,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->fileCheckers = [$virusChecker, $fileChecker];
     }
@@ -141,7 +138,7 @@ class UploadableFile implements UploadableFileInterface
         $this->scanResult = $scanResult;
         return $this;
     }
-    
+
     /**
      * Is the file safe to upload?
      *
@@ -158,7 +155,8 @@ class UploadableFile implements UploadableFileInterface
         return false;
     }
 
-    public function getScannerEndpoint() {
+    public function getScannerEndpoint()
+    {
         return $this->scannerEndpoint;
     }
 }

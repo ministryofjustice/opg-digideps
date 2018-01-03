@@ -190,6 +190,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ['103-4-5', '-4'],
         ];
     }
+
     /**
      * @dataProvider reportTypeTransSuffixProvider
      */

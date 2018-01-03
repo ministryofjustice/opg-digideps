@@ -68,10 +68,7 @@ class IndexController extends AbstractController
             $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
         }
 
-        $form = $this->createForm(FormDir\Admin\AddUserType::class
-                                 , new EntityDir\User()
-                                 , [ 'options' => [ 'roleChoices'        => $availableRoles
-                                                  , 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User(), [ 'options' => [ 'roleChoices'        => $availableRoles, 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
                                                   ]
                                    ]
                                  );
@@ -121,7 +118,6 @@ class IndexController extends AbstractController
         try {
             /* @var $user EntityDir\User */
             $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'user-clients', 'client', 'client-reports', 'odr']);
-
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -233,7 +229,7 @@ class IndexController extends AbstractController
      * @Method({"GET"})
      * @Template()
      *
-     * @param integer $id
+     * @param int $id
      */
     public function deleteConfirmAction($id)
     {
@@ -306,7 +302,7 @@ class IndexController extends AbstractController
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))
                     );
 
-                    foreach($ret['errors'] as $err) {
+                    foreach ($ret['errors'] as $err) {
                         $request->getSession()->getFlashBag()->add(
                             'error',
                             $err
@@ -368,14 +364,13 @@ class IndexController extends AbstractController
                     sprintf('Your file contained %d deputy numbers, %d were updated, with %d error(s)', $ret['requested_mld_upgrades'], $ret['updated'], count($ret['errors']))
                 );
 
-                foreach($ret['errors'] as $err) {
+                foreach ($ret['errors'] as $err) {
                     $request->getSession()->getFlashBag()->add(
                         'error',
                         $err
                     );
                 }
                 return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
-
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
@@ -391,7 +386,6 @@ class IndexController extends AbstractController
             'maxUploadSize'   => min([ini_get('upload_max_filesize'), ini_get('post_max_size')]),
         ];
     }
-
 
     /**
      * @Route("/pa-upload", name="admin_pa_upload")

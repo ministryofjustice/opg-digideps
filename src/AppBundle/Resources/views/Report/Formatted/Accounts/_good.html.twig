@@ -6,14 +6,14 @@
 
     <div class="half-width tight">
         <div class="box flush">
-            <div class="message short">Total money in and money out:</div>
+            <div class="message">Report closing balance:</div>
             <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
         </div>
     </div>
 
     <div class="half-width tight last">
         <div class="box flush">
-            <div class="message short">Total balance from all bank accounts:</div>
+            <div class="message">Accounts closing balance:</div>
             <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
         </div>
     </div>

@@ -85,7 +85,6 @@ trait FormTrait
     public function followingFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
     {
         foreach ($fields->getRowsHash() as $field => $value) {
-
             $this->assertFieldContains($field, $value);
         }
     }
@@ -98,7 +97,7 @@ trait FormTrait
         foreach ($fields->getRowsHash() as $field => $value) {
 
             /** @var NodeElement $elementsFound */
-            $elementsFound = $this->getSession()->getPage()->find('css', '#'.$field);
+            $elementsFound = $this->getSession()->getPage()->find('css', '#' . $field);
 
             if (empty($elementsFound)) {
                 throw new \RuntimeException("Element $field not found");
@@ -106,10 +105,8 @@ trait FormTrait
             if ($elementsFound->getAttribute('value') != $value) {
                 throw new \RuntimeException("Element $field value not equal to $value");
             }
-
         }
     }
-
 
     /**
      * Fills in form field with specified id|name|label|value.

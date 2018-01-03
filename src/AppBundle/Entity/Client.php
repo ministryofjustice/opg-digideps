@@ -223,7 +223,7 @@ class Client
      */
     public function hasUser(User $user)
     {
-        foreach($this->users?:[] as $currentUser) {
+        foreach ($this->users?:[] as $currentUser) {
             if ($user->getId()
                 && $currentUser instanceof User && $currentUser->getId()
                 && $user->getId() == $currentUser->getId()) {
@@ -706,10 +706,10 @@ class Client
                     $matches = [];
                     preg_match('(^\w+)', $user->getEmail(), $matches);
                     if (!empty($matches[0])) {
-                        $coDeps[strToLower($matches[0]).$user->getId()] = $user;
+                        $coDeps[strtolower($matches[0]) . $user->getId()] = $user;
                     }
                 } else {
-                    $coDeps[strToLower($user->getFirstname()).$user->getId()] = $user;
+                    $coDeps[strtolower($user->getFirstname()) . $user->getId()] = $user;
                 }
             }
             ksort($coDeps);

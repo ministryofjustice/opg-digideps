@@ -90,5 +90,4 @@ class ClientContactVoter extends Voter
 
         return false;
     }
-
 }

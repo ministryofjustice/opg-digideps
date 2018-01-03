@@ -2,18 +2,17 @@
 
 namespace AppBundle\Service\File\Checker;
 
-use AppBundle\Service\File\Checker\Exception\InvalidFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Types\UploadableFileInterface;
+use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Types\Pdf;
+use AppBundle\Service\File\Types\UploadableFileInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Message\ResponseInterface;
+use GuzzleHttp\Post\PostFile;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use GuzzleHttp\Post\PostFile;
 
 class ClamAVChecker implements FileCheckerInterface
 {
@@ -74,7 +73,7 @@ class ClamAVChecker implements FileCheckerInterface
             return true;
         }
 
-        switch(strtoupper(trim($response['file_scanner_code']))) {
+        switch (strtoupper(trim($response['file_scanner_code']))) {
             case 'AV_FAIL':
                 throw new VirusFoundException();
             case 'PDF_INVALID_FILE':
@@ -82,13 +81,13 @@ class ClamAVChecker implements FileCheckerInterface
                 throw new RiskyFileException();
         }
 
-        throw new RuntimeException("Files scanner FAIL. Unrecognised code. Full response: ". print_r($response));
+        throw new RuntimeException('Files scanner FAIL. Unrecognised code. Full response: ' . print_r($response));
     }
 
     /**
      * POSTS the file body to file scanner, and continually polls until result is returned.
      *
-     * @param UploadableFileInterface $uploadedFile
+     * @param  UploadableFileInterface $uploadedFile
      * @return array
      */
     private function getScanResults(UploadableFileInterface $file)
@@ -101,12 +100,11 @@ class ClamAVChecker implements FileCheckerInterface
             $statusResponse = [];
 
             //TODO use $statusResponse['celery_task_state'] == 'SUCCESS' to verify
-            while ((!array_key_exists('file_scanner_result', $statusResponse)) && ($count < $maxRetries))
-            {
+            while ((!array_key_exists('file_scanner_result', $statusResponse)) && ($count < $maxRetries)) {
                 $statusResponse = $this->makeStatusRequest($result['location']);
 
                 if ($statusResponse === false) {
-                   $this->log(Logger::CRITICAL, 'Scanner response could not be decoded');
+                    $this->log(Logger::CRITICAL, 'Scanner response could not be decoded');
                     throw new \RunTimeException('Unable to contact file scanner');
                 }
 
@@ -120,9 +118,8 @@ class ClamAVChecker implements FileCheckerInterface
             }
 
             return $statusResponse;
-
         } catch (\Exception $e) {
-           $this->log(Logger::CRITICAL, 'Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
+            $this->log(Logger::CRITICAL, 'Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
 
             throw new \RunTimeException($e);
         }
@@ -147,7 +144,7 @@ class ClamAVChecker implements FileCheckerInterface
 
         $response = $this->client->send($request);
 
-        if (!$response instanceof ResponseInterface ) {
+        if (!$response instanceof ResponseInterface) {
             throw new \RuntimeException('ClamAV not available');
         }
         $result = json_decode($response->getBody()->getContents(), true);
@@ -173,12 +170,11 @@ class ClamAVChecker implements FileCheckerInterface
         return $result;
     }
 
-
     /**
      * @param $level
      * @param $message
      * @param UploadedFile|null $file
-     * @param array|null $response
+     * @param array|null        $response
      */
     private function log($level, $message, UploadedFile $file = null, array $response = null)
     {

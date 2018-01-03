@@ -18,7 +18,7 @@ class AbstractFileChecker
      * Any other checks that are not found by the virus scan go here.
      * Checks file extension.
      *
-     * @param UploadedFile $file
+     * @param  UploadedFile $file
      * @return bool
      */
     public function checkFile(UploadableFileInterface $file)

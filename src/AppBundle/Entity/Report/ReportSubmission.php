@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Traits\CreationAudit;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 class ReportSubmission
@@ -52,7 +51,7 @@ class ReportSubmission
     }
 
     /**
-     * @param int $id
+     * @param  int              $id
      * @return ReportSubmission
      */
     public function setId($id)
@@ -71,7 +70,7 @@ class ReportSubmission
     }
 
     /**
-     * @param Report $report
+     * @param  Report           $report
      * @return ReportSubmission
      */
     public function setReport($report)
@@ -90,7 +89,7 @@ class ReportSubmission
     }
 
     /**
-     * @param array $documents
+     * @param  array            $documents
      * @return ReportSubmission
      */
     public function setDocuments($documents)
@@ -109,7 +108,7 @@ class ReportSubmission
     }
 
     /**
-     * @param User $archivedBy
+     * @param  User             $archivedBy
      * @return ReportSubmission
      */
     public function setArchivedBy($archivedBy)
@@ -139,7 +138,6 @@ class ReportSubmission
         return $this;
     }
 
-
     /**
      * @return string
      */
@@ -149,7 +147,5 @@ class ReportSubmission
         $client = $this->getReport()->getClient();
 
         return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '.zip';
-
     }
-
 }

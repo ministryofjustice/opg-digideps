@@ -2,9 +2,8 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -86,5 +85,4 @@ class DocumentVoter extends Voter
 
         return false;
     }
-
 }

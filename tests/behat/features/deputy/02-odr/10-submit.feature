@@ -23,7 +23,6 @@ Feature: odr / report submit
         And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "odr-start, odr-submit, odr-declaration-page"
         Then the URL should match "/odr/\d+/declaration"
-        And I save the application status into "odr-submit-pre"
         #
         # empty form
         #
@@ -50,7 +49,6 @@ Feature: odr / report submit
         And I press "odr_declaration_save"
         Then the form should be valid
         And the URL should match "/odr/\d+/submitted"
-        And I save the page as "odr-submit-submitted"
         And the response status code should be 200
         # return to homepage
         When I click on "return-homepage"
@@ -59,7 +57,6 @@ Feature: odr / report submit
         And the "last" email should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
-        And I save the application status into "odr-submit-confirmation"
 
 
     @odr
@@ -82,7 +79,6 @@ Feature: odr / report submit
         # create report
         When I click on "report-start"
         Then the URL should match "report/create/\d+"
-        And I save the page as "odr-create-report"
         # simple validation check. Same form already tested from deputy, not need to check validation cases again
         When I fill in the following:
             | report_startDate_day |  |

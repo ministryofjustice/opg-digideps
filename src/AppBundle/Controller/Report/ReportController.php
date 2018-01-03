@@ -104,7 +104,7 @@ class ReportController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
-        $editReportDatesForm = $this->get('form.factory')->createNamed( 'report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
+        $editReportDatesForm = $this->get('form.factory')->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
         $returnLink = $this->getUser()->isDeputyPa()
             ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
@@ -151,11 +151,7 @@ class ReportController extends AbstractController
         $report->setClient($client);
 
         $formFactory = $this->get('form.factory');
-        $form = $this->get('form.factory')->createNamed( 'report'
-                                 , FormDir\Report\ReportType::class
-                                 , $report
-                                 , [ 'translation_domain' => 'registration'
-                                   , 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+        $form = $this->get('form.factory')->createNamed('report', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'registration', 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
                                    ]
                                  );
 
@@ -215,7 +211,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId,  self::$reportGroupsAll);
+        $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
@@ -381,8 +377,8 @@ class ReportController extends AbstractController
     }
 
     /**
-     * @param EntityDir\Report\Report $report
-     * @return string binary PDF content
+     * @param  EntityDir\Report\Report $report
+     * @return string                  binary PDF content
      */
     private function getPdfBinaryContent(EntityDir\Report\Report $report)
     {

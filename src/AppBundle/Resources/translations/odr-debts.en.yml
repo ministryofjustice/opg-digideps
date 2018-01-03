@@ -15,6 +15,16 @@ existPage:
     save:
       label: Save and continue
 
+managementPage:
+  htmlTitle: "Deputy report - debts | GOV.UK"
+  pageSectionTitle: Debts
+  pageSectionDescription: How is the debt being managed or reduced?
+  pageHint: For example, list any regular payments to creditors or payment plans in place
+  form:
+    debtManagement:
+      label: How is the debt being managed or reduced?
+      hint: For example, give details of any regular payments to creditors or payment plans
+
 editPage:
   htmlTitle: "New deputy report - debts | GOV.UK"
   pageTitle: Debts

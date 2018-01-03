@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Document;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
@@ -28,8 +27,8 @@ class DocumentService
 
     /**
      * DocumentService constructor.
-     * @param S3Storage $s3Storage
-     * @param RestClient $restClient
+     * @param S3Storage       $s3Storage
+     * @param RestClient      $restClient
      * @param LoggerInterface $logger
      */
     public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger)
@@ -64,7 +63,7 @@ class DocumentService
                 $this->log('error', $message);
             }
         }
-        $this->log('notice', "Done");
+        $this->log('notice', 'Done');
     }
 
     /**
@@ -112,19 +111,18 @@ class DocumentService
         }
     }
 
-
     /**
-     * @param Document $document
-     * @param bool $ignoreS3Failure
-     * @return boolean true if delete is successful
-     *
+     * @param  Document   $document
+     * @param  bool       $ignoreS3Failure
      * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
+     * @return bool       true if delete is successful
+     *
      */
     private function deleteFromS3(Document $document, $ignoreS3Failure)
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
-            $this->log('notice', "empty file reference for document " . $document->getId() . ", can't delete");
+            $this->log('notice', 'empty file reference for document ' . $document->getId() . ", can't delete");
 
             return true;
         }
@@ -142,7 +140,6 @@ class DocumentService
         }
     }
 
-
     /**
      * Log message using the internal logger
      *
@@ -157,6 +154,4 @@ class DocumentService
             'service' => 'documents-service',
         ]]);
     }
-
-
 }

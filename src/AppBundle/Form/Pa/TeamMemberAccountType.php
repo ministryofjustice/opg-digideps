@@ -49,9 +49,9 @@ class TeamMemberAccountType extends AbstractType
             'targetUser'         => null
         ])
         ->setRequired(['team','loggedInUser','validation_groups'])
-        ->setAllowedTypes('team'        , Team::class)
+        ->setAllowedTypes('team', Team::class)
         ->setAllowedTypes('loggedInUser', User::class)
-        ->setAllowedTypes('validation_groups'  , 'array')
+        ->setAllowedTypes('validation_groups', 'array')
         ;
     }
 

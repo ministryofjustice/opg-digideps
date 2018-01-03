@@ -519,7 +519,7 @@ trait ReportTrait
             # PA
             $this->assertSession()->elementNotExists('css', '#edit-report_submit');
         } else {
-            throw new \RuntimeException("usertype not specified. Usage: the PA|Lay report should not be submittable");
+            throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should not be submittable');
         }
     }
 
@@ -538,7 +538,7 @@ trait ReportTrait
             # PA
             $this->assertSession()->elementExists('css', '#edit-report_submit');
         } else {
-            throw new \RuntimeException("usertype not specified. Usage: the PA|Lay report should be submittable");
+            throw new \RuntimeException('usertype not specified. Usage: the PA|Lay report should be submittable');
         }
     }
 }

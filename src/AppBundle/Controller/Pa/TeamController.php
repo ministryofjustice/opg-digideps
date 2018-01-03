@@ -41,11 +41,7 @@ class TeamController extends AbstractController
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
         $validationGroups = $team->canAddAdmin() ? ['pa_team_add', 'pa_team_role_name'] : ['pa_team_add'];
 
-        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class
-                                 , null
-                                 , [ 'team'              => $team
-                                   , 'loggedInUser'      => $this->getUser()
-                                   , 'validation_groups' => $validationGroups
+        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class, null, [ 'team'              => $team, 'loggedInUser'      => $this->getUser(), 'validation_groups' => $validationGroups
                                    ]
                                  );
 
@@ -102,12 +98,7 @@ class TeamController extends AbstractController
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
         $validationGroups = $team->canAddAdmin() ? ['user_details_pa', 'pa_team_role_name'] : ['user_details_pa'];
 
-        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class
-                                 , $user
-                                 , [ 'team'                => $team
-                                   , 'loggedInUser'      => $this->getUser()
-                                   , 'targetUser'        => $user
-                                   , 'validation_groups' => $validationGroups
+        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class, $user, [ 'team'                => $team, 'loggedInUser'      => $this->getUser(), 'targetUser'        => $user, 'validation_groups' => $validationGroups
                                    ]
                                  );
 

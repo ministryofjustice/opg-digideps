@@ -100,7 +100,6 @@ class Lifestyle
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
     }
 
-
     /**
      * @return bool
      */
@@ -140,6 +139,4 @@ class Lifestyle
     {
         $this->activityDetailsNo = $activityDetailsNo;
     }
-
-
 }

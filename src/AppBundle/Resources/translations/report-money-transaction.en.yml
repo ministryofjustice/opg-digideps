@@ -3,27 +3,41 @@ startPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in
     pageSectionDescription1: |
-      Please tell us about money paid into %client%'s accounts between %startDate% and %endDate%.
+      In this section, we ask you about money paid into %client%'s accounts between %startDate%
+      and %endDate%.
     pageSectionDescription2: |
-      You can enter a total for each type of income, or you can enter
-      individual amounts and we'll add them up for you.
+      Transfers between %client%'s accounts should be entered in the
+      <a href="%moneyTransfersPath%">money transfers</a> section.
     pageSectionDescription3: |
-      Be sure to enter each individual source of income into one category only,
-      so we don't count them twice when we do the calculation.
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      You can enter a total amount or individual amounts for each type of income.
+    totalOrIndividualPara: |
+      For example, you can add one item of income that covers the total amount of state pension
+      received over the reporting period, or you can add 12 items - one for each month's pension
+      payment.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageTitle: Money out
     pageSectionDescription1: |
-      Use this section to tell us about money you have spent between %startDate% and %endDate%
-      on %client% that you have not told us about in the money transfers, deputy expenses or
-      gift sections of this report.
+      In this section, we ask you about money paid out of %client%'s accounts between %startDate%
+      and %endDate%.
     pageSectionDescription2: |
-      You can enter a total for each type of payment, or you can enter
-      individual amounts and we'll add them up for you.
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+      deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2PA: |
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
+      deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
-      Be sure to enter each individual payment into one category only,
-      so we don't count them twice when we do the calculation.
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      You can enter a total amount or individual amounts for each type of payment.
+    totalOrIndividualPara: |
+      For example, you can add one payment that covers the cost of rent for the whole reporting
+      period, or you can add 12 payments - one for each month's rent.
     startButton: Start money out
 
 
@@ -33,13 +47,24 @@ stepPage:
     pageTitle: Add an item of income
     supportTitle: Money in
     pageSectionDescription:
-       step1: You can add one or more items and come back to complete the section later.
+      step1: You can add one or more items and come back to complete the section later.
+      transferWarning: |
+        Don't include transfers between %client%'s accounts here. Enter them in the
+        <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
-      htmlTitle: "Deputy report - Money out | GOV.UK"
-      pageTitle: Add a payment
-      supportTitle: Money out
-      pageSectionDescription:
-         step1: You can add one or more types of payment and come back to complete the section later.
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Add a payment
+    supportTitle: Money out
+    pageSectionDescription:
+      step1: You can add one or more types of payment and come back to complete the section later.
+      differentSections: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+        deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+      differentSectionsPA: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
+        deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
 
 addAnotherPage:
   moneyIn:
@@ -47,8 +72,8 @@ addAnotherPage:
     pageTitle: Add another item
     form:
       addAnother:
-        label: The item of income has been saved. Would you like to add another item of income now?
-        hint: If you prefer, you can come back to this section later to add more items of income
+        label: The item has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more items
       save:
          label: Continue
   moneyOut:
@@ -56,8 +81,8 @@ addAnotherPage:
     pageTitle: Add a payment
     form:
       addAnother:
-        label: The payment has been saved. Would you like to add another payment now?
-        hint: If you prefer, you can come back to this section later to add more types of payment
+        label: The payment has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more payments
       save:
          label: Continue
 
@@ -66,38 +91,31 @@ summaryPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in
-    # similar to start page, but expecting to evolve differently
-    supportTitle: ""
-    weAskAbout: In this section, we ask you about money paid into %client%'s account between %startDate% and %endDate%.
+    moreDetails: More details about this section
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageTitle: Money out
-    supportTitle: ""
-    weAskAbout: |
-      In this section, we ask you about money you have spent between %startDate% and %endDate%
-      on %client% that you have not told us about in the money transfers, deputy expenses or
-      gift sections of this report.
-    # similar to start page, but expecting to evolve differently
+    moreDetails: More details about this section
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
     moneyOut.legend: What category does the payment come under?
     entries:
       # money in
-      income-and-earnings: Income from investment
-      state-benefits: State benefit
+      income-and-earnings: Income from interest, investments, or property
       pensions: Pension
-      damages: Damages
-      one-off: One-off
+      state-benefits: State benefit
+      damages: Compensation or damages award
+      one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
-      household-bills: Household bill
+      household-bills: Household bills and expenses
       accommodation: Accommodation (mortgage or rent)
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
-      fees: Professional fee
-      major-purchases: Major purchase
-      debt-and-charges: Tax, debt or charge
+      fees: OPG and other professional fees
+      major-purchases: Major purchase over £1,000
+      debt-and-charges: Tax or charge
       moving-money: Moving money
       moneyout-other: Other
   amount:
@@ -121,7 +139,7 @@ form:
       dividends:
         label: Dividends
       account-interest:
-        label: Account interest
+        label: Interest on savings and other accounts
       salary-or-wages:
         label: Salary or wages
       other-incomes:
@@ -245,7 +263,7 @@ form:
       day-trips:
         label: Day trips
       tax-payments-to-hmrc:
-        label: Tax payments to HMRC
+        label: Tax payment to HMRC
       debt-and-charges-other:
         label: Other
         moreInformations: Please give us more information
@@ -273,7 +291,7 @@ form:
         label: Investment account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
-        label: Purchases over £1,000
+        label: Other purchase over £1,000
         moreInformations: Please give us more information
       deputy-expenses:
         label: Deputy expenses
@@ -283,15 +301,13 @@ form:
       bank-charges:
         label: Bank charge
       loans:
-        label: Loans
+        label: Loan repayment
       credit-cards-charges:
         label: Credit card charge
       unpaid-care-fees:
         label: Unpaid care fee
       arrears:
         label: Arrears
-      tax-payments-to-hmrc:
-        label: Tax payment to HMRC
       transfers-out-to-other-accounts:
         label: Transfers from %client%'s account to other accounts
         moreInformations: Please enter the bank or building society name, the last 4 digits of the account number and the amount transferred

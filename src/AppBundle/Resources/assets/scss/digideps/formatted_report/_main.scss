@@ -102,13 +102,9 @@
     .balance {
 
         .message {
-            height: 65px;
+            height: 35px;
             @include core-19();
             text-align: center;
-
-            &.short {
-                height: 35px;
-            }
         }
 
         .total {

@@ -79,7 +79,7 @@ class BankAccountController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm( FormDir\Report\BankAccountType::class, $account, ['step' => $step]);
+        $form = $this->createForm(FormDir\Report\BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

@@ -33,3 +33,8 @@ services:
         class: AppBundle\Service\Mailer\Transport\TransportMock
     mailer.transport.smtp.secure:
         class: AppBundle\Service\Mailer\Transport\TransportMock
+
+jms_serializer:
+    metadata:
+        cache: none
+        debug: false

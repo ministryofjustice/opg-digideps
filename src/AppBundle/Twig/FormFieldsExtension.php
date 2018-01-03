@@ -51,9 +51,9 @@ class FormFieldsExtension extends \Twig_Extension
      * Renders form input field.
      *
      * @param mixed  $element
-     * @param string  $elementName
-     * @param integer  $transIndex
-     * @param array $vars
+     * @param string $elementName
+     * @param int    $transIndex
+     * @param array  $vars
      */
     public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
     {
@@ -68,9 +68,9 @@ class FormFieldsExtension extends \Twig_Extension
      * Renders form checkbox field.
      *
      * @param mixed  $element
-     * @param string  $elementName
-     * @param integer  $transIndex
-     * @param array $vars
+     * @param string $elementName
+     * @param int    $transIndex
+     * @param array  $vars
      */
     public function renderCheckboxInput($element, $elementName, array $vars = [], $transIndex = null)
     {
@@ -189,9 +189,9 @@ class FormFieldsExtension extends \Twig_Extension
      * Renders form select element.
      *
      * @param mixed  $element
-     * @param string  $elementName
-     * @param integer  $transIndex
-     * @param array $vars
+     * @param string $elementName
+     * @param int    $transIndex
+     * @param array  $vars
      */
     public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
     {
@@ -274,9 +274,9 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @param mixed  $element
-     * @param string  $elementName
-     * @param array $vars
-     * @param integer  $transIndex
+     * @param string $elementName
+     * @param array  $vars
+     * @param int    $transIndex
      */
     public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null)
     {

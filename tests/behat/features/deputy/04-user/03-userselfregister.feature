@@ -77,8 +77,7 @@ Feature: User Self Registration
       | self_registration_caseNumber      | 11112222                                |
     And I press "self_registration_save"
     Then I should see a "#error-summary" element
-    And I save the page as "selfreg-error-mismatch"
-    And I should be on "/register"
+        And I should be on "/register"
       #
       # Postcode mismatch
       #
@@ -88,15 +87,13 @@ Feature: User Self Registration
       | 11113333 | Cross-Tolley2 | D002      | Tolley2     | SW1 3RF2     | OPG102    |
     And I press "self_registration_save"
     Then I should see a "#error-summary" element
-    And I save the page as "selfreg-error-postcode"
-      #
+          #
       # success (by fixing postcode)
       #
     And I fill in the following:
       | self_registration_postcode | SW1 3RF |
     And I press "self_registration_save"
     Then the form should be valid
-    And I save the page as "selfreg-ok"
     Then I should see "Please check your email"
     And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
@@ -127,7 +124,6 @@ Feature: User Self Registration
       | self_registration_caseNumber      | 11112222                                    |
     And I press "self_registration_save"
     Then I should see a "#error-summary" element
-    And I save the page as "selfreg-error-casenumber-already-used"
 
   @deputy
   Scenario: Inform the use that email already exists

@@ -266,9 +266,9 @@ class RestClient
     /**
      * @param string $method
      * @param string $endpoint
-     * @param mixed $data
+     * @param mixed  $data
      * @param string $expectedResponseType
-     * @param array $options
+     * @param array  $options
      *
      * @throws \InvalidArgumentException
      *
@@ -455,11 +455,11 @@ class RestClient
     }
 
     /**
-     * @param string $url
-     * @param string $method
-     * @param string $start
-     * @param array $options
-     * @param ResponseInterface  $response
+     * @param string            $url
+     * @param string            $method
+     * @param string            $start
+     * @param array             $options
+     * @param ResponseInterface $response
      */
     private function logRequest($url, $method, $start, $options, ResponseInterface $response = null)
     {

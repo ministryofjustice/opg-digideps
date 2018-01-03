@@ -2,10 +2,7 @@
 
 namespace AppBundle\Service\File\Checker;
 
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Types\UploadableFileInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class PdfChecker extends AbstractFileChecker implements FileCheckerInterface
 {
@@ -14,7 +11,7 @@ class PdfChecker extends AbstractFileChecker implements FileCheckerInterface
      *
      * Checks file extension.
      *
-     * @param UploadableFileInterface $file
+     * @param  UploadableFileInterface $file
      * @return bool
      */
     public function checkFile(UploadableFileInterface $fileToStore)

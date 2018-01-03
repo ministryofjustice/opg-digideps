@@ -26,7 +26,7 @@ class AddAnotherRecordType extends AbstractType
         $resolver
             ->setDefaults([])
             ->setRequired(['translation_domain'])
-            ->setAllowedTypes('translation_domain','string');
+            ->setAllowedTypes('translation_domain', 'string');
     }
 
     public function getName()

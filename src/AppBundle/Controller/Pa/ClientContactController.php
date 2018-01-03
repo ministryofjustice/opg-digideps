@@ -36,14 +36,12 @@ class ClientContactController extends AbstractController
 
         $clientContact = new EntityDir\ClientContact($client);
 
-        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form = $this->createForm(new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
 
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts'
-                , $form->getData()
-                , ['add_clientcontact']
+            $this->getRestClient()->post('clients/' . $client->getId() . '/clientcontacts', $form->getData(), ['add_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been added');
 
@@ -70,13 +68,11 @@ class ClientContactController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit-client-contact', $client, 'Access denied');
 
-        $form = $this->createForm( new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form = $this->createForm(new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('/clientcontacts/' . $id
-                , $form->getData()
-                , ['edit_clientcontact']
+            $this->getRestClient()->put('/clientcontacts/' . $id, $form->getData(), ['edit_clientcontact']
             );
             $request->getSession()->getFlashBag()->add('notice', 'The contact has been updated');
             return $this->redirect($backLink);
@@ -89,7 +85,6 @@ class ClientContactController extends AbstractController
             'backLink' => $backLink
         ];
     }
-
 
     /**
      * @Route("{id}/delete", name="clientcontact_delete")
@@ -110,7 +105,6 @@ class ClientContactController extends AbstractController
             'backLink' => $this->generateClientProfileLink($client)
         ];
     }
-
 
     /**
      * @Route("{id}/delete/confirm", name="clientcontact_delete_confirm")
@@ -136,16 +130,13 @@ class ClientContactController extends AbstractController
         return $this->redirect($this->generateClientProfileLink($clientContact->getClient()));
     }
 
-
     /**
      * @param $id
      * @return mixed
      */
     private function getContactById($id)
     {
-        return $this->getRestClient()->get('clientcontacts/'.$id
-            , 'ClientContact'
-            , ['clientcontacts', 'client', 'client-users', 'current-report', 'report-id', 'user']
+        return $this->getRestClient()->get('clientcontacts/' . $id, 'ClientContact', ['clientcontacts', 'client', 'client-users', 'current-report', 'report-id', 'user']
         );
     }
 }

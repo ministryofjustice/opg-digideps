@@ -31,5 +31,4 @@ monolog:
 jms_serializer:
     metadata:
         cache: none
-        cache: file
-        debug: true 
+        debug: true
