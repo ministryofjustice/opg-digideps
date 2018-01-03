@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\BankAccount;
+use AppBundle\Entity\Odr\Debt;
 use AppBundle\Entity\Odr\Expense;
 use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
@@ -143,6 +144,8 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function debtsProvider()
     {
+        $debt = m::mock(Debt::class);
+
         return [
             [['getHasDebts' => 'no'], StatusService::STATE_DONE],
             [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
