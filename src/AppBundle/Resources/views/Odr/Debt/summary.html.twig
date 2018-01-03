@@ -96,32 +96,6 @@
             </tbody>
         </table>
 
-        {% set debtOther = odr.getDebtById('other') %}
-        {% if debtOther.moreDetails %}
-
-            {# Questions and answers table #}
-            <table class="check-your-answers columns-2 push--top">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Answer</th>
-                        <th>
-                            <span class="visually-hidden">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="behat-region-debt-other-more-details">
-                        <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
-                        <td>{{ debtOther.moreDetails | nl2br }}</td>
-                        <td class="change-answer">
-                            <a href="{{ path('odr_debts_edit', {'odrId': odr.id, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        {% endif %}
-
         <table class="check-your-answers columns-2 push--top">
             <thead>
                 <tr>
@@ -133,6 +107,16 @@
                 </tr>
             </thead>
             <tbody>
+                {% set debtOther = odr.getDebtById('other') %}
+                {% if debtOther.moreDetails %}
+                    <tr class="behat-region-debt-other-more-details">
+                        <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
+                        <td>{{ debtOther.moreDetails | nl2br }}</td>
+                        <td class="change-answer">
+                            <a href="{{ path('odr_debts_edit', {'odrId': odr.id, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
                 <tr class="behat-region-debt-management-details">
                     {% if odr.debtManagement %}
                         <td>{{ 'managementPage.form.debtManagement.label' | trans }}</td>
