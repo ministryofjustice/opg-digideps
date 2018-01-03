@@ -207,7 +207,7 @@
                 </tr>
             </table>
 
-            {% if showMoreDetailsWith | default(false) and param.answer == param.showMoreDetailsWith %}
+            {% if param.showMoreDetailsWith | default(false) and param.answer == param.showMoreDetailsWith %}
                 <div class="labelvalue push-half--top">
                     {% if param.moreDetailsLabel | default(false) %}
                         <h3 class="label question bold">{{ param.moreDetailsLabel }}</h3>
