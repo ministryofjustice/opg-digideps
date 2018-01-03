@@ -1,37 +1,137 @@
 {% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
 
+{# always true when sent as PDF at submittion time #}
 {% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
+{% set transOptions = {
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more",
+} %}
 
 <div class="section" id="report-summary">
     <h2 class="section-heading">Report summary</h2>
 
-    {{ macros.answerYesNo({
-        question: 'Significant Decisions',
-        answer: report.action.doYouExpectFinancialDecisions
-    }) }}
+    {% if report.hasSection('actions') %}
+        {{ macros.answerYesNo({
+            question: 'Significant Decisions',
+            answer: report.action.doYouExpectFinancialDecisions
+        }) }}
+    {% endif %}
 
-    {{ macros.answerYesNo({
-        question: 'Any other information',
-        answer: report.actionMoreInfo
-    }) }}
+    {% if report.hasSection('otherInfo') %}
+        {{ macros.answerYesNo({
+            question: 'Any other information',
+            answer: report.actionMoreInfo
+        }) }}
+    {% endif %}
 
-    {{ macros.answerYesNo({
-        question: 'Do account balance',
-        answer: readyToBalance ? (report.isTotalsMatch ? 'yes' : 'no') : ''
-    }) }}
+    {% if report.hasSection('balance') and readyToBalance %}
+        {{ macros.answerYesNo({
+            question: 'Do account balance',
+            answer: report.isTotalsMatch ? 'yes' : 'no'
+        }) }}
 
-    {#[warning]#}
+        {# //TODO fix STYLE NOT LOADED #}
+        <div class="alert-error panel panel-border-narrow behat-region-balance-bad"
+             id="alert-not-balanced">
+            <span class="icon icon-cross"></span>
+            <div class="alert-message">
+                <p class="bold">{{ 'alerts.notBalanced' | trans({}, 'report-balance') }}</p>
+                <div class="data behat-region-unaccounted-for">
+                        <span class="data-item bold-xlarge">
+                            £{{ report.totalsOffset | abs | money_format }}
+                        </span>
+                    <span class="data-item bold-xsmall">{{ 'alerts.notBalancedSupport' | trans(transOptions, 'report-balance') }}</span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if report.hasSection('bankAccounts') %}
+        <div class="box">
+            <h3>Account balances</h3>
+            <dl class="labelvalue half-width first">
+                <dt class="label">Opening</dt>
+                <dd class="value">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</dd>
+            </dl>
+            <dl class="labelvalue half-width">
+                <dt class="label">Closing</dt>
+                <dd class="value">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</dd>
+            </dl>
+        </div>
+    {% endif %}
+
+    {# money 103 doesn't have a total, therefore #}
+    {% if report.hasSection('moneyIn') %}
+        <div class="box">
+            {# total value #}
+            <table class="labelvalue money">
+                <tr>
+                    <td class="label bold">Difference between income and expenditure</td>
+                    <td class="value total width-fifth">
+                        &pound;{{ report.moneyInTotal - report.moneyOutTotal | money_format }}</td>
+                </tr>
+            </table>
+        </div>
+    {% endif %}
+
+    {% if report.hasSection('assets') %}
+        <div class="box">
+            <h3>Assets</h3>
+            <table class="labelvalue money">
+                <tbody>
+                <tr class="">
+                    <td class="label noborder">Property</td>
+                    <td class="value text--right width-fifth">
+                        £ {{ report.assetsTotalsSummaryPage('property') | money_format }}</td>
+                </tr>
+                <tr class="">
+                    <td class="label noborder">Cash</td>
+                    <td class="value text--right width-fifth">
+                        £ {{ report.assetsTotalsSummaryPage('cash') | money_format }}</td>
+                </tr>
+                <tr class="">
+                    <td class="label noborder">OherAssets</td>
+                    <td class="value text--right width-fifth">
+                        £ {{ report.assetsTotalsSummaryPage('other') | money_format }}</td>
+                </tr>
 
 
-    {#balances#}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
 
-    {#difference#}
+    {% if report.hasSection('debts') %}
+        {{ macros.answerYesNo({
+            question: 'Debt',
+            answer: report.hasDebts
+        }) }}
+    {% endif %}
 
-    {#assets (property, cash, other)#}
-
-    {#debt#}
-
-    {#gify#}
-    {#deputyExpenses#}
+    {% if report.hasSection('gifts') or report.hasSection('deputyExpenses') or report.hasSection('paDeputyExpenses') %}
+        <div class="box">
+            {# total value #}
+            <table class="labelvalue money">
+                {% if report.hasSection('gifts') %}
+                    <tr>
+                        <td class="label bold">Gifts</td>
+                        <td class="value total width-fifth">£{{ report.giftsTotalValue | money_format }}</td>
+                    </tr>
+                {% endif %}
+                {% if report.hasSection('deputyExpenses') %}
+                    <tr>
+                        <td class="label bold">Deputy Expenses</td>
+                        <td class="value total width-fifth">£{{ report.expensesTotal | money_format }}</td>
+                    </tr>
+                {% endif %}
+                {% if report.hasSection('paDeputyExpenses') %}
+                    <tr>
+                        <td class="label bold">Deputy Fees and Expenses</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.feesTotal + report.expensesTotal | money_format }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    {% endif %}
 
 </div>

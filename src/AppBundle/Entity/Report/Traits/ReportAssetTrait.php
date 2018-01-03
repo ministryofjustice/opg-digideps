@@ -10,6 +10,19 @@ use JMS\Serializer\Annotation as JMS;
 trait ReportAssetTrait
 {
     /**
+     * Titles matching this will be included in the count for "Cash" in summary page
+     * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
+     *
+     */
+    private static $cashAssetTitles = [
+        'Unit trusts',
+        'National Savings certificates',
+        'Stocks and shares',
+        'Premium Bonds',
+    ];
+
+
+    /**
      * @JMS\Type("array<AppBundle\Entity\Report\Asset>")
      *
      * @var Asset[]
@@ -51,6 +64,27 @@ trait ReportAssetTrait
     public function getAssetsTotalValue()
     {
         return $this->assetsTotalValue;
+    }
+
+    /**
+     * @param string $type asset|cash|other
+     */
+    public function getAssetsTotalsSummaryPage($type)
+    {
+        $ret = 0;
+
+        foreach ($this->assets as $asset) {
+
+            if (
+                ($type === 'property' && $asset instanceof AssetProperty)
+                || ($type === 'cash' && in_array($asset->getTitle(), self::$cashAssetTitles))
+                || ($type === 'other')
+            ) {
+                $ret += $asset->getValueTotal();
+            }
+        }
+
+        return $ret;
     }
 
     /**
