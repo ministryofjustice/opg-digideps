@@ -1,5 +1,7 @@
 {% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
 
+{% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
+
 <div class="section" id="report-summary">
     <h2 class="section-heading">Report summary</h2>
 
@@ -15,7 +17,21 @@
 
     {{ macros.answerYesNo({
         question: 'Do account balance',
-        answer: 'yes'
+        answer: readyToBalance ? (report.isTotalsMatch ? 'yes' : 'no') : ''
     }) }}
+
+    {#[warning]#}
+
+
+    {#balances#}
+
+    {#difference#}
+
+    {#assets (property, cash, other)#}
+
+    {#debt#}
+
+    {#gify#}
+    {#deputyExpenses#}
 
 </div>
