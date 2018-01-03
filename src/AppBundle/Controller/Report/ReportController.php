@@ -149,11 +149,13 @@ class ReportController extends AbstractController
             $report = new EntityDir\Report\Report();
         }
         $report->setClient($client);
-
-        $formFactory = $this->get('form.factory');
-        $form = $this->get('form.factory')->createNamed('report', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'registration', 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
-                                   ]
-                                 );
+        $form = $this->get('form.factory')->createNamed(
+            'report',
+            FormDir\Report\ReportType::class, $report, [
+                'translation_domain' => 'registration',
+                'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+            ]
+        );
 
         $form->handleRequest($request);
 
@@ -359,8 +361,6 @@ class ReportController extends AbstractController
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
-        $name = 'OPG102-' . $report->getClient()->getCaseNumber() . '-' . date_format($report->getEndDate(), 'Y') . '.pdf';
-
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
@@ -368,7 +368,6 @@ class ReportController extends AbstractController
         );
 
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
-//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything
         $response->sendHeaders();
