@@ -1,6 +1,21 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
 <div class="section" id="report-summary">
     <h2 class="section-heading">Report summary</h2>
 
-    ...
+    {{ macros.answerYesNo({
+        question: 'Significant Decisions',
+        answer: report.action.doYouExpectFinancialDecisions
+    }) }}
+
+    {{ macros.answerYesNo({
+        question: 'Any other information',
+        answer: report.actionMoreInfo
+    }) }}
+
+    {{ macros.answerYesNo({
+        question: 'Do account balance',
+        answer: 'yes'
+    }) }}
 
 </div>

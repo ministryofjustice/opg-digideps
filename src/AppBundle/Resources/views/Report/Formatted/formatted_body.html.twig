@@ -107,9 +107,7 @@
         {% endif %}
 
         {% if report.hasSection('actions') %}
-            {% include 'AppBundle:Report/Formatted:_action.html.twig' with {
-            'action': report.action
-            } %}
+            {% include 'AppBundle:Report/Formatted:_action.html.twig' %}
         {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
