@@ -126,7 +126,7 @@ class DebtController extends AbstractController
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
 
             if ($fromPage == 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
