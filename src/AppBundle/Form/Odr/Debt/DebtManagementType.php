@@ -19,7 +19,7 @@ class DebtManagementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['debt-management'],
+            'validation_groups' => ['odr-debt-management'],
             'translation_domain' => 'odr-debts',
         ]);
     }

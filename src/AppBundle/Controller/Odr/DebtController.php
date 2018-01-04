@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DebtController extends AbstractController
 {
-    private static $jmsGroups = ['odr-debt', 'debt-management'];
+    private static $jmsGroups = ['odr-debt', 'odr-debt-management'];
 
     /**
      * @Route("/odr/{odrId}/debts", name="odr_debts")
@@ -110,14 +110,16 @@ class DebtController extends AbstractController
     {
         $odr = $this->getOdrIfNotSubmitted($odrId, self::$jmsGroups);
         $form = $this->createForm(FormDir\Odr\Debt\DebtManagementType::class, $odr);
+
         $form->handleRequest($request);
         $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('odr/' . $odr->getId(), $form->getData(), ['debt-management']);
+            $this->getRestClient()->put('odr/' . $odr->getId(), $form->getData(), ['odr-debt-management']);
 
             if ($fromPage == 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]));
@@ -130,7 +132,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
-            'skipLink' => $this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('odr_debts_summary', ['odrId' => $odr->getId()]),
             'odr' => $odr,
             'form' => $form->createView(),
         ];

@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Odr\BankAccount;
+use AppBundle\Entity\Odr\Debt;
 use AppBundle\Entity\Odr\Expense;
 use AppBundle\Entity\Odr\IncomeBenefit;
 use AppBundle\Entity\Odr\Odr;
@@ -40,6 +41,7 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getBankAccounts' => [],
                 'getHasDebts' => null,
                 'getDebtsWithValidAmount' => [],
+                'getDebtManagement' => null,
                 'getNoAssetToAdd' => null,
                 'getAssets' => [],
                 'incomeBenefitsStatus' => 'not-started',
@@ -142,10 +144,16 @@ class OdrStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function debtsProvider()
     {
+        $debt = m::mock(Debt::class);
+
         return [
-            [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes'], StatusService::STATE_DONE],
             [['getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getHasDebts' => null], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>''], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>'Payment plan'], StatusService::STATE_DONE],
         ];
     }
 

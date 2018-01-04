@@ -1,4 +1,5 @@
 page.htmlTitle: "New deputy report - overview | GOV.UK"
+page.htmlTitle: "New deputy report - overview | GOV.UK"
 report: "New deputy report"
 pageSectionTitle: "New deputy report"
 pageSectionDescription: "Your new deputy report:"
@@ -84,7 +85,7 @@ debts:
     edit: "Edit"
     start: "Start"
     label:
-       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
+       done: "Finished"
 actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "What major financial decisions will you need to take for %client% in the next year?"
