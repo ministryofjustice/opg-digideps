@@ -1,0 +1,7 @@
+htmlTitle: Deputy reports dashboard | GOV.UK
+pageTitle: Deputy reports dashboard
+searchBy: Search by client name or court order number
+tabClients: Clients
+overdue: Overdue by %overdueDays% days
+dueToday: Due today
+dueIn: Due in %dueDays% days

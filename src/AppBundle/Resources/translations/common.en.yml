@@ -39,6 +39,10 @@ out: Out
 balance: Balance
 actions: Actions
 caseNumber: Case number
+client: Client
+courtOrderNo: Court order no.
+reportDueDate: Report due date
+reportStatus: Report status
 
 # Statuses
 notCreated: Not created
@@ -46,6 +50,7 @@ notFinished: Not finished
 notStarted: Not started
 readyToSubmit: Ready to submit
 notAvailable: Not available
+inProgress: In progress
 
 # Breadcrumbs
 yourReports: Your reports
@@ -58,6 +63,11 @@ clientProfile: Client profile
 #Back links
 backToReportOverview: Back to report overview
 backToClientProfile: Back to client profile
+
+#Search
+search: Search
+clearSearch: Clear search
+sorryNoResultsFor: Sorry, no results were found for
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
