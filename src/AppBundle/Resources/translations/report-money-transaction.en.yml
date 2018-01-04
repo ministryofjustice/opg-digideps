@@ -110,7 +110,7 @@ form:
       moneyin-other: Other
       # money out
       household-bills: Household bills and expenses
-      accommodation: Accommodation (mortgage or rent)
+      accommodation: Accommodation costs, such as mortgage or rent
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
       fees: OPG and other professional fees
