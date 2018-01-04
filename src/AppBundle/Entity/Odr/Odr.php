@@ -73,7 +73,7 @@ class Odr
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"debt-management"})
+     * @JMS\Groups({"odr-debt-management"})
      * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
     private $debtManagement;
