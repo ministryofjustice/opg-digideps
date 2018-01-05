@@ -17,6 +17,9 @@ $(document).ready(function() {
     // Upload Files
     new GOVUK.uploadFile('.js-uploading');
 
+    // Return HTML with ajax
+    new GOVUK.returnHTML('.js-return-html');
+
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
