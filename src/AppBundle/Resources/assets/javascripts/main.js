@@ -20,6 +20,9 @@ $(document).ready(function() {
     // Return HTML with ajax
     new GOVUK.returnHTML('.js-return-html');
 
+    // Check upload progress
+    new GOVUK.uploadProgress();
+
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
