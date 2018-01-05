@@ -9,11 +9,11 @@
 {% block htmlTitle %}{{ ('stepPage.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}
     {{ {
-        1: 'stepPage.pageSectionTitle.stateBenefits',
-        2: 'stepPage.pageSectionTitle.pensions',
-        3: 'stepPage.pageSectionTitle.pensions' ,
-        4: 'stepPage.pageSectionTitle.damages',
-        5: 'stepPage.pageSectionTitle.oneOff'}[step] | trans(transOptions)  }}
+        1: 'stepPage.pageTitle.stateBenefits',
+        2: 'stepPage.pageTitle.pensions',
+        3: 'stepPage.pageTitle.pensions' ,
+        4: 'stepPage.pageTitle.damages',
+        5: 'stepPage.pageTitle.oneOff'}[step] | trans(transOptions)  }}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 

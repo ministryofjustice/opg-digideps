@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
-  pageSectionTitle: Visits and care
+  pageTitle: Visits and care
   pageSectionDescription: |
     Use this section to tell us about %client%'s care and contact with you and other people.
     We ask about this because it's OPG's responsibility to make sure you are looking
@@ -9,12 +9,12 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
-  pageSectionTitle: Visits and care
+  pageTitle: Visits and care
   backLink: Back
 
 summaryPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
-  pageSectionTitle: Visits and care
+  pageTitle: Visits and care
   supportTitle: ""
   pageContent:
     weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.

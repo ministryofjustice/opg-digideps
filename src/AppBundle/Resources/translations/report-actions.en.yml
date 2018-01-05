@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
-  pageSectionTitle: Actions you plan to take
+  pageTitle: Actions you plan to take
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
@@ -33,12 +33,12 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
-  pageSectionTitle: Actions you plan to take
+  pageTitle: Actions you plan to take
   backLink: Back
 
 summaryPage:
   htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
-  pageSectionTitle: Actions you plan to take
+  pageTitle: Actions you plan to take
   supportTitle: ""
   pageContent:
     weAskAbout: In this section, we ask you about significant decisions you may have to take on %client%'s behalf over the coming year.

@@ -41,7 +41,7 @@ attachPage:
 
 startPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
-  pageSectionTitle: Supporting documents
+  pageTitle: Supporting documents
   pageSectionDescription1: |
     Use this section to attach supporting documents to this deputy report.
   notice: |
@@ -51,7 +51,7 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - suporting documents | GOV.UK"
-  pageSectionTitle: Supporting documents
+  pageTitle: Supporting documents
   backLink: Back
   form:
     wishToUploadDocumentation:
@@ -59,7 +59,7 @@ stepPage:
 
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
-  pageSectionTitle: Supporting documents
+  pageTitle: Supporting documents
   addButton: Attach more documents
   pageContent:
     weAskAbout: In this section, we asked you to provide any supporting documents.

@@ -1,13 +1,13 @@
 startPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
-  pageSectionTitle: Contacts
+  pageTitle: Contacts
   pageSectionDescription1: |
     Please give us details of people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
   startButton: Start contacts
 
 existPage:
   htmlTitle: "Deputy report - add contact | GOV.UK"
-  pageSectionTitle: Contacts
+  pageTitle: Contacts
   form:
     hasContacts:
       label: Has anyone helped you make any significant decisions for %client% during this reporting period?
@@ -24,7 +24,7 @@ existPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add contact | GOV.UK"
-  pageSectionTitle: Contacts
+  pageTitle: Contacts
   form:
     addAnother:
       label: The person you consulted has been saved. Would you like to add another person now?
@@ -34,7 +34,7 @@ addAnotherPage:
 
 addPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
-  pageSectionTitle: Add a contact
+  pageTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
     Please tell us more about the people you've consulted for your deputyship. Start by adding the first person; you'll be able to add more people later if you need to.
@@ -42,11 +42,11 @@ addPage:
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   supportTitle: Contacts
-  pageSectionTitle: Edit contact
+  pageTitle: Edit contact
 
 summaryPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
-  pageSectionTitle: Contacts
+  pageTitle: Contacts
   addButton: Add a contact
   edit: Edit
   relationship: Their relationship to %client%

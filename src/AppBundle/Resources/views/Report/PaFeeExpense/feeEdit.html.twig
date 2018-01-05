@@ -7,7 +7,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}

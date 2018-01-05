@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - income and benefits | GOV.UK"
-  pageSectionTitle: Income and benefits
+  pageTitle: Income and benefits
   pageSectionDescription: |
     As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
     This includes making sure you claim all %client%'s benefits on his behalf.
@@ -8,14 +8,14 @@ startPage:
     summary: Find out what benefits %client% is entitled to
     content:
       para01: |
-        You can use a <a href="https://www.entitledto.co.uk/" target="_blank">benefits calculator</a> 
-        to work out which benefits %client% could be claiming. 
+        You can use a <a href="https://www.entitledto.co.uk/" target="_blank">benefits calculator</a>
+        to work out which benefits %client% could be claiming.
   startButton: Start income and benefits
 
 stepPage:
   supportTitle: Income and benefits
   htmlTitle: "Deputy report - income and benefits | GOV.UK"
-  pageSectionTitle:
+  pageTitle:
     stateBenefits: State benefits
     pensions: Pensions and other income
     damages: Damages and compensation awards
@@ -27,7 +27,7 @@ summaryPage:
     weAskAbout: |
       In this section, we ask you about %client%'s income and benefits.
   htmlTitle: "Deputy report - income and benefits | GOV.UK"
-  pageSectionTitle: Income and benefits
+  pageTitle: Income and benefits
   supportTitle: ""
   edit: Edit
 

@@ -2,8 +2,11 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% block htmlTitle %}User accounts{% endblock %}
-{% block pageTitle %}User accounts{% endblock %}
+{% set translationDomain = "pa-team" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'listPage.pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
@@ -14,22 +17,22 @@
     {# Introduction text #}
     <p class="text">
         {% if (app.user.roleName == 'ROLE_PA' or app.user.roleName == 'ROLE_PA_ADMIN') %}
-            Add, edit and remove user accounts for your team members
+            {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
-            View team members
+            {{ 'listPage.introPara' | trans }}
         {% endif %}
     </p>
 
     <div class="grid-row push--top">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of user accounts</h2>
+            <h2 class="heading-medium flush--ends">{{ 'listPage.tableHeading' | trans }}</h2>
         </div>
         <div class="column-half text--right">
             {% if is_granted('add-user') %}
                 <a href="{{ path('add_team_member') }}"
                class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
-                Add user account
+                {{ 'listPage.addUser' | trans }}
             </a>
             {% endif %}
         </div>
@@ -38,10 +41,10 @@
     <table class="check-your-answers">
         <thead>
             <tr>
-                <th>Name and job</th>
-                <th>Contact information</th>
+                <th>{{ 'listPage.nameAndJob' | trans }}</th>
+                <th>{{ 'listPage.contactInfo' | trans }}</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
@@ -54,7 +57,7 @@
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
                     {% if (user.roleName == 'ROLE_PA' or user.roleName == 'ROLE_PA_ADMIN') %}
-                        <span class="status status-label admin">Administrator</span><br>
+                        <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
                         <p class="flush--top">{{ user.jobTitle }}</p>
@@ -62,7 +65,7 @@
                 </td>
                 <td>
                     <p class="flush--ends">
-                        <strong class="bold">Email</strong><br>
+                        <strong class="bold">{{ 'email' | trans({}, 'common') }}</strong><br>
                         {{ user.email }}
                     </p>
                     {% if user.phoneMain != '' %}
@@ -80,7 +83,7 @@
                         <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if is_granted('edit-user', user) and not user.active %}
-                        <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">Resend activation</a>
+                        <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
                     {% endif %}
                 </td>
             </tr>

@@ -7,7 +7,7 @@
 {% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'startPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}

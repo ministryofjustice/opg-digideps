@@ -28,11 +28,7 @@
             <tr>
                 <th scope="row">{{ (page ~ '.organisation') | trans }}</th>
                 <td>
-                    {% if contact.getOrgName() == "" %}
-                        -
-                    {% else %}
-                        {{ contact.getOrgName() }}
-                    {% endif %}
+                    {{ (contact.getOrgName() == "") ? '-' : contact.getOrgName() }}
                 </td>
             </tr>
         </tbody>

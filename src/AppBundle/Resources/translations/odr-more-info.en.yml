@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "New deputy report - any other information | GOV.UK"
-  pageSectionTitle: Any other information
+  pageTitle: Any other information
   pageSectionDescription1: |
     You can use this section to give us information that isn't covered elsewhere in this report.
   pageSectionDescription2: |
@@ -11,12 +11,12 @@ startPage:
 
 stepPage:
   htmlTitle: "New deputy report - any other information | GOV.UK"
-  pageSectionTitle: Any other information
+  pageTitle: Any other information
 
 summaryPage:
   htmlTitle: "New deputy report - any other information | GOV.UK"
   supportTitle: Any other information
-  pageSectionTitle: Any other information
+  pageTitle: Any other information
   supportTitle: ""
   pageContent:
     weAskAbout: In this section, you can raise concerns about your deputyship and give us any other information you think we should have.
