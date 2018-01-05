@@ -110,12 +110,6 @@ Feature: PA user edits common report sections common to ALL report types
     Then the following fields should have an error:
       | report_document_upload_file   |
 
-    # check vba-eicar file error TO ENABLE ONCE FILE SCANNER ENABLED
-    #When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
-    #And I click on "attach-file"
-    #Then the following fields should have an error:
-    #  | report_document_upload_file   |
-
     When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the form should be valid
