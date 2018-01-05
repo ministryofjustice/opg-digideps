@@ -94,7 +94,7 @@
                     <tr>
                         <td class="label bold">Deputy fees and expenses</td>
                         <td class="value total width-fifth">
-                            &pound;{{ report.feesTotal + report.expensesTotal | money_format }}
+                            &pound;{{ (report.feesTotal + report.expensesTotal) | money_format }}
                         </td>
                     </tr>
                 {% endif %}
