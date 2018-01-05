@@ -28,6 +28,8 @@
     {% if step == 2 %}
         {% if transaction.group == "fees" %}
             {{ groupString }}
+        {% elseif transaction.group == "accommodation" %}
+            {{ transaction.group }}
         {% else %}
             {{ groupString | lower }}
         {% endif %}

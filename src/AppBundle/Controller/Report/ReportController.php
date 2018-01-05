@@ -32,6 +32,7 @@ class ReportController extends AbstractController
         'action-more-info',
         'asset',
         'debt',
+        'debt-management',
         'fee',
         'balance',
         'client',
@@ -250,7 +251,7 @@ class ReportController extends AbstractController
 
             //send confirmation email
             if ($user->isDeputyPa()) {
-                $reportConfirmEmail = $this->getMailFactory()->createPaReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport, $pdfBinaryContent);
+                $reportConfirmEmail = $this->getMailFactory()->createPaReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
                 $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
             } else {
                 $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);

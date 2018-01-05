@@ -80,9 +80,8 @@ class Odr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"debt-management"})
-     *
-     * @Assert\NotBlank(message="report.debts-management.notBlank", groups={"debt-management"})
+     * @JMS\Groups({"odr-debt-management"})
+     * @Assert\NotBlank(message="odr.debt.debts-management.notBlank", groups={"odr-debt-management"})
      *
      * @var string
      */

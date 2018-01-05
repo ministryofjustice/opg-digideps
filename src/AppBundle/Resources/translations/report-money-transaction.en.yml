@@ -105,12 +105,12 @@ form:
       income-and-earnings: Income from interest, investments, or property
       pensions: Pension
       state-benefits: State benefit
-      damages: Compensation or damages award
+      damages: Damages
       one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
       household-bills: Household bills and expenses
-      accommodation: Accommodation (mortgage or rent)
+      accommodation: Accommodation costs, such as mortgage or rent
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
       fees: OPG and other professional fees

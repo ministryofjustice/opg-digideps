@@ -138,7 +138,7 @@ trait ReportDebtsTrait
     /**
      * Get debt management text
      *
-     * @return mixed
+     * @return string
      */
     public function getDebtManagement()
     {

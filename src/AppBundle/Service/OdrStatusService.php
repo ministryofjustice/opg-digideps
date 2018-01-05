@@ -109,17 +109,19 @@ class OdrStatusService
     public function getDebtsState()
     {
         $hasDebts = $this->odr->getHasDebts();
-
         if (empty($hasDebts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        } elseif (
+            'no' == $hasDebts ||
+            (   'yes' == $hasDebts &&
+                count($this->odr->getDebtsWithValidAmount()) > 0) &&
+            !empty($this->odr->getDebtManagement()
+            )
+        ) {
+            return ['state' => self::STATE_DONE];
+        } else {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => count($this->odr->getDebtsWithValidAmount())];
         }
-
-        $debtsSectionComplete = in_array($hasDebts, ['yes', 'no']);
-        if ($debtsSectionComplete) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->odr->getDebtsWithValidAmount())];
-        }
-
-        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
     public function getActionsState()

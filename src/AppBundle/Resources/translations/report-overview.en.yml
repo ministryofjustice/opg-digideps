@@ -137,7 +137,7 @@ debts:
     subSectionTitle: "Debts"
     subSectionDescription: "Let us know about any debts %client% owes"
     label:
-       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
+       done: "Finished"
 heading.other: "Other information"
 actions:
     subSectionTitle: "Actions you plan to take"

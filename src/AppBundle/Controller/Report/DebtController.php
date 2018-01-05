@@ -85,8 +85,11 @@ class DebtController extends AbstractController
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
             if ($fromPage == 'summary') {
+                if (empty($report->getDebtManagement())) {
+                    return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId, 'from' => 'summary']));
+                }
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
-                return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
+                return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId, 'from' => 'summary']));
             }
 
             return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId]));
@@ -117,12 +120,13 @@ class DebtController extends AbstractController
         $form = $this->createForm(FormDir\Report\Debt\DebtManagementType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
 
             if ($fromPage == 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('debts_summary', ['reportId' => $reportId]));
@@ -135,7 +139,7 @@ class DebtController extends AbstractController
 
         return [
             'backLink' => $backLink,
-            'skipLink' => $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
+            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('debts_summary', ['reportId' => $report->getId()]),
             'report' => $report,
             'form' => $form->createView(),
         ];

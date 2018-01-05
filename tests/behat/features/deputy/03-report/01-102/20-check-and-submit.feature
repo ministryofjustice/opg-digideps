@@ -69,6 +69,38 @@ Feature: Report submit
         And I save the application status into "report-submit-reports"
 
     @deputy
+    Scenario: deputy gives feedback after submitting report
+        Given emails are sent from "deputy" area
+        And I reset the email log
+        And I load the application status from "report-submit-pre"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "report-start"
+        And I click on "report-submit"
+        And I click on "declaration-page"
+        And I fill in the following:
+            | report_declaration_agree | 1 |
+            | report_declaration_agreedBehalfDeputy_0 | only_deputy |
+            | report_declaration_agreedBehalfDeputyExplanation |  |
+        And I press "report_declaration_save"
+        Then the form should be valid
+        And the URL should match "/report/\d+/submitted"
+        When I press "feedback_report_save"
+        Then the following fields should have an error:
+            | feedback_report_satisfactionLevel_0 |
+            | feedback_report_satisfactionLevel_1 |
+            | feedback_report_satisfactionLevel_2 |
+            | feedback_report_satisfactionLevel_3 |
+            | feedback_report_satisfactionLevel_4 |
+        When I fill in the following:
+            | feedback_report_satisfactionLevel_0 | Very satisfied |
+        And I press "feedback_report_save"
+        Then the form should be valid
+        And the URL should match "/report/\d+/submit_feedback"
+        When I click on "return-to-reports-page"
+        Then the URL should match "/lay"
+        And the response status code should be 200
+
+    @deputy
     Scenario: admin area check filters, submission and ZIP file content
         Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
