@@ -25,8 +25,9 @@
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
 
-        {# Report summary is only displayed in the PDF and in the pdf-debug route #}
-        {% if showSummary | default(false) %}
+        {# Show the summary (key info) when a flag is set ffrom the controller (only submit time for OPG),
+           and when the balance section is present (only 102 reports ATM) #}
+        {% if showSummary | default(false) and report.hasSection('balance')  %}
             {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
         {% endif %}
 
