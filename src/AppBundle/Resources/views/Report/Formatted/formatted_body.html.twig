@@ -19,15 +19,17 @@
 
 <div id="wrapper">
     <div class="formatted-report">
-        {# KEY INFO - DDPB-1759 - Displayed only in the PDF and in the pdf-debug route #}
-        {% if showSummary | default(false) %}
-            {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
-        {% endif %}
 
         <div id="report-header">Office of the Public Guardian</div>
         <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
+
+        {# Report summary is only displayed in the PDF and in the pdf-debug route #}
+        {% if showSummary | default(false) %}
+            {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
+        {% endif %}
+
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
         {% if report.mentalCapacity is not null %}
             {% include 'AppBundle:Report/Formatted:_mental-capacity.html.twig' with {
