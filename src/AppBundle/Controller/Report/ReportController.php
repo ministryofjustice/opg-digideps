@@ -235,12 +235,11 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
 
-            // store PDF as a document
-            $pdfBinaryContent = $this->getPdfBinaryContent($report);
+            // store PDF (with summary info) as a document
             $fileUploader = $this->get('file_uploader');
             $fileUploader->uploadFile(
                 $report->getId(),
-                $pdfBinaryContent,
+                $this->getPdfBinaryContent($report, true),
                 $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
                 true
             );
@@ -398,13 +397,14 @@ class ReportController extends AbstractController
 
     /**
      * @param  EntityDir\Report\Report $report
+     * @param  boolean $showSummary
      * @return string                  binary PDF content
      */
-    private function getPdfBinaryContent(EntityDir\Report\Report $report)
+    private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)
     {
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
-                'showSummary' => true
+                'showSummary' => $showSummary
             ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
