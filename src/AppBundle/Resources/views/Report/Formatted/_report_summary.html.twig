@@ -28,7 +28,9 @@
             {% if report.totalsMatch %}
                 {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
             {% else %}
-                {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
+                    'showReason': false
+                } %}
             {% endif %}
         {% endif %}
     {% endif %}

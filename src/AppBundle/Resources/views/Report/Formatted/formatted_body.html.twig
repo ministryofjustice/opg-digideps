@@ -59,7 +59,9 @@
                     {% if report.totalsMatch %}
                         {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
                     {% else %}
-                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
+                            'showReason': true
+                        } %}
                     {% endif %}
 
                     {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
