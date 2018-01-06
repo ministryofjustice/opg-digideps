@@ -33,42 +33,38 @@
         root.GOVUK = {};
     }
 
-    var uploadProgress = function () {
+    var uploadProgress = function (element) {
         // check if exists
-        if ($('#uploadProgress').length == 1) {
-            console.log($('#uploadProgress').attr('max'));
-            var nOfChunks = $('#uploadProgress').attr('max') - 1;
-            console.log(nOfChunks);
-            var casrecTruncateAjax = $('#uploadProgress').data('path-casrec-truncate-ajax');
-            console.log(casrecTruncateAjax);
+        if ($(element).length == 1) {
+            var nOfChunks = $(element).attr('max') - 1;
+            var casrecTruncateAjaxUrl = $(element).data('path-casrec-truncate-ajax');
 
             $.ajax({
-                url: casrecTruncateAjax,
+                url: casrecTruncateAjaxUrl,
                 dataType: 'json'
             }).done(function (data) {
-                $('#uploadProgress').val(1);
-                uploadChunk(0,nOfChunks);
+                $(element).val(1);
+                uploadChunk(0,nOfChunks,element);
             });
         }
     };
 
-    var uploadChunk = function(currentChunk,nOfChunks) {
-        var casrecAddAjax = $('#uploadProgress').data('path-casrec-add-ajax');
-        var casrecUpload = $('#uploadProgress').data('path-casrec-upload');
-        console.log(casrecUpload);
-        if (currentChunk < nOfChunks ) {
+    var uploadChunk = function(currentChunk,nOfChunks,element) {
+        var casrecAddAjaxUrl = $(element).data('path-casrec-add-ajax');
+        var casrecUploadUrl = $(element).data('path-casrec-upload');
+
+        if (currentChunk < nOfChunks) {
             $.ajax({
-                url: casrecAddAjax + "?chunk=" + currentChunk,
+                url: casrecAddAjaxUrl + "?chunk=" + currentChunk,
                 dataType: 'json'
             }).done(function (data) {
-                $('#uploadProgress').val(currentChunk + 1);
-                uploadChunk(currentChunk + 1);
+                $(element).val(currentChunk + 1);
+                uploadChunk(currentChunk + 1,nOfChunks,element);
             }).error(function() {
                 alert('Upload error. please try uploading again');
             });
         } else {
-            console.log('done');
-            window.location.href = casrecUpload;
+            window.location.href = casrecUploadUrl;
         }
     };
 
