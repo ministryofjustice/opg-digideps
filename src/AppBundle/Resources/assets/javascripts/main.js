@@ -24,6 +24,10 @@ $(document).ready(function() {
     new GOVUK.uploadProgress('.js-upload-progress');
     new GOVUK.uploadProgressPA('.js-upload-progress-pa');
 
+    // Details expander
+    new GOVUK.detailsExpander('.js-details-expander-travel-costs');
+    new GOVUK.detailsExpander('.js-details-expander-specialist-service');
+
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
