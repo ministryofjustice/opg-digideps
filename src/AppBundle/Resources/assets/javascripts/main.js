@@ -22,6 +22,7 @@ $(document).ready(function() {
 
     // Check upload progress
     new GOVUK.uploadProgress('.js-upload-progress');
+    new GOVUK.uploadProgressPA('.js-upload-progress-pa');
 
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
