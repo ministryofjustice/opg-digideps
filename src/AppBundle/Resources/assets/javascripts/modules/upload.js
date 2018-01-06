@@ -34,32 +34,43 @@
     }
 
     var uploadProgress = function () {
-        $.ajax({
-            url: "{{ path('casrec_truncate_ajax') }}",
-            dataType: 'json'
-        }).done(function (data) {
-            $('#uploadProgress').val(1);
-            uploadChunk(0);
-        });
+        // check if exists
+        if ($('#uploadProgress').length == 1) {
+            console.log($('#uploadProgress').attr('max'));
+            var nOfChunks = $('#uploadProgress').attr('max') - 1;
+            console.log(nOfChunks);
+            var casrecTruncateAjax = $('#uploadProgress').data('path-casrec-truncate-ajax');
+            console.log(casrecTruncateAjax);
 
-        function uploadChunk(currentChunk) {
-            if (currentChunk < {{ nOfChunks }}) {
-                $.ajax({
-                    url: "{{ path('casrec_add_ajax') }}?chunk=" + currentChunk,
-                    dataType: 'json'
-                }).done(function (data) {
-                    $('#uploadProgress').val(currentChunk + 1);
-                    uploadChunk(currentChunk + 1);
-                }).error(function() {
-                    alert('Upload error. please try uploading again');
-                });
-            } else {
-                window.location.href = "{{ path('casrec_upload') }}";
-            }
+            $.ajax({
+                url: casrecTruncateAjax,
+                dataType: 'json'
+            }).done(function (data) {
+                $('#uploadProgress').val(1);
+                uploadChunk(0,nOfChunks);
+            });
         }
-
     };
 
+    var uploadChunk = function(currentChunk,nOfChunks) {
+        var casrecAddAjax = $('#uploadProgress').data('path-casrec-add-ajax');
+        var casrecUpload = $('#uploadProgress').data('path-casrec-upload');
+        console.log(casrecUpload);
+        if (currentChunk < nOfChunks ) {
+            $.ajax({
+                url: casrecAddAjax + "?chunk=" + currentChunk,
+                dataType: 'json'
+            }).done(function (data) {
+                $('#uploadProgress').val(currentChunk + 1);
+                uploadChunk(currentChunk + 1);
+            }).error(function() {
+                alert('Upload error. please try uploading again');
+            });
+        } else {
+            console.log('done');
+            window.location.href = casrecUpload;
+        }
+    };
 
     root.GOVUK.uploadProgress = uploadProgress;
 
