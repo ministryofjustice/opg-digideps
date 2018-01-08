@@ -1,14 +1,14 @@
 startPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageSectionTitle: Money in
+    pageTitle: Money in
     pageSectionDescription1: |
       Tell us about how you have managed %client%'s money during this reporting period.
       We need this information to understand the client's financial situation.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money out
+    pageTitle: Money out
     pageSectionDescription1: |
       Tell us about how you have managed %client%'s money during this reporting period.
       We need this information to understand the client's financial situation.
@@ -22,20 +22,20 @@ categoryPage:
   backLink: Back
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageSectionTitle: Money in
+    pageTitle: Money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money out
+    pageTitle: Money out
 
 
 
 existPage:
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageSectionTitle: Money in
+    pageTitle: Money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money out
+    pageTitle: Money out
   form:
     moneyTransactionsShortInExist:
       label: Have there been any one-off income payments over £1,000?
@@ -48,7 +48,7 @@ existPage:
 addPage:
   moneyIn:
     htmlTitle: "Deputy report - money in | GOV.UK"
-    pageSectionTitle: Add an item of income
+    pageTitle: Add an item of income
     supportTitle: Money in
     pageSectionDescription1: |
       List all one-off items of income over £1,000
@@ -58,7 +58,7 @@ addPage:
       You can add one or more items of income and come back to complete the section later.
   moneyOut:
       htmlTitle: "Deputy report - money out | GOV.UK"
-      pageSectionTitle: Add a payment
+      pageTitle: Add a payment
       supportTitle: Money out
       pageSectionDescription1: |
         List all one-off payments of over £1,000
@@ -72,17 +72,17 @@ editPage:
   moneyIn:
     htmlTitle: "Deputy report - money in - edit item of income | GOV.UK"
     supportTitle: Money in
-    pageSectionTitle: Edit item of income
+    pageTitle: Edit item of income
   moneyOut:
     htmlTitle: "Deputy report - money out - edit payment | GOV.UK"
     supportTitle: Money out
-    pageSectionTitle: Edit payment
+    pageTitle: Edit payment
 
 addAnotherPage:
   moneyIn:
     htmlTitle: "Deputy report - Add another item of income | GOV.UK"
     supportTitle: Money in
-    pageSectionTitle: Add another item
+    pageTitle: Add another item
     form:
       addAnother:
         label: The item of income has been saved. Would you like to add another item of income over £1,000 now?
@@ -92,7 +92,7 @@ addAnotherPage:
   moneyOut:
     htmlTitle: "Deputy report - Add another payment | GOV.UK"
     supportTitle: Money out
-    pageSectionTitle: Add another payment
+    pageTitle: Add another payment
     form:
       addAnother:
         label: The payment has been saved. Would you like to add another payment of over £1,000 now?
@@ -105,14 +105,14 @@ summaryPage:
   edit: Edit
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
-    pageSectionTitle: Money in
+    pageTitle: Money in
     weAskAbout: |
       In this section we ask for details of how you have managed
       %client%'s money during this reporting period.
     addButton: Add an item of income over £1,000
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
-    pageSectionTitle: Money out
+    pageTitle: Money out
     weAskAbout: |
       In this section we ask for details of how you have managed
       %client%'s money during this reporting period.

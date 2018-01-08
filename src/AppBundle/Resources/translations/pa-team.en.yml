@@ -1,18 +1,35 @@
+listPage:
+  htmlTitle: Deputy report - user accounts | GOV.UK
+  pageTitle: User accounts
+  introPara: View team members
+  introParaAdmin: Add, edit and remove user accounts for your team members
+  tableHeading: List of user accounts
+  addUser: Add user account
+  nameAndJob: Name and job
+  contactInfo: Contact information
+  roleAdmin: Administrator
+  resendActivation: Resend activation
+
 addPage:
   htmlTitle: Deputy report - add user account | GOV.UK
   pageTitle: Add user account
   supportTitle: User account
+
 editPage:
   htmlTitle: Deputy report - edit user account | GOV.UK
   pageTitle: Edit user account
   supportTitle: User account
+
 removePage:
   htmlTitle: Deputy report - remove user account | GOV.UK
   pageTitle: Remove user account
   supportTitle: User account
   question: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
+  confirmButton: Yes, remove user
+
 view:
     pageTitle: My details
+
 form:
   add:
     jobTitle:

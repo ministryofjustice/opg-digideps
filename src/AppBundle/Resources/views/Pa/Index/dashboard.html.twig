@@ -1,20 +1,23 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% block htmlTitle %}Deputy reports dashboard | GOV.UK{% endblock %}
-{% block pageTitle %}Deputy reports dashboard{% endblock %}
+{% set translationDomain = "pa-dashboard" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block pageContent %}
 
     <form action="{{ path('pa_dashboard') }}" method="GET" class="search-form push--ends">
         <fieldset>
-            <legend class="visually-hidden">Search</legend>
-            <label for="search" class="search-label">Search by client name or court order number</label>
+            <legend class="visually-hidden">{{ 'search' | trans({}, 'common') }}</legend>
+            <label for="search" class="search-label">{{ 'searchBy' | trans }}</label>
             <input type="text" id="search" name="q" value="{{ filters.q }}"
                    class="js-search-focus search-input form-control">
             <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
             {% if filters.q %}
-                <a href="{{ path('pa_dashboard', {'status': filters.status}) }}">Clear search</a>
+                <a href="{{ path('pa_dashboard', {'status': filters.status}) }}">{{ 'clearSearch' | trans({}, 'common') }}</a>
             {% endif %}
         </fieldset>
 
@@ -26,25 +29,25 @@
                 <li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
                     <a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="data-item bold-large">{{ counts.total }}</span>
-                        <span class="data-item bold-xsmall">Clients</span>
+                        <span class="data-item bold-xsmall">{{ 'tabClients' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
                     <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-unstarted">
                         <span class="data-item bold-large">{{ counts.notStarted }}</span>
-                        <span class="data-item bold-xsmall">Not started</span>
+                        <span class="data-item bold-xsmall">{{ 'notStarted' | trans({}, 'common') }}</span>
                     </a>
                 </li>
                 <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
                     <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-in-progress">
                         <span class="data-item bold-large">{{ counts.notFinished }}</span>
-                        <span class="data-item bold-xsmall">In progress</span>
+                        <span class="data-item bold-xsmall">{{ 'inProgress' | trans({}, 'common') }}</span>
                     </a>
                 </li>
                 <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
                     <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0"  class="behat-link-tab-ready">
                         <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
-                        <span class="data-item bold-xsmall">Ready to submit</span>
+                        <span class="data-item bold-xsmall">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
                     </a>
                 </li>
             </ul>
@@ -54,14 +57,18 @@
     <table class="push--bottom">
         <thead>
             <tr>
-                <th scope="col">Client</th>
-                <th scope="col">Court order no.</th>
-                <th scope="col">Report due date</th>
-                <th scope="col" class="numeric">Report status</th>
+                <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'courtOrderNo' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportDueDate' | trans({}, 'common') }}</th>
+                <th scope="col" class="numeric">{{ 'reportStatus' | trans({}, 'common') }}</th>
             </tr>
         </thead>
         <tbody>
         {% for report in reports %}
+            {% set transOptions = {
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            } %}
             {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
 
             <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}">
@@ -74,20 +81,20 @@
                 <td>
                     <span>{{ report.dueDate | date("j M Y") }}</span><br>
                     {% if report.dueDateDiffDays < 0 %}
-                        <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                        <span class="font-xsmall bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
                     {% elseif report.dueDateDiffDays == 0 %}
-                        <span class="font-xsmall bold">Due today</span>
+                        <span class="font-xsmall bold">{{ 'dueToday' | trans }}</span>
                     {% elseif report.dueDateDiffDays <= 30 %}
-                        <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                        <span class="font-xsmall">{{ 'dueIn' | trans(transOptions) }}</span>
                     {% endif %}
                 </td>
                 <td class="numeric">
                     {% if report.status.status == 'notStarted' %}
-                        <span class="status status-large not-started">Not Started</span>
+                        <span class="status status-large not-started">{{ 'notStarted' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'notFinished' %}
-                        <span class="status status-large incomplete">In Progress</span>
+                        <span class="status status-large incomplete">{{ 'notFinished' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'readyToSubmit' %}
-                        <span class="status status-large done">Ready To Submit</span>
+                        <span class="status status-large done">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
                     {% endif %}
                 </td>
             </tr>
@@ -95,7 +102,7 @@
         </tbody>
     </table>
     {% if filters.q and reports |length == 0 %}
-        <p>Sorry, no results were found for "<strong class="bold">{{ filters.q }}</strong>"</p>
+        <p>{{ 'sorryNoResultsFor' | trans({}, 'common') }} "<strong class="bold">{{ filters.q }}</strong>"</p>
         <hr>
     {% endif %}
 

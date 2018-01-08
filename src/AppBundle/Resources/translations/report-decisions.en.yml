@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
-  pageSectionTitle: Decisions
+  pageTitle: Decisions
   startButton: Start decisions
   description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
 
@@ -45,7 +45,7 @@ startPage:
 
 mentalCapacity:
   htmlTitle: "Deputy report - mental capacity | GOV.UK"
-  pageSectionTitle: "Mental capacity"
+  pageTitle: "Mental capacity"
   form:
     hasCapacityChanged:
       label: "Has %client%'s mental capacity to make financial decisions changed?"
@@ -61,7 +61,7 @@ mentalCapacity:
 
 existPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
-  pageSectionTitle: Decisions
+  pageTitle: Decisions
   form:
     hasDecisions:
       label: Have you made any significant decisions for %client% during this reporting period?
@@ -70,7 +70,7 @@ existPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
-  pageSectionTitle: Decisions
+  pageTitle: Decisions
   form:
     addAnother:
       label: The decision has been saved. Would you like to add another decision now?
@@ -80,7 +80,7 @@ addAnotherPage:
 
 addPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
-  pageSectionTitle: Add a decision
+  pageTitle: Add a decision
   supportTitle: Decisions
   pageSectionDescription: |
     We need to know the details of the significant decisions you've made for %client%. You'll be
@@ -89,13 +89,13 @@ addPage:
 editPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   supportTitle: Decisions
-  pageSectionTitle: Edit decision
+  pageTitle: Edit decision
 
 summaryPage:
   weAskAbout: |
       In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
   htmlTitle: "Deputy report - decisions | GOV.UK"
-  pageSectionTitle: Decisions
+  pageTitle: Decisions
   addButton: Add significant decision
   edit: Edit
   decisionTableColumnHeading1: Decision description

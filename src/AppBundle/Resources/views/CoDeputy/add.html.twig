@@ -3,6 +3,9 @@
 {% set translationDomain = "co-deputy" %}
 {% trans_default_domain translationDomain %}
 {% set page = "addCoDeputy" %}
+{% set transOptions = {
+    '%clientFirstName%': client.firstname
+} %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -12,13 +15,16 @@
 
 {% block pageContent %}
 
-    <p class="text">You can invite additional deputies to {{ client.firstname }}'s reports, all we need is their email address.</p>
+    <p class="text">{{ (page ~ '.intro') | trans(transOptions) }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-send-invitation'}) }}
+    {{ form_submit(form.submit,'form.submit', {
+        'buttonClass': 'behat-link-send-invitation',
+        'labelText': (page ~ '.submitButton') | trans
+    }) }}
 
     <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 

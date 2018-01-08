@@ -1,15 +1,23 @@
 addCoDeputy:
   htmlTitle: Deputy report - Invite deputy | GOV.UK
   pageTitle: Deputies
+  intro: |
+    You can invite additional deputies to %clientFirstName%'s reports, all we need is their
+    email address.
+  submitButton: Send invitation
+
+reinviteDeputy:
+  htmlTitle: Deputy report - Reinvite deputy | GOV.UK
+  pageTitle: Deputies
+  intro: |
+    Use the box below to resend an invitation to the original or alternative email address.
+  submitButton: Resend invitation
 
 form:
   email:
     label: Deputy email address
     existingError: |
       There's a problem with your email address. Please contact us for help on 0115 934 2700.
-  submit:
-    label: Send invitation
-    cancel: Cancel
 
   editYourDetails:
     subSectionTitle: "Edit your details"

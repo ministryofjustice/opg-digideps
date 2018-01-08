@@ -154,7 +154,7 @@ class CoDeputyController extends AbstractController
         $loggedInUser = $this->getUserWithData(['user-clients', 'client']);
         $invitedUser = $this->getRestClient()->userRecreateToken($email, 'pass-reset');
 
-        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser, ['translation_domain' => 'codeputy-resend-invite']);
+        $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
         $backLink = $loggedInUser->isOdrEnabled() ?
             $this->generateUrl('odr_index')

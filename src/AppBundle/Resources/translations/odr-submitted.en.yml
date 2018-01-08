@@ -1,6 +1,6 @@
 page:
   htmlTitle: "Deputy report - report submitted | GOV.UK"
-  pageSectionTitle: "%client%"
+  pageTitle: "%client%"
 
 reportSubmitted: Report submitted
 weHaveSentEmail: We have sent you a confirmation email

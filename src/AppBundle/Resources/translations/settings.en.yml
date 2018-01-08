@@ -47,6 +47,10 @@ profile-page:
 page:
   passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
 
+# Co-deputy registration
+verifyDeputy:
+  yourDetails: Your details
+  yourClientsDetails: Your client's details
 
 form:
   editYourDetails:

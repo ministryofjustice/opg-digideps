@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  pageSectionTitle: Deputy expenses
+  pageTitle: Deputy expenses
   pageSectionDescription1: |
     You can use your new deputy report to claim back money for things you paid for on %client%'s behalf before your court order – for example, care home fees or domestic bills.
   pageSectionDescription2: |
@@ -16,7 +16,7 @@ startPage:
 
 existPage:
   htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageSectionTitle: Deputy expenses
+  pageTitle: Deputy expenses
   form:
     paidForAnything:
       label: Did you pay for anything for %client% before you got your court order?
@@ -25,7 +25,7 @@ existPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add deputy expense | GOV.UK"
-  pageSectionTitle: Add an expense
+  pageTitle: Add an expense
   supportTitle: Deputy expenses
   form:
     addAnother:
@@ -36,7 +36,7 @@ addAnotherPage:
 
 addPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  pageSectionTitle: Add an expense
+  pageTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
     Use this section to tell us about the money you spent on %client%'s care and other expenses (professional fees for example) before your court order.
@@ -45,11 +45,11 @@ addPage:
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   supportTitle: Deputy expenses
-  pageSectionTitle: Edit deputy expense
+  pageTitle: Edit deputy expense
 
 summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
-  pageSectionTitle: Deputy expenses
+  pageTitle: Deputy expenses
   pageSectionDescription: |
     In this section we ask you to tell us about things you paid for on %client%'s behalf before your
     court order.
