@@ -83,7 +83,7 @@
                         <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if is_granted('edit-user', user) and not user.active %}
-                        <a data-role="ajax-link" class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
+                        <a class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
                     {% endif %}
                 </td>
             </tr>
