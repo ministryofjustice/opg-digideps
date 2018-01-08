@@ -1,0 +1,11 @@
+htmlTitle: "Archive client | GOV.UK"
+pageTitle: "Court order no: %caseNumber%"
+supportTitle: "Client: %fullName%"
+
+description: "You cannot undo this action. You must also inform your OPG case manager if there has been a change in the client's circumstances."
+
+form:
+  confirmArchive:
+      label: Are you sure you wish to archive this client?
+  save:
+      label: Continue

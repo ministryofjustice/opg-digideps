@@ -81,4 +81,35 @@ class IndexController extends AbstractController
             'client'=>$client,
         ];
     }
+
+    /**
+     * Client archive page
+     *
+     * @Route("/client/{clientId}/archive", name="pa_client_archive")
+     * @Template
+     */
+    public function clientArchiveAction(Request $request, $clientId)
+    {
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+        // PA client profile is ATM relying on report ID, this is a working until next refactor
+        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+        $form = $this->createForm(FormDir\Pa\ClientArchiveType::class, $client);
+        $form->handleRequest($request);
+
+        // edit client form
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            if ('yes' == $form->get('confirmArchive')->getData()) {
+                $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
+                $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
+            }
+            return $this->redirect($returnLink);
+        }
+
+        return [
+            'backLink' => $returnLink,
+            'form' => $form->createView(),
+            'client'=>$client,
+        ];
+    }
 }
