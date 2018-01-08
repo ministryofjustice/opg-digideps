@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 /**
  * @Route("/client")
@@ -93,5 +94,30 @@ class ClientController extends RestController
         }
 
         return $client;
+    }
+
+    /**
+     * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
+     * @Method({"PUT"})
+     *
+     * @param int $id
+     */
+    public function archiveAction(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+        $client = $this->findEntityBy(EntityDir\Client::class, $id);
+
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+            throw $this->createAccessDeniedException('Client does not belong to user');
+        }
+
+        foreach ($client->getUsers() as $user) {
+            $client->removeUser($user);
+        }
+        $this->persistAndFlush($client);
+
+        return [
+            'client_id' => $client->getId()
+        ];
     }
 }
