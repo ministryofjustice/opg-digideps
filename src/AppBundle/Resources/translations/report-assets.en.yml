@@ -69,6 +69,8 @@ form:
     legend: What type of asset is it?
     choices:
       # ordering is configured in app/config.yml
+      # Note: translated values are stored in the db as Asset.Title. that will need to migrate soon
+      # Until then, keep the translated values synchronised with ReportAssetTrait::$cashAssetTitles
       property: Property
       investment_bonds: Investment bonds
       unit_trusts: Unit trusts

@@ -12,7 +12,6 @@ trait ReportAssetTrait
     /**
      * Titles matching this will be included in the count for "Cash" in summary page
      * Note: it relies on the translation (see report-assets.en.yml form.choices) for historical reasons
-     *
      */
     private static $cashAssetTitles = [
         'Unit trusts',
@@ -67,7 +66,7 @@ trait ReportAssetTrait
     }
 
     /**
-     * @param string $type asset|cash|other
+     * @param string $type property|cash|other
      */
     public function getAssetsTotalsSummaryPage($type)
     {
