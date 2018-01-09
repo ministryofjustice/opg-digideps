@@ -5,16 +5,10 @@
 {% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
 
-{% if report.totalsOffset < 0 %}
-    {% set moreless = "less" %}
-{% else %}
-    {% set moreless = "more" %}
-{% endif %}
-
 {% set transOptions = {
-'%client%': report.client.firstname | e,
-'%moreless%': moreless,
-'%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
+    '%client%': report.client.firstname | e,
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more",
+    '%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
 } %}
 
 {% set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}

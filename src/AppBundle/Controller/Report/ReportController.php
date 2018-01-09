@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
@@ -150,11 +151,13 @@ class ReportController extends AbstractController
             $report = new EntityDir\Report\Report();
         }
         $report->setClient($client);
-
-        $formFactory = $this->get('form.factory');
-        $form = $this->get('form.factory')->createNamed('report', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'registration', 'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
-                                   ]
-                                 );
+        $form = $this->get('form.factory')->createNamed(
+            'report',
+            FormDir\Report\ReportType::class, $report, [
+                'translation_domain' => 'registration',
+                'action'             => $this->generateUrl('report_create', ['clientId' => $clientId]) //TODO useless ?
+            ]
+        );
 
         $form->handleRequest($request);
 
@@ -232,12 +235,11 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
 
-            // store PDF as a document
-            $pdfBinaryContent = $this->getPdfBinaryContent($report);
+            // store PDF (with summary info) as a document
             $fileUploader = $this->get('file_uploader');
             $fileUploader->uploadFile(
                 $report->getId(),
-                $pdfBinaryContent,
+                $this->getPdfBinaryContent($report, true),
                 $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
                 true
             );
@@ -350,6 +352,25 @@ class ReportController extends AbstractController
     }
 
     /**
+     * Used for active and archived report.
+     *
+     * @Route("/report/{reportId}/pdf-debug")
+     */
+    public function pdfDebugAction($reportId)
+    {
+        if (!$this->getParameter('kernel.debug') ) {
+            throw new DisplayableException('Route only visite in debug mode');
+        }
+        /** @var EntityDir\Report\Report $report */
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
+
+        return $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
+            'report' => $report,
+            'showSummary' => true
+        ]);
+    }
+
+    /**
      * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      */
     public function pdfViewAction($reportId)
@@ -360,8 +381,6 @@ class ReportController extends AbstractController
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
-        $name = 'OPG102-' . $report->getClient()->getCaseNumber() . '-' . date_format($report->getEndDate(), 'Y') . '.pdf';
-
         $attachmentName = sprintf('DigiRep-%s_%s_%s.pdf',
             $report->getEndDate()->format('Y'),
             $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
@@ -369,7 +388,6 @@ class ReportController extends AbstractController
         );
 
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
-//        $response->headers->set('Content-length', strlen($->getSize()); // not easy to calculate binary size in bytes
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -379,12 +397,14 @@ class ReportController extends AbstractController
 
     /**
      * @param  EntityDir\Report\Report $report
+     * @param  boolean $showSummary
      * @return string                  binary PDF content
      */
-    private function getPdfBinaryContent(EntityDir\Report\Report $report)
+    private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)
     {
         $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
                 'report' => $report,
+                'showSummary' => $showSummary
             ])->getContent();
 
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);

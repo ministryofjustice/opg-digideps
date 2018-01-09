@@ -13,6 +13,7 @@ use AppBundle\Entity\Report\Decision;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\MoneyTransfer;
 use AppBundle\Entity\Report\Report as Report;
+use AppBundle\Entity\Report\Status;
 use AppBundle\Entity\User;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -117,6 +118,8 @@ class FormattedTest extends WebTestCase
             ->setClientInvolvedBoolean(true)
             ->setClientInvolvedDetails('he wanted to live here');
 
+        $this->reportStatus = m::mock(Status::class);
+
         $this->report = new Report();
         $this->report
             ->setType(Report::TYPE_102)
@@ -133,15 +136,17 @@ class FormattedTest extends WebTestCase
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))
             ->setEndDate(new \Datetime('2015-12-31'))
+            ->setStatus($this->reportStatus)
         ;
     }
 
     /**
+     * @param array $additionalVars
      * @return Crawler
      */
-    private function renderTemplateAndGetCrawler()
+    private function renderTemplateAndGetCrawler($additionalVars = [])
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', [
+        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', $additionalVars + [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
@@ -306,6 +311,29 @@ class FormattedTest extends WebTestCase
             )
             ->setBalanceMismatchExplanation('money lost');
     }
+
+
+    public function testSummaryinfo()
+    {
+        $this->reportStatus->shouldReceive('getBalanceState')->andReturn(['state'=>'done']);
+
+        // assert not displaying without "showSummary"
+        $crawler = $this->renderTemplateAndGetCrawler();
+        $this->assertCount(0, $crawler->filter('#report-summary'));
+
+        // assert displaying for a 102
+        $crawler = $this->renderTemplateAndGetCrawler(['showSummary'=>true]);
+        $this->assertCount(1, $crawler->filter('#report-summary'));
+
+        // assert NOT displaying when balacne section is not added
+        $as = $this->report->getAvailableSections();
+        unset($as[array_search('balance', $as)]);
+        $this->report->setAvailableSections($as);
+        $crawler = $this->renderTemplateAndGetCrawler(['showSummary'=>true]);
+        $this->assertCount(0, $crawler->filter('#report-summary'));
+    }
+
+
 
     public function tearDown()
     {
