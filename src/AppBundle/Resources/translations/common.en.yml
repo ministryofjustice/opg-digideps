@@ -41,6 +41,7 @@ actions: Actions
 caseNumber: Case number
 client: Client
 courtOrderNo: Court order no.
+courtOrderNumber: Court order number
 reportDueDate: Report due date
 reportStatus: Report status
 

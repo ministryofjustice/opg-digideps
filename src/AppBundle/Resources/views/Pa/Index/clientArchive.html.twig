@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle' | trans({'%caseNumber%': client.caseNumber }) }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
@@ -15,28 +15,32 @@
     </span>
 {% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbs(client.currentReport) }}
+{% endblock %}
+
 {% block pageContent %}
 
-    <p class="text">{{ 'description' | trans }}</p>
+    <p class="text"><strong class="bold">{{ 'question' | trans }}</strong></p>
+    <table class="text push--bottom">
+        <tbody>
+            <tr>
+                <th scope="row"><strong class="bold">{{ 'name' | trans({}, 'common') }}:</strong></th>
+                <td>{{ client.fullname }}</td>
+            </tr>
+            <tr>
+                <th scope="row"><strong class="bold">{{ 'courtOrderNumber' | trans({}, 'common') }}:</strong></th>
+                <td>{{ client.caseNumber }}</td>
+            </tr>
+        </tbody>
+    </table>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
-
-    <div class="form-section push--bottom">
-        <div class="form-group flush--bottom">
-            {{ form_checkbox_group(form.confirmArchive, 'form.confirmArchive', {
-                'useFormGroup': false,
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'heading-medium',
-                'legendText' : 'form.confirmArchive.label' | trans,
-                'items': [{'dataTarget': 'has-capacity-changed-details'}]
-            }) }}
-        </div>
+    <div class="push--bottom">
+        {{ macros.notification('important', 'warning' |trans) }}
     </div>
 
-    {{ form_submit(form.save, 'form.save') }}
+    <a href="#" class="button push-half--right behat-link-confirm">{{ 'linkButtonLabel' | trans }}</a>
 
-    {#<a href="{{ backLink }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>#}
-
-    {{ form_end(form) }}
+    <a href="{{ backLink }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
 
 {% endblock %}
