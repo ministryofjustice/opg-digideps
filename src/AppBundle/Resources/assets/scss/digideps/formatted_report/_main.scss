@@ -71,6 +71,16 @@
         padding-left: 0;
     }
 
+    // Utility
+    .flush--bottom {
+        margin-bottom: 0 !important;
+    }
+
+    .flush--ends {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
     // =======================================================
     // HEADER
 
