@@ -25,8 +25,8 @@
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
 
-        {# Show the summary (key info) when a flag is set ffrom the controller (only submit time for OPG),
-           and when the balance section is present (only 102 reports ATM) #}
+        {# Show the summary (key info) when a flag is set from the controller (only submit time for OPG),
+           and when the money/balance information are present (only 102 reports ATM) #}
         {% if showSummary | default(false) and report.hasSection('balance')  %}
             {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
         {% endif %}
