@@ -99,11 +99,13 @@ class IndexController extends AbstractController
 
         // edit client form
         if ($form->get('save')->isClicked() && $form->isValid()) {
-            if ('yes' == $form->get('confirmArchive')->getData()) {
+            if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
+                return $this->redirectToRoute('pa_dashboard');
+            } else {
+                $request->getSession()->getFlashBag()->add('error', 'Please confirm that you intend to archive the client');
             }
-            return $this->redirect($returnLink);
         }
 
         return [

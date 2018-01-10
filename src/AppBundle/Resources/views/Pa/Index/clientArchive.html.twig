@@ -39,8 +39,17 @@
         {{ macros.notification('important', 'warning' |trans) }}
     </div>
 
-    <a href="#" class="button push-half--right behat-link-confirm">{{ 'linkButtonLabel' | trans }}</a>
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom">
+            {{ form_checkbox(form.confirmArchive, 'form.confirmArchive', {'labelText': ('form.confirmArchive.label') | trans}) }}
+        </div>
+    </div>
+
+    {{ form_submit(form.save, 'form.save') }}
     <a href="{{ backLink }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
 
 {% endblock %}

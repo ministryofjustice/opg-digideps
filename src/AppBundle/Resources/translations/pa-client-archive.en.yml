@@ -2,7 +2,11 @@ htmlTitle: "Archive client | GOV.UK"
 pageTitle: "Archive client"
 supportTitle: "Client profile: %fullName%"
 question: Are you sure you want to archive this client?
-linkButtonLabel: Yes, archive client
 warning: |
   You cannot undo this action. You must also inform your OPG case manager if there has been a
   change in the client's circumstances.
+form:
+  confirmArchive:
+    label: "Yes, I'm sure I want to archive this client"
+  save:
+    label: Continue

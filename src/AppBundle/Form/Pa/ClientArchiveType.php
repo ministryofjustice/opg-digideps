@@ -5,7 +5,7 @@ namespace AppBundle\Form\Pa;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * PA - edit client
@@ -17,15 +17,10 @@ class ClientArchiveType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('confirmArchive',
-        'choice',
-        [
-            'choices'  => ['yes' => 'Yes', 'no'  => 'No'],
-            'expanded' => true,
-            'mapped'   => false
-        ])
-        ->add('id', 'hidden')
-        ->add('save', 'submit');
+        $builder
+            ->add('confirmArchive', 'checkbox', [ 'constraints' => new NotBlank(['message' => '....']), 'mapped' => false])
+            ->add('id', 'hidden')
+            ->add('save', 'submit');
     }
 
     public function configureOptions(OptionsResolver $resolver)
