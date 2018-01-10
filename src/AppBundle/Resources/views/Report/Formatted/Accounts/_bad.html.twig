@@ -29,7 +29,7 @@
 
     </div>
 
-    {% if report.balanceMismatchExplanation is not null %}
+    {% if report.balanceMismatchExplanation is not null and showReason != false %}
         <div class="box">
             <div class="labelvalue">
                 <div class="label">Reason for accounts not balancing</div>
