@@ -114,7 +114,7 @@ form:
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
       fees: OPG and other professional fees
-      major-purchases: Investments
+      major-purchases: Major purchase, such as property or investment
       debt-and-charges: Tax or charge
       moving-money: Moving money
       moneyout-other: Other
@@ -291,7 +291,7 @@ form:
         label: Investment fund account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
-        label: Other investments
+        label: Other purchase over £1,000
         moreInformations: Please give us more information
       deputy-expenses:
         label: Deputy expenses
