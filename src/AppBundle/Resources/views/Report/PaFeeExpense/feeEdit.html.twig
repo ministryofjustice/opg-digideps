@@ -35,7 +35,7 @@
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div class="hidden">
+                <div class="js-hidden">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow hard--top',
