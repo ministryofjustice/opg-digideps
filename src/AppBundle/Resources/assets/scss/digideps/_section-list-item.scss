@@ -32,15 +32,8 @@
     }
 
     .edit-link {
-        @include box-sizing(border-box);
-        @include core-19(1.6);
-        @include inline-block();
         margin: 20px 0 0 0;
         float: right;
-        width: auto;
-        text-align: right;
-        text-decoration: underline;
-        color: $link-colour;
 
         @include media(mobile) {
             display: none;
