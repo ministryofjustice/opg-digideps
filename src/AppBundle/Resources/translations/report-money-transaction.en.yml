@@ -114,7 +114,7 @@ form:
       care-and-medical: Care or medical bill
       client-expenses: Client's personal expenses
       fees: OPG and other professional fees
-      major-purchases: Major purchase over £1,000
+      major-purchases: Major purchase, such as property or investment
       debt-and-charges: Tax or charge
       moving-money: Moving money
       moneyout-other: Other
@@ -277,7 +277,7 @@ form:
       accountant-fees:
         label: Accountant's fees
       professional-fees-eg-solicitor-accountant:
-        label: Fees charged by a solicitor, accountant or other type of professional
+        label: Fees charged by a solicitor, accountant or other professional
         moreInformations: For each fee, please enter the date, the amount and what it was for
       opg-fees:
         label: OPG's fees
@@ -288,7 +288,7 @@ form:
         label: Investment bond
         moreInformations: For each bond, please enter the date and the value
       investment-account-purchased:
-        label: Investment account
+        label: Investment fund account
         moreInformations: For each new investment, please enter the date, a description and the value
       purchase-over-1000:
         label: Other purchase over £1,000

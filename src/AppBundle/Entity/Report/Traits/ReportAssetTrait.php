@@ -73,11 +73,14 @@ trait ReportAssetTrait
         $ret = 0;
 
         foreach ($this->assets as $asset) {
+            $isProperty = $asset instanceof AssetProperty;
+            $isCash = in_array($asset->getTitle(), self::$cashAssetTitles);
+            $isOther = !$isProperty && !$isCash;
 
             if (
-                ($type === 'property' && $asset instanceof AssetProperty)
-                || ($type === 'cash' && in_array($asset->getTitle(), self::$cashAssetTitles))
-                || ($type === 'other')
+                ($type === 'property' && $isProperty)
+                || ($type === 'cash' && $isCash)
+                || ($type === 'other' && $isOther)
             ) {
                 $ret += $asset->getValueTotal();
             }
