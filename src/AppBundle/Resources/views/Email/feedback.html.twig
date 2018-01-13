@@ -1,3 +1,11 @@
+
+Overall, how did you feel about the service you received today ?<br/>
+<br/>
+{{ response.satisfactionLevel }}<br/>
+<br/>
+
+{# The conditional statements here are not implemented #}
+
 {% if response.difficulty is defined %}
     Did you have any difficulty with this service ? <br/>
     <br/>
@@ -14,12 +22,6 @@
     <br/>
 {% endif %}
 
-Overall, how did you feel about the service you received today ?<br/>
-<br/>
-{{ response.satisfactionLevel }}<br/>
-<br/>
-
-
 {% if response.help is defined %}
     Did you have any help filling in this form?<br/>
     <br/>
@@ -28,11 +30,7 @@ Overall, how did you feel about the service you received today ?<br/>
     <br/>
 {% endif %}
 
-
 {% if response.email is defined %}
     Sender: {{ response.email }}
     <br/>
 {% endif %}
-
-<br/>
-<br/>
