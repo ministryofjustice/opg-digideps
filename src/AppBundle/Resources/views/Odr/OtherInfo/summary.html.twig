@@ -18,26 +18,26 @@
 
     {# Introduction text #}
     <p class="text">
-         {{ 'summaryPage.pageContent.weAskAbout' | trans(transOptions) }}
+         {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
     </p>
 
     {# Check answers text #}
-    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Missing questions alerts #}
     {% if odr.actionMoreInfo is null and comingFromLastStep%}
-        {{ macros.notification('notice', 'summaryPage.pageContent.remindComplete' | trans(transOptions, 'common')) }}
+        {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
     {% endif %}
 
     {% if odr.actionMoreInfo is null and not comingFromLastStep%}
-        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswerNDR' | trans(transOptions, 'common')) }}
+        {{ macros.notification('notice', 'canYouAnswerNDR' | trans(transOptions, 'common')) }}
     {% endif %}
 
     {# Return to overview link #}
     <p class="text--right flush--bottom">
         <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="bold-small">
-            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
+            {{ 'returnToReport' | trans(transOptions, 'common') }}
         </a>
     </p>
 

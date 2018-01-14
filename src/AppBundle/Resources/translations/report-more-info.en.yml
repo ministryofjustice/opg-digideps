@@ -26,8 +26,9 @@ summaryPage:
   supportTitle: Any other information
   pageTitle: Any other information
   supportTitle: ""
-  pageContent:
-    weAskAbout: In this section, we ask you to give us any other information you think we should have about your deputyship.
+  weAskAbout: |
+    In this section, we ask you to give us any other information you think we should have about
+    your deputyship.
 
 form:
   save:

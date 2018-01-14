@@ -16,8 +16,7 @@ summaryPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageTitle: Visits and care
   supportTitle: ""
-  pageContent:
-    weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+  weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
 
 form:
   doYouLiveWithClient:

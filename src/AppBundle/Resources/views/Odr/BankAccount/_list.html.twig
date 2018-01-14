@@ -20,7 +20,7 @@
             <th>Account</th>
             <th class="text--right">Balance on {{ odr.client.courtDate | date("j F Y") }}</th>
             <th>
-                <span class="visually-hidden">Actions</span>
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
             </th>
         </tr>
     </thead>

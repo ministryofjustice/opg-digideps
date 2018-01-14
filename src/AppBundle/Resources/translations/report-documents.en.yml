@@ -61,9 +61,7 @@ summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageTitle: Supporting documents
   addButton: Attach more documents
-  pageContent:
-    weAskAbout: In this section, we asked you to provide any supporting documents.
-    checktheyrecorrect: Check they're correct and edit them where neccessary.
+  weAskAbout: In this section, we asked you to provide any supporting documents.
   noDocuments: No documents
   documentList: Attached documents
   filename: File name

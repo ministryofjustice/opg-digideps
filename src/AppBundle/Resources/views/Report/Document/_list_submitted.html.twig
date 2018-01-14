@@ -24,7 +24,7 @@
             <tr>
                 <th>{{ (page ~ '.filename') | trans }}</th>
                 <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
-                <th><span class="visually-hidden">Actions</span></th>
+                <th><span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span></th>
             </tr>
         </thead>
         <tbody class="behat-region-document-list">

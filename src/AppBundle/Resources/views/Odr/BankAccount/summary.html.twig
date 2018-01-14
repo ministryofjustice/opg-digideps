@@ -22,13 +22,13 @@
     </div>
 
     {# Check answers text #}
-    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Return to overview link #}
     <p class="text--right flush--bottom">
         <a href="{{ path('odr_overview', {'odrId': odr.id}) }}" class="bold-small">
-            {{ 'summaryPage.pageContent.returnToReport' | trans(transOptions, 'common') }}
+            {{ 'returnToReport' | trans(transOptions, 'common') }}
         </a>
     </p>
 
