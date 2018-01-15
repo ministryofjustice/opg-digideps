@@ -92,12 +92,10 @@ class PaService
                     throw new \RuntimeException('Not a PA');
                 }
 
-                $user = $this->createUser($row);
-                if ($user instanceof EntityDir\User) {
-                    $client = $this->createClient($row, $user);
-                    if (count($client->getUnsubmittedReports()) === 0)  {
-                        $this->createReport($row, $client, $user);
-                    }
+                $user = $this->upsertUser($row);
+                $client = $this->upsertClient($row, $user);
+                if (count($client->getUnsubmittedReports()) === 0)  {
+                    $this->upsertReport($row, $client, $user);
                 }
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for PA Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
@@ -121,12 +119,20 @@ class PaService
      *
      * @return EntityDir\User
      */
-    private function createUser(array $row)
+    private function upsertUser(array $row)
     {
         $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
         $userEmail = strtolower($row['Email']);
 
-        if (!$user) {
+        if ($user) {
+            // Notify email change
+            if ($user->getEmail() !== $userEmail) {
+                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
+                    ' has changed their email to ' . $user->getEmail() . '. ' .
+                    'Please update the CSV to reflect the new email address.<br />';
+            }
+        } else {
+            // create user
             $this->log('Creating user');
             // check for duplicate email address
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
@@ -179,29 +185,20 @@ class PaService
                 $this->em->flush($user);
                 $this->added['users'][] = $row['Email'];
             }
-        } else {
+        } 
 
-            // update team name, if not set
-            // can be removed if there is not need to update PA names after DDPB-1718
-            // is released and one PA CSV upload is done
-            if ($user->getTeams()->count()
-                && ($team = $user->getTeams()->first())
-                && $team->getTeamName() != $row['Dep Surname']
-            ) {
-                $team->setTeamName($row['Dep Surname']);
-                $this->warnings[] = 'PA team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
-                $this->em->flush($team);
-            }
-
-            // Notify email change
-            if ($user->getEmail() !== $userEmail) {
-                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
-                    ' has changed their email to ' . $user->getEmail() . '. ' .
-                    'Please update the CSV to reflect the new email address.<br />';
-
-                return null;
-            }
+        // update team name, if not set
+        // can be removed if there is not need to update PA names after DDPB-1718
+        // is released and one PA CSV upload is done
+        if ($user->getTeams()->count()
+            && ($team = $user->getTeams()->first())
+            && $team->getTeamName() != $row['Dep Surname']
+        ) {
+            $team->setTeamName($row['Dep Surname']);
+            $this->warnings[] = 'PA team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
+            $this->em->flush($team);
         }
+
 
         return $user;
     }
@@ -212,7 +209,7 @@ class PaService
      *
      * @return EntityDir\Client
      */
-    private function createClient(array $row, EntityDir\User $user)
+    private function upsertClient(array $row, EntityDir\User $user)
     {
         // find or create client
         $caseNumber = strtolower($row['Case']);
@@ -285,7 +282,7 @@ class PaService
      *
      * @return EntityDir\Report\Report
      */
-    private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
+    private function upsertReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
         $reportEndDate = self::parseDate($row['Last Report Day'], '20');
