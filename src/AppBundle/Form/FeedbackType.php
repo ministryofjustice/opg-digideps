@@ -19,28 +19,11 @@ class FeedbackType extends AbstractType
         $satisfactionLevelChoices = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
         $helpChoices = array_filter(explode("\n", $this->translate('helpChoices', [], 'feedback')));
 
-        $builder->add('difficulty', 'textarea')
-            ->add('ideas', 'textarea')
+        $builder
             ->add('satisfactionLevel', 'choice', [
                 'choices' => array_combine($satisfactionLevelChoices, $satisfactionLevelChoices),
                 'expanded' => true,
                 'multiple' => false,
-            ])
-            ->add('help', 'choice', [
-                'choices' => array_combine($helpChoices, $helpChoices),
-                'expanded' => true,
-                'multiple' => false,
-            ])
-            ->add('emailYesNo', 'choice', [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'mapped' => false,
-            ])
-            ->add('email', 'email', [
-                'constraints' => [
-                    new Constraints\Email(['message' => 'login.email.inValid']),
-                ],
-                'data' => $this->getLoggedUserEmail(),
             ])
             ->add('save', 'submit');
 
