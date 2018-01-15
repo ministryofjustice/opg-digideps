@@ -127,7 +127,7 @@ class PaService
         if ($user) {
             // Notify email change
             if ($user->getEmail() !== $userEmail) {
-                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
+                $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
                     ' has changed their email to ' . $user->getEmail() . '. ' .
                     'Please update the CSV to reflect the new email address.<br />';
             }
