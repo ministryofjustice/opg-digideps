@@ -94,9 +94,7 @@ class PaService
 
                 $user = $this->upsertUser($row);
                 $client = $this->upsertClient($row, $user);
-                if (count($client->getUnsubmittedReports()) === 0)  {
-                    $this->upsertReport($row, $client, $user);
-                }
+                $this->upsertReport($row, $client, $user);
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for PA Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;

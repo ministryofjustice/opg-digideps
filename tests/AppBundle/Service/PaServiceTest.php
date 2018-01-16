@@ -216,7 +216,9 @@ class PaServiceTest extends WebTestCase
         $this->assertInstanceof(EntityDir\User::class, $user1, 'deputy not added');
         $client1 = $user1->getClientByCaseNumber('10000001');
         $this->assertCount(1, $client1->getReports());
-        $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client1->getReports()->first()->getType());
+        $report = $client1->getReports()->first();
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $report->getType());
+
     }
 
     /**
