@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\MoneyTransfer;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
@@ -177,5 +178,28 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
         $this->assertTrue(null === $t);
+    }
+
+    /**
+     * @depends testdeleteTransfer
+     */
+    public function testNoTransfers()
+    {
+        /* @var $report Report */
+        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $this->assertTrue(count($report->getMoneyTransfers()) > 0);
+        self::fixtures()->clear();
+
+        $url = '/report/' . self::$report1->getId() ;
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data' => [
+                'no_transfers_to_add' => true
+            ]
+        ]);
+
+        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $this->assertCount(0, $report->getMoneyTransfers());
     }
 }
