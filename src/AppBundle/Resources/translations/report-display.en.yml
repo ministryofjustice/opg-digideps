@@ -1,11 +1,5 @@
-#TODO remove this. text is 99% hardcoded in the views
-decisionsMadeAsDeputy: Decisions made as deputy
-page:
-    pageTitle: Review report
-
 downloadAsPdf: Download as pdf
 incomplete:
-  youCanContinue: You can continue when all sections are completed.
   backToEditingReport: Back to editing report
 
 submitReport: Submit report
@@ -22,6 +16,11 @@ review:
   pageTitle: Review report
   introPara: Please review all sections of this report before continuing to the deputy declaration.
 
+submitted:
+  htmlTitle: Submitted deputy report | GOV.UK
+  pageTitle: Submitted report
+  introPara: This report was submitted to OPG on
+
 ndr-preview:
   htmlTitle: Preview new deputy report | GOV.UK
   pageTitle: Preview report
@@ -33,3 +32,8 @@ ndr-review:
   htmlTitle: Review new deputy report | GOV.UK
   pageTitle: Review report
   introPara: Please review all sections of this report before continuing to the deputy declaration.
+
+ndr-submitted:
+  htmlTitle: Submitted new deputy report | GOV.UK
+  pageTitle: Submitted report
+  introPara: This report was submitted to OPG on

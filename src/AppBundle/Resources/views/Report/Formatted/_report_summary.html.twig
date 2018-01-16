@@ -7,12 +7,12 @@
 } %}
 
 <div class="section" id="report-summary">
-    <h2 class="section-heading">Report summary</h2>
+    <h2 class="section-heading">Report summary (internal use only)</h2>
 
-    {% if report.hasSection('actions') %}
+    {% if report.hasSection('decisions') %}
         {{ macros.answerYesNo({
             question: 'Significant Decisions',
-            answer: report.action.doYouExpectFinancialDecisions
+            answer: report.hasDecisions
         }) }}
     {% endif %}
 
@@ -47,19 +47,21 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label noborder">Cash</td>
+                        <td class="label noborder">Liquid assets*</td>
                         <td class="value total width-fifth">
                             &pound;{{ report.assetsTotalsSummaryPage('cash') | money_format }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="label noborder">Other assets</td>
+                        <td class="label noborder">Other assets**</td>
                         <td class="value total width-fifth">
                             &pound;{{ report.assetsTotalsSummaryPage('other') | money_format }}
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <p class="flush--bottom">* includes investment bonds, National Savings certificates, Premium Bonds, stocks and shares, and unit trusts</p>
+            <p class="flush--ends">** includes antiques, artwork, jewellery, vehicles, other valuable assets and assets outside England and Wales</p>
         </div>
     {% endif %}
 
