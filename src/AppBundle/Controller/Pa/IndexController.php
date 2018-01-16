@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -104,7 +105,7 @@ class IndexController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
                 return $this->redirectToRoute('pa_dashboard');
             } else {
-                $request->getSession()->getFlashBag()->add('error', 'Please confirm that you intend to archive the client');
+                $form->get('confirmArchive')->addError(new FormError('Please confirm that you intend to archive the client'));
             }
         }
 
