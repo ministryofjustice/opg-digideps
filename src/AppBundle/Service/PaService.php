@@ -121,7 +121,8 @@ class PaService
      */
     private function upsertUser(array $row)
     {
-        $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
+        $criteria = ['deputyNo' => $row['Deputy No'], 'roleName' => EntityDir\User::ROLE_PA];
+        $user = $this->userRepository->findOneBy($criteria);
         $userEmail = strtolower($row['Email']);
 
         if ($user) {
