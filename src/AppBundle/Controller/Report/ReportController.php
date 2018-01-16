@@ -335,7 +335,8 @@ class ReportController extends RestController
         }
 
         if ($sort == 'end_date') {
-            $qb->orderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('c.caseNumber', 'ASC');
         }
 
         if ($q) {
