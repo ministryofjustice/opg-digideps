@@ -4,6 +4,9 @@ set -e
 run-parts /etc/my_init.d
 
 cd /app
+
+# the following are not needed, as `run-parts` above already calls migration scripts
+# to remove after next release in February
 /sbin/setuser app php app/console doctrine:migrations:status-check
 /sbin/setuser app php app/console doctrine:migrations:migrate --no-interaction -vvv
 
