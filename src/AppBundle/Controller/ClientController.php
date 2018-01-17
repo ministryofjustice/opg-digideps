@@ -117,7 +117,7 @@ class ClientController extends RestController
         $this->persistAndFlush($client);
 
         return [
-            'client_id' => $client->getId()
+            'id' => $client->getId()
         ];
     }
 }
