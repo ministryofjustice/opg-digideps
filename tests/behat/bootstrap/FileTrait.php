@@ -7,6 +7,9 @@ use Behat\Gherkin\Node\TableNode;
 trait FileTrait
 {
     /**
+     * | NdrRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
+     * | file2.pdf | exactFileName+md5sum | 6b871eed6b34b560895f221de1420a5a |
+     *
      * @Then the page content should be a zip file containing files with the following files:
      */
     public function thePagecontentShouldBeZipContainingFilesChecksum(TableNode $table)
