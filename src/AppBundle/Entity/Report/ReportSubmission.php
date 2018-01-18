@@ -146,6 +146,6 @@ class ReportSubmission
         $report = $this->getReport();
         $client = $this->getReport()->getClient();
 
-        return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '.zip';
+        return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '_' . microtime(1) . '.zip';
     }
 }

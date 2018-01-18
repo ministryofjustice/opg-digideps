@@ -80,9 +80,19 @@
 
     {# table with records #}
     {% if  records | length %}
+    <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
+        {% for action in postActions %}
+            <input type="submit" value="{{ action }}" name="multiAction">
+        {% endfor %}
         <table class="check-your-answers push--bottom">
             <thead>
                 <tr>
+                    <th>
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="select-all" name="select-all" value="all">
+                            <label for="select-all"><span class="visually-hidden">All</span></label>
+                        </div>
+                    </th>
                     <th>Client and case no</th>
                     <th>Deputy</th>
                     <th>Period</th>
@@ -91,9 +101,6 @@
                     {% if isArchivedPage %}
                         <th>User</th>
                     {% endif %}
-                    <th>
-                        <span class="visually-hidden">Actions</span>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -102,6 +109,12 @@
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
+                        <td>
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]">
+                                <label for="cb{{ reportSubmission.id }}"><span class="visually-hidden">Select</span></label>
+                            </div>
+                        </td>
                         <td class="width-fifth">
                             {{ report.client.fullname }}<br>
                             <span class="text-secondary">{{ report.client.caseNumber }}</span>
@@ -150,19 +163,11 @@
                                 <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
                             </td>
                         {% endif %}
-                        <td class="width-tenth change-answer">
-                            {% if reportSubmission.downloadable %}
-                                <a href="{{ path('admin_documents_download', {'reportSubmissionId': reportSubmission.id}) }}" class="behat-link-download">Download</a><br>
-                            {% endif %}
-                            {% if isNewPage %}
-                                <a href="{{ path('admin_document_archive', {'reportSubmissionId': reportSubmission.id} | merge(filtersToPreserveAfterArchiving)) }}" class="behat-link-archive">Archive</a>
-                            {% endif %}
-                        </td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-
+                </tbody>
+            </table>
+        </form>
         {% include 'AppBundle:Components:paginator.html.twig' with {
             currentOffset: filters.offset,
             recordsPerPage: filters.limit,
