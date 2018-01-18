@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use JMS\Serializer\Annotation as JMS;
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
  */
-class Report
+class Report extends AbstractReport
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
 use AppBundle\Service\OdrStatusService;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
-class Odr
+class Odr extends AbstractReport
 {
     use OdrTraits\ReportIncomeBenefitTrait;
     use OdrTraits\ReportDeputyExpenseTrait;
