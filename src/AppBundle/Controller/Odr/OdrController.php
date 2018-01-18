@@ -17,7 +17,7 @@ class OdrController extends AbstractController
     private static $odrGroupsForValidation = [
         'user',
         'user-clients',
-        'client',
+        'ndr-client',
         'client-reports',
         'odr',
         'report',
@@ -198,9 +198,9 @@ class OdrController extends AbstractController
             $fileUploader = $this->get('file_uploader');
 
             $fileUploader->uploadFile(
-                $odr->getId(),
+                $odr,
                 $pdfBinaryContent,
-                $odr->createAttachmentName('Ndr-%s_%s_%s.pdf'),
+                $odr->createAttachmentName('Ndr-%s_%s.pdf'),
                 true
             );
 

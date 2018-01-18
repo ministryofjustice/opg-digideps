@@ -7,7 +7,8 @@ namespace AppBundle\Entity;
  */
 abstract class AbstractReport
 {
+    abstract function getId();
+    abstract function getType();
     abstract function getClient();
     abstract function createAttachmentName($format);
-
 }

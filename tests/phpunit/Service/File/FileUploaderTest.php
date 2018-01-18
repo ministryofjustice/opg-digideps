@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
@@ -33,7 +34,8 @@ class FileUploaderTest extends \PHPUnit_Framework_TestCase
         $this->storage->shouldReceive('store')->once()->with(matchesPattern('/^dd_doc_1_\d+$/'), $fileContent);
         $this->restClient->shouldReceive('post')->once()->with('/report/1/document', anInstanceOf(Document::class), ['document']);
 
-        $doc = $this->object->uploadFile(1, $fileContent, $fileName, false); /* @var $document Document */
+        $report = m::mock(AbstractReport::class, ['getId'=>1]);
+        $doc = $this->object->uploadFile($report, $fileContent, $fileName, false); /* @var $document Document */
 
         $this->assertStringMatchesFormat('dd_doc_1_%d', $doc->getStorageReference());
         $this->assertEquals($fileName, $doc->getFileName());
