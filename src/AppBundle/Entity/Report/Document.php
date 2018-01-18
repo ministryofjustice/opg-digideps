@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -78,6 +79,17 @@ class Document
     private $report;
 
     /**
+     * @var Odr
+     *
+     * @JMS\Groups({"document-report"})
+     *
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $ndr;
+
+    /**
      * @var ReportSubmission
      *
      * @JMS\Type("AppBundle\Entity\Report\ReportSubmission")
@@ -94,12 +106,16 @@ class Document
      * Report is initially required, but will be set to null at submission time,
      * and associated to a specific ReportSubmission instead
      *
-     * @param Report $report
+     * @param Report\Odr $report
      */
-    public function __construct(Report $report)
+    public function __construct($report)
     {
-        $this->report = $report;
-//        $report->addDocument($this);
+        //TODO create AbstractReport class and use as type hinting
+        if ($report instanceof Report) {
+            $this->report = $report;
+        } else if ($report instanceof Odr) {
+            $this->ndr = $report;
+        }
         $this->isReportPdf = true;
     }
 
@@ -166,6 +182,14 @@ class Document
     public function getReport()
     {
         return $this->report;
+    }
+
+    /**
+     * @return Odr
+     */
+    public function getNdr()
+    {
+        return $this->ndr;
     }
 
     /**

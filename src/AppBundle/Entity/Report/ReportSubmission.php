@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
@@ -46,7 +47,7 @@ class ReportSubmission
     private $report;
 
     /**
-     * @var Report
+     * @var Odr
      *
      * @JMS\Type("AppBundle\Entity\Odr\Odr")
      *
@@ -97,12 +98,12 @@ class ReportSubmission
     {
         if ($report instanceof Report) {
             $this->report = $report;
+            $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         } else if ($report instanceof Odr) {
             $this->ndr = $report;
         } else {
             throw new \InvalidArgumentException(__METHOD__.' first argumnt should be a Report or an Ndr');
         }
-        $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->downloadable = true;
@@ -134,6 +135,14 @@ class ReportSubmission
     public function getReport()
     {
         return $this->report;
+    }
+
+    /**
+     * @return Odr
+     */
+    public function getNdr()
+    {
+        return $this->ndr;
     }
 
     /**

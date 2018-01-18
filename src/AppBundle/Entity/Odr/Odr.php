@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
  * @ORM\Table(name="odr")
  */
-class Odr
+class Odr extends AbstractReport
 {
     use OdrTraits\IncomeBenefitTrait;
     use OdrTraits\ExpensesTrait;
@@ -36,7 +37,7 @@ class Odr
     /**
      * @var Client
      *
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"ndr-client"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */

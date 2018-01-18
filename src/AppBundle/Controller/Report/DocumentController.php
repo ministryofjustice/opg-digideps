@@ -11,15 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 class DocumentController extends RestController
 {
     /**
-     * @Route("/report/{reportId}/document", requirements={"reportId":"\d+"})
+     * @Route("/document/{reportType}/{reportId}", requirements={
+     *     "reportId":"\d+",
+     *     "reportType" = "(report|ndr)"
+     * })
      * @Method({"POST"})
      */
-    public function add(Request $request, $reportId)
+    public function add(Request $request, $reportType, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
 
         /* @var $report Report */
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        $report = $reportType === 'report' ?
+            $this->findEntityBy(EntityDir\Report\Report::class, $reportId)
+            : $this->findEntityBy(EntityDir\Odr\Odr::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
