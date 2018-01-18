@@ -7,15 +7,15 @@
 
     {{ macros.answerYesNo({
         question: ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions'),
-        answer: action.doYouExpectFinancialDecisions,
-        moreDetails: action.doYouExpectFinancialDecisionsDetails,
+        answer: report.action.doYouExpectFinancialDecisions,
+        moreDetails: report.action.doYouExpectFinancialDecisionsDetails,
         showMoreDetailsWith: 'yes'
     }) }}
 
     {{ macros.answerYesNo({
         question: 'form.doYouHaveConcerns.label' | trans({}, 'report-actions'),
-        answer: action.doYouHaveConcerns,
-        moreDetails: action.doYouHaveConcernsDetails,
+        answer: report.action.doYouHaveConcerns,
+        moreDetails: report.action.doYouHaveConcernsDetails,
         showMoreDetailsWith: 'yes'
     }) }}
 

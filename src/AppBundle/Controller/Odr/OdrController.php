@@ -24,6 +24,7 @@ class OdrController extends AbstractController
         'visits-care',
         'odr-account',
         'odr-debt',
+        'odr-debt-management',
         'odr-asset',
         'state-benefits',
         'pension',

@@ -2,7 +2,7 @@
 
 {% set translationDomain = "co-deputy" %}
 {% trans_default_domain translationDomain %}
-{% set page = "addCoDeputy" %}
+{% set page = "reinviteDeputy" %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -12,13 +12,16 @@
 
 {% block pageContent %}
 
-    <p class="text">Use the box below to resend an invitation to the original or alternative email address.</p>
+    <p class="text">{{ (page ~ '.intro') | trans }}</p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_submit(form.submit,'form.submit', {'buttonClass': 'behat-link-send-invitation'}) }}
+    {{ form_submit(form.submit,'form.submit', {
+        'buttonClass': 'behat-link-send-invitation',
+        'labelText': (page ~ '.submitButton') | trans
+    }) }}
 
     <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 

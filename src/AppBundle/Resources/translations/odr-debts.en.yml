@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "New deputy report - debts | GOV.UK"
-  pageSectionTitle: "Debts"
+  pageTitle: "Debts"
   pageSectionDescription: |
     Use this section to tell us about %client%'s debts, for example,
     care fees, credit cards or loans.
@@ -8,7 +8,7 @@ startPage:
 
 existPage:
   htmlTitle: "New deputy report - debts | GOV.UK"
-  pageSectionTitle: Debts
+  pageTitle: Debts
   form:
     exist:
       label: Does %client% have any debts?
@@ -27,7 +27,7 @@ managementPage:
 
 editPage:
   htmlTitle: "New deputy report - debts | GOV.UK"
-  pageSectionTitle: Debts
+  pageTitle: Debts
   pageSectionDescription: Please tell us more about %client%'s debts.
   pageHint: If %client% has a mortgage on a property, use the Assets section to tell us about it
 

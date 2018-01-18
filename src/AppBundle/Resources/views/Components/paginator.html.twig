@@ -27,7 +27,7 @@
             {% if currentOffset > 0 %}
                 <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
                     'offset': (currentOffset - recordsPerPage)
-                })) }}">Prev</a>
+                })) }}">{{ 'previous' | trans({}, 'common' ) }}</a>
             {% endif %}
 
             {# links to single pages #}
@@ -47,7 +47,7 @@
             {% if (currentOffset + recordsPerPage) < totalRecords %}
                 <a class="pager-next" href="{{ path(routeName, routeParams | merge({
                     'offset': currentOffset + recordsPerPage
-                })) }}">Next</a>
+                })) }}">{{ 'next' | trans({}, 'common' ) }}</a>
             {% endif %}
 
         </div>

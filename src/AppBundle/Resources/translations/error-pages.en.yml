@@ -2,5 +2,5 @@ errors:
   503:
     page:
       htmlTitle: "503 - Service currently unavailable"
-      pageSectionTitle: "Service currently unavailable (503 error)"
+      pageTitle: "Service currently unavailable (503 error)"
       pageSectionDescription: "Try refreshing the page or returning later"

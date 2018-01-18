@@ -7,7 +7,7 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -35,7 +35,7 @@
             }) }}
 
             {% if fee.moreDetails is defined %}
-                <div class="hidden">
+                <div class="js-hidden">
                     {{ form_input(fee.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ feeId ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow hard--top',
@@ -49,13 +49,5 @@
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
-
-    <script>
-        $(document).ready(function () {
-            // Details expander
-            new GOVUK.detailsExpander('.js-details-expander-travel-costs');
-            new GOVUK.detailsExpander('.js-details-expander-specialist-service');
-        });
-    </script>
 
 {% endblock %}

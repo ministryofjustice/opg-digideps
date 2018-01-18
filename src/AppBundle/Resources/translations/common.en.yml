@@ -18,13 +18,15 @@ status:
   notStarted: Start now
   notFinished: Continue
   readyToSubmit: Continue
+next: Next
+previous: Previous
 
 # Report headings
 annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
 submittedReports: Submitted reports
 
-# Table Headings / Labels
+# Labels and table headings
 name: Name
 role: Role
 address: Address
@@ -36,6 +38,11 @@ in: In
 out: Out
 balance: Balance
 actions: Actions
+caseNumber: Case number
+client: Client
+courtOrderNo: Court order no.
+reportDueDate: Report due date
+reportStatus: Report status
 
 # Statuses
 notCreated: Not created
@@ -43,6 +50,7 @@ notFinished: Not finished
 notStarted: Not started
 readyToSubmit: Ready to submit
 notAvailable: Not available
+inProgress: In progress
 
 # Breadcrumbs
 yourReports: Your reports
@@ -55,6 +63,12 @@ clientProfile: Client profile
 #Back links
 backToReportOverview: Back to report overview
 backToClientProfile: Back to client profile
+backToYourReports: Back to your reports
+
+#Search
+search: Search
+clearSearch: Clear search
+sorryNoResultsFor: Sorry, no results were found for
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago

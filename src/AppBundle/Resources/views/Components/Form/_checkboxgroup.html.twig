@@ -22,7 +22,7 @@
                 <p class="form-hint description">{{ description | raw }}</p>
             {% endif %}
 
-            <div class="multiple-choice" {% if labelDataTarget %} data-target="{{ labelDataTarget }}"{% endif %}>
+            <div class="multiple-choice text" {% if labelDataTarget %} data-target="{{ labelDataTarget }}"{% endif %}>
                 {% set attr = {'class': elementClass } %}
                 {% if disabled %}
                     {% set attr = attr | merge({'disabled': 'disabled'}) %}

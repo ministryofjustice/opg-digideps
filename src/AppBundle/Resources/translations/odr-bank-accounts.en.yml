@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageSectionTitle: Accounts
+  pageTitle: Accounts
   pageSectionDescription1: |
     An important part of your role as a deputy is to keep a record of
     the money that comes into and goes out of %client%'s accounts.
@@ -27,7 +27,7 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageSectionTitle: Add an account
+  pageTitle: Add an account
   supportTitle: Accounts
   pageSectionDescription:
     step1: Start by selecting one type of account. We'll then ask you for the details of that account. You can go back and add more accounts if you need to.
@@ -35,7 +35,7 @@ stepPage:
 
 addAnotherPage:
   htmlTitle: "Deputy report - add another account | GOV.UK"
-  pageSectionTitle: Accounts
+  pageTitle: Accounts
   form:
     addAnother:
       label: The account has been saved. Would you like to add another account now?
@@ -45,7 +45,7 @@ addAnotherPage:
 
 summaryPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageSectionTitle: Accounts
+  pageTitle: Accounts
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
@@ -65,6 +65,9 @@ form:
       label: How much was in the account on %cotDate%?
   isJointAccount:
       label: Is this a joint account?
+      hint: |
+        Joint accounts are often used by married couples or couples who live together. The money in
+        a joint account is owned by both account holders.
   save:
     label: Save and continue
   cancel:

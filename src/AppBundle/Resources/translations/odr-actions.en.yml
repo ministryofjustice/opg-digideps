@@ -1,6 +1,6 @@
 startPage:
   htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
-  pageSectionTitle: Actions you plan to take
+  pageTitle: Actions you plan to take
   pageSectionDescription1: |
     Use this section to tell us about any significant financial decisions you plan to
     make on %client%'s behalf in the next 12 months.
@@ -27,7 +27,7 @@ stepPage:
   htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
   supportTitle: Actions you plan to take
   gifts:
-    pageSectionTitle: Gifts
+    pageTitle: Gifts
     pageSectionDescription1: |
       Your court order will say if you can buy gifts or give gifts of money on %client%'s behalf.
     pageSectionDescription2: |
@@ -44,7 +44,7 @@ stepPage:
         para03: |
           OPG's <a href="https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys" target="_blank">'Giving gifts for someone else' (OPG2) booklet</a> gives detailed guidance on giving gifts as a deputy.
   property:
-    pageSectionTitle: Property
+    pageTitle: Property
     selling:
       hiddenText01:
         summary: Selling property on behalf of your client
@@ -65,7 +65,7 @@ stepPage:
 summaryPage:
   htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
   supportTitle: Actions you plan to take
-  pageSectionTitle: Actions you plan to take
+  pageTitle: Actions you plan to take
   supportTitle: ""
   pageContent:
     weAskAbout: In this section, we ask you about significant financial decisions you're planning to make on behalf of %client%.

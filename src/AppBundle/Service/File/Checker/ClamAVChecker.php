@@ -92,6 +92,11 @@ class ClamAVChecker implements FileCheckerInterface
      */
     private function getScanResults(UploadableFileInterface $file)
     {
+        // avoid contacting ClamAV for files with already-known asnwer
+        if ($cachedResponse = ClamAVMocks::getCachedResponse($file)) {
+            return $cachedResponse;
+        }
+
         try {
             $result = $this->makeScannerRequest($file);
 

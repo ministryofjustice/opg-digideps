@@ -19,10 +19,18 @@
 
 <div id="wrapper">
     <div class="formatted-report">
+
         <div id="report-header">Office of the Public Guardian</div>
         <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
+
+        {# Show the summary (key info) when a flag is set from the controller (only submit time for OPG),
+           and when the money/balance information are present (only 102 reports ATM) #}
+        {% if showSummary | default(false) and report.hasSection('balance')  %}
+            {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
+        {% endif %}
+
         {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
         {% if report.mentalCapacity is not null %}
             {% include 'AppBundle:Report/Formatted:_mental-capacity.html.twig' with {
@@ -51,7 +59,9 @@
                     {% if report.totalsMatch %}
                         {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
                     {% else %}
-                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
+                            'showReason': true
+                        } %}
                     {% endif %}
 
                     {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
@@ -102,9 +112,7 @@
         {% endif %}
 
         {% if report.hasSection('actions') %}
-            {% include 'AppBundle:Report/Formatted:_action.html.twig' with {
-            'action': report.action
-            } %}
+            {% include 'AppBundle:Report/Formatted:_action.html.twig' %}
         {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {

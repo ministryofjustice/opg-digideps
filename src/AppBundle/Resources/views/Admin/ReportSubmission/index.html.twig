@@ -109,8 +109,12 @@
                         </td>
                         <td class="width-fifth">
                             {% if reportSubmission.createdBy %}
-                                {{ reportSubmission.createdBy.fullname }}<br>
-                                ({{ reportSubmission.createdBy.roleFullName }})
+                                {% set createdBy = reportSubmission.createdBy %}
+                                {{ createdBy.fullname }}
+                                ({{ createdBy.roleFullName }})
+                                {% if createdBy.isDeputyPa %}
+                                    <br/>{{ reportSubmission.createdBy.paTeamName }}
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td class="width-eighth">

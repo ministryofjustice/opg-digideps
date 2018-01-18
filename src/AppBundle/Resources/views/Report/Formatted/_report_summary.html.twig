@@ -1,0 +1,107 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+{# always true when sent as PDF at submittion time #}
+{% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
+{% set transOptions = {
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more",
+} %}
+
+<div class="section" id="report-summary">
+    <h2 class="section-heading">Report summary (internal use only)</h2>
+
+    {% if report.hasSection('decisions') %}
+        {{ macros.answerYesNo({
+            question: 'Significant Decisions',
+            answer: report.hasDecisions
+        }) }}
+    {% endif %}
+
+    {% if report.hasSection('otherInfo') %}
+        {{ macros.answerYesNo({
+            question: 'Any other information',
+            answer: report.actionMoreInfo
+        }) }}
+    {% endif %}
+
+    {% if report.hasSection('moneyIn') %}
+        {% if (report.bankAccounts | length) > 0 %}
+            {% if report.totalsMatch %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
+            {% else %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
+                    'showReason': false
+                } %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+    {% if report.hasSection('assets') %}
+        <div class="box">
+            <h3 class="label question bold">Assets</h3>
+            <table class="labelvalue money">
+                <tbody>
+                    <tr>
+                        <td class="label noborder">Property</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.assetsTotalsSummaryPage('property') | money_format }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label noborder">Liquid assets*</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.assetsTotalsSummaryPage('cash') | money_format }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label noborder">Other assets**</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.assetsTotalsSummaryPage('other') | money_format }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="flush--bottom">* includes investment bonds, National Savings certificates, Premium Bonds, stocks and shares, and unit trusts</p>
+            <p class="flush--ends">** includes antiques, artwork, jewellery, vehicles, other valuable assets and assets outside England and Wales</p>
+        </div>
+    {% endif %}
+
+    {% if report.hasSection('debts') %}
+        {{ macros.answerYesNo({
+            question: 'Debts',
+            answer: report.hasDebts
+        }) }}
+    {% endif %}
+
+    {% if report.hasSection('gifts') or report.hasSection('deputyExpenses') or report.hasSection('paDeputyExpenses') %}
+        <div class="box">
+            {# total value #}
+            <table class="labelvalue money">
+                {% if report.hasSection('gifts') %}
+                    <tr>
+                        <td class="label bold">Gifts</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.giftsTotalValue | money_format }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if report.hasSection('deputyExpenses') %}
+                    <tr>
+                        <td class="label bold">Deputy expenses</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ report.expensesTotal | money_format }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if report.hasSection('paDeputyExpenses') %}
+                    <tr>
+                        <td class="label bold">Deputy fees and expenses</td>
+                        <td class="value total width-fifth">
+                            &pound;{{ (report.feesTotal + report.expensesTotal) | money_format }}
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    {% endif %}
+
+</div>

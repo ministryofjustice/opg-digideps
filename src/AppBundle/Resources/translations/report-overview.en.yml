@@ -1,7 +1,7 @@
 htmlTitle: "Deputy report - overview | GOV.UK"
 htmlTitlePA: "Client profile | GOV.UK"
 report: "report"
-pageSectionTitle: "The deputy report"
+pageTitle: "The deputy report"
 pageSectionDescription: "Your report:"
 submitWhenReady: "You can't submit your report until it's complete"
 reportingPeriod: "Reporting period"
@@ -137,7 +137,7 @@ debts:
     subSectionTitle: "Debts"
     subSectionDescription: "Let us know about any debts %client% owes"
     label:
-       done: "{0} no debts | {1} 1 debt | ]1,Inf[ %count% debts"
+       done: "Finished"
 heading.other: "Other information"
 actions:
     subSectionTitle: "Actions you plan to take"

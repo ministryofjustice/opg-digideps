@@ -7,7 +7,7 @@
 {% set transOptions = {'%client%': odr.client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.pageSectionTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -37,7 +37,7 @@
 
                 {% if debt.moreDetails is defined %}
                     <div class="form-group flush--bottom">
-                        <div class="panel panel-border-narrow flush--bottom hidden">
+                        <div class="panel panel-border-narrow flush--bottom js-hidden">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions),
