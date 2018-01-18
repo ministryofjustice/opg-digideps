@@ -123,7 +123,7 @@ class CoDeputyController extends RestController
         $deputyNumbers = [];
         foreach ($data as $deputy) {
             if (array_key_exists('Deputy No', $deputy)) {
-                $deputyNumbers[] = str_pad($deputy['Deputy No'], 8, "0", STR_PAD_LEFT);
+                $deputyNumbers[] = EntityDir\User::padDeputyNumber($deputy['Deputy No']);
             }
         }
 

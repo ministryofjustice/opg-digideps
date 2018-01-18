@@ -833,6 +833,16 @@ class User implements UserInterface
     }
 
     /**
+     * convert 7 into 00000007
+     * @param $deputyNo
+     * @return string
+     */
+    public static function padDeputyNumber($deputyNo)
+    {
+        return str_pad($deputyNo, 8, "0", STR_PAD_LEFT);
+    }
+
+    /**
      * @param string $deputyNo
      */
     public function setDeputyNo($deputyNo)
@@ -957,7 +967,7 @@ class User implements UserInterface
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "user-teamname"})
      * @JMS\Type("string")
      * @JMS\SerializedName("pa_team_name")
      */
