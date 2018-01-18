@@ -552,6 +552,20 @@ class Odr extends AbstractReport
     }
 
     /**
+     * @param $format string where %s are submitDate Y-m-d, case number
+     * @return string
+     */
+    public function createAttachmentName($format)
+    {
+        $attachmentName = sprintf($format,
+            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $this->getClient()->getCaseNumber()
+        );
+
+        return $attachmentName;
+    }
+
+    /**
      * @return OdrStatusService
      */
     public function getStatusService()

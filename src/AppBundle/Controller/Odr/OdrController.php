@@ -197,16 +197,12 @@ class OdrController extends AbstractController
             $pdfBinaryContent = $this->getPdfBinaryContent($odr);
             $fileUploader = $this->get('file_uploader');
 
-            throw new \Exception('NDR.documents not supported. need implementation or re-thinking');
-
             $fileUploader->uploadFile(
                 $odr->getId(),
                 $pdfBinaryContent,
-                'ndr.pdf', //$report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
+                $odr->createAttachmentName('Ndr-%s_%s_%s.pdf'),
                 true
             );
-
-
 
             $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, ['submit']);
 
