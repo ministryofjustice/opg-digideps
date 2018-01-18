@@ -5,27 +5,28 @@ imports:
 #    validation:
 #        cache: apc
 
-services:
-  doctrine_redis_cache:
-    class: Doctrine\Common\Cache\PredisCache
-    arguments: [ "@snc_redis.default" ]
+#services:
+#  doctrine_redis_cache:
+#    class: Doctrine\Common\Cache\PredisCache
+#    arguments: [ "@snc_redis.default" ]
 
-  jms_redis_cache_doctrine_adapter:
-    class: Metadata\Cache\DoctrineCacheAdapter
-    arguments: [ "dd_jms_", "@doctrine_redis_cache" ]
+#  jms_redis_cache_doctrine_adapter:
+#    class: Metadata\Cache\DoctrineCacheAdapter
+#    arguments: [ "dd_jms_", "@doctrine_redis_cache" ]
 
+# works perfectly for all the code, except debt management not being loaded
 doctrine:
   orm:
     # https://symfony.com/doc/2.6/reference/configuration/doctrine.html
     metadata_cache_driver:
-      type: service
-      id:   doctrine_redis_cache
-    query_cache_driver:
-      type: service
-      id:   doctrine_redis_cache
-    result_cache_driver:
-      type: service
-      id:   doctrine_redis_cache
+      type: array
+    #  id:   doctrine_redis_cache
+    #query_cache_driver:
+    #  type: service
+    #  id:   doctrine_redis_cache
+    #result_cache_driver:
+    #  type: service
+    #  id:   doctrine_redis_cache
 
 # check \JMS\SerializerBundle\DependencyInjection\Configuration for options
 jms_serializer:

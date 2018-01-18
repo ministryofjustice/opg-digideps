@@ -4,6 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -134,6 +135,12 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
             $em->persist($client);
             $user->addClient($client);
+
+            if (!$client->getOdr()) {
+                $odr = new Odr($client);
+                $em->persist($odr);
+            }
+
         }
 
         

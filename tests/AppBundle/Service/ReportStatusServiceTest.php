@@ -59,6 +59,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getHasDebts'                       => null,
                 'getDebts'                          => [],
                 'getDebtsWithValidAmount'           => [],
+                'getDebtManagement'                 => null,
                 'getTotalsMatch'                    => null,
                 'getBalanceMismatchExplanation'     => null,
                 'getDocuments'                      => [],
@@ -466,8 +467,10 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         return [
             [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes'], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_DONE],
+            [['getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt]], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>''], StatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount'=>[$debt], 'getDebtManagement'=>'Payment plan'], StatusService::STATE_DONE],
             [['getHasDebts' => 'no'], StatusService::STATE_DONE],
         ];
     }

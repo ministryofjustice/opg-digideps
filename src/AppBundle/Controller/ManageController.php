@@ -42,7 +42,7 @@ class ManageController extends RestController
     private function dbInfo()
     {
         try {
-            $this->getDoctrine()->getRepository(User::class)->findAll();
+            $this->getDoctrine()->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
 
             return [true, ''];
         } catch (\Exception $e) {
@@ -52,7 +52,7 @@ class ManageController extends RestController
                 $returnMessage = 'Database service not reachabe (' . $e->getMessage() . ')';
             }
             if ($e instanceof \Doctrine\DBAL\DBALException) {
-                $returnMessage = 'Database schema error (dd_user table not found) (' . $e->getMessage() . ')';
+                $returnMessage = 'Migrations table missing.';
             }
 
             // log real error message

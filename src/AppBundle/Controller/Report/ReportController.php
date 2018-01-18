@@ -222,6 +222,13 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
+            if ($data['no_transfers_to_add'] === true) {
+                //true here means "no", so remove existing transfers
+                foreach ($report->getMoneyTransfers() as $e) {
+                    $this->getEntityManager()->remove($e);
+                }
+            }
+
             $report->setNoTransfersToAdd($data['no_transfers_to_add']);
         }
 
@@ -328,7 +335,8 @@ class ReportController extends RestController
         }
 
         if ($sort == 'end_date') {
-            $qb->orderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('c.caseNumber', 'ASC');
         }
 
         if ($q) {

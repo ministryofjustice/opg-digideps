@@ -296,10 +296,17 @@ class ReportStatusService
     public function getDebtsState()
     {
         $hasDebts = $this->report->getHasDebts();
-        if ('no' == $hasDebts || ('yes' == $hasDebts and count($this->report->getDebtsWithValidAmount()) > 0)) {
-            return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
-        } else {
+        if (empty($hasDebts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        } elseif ('no' == $hasDebts ||
+            (   'yes' == $hasDebts &&
+                count($this->report->getDebtsWithValidAmount()) > 0) &&
+                !empty($this->report->getDebtManagement())
+        )
+        {
+            return ['state' => self::STATE_DONE];
+        } else {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];
         }
     }
 
