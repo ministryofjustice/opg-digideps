@@ -37,7 +37,7 @@ class PaService
     /**
      * PaService constructor.
      *
-     * @param EntityManager   $em
+     * @param EntityManager $em
      * @param LoggerInterface $logger
      */
     public function __construct(EntityManager $em, LoggerInterface $logger)
@@ -92,13 +92,9 @@ class PaService
                     throw new \RuntimeException('Not a PA');
                 }
 
-                $user = $this->createUser($row);
-                if ($user instanceof EntityDir\User) {
-                    $client = $this->createClient($row, $user);
-                    if ($client instanceof EntityDir\Client) {
-                        $this->createReport($row, $client, $user);
-                    }
-                }
+                $user = $this->upsertUser($row);
+                $client = $this->upsertClient($row, $user);
+                $this->upsertReport($row, $client, $user);
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for PA Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -110,9 +106,9 @@ class PaService
         sort($this->added['reports']);
 
         return [
-            'added' => $this->added,
-            'errors' => $errors,
-            'warnings' => $this->warnings
+            'added'    => $this->added,
+            'errors'   => $errors,
+            'warnings' => $this->warnings,
         ];
     }
 
@@ -121,12 +117,21 @@ class PaService
      *
      * @return EntityDir\User
      */
-    private function createUser(array $row)
+    private function upsertUser(array $row)
     {
-        $user = $this->userRepository->findOneBy(['deputyNo' => $row['Deputy No']]);
+        $criteria = ['deputyNo' => $row['Deputy No'], 'roleName' => EntityDir\User::ROLE_PA];
+        $user = $this->userRepository->findOneBy($criteria);
         $userEmail = strtolower($row['Email']);
 
-        if (!$user) {
+        if ($user) {
+            // Notify email change
+            if ($user->getEmail() !== $userEmail) {
+                $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
+                    ' has changed their email to ' . $user->getEmail() . '. ' .
+                    'Please update the CSV to reflect the new email address.<br />';
+            }
+        } else {
+            // create user
             $this->log('Creating user');
             // check for duplicate email address
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
@@ -146,7 +151,10 @@ class PaService
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
-                    $team = new EntityDir\Team(null);
+                    // Dep Surname in the CSV is actually the PA team name
+                    // it's used for firstname/lastname of the named PA (ROLE_PA), but those fields are editable
+                    // and not reliable for a PA team name
+                    $team = new EntityDir\Team($row['Dep Surname']);
 
                     // Address from upload is the team's address, not the user's
                     if (!empty($row['Dep Adrs1'])) {
@@ -176,26 +184,31 @@ class PaService
                 $this->em->flush($user);
                 $this->added['users'][] = $row['Email'];
             }
-        } else {
-            // Notify email change
-            if ($user->getEmail() !== $userEmail) {
-                $this->warnings[] = 'Deputy ' . $user->getDeputyNo() .
-                    ' has changed their email to ' . $user->getEmail() . '. ' .
-                    'Please update the CSV to reflect the new email address.<br />';
-                return null;
-            }
+        } 
+
+        // update team name, if not set
+        // can be removed if there is not need to update PA names after DDPB-1718
+        // is released and one PA CSV upload is done
+        if ($user->getTeams()->count()
+            && ($team = $user->getTeams()->first())
+            && $team->getTeamName() != $row['Dep Surname']
+        ) {
+            $team->setTeamName($row['Dep Surname']);
+            $this->warnings[] = 'PA team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
+            $this->em->flush($team);
         }
+
 
         return $user;
     }
 
     /**
-     * @param array          $row
+     * @param array $row
      * @param EntityDir\User $user
      *
      * @return EntityDir\Client
      */
-    private function createClient(array $row, EntityDir\User $user)
+    private function upsertClient(array $row, EntityDir\User $user)
     {
         // find or create client
         $caseNumber = strtolower($row['Case']);
@@ -263,12 +276,12 @@ class PaService
     }
 
     /**
-     * @param array            $row
+     * @param array $row
      * @param EntityDir\Client $client
      *
      * @return EntityDir\Report\Report
      */
-    private function createReport(array $row, EntityDir\Client $client, EntityDir\User $user)
+    private function upsertReport(array $row, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
         $reportEndDate = self::parseDate($row['Last Report Day'], '20');
@@ -328,7 +341,7 @@ class PaService
      * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
-     * @param string $century    e.g. 20/19 Prefix added to 2-digits year
+     * @param string $century e.g. 20/19 Prefix added to 2-digits year
      *
      * @return \DateTime|false
      */
@@ -340,10 +353,10 @@ class PaService
 
         // prefix century if needed
         if (strlen($pieces[2]) === 2) {
-            $pieces[2] = ((string) $century) . $pieces[2];
+            $pieces[2] = ((string)$century) . $pieces[2];
         }
         // check format is d-M-Y
-        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
+        if ((int)$pieces[0] < 1 || (int)$pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
             return false;
             //throw new \InvalidArgumentException($errorMessage);
         }
