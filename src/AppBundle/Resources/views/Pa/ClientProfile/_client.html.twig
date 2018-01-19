@@ -10,8 +10,9 @@
 
     <div class="panel-body soft-half--top soft-half--sides">
 
-        <p>
-            <a href="{{ path('pa_client_edit', {'clientId': client.id}) }}" class="btn behat-link-client-edit right">{{ (page ~ '.editClient') | trans }}</a>
+        <p class="right">
+            <a href="{{ path('pa_client_edit', {'clientId': client.id}) }}" class="btn behat-link-client-edit">{{ (page ~ '.editClient') | trans }}</a>
+            <a href="{{ path('pa_client_archive', {'clientId': client.id}) }}" class="btn behat-link-client-archive push-half--left">{{ (page ~ '.archiveClient') | trans }}</a>
         </p>
 
         <div class="grid-row behat-region-client-profile-details">
