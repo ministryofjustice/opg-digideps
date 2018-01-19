@@ -3,7 +3,6 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use \Doctrine\Common\Util\Debug as doctrineDebug;
 
 class ClientControllerTest extends AbstractTestController
 {
