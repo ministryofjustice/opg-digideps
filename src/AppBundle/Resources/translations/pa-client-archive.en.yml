@@ -6,6 +6,8 @@ warning: |
   You cannot undo this action. You must also inform your OPG case manager if there has been a
   change in the client's circumstances.
 form:
+  error:
+    confirmArchive: "Please confirm that you want to archive the client"
   confirmArchive:
     label: "Yes, I'm sure I want to archive this client"
   save:

@@ -105,7 +105,7 @@ class IndexController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
                 return $this->redirectToRoute('pa_dashboard');
             } else {
-                $form->get('confirmArchive')->addError(new FormError('Please confirm that you want to archive the client'));
+                $form->get('confirmArchive')->addError(new FormError($this->get('translator')->trans('form.error.confirmArchive', [], 'pa-client-archive')));
             }
         }
 
