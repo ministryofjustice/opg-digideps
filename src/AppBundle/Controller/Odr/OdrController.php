@@ -18,6 +18,7 @@ class OdrController extends AbstractController
         'user',
         'user-clients',
         'ndr-client',
+        'client-id',
         'client-reports',
         'client-case-number',
         'odr', //remove when odr->ndr has been done
