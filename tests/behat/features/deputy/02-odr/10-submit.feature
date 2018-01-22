@@ -1,11 +1,11 @@
-Feature: odr / report submit
+Feature: ndr / report submit
 
-    @odr
-    Scenario: ODR review page
-        Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    @ndr
+    Scenario: NDR review page
+        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # go to review page
-        When I click on "odr-start, odr-submit"
-        Then the URL should match "/odr/\d+/review"
+        When I click on "ndr-start, ndr-submit"
+        Then the URL should match "/ndr/\d+/review"
         # quick check sections are presented. An unit test asserts
         And I should see an "#visits-care-section" element
         And I should see an "#assets-section" element
@@ -16,65 +16,65 @@ Feature: odr / report submit
         And I should see an "#accounts-section" element
         # assert pages not accessible
 
-    @odr
-    Scenario: ODR declaration, submission with emails, confirm
+    @ndr
+    Scenario: NDR declaration, submission with emails, confirm
         Given emails are sent from "deputy" area
         And I reset the email log
-        And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "odr-start, odr-submit, odr-declaration-page"
-        Then the URL should match "/odr/\d+/declaration"
+        And I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "ndr-start, ndr-submit, ndr-declaration-page"
+        Then the URL should match "/ndr/\d+/declaration"
         #
         # empty form
         #
-        When I press "odr_declaration_save"
+        When I press "ndr_declaration_save"
         Then the following fields should have an error:
-            | odr_declaration_agree |
-            | odr_declaration_agreedBehalfDeputy_0 |
-            | odr_declaration_agreedBehalfDeputy_1 |
-            | odr_declaration_agreedBehalfDeputy_2 |
-            | odr_declaration_agreedBehalfDeputyExplanation |
+            | ndr_declaration_agree |
+            | ndr_declaration_agreedBehalfDeputy_0 |
+            | ndr_declaration_agreedBehalfDeputy_1 |
+            | ndr_declaration_agreedBehalfDeputy_2 |
+            | ndr_declaration_agreedBehalfDeputyExplanation |
         # missing explanation
         When I fill in the following:
-            | odr_declaration_agree | 1 |
-            | odr_declaration_agreedBehalfDeputy_2 | more_deputies_not_behalf |
-            | odr_declaration_agreedBehalfDeputyExplanation |  |
-        And I press "odr_declaration_save"
+            | ndr_declaration_agree | 1 |
+            | ndr_declaration_agreedBehalfDeputy_2 | more_deputies_not_behalf |
+            | ndr_declaration_agreedBehalfDeputyExplanation |  |
+        And I press "ndr_declaration_save"
         Then the following fields should have an error:
-            | odr_declaration_agreedBehalfDeputyExplanation |
+            | ndr_declaration_agreedBehalfDeputyExplanation |
         # change to one deputy and submit
         When I fill in the following:
-            | odr_declaration_agree | 1 |
-            | odr_declaration_agreedBehalfDeputy_0 | only_deputy |
-            | odr_declaration_agreedBehalfDeputyExplanation |  |
-        And I press "odr_declaration_save"
+            | ndr_declaration_agree | 1 |
+            | ndr_declaration_agreedBehalfDeputy_0 | only_deputy |
+            | ndr_declaration_agreedBehalfDeputyExplanation |  |
+        And I press "ndr_declaration_save"
         Then the form should be valid
-        And the URL should match "/odr/\d+/submitted"
+        And the URL should match "/ndr/\d+/submitted"
         And the response status code should be 200
         # return to homepage
         When I click on "return-homepage"
-        Then I should be on "/odr"
+        Then I should be on "/ndr"
         # check emails
-        And the "last" email should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
+        And the "last" email should have been sent to "behat-user-ndr@publicguardian.gsi.gov.uk"
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
 
 
-    @odr
-    Scenario: check ODR report not accessible after submission
-        Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And the URL "/odr/1/visits-care/summary" should not be accessible
-        And the URL "/odr/1/deputy-expenses/summary" should not be accessible
-        And the URL "/odr/1/income-benefits/summary" should not be accessible
-        And the URL "/odr/1/bank-accounts/summary" should not be accessible
-        And the URL "/odr/1/assets/summary" should not be accessible
-        And the URL "/odr/1/debts/summary" should not be accessible
-        And the URL "/odr/1/actions/summary" should not be accessible
-        And the URL "/odr/1/any-other-info/summary" should not be accessible
+    @ndr
+    Scenario: check NDR report not accessible after submission
+        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And the URL "/ndr/1/visits-care/summary" should not be accessible
+        And the URL "/ndr/1/deputy-expenses/summary" should not be accessible
+        And the URL "/ndr/1/income-benefits/summary" should not be accessible
+        And the URL "/ndr/1/bank-accounts/summary" should not be accessible
+        And the URL "/ndr/1/assets/summary" should not be accessible
+        And the URL "/ndr/1/debts/summary" should not be accessible
+        And the URL "/ndr/1/actions/summary" should not be accessible
+        And the URL "/ndr/1/any-other-info/summary" should not be accessible
 
-    @odr
-    Scenario: ODR homepage and create new report
-        Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/odr"
+    @ndr
+    Scenario: NDR homepage and create new report
+        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should be on "/ndr"
         And I should see the "reports-history" region
         # create report
         When I click on "report-start"
@@ -106,7 +106,7 @@ Feature: odr / report submit
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
         And I press "report_save"
-        Then the URL should match "/odr"
+        Then the URL should match "/ndr"
         # assert homepage with report created
         When I go to "/"
         And I click on "report-start"

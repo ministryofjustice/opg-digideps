@@ -1,5 +1,5 @@
 {% macro breadcrumbs(report) %}
-    {% set isUserOdrEnabled = app.user.isOdrEnabled() %}
+    {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isPaUser = app.user.isDeputyPa() %}
 
     <div class="breadcrumbs hard--bottom">
@@ -13,7 +13,7 @@
             </li>
             <li>
                 {% if report.type == 'ndr' %}
-                    <a href="{{ path('odr_overview', {'odrId': report.id}) }}" class="behat-link-breadcrumbs-odr-overview">
+                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="behat-link-breadcrumbs-ndr-overview">
                         {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
                     </a>
 
@@ -94,18 +94,18 @@
 {% macro reportSectionPrevNext(report, currentSectionId) %}
 
     {% if report.type == 'ndr' %}
-        {% set routeParams = {'odrId': report.id} %}
+        {% set routeParams = {'ndrId': report.id} %}
         {% set config = [
-            {'section':'reportOverview', 'link': path('odr_overview', routeParams)},
-            {'section':'visitsCare','link': path('odr_visits_care', routeParams)},
-            {'section':'deputyExpenses','link': path('odr_deputy_expenses', routeParams)},
-            {'section':'incomeBenefits','link': path('odr_income_benefits', routeParams)},
-            {'section':'bankAccounts','link': path('odr_bank_accounts', routeParams)},
-            {'section':'assets','link': path('odr_assets', routeParams)},
-            {'section':'debts','link': path('odr_debts', routeParams)},
-            {'section':'actions', 'link': path('odr_actions', routeParams)},
-            {'section':'otherInfo', 'link': path('odr_other_info', routeParams)},
-            {'section':'reportOverview', 'link': path('odr_overview', routeParams)},
+            {'section':'reportOverview', 'link': path('ndr_overview', routeParams)},
+            {'section':'visitsCare','link': path('ndr_visits_care', routeParams)},
+            {'section':'deputyExpenses','link': path('ndr_deputy_expenses', routeParams)},
+            {'section':'incomeBenefits','link': path('ndr_income_benefits', routeParams)},
+            {'section':'bankAccounts','link': path('ndr_bank_accounts', routeParams)},
+            {'section':'assets','link': path('ndr_assets', routeParams)},
+            {'section':'debts','link': path('ndr_debts', routeParams)},
+            {'section':'actions', 'link': path('ndr_actions', routeParams)},
+            {'section':'otherInfo', 'link': path('ndr_other_info', routeParams)},
+            {'section':'reportOverview', 'link': path('ndr_overview', routeParams)},
         ] %}
     {% else %}
 

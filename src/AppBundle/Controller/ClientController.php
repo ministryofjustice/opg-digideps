@@ -95,8 +95,8 @@ class ClientController extends AbstractController
                 // $method is set above to either post or put
                 $response =  $this->getRestClient()->$method('client/upsert', $form->getData());
 
-                $url = $this->getUser()->isOdrEnabled()
-                    ? $this->generateUrl('odr_index')
+                $url = $this->getUser()->isNdrEnabled()
+                    ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
             } catch (\Exception $e) {

@@ -21,7 +21,7 @@ class SearchType extends AbstractType
                     User::ROLE_PA         => 'Public Authority',
                 ],
             ])
-            ->add('odr_enabled', 'checkbox')
+            ->add('ndr_enabled', 'checkbox')
             ->add('search', 'submit');
     }
 

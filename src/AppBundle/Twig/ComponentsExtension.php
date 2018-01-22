@@ -183,7 +183,7 @@ class ComponentsExtension extends \Twig_Extension
     {
         if ($user->isDeputyPa() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD])) {
             $availableStepIds = ['password', 'user_details'];
-        } elseif ($user->isOdrEnabled() && !$user->getIsCoDeputy()) {
+        } elseif ($user->isNdrEnabled() && !$user->getIsCoDeputy()) {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         } elseif ($user->getIsCoDeputy()) {
             $availableStepIds = ['password', 'codep_verify'];

@@ -18,9 +18,9 @@ trait UserTrait
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
      *
-     * @When I create a new :odrType :role user :firstname :lastname with email :email and postcode :postcode
+     * @When I create a new :ndrType :role user :firstname :lastname with email :email and postcode :postcode
      */
-    public function iCreateTheUserWithEmailAndPostcode($odrType, $role, $firstname, $lastname, $email, $postcode = '')
+    public function iCreateTheUserWithEmailAndPostcode($ndrType, $role, $firstname, $lastname, $email, $postcode = '')
     {
         $this->clickOnBehatLink('user-add-new');
         $this->fillField('admin_email', $email);
@@ -31,15 +31,15 @@ trait UserTrait
         }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
         $this->fillField('admin_roleName', $roleName);
-        switch ($odrType) {
-            case 'ODR-enabled':
-                $this->checkOption('admin_odrEnabled');
+        switch ($ndrType) {
+            case 'NDR-enabled':
+                $this->checkOption('admin_ndrEnabled');
                 break;
-            case 'ODR-disabled':
-                $this->uncheckOption('admin_odrEnabled');
+            case 'NDR-disabled':
+                $this->uncheckOption('admin_ndrEnabled');
                 break;
             default:
-                throw new \RuntimeException("$odrType not a valid ODR type");
+                throw new \RuntimeException("$ndrType not a valid NDR type");
         }
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();

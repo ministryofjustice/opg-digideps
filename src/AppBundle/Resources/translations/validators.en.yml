@@ -435,7 +435,7 @@ feedbackAfterReport:
 # ====================================================================================================
 #       NDR
 # ====================================================================================================
-odr:
+ndr:
   agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
       notBlank: Select one option

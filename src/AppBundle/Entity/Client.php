@@ -62,11 +62,11 @@ class Client
     private $currentReport;
 
     /**
-     * @var Odr\Odr
+     * @var Ndr\Ndr
      *
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @JMS\Exclude()
@@ -313,19 +313,19 @@ class Client
     }
 
     /**
-     * @return Odr\Odr
+     * @return Ndr\Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr\Odr $odr
+     * @param Ndr\Ndr $ndr
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
 
         return $this;
     }
