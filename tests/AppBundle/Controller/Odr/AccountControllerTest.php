@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Odr;
+namespace Tests\AppBundle\Controller\Ndr;
 
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
     private static $deputy1;
-    private static $odr1;
+    private static $ndr1;
     private static $account1;
     private static $deputy2;
-    private static $odr2;
+    private static $ndr2;
     private static $account2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
@@ -24,14 +24,14 @@ class AccountControllerTest extends AbstractTestController
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
 
-        self::$odr1 = self::fixtures()->createOdr($client1);
-        self::$account1 = self::fixtures()->createOdrAccount(self::$odr1, ['setBank' => 'bank1']);
+        self::$ndr1 = self::fixtures()->createNdr($client1);
+        self::$account1 = self::fixtures()->createNdrAccount(self::$ndr1, ['setBank' => 'bank1']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$odr2 = self::fixtures()->createOdr($client2);
-        self::$account2 = self::fixtures()->createOdrAccount(self::$odr2, ['setBank' => 'bank2']);
+        self::$ndr2 = self::fixtures()->createNdr($client2);
+        self::$account2 = self::fixtures()->createNdrAccount(self::$ndr2, ['setBank' => 'bank2']);
 
         self::fixtures()->flush()->clear();
     }
@@ -56,12 +56,12 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetAccounts()
     {
-        $this->markTestIncomplete('implement using odr/1 with accounts group');
+        $this->markTestIncomplete('implement using ndr/1 with accounts group');
     }
 
     public function testaddAccount()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/account';
+        $url = '/ndr/' . self::$ndr1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
@@ -81,15 +81,15 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $account = self::fixtures()->getRepo('Odr\BankAccount')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Odr\BankAccount */
+        $account = self::fixtures()->getRepo('Ndr\BankAccount')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Ndr\BankAccount */
         $this->assertEquals('hsbc', $account->getBank());
         $this->assertEquals('savings', $account->getAccountType());
         $this->assertEquals('123456', $account->getSortCode());
         $this->assertEquals('500.45', $account->getBalanceOnCourtOrderDate());
 
 
-        // assert cannot create account for a odr not belonging to logged user
-        $url2 = '/odr/' . self::$odr2->getId() . '/account';
+        // assert cannot create account for a ndr not belonging to logged user
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
         return $account->getId();
@@ -97,7 +97,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetOneById()
     {
-        $url = '/odr/account/' . self::$account1->getId();
+        $url = '/ndr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
 
@@ -109,10 +109,10 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('bank1', $data['bank']);
         $this->assertEquals('101010', $data['sort_code']);
         $this->assertEquals('1234', $data['account_number']);
-        $this->assertEquals(self::$odr1->getId(), $data['odr']['id']);
+        $this->assertEquals(self::$ndr1->getId(), $data['ndr']['id']);
 
         // assert  user2 cannot read the account
-        $url2 = '/odr/account/' . self::$account2->getId();
+        $url2 = '/ndr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
@@ -121,7 +121,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testEdit()
     {
-        $url = '/odr/account/' . self::$account1->getId();
+        $url = '/ndr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
@@ -136,13 +136,13 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->getRepo('Odr\BankAccount')->find($data);
+        $account = self::fixtures()->getRepo('Ndr\BankAccount')->find($data);
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertEquals(499, $account->getBalanceOnCourtOrderDate());
         $this->assertEquals('yes', $account->getIsJointAccount());
 
         // assert user cannot modify another users' account
-        $url2 = '/odr/account/' . self::$account2->getId();
+        $url2 = '/ndr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
@@ -152,8 +152,8 @@ class AccountControllerTest extends AbstractTestController
     public function testaccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $url = '/odr/account/' . $account1Id;
-        $url2 = '/odr/account/' . self::$account2->getId();
+        $url = '/ndr/account/' . $account1Id;
+        $url2 = '/ndr/account/' . self::$account2->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -169,6 +169,6 @@ class AccountControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Odr\BankAccount')->find($account1Id));
+        $this->assertTrue(null === self::fixtures()->getRepo('Ndr\BankAccount')->find($account1Id));
     }
 }

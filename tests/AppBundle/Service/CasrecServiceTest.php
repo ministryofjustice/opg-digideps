@@ -68,7 +68,7 @@ class CasrecServiceTest extends WebTestCase
         self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2016'));
         self::$fixtures->createReport($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '05/06/2017'));
         self::$fixtures->createReport($c1)->setSubmitted(false);
-        self::$fixtures->createOdr($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '04/06/2016'));
+        self::$fixtures->createNdr($c1)->setSubmitted(true)->setSubmitDate(\DateTime::createFromFormat('d/m/Y', '04/06/2016'));
         self::$em->flush();
         self::$em->clear();
 

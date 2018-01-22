@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -8,13 +8,13 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Asset.
  *
- * @ORM\Table(name="odr_asset")
+ * @ORM\Table(name="ndr_asset")
  * @ORM\Entity()
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *      "property"  = "AppBundle\Entity\Odr\AssetProperty",
- *      "other"     = "AppBundle\Entity\Odr\AssetOther"
+ *      "property"  = "AppBundle\Entity\Ndr\AssetProperty",
+ *      "other"     = "AppBundle\Entity\Ndr\AssetOther"
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -23,19 +23,19 @@ abstract class Asset
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_asset_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="ndr_asset_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
      * @var float
      *
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
@@ -44,19 +44,19 @@ abstract class Asset
 
     /**
      * @var \DateTime
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("DateTime")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="assets")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="assets")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @var string
@@ -143,23 +143,23 @@ abstract class Asset
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr $odr
+     * @param Ndr $ndr
      *
      * @return Asset
      */
-    public function setOdr(Odr $odr = null)
+    public function setNdr(Ndr $ndr = null)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
 
-        $odr->setNoAssetToAdd(null);
+        $ndr->setNoAssetToAdd(null);
 
         return $this;
     }

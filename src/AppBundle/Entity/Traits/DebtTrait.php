@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Traits;
 
 /**
- * Shared among Report\Debt and Odr\Debt
+ * Shared among Report\Debt and Ndr\Debt
  */
 trait DebtTrait
 {

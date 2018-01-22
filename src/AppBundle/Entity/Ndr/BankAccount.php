@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Account.
  *
- * @ORM\Table(name="odr_account")
+ * @ORM\Table(name="ndr_account")
  * @ORM\Entity()
  */
 class BankAccount
@@ -51,24 +51,24 @@ class BankAccount
 
     /**
      * @var int
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_account_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="ndr_account_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
      * @var string
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
     private $bank;
 
     /**
      * @var string
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
@@ -76,7 +76,7 @@ class BankAccount
 
     /**
      * @var string
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
@@ -84,7 +84,7 @@ class BankAccount
 
     /**
      * @var string
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
@@ -92,7 +92,7 @@ class BankAccount
 
     /**
      * @var \DateTime
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
@@ -100,7 +100,7 @@ class BankAccount
 
     /**
      * @var float
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_on_cod", type="decimal", precision=14, scale=2, nullable=true)
@@ -108,19 +108,19 @@ class BankAccount
     private $balanceOnCourtOrderDate;
 
     /**
-     * @var Odr
-     * @JMS\Groups({"bank-acccount-odr"})
+     * @var Ndr
+     * @JMS\Groups({"bank-acccount-ndr"})
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="bankAccounts")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="bankAccounts")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
@@ -138,7 +138,7 @@ class BankAccount
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("account_type_text")
-     * @JMS\Groups({"odr-account"})
+     * @JMS\Groups({"ndr-account"})
      *
      * @return string
      */
@@ -327,21 +327,21 @@ class BankAccount
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr $odr
+     * @param Ndr $ndr
      *
      * @return BankAccount
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
 
         return $this;
     }

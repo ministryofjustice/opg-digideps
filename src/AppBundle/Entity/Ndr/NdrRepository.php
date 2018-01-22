@@ -1,33 +1,33 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\EntityRepository;
 
 /**
- * OdrRepository.
+ * NdrRepository.
  */
-class OdrRepository extends EntityRepository
+class NdrRepository extends EntityRepository
 {
     /**
-     * add empty Debts to Odr.
+     * add empty Debts to Ndr.
      * Called from doctrine listener.
      *
-     * @param Odr $odr
+     * @param Ndr $ndr
      *
      * @return int changed records
      */
-    public function addDebtsToOdrIfMissing(Odr $odr)
+    public function addDebtsToNdrIfMissing(Ndr $ndr)
     {
         $ret = 0;
 
         // skips if already added
-        if (count($odr->getDebts()) > 0) {
+        if (count($ndr->getDebts()) > 0) {
             return $ret;
         }
 
         foreach (Debt::$debtTypeIds as $row) {
-            $debt = new Debt($odr, $row[0], $row[1], null);
+            $debt = new Debt($ndr, $row[0], $row[1], null);
             $this->_em->persist($debt);
             ++$ret;
         }
@@ -38,28 +38,28 @@ class OdrRepository extends EntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @param Odr $odr
+     * @param Ndr $ndr
      *
      * @return int changed records
      */
-    public function addIncomeBenefitsToOdrIfMissing(Odr $odr)
+    public function addIncomeBenefitsToNdrIfMissing(Ndr $ndr)
     {
         $ret = 0;
 
-        if (count($odr->getStateBenefits()) === 0) {
+        if (count($ndr->getStateBenefits()) === 0) {
             foreach (StateBenefit::$stateBenefitsKeys as $typeId => $hasMoreDetails) {
-                $incomeBenefit = new StateBenefit($odr, $typeId, $hasMoreDetails);
+                $incomeBenefit = new StateBenefit($ndr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);
-                $odr->addStateBenefits($incomeBenefit);
+                $ndr->addStateBenefits($incomeBenefit);
                 ++$ret;
             }
         }
 
-        if (count($odr->getOneOff()) === 0) {
+        if (count($ndr->getOneOff()) === 0) {
             foreach (OneOff::$oneOffKeys as $typeId => $hasMoreDetails) {
-                $incomeBenefit = new OneOff($odr, $typeId, $hasMoreDetails);
+                $incomeBenefit = new OneOff($ndr, $typeId, $hasMoreDetails);
                 $this->_em->persist($incomeBenefit);
-                $odr->addOneOff($incomeBenefit);
+                $ndr->addOneOff($incomeBenefit);
                 ++$ret;
             }
         }

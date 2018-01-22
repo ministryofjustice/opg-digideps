@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -17,7 +17,7 @@ class AssetProperty extends Asset
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
@@ -27,7 +27,7 @@ class AssetProperty extends Asset
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
@@ -37,7 +37,7 @@ class AssetProperty extends Asset
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
@@ -47,7 +47,7 @@ class AssetProperty extends Asset
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      *
      * @var string
      *
@@ -57,7 +57,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="occupants", type="string", length=550)
      */
@@ -65,7 +65,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string fully/partly
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="owned", type="string", length=15)
      */
@@ -73,14 +73,14 @@ class AssetProperty extends Asset
 
     /**
      * @var float 0-100
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("float")
      * @ORM\Column(name="owned_percentage", type="decimal", precision=14, scale=2)
      */
     private $ownedPercentage;
 
     /**
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="is_subject_equity_rel", type="string", length=4)
      */
@@ -88,7 +88,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="has_mortgage",  type="string", length=4)
      */
@@ -96,7 +96,7 @@ class AssetProperty extends Asset
 
     /**
      * @var float
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("integer")
      * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)
      */
@@ -104,7 +104,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="has_charges",  type="string", length=4)
      */
@@ -112,7 +112,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="is_rented_out",  type="string", length=4)
      */
@@ -120,7 +120,7 @@ class AssetProperty extends Asset
 
     /**
      * @var \DateTime
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
@@ -128,7 +128,7 @@ class AssetProperty extends Asset
 
     /**
      * @var float
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("float")
      * @ORM\Column(name="rent_income_month", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -365,7 +365,7 @@ class AssetProperty extends Asset
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("type")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      */
     public function getAssetType()
     {

@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="odr_visits_care")
+ * @ORM\Table(name="ndr_visits_care")
  */
 class VisitsCare
 {
@@ -19,17 +19,17 @@ class VisitsCare
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_visits_care_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="ndr_visits_care_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="visitsCare")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="visitsCare")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @var string
@@ -125,17 +125,17 @@ class VisitsCare
     /**
      * @return mixed
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param mixed $odr
+     * @param mixed $ndr
      */
-    public function setOdr(Odr $odr)
+    public function setNdr(Ndr $ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**

@@ -23,7 +23,7 @@ parameters:
             roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
             {{ if exists (printf "/fixtures/%s/rolename" . ) }}roleName: {{ getv (printf "/fixtures/%s/rolename" .) }}{{ end }}
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
-            odrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
+            ndrEnabled: {{ getv (printf "/fixtures/%s/ndr" .) }}
             {{ if exists (printf "/fixtures/%s/deputyno" . ) }}deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}{{ end }}
             {{ if exists (printf "/fixtures/%s/deputypostcode" . ) }}deputyPostcode: {{ getv (printf "/fixtures/%s/deputypostcode" .) }}{{ end }}
             {{ if exists (printf "/fixtures/%s/casenumber" . ) }}caseNumber: {{ getv (printf "/fixtures/%s/casenumber" .) }}{{ end }}

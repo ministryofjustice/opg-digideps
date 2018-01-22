@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Odr;
+namespace Tests\AppBundle\Controller\Ndr;
 
-use AppBundle\Entity\Odr\VisitsCare;
+use AppBundle\Entity\Ndr\VisitsCare;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $odr1;
+    private static $ndr1;
     private static $visitsCare1;
     private static $deputy2;
     private static $client2;
-    private static $odr2;
+    private static $ndr2;
     private static $visitsCare2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
@@ -25,14 +25,14 @@ class VisitsCareControllerTest extends AbstractTestController
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$odr1 = self::fixtures()->createOdr(self::$client1);
-        self::$visitsCare1 = self::fixtures()->createOdrVisitsCare(self::$odr1, ['setDoYouLiveWithClient' => 'y']);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+        self::$visitsCare1 = self::fixtures()->createNdrVisitsCare(self::$ndr1, ['setDoYouLiveWithClient' => 'y']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$odr2 = self::fixtures()->createOdr(self::$client2);
-        self::$visitsCare2 = self::fixtures()->createOdrVisitsCare(self::$odr2);
+        self::$ndr2 = self::fixtures()->createNdr(self::$client2);
+        self::$visitsCare2 = self::fixtures()->createNdrVisitsCare(self::$ndr2);
 
         self::fixtures()->flush()->clear();
     }
@@ -65,7 +65,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testGetOneByIdAuth()
     {
-        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
+        $url = '/ndr/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -73,13 +73,13 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testGetOneByIdAcl()
     {
-        $url2 = '/odr/visits-care/' . self::$visitsCare2->getId();
+        $url2 = '/ndr/visits-care/' . self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testGetOneByIdData()
     {
-        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
+        $url = '/ndr/visits-care/' . self::$visitsCare1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -96,7 +96,7 @@ class VisitsCareControllerTest extends AbstractTestController
 //     */
 //    public function testGetAuth()
 //    {
-//        $url = '/odr/'.self::$odr1->getId().'/visits-care';
+//        $url = '/ndr/'.self::$ndr1->getId().'/visits-care';
 //
 //        $this->assertEndpointNeedsAuth('GET', $url);
 //        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -107,7 +107,7 @@ class VisitsCareControllerTest extends AbstractTestController
 //     */
 //    public function testGetAcl()
 //    {
-//        $url2 = '/odr/'.self::$odr2->getId().'/visits-care';
+//        $url2 = '/ndr/'.self::$ndr2->getId().'/visits-care';
 //
 //        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
 //    }
@@ -117,7 +117,7 @@ class VisitsCareControllerTest extends AbstractTestController
 //     */
 //    public function testGet()
 //    {
-//        $url = '/odr/'.self::$odr1->getId().'/visits-care';
+//        $url = '/ndr/'.self::$ndr1->getId().'/visits-care';
 //
 //        // assert get
 //        $data = $this->assertJsonRequest('GET', $url, [
@@ -132,8 +132,8 @@ class VisitsCareControllerTest extends AbstractTestController
 
     public function testAddUpdateAuth()
     {
-        $url = '/odr/visits-care';
-        $url2 = '/odr/visits-care/' . self::$visitsCare1->getId();
+        $url = '/ndr/visits-care';
+        $url2 = '/ndr/visits-care/' . self::$visitsCare1->getId();
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNeedsAuth('PUT', $url2);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -145,11 +145,11 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testAddUpdateAcl()
     {
-        $url2post = '/odr/visits-care';
-        $url2put = '/odr/visits-care/' . self::$visitsCare2->getId();
+        $url2post = '/ndr/visits-care';
+        $url2put = '/ndr/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('POST', $url2post, self::$tokenDeputy, [
-            'odr_id' => ['id' => self::$odr2->getId()],
+            'ndr_id' => ['id' => self::$ndr2->getId()],
         ]);
         $this->assertEndpointNotAllowedFor('PUT', $url2put, self::$tokenDeputy);
     }
@@ -159,7 +159,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testUpdate()
     {
-        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
+        $url = '/ndr/visits-care/' . self::$visitsCare1->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -173,12 +173,12 @@ class VisitsCareControllerTest extends AbstractTestController
         /**
          * @var $visitsCare VisitsCare
          */
-        $visitsCare = self::fixtures()->getRepo('Odr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Odr\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo('Ndr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Ndr\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals('yes', $visitsCare->getPlanMoveNewResidence());
         $this->assertEquals("Toscany\nItaly", $visitsCare->getPlanMoveNewResidenceDetails());
-        $this->assertEquals(self::$odr1->getId(), $visitsCare->getOdr()->getId());
+        $this->assertEquals(self::$ndr1->getId(), $visitsCare->getNdr()->getId());
         // TODO assert other fields
     }
 
@@ -187,7 +187,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteAuth()
     {
-        $url = '/odr/visits-care/' . self::$visitsCare1->getId();
+        $url = '/ndr/visits-care/' . self::$visitsCare1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -198,7 +198,7 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testDeleteAcl()
     {
-        $url2 = '/odr/visits-care/' . self::$visitsCare2->getId();
+        $url2 = '/ndr/visits-care/' . self::$visitsCare2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
@@ -211,7 +211,7 @@ class VisitsCareControllerTest extends AbstractTestController
     public function testDelete()
     {
         $id = self::$visitsCare1->getId();
-        $url = '/odr/visits-care/' . $id;
+        $url = '/ndr/visits-care/' . $id;
 
         $data = $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
@@ -228,21 +228,21 @@ class VisitsCareControllerTest extends AbstractTestController
      */
     public function testAdd()
     {
-        $url = '/odr/visits-care';
+        $url = '/ndr/visits-care';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['odr_id' => self::$odr1->getId()] + $this->dataUpdate,
+            'data' => ['ndr_id' => self::$ndr1->getId()] + $this->dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $visitsCare = self::fixtures()->getRepo('Odr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare VisitsCare */
+        $visitsCare = self::fixtures()->getRepo('Ndr\VisitsCare')->find($return['data']['id']); /* @var $visitsCare VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
-        $this->assertEquals(self::$odr1->getId(), $visitsCare->getOdr()->getId());
+        $this->assertEquals(self::$ndr1->getId(), $visitsCare->getNdr()->getId());
         // TODO assert other fields
     }
 }

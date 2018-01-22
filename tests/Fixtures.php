@@ -76,19 +76,19 @@ class Fixtures
      * @param EntityDir\Client $client
      * @param array            $settersMap
      *
-     * @return EntityDir\Odr\Odr
+     * @return EntityDir\Ndr\Ndr
      */
-    public function createOdr(EntityDir\Client $client, array $settersMap = [])
+    public function createNdr(EntityDir\Client $client, array $settersMap = [])
     {
-        $odr = new EntityDir\Odr\Odr($client);
+        $ndr = new EntityDir\Ndr\Ndr($client);
 
         foreach ($settersMap as $k => $v) {
-            $odr->$k($v);
+            $ndr->$k($v);
         }
 
-        $this->em->persist($odr);
+        $this->em->persist($ndr);
 
-        return $odr;
+        return $ndr;
     }
 
     public function createReport(
@@ -133,12 +133,12 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Odr\BankAccount
+     * @return EntityDir\Ndr\BankAccount
      */
-    public function createOdrAccount(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    public function createNdrAccount(EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
     {
-        $ret = new EntityDir\Odr\BankAccount();
-        $ret->setOdr($odr);
+        $ret = new EntityDir\Ndr\BankAccount();
+        $ret->setNdr($ndr);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
             ->setSortCode('101010');
@@ -187,15 +187,15 @@ class Fixtures
     }
 
     /**
-     * @param EntityDir\Odr\Odr $odr
+     * @param EntityDir\Ndr\Ndr $ndr
      * @param array             $settersMap
      *
-     * @return EntityDir\Odr\VisitsCare
+     * @return EntityDir\Ndr\VisitsCare
      */
-    public function createOdrVisitsCare(EntityDir\Odr\Odr $odr, array $settersMap = [])
+    public function createNdrVisitsCare(EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
     {
-        $vc = new EntityDir\Odr\VisitsCare();
-        $vc->setOdr($odr);
+        $vc = new EntityDir\Ndr\VisitsCare();
+        $vc->setNdr($ndr);
         $vc->setDoYouLiveWithClient('yes');
 
         foreach ($settersMap as $k => $v) {
@@ -223,12 +223,12 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Odr\Asset
+     * @return EntityDir\Ndr\Asset
      */
-    public function createOdrAsset($type, EntityDir\Odr\Odr $odr, array $settersMap = [])
+    public function createNdrAsset($type, EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
     {
-        $asset = EntityDir\Odr\Asset::factory($type);
-        $asset->setOdr($odr);
+        $asset = EntityDir\Ndr\Asset::factory($type);
+        $asset->setNdr($ndr);
 
         foreach ($settersMap as $k => $v) {
             $asset->$k($v);
@@ -239,11 +239,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Odr\Expense
+     * @return EntityDir\Ndr\Expense
      */
-    public function createOdrExpense($type, EntityDir\Odr\Odr $odr, array $settersMap = [])
+    public function createNdrExpense($type, EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
     {
-        $record = new EntityDir\Odr\Expense($odr);
+        $record = new EntityDir\Ndr\Expense($ndr);
         foreach ($settersMap as $k => $v) {
             $record->$k($v);
         }
@@ -391,7 +391,7 @@ class Fixtures
 
     public static function deleteReportsData($additionalTables = [])
     {
-        $tables = array_merge(['document', 'casrec', 'deputy_case', 'report_submission', 'report', 'odr', 'dd_team'], $additionalTables);
+        $tables = array_merge(['document', 'casrec', 'deputy_case', 'report_submission', 'report', 'ndr', 'dd_team'], $additionalTables);
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 }

@@ -1,35 +1,35 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Traits as OdrTraits;
+use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
- * @ORM\Table(name="odr")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Ndr\NdrRepository")
+ * @ORM\Table(name="ndr")
  */
-class Odr
+class Ndr
 {
-    use OdrTraits\IncomeBenefitTrait;
-    use OdrTraits\ExpensesTrait;
-    use OdrTraits\ActionTrait;
-    use OdrTraits\MoreInfoTrait;
+    use NdrTraits\IncomeBenefitTrait;
+    use NdrTraits\ExpensesTrait;
+    use NdrTraits\ActionTrait;
+    use NdrTraits\MoreInfoTrait;
 
     const PROPERTY_AND_AFFAIRS = 2;
 
     /**
      * @var int
      *
-     * @JMS\Groups({"odr", "odr_id"})
+     * @JMS\Groups({"ndr", "ndr_id"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="ndr_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
@@ -37,7 +37,7 @@ class Odr
      * @var Client
      *
      * @JMS\Groups({"client"})
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="ndr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;
@@ -45,26 +45,26 @@ class Odr
     /**
      * @var VisitsCare
      *
-     * @JMS\Groups({"odr"})
-     * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\VisitsCare", mappedBy="odr", cascade={"persist", "remove"})
+     * @JMS\Groups({"ndr"})
+     * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 
     /**
      * @var Account[]
      *
-     * @JMS\Groups({"odr-account"})
-     * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\BankAccount", mappedBy="odr", cascade={"persist", "remove"})
+     * @JMS\Groups({"ndr-account"})
+     * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $bankAccounts;
 
     /**
      * @var Debt[]
      *
-     * @JMS\Groups({"odr-debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Debt", mappedBy="odr", cascade={"persist", "remove"})
+     * @JMS\Groups({"ndr-debt"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -73,7 +73,7 @@ class Odr
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-debt-management"})
+     * @JMS\Groups({"ndr-debt-management"})
      * @ORM\Column( name="debt_management", type="text", nullable=true)
      */
     private $debtManagement;
@@ -82,7 +82,7 @@ class Odr
      * @var bool
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="has_debts", type="string", length=5, nullable=true)
      *
@@ -93,16 +93,16 @@ class Odr
     /**
      * @var Asset[]
      *
-     * @JMS\Groups({"odr-asset"})
-     * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\Asset", mappedBy="odr", cascade={"persist", "remove"})
+     * @JMS\Groups({"ndr-asset"})
+     * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $assets;
 
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
@@ -110,7 +110,7 @@ class Odr
     /**
      * @var bool
      *
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -119,7 +119,7 @@ class Odr
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
@@ -129,7 +129,7 @@ class Odr
     /**
      * @var \DateTime
      *
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -141,7 +141,7 @@ class Odr
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
     private $agreedBehalfDeputy;
@@ -150,13 +150,13 @@ class Odr
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr"})
+     * @JMS\Groups({"ndr"})
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
 
     /**
-     * Odr constructor.
+     * Ndr constructor.
      *
      * @param Client $client
      */
@@ -374,7 +374,7 @@ class Odr
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\SerializedName("debts_total_amount")
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @return float
      */
@@ -393,7 +393,7 @@ class Odr
      *
      * @param Asset $assets
      *
-     * @return Odr
+     * @return Ndr
      */
     public function addAsset(Asset $assets)
     {
@@ -427,7 +427,7 @@ class Odr
      *
      * @param bool $noAssetToAdd
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
@@ -457,7 +457,7 @@ class Odr
     /**
      * @param string $agreedBehalfDeputy
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setAgreedBehalfDeputy($agreedBehalfDeputy)
     {
@@ -476,7 +476,7 @@ class Odr
     /**
      * @param string $agreedBehalfDeputyExplanation
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
     {

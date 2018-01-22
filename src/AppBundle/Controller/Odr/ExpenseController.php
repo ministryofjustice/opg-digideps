@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -11,66 +11,66 @@ use Symfony\Component\HttpFoundation\Request;
 class ExpenseController extends RestController
 {
     /**
-     * @Route("/odr/{odrId}/expense/{expenseId}", requirements={"odrId":"\d+", "expenseId":"\d+"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($odrId, $expenseId)
+    public function getOneById($ndrId, $expenseId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
+        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
 
-        $this->setJmsSerialiserGroups(['odr-expenses']);
+        $this->setJmsSerialiserGroups(['ndr-expenses']);
 
         return $expense;
     }
 
     /**
-     * @Route("/odr/{odrId}/expense", requirements={"odrId":"\d+"})
+     * @Route("/ndr/{ndrId}/expense", requirements={"ndrId":"\d+"})
      * @Method({"POST"})
      */
-    public function add(Request $request, $odrId)
+    public function add(Request $request, $ndrId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         $this->validateArray($data, [
             'explanation' => 'mustExist',
             'amount' => 'mustExist',
         ]);
-        $expense = new EntityDir\Odr\Expense($odr);
+        $expense = new EntityDir\Ndr\Expense($ndr);
 
         $this->updateEntityWithData($expense, $data);
-        $odr->setPaidForAnything('yes');
+        $ndr->setPaidForAnything('yes');
 
         $this->persistAndFlush($expense);
-        $this->persistAndFlush($odr);
+        $this->persistAndFlush($ndr);
 
         return ['id' => $expense->getId()];
     }
 
     /**
-     * @Route("/odr/{odrId}/expense/{expenseId}", requirements={"odrId":"\d+", "expenseId":"\d+"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"PUT"})
      */
-    public function edit(Request $request, $odrId, $expenseId)
+    public function edit(Request $request, $ndrId, $expenseId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
+        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
 
         $this->updateEntityWithData($expense, $data);
 
@@ -80,18 +80,18 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/odr/{odrId}/expense/{expenseId}", requirements={"odrId":"\d+", "expenseId":"\d+"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"DELETE"})
      */
-    public function delete($odrId, $expenseId)
+    public function delete($ndrId, $expenseId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $expense = $this->findEntityBy(EntityDir\Odr\Expense::class, $expenseId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($expense->getOdr());
+        $expense = $this->findEntityBy(EntityDir\Ndr\Expense::class, $expenseId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($expense->getNdr());
         $this->getEntityManager()->remove($expense);
 
         $this->getEntityManager()->flush();
@@ -99,7 +99,7 @@ class ExpenseController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Odr\Expense $expense, array $data)
+    private function updateEntityWithData(EntityDir\Ndr\Expense $expense, array $data)
     {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [

@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="odr_income_state_benefit")
+ * @ORM\Table(name="ndr_income_state_benefit")
  */
 class StateBenefit
 {
@@ -34,17 +34,17 @@ class StateBenefit
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="odr_state_benefits_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="ndr_state_benefits_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="stateBenefits")
-     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="stateBenefits")
+     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
 
     /**
@@ -80,13 +80,13 @@ class StateBenefit
     private $moreDetails;
 
     /**
-     * @param Odr    $odr
+     * @param Ndr    $ndr
      * @param string $typeId
      * @param float  $amount
      */
-    public function __construct(Odr $odr, $typeId, $hasMoreDetails)
+    public function __construct(Ndr $ndr, $typeId, $hasMoreDetails)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
         $this->typeId = $typeId;
         $this->present = null;
         $this->hasMoreDetails = $hasMoreDetails;
@@ -109,19 +109,19 @@ class StateBenefit
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr $odr
+     * @param Ndr $ndr
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**

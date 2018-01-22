@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version159 extends AbstractMigration
+class Version162 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,8 +18,10 @@ class Version159 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report ADD debt_management TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE ndr ADD debt_management TEXT DEFAULT NULL');
+        // rename ndr to ndr
+
+        #$this->addSql(" ALTER TABLE dd_user RENAME ndr_enabled TO ndr_enabled; ");
+        #$this->addSql(" ALTER TABLE ndr RENAME TO ndr; ");
 
     }
 
@@ -31,8 +33,7 @@ class Version159 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE report DROP debt_management');
-        $this->addSql('ALTER TABLE ndr DROP debt_management');
+        #$this->addSql(" ALTER TABLE dd_user RENAME ndr_enabled TO ndr_enabled; ");
+        #$this->addSql(" ALTER TABLE ndr RENAME TO ndr; ");
     }
 }
