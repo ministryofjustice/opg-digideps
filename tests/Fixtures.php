@@ -91,6 +91,21 @@ class Fixtures
         return $odr;
     }
 
+    /**
+     * @param EntityDir\AbstractReport $report
+     * @param $filename
+     * @return EntityDir\Report\Document
+     */
+    public function createDocument(EntityDir\AbstractReport $report, $filename)
+    {
+        $doc = new EntityDir\Report\Document($report);
+        $doc->setFileName($filename);
+
+        $this->em->persist($doc);
+
+        return $doc;
+    }
+
     public function createReport(
         EntityDir\Client $client,
         array $settersMap = []
@@ -323,6 +338,10 @@ class Fixtures
 
     public function persist()
     {
+        $args = func_get_args();
+        if (empty($args)) {
+            throw new \InvalidArgumentException('You must pass at least one object to persist');
+        }
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
         }
@@ -339,7 +358,7 @@ class Fixtures
 
     public function getRepo($entity)
     {
-        return $this->em->getRepository("AppBundle\\Entity\\{$entity}");
+        return $this->em->getRepository(class_exists($entity) ? $entity : "AppBundle\\Entity\\{$entity}");
     }
 
     /**

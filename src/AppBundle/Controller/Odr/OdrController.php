@@ -49,6 +49,11 @@ class OdrController extends RestController
         if (empty($data['agreed_behalf_deputy'])) {
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
+        $documentId = $request->get('documentId');
+        if (empty($documentId)) {
+            throw new \InvalidArgumentException('documentId must be specified');
+        }
+
         $odr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
         if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
             $odr->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
@@ -60,12 +65,13 @@ class OdrController extends RestController
         $odr->setSubmitDate(new \DateTime($data['submit_date']));
 
         $submission = new EntityDir\Report\ReportSubmission($odr, $this->getUser());
-        $this->getEntityManager()->persist($submission);
+
+        $document = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $document->setReportSubmission($submission);
 
         $this->getEntityManager()->flush();
 
-        //response to pass back
-        return [];
+        return ['id' => $submission->getId()];
     }
 
     /**
