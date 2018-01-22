@@ -75,7 +75,7 @@ Feature: odr / report submit
         Then the page content should be a zip file containing files with the following files:
             | NdrRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
             # archive (and clean for future tests)
-        When I go to the URL previously saved as "ndr-admin-documents-list-newb"
+        When I go to the URL previously saved as "ndr-admin-documents-list-new"
         When I click on "archive" in the "report-submission-1" region
         Then I should see the "report-submission" region exactly 0 times
 

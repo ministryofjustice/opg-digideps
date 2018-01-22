@@ -68,7 +68,8 @@ class FileUploader
             ->setIsReportPdf($isReportPdf);
 
         $reportType = $report instanceof Report ? 'report' : 'ndr';
-        $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
+        $ret = $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
+        $document->setId($ret['id']);
 
         return $document;
     }

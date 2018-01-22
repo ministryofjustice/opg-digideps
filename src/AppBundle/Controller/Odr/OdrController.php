@@ -19,7 +19,9 @@ class OdrController extends AbstractController
         'user-clients',
         'ndr-client',
         'client-reports',
-        'odr',
+        'client-case-number',
+        'odr', //remove when odr->ndr has been done
+        'ndr',
         'report',
         'visits-care',
         'odr-account',
@@ -197,14 +199,15 @@ class OdrController extends AbstractController
             $pdfBinaryContent = $this->getPdfBinaryContent($odr);
             $fileUploader = $this->get('file_uploader');
 
-            $fileUploader->uploadFile(
+            $document = $fileUploader->uploadFile(
                 $odr,
                 $pdfBinaryContent,
-                $odr->createAttachmentName('Ndr-%s_%s.pdf'),
+                $odr->createAttachmentName('NdrRep-%s_%s.pdf'),
                 true
             );
 
-            $this->getRestClient()->put('odr/' . $odr->getId() . '/submit', $odr, ['submit']);
+            $this->getRestClient()->put('odr/' . $odr->getId() . '/submit?documentId='.$document->getId(), $odr, ['submit']);
+
 
             $pdfBinaryContent = $this->getPdfBinaryContent($odr);
             $reportEmail = $this->getMailFactory()->createOdrEmail($this->getUser(), $odr, $pdfBinaryContent);

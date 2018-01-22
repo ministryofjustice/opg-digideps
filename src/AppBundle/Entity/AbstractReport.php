@@ -11,4 +11,5 @@ abstract class AbstractReport
     abstract function getType();
     abstract function getClient();
     abstract function createAttachmentName($format);
+    abstract function getZipName();
 }

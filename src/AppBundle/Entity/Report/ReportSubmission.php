@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 
@@ -170,9 +171,8 @@ class ReportSubmission
      */
     public function getZipName()
     {
-        $report = $this->getReport();
-        $client = $this->getReport()->getClient();
-
-        return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '.zip';
+        /* @var $report AbstractReport */
+        $report = $this->getReport() ? $this->getReport() : $this->getNdr();
+        return $report->getZipName();
     }
 }

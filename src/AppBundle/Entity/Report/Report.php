@@ -1017,6 +1017,18 @@ class Report extends AbstractReport
     /**
      * @return string
      */
+    public function getZipName()
+    {
+        $client = $this->getClient();
+        return 'Report_' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '_' . $this->getEndDate()->format('Y')
+            . '.zip';
+    }
+
+    /**
+     * @return string
+     */
     public function getMetadata()
     {
         return $this->metadata;

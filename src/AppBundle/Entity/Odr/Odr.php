@@ -566,6 +566,19 @@ class Odr extends AbstractReport
     }
 
     /**
+     * @return string
+     */
+    public function getZipName()
+    {
+        $client = $this->getClient();
+
+        return 'NdrReport-' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '.zip';
+
+    }
+
+    /**
      * @return OdrStatusService
      */
     public function getStatusService()
