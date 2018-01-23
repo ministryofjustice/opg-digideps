@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use JMS\Serializer\Annotation as JMS;
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
  */
-class Report
+class Report extends AbstractReport
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;
@@ -999,19 +1000,30 @@ class Report
     }
 
     /**
-     * @param $format where %s are endDate (Y), submitDate Y-m-d, case number
+     * @param $format string where %s are endDate (Y), submitDate Y-m-d, case number
      * @return string
      */
     public function createAttachmentName($format)
     {
-        $client = $this->getClient();
         $attachmentName = sprintf($format,
             $this->getEndDate()->format('Y'),
             $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
-            $client->getCaseNumber()
+            $this->getClient()->getCaseNumber()
         );
 
         return $attachmentName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipName()
+    {
+        $client = $this->getClient();
+        return 'Report_' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '_' . $this->getEndDate()->format('Y')
+            . '.zip';
     }
 
     /**

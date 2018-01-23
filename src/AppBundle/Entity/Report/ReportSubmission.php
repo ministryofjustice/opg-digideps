@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 
@@ -22,6 +23,13 @@ class ReportSubmission
      * @JMS\Type("AppBundle\Entity\Report\Report")
      */
     private $report;
+
+    /**
+     * @var Report
+     *
+     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     */
+    private $ndr;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
@@ -79,6 +87,26 @@ class ReportSubmission
 
         return $this;
     }
+
+    /**
+     * @return Report
+     */
+    public function getNdr()
+    {
+        return $this->ndr;
+    }
+
+    /**
+     * @param Report $ndr
+     * @return ReportSubmission
+     */
+    public function setNdr($ndr)
+    {
+        $this->ndr = $ndr;
+
+        return $this;
+    }
+    
 
     /**
      * @return Document[]
@@ -143,9 +171,8 @@ class ReportSubmission
      */
     public function getZipName()
     {
-        $report = $this->getReport();
-        $client = $this->getReport()->getClient();
-
-        return 'Report_' . $client->getCaseNumber() . '_' . $report->getStartDate()->format('Y') . '_' . $report->getEndDate()->format('Y') . '.zip';
+        /* @var $report AbstractReport */
+        $report = $this->getReport() ? $this->getReport() : $this->getNdr();
+        return $report->getZipName();
     }
 }
