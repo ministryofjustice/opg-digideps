@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\File;
 
-use AppBundle\Entity\AbstractReport;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
@@ -46,14 +46,14 @@ class FileUploader
     /**
      * Uploads a file into S3 + create and persist a Document entity using that reference
      *
-     * @param AbstractReport    $reportId
+     * @param ReportInterface    $reportId
      * @param string $body
      * @param string $fileName
      * @param bool   $isReportPdf
      *
      * @return Document
      */
-    public function uploadFile(AbstractReport $report, $body, $fileName, $isReportPdf)
+    public function uploadFile(ReportInterface $report, $body, $fileName, $isReportPdf)
     {
         $reportId = $report->getId();
         $storageReference = 'dd_doc_' . $reportId . '_' . str_replace('.', '', microtime(1));
