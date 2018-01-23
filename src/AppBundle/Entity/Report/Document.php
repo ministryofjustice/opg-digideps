@@ -110,7 +110,7 @@ class Document
      */
     public function __construct($report)
     {
-        //TODO create AbstractReport class and use as type hinting
+        //TODO create ReportInterface class and use as type hinting
         if ($report instanceof Report) {
             $this->report = $report;
         } else if ($report instanceof Odr) {

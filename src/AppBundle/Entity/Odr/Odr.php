@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
-use AppBundle\Entity\AbstractReport;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Odr\OdrRepository")
  * @ORM\Table(name="odr")
  */
-class Odr extends AbstractReport
+class Odr implements ReportInterface
 {
     use OdrTraits\IncomeBenefitTrait;
     use OdrTraits\ExpensesTrait;

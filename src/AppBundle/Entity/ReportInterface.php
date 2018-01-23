@@ -3,11 +3,11 @@
 namespace AppBundle\Entity;
 
 
-abstract class AbstractReport
+interface ReportInterface
 {
     /**
      * @return Client
      */
-    abstract public function getClient();
+    public function getClient();
 
 }
