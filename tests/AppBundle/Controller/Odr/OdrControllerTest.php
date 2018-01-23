@@ -2,6 +2,9 @@
 
 namespace Tests\AppBundle\Controller\Odr;
 
+use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class OdrControllerTest extends AbstractTestController
@@ -9,6 +12,7 @@ class OdrControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $odr1;
+    private static $document1;
     private static $deputy2;
     private static $client2;
     private static $odr2;
@@ -23,13 +27,14 @@ class OdrControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$odr1 = self::fixtures()->createOdr(self::$client1);
+        self::$document1 = self::fixtures()->createDocument(self::$odr1, 'ndr.pdf');
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$odr2 = self::fixtures()->createOdr(self::$client2);
 
-        self::fixtures()->flush()->clear();
+        self::fixtures()->flush();
     }
 
     /**
@@ -297,8 +302,7 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$odr1->getSubmitted());
 
         $odrId = self::$odr1->getId();
-        $url = '/odr/' . $odrId . '/submit';
-
+        $url = '/odr/' . $odrId . '/submit?documentId=' . self::$document1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -322,9 +326,9 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$odr1->getSubmitted());
 
         $odrId = self::$odr1->getId();
-        $url = '/odr/' . $odrId . '/submit';
+        $url = '/odr/' . $odrId . '/submit?documentId=' . self::$document1->getId();
 
-        $this->assertJsonRequest('PUT', $url, [
+        $ret = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
             'data'        => [
@@ -332,7 +336,7 @@ class OdrControllerTest extends AbstractTestController
                 'agreed_behalf_deputy'             => 'only_deputy',
                 'agreed_behalf_deputy_explanation' => 'should not be saved',
             ],
-        ]);
+        ])['data'];
 
         // assert account created with transactions
         $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
@@ -341,5 +345,9 @@ class OdrControllerTest extends AbstractTestController
         $this->assertEquals('only_deputy', $odr->getAgreedBehalfDeputy());
         $this->assertEquals(null, $odr->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $odr->getSubmitDate()->format('Y-m-d'));
+
+        /* @var $reportSubmission ReportSubmission */
+        $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->find($ret['id']);
+        $this->assertCount(1, $reportSubmission->getDocuments());
     }
 }

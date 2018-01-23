@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AbstractReport;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\User;
@@ -16,7 +17,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
-class Report
+class Report extends AbstractReport
 {
     use ReportTraits\AssetTrait;
     use ReportTraits\BankAccountTrait;

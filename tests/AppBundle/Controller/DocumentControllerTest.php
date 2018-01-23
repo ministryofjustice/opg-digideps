@@ -2,11 +2,18 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Repository\DocumentRepository;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 
 class DocumentControllerTest extends AbstractTestController
 {
+    /**
+     * @var DocumentRepository
+     */
+    private $repo;
+
     // users
     private static $tokenDeputy;
 
@@ -15,6 +22,7 @@ class DocumentControllerTest extends AbstractTestController
     private static $client1;
 
     private static $report1;
+    private static $ndr1;
 
     public static function setUpBeforeClass()
     {
@@ -26,6 +34,7 @@ class DocumentControllerTest extends AbstractTestController
 
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$ndr1 = self::fixtures()->createOdr(self::$client1);
 
         self::fixtures()->flush();
     }
@@ -42,13 +51,16 @@ class DocumentControllerTest extends AbstractTestController
 
     public function setup()
     {
+        $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();
     }
 
+
     public function testAddDocumentForDeputy()
     {
+        $type = 'report';
         $reportId = self::$report1->getId();
-        $url = '/report/' . $reportId . '/document';
+        $url = "/document/{$type}/{$reportId}";
 
         // assert Auth
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -77,13 +89,39 @@ class DocumentControllerTest extends AbstractTestController
         return $document->getId();
     }
 
+    public function testAddDocumentNdr()
+    {
+        $type = 'ndr';
+        $reportId = self::$ndr1->getId();
+        $url = "/document/{$type}/{$reportId}";
+
+        $data = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+            'data'        => [
+                'file_name'=> 'ndr.pdf',
+                'storage_reference'   => 's3NdrStorageKey',
+                'is_report_pdf'   => true
+            ],
+        ])['data'];
+
+        /** @var Document $document */
+        $document = $this->repo->find($data['id']);
+        $this->assertInstanceOf(Odr::class, $document->getNdr());
+
+        self::fixtures()->remove($document)->flush();
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-admin',
+        ]);
+    }
+
     /**
      * @depends testAddDocumentForDeputy
      */
     public function testgetSoftDeletedDocuments()
     {
-        $repo = self::fixtures()->getRepo('Report\Document');
-        $this->assertCount(1, $repo->findAll()); // only testfile.pdf
+        $this->assertCount(1, $this->repo->findAll()); // only testfile.pdf
         // add d1 and d2, and soft-delete them
         $d1 = (new Document(self::$report1))
             ->setFileName('file1.pdf')->setStorageReference('sr1')
@@ -92,9 +130,9 @@ class DocumentControllerTest extends AbstractTestController
             ->setFileName('file2.pdf')->setStorageReference('sr2')
             ->setReport(null); // failing at flush time, not clear why
         self::fixtures()->persist($d1, $d2)->flush();
-        $this->assertCount(3, $repo->findAll());
+        $this->assertCount(3, $this->repo->findAll());
         self::fixtures()->remove($d1, $d2)->flush()->clear();
-        $this->assertCount(1, $repo->findAll()); // only testfile.pdf
+        $this->assertCount(1, $this->repo->findAll()); // only testfile.pdf
 
         $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustFail' => true,
@@ -151,8 +189,7 @@ class DocumentControllerTest extends AbstractTestController
             'ClientSecret' => '123abc-admin',
         ]);
 
-        $repo = self::fixtures()->getRepo('Report\Document');
-        $repo->clear();
-        $this->assertInstanceOf(Document::class, $repo->find($existingDoocId));
+        $this->repo->clear();
+        $this->assertInstanceOf(Document::class, $this->repo->find($existingDoocId));
     }
 }

@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -171,14 +172,15 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report    $currentReport
+     * @param Report|Odr    $currentReport
      * @param User      $user
      * @param \DateTime $submitDate
      *
      * @return Report new year's report
      */
-    public function submit(Report $currentReport, User $user, \DateTime $submitDate)
+    public function submit($currentReport, User $user, \DateTime $submitDate)
     {
+
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
         }
