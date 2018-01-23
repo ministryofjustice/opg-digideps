@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\AbstractReport;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
@@ -90,20 +90,18 @@ class ReportSubmission
 
     /**
      * ReportSubmission constructor.
-     *
-     * @param Report\Odr $report
-     * @param User   $createdBy
+     * @param ReportInterface $report
+     * @param User $createdBy
      */
-    public function __construct($report, User $createdBy)
+    public function __construct(ReportInterface $report, User $createdBy)
     {
         if ($report instanceof Report) {
             $this->report = $report;
             $this->report->addReportSubmission($this);// double-link for UNIT test purposes
         } else if ($report instanceof Odr) {
             $this->ndr = $report;
-        } else {
-            throw new \InvalidArgumentException(__METHOD__.' first argumnt should be a Report or an Ndr');
         }
+
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->downloadable = true;

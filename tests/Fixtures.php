@@ -92,11 +92,11 @@ class Fixtures
     }
 
     /**
-     * @param EntityDir\AbstractReport $report
+     * @param EntityDir\ReportInterface $report
      * @param $filename
      * @return EntityDir\Report\Document
      */
-    public function createDocument(EntityDir\AbstractReport $report, $filename)
+    public function createDocument(EntityDir\ReportInterface $report, $filename)
     {
         $doc = new EntityDir\Report\Document($report);
         $doc->setFileName($filename);
