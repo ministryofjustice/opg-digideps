@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Asset.
  *
- * @ORM\Table(name="ndr_asset")
+ * @ORM\Table(name="odr_asset")
  * @ORM\Entity()
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
@@ -28,7 +28,7 @@ abstract class Asset
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="ndr_asset_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="odr_asset_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
@@ -54,7 +54,7 @@ abstract class Asset
      * @var Ndr
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="assets")
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
 

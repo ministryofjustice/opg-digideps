@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Account.
  *
- * @ORM\Table(name="ndr_account")
+ * @ORM\Table(name="odr_account")
  * @ORM\Entity()
  */
 class BankAccount
@@ -55,7 +55,7 @@ class BankAccount
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="ndr_account_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="odr_account_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
@@ -112,7 +112,7 @@ class BankAccount
      * @JMS\Groups({"bank-acccount-ndr"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="bankAccounts")
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
 

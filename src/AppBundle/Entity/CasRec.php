@@ -188,7 +188,7 @@ class CasRec
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
-     * @ORM\Column(name="ndr_submitted_at", type="datetime", nullable=true)
+     * @ORM\Column(name="odr_submitted_at", type="datetime", nullable=true)
      */
     private $ndrSubmittedAt;
 

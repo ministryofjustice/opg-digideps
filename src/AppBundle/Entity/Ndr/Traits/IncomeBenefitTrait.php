@@ -17,7 +17,7 @@ trait IncomeBenefitTrait
      * @var StateBenefit[]
      *
      * @JMS\Groups({"state-benefits"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\StateBenefit", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\StateBenefit", mappedBy="odr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $stateBenefits;
@@ -71,7 +71,7 @@ trait IncomeBenefitTrait
      * @var OneOff[]
      *
      * @JMS\Groups({"one-off"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\OneOff", mappedBy="ndr")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\OneOff", mappedBy="odr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $oneOff;

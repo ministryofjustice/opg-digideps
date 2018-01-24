@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="ndr_visits_care")
+ * @ORM\Table(name="odr_visits_care")
  */
 class VisitsCare
 {
@@ -19,7 +19,7 @@ class VisitsCare
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="ndr_visits_care_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="odr_visits_care_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
@@ -27,7 +27,7 @@ class VisitsCare
      * @var Ndr
      *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="visitsCare")
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
 

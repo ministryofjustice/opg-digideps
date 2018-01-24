@@ -198,7 +198,7 @@ class User implements UserInterface
      * @JMS\Type("boolean")
      * @JMS\Groups({"user", "user-login"})
      *
-     * @ORM\Column(name="ndr_enabled", type="boolean", nullable=true, options = { "default": false })
+     * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
      */
     private $ndrEnabled;
 
