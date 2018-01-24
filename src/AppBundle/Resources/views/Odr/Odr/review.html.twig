@@ -5,12 +5,17 @@
 
 {% set isLayDeputy = not app.user.isDeputyPa %}
 
-{% if not odrStatus.isReadyToSubmit %}
-    {% set preview = true %}
-    {% set page = 'ndr-preview' %}
+{% if odr.submitted == false %}
+    {% if not odrStatus.isReadyToSubmit %}
+        {% set preview = true %}
+        {% set page = 'ndr-preview' %}
+    {% else %}
+        {% set preview = false %}
+        {% set page = 'ndr-review' %}
+    {% endif %}
 {% else %}
     {% set preview = false %}
-    {% set page = 'ndr-review' %}
+    {% set page = 'ndr-submitted' %}
 {% endif %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
@@ -28,11 +33,17 @@
 {% block pageContent %}
 
     <div class="push--bottom">
-        <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
-        {% if preview %}
-            <a class="button" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
-                {{ 'incomplete.backToEditingReport' | trans() }}
-            </a>
+        {% if odr.submitted == false %}
+            <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
+            {% if preview %}
+                <a class="button" href="{{ path("odr_overview" , {'odrId': odr.id }) }}">
+                    {{ 'incomplete.backToEditingReport' | trans() }}
+                </a>
+                <a class="link-icon link-icon-pdf button-link" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+            {% endif %}
+        {% else %}
+            <p class="text">{{ (page ~ '.introPara') | trans() }} {{ odr.submitDate | date("j F Y") }}.</p>
+            <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
             <a class="link-icon link-icon-pdf button-link" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
         {% endif %}
     </div>
@@ -52,6 +63,8 @@
                 {{ 'incomplete.backToEditingReport' | trans() }}
             </a>
         {% endif %}
+    {% else %}
+        <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
     {% endif %}
 
     <a class="link-icon link-icon-pdf button-link" href="{{ path('odr_pdf', {'odrId': odr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>

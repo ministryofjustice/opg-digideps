@@ -25,31 +25,31 @@ class ClamAVMocks
         'a1ddc9ebe19a3d43ec25889085ad3ed8' => [ // pdf-doc-vba-eicar-dropper.pdf
             'celery_task_state'    => 'SUCCESS',
             'file_scanner_code'    => 'AV_FAIL',
-            'file_scanner_message' => 'FOUND Doc.Dropper.Agent-1540415',
+            'file_scanner_message' => 'FOUND Doc.Dropper.Agent-1540415 (mock response)',
             'file_scanner_result'  => 'FAIL',
         ],
         'd459dc4890f2ba3c285e014190ca0560' => [ //good.jpg
             'celery_task_state'    => 'SUCCESS',
             'file_scanner_code'    => null,
-            'file_scanner_message' => 'Image details 500x500 mode RGB',
+            'file_scanner_message' => 'Image details 500x500 mode RGB (mock response)',
             'file_scanner_result'  => 'PASS',
         ],
         '86c9b243a641dfd2d6b013da32503141' => [//good.png
             'celery_task_state'    => 'SUCCESS',
             'file_scanner_code'    => null,
-            'file_scanner_message' => 'Image details 500x500 mode RGB',
+            'file_scanner_message' => 'Image details 500x500 mode RGB (mock response)',
             'file_scanner_result'  => 'PASS',
         ],
         'd7e19f88174e81c16c6cd0f3f53f0e0e' => [ //small.jpg
             'celery_task_state' => 'SUCCESS',
             'file_scanner_code' => 'JPEG_DIMENSION_UNDER_500',
-            'file_scanner_message' => 'Image details 200x200 mode RGB',
+            'file_scanner_message' => 'Image details 200x200 mode RGB (mock response)',
             'file_scanner_result' => 'PASS',
         ],
         'ffa7763c3fb52dc45e721a9846f574ce' => [ //small.png
             'celery_task_state' => 'SUCCESS',
             'file_scanner_code' => 'PNG_DIMENSION_UNDER_500',
-            'file_scanner_message' => 'Image details 200x200 mode P',
+            'file_scanner_message' => 'Image details 200x200  (mock response)',
             'file_scanner_result' => 'PASS',
         ],
         'a2ba3341104c77c2697666690559a907' => [ // file1.pdf

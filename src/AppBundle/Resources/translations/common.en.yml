@@ -41,6 +41,7 @@ actions: Actions
 caseNumber: Case number
 client: Client
 courtOrderNo: Court order no.
+courtOrderNumber: Court order number
 reportDueDate: Report due date
 reportStatus: Report status
 question: Question
@@ -65,6 +66,7 @@ clientProfile: Client profile
 # Back links
 backToReportOverview: Back to report overview
 backToClientProfile: Back to client profile
+backToYourReports: Back to your reports
 
 # Search
 search: Search

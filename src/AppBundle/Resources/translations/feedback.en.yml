@@ -1,25 +1,5 @@
-htmlTitle: "Deputy report - feedback | GOV.UK"
-pageTitle: Your feedback
-
-difficulty.label: Did you have any difficulty with this service?
-ideas.label: Do you have any ideas for how it could be improved?
-
 satisfactionLevel.legend: Overall, how did you feel about the service you received today?
-help.legend: Did you have any help filling in this form?
-emailYesNo.label: Would you like us to contact you about the issues you've raised?
-email.label: If you'd like us to contact you, give us your email address
-back.label: Back to deputy report
 send.label: Send feedback
-
-thankYou: Thank you for sending your feedback
-
-
-# keep values in different lines
-helpChoices: |
-    No, I filled in this form myself
-    I have difficulty using computers so someone filled in this form for me
-    I used an accessibility tool such as a screen reader
-    I had some other kind of help
 
 satisfactionLevelsChoices: |
     Very satisfied

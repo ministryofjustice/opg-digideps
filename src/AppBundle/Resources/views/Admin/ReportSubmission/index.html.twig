@@ -99,21 +99,32 @@
             <tbody>
                 {% for reportSubmission in records %}
                     {% set report = reportSubmission.report %}
+                    {% set ndr = reportSubmission.ndr %}
+                    {% set client = report ? report.client : ndr.client %}
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
                         <td class="width-fifth">
-                            {{ report.client.fullname }}<br>
-                            <span class="text-secondary">{{ report.client.caseNumber }}</span>
+                            {{ client.fullname }}<br>
+                            <span class="text-secondary">{{ client.caseNumber }}</span>
                         </td>
                         <td class="width-fifth">
                             {% if reportSubmission.createdBy %}
-                                {{ reportSubmission.createdBy.fullname }}<br>
-                                ({{ reportSubmission.createdBy.roleFullName }})
+                                {% set createdBy = reportSubmission.createdBy %}
+                                {{ createdBy.fullname }}
+                                ({{ createdBy.roleFullName }})
+                                {% if createdBy.isDeputyPa %}
+                                    <br/>{{ reportSubmission.createdBy.paTeamName }}
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td class="width-eighth">
-                            {{ report.period | replace({'to': '-'}) }}
+                            {% if report %}
+                                {{ report.period | replace({'to': '-'}) }}
+                            {% endif %}
+                            {% if ndr %}
+                                NDR
+                            {% endif %}
                         </td>
                         <td>
                             <details class="push--bottom">

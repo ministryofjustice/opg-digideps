@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Odr\Traits as OdrTraits;
 use AppBundle\Service\OdrStatusService;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
-class Odr
+class Odr implements ReportInterface
 {
     use OdrTraits\ReportIncomeBenefitTrait;
     use OdrTraits\ReportDeputyExpenseTrait;
@@ -548,6 +549,33 @@ class Odr
         }
 
         return $ret;
+    }
+
+    /**
+     * @param $format string where %s are submitDate Y-m-d, case number
+     * @return string
+     */
+    public function createAttachmentName($format)
+    {
+        $attachmentName = sprintf($format,
+            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $this->getClient()->getCaseNumber()
+        );
+
+        return $attachmentName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipName()
+    {
+        $client = $this->getClient();
+
+        return 'NdrReport-' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '.zip';
+
     }
 
     /**

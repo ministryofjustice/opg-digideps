@@ -238,7 +238,7 @@ class ReportController extends AbstractController
             // store PDF (with summary info) as a document
             $fileUploader = $this->get('file_uploader');
             $fileUploader->uploadFile(
-                $report->getId(),
+                $report,
                 $this->getPdfBinaryContent($report, true),
                 $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
                 true
