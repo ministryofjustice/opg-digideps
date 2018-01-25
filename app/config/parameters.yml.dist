@@ -56,7 +56,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: true
+            odrEnabled: true
             deputyNo: 1000
             deputyPostcode: SW1
             caseNumber: TESTNDR1
@@ -70,7 +70,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: false
+            odrEnabled: false
             deputyNo: 1020
             deputyPostcode: SW1
             caseNumber: TEST1020
@@ -84,7 +84,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: false
+            odrEnabled: false
             deputyNo: 1030
             deputyPostcode: SW1
             caseNumber: TEST1030
@@ -98,7 +98,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: false
+            odrEnabled: false
             deputyNo: 1040
             deputyPostcode: SW1
             caseNumber: TEST1040
@@ -112,7 +112,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: false
+            odrEnabled: false
             deputyNo: 1024
             deputyPostcode: SW1
             caseNumber: TEST1024
@@ -126,7 +126,7 @@ parameters:
             password: Abcd1234
             roleName: ROLE_LAY_DEPUTY
             activated: true
-            ndrEnabled: false
+            odrEnabled: false
             deputyNo: 1034
             deputyPostcode: SW1
             caseNumber: TEST1034
