@@ -261,7 +261,7 @@ class UserController extends RestController
         }
 
         if ($ndrEnabled) {
-            $qb->andWhere('u.ndrEnabled = true');
+            $qb->andWhere('u.odrEnabled = true');
         }
 
         if ($q) {
