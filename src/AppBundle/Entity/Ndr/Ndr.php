@@ -1,11 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Traits as OdrTraits;
-use AppBundle\Service\OdrStatusService;
+use AppBundle\Entity\Ndr\Traits as NdrTraits;
+use AppBundle\Service\NdrStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -13,13 +13,13 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
-class Odr implements ReportInterface
+class Ndr implements ReportInterface
 {
-    use OdrTraits\ReportIncomeBenefitTrait;
-    use OdrTraits\ReportDeputyExpenseTrait;
-    use OdrTraits\ReportActionTrait;
-    use OdrTraits\ReportMoreInfoTrait;
-    use OdrTraits\ReportAgreeTrait;
+    use NdrTraits\ReportIncomeBenefitTrait;
+    use NdrTraits\ReportDeputyExpenseTrait;
+    use NdrTraits\ReportActionTrait;
+    use NdrTraits\ReportMoreInfoTrait;
+    use NdrTraits\ReportAgreeTrait;
 
     /**
      * @JMS\Type("integer")
@@ -58,21 +58,21 @@ class Odr implements ReportInterface
     private $client;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
+     * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
      *
      * @var VisitsCare
      */
     private $visitsCare;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
+     * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
      *
      * @var BankAccount
      */
     private $bankAccounts;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
+     * @JMS\Type("array<AppBundle\Entity\Ndr\Debt>")
      * @JMS\Groups({"debt"})
      *
      * @var Debt[]
@@ -81,8 +81,8 @@ class Odr implements ReportInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-debt-management"})
-     * @Assert\NotBlank(message="odr.debt.debts-management.notBlank", groups={"odr-debt-management"})
+     * @JMS\Groups({"ndr-debt-management"})
+     * @Assert\NotBlank(message="ndr.debt.debts-management.notBlank", groups={"ndr-debt-management"})
      *
      * @var string
      */
@@ -92,7 +92,7 @@ class Odr implements ReportInterface
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
-     * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
+     * @Assert\NotBlank(message="ndr.debt.notBlank", groups={"debts"})
      *
      * @var string
      */
@@ -107,7 +107,7 @@ class Odr implements ReportInterface
     private $debtsTotalAmount;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
+     * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
      *
      * @var Asset[]
      */
@@ -417,7 +417,7 @@ class Odr implements ReportInterface
     public function debtsValid(ExecutionContextInterface $context)
     {
         if ($this->getHasDebts() == 'yes'  && count($this->getDebtsWithValidAmount()) === 0) {
-            $context->addViolation('odr.debt.mustHaveAtLeastOneDebt');
+            $context->addViolation('ndr.debt.mustHaveAtLeastOneDebt');
         }
     }
 
@@ -511,7 +511,7 @@ class Odr implements ReportInterface
     /**
      * @param bool $noAssetToAdd
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
@@ -579,10 +579,10 @@ class Odr implements ReportInterface
     }
 
     /**
-     * @return OdrStatusService
+     * @return NdrStatusService
      */
     public function getStatusService()
     {
-        return new OdrStatusService($this);
+        return new NdrStatusService($this);
     }
 }
