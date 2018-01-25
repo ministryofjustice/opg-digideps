@@ -17,8 +17,10 @@ class NdrController extends AbstractController
     private static $ndrGroupsForValidation = [
         'user',
         'user-clients',
-        'client',
+        'ndr-client',
+        'client-id',
         'client-reports',
+        'client-case-number',
         'ndr',
         'report',
         'visits-care',
@@ -191,8 +193,21 @@ class NdrController extends AbstractController
         $form->handleRequest($request);
         if ($form->isValid()) {
             // set report submitted with date
+
             $ndr->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit', $ndr, ['submit']);
+
+            // store PDF as a document
+            $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
+            $fileUploader = $this->get('file_uploader');
+
+            $document = $fileUploader->uploadFile(
+                $ndr,
+                $pdfBinaryContent,
+                $ndr->createAttachmentName('NdrRep-%s_%s.pdf'),
+                true
+            );
+
+            $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId='.$document->getId(), $ndr, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
             $reportEmail = $this->getMailFactory()->createNdrEmail($this->getUser(), $ndr, $pdfBinaryContent);

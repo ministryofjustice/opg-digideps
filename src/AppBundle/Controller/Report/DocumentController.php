@@ -140,7 +140,7 @@ class DocumentController extends AbstractController
                 $fileChecker->checkFile();
                 if ($fileChecker->isSafe()) {
                     $fileUploader->uploadFile(
-                        $report->getId(),
+                        $report,
                         file_get_contents($uploadedFile->getPathName()),
                         $uploadedFile->getClientOriginalName(),
                         false

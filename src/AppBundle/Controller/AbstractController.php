@@ -121,6 +121,7 @@ abstract class AbstractController extends Controller
     public function getNdr($ndrId, array $groups)
     {
         $groups[] = 'ndr';
+        $groups[] = 'ndr-client';
         $groups[] = 'client';
         $groups = array_unique($groups);
 

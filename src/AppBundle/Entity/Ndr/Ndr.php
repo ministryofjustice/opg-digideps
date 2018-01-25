@@ -1,10 +1,11 @@
 <?php
 
-namespace AppBundle\Entity\Ndr;
+namespace AppBundle\Entity\Odr;
 
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Ndr\Traits as NdrTraits;
-use AppBundle\Service\NdrStatusService;
+use AppBundle\Entity\Odr\Traits as OdrTraits;
+use AppBundle\Service\OdrStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -12,13 +13,13 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  */
-class Ndr
+class Odr implements ReportInterface
 {
-    use NdrTraits\ReportIncomeBenefitTrait;
-    use NdrTraits\ReportDeputyExpenseTrait;
-    use NdrTraits\ReportActionTrait;
-    use NdrTraits\ReportMoreInfoTrait;
-    use NdrTraits\ReportAgreeTrait;
+    use OdrTraits\ReportIncomeBenefitTrait;
+    use OdrTraits\ReportDeputyExpenseTrait;
+    use OdrTraits\ReportActionTrait;
+    use OdrTraits\ReportMoreInfoTrait;
+    use OdrTraits\ReportAgreeTrait;
 
     /**
      * @JMS\Type("integer")
@@ -57,21 +58,21 @@ class Ndr
     private $client;
 
     /**
-     * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
+     * @JMS\Type("AppBundle\Entity\Odr\VisitsCare")
      *
      * @var VisitsCare
      */
     private $visitsCare;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
+     * @JMS\Type("array<AppBundle\Entity\Odr\BankAccount>")
      *
      * @var BankAccount
      */
     private $bankAccounts;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Ndr\Debt>")
+     * @JMS\Type("array<AppBundle\Entity\Odr\Debt>")
      * @JMS\Groups({"debt"})
      *
      * @var Debt[]
@@ -80,8 +81,8 @@ class Ndr
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"ndr-debt-management"})
-     * @Assert\NotBlank(message="ndr.debt.debts-management.notBlank", groups={"ndr-debt-management"})
+     * @JMS\Groups({"odr-debt-management"})
+     * @Assert\NotBlank(message="odr.debt.debts-management.notBlank", groups={"odr-debt-management"})
      *
      * @var string
      */
@@ -91,7 +92,7 @@ class Ndr
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
-     * @Assert\NotBlank(message="ndr.debt.notBlank", groups={"debts"})
+     * @Assert\NotBlank(message="odr.debt.notBlank", groups={"debts"})
      *
      * @var string
      */
@@ -106,7 +107,7 @@ class Ndr
     private $debtsTotalAmount;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
+     * @JMS\Type("array<AppBundle\Entity\Odr\Asset>")
      *
      * @var Asset[]
      */
@@ -416,7 +417,7 @@ class Ndr
     public function debtsValid(ExecutionContextInterface $context)
     {
         if ($this->getHasDebts() == 'yes'  && count($this->getDebtsWithValidAmount()) === 0) {
-            $context->addViolation('ndr.debt.mustHaveAtLeastOneDebt');
+            $context->addViolation('odr.debt.mustHaveAtLeastOneDebt');
         }
     }
 
@@ -510,7 +511,7 @@ class Ndr
     /**
      * @param bool $noAssetToAdd
      *
-     * @return Ndr
+     * @return Odr
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
@@ -551,10 +552,37 @@ class Ndr
     }
 
     /**
-     * @return NdrStatusService
+     * @param $format string where %s are submitDate Y-m-d, case number
+     * @return string
+     */
+    public function createAttachmentName($format)
+    {
+        $attachmentName = sprintf($format,
+            $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-',
+            $this->getClient()->getCaseNumber()
+        );
+
+        return $attachmentName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZipName()
+    {
+        $client = $this->getClient();
+
+        return 'NdrReport-' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '.zip';
+
+    }
+
+    /**
+     * @return OdrStatusService
      */
     public function getStatusService()
     {
-        return new NdrStatusService($this);
+        return new OdrStatusService($this);
     }
 }
