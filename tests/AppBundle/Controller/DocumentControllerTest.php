@@ -34,7 +34,7 @@ class DocumentControllerTest extends AbstractTestController
 
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$ndr1 = self::fixtures()->createOdr(self::$client1);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
 
         self::fixtures()->flush();
     }
