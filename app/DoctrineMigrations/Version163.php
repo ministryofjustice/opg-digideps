@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version162 extends AbstractMigration
+class Version163 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,9 +18,9 @@ class Version162 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report_submission ADD ndr_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE report_submission ADD CONSTRAINT FK_C84776C8B7B86A31 FOREIGN KEY (ndr_id) REFERENCES odr (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('CREATE INDEX IDX_C84776C8B7B86A31 ON report_submission (ndr_id)');
+        $this->addSql('ALTER TABLE document ADD ndr_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE document ADD CONSTRAINT FK_D8698A76B7B86A31 FOREIGN KEY (ndr_id) REFERENCES odr (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('CREATE INDEX IDX_D8698A76B7B86A31 ON document (ndr_id)');
     }
 
     /**
@@ -30,5 +30,9 @@ class Version162 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('ALTER TABLE document DROP CONSTRAINT FK_D8698A76B7B86A31');
+        $this->addSql('DROP INDEX IDX_D8698A76B7B86A31');
+        $this->addSql('ALTER TABLE document DROP ndr_id');
     }
 }

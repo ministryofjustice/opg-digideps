@@ -5,10 +5,7 @@ namespace Application\Migrations;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-class Version162 extends AbstractMigration
+class Version164 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,9 +15,9 @@ class Version162 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report_submission ADD ndr_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE report_submission ADD CONSTRAINT FK_C84776C8B7B86A31 FOREIGN KEY (ndr_id) REFERENCES odr (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('CREATE INDEX IDX_C84776C8B7B86A31 ON report_submission (ndr_id)');
+        // fix deputyNo (done by 161, but not exucuted on staging)
+        $this->addSql(" UPDATE dd_user SET deputy_no = lpad(deputy_no, 8, '0')  WHERE deputy_no is not null and char_length(deputy_no) !=8; ");
+
     }
 
     /**
@@ -30,5 +27,6 @@ class Version162 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
     }
 }

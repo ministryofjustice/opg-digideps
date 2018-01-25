@@ -2,6 +2,9 @@
 
 namespace Tests\AppBundle\Controller\Ndr;
 
+use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class NdrControllerTest extends AbstractTestController
@@ -9,6 +12,7 @@ class NdrControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
     private static $ndr1;
+    private static $document1;
     private static $deputy2;
     private static $client2;
     private static $ndr2;
@@ -23,13 +27,14 @@ class NdrControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+        self::$document1 = self::fixtures()->createDocument(self::$odr1, 'ndr.pdf');
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$ndr2 = self::fixtures()->createNdr(self::$client2);
 
-        self::fixtures()->flush()->clear();
+        self::fixtures()->flush();
     }
 
     /**
@@ -298,7 +303,8 @@ class NdrControllerTest extends AbstractTestController
 
         $ndrId = self::$ndr1->getId();
         $url = '/ndr/' . $ndrId . '/submit';
-
+        $ndrId = self::$ndr1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -322,9 +328,9 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/' . $ndrId . '/submit';
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
-        $this->assertJsonRequest('PUT', $url, [
+        $ret = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
             'data'        => [
@@ -332,14 +338,19 @@ class NdrControllerTest extends AbstractTestController
                 'agreed_behalf_deputy'             => 'only_deputy',
                 'agreed_behalf_deputy_explanation' => 'should not be saved',
             ],
-        ]);
+        ])['data'];
 
         // assert account created with transactions
+
         $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
         /* @var $ndr \AppBundle\Entity\Ndr\Ndr */
         $this->assertEquals(true, $ndr->getSubmitted());
         $this->assertEquals('only_deputy', $ndr->getAgreedBehalfDeputy());
         $this->assertEquals(null, $ndr->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $ndr->getSubmitDate()->format('Y-m-d'));
+
+        /* @var $reportSubmission ReportSubmission */
+        $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->find($ret['id']);
+        $this->assertCount(1, $reportSubmission->getDocuments());
     }
 }

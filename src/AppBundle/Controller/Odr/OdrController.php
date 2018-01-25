@@ -49,7 +49,14 @@ class NdrController extends RestController
         if (empty($data['agreed_behalf_deputy'])) {
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
+
+        $documentId = $request->get('documentId');
+        if (empty($documentId)) {
+            throw new \InvalidArgumentException('documentId must be specified');
+        }
+
         $ndr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
+
         if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
             $ndr->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
         } else {
@@ -59,10 +66,14 @@ class NdrController extends RestController
         $ndr->setSubmitted(true);
         $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
-        $this->getEntityManager()->flush($ndr);
+        $submission = new EntityDir\Report\ReportSubmission($ndr, $this->getUser());
 
-        //response to pass back
-        return [];
+        $document = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
+        $document->setReportSubmission($submission);
+
+        $this->getEntityManager()->flush();
+
+        return ['id' => $submission->getId()];
     }
 
     /**

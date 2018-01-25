@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Ndr\NdrRepository")
  * @ORM\Table(name="odr")
  */
-class Ndr
+class Ndr implements ReportInterface
 {
     use NdrTraits\IncomeBenefitTrait;
     use NdrTraits\ExpensesTrait;
@@ -36,7 +37,7 @@ class Ndr
     /**
      * @var Client
      *
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"ndr-client"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -197,7 +198,7 @@ class Ndr
     }
 
     /**
-     * @param int $client
+     * @param Client $client
      */
     public function setClient(Client $client)
     {

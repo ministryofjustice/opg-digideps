@@ -35,16 +35,6 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('rs.documents', 'd')
             ->orderBy('rs.' . $orderBy, $order);
 
-        // only return submission with at least one document
-        // it can be removed when https://opgtransform.atlassian.net/browse/DDPB-1473 gets implemented
-        $qb
-            ->groupBy('rs')
-            ->having(
-                $qb->expr()->gt(
-                    $qb->expr()->count('d'), 0
-                )
-            );
-
         // search filter
         if ($q) {
             $qb->andWhere(implode(' OR ', [
