@@ -19,7 +19,7 @@ class Version159 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE report ADD debt_management TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE ndr ADD debt_management TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE odr ADD debt_management TEXT DEFAULT NULL');
 
     }
 
@@ -33,6 +33,6 @@ class Version159 extends AbstractMigration
 
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE report DROP debt_management');
-        $this->addSql('ALTER TABLE ndr DROP debt_management');
+        $this->addSql('ALTER TABLE odr DROP debt_management');
     }
 }
