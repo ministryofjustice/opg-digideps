@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Repository\DocumentRepository;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;

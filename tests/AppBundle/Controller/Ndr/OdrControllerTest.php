@@ -27,7 +27,7 @@ class NdrControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
-        self::$document1 = self::fixtures()->createDocument(self::$odr1, 'ndr.pdf');
+        self::$document1 = self::fixtures()->createDocument(self::$ndr1, 'ndr.pdf');
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
