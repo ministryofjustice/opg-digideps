@@ -48,7 +48,7 @@ class Ndr implements ReportInterface
      *
      * @JMS\Groups({"ndr"})
      * @JMS\Type("AppBundle\Entity\Ndr\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\VisitsCare", mappedBy="odr", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\VisitsCare", mappedBy="ndr", cascade={"persist", "remove"})
      **/
     private $visitsCare;
 
@@ -57,7 +57,7 @@ class Ndr implements ReportInterface
      *
      * @JMS\Groups({"ndr-account"})
      * @JMS\Type("array<AppBundle\Entity\Ndr\BankAccount>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\BankAccount", mappedBy="odr", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\BankAccount", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $bankAccounts;
 
@@ -65,7 +65,7 @@ class Ndr implements ReportInterface
      * @var Debt[]
      *
      * @JMS\Groups({"ndr-debt"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Debt", mappedBy="odr", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Debt", mappedBy="ndr", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $debts;
@@ -96,7 +96,7 @@ class Ndr implements ReportInterface
      *
      * @JMS\Groups({"ndr-asset"})
      * @JMS\Type("array<AppBundle\Entity\Ndr\Asset>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Asset", mappedBy="odr", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Asset", mappedBy="ndr", cascade={"persist", "remove"})
      */
     private $assets;
 
