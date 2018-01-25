@@ -38,7 +38,7 @@ class Ndr implements ReportInterface
      * @var Client
      *
      * @JMS\Groups({"ndr-client"})
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="odr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Client", inversedBy="ndr")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $client;

@@ -21,7 +21,7 @@ trait ExpensesTrait
     /**
      * @JMS\Type("array<AppBundle\Entity\Ndr\Expense>")
      * @JMS\Groups({"ndr-expenses"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Expense", mappedBy="odr", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\Expense", mappedBy="ndr", cascade={"persist"})
      *
      * @var Expense[]
      */
