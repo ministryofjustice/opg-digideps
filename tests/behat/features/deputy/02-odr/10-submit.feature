@@ -14,10 +14,11 @@ Feature: odr / report submit
         And I should see an "#expenses-section" element
         And I should see an "#action-section" element
         And I should see an "#accounts-section" element
+        And I save the application status into "ndr-before-submission"
         # assert pages not accessible
 
     @odr
-    Scenario: ODR declaration, submission with emails, confirm
+    Scenario: ODR declaration and submission
         Given emails are sent from "deputy" area
         And I reset the email log
         And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -53,10 +54,30 @@ Feature: odr / report submit
         # return to homepage
         When I click on "return-homepage"
         Then I should be on "/odr"
-        # check emails
-        And the "last" email should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
-#        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
-#        And the second_last email should contain a PDF of at least 40 kb
+
+    @odr
+    Scenario: admin area check submission ZIP file
+        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
+        Then I should be on "/admin/documents/list"
+        And I save the current URL as "ndr-admin-documents-list-new"
+            # test filters
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-new"
+        Then I should see the "report-submission" region exactly 1 times
+            # assert submission and download
+        Given each text should be present in the corresponding region:
+            | Cly Hent | report-submission-1 |
+            | behat001 | report-submission-1 |
+            | 1 document | report-submission-1 |
+        When I click on "download" in the "report-submission-1" region
+        Then the page content should be a zip file containing files with the following files:
+            | NdrRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
+            # archive (and clean for future tests)
+        When I go to the URL previously saved as "ndr-admin-documents-list-new"
+        When I click on "archive" in the "report-submission-1" region
+        Then I should see the "report-submission" region exactly 0 times
 
 
     @odr

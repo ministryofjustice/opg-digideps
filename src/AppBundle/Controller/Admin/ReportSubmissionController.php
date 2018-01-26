@@ -32,6 +32,7 @@ class ReportSubmissionController extends AbstractController
         $this->processPost($request);
         $currentFilters = self::getFiltersFromRequest($request);
         $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
+
         $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         return [

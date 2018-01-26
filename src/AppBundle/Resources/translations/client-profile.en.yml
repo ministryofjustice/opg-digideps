@@ -9,6 +9,7 @@ clientDetails:
   email: Email
   address: Address
   editClient: Edit client details
+  archiveClient: Archive client
 
 clientReports:
   heading: Submitted reports
