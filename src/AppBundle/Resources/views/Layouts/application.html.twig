@@ -94,9 +94,10 @@
     <div class="helpline">
         <h3>Helpline<br/>
             {% if app.user and app.user.isDeputyPa() %}
-                {% trans %}helplinePA{% endtrans %}
+                {{ 'helplinePA' | trans }}
             {% else %}
-                {% trans %}helpline{% endtrans %}
+                {{ 'helpline' | trans }}<br/>
+                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
             {% endif %}
         </h3>
     </div>
