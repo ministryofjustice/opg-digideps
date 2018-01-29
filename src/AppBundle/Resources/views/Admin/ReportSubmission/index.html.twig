@@ -81,21 +81,25 @@
     {# table with records #}
     {% if  records | length %}
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
-        <div class="push-half--bottom">
-            {% for action in postActions %}
-                <input type="submit" value="{{ action }}" name="multiAction" class="button-secondary push-half--right js-action-selected js-disabled">
-            {% endfor %}
-            <p class="right text--right"><span id="numberOfCases">0</span> cases selected</p>
-        </div>
+        {% if isNewPage %}
+            <div class="push-half--bottom">
+                {% for action in postActions %}
+                    <input type="submit" value="{{ action }}" name="multiAction" class="button-secondary push-half--right js-action-selected js-disabled">
+                {% endfor %}
+                <p class="right text--right"><span id="numberOfCases">0</span> cases selected</p>
+            </div>
+        {% endif %}
         <table class="check-your-answers table-clickable push--bottom">
             <thead>
                 <tr>
-                    <th class="width-twentieth multiple-choice--dd">
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
-                            <label for="select-all"><span class="visually-hidden">All</span></label>
-                        </div>
-                    </th>
+                    {% if isNewPage %}
+                        <th class="width-twentieth multiple-choice--dd">
+                            <div class="multiple-choice">
+                                <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
+                                <label for="select-all"><span class="visually-hidden">All</span></label>
+                            </div>
+                        </th>
+                    {% endif %}
                     <th>Client and case no</th>
                     <th>Deputy</th>
                     <th>Period</th>
@@ -114,12 +118,14 @@
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
-                        <td class="width-twentieth multiple-choice--dd">
-                            <div class="multiple-choice">
-                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]" class="js-checkbox">
-                                <label for="cb{{ reportSubmission.id }}"><span class="visually-hidden">Select</span></label>
-                            </div>
-                        </td>
+                        {% if isNewPage %}
+                            <td class="width-twentieth multiple-choice--dd">
+                                <div class="multiple-choice">
+                                    <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]" class="js-checkbox">
+                                    <label for="cb{{ reportSubmission.id }}"><span class="visually-hidden">Select</span></label>
+                                </div>
+                            </td>
+                        {% endif %}
                         <td class="width-fifth">
                             {{ client.fullname }}<br>
                             <span class="text-secondary">{{ client.caseNumber }}</span>
