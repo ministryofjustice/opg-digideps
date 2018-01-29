@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,12 +47,12 @@ class ReportSubmission
     private $report;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
      *
      * @JMS\Groups({"report-submission"})
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr")
      * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $ndr;
@@ -98,7 +98,7 @@ class ReportSubmission
         if ($report instanceof Report) {
             $this->report = $report;
             $this->report->addReportSubmission($this);// double-link for UNIT test purposes
-        } else if ($report instanceof Odr) {
+        } else if ($report instanceof Ndr) {
             $this->ndr = $report;
         }
 
@@ -136,7 +136,7 @@ class ReportSubmission
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
     public function getNdr()
     {

@@ -49,13 +49,13 @@ Client secret is required for those.
 
 ## Endpoint conventions
 
-Example with `account` (type) and `odr`(parent type) entities
+Example with `account` (type) and `ndr`(parent type) entities
 
- * Get account records (odr ID=1): `GET /odr/1/account`
- * Add account to Odr with ID=1: `POST /odr/1/account`
- * Get account with id=2:  `GET /odr/account/2`
- * Edit account with id=2: `PUT /odr/account/2`
- * Delete account with id=2: `DELETE /odr/account/2`
+ * Get account records (ndr ID=1): `GET /ndr/1/account`
+ * Add account to Ndr with ID=1: `POST /ndr/1/account`
+ * Get account with id=2:  `GET /ndr/account/2`
+ * Edit account with id=2: `PUT /ndr/account/2`
+ * Delete account with id=2: `DELETE /ndr/account/2`
 
 
 ## Notes about JMS groups

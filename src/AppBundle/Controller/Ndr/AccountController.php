@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -11,21 +11,21 @@ use Symfony\Component\HttpFoundation\Request;
 class AccountController extends RestController
 {
     /**
-     * @Route("/odr/{odrId}/account")
+     * @Route("/ndr/{ndrId}/account")
      * @Method({"POST"})
      */
-    public function addAccountAction(Request $request, $odrId)
+    public function addAccountAction(Request $request, $ndrId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $data = $this->deserializeBodyContent($request, [
         ]);
 
-        $account = new EntityDir\Odr\BankAccount();
-        $account->setOdr($odr);
+        $account = new EntityDir\Ndr\BankAccount();
+        $account->setNdr($ndr);
 
         $this->fillAccountData($account, $data);
 
@@ -35,7 +35,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/odr/account/{id}")
+     * @Route("/ndr/account/{id}")
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
@@ -46,24 +46,24 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
 
-        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found');
-        $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
+        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found');
+        $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
-        $this->setJmsSerialiserGroups(['odr-account', 'bank-acccount-odr', 'odr_id']);
+        $this->setJmsSerialiserGroups(['ndr-account', 'bank-acccount-ndr', 'ndr_id']);
 
         return $account;
     }
 
     /**
-     * @Route("/odr/account/{id}")
+     * @Route("/ndr/account/{id}")
      * @Method({"PUT"})
      */
     public function editAccountAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount*/
-        $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
+        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount*/
+        $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $data = $this->deserializeBodyContent($request);
 
@@ -77,15 +77,15 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/odr/account/{id}")
+     * @Route("/ndr/account/{id}")
      * @Method({"DELETE"})
      */
     public function accountDelete($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $account = $this->findEntityBy(EntityDir\Odr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Odr\BankAccount */
-        $this->denyAccessIfOdrDoesNotBelongToUser($account->getOdr());
+        $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
+        $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
         $this->getEntityManager()->remove($account);
 
@@ -94,7 +94,7 @@ class AccountController extends RestController
         return [];
     }
 
-    private function fillAccountData(EntityDir\Odr\BankAccount $account, array $data)
+    private function fillAccountData(EntityDir\Ndr\BankAccount $account, array $data)
     {
         if (array_key_exists('account_type', $data)) {
             $account->setAccountType($data['account_type']);

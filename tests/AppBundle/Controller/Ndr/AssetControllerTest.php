@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Odr;
+namespace Tests\AppBundle\Controller\Ndr;
 
 use Tests\AppBundle\Controller\AbstractTestController;
 
@@ -8,12 +8,12 @@ class AssetControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $odr1;
+    private static $ndr1;
     private static $asset1;
     private static $assetp1;
     private static $deputy2;
     private static $client2;
-    private static $odr2;
+    private static $ndr2;
     private static $asset2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
@@ -25,15 +25,15 @@ class AssetControllerTest extends AbstractTestController
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$odr1 = self::fixtures()->createOdr(self::$client1);
-        self::$asset1 = self::fixtures()->createOdrAsset('other', self::$odr1, ['setTitle' => 'asset1']);
-        self::$assetp1 = self::fixtures()->createOdrAsset('property', self::$odr1, ['setAddress' => 'ha1']);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+        self::$asset1 = self::fixtures()->createNdrAsset('other', self::$ndr1, ['setTitle' => 'asset1']);
+        self::$assetp1 = self::fixtures()->createNdrAsset('property', self::$ndr1, ['setAddress' => 'ha1']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$odr2 = self::fixtures()->createOdr(self::$client2);
-        self::$asset2 = self::fixtures()->createOdrAsset('other', self::$odr2, ['setTitle' => 'asset2']);
+        self::$ndr2 = self::fixtures()->createNdr(self::$client2);
+        self::$asset2 = self::fixtures()->createNdrAsset('other', self::$ndr2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
     }
@@ -58,7 +58,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetAssetsAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/assets';
+        $url = '/ndr/' . self::$ndr1->getId() . '/assets';
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -66,14 +66,14 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetAssetsAcl()
     {
-        $url2 = '/odr/' . self::$odr2->getId() . '/assets';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/assets';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetAssets()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/assets';
+        $url = '/ndr/' . self::$ndr1->getId() . '/assets';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -99,7 +99,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -107,13 +107,13 @@ class AssetControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -127,7 +127,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testPostAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset';
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -135,14 +135,14 @@ class AssetControllerTest extends AbstractTestController
 
     public function testPostAcl()
     {
-        $url2 = '/odr/' . self::$odr2->getId() . '/asset';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/asset';
 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
     }
 
     public function testPostOther()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset';
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -158,17 +158,17 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Odr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Odr\AssetOther */
-        $this->assertInstanceOf('AppBundle\Entity\Odr\AssetOther', $asset);
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Ndr\AssetOther */
+        $this->assertInstanceOf('AppBundle\Entity\Ndr\AssetOther', $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
-        $this->assertEquals(self::$odr1->getId(), $asset->getOdr()->getId());
+        $this->assertEquals(self::$ndr1->getId(), $asset->getNdr()->getId());
     }
 
     public function testPostProperty()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset';
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -196,9 +196,9 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Odr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Odr\AssetProperty */
+        $asset = self::fixtures()->getRepo('Ndr\Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Ndr\AssetProperty */
 
-        $this->assertInstanceOf('AppBundle\Entity\Odr\AssetProperty', $asset);
+        $this->assertInstanceOf('AppBundle\Entity\Ndr\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51', $asset->getOwnedPercentage());
@@ -218,7 +218,7 @@ class AssetControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -226,8 +226,8 @@ class AssetControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset2->getId();
-        $url3 = '/odr/' . self::$odr2->getId() . '/asset/' . self::$asset2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset2->getId();
+        $url3 = '/ndr/' . self::$ndr2->getId() . '/asset/' . self::$asset2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -240,12 +240,12 @@ class AssetControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/asset/' . self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Odr\Asset')->find(self::$asset1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Ndr\Asset')->find(self::$asset1->getId()));
     }
 }

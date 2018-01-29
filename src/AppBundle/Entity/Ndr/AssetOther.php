@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,14 +12,14 @@ class AssetOther extends Asset
 {
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
     private $title;
 
     /**
      * @var string
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -27,7 +27,7 @@ class AssetOther extends Asset
     /**
      * @var \Date
      * @JMS\Type("DateTime")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
     private $valuationDate;
@@ -107,7 +107,7 @@ class AssetOther extends Asset
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("type")
-     * @JMS\Groups({"odr-asset"})
+     * @JMS\Groups({"ndr-asset"})
      */
     public function getAssetType()
     {

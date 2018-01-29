@@ -4,7 +4,6 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Odr;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -172,7 +171,7 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report|Odr    $currentReport
+     * @param Report|Ndr    $currentReport
      * @param User      $user
      * @param \DateTime $submitDate
      *

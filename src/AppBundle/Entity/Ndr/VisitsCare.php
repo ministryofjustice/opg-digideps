@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -24,12 +24,12 @@ class VisitsCare
     private $id;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="visitsCare")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="visitsCare")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @var string
@@ -125,17 +125,17 @@ class VisitsCare
     /**
      * @return mixed
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param mixed $odr
+     * @param mixed $ndr
      */
-    public function setOdr(Odr $odr)
+    public function setNdr(Ndr $ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**

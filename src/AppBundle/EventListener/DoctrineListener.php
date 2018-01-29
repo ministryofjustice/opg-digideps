@@ -23,11 +23,11 @@ class DoctrineListener
             $reportRepo->addFeesToReportIfMissing($entity);
         }
 
-        if ($entity instanceof EntityDir\Odr\Odr && !$entity->getId()) {
-            $odrRepo = $entityManager->getRepository('AppBundle\Entity\Odr\Odr');
-            /* @var $odrRepo EntityDir\Odr\OdrRepository */
-            $odrRepo->addDebtsToOdrIfMissing($entity);
-            $odrRepo->addIncomeBenefitsToOdrIfMissing($entity);
+        if ($entity instanceof EntityDir\Ndr\Ndr && !$entity->getId()) {
+            $ndrRepo = $entityManager->getRepository('AppBundle\Entity\Ndr\Ndr');
+            /* @var $ndrRepo EntityDir\Ndr\NdrRepository */
+            $ndrRepo->addDebtsToNdrIfMissing($entity);
+            $ndrRepo->addIncomeBenefitsToNdrIfMissing($entity);
         }
 
         if ($entity instanceof EntityDir\Report\MoneyTransactionShortIn && !$entity->getId()) {
@@ -107,17 +107,17 @@ class DoctrineListener
         }
 
         // NDR
-        if ($entity instanceof EntityDir\Odr\Expense) {
-            $odr = $entity->getOdr();
-            if (count($odr->getExpenses()) === 1) {
-                $odr->setPaidForAnything(null);
+        if ($entity instanceof EntityDir\Ndr\Expense) {
+            $ndr = $entity->getNdr();
+            if (count($ndr->getExpenses()) === 1) {
+                $ndr->setPaidForAnything(null);
             }
         }
 
-        if ($entity instanceof EntityDir\Odr\Asset) {
-            $odr = $entity->getOdr();
-            if (count($odr->getAssets()) === 1) {
-                $odr->setNoAssetToAdd(null);
+        if ($entity instanceof EntityDir\Ndr\Asset) {
+            $ndr = $entity->getNdr();
+            if (count($ndr->getAssets()) === 1) {
+                $ndr->setNoAssetToAdd(null);
             }
         }
     }

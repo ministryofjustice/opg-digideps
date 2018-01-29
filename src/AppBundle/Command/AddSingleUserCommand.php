@@ -4,7 +4,7 @@ namespace AppBundle\Command;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -33,7 +33,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->addOption('role', null, InputOption::VALUE_REQUIRED)
             ->addOption('roleName', null, InputOption::VALUE_REQUIRED)
             ->addOption('password', null, InputOption::VALUE_REQUIRED)
-            ->addOption('enable-odr', null, InputOption::VALUE_NONE)
+            ->addOption('enable-ndr', null, InputOption::VALUE_NONE)
         ;
     }
 
@@ -45,7 +45,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             'roleId' => $input->getOption('role'),
             'password' => $input->getOption('password'),
             'email' => $input->getArgument('email'),
-            'odrEnabled' => $input->getOption('enable-odr'),
+            'ndrEnabled' => $input->getOption('enable-ndr'),
         ];
         if (count(array_filter($data)) !== count($data)) {
             throw new \RuntimeException('Missing params');
@@ -57,7 +57,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
     /**
      * @param OutputInterface $output
      * @param string          $email
-     * @param array           $data   keys: firstname lastname roleId password odrEnabled
+     * @param array           $data   keys: firstname lastname roleId password ndrEnabled
      */
     protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
@@ -81,7 +81,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->setEmail($email)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setOdrEnabled(!empty($data['odrEnabled']))
+            ->setNdrEnabled(!empty($data['ndrEnabled']))
             ->setCoDeputyClientConfirmed(
                 isset($data['codeputyClientConfirmed']) ?
                     (bool) $data['codeputyClientConfirmed'] :
@@ -136,9 +136,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
             $em->persist($client);
             $user->addClient($client);
 
-            if (!$client->getOdr()) {
-                $odr = new Odr($client);
-                $em->persist($odr);
+            if (!$client->getNdr()) {
+                $ndr = new Ndr($client);
+                $em->persist($ndr);
             }
 
         }

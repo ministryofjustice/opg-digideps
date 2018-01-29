@@ -243,7 +243,7 @@ class UserController extends RestController
         $offset  = $request->get('offset', 0);
         $roleName  = $request->get('role_name');
         $adManaged  = $request->get('ad_managed');
-        $odrEnabled  = $request->get('odr_enabled');
+        $ndrEnabled  = $request->get('ndr_enabled');
         $q  = $request->get('q');
 
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
@@ -260,8 +260,8 @@ class UserController extends RestController
             $qb->andWhere('u.adManaged = true');
         }
 
-        if ($odrEnabled) {
-            $qb->andWhere('u.odrEnabled = true');
+        if ($ndrEnabled) {
+            $qb->andWhere('u.ndrEnabled = true');
         }
 
         if ($q) {
@@ -385,7 +385,7 @@ class UserController extends RestController
             'address_country' => 'setAddressCountry',
             'phone_alternative' => 'setPhoneAlternative',
             'phone_main' => 'setPhoneMain',
-            'odr_enabled' => 'setOdrEnabled',
+            'ndr_enabled' => 'setNdrEnabled',
             'ad_managed' => 'setAdManaged',
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',

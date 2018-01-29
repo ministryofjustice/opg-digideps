@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Odr;
+namespace Tests\AppBundle\Controller\Ndr;
 
-use AppBundle\Entity\Odr\Expense;
+use AppBundle\Entity\Ndr\Expense;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $odr1;
+    private static $ndr1;
     /**
      * @var Expense
      */
@@ -21,7 +21,7 @@ class ExpenseControllerTest extends AbstractTestController
     private static $expense2;
     private static $deputy2;
     private static $client2;
-    private static $odr2;
+    private static $ndr2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -32,14 +32,14 @@ class ExpenseControllerTest extends AbstractTestController
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$odr1 = self::fixtures()->createOdr(self::$client1);
-        self::$expense1 = self::fixtures()->createOdrExpense('other', self::$odr1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+        self::$expense1 = self::fixtures()->createNdrExpense('other', self::$ndr1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$odr2 = self::fixtures()->createOdr(self::$client2);
-        self::$expense2 = self::fixtures()->createOdrExpense('other', self::$odr2, ['setExplanation' => 'e2', 'setAmount' => 2.2]);
+        self::$ndr2 = self::fixtures()->createNdr(self::$client2);
+        self::$expense2 = self::fixtures()->createNdrExpense('other', self::$ndr2, ['setExplanation' => 'e2', 'setAmount' => 2.2]);
 
         self::fixtures()->flush()->clear();
     }
@@ -64,7 +64,7 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -72,13 +72,13 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -93,31 +93,31 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testPostPutAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/expense';
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testPostPutAcl()
     {
-        $url2 = '/odr/' . self::$odr2->getId() . '/expense';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/expense';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
-        $url2 = '/odr/' . self::$odr2->getId() . '/expense/' . self::$expense1->getId();
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense1->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $url3 = '/odr/' . self::$odr2->getId() . '/expense/' . self::$expense2->getId();
+        $url3 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
     public function testPostPutGetAll()
     {
         //POST
-        $url = '/odr/' . self::$odr1->getId() . '/expense';
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -131,13 +131,13 @@ class ExpenseControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $expense = self::fixtures()->getRepo('Odr\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Odr\Expense */
+        $expense = self::fixtures()->getRepo('Ndr\Expense')->find($expenseId);
+        /* @var $expense \AppBundle\Entity\Ndr\Expense */
         $this->assertEquals(3.3, $expense->getAmount());
         $this->assertEquals('e3', $expense->getExplanation());
 
         // UPDATE
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . $expenseId;
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . $expenseId;
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -148,14 +148,14 @@ class ExpenseControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $expense = self::fixtures()->getRepo('Odr\Expense')->find($expenseId);
-        /* @var $expense \AppBundle\Entity\Odr\Expense */
+        $expense = self::fixtures()->getRepo('Ndr\Expense')->find($expenseId);
+        /* @var $expense \AppBundle\Entity\Ndr\Expense */
         $this->assertEquals(3.31, $expense->getAmount());
         $this->assertEquals('e3.1', $expense->getExplanation());
 
         // GET ALL
-        $url = '/odr/' . self::$odr1->getId();
-        $q = http_build_query(['groups' => ['odr-expenses']]);
+        $url = '/ndr/' . self::$ndr1->getId();
+        $q = http_build_query(['groups' => ['ndr-expenses']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
@@ -173,7 +173,7 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -181,8 +181,8 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense2->getId();
-        $url3 = '/odr/' . self::$odr2->getId() . '/expense/' . self::$expense2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense2->getId();
+        $url3 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -193,13 +193,13 @@ class ExpenseControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/expense/' . self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Odr\Expense')->find(self::$expense1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Ndr\Expense')->find(self::$expense1->getId()));
     }
 
     /**
@@ -207,11 +207,11 @@ class ExpenseControllerTest extends AbstractTestController
      */
     public function testPaidAnything()
     {
-        $odr = self::fixtures()->getRepo('Odr\Odr')->find(self::$odr1->getId());
-        $this->assertCount(1, $odr->getExpenses());
-        $this->assertEquals('yes', $odr->getPaidForAnything());
+        $ndr = self::fixtures()->getRepo('Ndr\Ndr')->find(self::$ndr1->getId());
+        $this->assertCount(1, $ndr->getExpenses());
+        $this->assertEquals('yes', $ndr->getPaidForAnything());
 
-        $url = '/odr/' . self::$odr1->getId() ;
+        $url = '/ndr/' . self::$ndr1->getId() ;
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -221,8 +221,8 @@ class ExpenseControllerTest extends AbstractTestController
         ]);
 
         self::fixtures()->clear();
-        $odr = self::fixtures()->getRepo('Odr\Odr')->find(self::$odr1->getId());
-        $this->assertEquals('no', $odr->getPaidForAnything());
-        $this->assertCount(0, $odr->getExpenses());
+        $ndr = self::fixtures()->getRepo('Ndr\Ndr')->find(self::$ndr1->getId());
+        $this->assertEquals('no', $ndr->getPaidForAnything());
+        $this->assertCount(0, $ndr->getExpenses());
     }
 }

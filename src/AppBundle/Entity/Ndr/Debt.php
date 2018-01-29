@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use AppBundle\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,7 +30,7 @@ class Debt
     /**
      * @var int
      *
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -40,16 +40,16 @@ class Debt
     private $id;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="debts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="debts")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @var string
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
@@ -59,7 +59,7 @@ class Debt
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -67,7 +67,7 @@ class Debt
 
     /**
      * @var bool
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      * @JMS\Type("boolean")
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
@@ -76,7 +76,7 @@ class Debt
 
     /**
      * @var string
-     * @JMS\Groups({"odr-debt"})
+     * @JMS\Groups({"ndr-debt"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
@@ -85,15 +85,15 @@ class Debt
     /**
      * Debt constructor.
      *
-     * @param Odr    $odr
+     * @param Ndr    $ndr
      * @param string $debtTypeId
      * @param boole  $hasMoreDetails
      * @param float  $amount
      */
-    public function __construct(Odr $odr, $debtTypeId, $hasMoreDetails, $amount)
+    public function __construct(Ndr $ndr, $debtTypeId, $hasMoreDetails, $amount)
     {
-        $this->odr = $odr;
-        $odr->addDebt($this);
+        $this->ndr = $ndr;
+        $ndr->addDebt($this);
 
         $this->debtTypeId = $debtTypeId;
         $this->hasMoreDetails = $hasMoreDetails;
@@ -117,19 +117,19 @@ class Debt
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr $odr
+     * @param Ndr $ndr
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -11,20 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 class VisitsCareController extends RestController
 {
     /**
-     * @Route("/odr/visits-care")
+     * @Route("/ndr/visits-care")
      * @Method({"POST"})
      */
     public function addAction(Request $request)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $visitsCare = new EntityDir\Odr\VisitsCare();
+        $visitsCare = new EntityDir\Ndr\VisitsCare();
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $data['odr_id']);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $data['ndr_id']);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $visitsCare->setOdr($odr);
+        $visitsCare->setNdr($ndr);
 
         $this->updateEntity($data, $visitsCare);
 
@@ -34,15 +34,15 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/odr/visits-care/{id}")
+     * @Route("/ndr/visits-care/{id}")
      * @Method({"PUT"})
      */
     public function updateAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id);
-        $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
+        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id);
+        $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $visitsCare);
@@ -53,25 +53,25 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/odr/{odrId}/visits-care")
+     * @Route("/ndr/{ndrId}/visits-care")
      * @Method({"GET"})
      *
-     * @param int $odrId
+     * @param int $ndrId
      */
-    public function findByOdrIdAction($odrId)
+    public function findByNdrIdAction($ndrId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($report);
+        $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($report);
 
-        $ret = $this->getRepository(EntityDir\Odr\Odr::class)->findByReport($report);
+        $ret = $this->getRepository(EntityDir\Ndr\Ndr::class)->findByReport($report);
 
         return $ret;
     }
 
     /**
-     * @Route("/odr/visits-care/{id}")
+     * @Route("/ndr/visits-care/{id}")
      * @Method({"GET"})
      *
      * @param int $id
@@ -83,22 +83,22 @@ class VisitsCareController extends RestController
         $serialiseGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['visits-care'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
-        $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
+        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
+        $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         return $visitsCare;
     }
 
     /**
-     * @Route("/odr/visits-care/{id}")
+     * @Route("/ndr/visits-care/{id}")
      * @Method({"DELETE"})
      */
     public function deleteVisitsCare($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $visitsCare = $this->findEntityBy(EntityDir\Odr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Odr\VisitsCare */
-        $this->denyAccessIfOdrDoesNotBelongToUser($visitsCare->getOdr());
+        $visitsCare = $this->findEntityBy(EntityDir\Ndr\VisitsCare::class, $id, 'VisitsCare not found'); /* @var $visitsCare EntityDir\Ndr\VisitsCare */
+        $this->denyAccessIfNdrDoesNotBelongToUser($visitsCare->getNdr());
 
         $this->getEntityManager()->remove($visitsCare);
         $this->getEntityManager()->flush($visitsCare);
@@ -108,11 +108,11 @@ class VisitsCareController extends RestController
 
     /**
      * @param array                    $data
-     * @param EntityDir\Odr\VisitsCare $visitsCare
+     * @param EntityDir\Ndr\VisitsCare $visitsCare
      *
-     * @return EntityDir\Odr\VisitsCare $report
+     * @return EntityDir\Ndr\VisitsCare $report
      */
-    private function updateEntity(array $data, EntityDir\Odr\VisitsCare $visitsCare)
+    private function updateEntity(array $data, EntityDir\Ndr\VisitsCare $visitsCare)
     {
         if (array_key_exists('plan_move_new_residence', $data)) {
             $visitsCare->setPlanMoveNewResidence($data['plan_move_new_residence']);

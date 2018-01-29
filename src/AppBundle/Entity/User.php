@@ -200,7 +200,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
      */
-    private $odrEnabled;
+    private $ndrEnabled;
 
     /**
      * @var bool
@@ -914,17 +914,17 @@ class User implements UserInterface
     /**
      * @return bool
      */
-    public function getOdrEnabled()
+    public function getNdrEnabled()
     {
-        return $this->odrEnabled;
+        return $this->ndrEnabled;
     }
 
     /**
-     * @param bool $odrEnabled
+     * @param bool $ndrEnabled
      */
-    public function setOdrEnabled($odrEnabled)
+    public function setNdrEnabled($ndrEnabled)
     {
-        $this->odrEnabled = $odrEnabled;
+        $this->ndrEnabled = $ndrEnabled;
 
         return $this;
     }
