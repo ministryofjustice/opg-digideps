@@ -81,15 +81,18 @@
     {# table with records #}
     {% if  records | length %}
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
-        {% for action in postActions %}
-            <input type="submit" value="{{ action }}" name="multiAction">
-        {% endfor %}
-        <table class="check-your-answers push--bottom">
+        <div class="push-half--bottom">
+            {% for action in postActions %}
+                <input type="submit" value="{{ action }}" name="multiAction" class="button-secondary push-half--right js-action-selected js-disabled">
+            {% endfor %}
+            <p class="right text--right"><span id="numberOfCases">0</span> cases selected</p>
+        </div>
+        <table class="check-your-answers table-clickable push--bottom">
             <thead>
                 <tr>
-                    <th>
+                    <th class="width-twentieth multiple-choice--dd">
                         <div class="multiple-choice">
-                            <input type="checkbox" id="select-all" name="select-all" value="all">
+                            <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
                             <label for="select-all"><span class="visually-hidden">All</span></label>
                         </div>
                     </th>
@@ -111,9 +114,9 @@
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
-                        <td>
+                        <td class="width-twentieth multiple-choice--dd">
                             <div class="multiple-choice">
-                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]">
+                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]" class="js-checkbox">
                                 <label for="cb{{ reportSubmission.id }}"><span class="visually-hidden">Select</span></label>
                             </div>
                         </td>

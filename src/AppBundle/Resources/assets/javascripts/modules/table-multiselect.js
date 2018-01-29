@@ -1,0 +1,43 @@
+
+// Select all checkbox change
+$('.js-checkbox-all').change(function() {
+    $('.js-disabled').removeAttr('disabled');
+
+    // Change all '.js-checkbox' checked status
+    $('.js-checkbox').prop('checked', $(this).prop('checked'));
+
+    // Toggle checked class on other checkboxes
+    if($(this).prop('checked')) {
+        $('.js-checkbox').parents('tr').addClass('checked');
+    } else {
+        $('.js-checkbox').parents('tr').removeClass('checked');
+        $('.js-disabled').attr('disabled', 'disabled');
+    }
+
+    $('#numberOfCases').text($('.js-checkbox:checked').length);
+});
+
+//'.js-checkbox' change
+$('.js-checkbox').change(function(){
+    $('.js-disabled').removeAttr('disabled');
+
+    $(this).parents('tr').toggleClass('checked');
+
+    //uncheck 'select all', if one of the listed checkbox item is unchecked
+    if(false == $(this).prop('checked')){
+    //change 'select all' checked status to false
+        $('.js-checkbox-all').prop('checked', false);
+    }
+
+    //check 'select all' if all checkbox items are checked
+    if ($('.js-checkbox:checked').length == $('.js-checkbox').length ){
+        $('.js-checkbox-all').prop('checked', true);
+    } else if ($('.js-checkbox:checked').length == 0 ) {
+        $('.js-disabled').attr('disabled', 'disabled');
+    }
+
+    $('#numberOfCases').text($('.js-checkbox:checked').length);
+});
+
+
+

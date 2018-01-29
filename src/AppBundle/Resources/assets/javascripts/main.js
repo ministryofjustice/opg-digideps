@@ -3,6 +3,8 @@
 
 $(document).ready(function() {
 
+    $('.js-disabled').attr('disabled', 'disabled');
+
 	// Format currency module
 	$('.js-format-currency').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
