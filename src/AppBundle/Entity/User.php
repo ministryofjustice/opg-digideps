@@ -19,6 +19,7 @@ class User implements AdvancedUserInterface
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
     const ROLE_PA = 'ROLE_PA';
+    const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
@@ -29,7 +30,7 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN          => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
-        self::ROLE_PA             => 'Public Authority',
+        self::ROLE_PA_NAMED       => 'Public Authority',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',
         self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
     ];
@@ -883,7 +884,7 @@ class User implements AdvancedUserInterface
      */
     public function isDeputyPa()
     {
-        return in_array($this->roleName, [self::ROLE_PA, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+        return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
     }
 
     /**
@@ -903,7 +904,7 @@ class User implements AdvancedUserInterface
      */
     public function isNamedDeputy()
     {
-        return in_array($this->roleName, [self::ROLE_PA]);
+        return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
 
     /**

@@ -18,7 +18,7 @@ class SearchType extends AbstractType
                     User::ROLE_ADMIN      => 'OPG Admin',
                     User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                     User::ROLE_AD         => 'Assisted Digital',
-                    User::ROLE_PA         => 'Public Authority',
+                    User::ROLE_PA_NAMED         => 'Public Authority',
                 ],
             ])
             ->add('ndr_enabled', 'checkbox')

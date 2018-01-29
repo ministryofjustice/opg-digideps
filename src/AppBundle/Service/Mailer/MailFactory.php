@@ -104,7 +104,7 @@ class MailFactory
     public static function getRecipientRole(User $user)
     {
         switch ($user->getRoleName()) {
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PA_TEAM_MEMBER:
                 return strtolower(str_replace(' ', '-', $user->getRoleFullName()));

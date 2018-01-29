@@ -70,7 +70,7 @@ class UserVoter extends Voter
 
         if ($attribute === self::ADD_USER) {
             // only Named and Admin can add users
-            return $this->decisionManager->decide($token, [User::ROLE_PA, USER::ROLE_PA_ADMIN]);
+            return $this->decisionManager->decide($token, [User::ROLE_PA_NAMED, USER::ROLE_PA_ADMIN]);
         }
 
         if ($attribute === self::DELETE_USER) {
@@ -100,14 +100,14 @@ class UserVoter extends Voter
         }
 
         switch ($loggedInUser->getRoleName()) {
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
                 // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
                 return true;
             case User::ROLE_PA_ADMIN:
                 // Admin can edit everyone except Named
-                if ($subject->getRoleName() !== User::ROLE_PA) {
+                if ($subject->getRoleName() !== User::ROLE_PA_NAMED) {
                     return true;
                 }
                 return false;
@@ -134,12 +134,12 @@ class UserVoter extends Voter
         }
 
         switch ($loggedInUser->getRoleName()) {
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
                 // Named deputies can remove anyone
                 return true;
             case User::ROLE_PA_ADMIN:
                 // Admin can remove everyone except Named
-                if ($subject->getRoleName() !== User::ROLE_PA) {
+                if ($subject->getRoleName() !== User::ROLE_PA_NAMED) {
                     return true;
                 }
                 return false;
