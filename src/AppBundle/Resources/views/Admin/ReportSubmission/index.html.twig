@@ -85,7 +85,7 @@
             <div class="push-half--bottom">
                 {% for action in postActions %}
 
-                    <input type="submit" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="button-secondary push-half--right js-action-selected js-disabled">
+                    <input type="submit" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="button-secondary push-half--right js-disabled">
                 {% endfor %}
                 <p class="right text--right"><span id="numberOfCases">0</span> cases selected</p>
             </div>
