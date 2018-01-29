@@ -56,7 +56,7 @@ class ReportSubmissionController extends AbstractController
     private function processPost(Request $request) {
         if ($request->isMethod('POST')){
             if (empty($request->request->get('checkboxes'))) {
-                $request->getSession()->getFlashBag()->add('error', 'Please select at least one row');
+                $request->getSession()->getFlashBag()->add('error', 'Please select at least one report submission');
                 return;
             }
 
