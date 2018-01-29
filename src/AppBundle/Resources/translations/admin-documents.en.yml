@@ -11,6 +11,8 @@ page:
   postactions:
     download: Download
     archive: Archive
+    archived:
+      notice: "{1} 1 document archived|]1,Inf[ %count% documents archived"
   resultsTable:
     header:
       all: All

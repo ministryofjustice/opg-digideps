@@ -69,7 +69,15 @@ class ReportSubmissionController extends AbstractController
                 switch ($action) {
                     case self::ACTION_ARCHIVE:
                         $this->processArchive($checkedBoxes);
-                        $request->getSession()->getFlashBag()->add('notice', $totalChecked . ' documents archived');
+                        $translator = $this->get('translator');
+                        $notice = $translator->transChoice(
+                            'page.postactions.archived.notice',
+                            $totalChecked,
+                            array('%count%' => $totalChecked),
+                            'admin-documents'
+                            );
+
+                        $request->getSession()->getFlashBag()->add('notice', $notice);
                         break;
                     case self::ACTION_DOWNLOAD:
                         $this->processDownload($request, $checkedBoxes);
