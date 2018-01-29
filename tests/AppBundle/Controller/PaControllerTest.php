@@ -65,7 +65,7 @@ class PaControllerTest extends AbstractTestController
         $this->assertEmpty($data['errors'], implode(',', $data['errors']));
         $this->assertEmpty($data['warnings'], implode(',', $data['warnings']));
         $this->assertEquals('dep1@provider.com', $data['added']['users'][0]);
-        $this->assertEquals('10000001', $data['added']['clients'][0]);
-        $this->assertEquals('10000001-2014-12-16', $data['added']['reports'][0]);
+        $this->assertEquals('00001111', $data['added']['clients'][0]);
+        $this->assertEquals('00001111-2014-12-16', $data['added']['reports'][0]);
     }
 }
