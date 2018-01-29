@@ -20,7 +20,7 @@ page:
       documents: Documents
       date: Date
       user: User
-      noDocumentsFound: No documents found
+    noDocumentsFound: No documents found
   table:
     rows:
       documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
