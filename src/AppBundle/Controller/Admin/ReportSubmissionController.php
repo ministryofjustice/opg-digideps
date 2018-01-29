@@ -61,7 +61,7 @@ class ReportSubmissionController extends AbstractController
             }
 
             $checkedBoxes = array_keys($request->request->get('checkboxes'));
-            $action = $request->request->get('multiAction');
+            $action = strtolower($request->request->get('multiAction'));
 
             if (in_array($action, $this->allowedPostActions)) {
                 $totalChecked = count($checkedBoxes);
