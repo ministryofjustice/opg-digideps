@@ -18,6 +18,13 @@ home:
     sendEmail: (Re)send activation email
     codepNameNotSet: Invited co-deputy
 
+clientSearch:
+  pageTitle: Admin
+  supportTitle: Cases
+  clientTable:
+    headers:
+      caseNumber: Case number
+      client: Client
 homeForm:
   clear: Clear filters
 
