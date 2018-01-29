@@ -93,7 +93,7 @@ input[type=text]::-ms-clear {
 // Smaller checkboxes for admin
 // https://home-office-digital-patterns.herokuapp.com/components/checkboxes
 
-.multiple-choice--dd {
+.multiple-choice--smaller {
     .multiple-choice {
         padding-top: 1px;
         padding-bottom: 2px;
@@ -103,17 +103,21 @@ input[type=text]::-ms-clear {
             padding-bottom: 18px;
         }
     }
-}
 
-.multiple-choice--dd [type=checkbox] + label::before {
-    width: 21px;
-    height: 21px;
-}
+    [type=checkbox] {
+        + label {
+            &::before {
+                width: 21px;
+                height: 21px;
+            }
 
-.multiple-choice--dd [type=checkbox] + label::after {
-    border-width: 0 0 3px 3px;
-    width: 11px;
-    height: 4px;
-    top: 8px;
-    left: 6px;
+            &::after {
+                width: 11px;
+                height: 4px;
+                top: 8px;
+                left: 6px;
+                border-width: 0 0 3px 3px;
+            }
+        }
+    }
 }
