@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * Client.
  *
  * @ORM\Table(name="client", indexes={@ORM\Index(name="case_number_idx", columns={"case_number"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
  */
 class Client
 {
