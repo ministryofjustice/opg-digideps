@@ -101,10 +101,22 @@ security:
             provider: user_provider_redis
             stateless:   true
 
+    # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
     role_hierarchy:
         ROLE_ADMIN:           ROLE_DOCUMENT_MANAGE
+
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY
-        ROLE_PA:              ROLE_DEPUTY
-        ROLE_PA_ADMIN:        ROLE_DEPUTY
-        ROLE_PA_TEAM_MEMBER:  ROLE_DEPUTY
+        ROLE_ORG:             ROLE_DEPUTY
+
+        ROLE_PA:              ROLE_ORG
+        ROLE_PROF:            ROLE_ORG
+
+        ROLE_PA_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
+        ROLE_PA_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
+        ROLE_PA_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+
+        ROLE_PROF_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
+        ROLE_PROF_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
+        ROLE_PROF_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+
 
