@@ -119,7 +119,11 @@ class PaService
      */
     private function upsertUser(array $row)
     {
-        $criteria = ['deputyNo' => $row['Deputy No'], 'roleName' => EntityDir\User::ROLE_PA];
+        $deputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
+        $criteria = [
+            'deputyNo' => $deputyNo,
+            'roleName' => EntityDir\User::ROLE_PA
+        ];
         $user = $this->userRepository->findOneBy($criteria);
         $userEmail = strtolower($row['Email']);
 
@@ -136,14 +140,14 @@ class PaService
             // check for duplicate email address
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
             if ($user) {
-                $this->warnings[] = 'Deputy ' . $row['Deputy No'] .
+                $this->warnings[] = 'Deputy ' . $deputyNo .
                     ' cannot be added with email ' . $user->getEmail() .
                     '. Email already taken by Deputy No: ' . $user->getDeputyNo();
             } else {
                 $user = new EntityDir\User();
                 $user
                     ->setRegistrationDate(new \DateTime())
-                    ->setDeputyNo($row['Deputy No'])
+                    ->setDeputyNo($deputyNo)
                     ->setEmail($row['Email'])
                     ->setFirstname($row['Dep Forename'])
                     ->setLastname($row['Dep Surname'])
@@ -211,7 +215,7 @@ class PaService
     private function upsertClient(array $row, EntityDir\User $user)
     {
         // find or create client
-        $caseNumber = strtolower($row['Case']);
+        $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
         if ($client) {
             foreach ($client->getUsers() as $cu) {
