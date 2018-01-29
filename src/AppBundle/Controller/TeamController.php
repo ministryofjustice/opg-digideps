@@ -18,7 +18,7 @@ class TeamController extends RestController
      */
     public function getMembers(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
 
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
@@ -36,7 +36,7 @@ class TeamController extends RestController
      */
     public function getMemberById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
 
         $user = $this->getRepository(EntityDir\User::class)->find($id);
         if ($user->getTeams()->first() !== $this->getUser()->getTeams()->first()) {
@@ -64,7 +64,7 @@ class TeamController extends RestController
     {
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
+                EntityDir\User::ROLE_PA_NAMED,
                 EntityDir\User::ROLE_PA_ADMIN
             ]
         );

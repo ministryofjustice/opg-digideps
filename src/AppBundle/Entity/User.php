@@ -30,6 +30,7 @@ class User implements UserInterface
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
     const ROLE_PA = 'ROLE_PA';
+    const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
@@ -1061,7 +1062,7 @@ class User implements UserInterface
      */
     public function isPaNamedDeputy()
     {
-        return $this->getRoleName() === self::ROLE_PA;
+        return $this->getRoleName() === self::ROLE_PA_NAMED;
     }
 
     /**
@@ -1082,7 +1083,7 @@ class User implements UserInterface
         return in_array(
             $this->getRoleName(),
             [
-                self::ROLE_PA,
+                self::ROLE_PA_NAMED,
                 self::ROLE_PA_ADMIN,
             ]
         );
@@ -1113,7 +1114,7 @@ class User implements UserInterface
                      'ROLE_PROFESSIONAL_DEPUTY'    => ['Professional Deputy', 3],
                      'ROLE_LOCAL_AUTHORITY_DEPUTY' => ['Local Authority Deputy', 4],
                      self::ROLE_AD                 => ['Assisted Digital', 5],
-                     self::ROLE_PA                 => ['Pa', 6],
+                     self::ROLE_PA_NAMED                 => ['Pa', 6],
                      self::ROLE_PA_ADMIN           => ['Pa Admin', 7],
                      self::ROLE_PA_TEAM_MEMBER     => ['Pa Team member', 8],
                  ] as $name => $row) {

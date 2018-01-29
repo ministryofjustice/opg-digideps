@@ -103,7 +103,7 @@ class ClientController extends RestController
      */
     public function archiveAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {

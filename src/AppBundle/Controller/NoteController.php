@@ -21,9 +21,7 @@ class NoteController extends RestController
         // checks
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
@@ -55,9 +53,7 @@ class NoteController extends RestController
     {
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 
@@ -82,9 +78,7 @@ class NoteController extends RestController
     {
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 
@@ -124,9 +118,7 @@ class NoteController extends RestController
 
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 

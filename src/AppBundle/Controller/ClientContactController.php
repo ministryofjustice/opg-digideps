@@ -21,9 +21,7 @@ class ClientContactController extends RestController
         // checks
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 
@@ -64,9 +62,7 @@ class ClientContactController extends RestController
     {
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 
@@ -99,9 +95,7 @@ class ClientContactController extends RestController
     {
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 
@@ -129,9 +123,7 @@ class ClientContactController extends RestController
 
         $this->denyAccessUnlessGranted(
             [
-                EntityDir\User::ROLE_PA,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER
+                EntityDir\User::ROLE_PA
             ]
         );
 

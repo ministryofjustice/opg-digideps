@@ -121,7 +121,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals(['new'=>1, 'archived'=>0], $reportsGetAllRequest(['status'=>'new', 'q'=>'l0'])['counts']); //client surname
         $this->assertEquals(['new'=>4, 'archived'=>1], $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['counts']); // deputy name
         $this->assertEquals(['new'=>1, 'archived'=>1], $reportsGetAllRequest(['created_by_role'=>'ROLE_LAY_DEPUTY'])['counts']);
-        $this->assertEquals(['new'=>3, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA'])['counts']);
+        $this->assertEquals(['new'=>3, 'archived'=>0], $reportsGetAllRequest(['created_by_role'=>'ROLE_PA_NAMED'])['counts']);
 
         // check pagination and limit
         $submissions = $reportsGetAllRequest(['status'=>'new', 'q'=>'test'])['records'];

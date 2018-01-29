@@ -87,27 +87,27 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             // ============ PA =============
 
             // 103-6
-            ['l3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['l3g', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['a3', 'opg103', User::ROLE_PA, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_103_6],
+            ['l3', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
+            ['l3g', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
+            ['a3', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_103_6],
 
             // 102-6
-            [null, null, User::ROLE_PA, Report::TYPE_102_6],
-            [null, 'opg103', User::ROLE_PA, Report::TYPE_102_6],
-            [null, 'opg103', User::ROLE_PA, Report::TYPE_102_6],
-            ['l3', 'whatever', User::ROLE_PA, Report::TYPE_102_6],
-            ['l3g', 'whatever', User::ROLE_PA, Report::TYPE_102_6],
-            ['a3', 'whatever', User::ROLE_PA, Report::TYPE_102_6],
-            ['l2', 'opg103', User::ROLE_PA, Report::TYPE_102_6],
+            [null, null, User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            [null, 'opg103', User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            [null, 'opg103', User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            ['l3', 'whatever', User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            ['l3g', 'whatever', User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            ['a3', 'whatever', User::ROLE_PA_NAMED, Report::TYPE_102_6],
+            ['l2', 'opg103', User::ROLE_PA_NAMED, Report::TYPE_102_6],
 
             // 104-6
-            ['hw', '', User::ROLE_PA, Report::ENABLE_104 ? Report::TYPE_104_6 : Report::TYPE_102_6],
+            ['hw', '', User::ROLE_PA_NAMED, Report::ENABLE_104 ? Report::TYPE_104_6 : Report::TYPE_102_6],
 
             // 103-4-6
-            ['hw', 'opg103', User::ROLE_PA, Report::ENABLE_104_JOINT ? Report::TYPE_103_4_6 : Report::TYPE_102_6],
+            ['hw', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_104_JOINT ? Report::TYPE_103_4_6 : Report::TYPE_102_6],
 
             // 102-4-6
-            ['hw', 'opg102', User::ROLE_PA, Report::ENABLE_104_JOINT ? Report::TYPE_102_4_6 : Report::TYPE_102_6],
+            ['hw', 'opg102', User::ROLE_PA_NAMED, Report::ENABLE_104_JOINT ? Report::TYPE_102_4_6 : Report::TYPE_102_6],
         ];
     }
 

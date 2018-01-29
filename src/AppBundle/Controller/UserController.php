@@ -21,7 +21,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA_NAMED, EntityDir\User::ROLE_PA_ADMIN]);
 
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
@@ -56,7 +56,7 @@ class UserController extends RestController
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
             && !$this->isGranted(EntityDir\User::ROLE_AD)
-            && !$this->isGranted(EntityDir\User::ROLE_PA) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PA_NAMED) //TODO check user is also part of the team
             && !$this->isGranted(EntityDir\User::ROLE_PA_ADMIN) //TODO check user is also part of the team
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
@@ -456,7 +456,7 @@ class UserController extends RestController
      */
     public function getTeamByUserId(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
+        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
 
         $user = $this->getRepository(EntityDir\User::class)->find($id);
         if (!$user) {

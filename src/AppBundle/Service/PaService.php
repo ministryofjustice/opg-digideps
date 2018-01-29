@@ -122,7 +122,7 @@ class PaService
         $deputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
         $criteria = [
             'deputyNo' => $deputyNo,
-            'roleName' => EntityDir\User::ROLE_PA
+            'roleName' => EntityDir\User::ROLE_PA_NAMED
         ];
         $user = $this->userRepository->findOneBy($criteria);
         $userEmail = strtolower($row['Email']);
@@ -151,12 +151,12 @@ class PaService
                     ->setEmail($row['Email'])
                     ->setFirstname($row['Dep Forename'])
                     ->setLastname($row['Dep Surname'])
-                    ->setRoleName(EntityDir\User::ROLE_PA);
+                    ->setRoleName(EntityDir\User::ROLE_PA_NAMED);
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
                     // Dep Surname in the CSV is actually the PA team name
-                    // it's used for firstname/lastname of the named PA (ROLE_PA), but those fields are editable
+                    // it's used for firstname/lastname of the named PA (ROLE_PA_NAMED), but those fields are editable
                     // and not reliable for a PA team name
                     $team = new EntityDir\Team($row['Dep Surname']);
 
@@ -292,7 +292,7 @@ class PaService
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], EntityDir\User::ROLE_PA);
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], EntityDir\User::ROLE_PA_NAMED);
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted

@@ -154,7 +154,7 @@ class NoteControllerTest extends AbstractTestController
         $url = '/note/' . $noteId;
 
         // create a new user and assign to note
-        $user = self::fixtures()->createUser()->setRoleName(\AppBundle\Entity\User::ROLE_PA);
+        $user = self::fixtures()->createUser()->setRoleName(\AppBundle\Entity\User::ROLE_PA_NAMED);
         self::$pa1Client1->addUser($user);
         $note = self::fixtures()->getRepo('Note')->find($noteId);
         $note->setCreatedBy($user);
