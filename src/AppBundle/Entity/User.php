@@ -239,7 +239,7 @@ class User implements AdvancedUserInterface
      *
      * @var bool
      */
-    private $odrEnabled;
+    private $ndrEnabled;
 
     /**
      * @var bool
@@ -764,17 +764,17 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function isOdrEnabled()
+    public function isNdrEnabled()
     {
-        return $this->odrEnabled;
+        return $this->ndrEnabled;
     }
 
     /**
-     * @param bool $odrEnabled
+     * @param bool $ndrEnabled
      */
-    public function setOdrEnabled($odrEnabled)
+    public function setNdrEnabled($ndrEnabled)
     {
-        $this->odrEnabled = $odrEnabled;
+        $this->ndrEnabled = $ndrEnabled;
     }
 
     /**

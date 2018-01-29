@@ -1,0 +1,147 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "ndr-overview" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block pageTitle %}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
+{% block pageContent %}
+
+    {% block pageHeader %}
+        {% include 'AppBundle:Ndr/Ndr:_header.html.twig' %}
+    {% endblock %}
+
+    <div class="grid-row">
+        <div class="column-one-half">
+            <ul>
+                {% if ndr.getSubmitted %}
+                    <li>
+                        Submitted:
+                        <span class="bold-small">{{ ndr.submitDate | date("j F Y") }}</span>
+
+                        <p class="flush--bottom">
+                            <a href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'ndr-submitted') }}</a>
+                            <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'status.viewReportOnline' | trans({}, 'ndr-submitted') }}</a>
+                        </p>
+                    </li>
+                {% else %}
+                    <li>Report status:
+                        <span class="bold-small">{{ ('status.' ~ ndrStatus.status) | trans() }}</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    {% if not ndrStatus.isReadyToSubmit %}
+        <div class="push--top">
+            {{ macros.notification('info', 'guidanceNotice' | trans()) }}
+        </div>
+    {% endif %}
+
+
+    <ul id="overview-sections" class="push--bottom">
+
+        <li id="visits-and-actions" class="overview-section">
+            <h2 class="heading">Health and welfare</h2>
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'visits_care',
+                linkToSubSection: path('ndr_visits_care', {ndrId: ndr.id}),
+                ndr: ndr,
+                info: true,
+                description: true,
+                state: ndrStatus.visitsCareState,
+            } %}
+        </li>
+
+
+        <li id="finances-and-assets" class="overview-section">
+            <h2 class="heading">{{ client.firstname }}'s property and finances</h2>
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'deputy_expenses',
+                ndr: ndr,
+                state: ndrStatus.expensesState,
+                nOfRecords: ndr.expenses | length,
+                linkToSubSection: path('ndr_deputy_expenses', {ndrId: ndr.id}),
+                description: true
+            } %}
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'income_benefits',
+                ndr: ndr,
+                state: ndrStatus.incomeBenefitsState,
+                linkToSubSection: path('ndr_income_benefits', {ndrId: ndr.id}),
+                description: true
+            } %}
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'bank_accounts',
+                ndr: ndr,
+                state: ndrStatus.bankAccountsState,
+                nOfRecords: ndr.bankAccounts | length,
+                linkToSubSection: path('ndr_bank_accounts', {ndrId: ndr.id}),
+                description: true
+            } %}
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'assets',
+                ndr: ndr,
+                state: ndrStatus.assetsState,
+                nOfRecords: ndr.assets | length,
+                linkToSubSection: path('ndr_assets', {ndrId: ndr.id}),
+                description: true
+            } %}
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'debts',
+                ndr: ndr,
+                description: false,
+                state: ndrStatus.getDebtsState,
+                nOfRecords: ndr.debtsWithValidAmount | length,
+                linkToSubSection: path('ndr_debts', {ndrId: ndr.id}),
+                description: true
+            } %}
+        </li>
+
+        <li id="visits-and-actions" class="overview-section">
+            <h2 class="heading">Other information</h2>
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'actions',
+                linkToSubSection: path('ndr_actions', {ndrId: ndr.id}),
+                ndr: ndr,
+                info: true,
+                description: true,
+                state: ndrStatus.actionsState,
+            } %}
+            {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'other_info',
+                linkToSubSection: path('ndr_other_info', {ndrId: ndr.id}),
+                ndr: ndr,
+                info: true,
+                description: true,
+                state: ndrStatus.otherInfoState,
+            } %}
+        </li>
+    </ul>
+
+    {% if not ndrStatus.isReadyToSubmit %}
+
+        <div class="push--top">
+            {{ macros.notification('info', 'previewNotice' | trans()) }}
+        </div>
+        <a id="edit-report-preview" class="button left" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+
+    {% else %}
+
+        <a id="edit-report-review" class="button push--top" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a> 
+
+    {% endif %}
+
+{% endblock %}

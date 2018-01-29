@@ -1,0 +1,50 @@
+{% if ndr.bankAccounts | length > 0 %}
+    <div class="section" id="accounts-section">
+        <h2 class="section-heading">Accounts</h2>
+        <h3>Summary</h3>
+        <div id="account-summary" class="subsection">
+             <div class="box box-heading flush--bottom">
+                <h3 class="flush--bottom">Accounts summary</h3>
+            </div>
+            <div class="box box-white push-half--bottom">
+                <table class="money">
+                    <thead>
+                        <tr>
+                            <th scope="col">&nbsp;</th>
+                            <th class="grey numeric" scope="col">Balance on court order date ({{ ndr.client.courtDate | date('j M Y') }})</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for account in ndr.bankAccounts %}
+                            <tr>
+                                <td>
+                                    <div class="review-account-name">
+                                        {{ account.bank }} {{ account.accountTypeText }}
+                                    </div>
+                                    <div class="review-account-number">****{{ account.accountNumber }}
+                                        {% if account.requiresSortCode and account.sortCode %}
+                                           , {{ account.sortCode | split('', 2) | join('-') }}
+                                        {% endif %}
+                                        {% if account.isJointAccount =='yes' %}
+                                            <br><span class="review-account-closed">JOINT ACCOUNT</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="numeric grey">&pound;{{ account.balanceOnCourtOrderDate | money_format }}</td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr class="totals">
+                            <td>&nbsp;</td>
+                            <td class="numeric reverse"><span class="bold">&pound;{{ ndr.balanceOnCourtOrderDateTotal | money_format}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+{% endif %}
+
+

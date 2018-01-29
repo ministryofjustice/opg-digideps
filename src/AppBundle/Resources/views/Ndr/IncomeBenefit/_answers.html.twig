@@ -1,0 +1,209 @@
+{% set translationDomain = "ndr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<h3 class="heading-medium">{{ 'stepPage.pageSectionTitle.stateBenefits' | trans(transOptions) }}</h3>
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-benefits">
+        <td>
+            {{ 'form.stateBenefits.label' | trans(transOptions) }}
+        </td>
+        <td>
+            {% if ndr.stateBenefitsPresent | length == 0 %}
+                None
+            {% else %}
+                {# display state benefits choices comma separated #}
+                {% for sb in ndr.stateBenefitsPresent %}
+                    {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
+                    {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
+        </td>
+        <td class="change-answer">
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    {% set stateBenefitsOther = ndr.getStateBenefitOther() %}
+    {% if stateBenefitsOther.present %}
+        <tr class="behat-region-benefits-other-more-details">
+            <td>
+                {{ 'form.stateBenefitsOtherDetails.labelSummaryPage' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ stateBenefitsOther.moreDetails | nl2br }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+    {% endif %}
+
+    </tbody>
+</table>
+
+
+<h3 class="heading-medium">{{ 'stepPage.pageSectionTitle.pensions' | trans(transOptions) }}</h3>
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-receive-state-pension">
+
+        {% if ndr.receiveStatePension is null %}
+            <td>
+                <span class="error">
+                    {{ 'form.receiveStatePension.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.receiveStatePension.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.receiveStatePension | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 2, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    <tr class="behat-region-receive-other-regular-income">
+        {% if ndr.receiveOtherIncome is null %}
+            <td>
+                <span class="error">
+                    {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.receiveOtherIncome | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    {% if ndr.receiveOtherIncome == 'yes' %}
+        <tr class="behat-region-receive-other-regular-income-more-details">
+            <td>
+                {{ 'form.receiveOtherIncomeDetails.labelSummaryPage' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.receiveOtherIncomeDetails | nl2br }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+
+<h3 class="heading-medium">{{ 'stepPage.pageSectionTitle.damages' | trans(transOptions) }}</h3>
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-compensation-awards">
+        {% if ndr.expectCompensationDamages is null %}
+            <td>
+                    <span class="error">
+                        {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
+                    </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.expectCompensationDamages | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    {% if ndr.expectCompensationDamages == 'yes' %}
+        <tr class="behat-region-compensation-awards-more-details">
+            <td>
+                {{ 'form.expectCompensationDamagesDetails.labelSummaryPage' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.expectCompensationDamagesDetails | nl2br }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+
+<h3 class="heading-medium">{{ 'stepPage.pageSectionTitle.oneOff' | trans(transOptions) }}</h3>
+<table class="check-your-answers columns-2 push-double--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="behat-region-one-off">
+        <td>
+            {{ 'form.oneOff.label' | trans(transOptions) }}
+        </td>
+        <td>
+            {% if ndr.getOneOffPresent | length == 0 %}
+                None
+            {% else %}
+                {# display one Off choices comma separated #}
+                {% for sb in ndr.oneOffPresent %}
+                    {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            {% endif %}
+        </td>
+        <td class="change-answer">
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 5, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

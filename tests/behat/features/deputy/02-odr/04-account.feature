@@ -1,9 +1,9 @@
 Feature: NDR/ account
 
-  @odr
+  @ndr
   Scenario: NDR accounts
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-bank_accounts, start"
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "ndr-start, edit-bank_accounts, start"
   # step 1
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
