@@ -1,0 +1,141 @@
+{% set translationDomain = "ndr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+
+<h2 class="heading-medium flush--ends">Gifts</h2>
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Answer</th>
+            <th>
+                <span class="visually-hidden">Actions</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region-give-gifts-client">
+            {% if ndr.actionGiveGiftsToClient is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ ndr.actionGiveGiftsToClient | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </td>
+        </tr>
+        {% if ndr.actionGiveGiftsToClient == 'yes' %}
+            <tr class="behat-region-give-gifts-client-details">
+                <td>{{ 'form.actionGiveGiftsToClientDetails.label' | trans(transOptions) }}</td>
+                <td>{{ ndr.actionGiveGiftsToClientDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>
+
+<h2 class="heading-medium flush--ends">Property</h2>
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Answer</th>
+        <th>
+            <span class="visually-hidden">Actions</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {# step 2 #}
+    <tr class="behat-region-property-maintenance">
+        {% if ndr.actionPropertyMaintenance is null %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.actionPropertyMaintenance | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+        </td>
+    </tr>
+
+    {# step 3 #}
+    <tr class="behat-region-property-selling-rent">
+        {% if ndr.actionPropertySellingRent is null %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.actionPropertySellingRent | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 3, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+        </td>
+    </tr>
+
+    {# step 4 #}
+    <tr class="behat-region-property-buy">
+        {% if ndr.actionPropertyBuy is null %}
+            <td>
+                <span class="error">
+                    {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">Please answer this question</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ ndr.actionPropertyBuy | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 4, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>

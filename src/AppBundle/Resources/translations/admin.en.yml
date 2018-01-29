@@ -44,7 +44,7 @@ addUserForm:
     label: Role
     hint: ''
     defaultOption: Please select ...
-  odrEnabled:
+  ndrEnabled:
     label: Enable NDR for this user (Lay deputy only)
   submit:
     label: Save user

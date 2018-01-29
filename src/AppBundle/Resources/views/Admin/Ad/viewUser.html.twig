@@ -14,7 +14,7 @@
     <ul>
         <li>Name: {{ user.firstname }}</li>
         <li>Lastname: {{ user.lastname }}</li>
-        <li>NDR enabled: {{ user.odrEnabled ? 'yes':'no' }}</li>
+        <li>NDR enabled: {{ user.ndrEnabled ? 'yes':'no' }}</li>
         <li>Assisted: {{ user.adManaged ? 'yes':'no' }}</li>
     </ul>
 
@@ -30,9 +30,9 @@
     {% endif %}
 
     <h2 class="heading-small">NDR</h2>
-    {% if firstClient.odr is defined and firstClient.odr %}
+    {% if firstClient.ndr is defined and firstClient.ndr %}
         <ul>
-            <li>Status: {{ firstClient.odr.submitted ? 'Submitted' : 'Not submitted' }}</li>
+            <li>Status: {{ firstClient.ndr.submitted ? 'Submitted' : 'Not submitted' }}</li>
         </ul>
     {% else %}
         You must create the client first from the deputy area

@@ -82,7 +82,7 @@ class AdController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'odr']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'ndr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => 'User not found',
@@ -111,7 +111,7 @@ class AdController extends AbstractController
     {
         $adUser = $this->getUser();
 
-        // get user and check it's deputy and ODR
+        // get user and check it's deputy and NDR
         try {
             /* @var $deputy EntityDir\User */
             $deputy = $this->getRestClient()->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);

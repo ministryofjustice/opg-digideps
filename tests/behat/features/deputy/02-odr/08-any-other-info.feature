@@ -1,9 +1,9 @@
 Feature: NDR any other info
 
-  @odr
+  @ndr
   Scenario: NDR any other info
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-other_info, start"
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "ndr-start, edit-other_info, start"
      # step 1
     And the step cannot be submitted without making a selection
     Then the step with the following values CANNOT be submitted:

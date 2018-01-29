@@ -60,9 +60,9 @@ Feature: deputy / user / add client and report
       | client_country         | GB             |
       | client_phone           | 0123456789     |
 
-  @odr
-  Scenario: add client (odr) with no casrec record
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+  @ndr
+  Scenario: add client (ndr) with no casrec record
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:
@@ -75,12 +75,12 @@ Feature: deputy / user / add client and report
     And I press "client_save"
     Then the form should be invalid
 
-  @odr
-  Scenario: add client (odr) with no casrec record
+  @ndr
+  Scenario: add client (ndr) with no casrec record
     Given I add the following users to CASREC:
       | Case     | Surname       | Deputy No | Dep Surname  | Dep Postcode | Typeofrep |
-      | behat001 | Hent          | D001      | Doe ODR      | p0stc0d3      | OPG102    |
-    And I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      | behat001 | Hent          | D001      | Doe NDR      | p0stc0d3      | OPG102    |
+    And I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:

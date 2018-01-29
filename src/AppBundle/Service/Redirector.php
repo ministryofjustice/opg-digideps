@@ -113,8 +113,8 @@ class Redirector
     public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home','odr_index'])) {
-            $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+        if (in_array($currentRoute, ['lay_home','ndr_index'])) {
+            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
         //none of these corrections apply to admin
@@ -122,7 +122,7 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+                    $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
                 }
 
                 // unverified codeputy invitation
@@ -150,7 +150,7 @@ class Redirector
      */
     private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
     {
-        // checks if user has missing details or is ODR
+        // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
         }

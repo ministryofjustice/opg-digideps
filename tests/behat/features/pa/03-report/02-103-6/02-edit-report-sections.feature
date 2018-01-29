@@ -3,7 +3,7 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 money in
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-money_in_short, start"
     And the step with the following values CAN be submitted:
       | money_short_moneyShortCategoriesIn_0_present | 1 |
@@ -31,7 +31,7 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 money out
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-money_out_short, start"
     And the step with the following values CAN be submitted:
       | money_short_moneyShortCategoriesOut_0_present | 1 |
@@ -58,13 +58,13 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 debts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-debts, start"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | yes_no_hasDebts_1 | no |
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
+    And I click on "pa-report-open" in the "client-01000011" region
     And I click on "edit-bank_accounts, start"
     And the step with the following values CAN be submitted:
       | account_accountType_0 | current |
@@ -83,7 +83,7 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 fees and expenses
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-pa_fee_expense, start"
     Given the step cannot be submitted without making a selection
     And the step with the following values cannot be submitted:
@@ -102,13 +102,13 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 gifts
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-gifts, start"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | yes_no_giftsExist_1 | no |
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000011" region
+    And I click on "pa-report-open" in the "client-01000011" region
     And I click on "edit-assets, start"
     And the step with the following values CAN be submitted:
       | yes_no_noAssetToAdd_1 | 1 |
@@ -116,7 +116,7 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 accounts add current account
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-bank_accounts, start"
     # step 1
     And the step with the following values CAN be submitted:
@@ -142,7 +142,7 @@ Feature: PA user edits 103-6 report sections
   @103-6
   Scenario: PA 103-6 assets
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000014" region
+    And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-assets, start"
       # chose "no records"
     And the step with the following values CAN be submitted:
