@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Odr\Traits;
+namespace AppBundle\Entity\Ndr\Traits;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use JMS\Serializer\Annotation as JMS;
 
 trait ActionTrait
@@ -11,7 +11,7 @@ trait ActionTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-give-gifts"})
+     * @JMS\Groups({"ndr-action-give-gifts"})
      * @ORM\Column(name="action_give_gifts_to_client", type="string", length=3, nullable=true)
      */
     private $actionGiveGiftsToClient;
@@ -20,7 +20,7 @@ trait ActionTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-give-gifts"})
+     * @JMS\Groups({"ndr-action-give-gifts"})
      * @ORM\Column(name="action_give_gifts_to_client_details", type="text", nullable=true)
      */
     private $actionGiveGiftsToClientDetails;
@@ -30,7 +30,7 @@ trait ActionTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-property"})
+     * @JMS\Groups({"ndr-action-property"})
      * @ORM\Column(name="action_property_maintenance", type="string", length=3, nullable=true)
      */
     private $actionPropertyMaintenance;
@@ -39,7 +39,7 @@ trait ActionTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-property"})
+     * @JMS\Groups({"ndr-action-property"})
      * @ORM\Column(name="action_property_selling_rent", type="string", length=3, nullable=true)
      */
     private $actionPropertySellingRent;
@@ -48,7 +48,7 @@ trait ActionTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-property"})
+     * @JMS\Groups({"ndr-action-property"})
      * @ORM\Column(name="action_property_buy", type="string", length=3, nullable=true)
      */
     private $actionPropertyBuy;
@@ -64,7 +64,7 @@ trait ActionTrait
     /**
      * @param string $actionGiveGiftsToClient
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionGiveGiftsToClient($actionGiveGiftsToClient)
     {
@@ -84,7 +84,7 @@ trait ActionTrait
     /**
      * @param string $actionGiveGiftsToClientDetails
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionGiveGiftsToClientDetails($actionGiveGiftsToClientDetails)
     {
@@ -104,7 +104,7 @@ trait ActionTrait
     /**
      * @param string $actionPropertyMaintenance
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionPropertyMaintenance($actionPropertyMaintenance)
     {
@@ -124,7 +124,7 @@ trait ActionTrait
     /**
      * @param string $actionPropertySellingRent
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionPropertySellingRent($actionPropertySellingRent)
     {
@@ -144,7 +144,7 @@ trait ActionTrait
     /**
      * @param string $actionPropertyBuy
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionPropertyBuy($actionPropertyBuy)
     {

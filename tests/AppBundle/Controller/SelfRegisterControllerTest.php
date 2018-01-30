@@ -152,7 +152,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
         $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
-        $this->assertEquals(true, $user->getOdrEnabled());
+        $this->assertEquals(true, $user->getNdrEnabled());
 
         /** @var \AppBundle\Entity\Client $theClient */
         $theClient = $user->getClients()->first();

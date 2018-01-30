@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity\Odr\Traits;
+namespace AppBundle\Entity\Ndr\Traits;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use JMS\Serializer\Annotation as JMS;
 
 trait MoreInfoTrait
@@ -12,7 +12,7 @@ trait MoreInfoTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-more-info"})
+     * @JMS\Groups({"ndr-action-more-info"})
      * @ORM\Column(name="action_more_info", type="string", length=3, nullable=true)
      */
     private $actionMoreInfo;
@@ -21,7 +21,7 @@ trait MoreInfoTrait
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-action-more-info"})
+     * @JMS\Groups({"ndr-action-more-info"})
      * @ORM\Column(name="action_more_info_details", type="text", nullable=true)
      */
     private $actionMoreInfoDetails;
@@ -37,7 +37,7 @@ trait MoreInfoTrait
     /**
      * @param string $actionMoreInfo
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionMoreInfo($actionMoreInfo)
     {
@@ -57,7 +57,7 @@ trait MoreInfoTrait
     /**
      * @param string $actionMoreInfoDetails
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionMoreInfoDetails($actionMoreInfoDetails)
     {

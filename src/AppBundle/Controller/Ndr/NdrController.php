@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -8,63 +8,65 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class OdrController extends RestController
+class NdrController extends RestController
 {
     /**
-     * @Route("/odr/{id}")
+     * @Route("/ndr/{id}")
      * @Method({"GET"})
      *
      * @param int $id
      */
     public function getById(Request $request, $id)
     {
-        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['odr'];
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['ndr'];
         $this->setJmsSerialiserGroups($groups);
 
-        /* @var $report EntityDir\Odr\Odr */
-        $report = $this->findEntityBy(EntityDir\Odr\Odr::class, $id);
+        /* @var $report EntityDir\Ndr\Ndr */
+        $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id);
 
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-            $this->denyAccessIfOdrDoesNotBelongToUser($report);
+            $this->denyAccessIfNdrDoesNotBelongToUser($report);
         }
 
         return $report;
     }
 
     /**
-     * @Route("/odr/{id}/submit")
+     * @Route("/ndr/{id}/submit")
      * @Method({"PUT"})
      */
     public function submit(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
-        /* @var $odr EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
+        /* @var $ndr EntityDir\Ndr\Ndr */
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
         $data = $this->deserializeBodyContent($request);
 
         if (empty($data['agreed_behalf_deputy'])) {
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
+
         $documentId = $request->get('documentId');
         if (empty($documentId)) {
             throw new \InvalidArgumentException('documentId must be specified');
         }
 
-        $odr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
+        $ndr->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
+
         if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
-            $odr->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
+            $ndr->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
         } else {
-            $odr->setAgreedBehalfDeputyExplanation(null);
+            $ndr->setAgreedBehalfDeputyExplanation(null);
         }
 
-        $odr->setSubmitted(true);
-        $odr->setSubmitDate(new \DateTime($data['submit_date']));
+        $ndr->setSubmitted(true);
+        $ndr->setSubmitDate(new \DateTime($data['submit_date']));
 
-        $submission = new EntityDir\Report\ReportSubmission($odr, $this->getUser());
+        $submission = new EntityDir\Report\ReportSubmission($ndr, $this->getUser());
 
         $document = $this->getEntityManager()->getRepository(EntityDir\Report\Document::class)->find($documentId);
         $document->setReportSubmission($submission);
@@ -75,25 +77,25 @@ class OdrController extends RestController
     }
 
     /**
-     * @Route("/odr/{id}")
+     * @Route("/ndr/{id}")
      * @Method({"PUT"})
      */
     public function update(Request $request, $id)
     {
-        /* @var $odr EntityDir\Odr\Odr */
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $id, 'Odr not found');
+        /* @var $ndr EntityDir\Ndr\Ndr */
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $id, 'Ndr not found');
 
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-            $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+            $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         }
 
         $data = $this->deserializeBodyContent($request);
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
-            $odr->setHasDebts($data['has_debts']);
+            $ndr->setHasDebts($data['has_debts']);
             // null debts
-            foreach ($odr->getDebts() as $debt) {
+            foreach ($ndr->getDebts() as $debt) {
                 $debt->setAmount(null);
                 $debt->setMoreDetails(null);
                 $this->getEntityManager()->flush($debt);
@@ -101,8 +103,8 @@ class OdrController extends RestController
             // set debts as per "debts" key
             if ($data['has_debts'] == 'yes') {
                 foreach ($data['debts'] as $row) {
-                    $debt = $odr->getDebtByTypeId($row['debt_type_id']);
-                    if (!$debt instanceof EntityDir\Odr\Debt) {
+                    $debt = $ndr->getDebtByTypeId($row['debt_type_id']);
+                    if (!$debt instanceof EntityDir\Ndr\Debt) {
                         continue; //not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
@@ -113,13 +115,13 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('debt_management', $data)) {
-            $odr->setDebtManagement($data['debt_management']);
+            $ndr->setDebtManagement($data['debt_management']);
         }
 
         if (array_key_exists('state_benefits', $data)) {
             foreach ($data['state_benefits'] as $row) {
-                $e = $odr->getStateBenefitByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Odr\StateBenefit) {
+                $e = $ndr->getStateBenefitByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Ndr\StateBenefit) {
                     $e
                         ->setPresent($row['present'])
                         ->setMoreDetails($row['present'] ? $row['more_details'] : null);
@@ -129,35 +131,35 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('receive_state_pension', $data)) {
-            $odr->setReceiveStatePension($data['receive_state_pension']);
+            $ndr->setReceiveStatePension($data['receive_state_pension']);
         }
 
         if (array_key_exists('receive_other_income_details', $data)) {
-            $odr->setReceiveOtherIncomeDetails($data['receive_other_income_details']);
+            $ndr->setReceiveOtherIncomeDetails($data['receive_other_income_details']);
         }
 
         if (array_key_exists('receive_other_income', $data)) {
             if ($data['receive_other_income'] == 'no') {
-                $odr->setReceiveOtherIncomeDetails(null);
+                $ndr->setReceiveOtherIncomeDetails(null);
             }
-            $odr->setReceiveOtherIncome($data['receive_other_income']);
+            $ndr->setReceiveOtherIncome($data['receive_other_income']);
         }
 
         if (array_key_exists('expect_compensation_damages_details', $data)) {
-            $odr->setExpectCompensationDamagesDetails($data['expect_compensation_damages_details']);
+            $ndr->setExpectCompensationDamagesDetails($data['expect_compensation_damages_details']);
         }
 
         if (array_key_exists('expect_compensation_damages', $data)) {
             if ($data['expect_compensation_damages'] == 'no') {
-                $odr->setExpectCompensationDamagesDetails(null);
+                $ndr->setExpectCompensationDamagesDetails(null);
             }
-            $odr->setExpectCompensationDamages($data['expect_compensation_damages']);
+            $ndr->setExpectCompensationDamages($data['expect_compensation_damages']);
         }
 
         if (array_key_exists('one_off', $data)) {
             foreach ($data['one_off'] as $row) {
-                $e = $odr->getOneOffByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Odr\OneOff) {
+                $e = $ndr->getOneOffByTypeId($row['type_id']);
+                if ($e instanceof EntityDir\Ndr\OneOff) {
                     $e->setPresent($row['present'])->setMoreDetails($row['more_details']);
                     $this->getEntityManager()->flush($e);
                 }
@@ -165,9 +167,9 @@ class OdrController extends RestController
         }
 
         if (array_key_exists('no_asset_to_add', $data)) {
-            $odr->setNoAssetToAdd($data['no_asset_to_add']);
-            if ($odr->getNoAssetToAdd()) {
-                foreach ($odr->getAssets() as $asset) {
+            $ndr->setNoAssetToAdd($data['no_asset_to_add']);
+            if ($ndr->getNoAssetToAdd()) {
+                foreach ($ndr->getAssets() as $asset) {
                     $this->getEntityManager()->remove($asset);
                 }
                 $this->getEntityManager()->flush();
@@ -176,50 +178,50 @@ class OdrController extends RestController
 
         if (array_key_exists('paid_for_anything', $data)) {
             if ($data['paid_for_anything'] === 'no') { // remove existing expenses
-                foreach ($odr->getExpenses() as $e) {
+                foreach ($ndr->getExpenses() as $e) {
                     $this->getEntityManager()->remove($e);
                 }
             }
-            $odr->setPaidForAnything($data['paid_for_anything']);
+            $ndr->setPaidForAnything($data['paid_for_anything']);
         }
 
         // actions
         if (array_key_exists('action_give_gifts_to_client', $data)) {
-            $odr->setActionGiveGiftsToClient($data['action_give_gifts_to_client']);
+            $ndr->setActionGiveGiftsToClient($data['action_give_gifts_to_client']);
             if (array_key_exists('action_give_gifts_to_client_details', $data)) {
-                $odr->setActionGiveGiftsToClientDetails(
+                $ndr->setActionGiveGiftsToClientDetails(
                     $data['action_give_gifts_to_client'] == 'yes' ? $data['action_give_gifts_to_client_details'] : null
                 );
             }
         }
 
         if (array_key_exists('action_property_maintenance', $data)) {
-            $odr->setActionPropertyMaintenance($data['action_property_maintenance']);
+            $ndr->setActionPropertyMaintenance($data['action_property_maintenance']);
         }
 
         if (array_key_exists('action_property_selling_rent', $data)) {
-            $odr->setActionPropertySellingRent($data['action_property_selling_rent']);
+            $ndr->setActionPropertySellingRent($data['action_property_selling_rent']);
         }
 
         if (array_key_exists('action_property_buy', $data)) {
-            $odr->setActionPropertyBuy($data['action_property_buy']);
+            $ndr->setActionPropertyBuy($data['action_property_buy']);
         }
 
         if (array_key_exists('action_more_info', $data)) {
-            $odr->setActionMoreInfo($data['action_more_info']);
+            $ndr->setActionMoreInfo($data['action_more_info']);
             if (array_key_exists('action_more_info_details', $data)) {
-                $odr->setActionMoreInfoDetails(
+                $ndr->setActionMoreInfoDetails(
                     $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
                 );
             }
         }
 
         if (array_key_exists('start_date', $data)) {
-            $odr->setStartDate(new \DateTime($data['start_date']));
+            $ndr->setStartDate(new \DateTime($data['start_date']));
         }
 
         $this->getEntityManager()->flush();
 
-        return ['id' => $odr->getId()];
+        return ['id' => $ndr->getId()];
     }
 }

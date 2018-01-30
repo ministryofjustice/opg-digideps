@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,11 +47,11 @@ class Client
     private $reports;
 
     /**
-     * @JMS\Groups({"basic", "odr", "odr_id"})
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Odr\Odr", mappedBy="client", cascade={"persist", "remove"})
+     * @JMS\Groups({"basic", "ndr", "ndr_id"})
+     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
      **/
-    private $odr;
+    private $ndr;
 
     /**
      * @JMS\Type("string")
@@ -246,6 +246,18 @@ class Client
     public function getCaseNumber()
     {
         return $this->caseNumber;
+    }
+
+    /**
+     * convert 7 into 00000007
+     * One Lay deputy has a case number starting with zeros
+     *
+     * @param $caseNumber
+     * @return string
+     */
+    public static function padCaseNumber($caseNumber)
+    {
+        return str_pad($caseNumber, 8, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -606,19 +618,19 @@ class Client
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param mixed $odr
+     * @param mixed $ndr
      */
-    public function setOdr(Odr $odr = null)
+    public function setNdr(Ndr $ndr = null)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**

@@ -19,7 +19,6 @@ class ReportSubmissionController extends RestController
         'report-client',
         'ndr-client',
         'ndr',
-        'odr', //remove when odr->ndr has been renamed
         'report-period',
         'client-name',
         'client-case-number',

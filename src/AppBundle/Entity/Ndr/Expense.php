@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Odr;
+namespace AppBundle\Entity\Ndr;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -14,7 +14,7 @@ class Expense
     /**
      * @var int
      *
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"ndr-expenses"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -27,7 +27,7 @@ class Expense
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"ndr-expenses"})
      * @ORM\Column(name="explanation", type="text", nullable=false)
      */
     private $explanation;
@@ -36,7 +36,7 @@ class Expense
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"odr-expenses"})
+     * @JMS\Groups({"ndr-expenses"})
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
@@ -44,23 +44,23 @@ class Expense
     private $amount;
 
     /**
-     * @var Odr
+     * @var Ndr
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Odr\Odr", inversedBy="expenses")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Ndr\Ndr", inversedBy="expenses")
      * @ORM\JoinColumn(name="odr_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * Expense constructor.
      *
-     * @param Odr    $odr
+     * @param Ndr    $ndr
      * @param string $explanation
      * @param $amount
      */
-    public function __construct(Odr $odr)
+    public function __construct(Ndr $ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 
     /**
@@ -120,18 +120,18 @@ class Expense
     }
 
     /**
-     * @return Odr
+     * @return Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr $odr
+     * @param Ndr $ndr
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
     }
 }

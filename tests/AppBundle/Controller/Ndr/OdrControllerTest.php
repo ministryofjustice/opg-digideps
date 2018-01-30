@@ -1,21 +1,21 @@
 <?php
 
-namespace Tests\AppBundle\Controller\Odr;
+namespace Tests\AppBundle\Controller\Ndr;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use Tests\AppBundle\Controller\AbstractTestController;
 
-class OdrControllerTest extends AbstractTestController
+class NdrControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $odr1;
+    private static $ndr1;
     private static $document1;
     private static $deputy2;
     private static $client2;
-    private static $odr2;
+    private static $ndr2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -26,13 +26,13 @@ class OdrControllerTest extends AbstractTestController
         //deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$odr1 = self::fixtures()->createOdr(self::$client1);
-        self::$document1 = self::fixtures()->createDocument(self::$odr1, 'ndr.pdf');
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
+        self::$document1 = self::fixtures()->createDocument(self::$ndr1, 'ndr.pdf');
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$odr2 = self::fixtures()->createOdr(self::$client2);
+        self::$ndr2 = self::fixtures()->createNdr(self::$client2);
 
         self::fixtures()->flush();
     }
@@ -57,20 +57,20 @@ class OdrControllerTest extends AbstractTestController
 
     public function testGetOneByIdAuth()
     {
-        $url = '/odr/' . self::$odr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testGetOneByIdAcl()
     {
-        $url2 = '/odr/' . self::$odr2->getId();
+        $url2 = '/ndr/' . self::$ndr2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testGetOneByIdData()
     {
-        $url = '/odr/' . self::$odr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -78,11 +78,11 @@ class OdrControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
 
-        $this->assertEquals(self::$odr1->getId(), $data['id']);
+        $this->assertEquals(self::$ndr1->getId(), $data['id']);
 
 
         // assert debts
-        $data = $this->assertJsonRequest('GET', $url . '?groups=odr-debt', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=ndr-debt', [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -91,7 +91,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testDebts()
     {
-        $url = '/odr/' . self::$odr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
 
         // "yes"
         $this->assertJsonRequest('PUT', $url, [
@@ -108,7 +108,7 @@ class OdrControllerTest extends AbstractTestController
             ],
         ]);
 
-        $q = http_build_query(['groups' => ['odr-debt']]);
+        $q = http_build_query(['groups' => ['ndr-debt']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
@@ -157,7 +157,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testIncomeBenefits()
     {
-        $url = '/odr/' . self::$odr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -218,7 +218,7 @@ class OdrControllerTest extends AbstractTestController
             'more_details'     => 'obmd',
         ], $data['state_benefits'][11]);
 
-        // assert income and damages (Odr properties)
+        // assert income and damages (Ndr properties)
         $this->assertEquals('no', $data['receive_state_pension']);
         $this->assertEquals('yes', $data['receive_other_income']);
         $this->assertEquals('roid', $data['receive_other_income_details']);
@@ -245,7 +245,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testActions()
     {
-        $url = '/odr/' . self::$odr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
 
         // PUT
         $this->assertJsonRequest('PUT', $url, [
@@ -264,9 +264,9 @@ class OdrControllerTest extends AbstractTestController
 
         // GET and assert
         $q = http_build_query(['groups' => [
-            'odr-action-give-gifts',
-            'odr-action-property',
-            'odr-action-more-info',
+            'ndr-action-give-gifts',
+            'ndr-action-property',
+            'ndr-action-more-info',
         ]]);
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
@@ -284,7 +284,7 @@ class OdrControllerTest extends AbstractTestController
 
     public function testSubmitAuth()
     {
-        $url = '/odr/' . self::$odr1->getId() . '/submit';
+        $url = '/ndr/' . self::$ndr1->getId() . '/submit';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
@@ -292,17 +292,19 @@ class OdrControllerTest extends AbstractTestController
 
     public function testSubmitAcl()
     {
-        $url2 = '/odr/' . self::$odr2->getId() . '/submit';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/submit';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
     public function testSubmitNotAllAgree()
     {
-        $this->assertEquals(false, self::$odr1->getSubmitted());
+        $this->assertEquals(false, self::$ndr1->getSubmitted());
 
-        $odrId = self::$odr1->getId();
-        $url = '/odr/' . $odrId . '/submit?documentId=' . self::$document1->getId();
+        $ndrId = self::$ndr1->getId();
+        $url = '/ndr/' . $ndrId . '/submit';
+        $ndrId = self::$ndr1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
@@ -314,19 +316,19 @@ class OdrControllerTest extends AbstractTestController
         ]);
 
         // assert account created with transactions
-        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
-        /* @var $odr \AppBundle\Entity\Odr\Odr */
-        $this->assertEquals(true, $odr->getSubmitted());
-        $this->assertEquals('more_deputies_not_behalf', $odr->getAgreedBehalfDeputy());
-        $this->assertEquals('abdexplanation', $odr->getAgreedBehalfDeputyExplanation());
+        $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
+        /* @var $ndr \AppBundle\Entity\Ndr\Ndr */
+        $this->assertEquals(true, $ndr->getSubmitted());
+        $this->assertEquals('more_deputies_not_behalf', $ndr->getAgreedBehalfDeputy());
+        $this->assertEquals('abdexplanation', $ndr->getAgreedBehalfDeputyExplanation());
     }
 
     public function testSubmit()
     {
-        $this->assertEquals(false, self::$odr1->getSubmitted());
+        $this->assertEquals(false, self::$ndr1->getSubmitted());
 
-        $odrId = self::$odr1->getId();
-        $url = '/odr/' . $odrId . '/submit?documentId=' . self::$document1->getId();
+        $ndrId = self::$ndr1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
         $ret = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -339,12 +341,13 @@ class OdrControllerTest extends AbstractTestController
         ])['data'];
 
         // assert account created with transactions
-        $odr = self::fixtures()->clear()->getRepo('Odr\Odr')->find($odrId);
-        /* @var $odr \AppBundle\Entity\Odr\Odr */
-        $this->assertEquals(true, $odr->getSubmitted());
-        $this->assertEquals('only_deputy', $odr->getAgreedBehalfDeputy());
-        $this->assertEquals(null, $odr->getAgreedBehalfDeputyExplanation());
-        $this->assertEquals('2015-12-30', $odr->getSubmitDate()->format('Y-m-d'));
+
+        $ndr = self::fixtures()->clear()->getRepo('Ndr\Ndr')->find($ndrId);
+        /* @var $ndr \AppBundle\Entity\Ndr\Ndr */
+        $this->assertEquals(true, $ndr->getSubmitted());
+        $this->assertEquals('only_deputy', $ndr->getAgreedBehalfDeputy());
+        $this->assertEquals(null, $ndr->getAgreedBehalfDeputyExplanation());
+        $this->assertEquals('2015-12-30', $ndr->getSubmitDate()->format('Y-m-d'));
 
         /* @var $reportSubmission ReportSubmission */
         $reportSubmission = self::fixtures()->clear()->getRepo(ReportSubmission::class)->find($ret['id']);

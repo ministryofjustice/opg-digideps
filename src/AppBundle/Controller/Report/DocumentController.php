@@ -24,7 +24,7 @@ class DocumentController extends RestController
         /* @var $report Report */
         $report = $reportType === 'report' ?
             $this->findEntityBy(EntityDir\Report\Report::class, $reportId)
-            : $this->findEntityBy(EntityDir\Odr\Odr::class, $reportId);
+            : $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist

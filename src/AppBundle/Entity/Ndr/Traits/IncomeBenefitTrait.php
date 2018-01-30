@@ -6,10 +6,10 @@
  * Time: 15:46.
  */
 
-namespace AppBundle\Entity\Odr\Traits;
+namespace AppBundle\Entity\Ndr\Traits;
 
-use AppBundle\Entity\Odr\OneOff;
-use AppBundle\Entity\Odr\StateBenefit;
+use AppBundle\Entity\Ndr\OneOff;
+use AppBundle\Entity\Ndr\StateBenefit;
 
 trait IncomeBenefitTrait
 {
@@ -17,7 +17,7 @@ trait IncomeBenefitTrait
      * @var StateBenefit[]
      *
      * @JMS\Groups({"state-benefits"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\StateBenefit", mappedBy="odr")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\StateBenefit", mappedBy="ndr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $stateBenefits;
@@ -71,7 +71,7 @@ trait IncomeBenefitTrait
      * @var OneOff[]
      *
      * @JMS\Groups({"one-off"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Odr\OneOff", mappedBy="odr")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ndr\OneOff", mappedBy="ndr")
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $oneOff;
@@ -87,7 +87,7 @@ trait IncomeBenefitTrait
     /**
      * @param IncomeBenefit[] $stateBenefits
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function addStateBenefits($stateBenefits)
     {
@@ -109,7 +109,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $receiveOtherIncomeDetails
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function setReceiveOtherIncomeDetails($receiveOtherIncomeDetails)
     {
@@ -129,7 +129,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $expectCompensationDamages
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamages($expectCompensationDamages)
     {
@@ -149,7 +149,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $expectCompensationDamagesDetails
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function setExpectCompensationDamagesDetails($expectCompensationDamagesDetails)
     {
@@ -169,7 +169,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $receiveStatePension
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function setReceiveStatePension($receiveStatePension)
     {
@@ -189,7 +189,7 @@ trait IncomeBenefitTrait
     /**
      * @param string $receiveOtherIncome
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function setReceiveOtherIncome($receiveOtherIncome)
     {
@@ -209,7 +209,7 @@ trait IncomeBenefitTrait
     /**
      * @param IncomeBenefit[] $oneOff
      *
-     * @return OdrIncomeBenefitTrait
+     * @return NdrIncomeBenefitTrait
      */
     public function addOneOff($oneOff)
     {

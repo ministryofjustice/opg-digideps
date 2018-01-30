@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Odr;
+namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
@@ -11,86 +11,86 @@ use Symfony\Component\HttpFoundation\Request;
 class AssetController extends RestController
 {
     /**
-     * @Route("/odr/{odrId}/assets", requirements={"odrId":"\d+"})
+     * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"})
      * @Method({"GET"})
      */
-    public function getAll($odrId)
+    public function getAll($ndrId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $assets = $this->getRepository(EntityDir\Odr\Asset::class)->findByOdr($odr);
+        $assets = $this->getRepository(EntityDir\Ndr\Asset::class)->findByNdr($ndr);
 
         if (count($assets) == 0) {
             return [];
         }
 
-        $this->setJmsSerialiserGroups(['odr-asset']);
+        $this->setJmsSerialiserGroups(['ndr-asset']);
 
         return $assets;
     }
 
     /**
-     * @Route("/odr/{odrId}/asset/{assetId}", requirements={"odrId":"\d+", "assetId":"\d+"})
+     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($odrId, $assetId)
+    public function getOneById($ndrId, $assetId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
+        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
-        $this->setJmsSerialiserGroups(['odr-asset']);
+        $this->setJmsSerialiserGroups(['ndr-asset']);
 
         return $asset;
     }
 
     /**
-     * @Route("/odr/{odrId}/asset", requirements={"odrId":"\d+"})
+     * @Route("/ndr/{ndrId}/asset", requirements={"ndrId":"\d+"})
      * @Method({"POST"})
      */
-    public function add(Request $request, $odrId)
+    public function add(Request $request, $ndrId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId); /* @var $odr EntityDir\Odr\Odr */
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
         $this->validateArray($data, [
             'type' => 'mustExist',
         ]);
-        $asset = EntityDir\Odr\Asset::factory($data['type']);
-        $asset->setOdr($odr);
+        $asset = EntityDir\Ndr\Asset::factory($data['type']);
+        $asset->setNdr($ndr);
 
         $this->updateEntityWithData($asset, $data);
-        $odr->setNoAssetToAdd(false);
+        $ndr->setNoAssetToAdd(false);
         $this->persistAndFlush($asset);
 
         return ['id' => $asset->getId()];
     }
 
     /**
-     * @Route("/odr/{odrId}/asset/{assetId}", requirements={"odrId":"\d+", "assetId":"\d+"})
+     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"PUT"})
      */
-    public function edit(Request $request, $odrId, $assetId)
+    public function edit(Request $request, $ndrId, $assetId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
         $data = $this->deserializeBodyContent($request);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
+        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
         $this->updateEntityWithData($asset, $data);
 
@@ -100,18 +100,18 @@ class AssetController extends RestController
     }
 
     /**
-     * @Route("/odr/{odrId}/asset/{assetId}", requirements={"odrId":"\d+", "assetId":"\d+"})
+     * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"DELETE"})
      */
-    public function delete($odrId, $assetId)
+    public function delete($ndrId, $assetId)
     {
         $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
 
-        $odr = $this->findEntityBy(EntityDir\Odr\Odr::class, $odrId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($odr);
+        $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
-        $asset = $this->findEntityBy(EntityDir\Odr\Asset::class, $assetId);
-        $this->denyAccessIfOdrDoesNotBelongToUser($asset->getOdr());
+        $asset = $this->findEntityBy(EntityDir\Ndr\Asset::class, $assetId);
+        $this->denyAccessIfNdrDoesNotBelongToUser($asset->getNdr());
 
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();
@@ -119,14 +119,14 @@ class AssetController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Odr\Asset $asset, array $data)
+    private function updateEntityWithData(EntityDir\Ndr\Asset $asset, array $data)
     {
         // common props
         $this->hydrateEntityWithArrayData($asset, $data, [
             'value' => 'setValue',
         ]);
 
-        if ($asset instanceof EntityDir\Odr\AssetOther) {
+        if ($asset instanceof EntityDir\Ndr\AssetOther) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'title' => 'setTitle',
                 'description' => 'setDescription',
@@ -137,7 +137,7 @@ class AssetController extends RestController
             }
         }
 
-        if ($asset instanceof EntityDir\Odr\AssetProperty) {
+        if ($asset instanceof EntityDir\Ndr\AssetProperty) {
             $this->hydrateEntityWithArrayData($asset, $data, [
                 'address' => 'setAddress',
                 'address2' => 'setAddress2',

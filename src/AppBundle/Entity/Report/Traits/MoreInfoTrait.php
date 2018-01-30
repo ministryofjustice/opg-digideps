@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use JMS\Serializer\Annotation as JMS;
 
 trait MoreInfoTrait
@@ -37,7 +37,7 @@ trait MoreInfoTrait
     /**
      * @param string $actionMoreInfo
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionMoreInfo($actionMoreInfo)
     {
@@ -57,7 +57,7 @@ trait MoreInfoTrait
     /**
      * @param string $actionMoreInfoDetails
      *
-     * @return Odr
+     * @return Ndr
      */
     public function setActionMoreInfoDetails($actionMoreInfoDetails)
     {

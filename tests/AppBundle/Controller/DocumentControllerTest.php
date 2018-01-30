@@ -2,7 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\Odr\Odr;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Repository\DocumentRepository;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
@@ -34,7 +34,7 @@ class DocumentControllerTest extends AbstractTestController
 
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$ndr1 = self::fixtures()->createOdr(self::$client1);
+        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
 
         self::fixtures()->flush();
     }
@@ -107,7 +107,7 @@ class DocumentControllerTest extends AbstractTestController
 
         /** @var Document $document */
         $document = $this->repo->find($data['id']);
-        $this->assertInstanceOf(Odr::class, $document->getNdr());
+        $this->assertInstanceOf(Ndr::class, $document->getNdr());
 
         self::fixtures()->remove($document)->flush();
         $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
