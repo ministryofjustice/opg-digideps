@@ -48,19 +48,19 @@ Feature: deputy / user / add details
       | user_details_phoneMain        | 020 3334 3555    |
       | user_details_phoneAlternative | 020 1234 5678    |
 
-  @odr
-  Scenario: add user details (deputy odr)
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+  @ndr
+  Scenario: add user details (deputy ndr)
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should be on "/user/details"
     When I set the user details to:
-      | name    | John ODR         | Doe ODR       |        |          |    |
+      | name    | John NDR         | Doe NDR       |        |          |    |
       | address | 102 Petty France | MOJ           | London | p0stc0d3 | GB |
       | phone   | 020 3334 3555    | 020 1234 5678 |        |          |    |
     Then the form should be valid
     When I go to "/user/details"
     Then the following fields should have the corresponding values:
-      | user_details_firstname        | John ODR         |
-      | user_details_lastname         | Doe ODR          |
+      | user_details_firstname        | John NDR         |
+      | user_details_lastname         | Doe NDR          |
       | user_details_address1         | 102 Petty France |
       | user_details_address2         | MOJ              |
       | user_details_address3         | London           |

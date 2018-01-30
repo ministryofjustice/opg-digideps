@@ -1,0 +1,31 @@
+{% set translationDomain = "ndr-overview" %}
+{% trans_default_domain translationDomain %}
+
+<div id="{{ subSection }}-sub-section" class="section-list-item">
+
+    <a href="{{ linkToSubSection }}" class="edit-heading-link">
+        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
+    </a>
+
+    <span class="status flush--bottom {{ state.state }}">
+        {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+            {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+        {% else %}
+            {{ ('labels.' ~ state.state) | trans }}
+        {% endif %}
+    </span>
+
+    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+        {% if state.state == 'not-started' %}
+            {{ (subSection ~ '.start') | trans({}, translationDomain) }}
+        {% else %}
+            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        {% endif %}
+    </a>
+
+    {%  if description is defined and description %}
+        <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+    {%  endif %}
+
+
+</div>

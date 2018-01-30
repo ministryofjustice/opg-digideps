@@ -1,7 +1,7 @@
 Feature: deputy / user / add user
 
   @deputy
-  # remove when ODR-enabled deputy and 103-enabled deputy can be created via registration page
+  # remove when NDR-enabled deputy and 103-enabled deputy can be created via registration page
   Scenario: admin login
     Given I am on admin login page
       # test wrong credentials
@@ -46,16 +46,16 @@ Feature: deputy / user / add user
     Then I should see "Please check your email"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
-  @odr
-  Scenario: add deputy user (odr)
+  @ndr
+  Scenario: add deputy user (ndr)
     Given emails are sent from "admin" area
     And I reset the email log
     And I load the application status from "init"
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
       # assert form OK
-    When I create a new "ODR-enabled" "Lay Deputy" user "John ODR" "Doe ODR" with email "behat-user-odr@publicguardian.gsi.gov.uk" and postcode "AB12CD"
-    Then I should see "behat-user-odr@publicguardian.gsi.gov.uk" in the "users" region
-    And I should see "yes" in the "behat-user-odrpublicguardiangsigovuk-odr-enabled" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-odr@publicguardian.gsi.gov.uk"
+    When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gsi.gov.uk" and postcode "AB12CD"
+    Then I should see "behat-user-ndr@publicguardian.gsi.gov.uk" in the "users" region
+    And I should see "yes" in the "behat-user-ndrpublicguardiangsigovuk-ndr-enabled" region
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gsi.gov.uk"
 
 

@@ -3,7 +3,7 @@ Feature: PA client archive
   Scenario: PA archives a client
     Given I load the application status from "team-users-complete"
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-1000016" region
+    And I click on "pa-report-open" in the "client-01000016" region
 
     # archive-cancel
     When I click on "client-archive"
@@ -24,4 +24,4 @@ Feature: PA client archive
     Then the form should be valid
     And I should be on "/pa/"
     And I should see "The client has been archived"
-    And I should not see the "client-1000016" region
+    And I should not see the "client-01000016" region

@@ -19,7 +19,7 @@ class AddUserType extends AbstractType
                     'data'        => $options['roleNameSetTo'],
                 ]
             )
-            ->add('odrEnabled', 'checkbox', [
+            ->add('ndrEnabled', 'checkbox', [
                 'data'     => true,
             ])
             ->add('save', 'submit');

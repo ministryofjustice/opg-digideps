@@ -37,11 +37,11 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
             {{ end }}
 
-        deputyodr:
-            description: End to end journey for ODR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+        deputyndr:
+            description: End to end journey for NDR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
             paths:    [ %paths.base%/features/deputy ]
             filters:
-                tags: "@odr"
+                tags: "@ndr"
             contexts:
             {{ if exists "/api/database/name" }}
                 - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]

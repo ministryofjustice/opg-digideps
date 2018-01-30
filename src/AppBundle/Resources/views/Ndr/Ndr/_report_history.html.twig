@@ -1,0 +1,56 @@
+{% set translationDomain = "ndr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="heading-large">{{ 'history.title' | trans }}</h2>
+
+<table class="check-your-answers behat-region-reports-history">
+    <thead>
+        <tr>
+            <th>{{ 'history.header.reportType' | trans }}</th>
+            <th>{{ 'history.header.reportingPeriod' | trans }}</th>
+            <th>{{ 'history.header.submissionDate' | trans }}</th>
+            <th><span class="visually-hidden">Actions</span></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for report in reports %}
+        <tr>
+            <td>
+                <a href="{{ path('report_review', {reportId: report.id}) }}">
+                    {{ 'history.reports.title' | trans }}
+                </a>
+            </td>
+            <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+            <td>{{ report.submitDate | date("j F Y") }}</td>
+            <td class="width-sixth change-answer">
+                <a href="{{ path('report_pdf', {reportId: report.id}) }}">
+                    {{ 'history.reports.download' | trans }}
+                </a><br>
+                <a href="{{ path('report_review', {reportId: report.id}) }}">
+                    {{ 'history.reports.view' | trans }}
+                </a><br>
+                <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-report-attach-more">
+                    {{ 'history.reports.attachDocuments' | trans }}
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    <tr>
+        <td>
+            <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">
+                {{ 'history.ndr.title' | trans }}
+            </a>
+        </td>
+        <td>{{ 'history.ndr.reportingPeriod' | trans }}</td>
+        <td>{{ ndr.submitDate | date("j F Y") }}</td>
+        <td class="change-answer">
+            <a href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+                {{ 'history.ndr.download' | trans }}
+            </a><br>
+            <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">
+                {{ 'history.ndr.view' | trans }}
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

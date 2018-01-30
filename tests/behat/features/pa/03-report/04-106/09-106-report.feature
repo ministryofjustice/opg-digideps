@@ -3,7 +3,7 @@ Feature: PA Deputy fees and expenses (106)
     Scenario: PA deputy fees
         Given I load the application status from "team-users-complete"
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "pa-report-open" in the "client-1000014" region
+        And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-pa_fee_expense, start"
         # chose "no records"
         Given the step cannot be submitted without making a selection
@@ -14,7 +14,7 @@ Feature: PA Deputy fees and expenses (106)
             | fee_exist_reasonForNoFees | Test |
         # summary page check
         Given I click on "pa-dashboard, tab-in-progress"
-        And I click on "pa-report-open" in the "client-1000014" region
+        And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-pa_fee_expense"
         Then each text should be present in the corresponding region:
             | No                          | has-fees          |
@@ -56,7 +56,7 @@ Feature: PA Deputy fees and expenses (106)
         # check record in summary page
         # summary page check
         Given I click on "pa-dashboard, tab-in-progress"
-        And I click on "pa-report-open" in the "client-1000014" region
+        And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-pa_fee_expense"
         Then each text should be present in the corresponding region:
             | £12,331.23     | fee-work-up-to-and-including-cot-made   |
@@ -105,7 +105,7 @@ Feature: PA Deputy fees and expenses (106)
     Scenario: PA fees outside practice
         Given I load the application status from "pa-fees-completed"
         And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "pa-report-open" in the "client-1000014" region
+        And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-pa_fee_expense"
         And I click on "edit" in the "paid-for-anything" region
     # chose "no records"

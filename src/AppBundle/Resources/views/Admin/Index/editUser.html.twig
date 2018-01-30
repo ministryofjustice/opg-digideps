@@ -34,10 +34,10 @@
         <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
     {% endif %}
     {% if user.roleName == 'ROLE_LAY_DEPUTY' %}
-        {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
+        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
     {% else %}
         <div class="hidden">
-            {{ form_checkbox(form.odrEnabled, 'addUserForm.odrEnabled') }}
+            {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
         </div>
     {% endif %}
     {{ form_submit(form.save,'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
