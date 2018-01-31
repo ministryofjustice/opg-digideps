@@ -100,7 +100,7 @@ Feature: Report submit
         Then the URL should match "/lay"
         And the response status code should be 200
 
-    @deputy
+    @deputy @shaun
     Scenario: admin area check filters, submission and ZIP file content
         Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
@@ -131,7 +131,7 @@ Feature: Report submit
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
-            | Report_behat001_2016_2016.zip | exactFileName+filesize | 78468 |
+            | Report_behat001_2016_2016.zip | regexpName+sizeAtLeast | 70000 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
         Then I check "cb1"
