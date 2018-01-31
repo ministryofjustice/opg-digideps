@@ -96,7 +96,7 @@ class Redirector
             return $this->router->generate('admin_homepage');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
-        } elseif ($user->isDeputyPa()) {
+        } elseif ($user->isDeputyOrg()) {
             return $this->router->generate('pa_dashboard');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
@@ -136,7 +136,7 @@ class Redirector
                 }
 
                 // incomplete user info
-                if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
+                if (!$user->isDeputyOrg() && !$user->hasAddressDetails()) {
                     $route = 'user_details';
                 }
             }

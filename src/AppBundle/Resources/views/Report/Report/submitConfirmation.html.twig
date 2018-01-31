@@ -34,7 +34,7 @@
     {{ form_end(form) }}
     {# end feedback form #}
 
-    {% if app.user.isDeputyPa() %}
+    {% if app.user.isDeputyOrg() %}
         <a href="{{path('pa_dashboard')}}" class="behat-link-return-to-pa-dashboard">{{ 'page.returnToDashboard' | trans }}</a>
     {% else %}
         <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>

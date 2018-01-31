@@ -147,7 +147,7 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData();
 
-        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyPa();
+        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyOrg();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -162,6 +162,9 @@ class UserController extends AbstractController
                 EntityDir\User::ROLE_PA_NAMED       => 'pa_dashboard',
                 EntityDir\User::ROLE_PA_ADMIN       => 'pa_dashboard',
                 EntityDir\User::ROLE_PA_TEAM_MEMBER => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_NAMED       => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_ADMIN       => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'pa_dashboard',
                 EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
             ][$user->getRoleName()]));
         }
@@ -326,6 +329,12 @@ class UserController extends AbstractController
             case EntityDir\User::ROLE_PA_NAMED:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
+                return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
+
+            // prof reuses pa so far
+            case EntityDir\User::ROLE_PROF_NAMED:
+            case EntityDir\User::ROLE_PROF_ADMIN:
+            case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
                 return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
         }
     }

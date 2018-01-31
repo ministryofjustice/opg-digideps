@@ -113,7 +113,7 @@
                                 {% set createdBy = reportSubmission.createdBy %}
                                 {{ createdBy.fullname }}
                                 ({{ createdBy.roleFullName }})
-                                {% if createdBy.isDeputyPa %}
+                                {% if createdBy.isDeputyOrg %}
                                     <br/>{{ reportSubmission.createdBy.paTeamName }}
                                 {% endif %}
                             {% endif %}

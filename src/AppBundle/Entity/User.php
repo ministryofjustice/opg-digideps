@@ -897,6 +897,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a PA Deputy?
+     *
+     * @return bool
+     */
+    public function isDeputyProf()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER]);
+    }
+
+    /**
      * Is user a PA Administrator?
      *
      * @return bool
@@ -911,7 +921,7 @@ class User implements AdvancedUserInterface
      *
      * @return bool
      */
-    public function isNamedDeputy()
+    public function isPaNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
@@ -923,6 +933,16 @@ class User implements AdvancedUserInterface
      */
     public function isDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyPa();
+        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyOrg();
+    }
+
+    /**
+     * Is user a PA or Prof Deputy?
+     *
+     * @return bool
+     */
+    public function isDeputyOrg()
+    {
+        return $this->isDeputyPa() || $this->isDeputyProf();
     }
 }

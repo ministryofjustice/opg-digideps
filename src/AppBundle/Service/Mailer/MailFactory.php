@@ -279,7 +279,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
+    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 

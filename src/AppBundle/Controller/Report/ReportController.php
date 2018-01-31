@@ -107,7 +107,7 @@ class ReportController extends AbstractController
         $client = $report->getClient();
 
         $editReportDatesForm = $this->get('form.factory')->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
-        $returnLink = $this->getUser()->isDeputyPa()
+        $returnLink = $this->getUser()->isDeputyOrg()
             ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
@@ -198,7 +198,7 @@ class ReportController extends AbstractController
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
-        $template = $this->getUser()->isDeputyPa()
+        $template = $this->getUser()->isDeputyOrg()
             ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
@@ -249,8 +249,8 @@ class ReportController extends AbstractController
             $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
 
             //send confirmation email
-            if ($user->isDeputyPa()) {
-                $reportConfirmEmail = $this->getMailFactory()->createPaReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+            if ($user->isDeputyOrg()) {
+                $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
                 $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
             } else {
                 $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
@@ -337,7 +337,7 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
 
-        if ($this->getUser()->isDeputyPa()) {
+        if ($this->getUser()->isDeputyOrg()) {
             $backLink = $this->generateClientProfileLink($report->getClient());
         } else {
             $backLink = $this->generateUrl('lay_home');

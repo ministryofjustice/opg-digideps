@@ -21,7 +21,7 @@
                     <th scope="row" class="bold">{{ 'profile-page.fullName' | trans }}</th>
                     <td class="behat-region-profile-name">{{ user.getFullname }}</td>
                 </tr>
-                {% if app.user.isDeputyPa() %}
+                {% if app.user.isDeputyOrg() %}
                 <tr>
                     <th scope="row" class="bold">{{ 'profile-page.jobTitle' | trans }}</th>
                     <td class="behat-region-profile-job">{{ user.getJobTitle}}</td>
@@ -64,6 +64,6 @@
 
     </div>
 
-    <a href="{{ path(app.user.isDeputyPa() ? 'pa_profile_edit' : 'user_edit') }}" class="button push--top behat-link-profile-edit">{{ 'profile-page.editButton'| trans }}</a>
+    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_edit' : 'user_edit') }}" class="button push--top behat-link-profile-edit">{{ 'profile-page.editButton'| trans }}</a>
 
 {% endblock %}
