@@ -61,10 +61,9 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
         // follow order in https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
         return [
             // 103
-            ['l3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-            ['l3g', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_102],
-            ['a3', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_103 ? Report::TYPE_103 : Report::TYPE_103],
-
+            ['l3', 'opg103', User::ROLE_LAY_DEPUTY,  Report::TYPE_103 ],
+            ['l3g', 'opg103', User::ROLE_LAY_DEPUTY,  Report::TYPE_103 ],
+            ['a3', 'opg103', User::ROLE_LAY_DEPUTY,  Report::TYPE_103],
 
             // 102
             [null, null, User::ROLE_LAY_DEPUTY, Report::TYPE_102],
@@ -76,21 +75,19 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             ['l2', 'opg103', User::ROLE_LAY_DEPUTY, Report::TYPE_102],
 
             // 104
-            ['hw', '', User::ROLE_LAY_DEPUTY, Report::ENABLE_104 ? Report::TYPE_104 : Report::TYPE_102],
+            ['hw', '', User::ROLE_LAY_DEPUTY, Report::TYPE_104],
 
             // 103-4
-            ['hw', 'opg103', User::ROLE_LAY_DEPUTY, Report::ENABLE_104_JOINT ? Report::TYPE_103_4 : Report::TYPE_102],
+            ['hw', 'opg103', User::ROLE_LAY_DEPUTY, Report::TYPE_103_4],
 
             // 102-4
-            ['hw', 'opg102', User::ROLE_LAY_DEPUTY, Report::ENABLE_104_JOINT ? Report::TYPE_102_4 : Report::TYPE_102],
+            ['hw', 'opg102', User::ROLE_LAY_DEPUTY,  Report::TYPE_102_4],
 
             // ============ PA =============
-
             // 103-6
-            ['l3', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['l3g', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_102_6],
-            ['a3', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_103 ? Report::TYPE_103_6 : Report::TYPE_103_6],
-
+            ['l3', 'opg103', User::ROLE_PA_NAMED,Report::TYPE_103_6 ],
+            ['l3g', 'opg103', User::ROLE_PA_NAMED, Report::TYPE_103_6 ],
+            ['a3', 'opg103', User::ROLE_PA_NAMED, Report::TYPE_103_6],
             // 102-6
             [null, null, User::ROLE_PA_NAMED, Report::TYPE_102_6],
             [null, 'opg103', User::ROLE_PA_NAMED, Report::TYPE_102_6],
@@ -99,15 +96,32 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             ['l3g', 'whatever', User::ROLE_PA_NAMED, Report::TYPE_102_6],
             ['a3', 'whatever', User::ROLE_PA_NAMED, Report::TYPE_102_6],
             ['l2', 'opg103', User::ROLE_PA_NAMED, Report::TYPE_102_6],
-
             // 104-6
-            ['hw', '', User::ROLE_PA_NAMED, Report::ENABLE_104 ? Report::TYPE_104_6 : Report::TYPE_102_6],
-
+            ['hw', '', User::ROLE_PA_NAMED, Report::TYPE_104_6],
             // 103-4-6
-            ['hw', 'opg103', User::ROLE_PA_NAMED, Report::ENABLE_104_JOINT ? Report::TYPE_103_4_6 : Report::TYPE_102_6],
-
+            ['hw', 'opg103', User::ROLE_PA_NAMED, Report::TYPE_103_4_6],
             // 102-4-6
-            ['hw', 'opg102', User::ROLE_PA_NAMED, Report::ENABLE_104_JOINT ? Report::TYPE_102_4_6 : Report::TYPE_102_6],
+            ['hw', 'opg102', User::ROLE_PA_NAMED, Report::TYPE_102_4_6],
+
+            // ============ Prof =============
+            // 103-5
+            ['l3', 'opg103', User::ROLE_PROF_NAMED,Report::TYPE_103_5 ],
+            ['l3g', 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_103_5 ],
+            ['a3', 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_103_5],
+            // 102-5
+            [null, null, User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            [null, 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            [null, 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            ['l3', 'whatever', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            ['l3g', 'whatever', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            ['a3', 'whatever', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            ['l2', 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_102_5],
+            // 104-5
+            ['hw', '', User::ROLE_PROF_NAMED, Report::TYPE_104_5],
+            // 103-4-5
+            ['hw', 'opg103', User::ROLE_PROF_NAMED, Report::TYPE_103_4_5],
+            // 102-4-5
+            ['hw', 'opg102', User::ROLE_PROF_NAMED, Report::TYPE_102_4_5],
         ];
     }
 
