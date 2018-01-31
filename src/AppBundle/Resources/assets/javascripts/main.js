@@ -3,6 +3,9 @@
 
 $(document).ready(function() {
 
+    // JS induced disabling of elements
+    $('.js-disabled').attr('disabled', 'disabled');
+
 	// Format currency module
 	$('.js-format-currency').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
@@ -25,6 +28,9 @@ $(document).ready(function() {
     // Check upload progress
     new GOVUK.uploadProgress('.js-upload-progress');
     new GOVUK.uploadProgressPA('.js-upload-progress-pa');
+
+    // Table Multi Select
+    new GOVUK.tableMultiSelect();
 
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
