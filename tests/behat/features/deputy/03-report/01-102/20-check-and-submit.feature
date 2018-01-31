@@ -100,7 +100,7 @@ Feature: Report submit
         Then the URL should match "/lay"
         And the response status code should be 200
 
-    @deputy @shaun
+    @deputy
     Scenario: admin area check filters, submission and ZIP file content
         Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
