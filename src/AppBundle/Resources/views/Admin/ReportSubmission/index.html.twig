@@ -83,7 +83,7 @@
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
         {% if isNewPage %}
             {% for action in postActions %}
-                <input type="submit" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="button button-secondary push-half--bottom push-half--right js-disabled">
+                <input type="submit" id="action-{{ action }}" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled">
             {% endfor %}
             <p class="right text--right"><span id="numberOfCases">0 cases</span> selected</p>
         {% endif %}
@@ -119,7 +119,8 @@
                         {% if isNewPage %}
                             <td class="width-twentieth multiple-choice--smaller">
                                 <div class="multiple-choice">
-                                    <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]" class="js-checkbox">
+                                    <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
+                                           class="js-checkbox">
                                     <label for="cb{{ reportSubmission.id }}">
                                         <span class="visually-hidden">Select</span>
                                     </label>
