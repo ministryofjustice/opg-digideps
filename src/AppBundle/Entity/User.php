@@ -29,10 +29,16 @@ class User implements UserInterface
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
+    
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+
+    const ROLE_PROF = 'ROLE_PROF';
+    const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
     /**
      * @var int
