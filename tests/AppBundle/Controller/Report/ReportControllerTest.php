@@ -613,6 +613,9 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEndpointNotAllowedFor('GET', '/report/get-all', self::$tokenAdmin);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPa);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaAdmin);
+        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaTeamMember);
     }
 
     public function testGetAll()
