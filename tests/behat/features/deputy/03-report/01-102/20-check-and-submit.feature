@@ -127,14 +127,11 @@ Feature: Report submit
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
             | 4 documents | report-submission-1 |
-        #When I check "cb1"
-        #Then I click on "download"
-        #Then the page content should be a zip file containing zip files with the following files:
-            #| Report_behat001_2016_2016.zip | good.jpgg | exactFileName+filesize | 10170 |
-            #| Report_behat001_2016_2016.zip | good.png | exactFileName+filesize | 17089 |
-            #| Report_behat001_2016_2016.zip | file1.pdf | exactFileName+filesize | 6554 |
-            #| Report_behat001_2016_2016.zip | DigiRep-2016_2018-01-30_behat001.pdf | exactFileName+filesize | 78469 |
-
+        When I check "cb1"
+        Then I click on "download"
+        # only checks one level deep. In this case, we check for a single report zip file
+        And the page content should be a zip file containing files with the following files:
+            | Report_behat001_2016_2016.zip | exactFileName+filesize | 78468 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
         Then I check "cb1"
