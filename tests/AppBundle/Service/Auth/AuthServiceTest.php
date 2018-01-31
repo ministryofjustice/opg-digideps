@@ -159,15 +159,12 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider isSecretValidForUserProvider
      */
-    public function testisSecretValidForUser($clientSecret, $role, $expectedResult)
+    public function testisSecretValidForRole($clientSecret, $role, $expectedResult)
     {
-        $user = m::stub('AppBundle\Entity\User', [
-                'getRoleName' => $role,
-        ]);
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
 
-        $this->assertEquals($expectedResult, $this->authService->isSecretValidForUser($user, $request));
+        $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
     }
 
     public function tearDown()

@@ -328,7 +328,7 @@ class UserController extends RestController
 
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
-        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
@@ -350,7 +350,7 @@ class UserController extends RestController
 
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user EntityDir\User */
 
-        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 

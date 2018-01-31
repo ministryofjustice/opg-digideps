@@ -104,18 +104,4 @@ class AuthService
         return in_array($roleName, $permissions);
     }
 
-    /**
-     * @deprecated
-     *
-     * Use method above instead
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return bool
-     */
-    public function isSecretValidForUser(User $user, Request $request)
-    {
-        return $this->isSecretValidForRole($user->getRoleName(), $request);
-    }
 }
