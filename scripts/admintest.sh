@@ -11,5 +11,7 @@ export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
 export PGUSER=${API_DATABASE_USERNAME:=api}
 rm -rf app/cache/*
+# remove behat cache as it's mounted in a persistent container
+rm -rf /tmp/behat/*
 
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=admin --profile=${PROFILE:=headless} --stop-on-failure
