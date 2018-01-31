@@ -22,6 +22,7 @@ clientSearch:
   pageTitle: Admin
   supportTitle: Cases
   clientTable:
+    noResults: No clients found
     headers:
       caseNumber: Case number
       client: Client
