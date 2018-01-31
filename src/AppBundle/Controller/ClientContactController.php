@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -15,16 +16,10 @@ class ClientContactController extends RestController
     /**
      * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function add(Request $request, $clientId)
     {
-        // checks
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
@@ -57,15 +52,10 @@ class ClientContactController extends RestController
      *
      * @Route("/clientcontacts/{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function update(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());
 
@@ -90,15 +80,10 @@ class ClientContactController extends RestController
     /**
      * @Route("/clientcontacts/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups')
             : ['clientcontacts', 'user'];
@@ -116,17 +101,10 @@ class ClientContactController extends RestController
      *
      * @Route("/clientcontacts/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function delete($id)
     {
-        $this->get('logger')->debug('Deleting client contact ' . $id);
-
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         try {
             $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
             $this->denyAccessIfClientDoesNotBelongToUser($clientContact->getClient());

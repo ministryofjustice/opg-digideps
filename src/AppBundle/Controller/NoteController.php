@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -15,15 +16,10 @@ class NoteController extends RestController
     /**
      * @Route("{clientId}", requirements={"clientId":"\d+"})
      * @Method({"POST"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function add(Request $request, $clientId)
     {
-        // checks
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
         $client = $this->findEntityBy(EntityDir\Client::class, $clientId); /* @var $report EntityDir\Client */
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
@@ -48,15 +44,10 @@ class NoteController extends RestController
      *
      * @Route("{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['notes', 'user'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -73,15 +64,10 @@ class NoteController extends RestController
      *
      * @Route("{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function updateNote(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         $note = $this->findEntityBy(EntityDir\Note::class, $id); /* @var $note EntityDir\Note */
 
         // enable if the check above is removed and the note is available for editing for the whole team
@@ -105,8 +91,8 @@ class NoteController extends RestController
      * Delete note.
      *
      * @Method({"DELETE"})
-     *
      * @Route("{id}")
+     * @Security("has_role('ROLE_PA')")
      *
      * @param int $id
      *
@@ -114,14 +100,6 @@ class NoteController extends RestController
      */
     public function delete($id)
     {
-        $this->get('logger')->debug('Deleting note ' . $id);
-
-        $this->denyAccessUnlessGranted(
-            [
-                EntityDir\User::ROLE_PA
-            ]
-        );
-
         try {
             /** @var $note EntityDir\Note $note */
             $note = $this->findEntityBy(EntityDir\Note::class, $id);

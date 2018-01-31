@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,11 +19,10 @@ class ClientController extends RestController
      *
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function upsertAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'POST') {
@@ -75,13 +75,12 @@ class ClientController extends RestController
     /**
      * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function findByIdAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['client'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -98,12 +97,12 @@ class ClientController extends RestController
     /**
      * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_PA')")
      *
      * @param int $id
      */
     public function archiveAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA]);
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {

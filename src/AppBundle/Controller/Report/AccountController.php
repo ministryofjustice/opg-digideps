@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
@@ -13,11 +14,10 @@ class AccountController extends RestController
     /**
      * @Route("/report/{reportId}/account")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAccountAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -38,11 +38,10 @@ class AccountController extends RestController
     /**
      * @Route("/report/account/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
@@ -56,11 +55,10 @@ class AccountController extends RestController
     /**
      * @Route("/account/{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function editAccountAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
@@ -80,11 +78,10 @@ class AccountController extends RestController
     /**
      * @Route("/account/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function accountDelete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 

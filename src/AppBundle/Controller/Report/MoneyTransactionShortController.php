@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionShortController extends RestController
@@ -13,11 +14,10 @@ class MoneyTransactionShortController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction-short")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -41,11 +41,10 @@ class MoneyTransactionShortController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -64,11 +63,10 @@ class MoneyTransactionShortController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -84,11 +82,10 @@ class MoneyTransactionShortController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById($reportId, $transactionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 

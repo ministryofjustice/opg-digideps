@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
@@ -13,11 +13,10 @@ class ExpenseController extends RestController
     /**
      * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById($ndrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
@@ -32,11 +31,10 @@ class ExpenseController extends RestController
     /**
      * @Route("/ndr/{ndrId}/expense", requirements={"ndrId":"\d+"})
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $ndrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
@@ -59,11 +57,10 @@ class ExpenseController extends RestController
     /**
      * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $ndrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -82,11 +79,10 @@ class ExpenseController extends RestController
     /**
      * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($ndrId, $expenseId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 

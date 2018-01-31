@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
@@ -13,11 +14,10 @@ class MoneyTransactionController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -44,11 +44,10 @@ class MoneyTransactionController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -72,11 +71,10 @@ class MoneyTransactionController extends RestController
     /**
      * @Route("/report/{reportId}/money-transaction/{transactionId}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
