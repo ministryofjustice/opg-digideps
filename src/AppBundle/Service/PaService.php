@@ -290,7 +290,7 @@ class PaService
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], EntityDir\User::ROLE_PA_NAMED);
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], $user->getRoleName());
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
