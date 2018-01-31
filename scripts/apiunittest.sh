@@ -12,5 +12,7 @@ cd /app
 # clear cache
 rm -rf app/cache/*
 
+rm -f /tmp/dd_stats.csv
 /sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Controller/
-/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Service/ tests/AppBundle/Entity/
+/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Service/
+/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Entity/
