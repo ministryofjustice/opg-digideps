@@ -36,7 +36,7 @@ class PaServiceTest extends WebTestCase
         'Dep Postcode' => 'N1 ABC',
         'Dep Forename' => 'Dep1',
         'Dep Surname'  => 'Uty2',
-        'Dep Type'     => 23,
+        'Dep Type'     => 'SETME',
         'Dep Adrs1'    => 'ADD1',
         'Dep Adrs2'    => 'ADD2',
         'Dep Adrs3'    => 'ADD3',
@@ -49,7 +49,7 @@ class PaServiceTest extends WebTestCase
         'Deputy No'    => '00000002',
         'Dep Forename' => 'Dep2',
         'Dep Surname'  => 'Uty2',
-        'Dep Type'     => 23,
+        'Dep Type'     => 'SETME',
         'Email'        => 'dep2@provider.com',
     ];
 
@@ -111,15 +111,19 @@ class PaServiceTest extends WebTestCase
         self::$em->clear();
     }
 
-    public function testAddFromCasrecRows()
+    public function testPAAddFromCasrecRows()
     {
+        $deputy1 = ['Dep Type'=>23] + self::$deputy1;
+        $deputy2 = ['Dep Type'=>23] + self::$deputy2;
+
+
         // create two clients for the same deputy, each one with a report
         $data = [
             // deputy 1 with client 1 and client 2
-            0 => self::$deputy1 + self::$client1,
-            1 => self::$deputy1 + self::$client2,
+            0 => $deputy1 + self::$client1,
+            1 => $deputy1 + self::$client2,
             // deputy 2 with client 3
-            2 => self::$deputy2 + self::$client3,
+            2 => $deputy2 + self::$client3,
         ];
 
         $ret1 = $this->pa->addFromCasrecRows($data);
@@ -193,7 +197,7 @@ class PaServiceTest extends WebTestCase
 
         // move client2 from deputy1 -> deputy2
         $dataMove = [
-            self::$deputy2 + self::$client2,
+            $deputy2 + self::$client2,
         ];
         $this->pa->addFromCasrecRows($dataMove);
         self::$em->clear();
