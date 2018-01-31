@@ -23,6 +23,10 @@ class User implements AdvancedUserInterface
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
+    const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
+
     /**
      * @JMS\Exclude
      */
@@ -30,9 +34,14 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN          => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
-        self::ROLE_PA_NAMED       => 'Public Authority',
+        // pa
+        self::ROLE_PA_NAMED       => 'Public Authority (named)',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',
         self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
+        // prof
+        self::ROLE_PROF_NAMED       => 'Professional Deputy (named)',
+        self::ROLE_PROF_ADMIN       => 'Professional Deputy admin',
+        self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
     const TOKEN_EXPIRE_HOURS = 48;
