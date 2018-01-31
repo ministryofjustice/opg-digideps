@@ -4,10 +4,18 @@
 
 .button-secondary {
     @include button($grey-3);
+
+    &[disabled="disabled"] {
+        background: $grey-3;
+    }
 }
 
 .button-warning {
     @include button($red);
+
+    &[disabled="disabled"] {
+        background: $red;
+    }
 }
 
 .button-link {

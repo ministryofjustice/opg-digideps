@@ -35,6 +35,19 @@ trait FileTrait
                     }
                     break;
 
+                case 'exactFileName+filesize':
+                    $expectedSize = $value;
+
+                    exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
+                    if (empty($lines)) {
+                        throw new \RuntimeException("File matching $file not found in ZIP file");
+                    }
+                    $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
+                    if ($sizeBytes <> $value) {
+                        throw new \RuntimeException("File matching $file is $sizeBytes bytes, size $expectedSize expected");
+                    }
+                    break;
+
                 case 'regexpName+sizeAtLeast':
                     $sizeAtLeast = $value;
                     exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
