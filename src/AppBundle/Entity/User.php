@@ -945,4 +945,14 @@ class User implements AdvancedUserInterface
     {
         return $this->isDeputyPa() || $this->isDeputyProf();
     }
+
+    /**
+     * Is user a PA named or a Prof named ?
+     *
+     * @return bool
+     */
+    public function hasRoleOrgNamed()
+    {
+        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
+    }
 }

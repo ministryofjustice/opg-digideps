@@ -49,7 +49,9 @@ class UserController extends AbstractController
 
         // PA must agree to terms before activating the account
         // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if ($isActivatePage && $user->getRoleName() == EntityDir\User::ROLE_PA_NAMED && !$user->getAgreeTermsUse()) {
+        if ($isActivatePage
+            && $user->hasRoleOrgNamed()
+            && !$user->getAgreeTermsUse()) {
             return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
         }
 
@@ -304,10 +306,18 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }
 
-        return [
+        if ($user->getRoleName() == EntityDir\User::ROLE_PA_NAMED) {
+            $view = 'AppBundle:User:agreeTermsUsePa.html.twig';
+        } else if ($user->getRoleName() ==EntityDir\User::ROLE_PROF_NAMED) {
+            $view = 'AppBundle:User:agreeTermsUseProf.html.twig';
+        } else {
+            throw new \RuntimeException('terms page not implemented');
+        }
+
+        return $this->render($view, [
             'user' => $user,
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
