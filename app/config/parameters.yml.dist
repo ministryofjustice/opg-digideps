@@ -137,7 +137,7 @@ parameters:
 
     client_secrets:
         123abc-deputy:
-            permissions: [ROLE_LAY_DEPUTY, ROLE_PA]
+            permissions: [ROLE_DEPUTY]
         123abc-admin:
             permissions: [ROLE_ADMIN]
         123abc-both:

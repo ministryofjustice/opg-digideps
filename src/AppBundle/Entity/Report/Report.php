@@ -48,21 +48,25 @@ class Report implements ReportInterface
     const TYPE_103_4 = '103-4';
     const TYPE_102_4 = '102-4';
 
+    // PA
     const TYPE_103_6 = '103-6';
     const TYPE_102_6 = '102-6';
     const TYPE_104_6 = '104-6';
     const TYPE_103_4_6 = '103-4-6';
     const TYPE_102_4_6 = '102-4-6';
 
+    // PROF
+    const TYPE_103_5 = '103-5';
+    const TYPE_102_5 = '102-5';
+    const TYPE_104_5 = '104-5';
+    const TYPE_103_4_5 = '103-4-5';
+    const TYPE_102_4_5 = '102-4-5';
+
     private static $reportTypes = [
         self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
-        self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6
+        self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
+        self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5
     ];
-
-    // feature flags, to disable 103/104 if/when needed
-    const ENABLE_103 = true;
-    const ENABLE_104 = true;
-    const ENABLE_104_JOINT = true;
 
     const SECTION_DECISIONS = 'decisions';
     const SECTION_CONTACTS = 'contacts';
@@ -99,14 +103,17 @@ class Report implements ReportInterface
         $allReports = [
             self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, //Lay
             self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof
         ];
         $r102n103 = [
             self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4, //Lay
-            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
+            self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5 // Prof
         ];
         $r104 = [
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
-            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6 // PA
+            self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
+            self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5 // PA
         ];
 
         return [
@@ -116,20 +123,23 @@ class Report implements ReportInterface
             self::SECTION_LIFESTYLE          => $r104,
             // money
             self::SECTION_BANK_ACCOUNTS      => $r102n103,
-            self::SECTION_MONEY_TRANSFERS    => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
-            self::SECTION_MONEY_IN           => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
-            self::SECTION_MONEY_OUT          => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
-            self::SECTION_MONEY_IN_SHORT     => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6],
-            self::SECTION_MONEY_OUT_SHORT    => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6],
+            self::SECTION_MONEY_TRANSFERS    => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_IN           => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_OUT          => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
+            self::SECTION_MONEY_IN_SHORT     => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
+            self::SECTION_MONEY_OUT_SHORT    => [self::TYPE_103, self::TYPE_103_4, self::TYPE_103_6, self::TYPE_103_4_6, self::TYPE_103_5, self::TYPE_103_4_5],
             self::SECTION_ASSETS             => $r102n103,
             self::SECTION_DEBTS              => $r102n103,
             self::SECTION_GIFTS              => $r102n103,
-            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6],
+            self::SECTION_BALANCE            => [self::TYPE_102, self::TYPE_102_4, self::TYPE_102_6, self::TYPE_102_4_6, self::TYPE_102_5, self::TYPE_102_4_5],
             // end money
             self::SECTION_ACTIONS            => $allReports,
             self::SECTION_OTHER_INFO         => $allReports,
             self::SECTION_DEPUTY_EXPENSES    => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
-            self::SECTION_PA_DEPUTY_EXPENSES => [self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6], // PA except 104-6
+            self::SECTION_PA_DEPUTY_EXPENSES => [
+                self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
+                self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
+            ],
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }

@@ -88,10 +88,6 @@ class PaService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                if ($row['Dep Type'] != 23) {
-                    throw new \RuntimeException('Not a PA');
-                }
-
                 $user = $this->upsertUser($row);
                 $client = $this->upsertClient($row, $user);
                 $this->upsertReport($row, $client, $user);
@@ -119,10 +115,15 @@ class PaService
      */
     private function upsertUser(array $row)
     {
+        $depType = $row['Dep Type'];
+        if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
+            throw new \RuntimeException('Dep Type not recognised');
+        }
+        $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
         $deputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
         $criteria = [
             'deputyNo' => $deputyNo,
-            'roleName' => EntityDir\User::ROLE_PA
+            'roleName' => $roleName
         ];
         $user = $this->userRepository->findOneBy($criteria);
         $userEmail = strtolower($row['Email']);
@@ -151,13 +152,11 @@ class PaService
                     ->setEmail($row['Email'])
                     ->setFirstname($row['Dep Forename'])
                     ->setLastname($row['Dep Surname'])
-                    ->setRoleName(EntityDir\User::ROLE_PA);
+                    ->setRoleName($roleName);
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
                     // Dep Surname in the CSV is actually the PA team name
-                    // it's used for firstname/lastname of the named PA (ROLE_PA), but those fields are editable
-                    // and not reliable for a PA team name
                     $team = new EntityDir\Team($row['Dep Surname']);
 
                     // Address from upload is the team's address, not the user's
@@ -201,7 +200,6 @@ class PaService
             $this->warnings[] = 'PA team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
             $this->em->flush($team);
         }
-
 
         return $user;
     }
@@ -292,7 +290,7 @@ class PaService
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], EntityDir\User::ROLE_PA);
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], $user->getRoleName());
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted

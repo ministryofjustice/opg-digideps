@@ -28,8 +28,7 @@ abstract class AbstractTestController extends WebTestCase
         //TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
-        self::$frameworkBundleClient = static::createClient(['environment' => 'test',
-                                               'debug' => false, ]);
+        self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false, ]);
         $em = self::$frameworkBundleClient->getContainer()->get('em');
 
         $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
@@ -46,8 +45,6 @@ abstract class AbstractTestController extends WebTestCase
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-
-        //self::fixtures()->clear();
     }
 
     /**

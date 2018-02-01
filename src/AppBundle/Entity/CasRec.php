@@ -25,15 +25,21 @@ class CasRec
         // Lay
         [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
         [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
-        [Report::ENABLE_104, User::ROLE_LAY_DEPUTY, ['hw'], '', Report::TYPE_104],
-        [Report::ENABLE_104_JOINT, User::ROLE_LAY_DEPUTY, ['hw'], 'opg103', Report::TYPE_103_4],
-        [Report::ENABLE_104_JOINT, User::ROLE_LAY_DEPUTY, ['hw'], 'opg102', Report::TYPE_102_4],
+        [true, User::ROLE_LAY_DEPUTY, ['hw'], '', Report::TYPE_104],
+        [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg103', Report::TYPE_103_4],
+        [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg102', Report::TYPE_102_4],
         // PA
-        [true, User::ROLE_PA, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
-        [true, User::ROLE_PA, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
-        [Report::ENABLE_104, User::ROLE_PA, ['hw'], '', Report::TYPE_104_6],
-        [Report::ENABLE_104_JOINT, User::ROLE_PA, ['hw'], 'opg103', Report::TYPE_103_4_6],
-        [Report::ENABLE_104_JOINT, User::ROLE_PA, ['hw'], 'opg102', Report::TYPE_102_4_6],
+        [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
+        [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
+        [true, User::ROLE_PA_NAMED, ['hw'], '', Report::TYPE_104_6],
+        [true, User::ROLE_PA_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_6],
+        [true, User::ROLE_PA_NAMED, ['hw'], 'opg102', Report::TYPE_102_4_6],
+        // Prof
+        [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_5],
+        [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
+        [true, User::ROLE_PROF_NAMED, ['hw'], '', Report::TYPE_104_5],
+        [true, User::ROLE_PROF_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_5],
+        [true, User::ROLE_PROF_NAMED, ['hw'], 'opg102', Report::TYPE_102_4_5],
     ];
 
     /**
@@ -333,7 +339,7 @@ class CasRec
      *
      * @param string $typeOfRep    e.g. opg103
      * @param string $corref       e.g. l3, l3g
-     * @param string $userRoleName e.g. ROLE_PA
+     * @param string $userRoleName e.g. ROLE_PA_NAMED
      *
      * @return string Report::TYPE_*
      */
@@ -355,8 +361,10 @@ class CasRec
         switch ($userRoleName) {
             case User::ROLE_LAY_DEPUTY:
                 return Report::TYPE_102;
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
                 return Report::TYPE_102_6;
+            case User::ROLE_PROF_NAMED:
+                return Report::TYPE_102_5;
         }
 
         throw new \Exception(__METHOD__ . ': user role not recognised to determine report type');

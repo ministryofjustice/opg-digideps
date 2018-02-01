@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Service\CsvUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,11 +18,10 @@ class CasRecController extends RestController
     /**
      * @Route("/truncate")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function truncateTable(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
         $em = $this->getEntityManager();
         $em->getConnection()->query('TRUNCATE TABLE casrec');
 
@@ -35,11 +35,11 @@ class CasRecController extends RestController
      *
      * @Route("/bulk-add")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function addBulk(Request $request)
     {
         $casrecService = $this->get('casrec_service');
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
 
@@ -72,11 +72,10 @@ class CasRecController extends RestController
     /**
      * @Route("/count")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function userCount()
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
         $qb->select('count(c.id)');
         $qb->from('AppBundle\Entity\CasRec', 'c');
@@ -91,11 +90,10 @@ class CasRecController extends RestController
      *
      * @Route("/stats.csv")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getStatsCsv(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
         // create CSV if not added by the cron, or the "regenerated" param is true
         if (!file_exists(EntityDir\CasRec::STATS_FILE_PATH) || $request->get('regenerate')) {
             $this->get('casrec_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);

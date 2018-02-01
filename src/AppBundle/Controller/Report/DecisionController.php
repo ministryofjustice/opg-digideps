@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,11 +17,10 @@ class DecisionController extends RestController
     /**
      * @Route("/decision")
      * @Method({"POST", "PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function upsertDecision(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'PUT') {
@@ -61,13 +61,12 @@ class DecisionController extends RestController
     /**
      * @Route("/decision/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $serialisedGroups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['decision'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
@@ -80,11 +79,10 @@ class DecisionController extends RestController
     /**
      * @Route("/decision/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteDecision($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 

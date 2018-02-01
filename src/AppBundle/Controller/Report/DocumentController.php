@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
@@ -16,10 +17,11 @@ class DocumentController extends RestController
      *     "reportType" = "(report|ndr)"
      * })
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportType, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
+
 
         /* @var $report Report */
         $report = $reportType === 'report' ?
@@ -47,6 +49,7 @@ class DocumentController extends RestController
      *
      * @Route("/document/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -67,8 +70,8 @@ class DocumentController extends RestController
      * Accessible only from deputy area
      *
      * @Method({"DELETE"})
-     *
      * @Route("/document/{id}")
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      *

@@ -6,6 +6,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Service\CsvUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,11 +17,10 @@ class CoDeputyController extends RestController
     /**
      * @route("{count}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function countMld(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
         $qb = $this->getDoctrine()->getManager()->createQueryBuilder()
             ->select('count(u.id)')
             ->from('AppBundle\Entity\User', 'u')
@@ -35,11 +35,10 @@ class CoDeputyController extends RestController
     /**
      * @Route("add")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DEPUTY]);
-
         $data = $this->deserializeBodyContent($request, [
             'email' => 'notEmpty',
         ]);
@@ -70,12 +69,12 @@ class CoDeputyController extends RestController
     /**
      * @Route("{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
     {
         $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
 
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
         if (!$user->isCoDeputy()
             || !$this->getUser()->isCoDeputy()
             || ($this->getUser()->getIdOfClientWithDetails() != $user->getIdOfClientWithDetails())) {
@@ -100,12 +99,11 @@ class CoDeputyController extends RestController
      *
      * @Route("{mldupgrade}")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function upgradeToMld(Request $request)
     {
         $maxRecords = 10000;
-
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
 

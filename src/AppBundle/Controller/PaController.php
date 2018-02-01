@@ -7,6 +7,7 @@ use AppBundle\Service\CsvUploader;
 use AppBundle\Service\PaService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,11 +21,11 @@ class PaController extends RestController
      *
      * @Route("/bulk-add")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function addBulk(Request $request)
     {
         $maxRecords = 10000;
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
 
         ini_set('memory_limit', '1024M');
 

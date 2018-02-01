@@ -17,8 +17,6 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $this->selfRegisterController = new SelfRegisterController();
         parent::setUp();
-//        self::$frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => true]);
-//        $this->em = self::$frameworkBundleClient->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     public function tearDown()
