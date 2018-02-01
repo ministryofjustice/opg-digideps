@@ -71,13 +71,23 @@ Feature: ndr / report submit
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
             | 1 document | report-submission-1 |
-        When I click on "download" in the "report-submission-1" region
-        Then the page content should be a zip file containing files with the following files:
-            | NdrRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
-            # archive (and clean for future tests)
+        When I check "cb1"
+        Then I click on "download"
+        # only checks one level deep. In this case, we check for a single report zip file
+        And the page content should be a zip file containing files with the following files:
+            | NdrRep.*.zip | regexpName+sizeAtLeast | 40000 |
+        # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
-        When I click on "archive" in the "report-submission-1" region
+        Then I check "cb1"
+        When I click on "archive"
         Then I should see the "report-submission" region exactly 0 times
+        When I click on "tab-archived"
+        Then I should see the "report-submission" region exactly 1 times
+        And each text should be present in the corresponding region:
+            | Cly Hent | report-submission-1 |
+            | behat001 | report-submission-1 |
+            | 1 document | report-submission-1 |
+            | AU | report-submission-1 |
 
 
     @ndr
