@@ -32,12 +32,22 @@ services:
 
 security:
     role_hierarchy:
-        # needs re-thinking. we need a ROLE_PA where existing ROLE_PA extends from
-        ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
-        ROLE_PA: [ ROLE_PA ]
-        ROLE_PROFESSIONAL_DEPUTY: [ ROLE_DEPUTY ]
         ROLE_AD: [ ROLE_AD ]
         ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY ]
+
+        ROLE_LAY_DEPUTY:      ROLE_DEPUTY
+        ROLE_ORG:             ROLE_DEPUTY
+
+        ROLE_PA:              ROLE_ORG
+        ROLE_PROF:            ROLE_ORG
+
+        ROLE_PA_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
+        ROLE_PA_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
+        ROLE_PA_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+
+        ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
+        ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
+        ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
 
     providers:
         deputy:
@@ -93,15 +103,15 @@ security:
         # /admin accessible only from ADMIN, super users and AD users
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
         # client settings not available to PA users
-        - { path: ^/deputyship-details, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
+        - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD] }
         - { path: ^/user-account/, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
-        - { path: ^/pa/team/add, roles: [ROLE_PA, ROLE_PA_ADMIN] }
-        - { path: ^/pa/team/edit, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
-        - { path: ^/pa/team, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
-        - { path: ^/pa/, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
+        - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
+#        - { path: ^/pa/team, roles: [ROLE_ORG] } # inherited. delete if test pass
+        - { path: ^/pa/, roles: [ROLE_ORG] }
         # report expenses section access for Lay and PA
-        - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_PA, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER] }
+        - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_ORG] }
         - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
 
         # open URLs

@@ -24,6 +24,3 @@ default:
     makeAStart: |
         Make a start at <a  style="word-wrap: break-word;" href="%homepageUrl%">%homepageUrl%</a>
 
-public-authority:
-public-authority-admin:
-public-authority-team-member:

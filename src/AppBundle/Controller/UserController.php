@@ -49,7 +49,9 @@ class UserController extends AbstractController
 
         // PA must agree to terms before activating the account
         // this check happens before activating the account, therefore no need to set an ACL on all the actions
-        if ($isActivatePage && $user->getRoleName() == EntityDir\User::ROLE_PA && !$user->getAgreeTermsUse()) {
+        if ($isActivatePage
+            && $user->hasRoleOrgNamed()
+            && !$user->getAgreeTermsUse()) {
             return $this->redirectToRoute('user_agree_terms_use', ['token' => $token]);
         }
 
@@ -147,7 +149,7 @@ class UserController extends AbstractController
     {
         $user = $this->getUserWithData();
 
-        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyPa();
+        $client_validated = $this->getFirstClient() instanceof EntityDir\Client && !$user->isDeputyOrg();
 
         list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
@@ -159,9 +161,12 @@ class UserController extends AbstractController
             return $this->redirect($this->generateUrl([
                 EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
                 EntityDir\User::ROLE_AD             => 'ad_homepage',
-                EntityDir\User::ROLE_PA             => 'pa_dashboard',
+                EntityDir\User::ROLE_PA_NAMED       => 'pa_dashboard',
                 EntityDir\User::ROLE_PA_ADMIN       => 'pa_dashboard',
                 EntityDir\User::ROLE_PA_TEAM_MEMBER => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_NAMED       => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_ADMIN       => 'pa_dashboard',
+                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'pa_dashboard',
                 EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
             ][$user->getRoleName()]));
         }
@@ -301,10 +306,18 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_activate', ['token' => $token, 'action' => 'activate']);
         }
 
-        return [
+        if ($user->getRoleName() == EntityDir\User::ROLE_PA_NAMED) {
+            $view = 'AppBundle:User:agreeTermsUsePa.html.twig';
+        } else if ($user->getRoleName() ==EntityDir\User::ROLE_PROF_NAMED) {
+            $view = 'AppBundle:User:agreeTermsUseProf.html.twig';
+        } else {
+            throw new \RuntimeException('terms page not implemented');
+        }
+
+        return $this->render($view, [
             'user' => $user,
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
@@ -323,9 +336,15 @@ class UserController extends AbstractController
             case EntityDir\User::ROLE_LAY_DEPUTY:
                 return [new FormDir\User\UserDetailsFullType($user), ['user_details_full']];
 
-            case EntityDir\User::ROLE_PA:
+            case EntityDir\User::ROLE_PA_NAMED:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
+                return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
+
+            // prof reuses pa so far
+            case EntityDir\User::ROLE_PROF_NAMED:
+            case EntityDir\User::ROLE_PROF_ADMIN:
+            case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
                 return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
         }
     }

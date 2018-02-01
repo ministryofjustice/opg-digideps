@@ -59,6 +59,15 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
 
+        prof:
+            description: End to end journey for Professional Deputy users
+            paths:    [ %paths.base%/features/prof ]
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
+            {{ end }}
 
         components:
             description: Tests related to textareas

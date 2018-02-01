@@ -19,7 +19,7 @@
         <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
         <p>{{ 'startPage.pageSectionDescription3' | trans(transOptions) }}</p>
 
-        {% if not app.user.isDeputyPa() %}
+        {% if not app.user.isDeputyOrg() %}
             <details class="push--bottom">
                 <summary>
                     <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>

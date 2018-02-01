@@ -33,13 +33,13 @@
         <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
     {% endif %}
     <nav id="proposition-menu">
-        <a href="{{ (app.user and app.user.isDeputyPa()) ? path('pa_dashboard') : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
+        <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('pa_dashboard') : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
         {% if app.user %}
             <ul id="proposition-links" class="behat-region-navbar">
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{% trans %}nav.adminArea{% endtrans %}</a></li>
-                    <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{% trans %}Upload{% endtrans %}</a></li>
-                    <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{% trans %}Upload PA{% endtrans %}</a></li>
+                    <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{% trans %}Lay CSV{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{% trans %}PA/Prof CSV{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                     <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{% trans %}nav.documents{% endtrans %}</a></li>
@@ -59,7 +59,7 @@
                     <li><a href="{{path('homepage')}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
-                {% if app.user.isDeputyPa() %}
+                {% if app.user.isDeputyOrg() %}
                     <li>
                         <a href="{{path('pa_dashboard')}}" class="behat-link-pa-dashboard">Dashboard</a>
                     </li>
@@ -93,7 +93,7 @@
     {% block helpline %}
     <div class="helpline">
         <h3>Helpline<br/>
-            {% if app.user and app.user.isDeputyPa() %}
+            {% if app.user and app.user.isDeputyOrg() %}
                 {{ 'helplinePA' | trans }}
             {% else %}
                 {{ 'helpline' | trans }}<br/>
