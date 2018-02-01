@@ -57,7 +57,7 @@ class PaControllerTest extends AbstractTestController
     {
         // add
         $data = $this->assertJsonRequest('POST', '/pa/bulk-add', [
-            'data' => CsvUploader::compressData([PaServiceTest::$deputy1 + PaServiceTest::$client1]),
+            'data' => CsvUploader::compressData([['Dep Type'=>23] + PaServiceTest::$deputy1 + PaServiceTest::$client1]),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
