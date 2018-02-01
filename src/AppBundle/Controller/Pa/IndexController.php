@@ -21,8 +21,6 @@ class IndexController extends AbstractController
      */
     public function dashboardAction(Request $request)
     {
-        $user = $this->getUser();
-
         $currentFilters = [
             'q'                 => $request->get('q'),
             'status'            => $request->get('status'),
