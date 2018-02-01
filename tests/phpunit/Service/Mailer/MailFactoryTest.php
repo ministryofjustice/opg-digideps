@@ -44,6 +44,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->paUser = m::mock('AppBundle\Entity\User', [
             'isDeputyPa' => true,
+            'isDeputyOrg' => true,
             'getFullName' => 'FN',
             'getRegistrationToken' => 'RT',
             'getEmail' => 'pauser@email',

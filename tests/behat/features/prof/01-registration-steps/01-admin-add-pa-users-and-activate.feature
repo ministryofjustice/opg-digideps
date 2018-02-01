@@ -1,7 +1,7 @@
 Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: add PROF users
-    Given I load the application status from "init-pa"
+    Given I load the application status from "init-prof"
     And emails are sent from "admin" area
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -119,7 +119,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I should see the "client-03000001" region
 
   Scenario: Edit PROF2 user
-    Given I save the application status into "pa-users-uploaded"
+    Given I save the application status into "prof-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "user-behat-prof2publicguardiangsigovuk" in the "user-behat-prof2publicguardiangsigovuk" region
     Then the following fields should have the corresponding values:
@@ -143,7 +143,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then I should see the "client-02000001" region
 
   Scenario: Edit PROF2 user email to an existing email
-    Given I load the application status from "pa-users-uploaded"
+    Given I load the application status from "prof-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "user-behat-prof2publicguardiangsigovuk" in the "user-behat-prof2publicguardiangsigovuk" region
     And I fill in the following:

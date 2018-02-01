@@ -112,7 +112,8 @@ class SettingsController extends AbstractController
             $formData = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $user->setRoleName('ROLE_PA_TEAM_MEMBER');
+                $newRole = $this->isGranted(EntityDir\User::ROLE_PA) ? EntityDir\User::ROLE_PA_TEAM_MEMBER :EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+                $user->setRoleName($newRole);
                 $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
                 $redirectRoute = 'logout';
             } else {
