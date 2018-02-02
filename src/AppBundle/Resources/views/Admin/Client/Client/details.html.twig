@@ -15,8 +15,89 @@
 
 {% block pageContent %}
 
-DETAILS VIEW
 
+    Deputy list
 
+    {# client deputies list #}
+    <table class="width-two-thirds">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Registered</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% if client.users | length %}
+                {% for deputy in client.users %}
+
+                <tr>
+                    <td>
+                        {{ deputy.fullName }}
+                    </td>
+                    <td>
+                        {{ deputy.email }}
+                    </td>
+
+                    <td>
+                        {% if deputy.active %}
+                            Yes
+                        {% else %}
+                            No
+
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">{{ (page ~ '.deputyTable.noResults') | trans  }}</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    Report list
+
+    {# client report list #}
+    <table class="width-two-thirds">
+        <thead>
+        <tr>
+            <th scope="col">Reporting period</th>
+            <th scope="col">Date due</th>
+            <th scope="col">Submission date</th>
+            <th scope="col">Incomplete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if client.reports | length %}
+            {% for report in client.reports %}
+
+                <tr>
+                    <td>
+                        {{ report.reportingPeriod }}
+                    </td>
+                    <td>
+                        {{ report.dueDate }}
+                    </td>
+                    <td>
+                        {{ report.submissionDate }}
+                    </td>
+                    <td>
+                        {{ report.incomplete }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4">{{ (page ~ '.deputyTable.noResults') | trans  }}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
 
 {% endblock %}
