@@ -53,6 +53,15 @@ class PaServiceTest extends WebTestCase
         'Email'        => 'dep2@provider.com',
     ];
 
+
+    public static $deputy3 = [
+        'Deputy No'    => '00000003',
+        'Dep Forename' => 'Dep3',
+        'Dep Surname'  => 'Uty3',
+        'Dep Type'     => 'SETME',
+        'Email'        => 'dep3@provider.com',
+    ];
+
     public static $client1 = [
         'Case'       => '1111', //will get padded
         'Forename'   => 'Cly1',
@@ -88,6 +97,14 @@ class PaServiceTest extends WebTestCase
         'Last Report Day' => '05-Feb-2015',
     ];
 
+    public static $client4 = [
+        'Case'       => '1000004T',
+        'Forename'   => 'Cly4',
+        'Surname'    => 'Hent4',
+        'Corref'     => 'L3G',
+        'Typeofrep'  => 'OPG103',
+        'Last Report Day' => '06-Feb-2015',
+    ];
 
     /**
      * @var PaService
@@ -115,6 +132,7 @@ class PaServiceTest extends WebTestCase
     {
         $deputy1 = ['Dep Type'=>23] + self::$deputy1;
         $deputy2 = ['Dep Type'=>23] + self::$deputy2;
+        $deputy3 = ['Dep Type'=>21] + self::$deputy3;
 
         // create two clients for the same deputy, each one with a report
         $data = [
@@ -123,19 +141,23 @@ class PaServiceTest extends WebTestCase
             1 => $deputy1 + self::$client2,
             // deputy 2 with client 3
             2 => $deputy2 + self::$client3,
+            // add one Professional
+            3 => $deputy3 + self::$client4,
         ];
 
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors'], implode(',', $ret1['errors']));
         $this->assertEquals([
-            'users'   => ['dep1@provider.com', 'dep2@provider.com'],
-            'clients' => ['00001111', '1000000t', '10002222'],
-            'reports' => ['00001111-2014-12-16',  '1000000t-2015-02-05', '10002222-2015-02-04'],
+            'pa_users'   => ['dep1@provider.com', 'dep2@provider.com'],
+            'prof_users'   => ['dep3@provider.com'],
+            'clients' => ['00001111', '1000000t', '1000004t', '10002222'],
+            'reports' => ['00001111-2014-12-16', '1000000t-2015-02-05', '1000004t-2015-02-06', '10002222-2015-02-04']
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'users'   => [],
+            'pa_users'   => [],
+            'prof_users'   => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
@@ -174,6 +196,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Hent2', $client2->getLastname());
         $this->assertCount(1, $client2->getReports());
         $client2Report1 = $client2->getReports()->first();
+
         /* @var $client2Report1 EntityDir\Report\Report */
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $client2Report1->getType());
 
@@ -183,6 +206,13 @@ class PaServiceTest extends WebTestCase
         $clients = $user2->getClients();
         $this->assertCount(1, $clients);
         $this->assertCount(1, $user2->getTeams());
+
+        // assert 3rd deputy
+        $user3 = self::$fixtures->findUserByEmail('dep3@provider.com');
+        $this->assertEquals($user3->getRoleName(), EntityDir\User::ROLE_PROF_NAMED);
+        $clients = $user3->getClients();
+        $this->assertCount(1, $clients);
+        $this->assertCount(1, $user3->getTeams());
 
         // assert 1st client and report
         $client1 = $user2->getClientByCaseNumber('1000000t');
@@ -195,6 +225,19 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
 
+        // assert prof client and report
+        $client4 = $user3->getClientByCaseNumber('1000004t');
+        $this->assertEquals('Cly4', $client4->getFirstname());
+        $this->assertEquals('Hent4', $client4->getLastname());
+        $this->assertCount(1, $client4->getReports());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_5 , $client4->getReports()->first()->getType());
+
+        $client3 = $user1->getClientByCaseNumber('10002222');
+        $this->assertEquals('Cly2', $client2->getFirstname());
+        $this->assertEquals('Hent2', $client2->getLastname());
+        $this->assertCount(1, $client2->getReports());
+        $client2Report1 = $client2->getReports()->first();
+
         // move client2 from deputy1 -> deputy2
         $dataMove = [
             $deputy2 + self::$client2,
@@ -205,13 +248,15 @@ class PaServiceTest extends WebTestCase
         // check client 3 is now associated with deputy1
         $this->assertCount(1, self::$fixtures->findUserByEmail('dep1@provider.com')->getClients());
         $this->assertCount(2, self::$fixtures->findUserByEmail('dep2@provider.com')->getClients());
+        $this->assertCount(1, self::$fixtures->findUserByEmail('dep3@provider.com')->getClients());
 
         // check that report type changes are applied
         $data[0]['Corref'] = 'L3G';
         $data[0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'users'   => [],
+            'pa_users'   => [],
+            'prof_users' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
@@ -244,14 +289,16 @@ class PaServiceTest extends WebTestCase
         $ret1 = $this->pa->addFromCasrecRows($data);
         $this->assertEmpty($ret1['errors'], implode(',', $ret1['errors']));
         $this->assertEquals([
-            'users'   => ['dep1@provider.com', 'dep2@provider.com'],
+            'pa_users'   => [],
+            'prof_users' => ['dep1@provider.com', 'dep2@provider.com'],
             'clients' => ['00001111', '1000000t', '10002222'],
             'reports' => ['00001111-2014-12-16',  '1000000t-2015-02-05', '10002222-2015-02-04'],
         ], $ret1['added']);
         // add again and check no override
         $ret2 = $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'users'   => [],
+            'pa_users'   => [],
+            'prof_users' => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
@@ -328,7 +375,8 @@ class PaServiceTest extends WebTestCase
         $data[0]['Typeofrep'] = 'OPG103';
         $this->pa->addFromCasrecRows($data);
         $this->assertEquals([
-            'users'   => [],
+            'pa_users'   => [],
+            'prof_users'   => [],
             'clients' => [],
             'reports' => [],
         ], $ret2['added']);
