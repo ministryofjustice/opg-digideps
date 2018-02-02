@@ -32,8 +32,7 @@ class PaService
         // MOVE TO SERVICE
         $flashBag->add(
             'notice',
-            sprintf('<p>Added:<br /> %d Professional users,<br /> %d PA users,<br /> 
-            %d clients and <br />%d reports.</p> Go to users tab to enable them',
+            sprintf('Added %d Prof. users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
                 count($ret['added']['prof_users']),
                 count($ret['added']['pa_users']),
                 count($ret['added']['clients']),
