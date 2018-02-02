@@ -19,13 +19,15 @@ home:
     codepNameNotSet: Invited co-deputy
 
 clientSearch:
+  htmlTitle: Administration - Client search
   pageTitle: Admin
   supportTitle: Cases
+  searchBy: Search by client surname or case number
   clientTable:
+    heading: Client list
+    results: Found %numberOfClients% clients
+    resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
     noResults: No clients found
-    headers:
-      caseNumber: Case number
-      client: Client
 homeForm:
   clear: Clear filters
 
