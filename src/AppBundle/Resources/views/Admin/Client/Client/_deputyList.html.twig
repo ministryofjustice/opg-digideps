@@ -1,0 +1,44 @@
+Deputy list
+
+{# client deputies list #}
+<table class="width-two-thirds">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Registered</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if deputies | length %}
+        {% for deputy in deputies %}
+
+            <tr>
+                <td>
+                    {{ deputy.fullName }}
+                </td>
+                <td>
+                    {{ deputy.email }}
+                </td>
+
+                <td>
+                    {% if deputy.active %}
+                        Yes
+                    {% else %}
+                        No
+
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="4">{{ (page ~ '.deputyTable.noResults') | trans  }}</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
