@@ -57,14 +57,20 @@ class PaControllerTest extends AbstractTestController
     {
         // add
         $data = $this->assertJsonRequest('POST', '/pa/bulk-add', [
-            'data' => CsvUploader::compressData([['Dep Type'=>23] + PaServiceTest::$deputy1 + PaServiceTest::$client1]),
+            'data' => CsvUploader::compressData(
+                [
+                    ['Dep Type'=>23] + PaServiceTest::$deputy1 + PaServiceTest::$client1,
+                    ['Dep Type'=>21] + PaServiceTest::$deputy2 + PaServiceTest::$client2
+                ]
+            ),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
         $this->assertEmpty($data['errors'], implode(',', $data['errors']));
         $this->assertEmpty($data['warnings'], implode(',', $data['warnings']));
-        $this->assertEquals('dep1@provider.com', $data['added']['users'][0]);
+        $this->assertEquals('dep1@provider.com', $data['added']['pa_users'][0]);
+        $this->assertEquals('dep2@provider.com', $data['added']['prof_users'][0]);
         $this->assertEquals('00001111', $data['added']['clients'][0]);
         $this->assertEquals('00001111-2014-12-16', $data['added']['reports'][0]);
     }
