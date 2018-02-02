@@ -1,11 +1,9 @@
 <?php
 
-namespace AppBundle\Controller\Admin;
+namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
@@ -18,15 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/admin")
+ * @Route("/admin/client")
  */
 class SearchController extends AbstractController
 {
     /**
-     * @Route("/search", name="admin_search")
+     * @Route("/search", name="admin_client_search")
      * @Template
      */
-    public function indexAction(Request $request)
+    public function searchAction(Request $request)
     {
         $filters = [
             'limit'       => 100,
@@ -50,6 +48,4 @@ class SearchController extends AbstractController
             'filters' => $filters,
         ];
     }
-
-
 }

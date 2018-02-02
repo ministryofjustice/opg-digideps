@@ -1,0 +1,74 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'clientSearch' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.q, 'Search', {
+        'labelText': (page ~ '.searchBy') | trans,
+        'inputClass': '' })
+    }}
+    {{ form_submit(form.search, 'Search', { 'labelText': 'Search' }) }}
+
+    {{ form_end(form) }}
+
+    <hr>
+
+    {# LIST #}
+
+    <div class="behat-region-clients client-list">
+
+        <h2 id="client-list-title" class="heading-medium flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        {% if clients | length  == filters.limit %}
+            <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
+        {% else %}
+            <p>{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
+        {% endif %}
+
+
+        {# client list #}
+        <table class="width-two-thirds">
+            <thead>
+            <tr>
+                <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                {% if clients | length %}
+                {% for client in clients %}
+            <tr>
+                <td>
+                    <a href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
+                        {{ client.fullName }}
+                    </a>
+                </td>
+                <td>
+                    {{ client.caseNumber }}
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">{{ (page ~ '.clientTable.noResults') | trans  }}</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
