@@ -10,6 +10,7 @@ use ZipArchive;
 class DocumentsZipFileCreator
 {
     const TMP_ROOT_PATH = '/tmp/';
+    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var ReportSubmission
@@ -41,6 +42,11 @@ class DocumentsZipFileCreator
     {
         // store files locally, for subsequent memory-less ZIP creation
         $filesToAdd = [];
+
+        if ($this->reportSubmission->isDownloadable() !== true) {
+            throw new \RuntimeException(self::MSG_NOT_DOWNLOADABLE);
+        }
+
         if (empty($this->reportSubmission->getDocuments())) {
             throw new \RuntimeException('No documents found for downloading');
         }

@@ -1,0 +1,44 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set translationDomain = "ndr-homepage" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ client.firstname }} {{ client.lastname }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    {% if app.user.getCoDeputyClientConfirmed() %}
+        {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
+    {% endif %}
+
+    {% if ndr.submitted %}
+
+        {% include 'AppBundle:Ndr/Ndr:_report_row.html.twig' with {
+            reportActive: reportActive,
+            ndr: ndr,
+        } %}
+
+        {% include 'AppBundle:Ndr/Ndr:_report_history.html.twig' with {
+            reports: reportsSubmitted,
+            ndr: ndr,
+        } %}
+
+    {% else %}
+
+        {% include 'AppBundle:Ndr/Ndr:_ndr_row.html.twig' with {
+            reports: reportsSubmitted,
+            ndrStatus: ndrStatus,
+        } %}
+
+        {% include 'AppBundle:Ndr/Ndr:_report_row.html.twig' with {
+            reportActive: reportActive,
+            ndr: ndr,
+        } %}
+
+    {% endif %}
+
+{% endblock %}

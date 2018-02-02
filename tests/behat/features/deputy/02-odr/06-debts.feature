@@ -1,9 +1,9 @@
 Feature: NDR debts
 
-  @odr
+  @ndr
   Scenario: NDR debts
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-debts, start"
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "ndr-start, edit-debts, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
@@ -36,13 +36,13 @@ Feature: NDR debts
       | debt_debts_2_amount      | 1         |
       | debt_debts_3_amount      | 2         |
       | debt_debts_3_moreDetails | mr        |
-    Then the URL should match "odr/\d+/debts/management"
+    Then the URL should match "ndr/\d+/debts/management"
     When I click on "save-and-continue"
     Then the following fields should have an error:
       | debtManagement_debtManagement       |
     When the step with the following values CAN be submitted:
       | debtManagement_debtManagement | 100 per month payment plan |
-    Then the URL should match "odr/\d+/debts/summary"
+    Then the URL should match "ndr/\d+/debts/summary"
         # check record in summary page
     And each text should be present in the corresponding region:
       | 100 per month payment plan      | debt-management-details |
@@ -76,7 +76,7 @@ Feature: NDR debts
       | debtManagement_debtManagement    | 100 per month payment plan |
     When the step with the following values CAN be submitted:
       | debtManagement_debtManagement | 200 per month payment plan |
-    Then the URL should match "odr/\d+/debts/summary"
+    Then the URL should match "ndr/\d+/debts/summary"
         # check record in summary page
     And each text should be present in the corresponding region:
       | 200 per month payment plan    | debt-management-details |

@@ -104,10 +104,14 @@ class MailFactory
     public static function getRecipientRole(User $user)
     {
         switch ($user->getRoleName()) {
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PA_TEAM_MEMBER:
-                return strtolower(str_replace(' ', '-', $user->getRoleFullName()));
+            case User::ROLE_PROF_NAMED:
+            case User::ROLE_PROF_ADMIN:
+            case User::ROLE_PROF_TEAM_MEMBER:
+                return $user->getRoleName();
+
             default:
                 return 'default';
         }
@@ -186,12 +190,12 @@ class MailFactory
 
     /**
      * @param EntityDir\User          $user
-     * @param EntityDir\Report\Report $odr
+     * @param EntityDir\Report\Report $ndr
      * @param $pdfBinaryContent
      *
      * @return ModelDir\Email
      */
-    public function createOdrEmail(EntityDir\User $user, EntityDir\Odr\Odr $odr, $pdfBinaryContent)
+    public function createNdrEmail(EntityDir\User $user, EntityDir\Ndr\Ndr $ndr, $pdfBinaryContent)
     {
         $email = new ModelDir\Email();
 
@@ -199,18 +203,18 @@ class MailFactory
             'homepageUrl' => $this->generateAbsoluteLink($this->getUserArea($user), 'homepage'),
         ];
 
-        $client = $odr->getClient();
-        $attachmentName = sprintf('DigiOdrRep-%s_%s.pdf',
-            $odr->getSubmitDate() ? $odr->getSubmitDate()->format('Y-m-d') : 'n-a-',
+        $client = $ndr->getClient();
+        $attachmentName = sprintf('DigiNdrRep-%s_%s.pdf',
+            $ndr->getSubmitDate() ? $ndr->getSubmitDate()->format('Y-m-d') : 'n-a-',
             $client->getCaseNumber()
         );
 
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
-            ->setFromName($this->translate('odrSubmission.fromName'))
+            ->setFromName($this->translate('ndrSubmission.fromName'))
             ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
-            ->setToName($this->translate('odrSubmission.toName'))
-            ->setSubject($this->translate('odrSubmission.subject'))
+            ->setToName($this->translate('ndrSubmission.toName'))
+            ->setSubject($this->translate('ndrSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission.html.twig', $viewParams))
             ->setAttachments([new ModelDir\EmailAttachment($attachmentName, 'application/pdf', $pdfBinaryContent)]);
 
@@ -279,7 +283,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
+    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 
@@ -288,12 +292,12 @@ class MailFactory
 
     /**
      * @param EntityDir\User    $user
-     * @param EntityDir\Odr\Odr $odr
+     * @param EntityDir\Ndr\Ndr $ndr
      * @param EntityDir\Report  $newReport
      *
      * @return ModelDir\Email
      */
-    public function createOdrSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Odr\Odr $odr)
+    public function createNdrSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Ndr\Ndr $ndr)
     {
         $email = new ModelDir\Email();
 
@@ -305,10 +309,10 @@ class MailFactory
 
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
-            ->setFromName($this->translate('odrSubmissionConfirmation.fromName'))
+            ->setFromName($this->translate('ndrSubmissionConfirmation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
-            ->setSubject($this->translate('odrSubmissionConfirmation.subject'))
+            ->setSubject($this->translate('ndrSubmissionConfirmation.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:ndr-submission-confirm.html.twig', $viewParams))
             ->setBodyText($this->templating->render('AppBundle:Email:ndr-submission-confirm.text.twig', $viewParams));
 

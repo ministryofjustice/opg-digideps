@@ -6,7 +6,7 @@ Feature: admin / AD
     And emails are sent from "admin" area
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I create a new "ODR-disabled" "AD" user "Assis" "Ter" with email "behat-ad@publicguardian.gsi.gov.uk" and postcode "HA3"
+    And I create a new "NDR-disabled" "AD" user "Assis" "Ter" with email "behat-ad@publicguardian.gsi.gov.uk" and postcode "HA3"
     Then I should see "behat-ad@publicguardian.gsi.gov.uk" in the "users" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-ad@publicguardian.gsi.gov.uk"
@@ -52,7 +52,7 @@ Feature: admin / AD
     # behat-lay-assisted@publicguardian.gsi.gov.uk
     # find user
     And I go to admin page "/admin"
-    And I create a new "ODR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gsi.gov.uk" and postcode "HA4"
+    And I create a new "NDR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gsi.gov.uk" and postcode "HA4"
     And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
     # login on behalf
     And I click on "login-as"

@@ -30,7 +30,7 @@ class ProfileType extends AbstractType
             ->add('phoneAlternative', 'text')
             ->add('email', 'text', ['required' => true]);
 
-        if ($loggedInUser->isDeputyPa()) {
+        if ($loggedInUser->isDeputyOrg()) {
             $builder->add('jobTitle', 'text', ['required' => true]);
         }
 

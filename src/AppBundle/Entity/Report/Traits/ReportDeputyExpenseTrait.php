@@ -13,7 +13,7 @@ trait ReportDeputyExpenseTrait
      *
      * @JMS\Type("string")
      * @JMS\Groups({"expenses-paid-anything"})
-     * @Assert\NotBlank(message="odr.expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
+     * @Assert\NotBlank(message="ndr.expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
      */
     private $paidForAnything;
 
@@ -60,7 +60,7 @@ trait ReportDeputyExpenseTrait
     /**
      * @param mixed $expenses
      *
-     * @return OdrExpensesTrait
+     * @return NdrExpensesTrait
      */
     public function setExpenses($expenses)
     {
@@ -72,7 +72,7 @@ trait ReportDeputyExpenseTrait
     /**
      * @param Expense $expense
      *
-     * @return OdrExpensesTrait
+     * @return NdrExpensesTrait
      */
     public function addExpense(Expense $expense)
     {

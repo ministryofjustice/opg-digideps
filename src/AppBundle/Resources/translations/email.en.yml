@@ -8,14 +8,14 @@ reportSubmission:
     subject: Report submission from Digital Deputy
     fromName: Digital deputy secure email service
     toName: Deputyship Service
-odrSubmission:
+ndrSubmission:
     subject: NDR submission from Digital Deputy
     fromName: Digital deputy secure email service
     toName: Deputyship Service
 reportSubmissionConfirmation:
     subject: Complete the deputy report - new deputy report ready
     fromName: Office of the Public Guardian
-odrSubmissionConfirmation:
+ndrSubmissionConfirmation:
     subject: Complete the deputy report - new deputy report submitted
     fromName: Office of the Public Guardian
 resetPassword:

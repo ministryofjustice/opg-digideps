@@ -18,9 +18,16 @@ class User implements AdvancedUserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
+
     const ROLE_PA = 'ROLE_PA';
+    const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
     const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+
+    const ROLE_PROF = 'ROLE_PROF';
+    const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
     /**
      * @JMS\Exclude
@@ -29,9 +36,14 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN          => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
-        self::ROLE_PA             => 'Public Authority',
+        // pa
+        self::ROLE_PA_NAMED       => 'Public Authority (named)',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',
         self::ROLE_PA_TEAM_MEMBER => 'Public Authority team member',
+        // prof
+        self::ROLE_PROF_NAMED       => 'Professional Deputy (named)',
+        self::ROLE_PROF_ADMIN       => 'Professional Deputy admin',
+        self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
     const TOKEN_EXPIRE_HOURS = 48;
@@ -239,7 +251,7 @@ class User implements AdvancedUserInterface
      *
      * @var bool
      */
-    private $odrEnabled;
+    private $ndrEnabled;
 
     /**
      * @var bool
@@ -764,17 +776,17 @@ class User implements AdvancedUserInterface
     /**
      * @return bool
      */
-    public function isOdrEnabled()
+    public function isNdrEnabled()
     {
-        return $this->odrEnabled;
+        return $this->ndrEnabled;
     }
 
     /**
-     * @param bool $odrEnabled
+     * @param bool $ndrEnabled
      */
-    public function setOdrEnabled($odrEnabled)
+    public function setNdrEnabled($ndrEnabled)
     {
-        $this->odrEnabled = $odrEnabled;
+        $this->ndrEnabled = $ndrEnabled;
     }
 
     /**
@@ -883,7 +895,17 @@ class User implements AdvancedUserInterface
      */
     public function isDeputyPa()
     {
-        return in_array($this->roleName, [self::ROLE_PA, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+        return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+    }
+
+    /**
+     * Is user a PA Deputy?
+     *
+     * @return bool
+     */
+    public function isDeputyProf()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER]);
     }
 
     /**
@@ -901,9 +923,9 @@ class User implements AdvancedUserInterface
      *
      * @return bool
      */
-    public function isNamedDeputy()
+    public function isPaNamedDeputy()
     {
-        return in_array($this->roleName, [self::ROLE_PA]);
+        return in_array($this->roleName, [self::ROLE_PA_NAMED]);
     }
 
     /**
@@ -913,6 +935,26 @@ class User implements AdvancedUserInterface
      */
     public function isDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyPa();
+        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyOrg();
+    }
+
+    /**
+     * Is user a PA or Prof Deputy?
+     *
+     * @return bool
+     */
+    public function isDeputyOrg()
+    {
+        return $this->isDeputyPa() || $this->isDeputyProf();
+    }
+
+    /**
+     * Is user a PA named or a Prof named ?
+     *
+     * @return bool
+     */
+    public function hasRoleOrgNamed()
+    {
+        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
 }

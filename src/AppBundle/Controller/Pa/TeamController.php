@@ -48,10 +48,15 @@ class TeamController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            /** @var $user EntityDir\User */
             $user = $form->getData();
 
-            if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
+            if ($this->isGranted(EntityDir\User::ROLE_PA) && !in_array($user->getRoleName(), [EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER])) {
                 $user->setRoleName(EntityDir\User::ROLE_PA_TEAM_MEMBER);
+            }
+
+            if ($this->isGranted(EntityDir\User::ROLE_PROF) && !in_array($user->getRoleName(), [EntityDir\User::ROLE_PROF_ADMIN, EntityDir\User::ROLE_PROF_TEAM_MEMBER])) {
+                $user->setRoleName(EntityDir\User::ROLE_PROF_TEAM_MEMBER);
             }
 
             try {

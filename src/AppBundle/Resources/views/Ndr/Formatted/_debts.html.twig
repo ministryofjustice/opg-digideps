@@ -1,0 +1,65 @@
+{% if ndr.hasDebts %}
+{% set translationDomain = "ndr-debts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="section" id="debts-section">
+    <h2 class="section-heading">Client's debts</h2>
+
+    {% if ndr.hasDebts == 'no' %}
+        <div class="box">
+            <h3 class="label question bold">Does the client have any debts?</h3>
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">X</td>
+                    <td class="label">My client has no debts</td>
+                </tr>
+            </table>
+        </div>
+    {% else %}
+        {% set debts = ndr.debts %}
+        <div class="dont-break">
+            <div class="box">
+                <table class="labelvalue">
+                    {% for d in debts %}
+                        <tr class="{% if d.amount == 0 %}{{ d.amount }}disable{% endif %}">
+                            <td class="label noborder">{{ ('form.entries.' ~ d.debtTypeId ~ '.label') | trans }}</td>
+                            <td class="value text--right width-fifth">&pound;{{ d.amount | money_format }}</td>
+                        </tr>
+                        {% if d.hasMoreDetails %}
+                            <tr>
+                                <td colspan="2" class="hard noborder">
+                                    <div class="labelvalue soft-half--top">
+                                        <div class="label">More details about the other debts</div>
+                                        <div class="value">{{ d.moreDetails | nl2br }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if ndr.debtManagement %}
+                        <tr>
+                            <td colspan="2" class="hard noborder">
+                                <div class="labelvalue soft-half--top">
+                                    <div class="label">{{ ('managementPage.form.debtManagement.label' | trans) }}</div>
+                                    <div class="value">{{ ndr.debtManagement | nl2br }}</div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue">
+                    <tr>
+                        <td class="label bold">Debts Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ ndr.debtsTotalValue | money_format }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endif %}

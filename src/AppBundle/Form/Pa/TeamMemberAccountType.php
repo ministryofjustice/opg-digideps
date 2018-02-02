@@ -32,6 +32,7 @@ class TeamMemberAccountType extends AbstractType
 
         if (!$loggedInUser->isTeamMember() && $team->canAddAdmin($targetUser)) {
             $builder->add('roleName', 'choice', [
+                //TODO use $loggedInUser role name to detect PA/PRof ?
                 'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
                 'expanded' => true,
                 'required' => true

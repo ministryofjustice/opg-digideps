@@ -73,6 +73,9 @@ search: Search
 clearSearch: Clear search
 sorryNoResultsFor: Sorry, no results were found for
 
+# Emails
+layDeputySupportEmail: laydeputysupport@publicguardian.gsi.gov.uk
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"

@@ -44,6 +44,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
         $this->paUser = m::mock('AppBundle\Entity\User', [
             'isDeputyPa' => true,
+            'isDeputyOrg' => true,
             'getFullName' => 'FN',
             'getRegistrationToken' => 'RT',
             'getEmail' => 'pauser@email',
@@ -75,7 +76,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('from@email', $email->getFromEmail());
     }
 
-    public function testcreatePaReportSubmissionConfirmationEmail()
+    public function testcreateOrgReportSubmissionConfirmationEmail()
     {
         $this->router->shouldReceive('generate')->withAnyArgs()->andReturn('https://mock.com');
 
@@ -95,7 +96,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
             'getEndDate' => new \DateTime('2017-12-31'),
             'getSubmitDate' => new \DateTime('2018-01-01'),
         ]);
-        $email = $this->object->createPaReportSubmissionConfirmationEmail($this->paUser, $report, $newReport);
+        $email = $this->object->createOrgReportSubmissionConfirmationEmail($this->paUser, $report, $newReport);
 
         $this->assertEquals('[TEMPLATE]', $email->getBodyHtml());
         $this->assertEquals('pauser@email', $email->getToEmail());

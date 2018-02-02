@@ -27,7 +27,7 @@ class ReportSubmission
     /**
      * @var Report
      *
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
      */
     private $ndr;
 

@@ -1,15 +1,15 @@
 Feature: NDR visits care
 
-  @odr
+  @ndr
   Scenario: absence of co-deputies section for a client without multiple assigned deputies
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then the URL should match "/odr"
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then the URL should match "/ndr"
     And I should not see the "codeputies" region
 
-  @odr
+  @ndr
   Scenario: NDR visits care
-    Given I am logged in as "behat-user-odr@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "odr-start, edit-visits_care, start"
+    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "ndr-start, edit-visits_care, start"
       # step 1 empty
     And the step cannot be submitted without making a selection
       # step 1 missing details

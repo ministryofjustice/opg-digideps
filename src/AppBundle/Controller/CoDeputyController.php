@@ -107,8 +107,8 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
-        $backLink = $loggedInUser->isOdrEnabled() ?
-            $this->generateUrl('odr_index')
+        $backLink = $loggedInUser->isNdrEnabled() ?
+            $this->generateUrl('ndr_index')
             :$this->generateUrl('lay_home');
 
         $form->handleRequest($request);
@@ -156,8 +156,8 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(FormDir\CoDeputyInviteType::class, $invitedUser);
 
-        $backLink = $loggedInUser->isOdrEnabled() ?
-            $this->generateUrl('odr_index')
+        $backLink = $loggedInUser->isNdrEnabled() ?
+            $this->generateUrl('ndr_index')
             :$this->generateUrl('lay_home');
 
         $form->handleRequest($request);

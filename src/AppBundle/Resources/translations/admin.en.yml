@@ -44,7 +44,7 @@ addUserForm:
     label: Role
     hint: ''
     defaultOption: Please select ...
-  odrEnabled:
+  ndrEnabled:
     label: Enable NDR for this user (Lay deputy only)
   submit:
     label: Save user
@@ -90,10 +90,10 @@ statsPage:
     Data is being generated, Click here to <a href="%csvFile%">download</a>
 
 uploadPA:
-  htmlTitle: Administration - Upload PA users
+  htmlTitle: Administration - Upload PA/Prof users
   pageTitle: Admin
-  supportTitle: PA user management
-  heading: Upload PA users along with clients and reports
+  supportTitle: PA/Prof user management
+  heading: Upload PA/Prof users along with clients and reports
   uploading: Uploading... please wait.<br/>Do not refresh this page
 
 uploadUsers:
