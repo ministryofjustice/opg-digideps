@@ -45,7 +45,7 @@ class PaController extends RestController
             $ret = $pa->addFromCasrecRows($data);
             return $ret;
         } catch (\Exception $e) {
-            $added = ['users' => [], 'clients' => [], 'reports' => []];
+            $added = ['prof_users' => [], 'pa_users' => [], 'clients' => [], 'reports' => []];
             return ['added'=>$added, 'errors' => [$e->getMessage(), 'warnings'=>[]]];
         }
     }
