@@ -109,7 +109,7 @@ class DocumentController extends AbstractController
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
         } else {
             $nextLink = $this->generateUrl('report_documents_submit_more', ['reportId' => $report->getId(), 'from' => 'report_documents']);
-            if ($this->getUser()->isDeputyPa()) {
+            if ($this->getUser()->isDeputyOrg()) {
                 $backLink = $this->generateClientProfileLink($report->getClient());
             } else {
                 $backLink = $this->generateUrl('homepage');
@@ -314,7 +314,7 @@ class DocumentController extends AbstractController
 
         $request->getSession()->getFlashBag()->add('notice', 'The documents attached for your ' . $report->getPeriod() . ' report have been sent to OPG');
 
-        if ($this->getUser()->isDeputyPa()) {
+        if ($this->getUser()->isDeputyOrg()) {
             return $this->redirect($this->generateClientProfileLink($report->getClient()));
         } else {
             return $this->redirectToRoute('homepage');

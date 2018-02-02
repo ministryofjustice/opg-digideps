@@ -4,8 +4,8 @@
 
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
-{% set isPaUser = app.user.isDeputyPa() %}
-{% if not isPaUser %}
+{% set isOrgUser = app.user.isDeputyOrg() %}
+{% if not isOrgUser %}
     {% set page = 'editReportingDates' %}
 {% else %}
     {% set page = 'editReportingDatesPA' %}
@@ -20,20 +20,20 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    {% if isPaUser %}
+    {% if isOrgUser %}
         <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }} {{ client.fullname | title }}</span>
     {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
-    {% if isPaUser %}
+    {% if isOrgUser %}
         {{ macros.breadcrumbs(report) }}
     {% endif %}
 {% endblock %}
 
 {% block pageContent %}
 
-    {% if not isPaUser %}
+    {% if not isOrgUser %}
         <h3 class="heading-medium">
             {{ 'editReportingDates.title'| trans({'%period%': report.period}, translationDomain) }}
         </h3>

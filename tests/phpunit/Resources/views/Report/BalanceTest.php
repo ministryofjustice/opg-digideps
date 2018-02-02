@@ -47,6 +47,7 @@ class BalanceTest extends WebTestCase
             'user' => m::mock(User::class, [
                 'getGaTrackingId'=>null,
                 'isDeputyPa'=>false,
+                'isDeputyOrg'=>false,
                 'isNdrEnabled'=>false,
             ])
         ]);
