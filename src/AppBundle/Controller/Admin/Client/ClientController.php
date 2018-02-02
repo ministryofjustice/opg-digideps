@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/{id}/detail", name="admin_client_details", requirements={"id":"\d+"})
+     * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      *
      * @param Request $request
      * @param $id
@@ -34,10 +34,10 @@ class ClientController extends AbstractController
      */
     public function detailsAction(Request $request, $id)
     {
-        $client = $this->getRestClient()->get('client/' . $id . 'detail', 'Client[]');
+//        $client = $this->getRestClient()->get('client/' . $id . 'detail', 'Client[]');
 
         return [
-            'client'   => $client,
+  //          'client'   => $client,
         ];
     }
 }
