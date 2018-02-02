@@ -53,7 +53,7 @@
                 {% for client in clients %}
             <tr>
                 <td>
-                    <a href="#" class="bold">
+                    <a href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
                         {{ client.fullName }}
                     </a>
                 </td>

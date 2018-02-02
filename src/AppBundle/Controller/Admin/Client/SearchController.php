@@ -4,8 +4,6 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\DisplayableException;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
@@ -50,6 +48,4 @@ class SearchController extends AbstractController
             'filters' => $filters,
         ];
     }
-
-
 }
