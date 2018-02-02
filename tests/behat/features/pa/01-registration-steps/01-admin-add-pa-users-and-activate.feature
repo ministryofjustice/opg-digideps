@@ -126,7 +126,7 @@ Feature: Add PA users and activate PA user (journey)
       | admin_email      | behat-pa2@publicguardian.gsi.gov.uk |
       | admin_firstname  | Pa User                             |
       | admin_lastname   | Two                                 |
-      | admin_roleName   | ROLE_PA                             |
+      | admin_roleName   | ROLE_PA_NAMED                       |
     When I fill in the following:
       | admin_email      | behat-pa2-edited@publicguardian.gsi.gov.uk |
       | admin_firstname  | Edited Pa User                             |

@@ -8,7 +8,7 @@
         "psr-4": {"DigidepsBehat\\": "tests/behat/bootstrap" }
     },
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.5.9",
         "symfony/symfony": "2.8.*",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",

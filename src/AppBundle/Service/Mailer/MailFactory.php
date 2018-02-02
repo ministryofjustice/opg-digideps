@@ -104,10 +104,14 @@ class MailFactory
     public static function getRecipientRole(User $user)
     {
         switch ($user->getRoleName()) {
-            case User::ROLE_PA:
+            case User::ROLE_PA_NAMED:
             case User::ROLE_PA_ADMIN:
             case User::ROLE_PA_TEAM_MEMBER:
-                return strtolower(str_replace(' ', '-', $user->getRoleFullName()));
+            case User::ROLE_PROF_NAMED:
+            case User::ROLE_PROF_ADMIN:
+            case User::ROLE_PROF_TEAM_MEMBER:
+                return $user->getRoleName();
+
             default:
                 return 'default';
         }
@@ -279,7 +283,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createPaReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
+    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 
