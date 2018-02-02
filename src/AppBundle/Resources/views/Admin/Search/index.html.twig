@@ -17,19 +17,11 @@
 
     {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-    <div class="form-group form-groups-inline flush--bottom">
         {{ form_input(form.q, 'Search', {
-            'labelRaw': true,
-            'labelText':'Search',
-            'inputClass': 'width-full',
-            'formGroupClass': 'width-third'}) }}
-
-    </div>
-
-    <div class="form-group">
-        {{ form_submit(form.search, 'Search', {
-            'labelText': 'Search'}) }}
-    </div>
+            'labelText': (page ~ '.searchBy') | trans,
+            'inputClass': '' })
+        }}
+        {{ form_submit(form.search, 'Search', { 'labelText': 'Search' }) }}
 
     {{ form_end(form) }}
 
@@ -37,35 +29,37 @@
 
     {# LIST #}
 
-    <div class="behat-region-users client-list">
+    <div class="behat-region-clients client-list">
+
+        <h2 id="client-list-title" class="heading-medium flush--ends">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        {% if clients | length  == filters.limit %}
+            <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
+        {% else %}
+            <p>{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
+        {% endif %}
+
 
         {# client list #}
-        <table class="table-font-xsmall">
+        <table class="width-two-thirds">
             <thead>
                 <tr>
-                    <th scope="col">{{ (page ~ '.clientTable.headers.caseNumber') | trans }}</th>
-                    <th scope="col">{{ (page ~ '.clientTable.headers.client') | trans }}</th>
+                    <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                    <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                 {% if clients | length %}
                     {% for client in clients %}
-                        <tr class="behat-region-user-{{ client.email | behat_namify }}">
+                        <tr>
                             <td>
-                                <div class="text-secondary">
-                                    {{ client.caseNumber }}
-                                </div>
-                            </td>
-                            <td>
-
-                                <a class="behat-link-send-activation-email"
-                                   href="">
+                                <a href="#" class="bold">
                                     {{ client.fullName }}
                                 </a>
-
                             </td>
-
+                            <td>
+                                {{ client.caseNumber }}
+                            </td>
                         </tr>
                     {% endfor %}
                 {% else %}
