@@ -17,9 +17,6 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         '123abc-deputy' => [
             'permissions' => ['ROLE_LAY_DEPUTY'],
         ],
-        '123abc-both' => [
-            'permissions' => ['ROLE_ADMIN', 'ROLE_LAY_DEPUTY'],
-        ],
         '123abc-admin' => [
             'permissions' => ['ROLE_ADMIN'],
         ],
@@ -36,6 +33,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->container = m::stub('Symfony\Component\DependencyInjection\Container', [
                 'getParameter(client_secrets)' => $this->clientSecrets,
+                'getParameter(security.role_hierarchy.roles)' => ['ROLE_LAY_DEPUTY_INHERITED'=>['ROLE_LAY_DEPUTY']],
                 'get(em)->getRepository(AppBundle\Entity\User)' => $this->userRepo,
                 'get(logger)' => $this->logger,
                 'get(security.encoder_factory)' => $this->encoderFactory,
@@ -137,6 +135,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     {
         return [
             ['123abc-deputy', 'ROLE_LAY_DEPUTY', true],
+            ['123abc-deputy', 'ROLE_LAY_DEPUTY_INHERITED', true],
             ['123abc-deputy', 'ROLE_ADMIN', false],
             ['123abc-deputy', 'OTHER_ROLE', false],
             ['123abc-deputy', null, false],
@@ -144,10 +143,6 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
             ['123abc-admin', 'ROLE_ADMIN', true],
             ['123abc-admin', 'OTHER_ROLE', false],
             ['123abc-admin', null, false],
-            ['123abc-both', 'ROLE_LAY_DEPUTY', true],
-            ['123abc-both', 'ROLE_ADMIN', true],
-            ['123abc-both', 'OTHER_ROLE', false],
-            ['123abc-both', null, false],
             ['123abc-deputyNoPermissions', '', false],
             ['123abc-deputyNoPermissions', null, false],
             ['123abc-deputyNoPermissions', false, false],
@@ -159,15 +154,12 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider isSecretValidForUserProvider
      */
-    public function testisSecretValidForUser($clientSecret, $role, $expectedResult)
+    public function testisSecretValidForRole($clientSecret, $role, $expectedResult)
     {
-        $user = m::stub('AppBundle\Entity\User', [
-                'getRoleName' => $role,
-        ]);
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
 
-        $this->assertEquals($expectedResult, $this->authService->isSecretValidForUser($user, $request));
+        $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
     }
 
     public function tearDown()

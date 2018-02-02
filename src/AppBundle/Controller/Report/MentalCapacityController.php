@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class MentalCapacityController extends RestController
@@ -13,10 +14,10 @@ class MentalCapacityController extends RestController
     /**
      * @Route("/report/{reportId}/mental-capacity")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -37,13 +38,12 @@ class MentalCapacityController extends RestController
     /**
      * @Route("/report/{reportId}/mental-capacity")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $mc = $this->findEntityBy(EntityDir\Report\MentalCapacity::class, $id, 'MentalCapacity with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 

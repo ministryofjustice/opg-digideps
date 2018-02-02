@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -16,11 +17,10 @@ class LifestyleController extends RestController
     /**
      * @Route("/lifestyle")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $lifestyle = new EntityDir\Report\Lifestyle();
         $data = $this->deserializeBodyContent($request);
 
@@ -38,11 +38,10 @@ class LifestyleController extends RestController
     /**
      * @Route("/lifestyle/{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
@@ -57,13 +56,12 @@ class LifestyleController extends RestController
     /**
      * @Route("/{reportId}/lifestyle")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $reportId
      */
     public function findByReportIdAction($reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -75,13 +73,12 @@ class LifestyleController extends RestController
     /**
      * @Route("/lifestyle/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $serialiseGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['lifestyle'];
         $this->setJmsSerialiserGroups($serialiseGroups);
@@ -95,11 +92,10 @@ class LifestyleController extends RestController
     /**
      * @Route("/lifestyle/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteLifestyle($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'VisitsCare not found');
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 

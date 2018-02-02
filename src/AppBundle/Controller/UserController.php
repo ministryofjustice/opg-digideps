@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 //TODO
@@ -18,11 +19,10 @@ class UserController extends RestController
     /**
      * @Route("")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_PA_NAMED') or has_role('ROLE_PA_ADMIN')")
      */
     public function add(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD, EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN]);
-
         $data = $this->deserializeBodyContent($request, [
             'role_name' => 'notEmpty',
             'email' => 'notEmpty',
@@ -56,7 +56,7 @@ class UserController extends RestController
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
             && !$this->isGranted(EntityDir\User::ROLE_AD)
-            && !$this->isGranted(EntityDir\User::ROLE_PA) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PA_NAMED) //TODO check user is also part of the team
             && !$this->isGranted(EntityDir\User::ROLE_PA_ADMIN) //TODO check user is also part of the team
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
@@ -206,13 +206,12 @@ class UserController extends RestController
      *
      * @Route("/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
      */
     public function delete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_ADMIN);
-
         $user = $this->findEntityBy(EntityDir\User::class, $id);  /* @var $user EntityDir\User */
 
         // delete clients
@@ -232,11 +231,10 @@ class UserController extends RestController
     /**
      * @Route("/get-all", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
-
         $order_by  = $request->get('order_by', 'id');
         $sort_order  = strtoupper($request->get('sort_order', 'DESC'));
         $limit  = $request->get('limit', 50);
@@ -328,7 +326,7 @@ class UserController extends RestController
 
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
 
-        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
@@ -350,7 +348,7 @@ class UserController extends RestController
 
         $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user EntityDir\User */
 
-        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
@@ -453,11 +451,10 @@ class UserController extends RestController
     /**
      * @Route("/{id}/team", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function getTeamByUserId(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
-
         $user = $this->getRepository(EntityDir\User::class)->find($id);
         if (!$user) {
             throw new \RuntimeException('User not found', 419);

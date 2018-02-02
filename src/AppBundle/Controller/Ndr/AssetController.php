@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
@@ -13,11 +13,10 @@ class AssetController extends RestController
     /**
      * @Route("/ndr/{ndrId}/assets", requirements={"ndrId":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getAll($ndrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
@@ -35,11 +34,10 @@ class AssetController extends RestController
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById($ndrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
@@ -54,11 +52,10 @@ class AssetController extends RestController
     /**
      * @Route("/ndr/{ndrId}/asset", requirements={"ndrId":"\d+"})
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $ndrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId); /* @var $ndr EntityDir\Ndr\Ndr */
@@ -79,11 +76,10 @@ class AssetController extends RestController
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $ndrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
@@ -102,11 +98,10 @@ class AssetController extends RestController
     /**
      * @Route("/ndr/{ndrId}/asset/{assetId}", requirements={"ndrId":"\d+", "assetId":"\d+"})
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($ndrId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 

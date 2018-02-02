@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
@@ -13,11 +14,10 @@ class AssetController extends RestController
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -34,11 +34,10 @@ class AssetController extends RestController
     /**
      * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"})
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId); /* @var $report EntityDir\Report\Report */
@@ -61,11 +60,10 @@ class AssetController extends RestController
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $data = $this->deserializeBodyContent($request);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
@@ -84,11 +82,10 @@ class AssetController extends RestController
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($reportId, $assetId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 

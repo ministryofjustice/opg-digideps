@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,11 +23,10 @@ class ReportController extends RestController
      *
      * @Route("")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $reportData = $this->deserializeBodyContent($request);
 
         if (empty($reportData['client']['id'])) {
@@ -53,13 +53,12 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function getById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $groups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
@@ -74,11 +73,10 @@ class ReportController extends RestController
     /**
      * @Route("/{id}/submit", requirements={"id":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
@@ -109,11 +107,10 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -311,11 +308,10 @@ class ReportController extends RestController
      *
      * @Route("/get-all")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_PA')")
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_PA, EntityDir\User::ROLE_PA_ADMIN, EntityDir\User::ROLE_PA_TEAM_MEMBER]);
-
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
         $q = $request->get('q');
@@ -379,11 +375,10 @@ class ReportController extends RestController
     /**
      * @Route("/{id}/submit-documents", requirements={"id":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function submitDocuments(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $currentReport = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $currentReport Report */
         $this->denyAccessIfReportDoesNotBelongToUser($currentReport);

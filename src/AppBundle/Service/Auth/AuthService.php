@@ -96,26 +96,21 @@ class AuthService
     public function isSecretValidForRole($roleName, Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
-        if (empty($this->clientSecrets[$clientSecretFromRequest]['permissions'])) {
-            return false;
+        $allowedRoles = isset($this->clientSecrets[$clientSecretFromRequest]['permissions']) ?
+            $this->clientSecrets[$clientSecretFromRequest]['permissions'] : [];
+
+        // also allow inherited roles
+        $hierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+        foreach($hierarchy as $cr => $parents) { // ROLE_PA_NAMED => [ROLE_PA]
+            foreach($parents as $parent) {
+                if (in_array($parent, $allowedRoles) ) {
+                    $allowedRoles[] = $cr; //ROLE_PA_NAMED
+                }
+            }
         }
-        $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
 
-        return in_array($roleName, $permissions);
+
+        return in_array($roleName, $allowedRoles);
     }
 
-    /**
-     * @deprecated
-     *
-     * Use method above instead
-     *
-     * @param User    $user
-     * @param Request $request
-     *
-     * @return bool
-     */
-    public function isSecretValidForUser(User $user, Request $request)
-    {
-        return $this->isSecretValidForRole($user->getRoleName(), $request);
-    }
 }

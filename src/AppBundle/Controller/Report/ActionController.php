@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
@@ -13,10 +14,10 @@ class ActionController extends RestController
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $reportId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -37,13 +38,12 @@ class ActionController extends RestController
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"GET"})
+     *  @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $action = $this->findEntityBy(EntityDir\Report\Action::class, $id, 'Action with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 

@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -31,10 +32,10 @@ class ReportSubmissionController extends RestController
     /**
      * @Route("")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findByFiltersWithCounts(
@@ -55,11 +56,10 @@ class ReportSubmissionController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_DOCUMENT_MANAGE]);
-
         $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
 
         $this->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
@@ -73,11 +73,10 @@ class ReportSubmissionController extends RestController
      *
      * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function update(Request $request, $reportSubmissionId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DOCUMENT_MANAGE);
-
         /* @var $reportSubmission EntityDir\Report\ReportSubmission */
         $reportSubmission = $this->findEntityBy(EntityDir\Report\ReportSubmission::class, $reportSubmissionId);
 

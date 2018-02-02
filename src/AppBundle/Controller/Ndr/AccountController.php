@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Ndr;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route; use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
@@ -13,11 +13,10 @@ class AccountController extends RestController
     /**
      * @Route("/ndr/{ndrId}/account")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAccountAction(Request $request, $ndrId)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $ndr = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $ndrId);
         $this->denyAccessIfNdrDoesNotBelongToUser($ndr);
 
@@ -37,11 +36,10 @@ class AccountController extends RestController
     /**
      * @Route("/ndr/account/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
         }
@@ -57,11 +55,10 @@ class AccountController extends RestController
     /**
      * @Route("/ndr/account/{id}")
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function editAccountAction(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount*/
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 
@@ -79,11 +76,10 @@ class AccountController extends RestController
     /**
      * @Route("/ndr/account/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function accountDelete($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_LAY_DEPUTY);
-
         $account = $this->findEntityBy(EntityDir\Ndr\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Ndr\BankAccount */
         $this->denyAccessIfNdrDoesNotBelongToUser($account->getNdr());
 

@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,11 +18,10 @@ class ContactController extends RestController
     /**
      * @Route("/contact/{id}")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['contact'];
         $this->setJmsSerialiserGroups($serialisedGroups);
@@ -35,11 +35,10 @@ class ContactController extends RestController
     /**
      * @Route("/contact/{id}")
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteContact($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
@@ -52,11 +51,10 @@ class ContactController extends RestController
     /**
      * @Route("/contact")
      * @Method({"POST", "PUT"})
+     * @Security("has_role('ROLE_DEPUTY')")
      **/
     public function upsertContact(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $contactData = $this->deserializeBodyContent($request);
 
         if ($request->getMethod() == 'POST') {
@@ -109,11 +107,10 @@ class ContactController extends RestController
     /**
      * @Route("/{id}/contacts")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getContacts($id)
     {
-        $this->denyAccessUnlessGranted(EntityDir\User::ROLE_DEPUTY);
-
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 

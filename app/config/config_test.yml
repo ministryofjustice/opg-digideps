@@ -73,7 +73,7 @@ parameters:
         pa@example.org:
             firstname: test
             lastname: pa
-            roleName: ROLE_PA
+            roleName: ROLE_PA_NAMED
             password: Abcd1234
             deputyNo:
             deputyPostcode:
