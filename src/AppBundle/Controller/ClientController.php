@@ -95,6 +95,26 @@ class ClientController extends RestController
     }
 
     /**
+     * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"})
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return null|object
+     *
+     */
+    public function detailsAction(Request $request, $id)
+    {
+        $this->setJmsSerialiserGroups(['client', 'client-reports']);
+
+        $result = $this->findEntityBy(EntityDir\Client::class, $id);
+
+        return $result;
+    }
+
+    /**
      * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
      * @Method({"PUT"})
      * @Security("has_role('ROLE_PA')")
