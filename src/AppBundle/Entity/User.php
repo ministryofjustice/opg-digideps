@@ -1067,6 +1067,16 @@ class User implements UserInterface
     }
 
     /**
+     * Is a Professional Deputy (any role)?
+     *
+     * @return bool
+     */
+    public function isProfessionalDeputy()
+    {
+        return $this->isProfAdministrator() || $this->isProfTeamMember();
+    }
+
+    /**
      * Is PA Named deputy?
      *
      * @return bool
@@ -1101,6 +1111,22 @@ class User implements UserInterface
     }
 
     /**
+     * Is Professional Administrator?
+     *
+     * @return bool
+     */
+    public function isProfAdministrator()
+    {
+        return in_array(
+            $this->getRoleName(),
+            [
+                self::ROLE_PROF_NAMED,
+                self::ROLE_PROF_ADMIN,
+            ]
+        );
+    }
+
+    /**
      * Is PA Team member?
      *
      * @return bool
@@ -1108,6 +1134,16 @@ class User implements UserInterface
     public function isPaTeamMember()
     {
         return $this->getRoleName() === self::ROLE_PA_TEAM_MEMBER;
+    }
+
+    /**
+     * Is Professional Team member?
+     *
+     * @return bool
+     */
+    public function isProfTeamMember()
+    {
+        return $this->getRoleName() === self::ROLE_PROF_TEAM_MEMBER;
     }
 
     /**

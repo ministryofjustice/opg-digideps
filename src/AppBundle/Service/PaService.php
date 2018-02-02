@@ -83,7 +83,7 @@ class PaService
     {
         $this->log('Received ' . count($data) . ' records');
 
-        $this->added = ['users' => [], 'clients' => [], 'reports' => []];
+        $this->added = ['prof_users' => [],'pa_users' => [], 'clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
@@ -92,12 +92,13 @@ class PaService
                 $client = $this->upsertClient($row, $user);
                 $this->upsertReport($row, $client, $user);
             } catch (\Exception $e) {
-                $message = 'Error for Case: ' . $row['Case'] . ' for PA Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
+                $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
             }
         }
 
-        sort($this->added['users']);
+        sort($this->added['prof_users']);
+        sort($this->added['pa_users']);
         sort($this->added['clients']);
         sort($this->added['reports']);
 
@@ -185,7 +186,11 @@ class PaService
                 $this->userRepository->hardDeleteExistingUser($user);
                 $this->em->persist($user);
                 $this->em->flush($user);
-                $this->added['users'][] = $row['Email'];
+                if ($user->isProfessionalDeputy()) {
+                    $this->added['prof_users'][] = $row['Email'];
+                } elseif ($user->isPaDeputy()) {
+                    $this->added['pa_users'][] = $row['Email'];
+                }
             }
         } 
 
@@ -197,7 +202,7 @@ class PaService
             && $team->getTeamName() != $row['Dep Surname']
         ) {
             $team->setTeamName($row['Dep Surname']);
-            $this->warnings[] = 'PA team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
+            $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
             $this->em->flush($team);
         }
 
