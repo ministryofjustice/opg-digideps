@@ -19,9 +19,9 @@ home:
     codepNameNotSet: Invited co-deputy
 
 clientSearch:
-  htmlTitle: Administration - Client search
+  htmlTitle: Administration - Clients
   pageTitle: Admin
-  supportTitle: Cases
+  supportTitle: Clients
   searchBy: Search by client surname or case number
   clientTable:
     heading: Client list
