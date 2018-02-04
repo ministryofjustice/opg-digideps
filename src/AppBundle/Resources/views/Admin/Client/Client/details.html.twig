@@ -13,19 +13,37 @@
 
 {% block helpline %}{% endblock %}
 
-{% block pageContent %}
-    
+{% block breadcrumbs %}
+{#     <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li>
+                <a href="/client/search">Clients</a>
+            </li>
+            <li>
+                Client details
+            </li>
+        </ol>
+    </div> #}
+{% endblock %}
 
-    Report list
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">11325471</span></p>
+
+    <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
 
     {# client report list #}
-    <table class="width-two-thirds">
+    <table class="check-your-answers">
         <thead>
         <tr>
             <th scope="col">Reporting period</th>
             <th scope="col">Date due</th>
             <th scope="col">Submission date</th>
-            <th scope="col">Incomplete</th>
+            <th scope="col">Status</th>
+            <th scope="col">
+                <span class="visually-hidden">Actions</span>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -41,10 +59,12 @@
                     </td>
                     <td>
                         {{ report.submitDate | date("j F Y") }}
-
                     </td>
                     <td>
-                        Coming soon...
+                        <span class="status status-label status-admin flush--ends incomplete">Marked as incomplete</span>
+                    </td>
+                    <td class="change-answer width-tenth soft-half--left hard--right">
+                        <a href="#" class="action-link">Manage</a>
                     </td>
                 </tr>
             {% endfor %}

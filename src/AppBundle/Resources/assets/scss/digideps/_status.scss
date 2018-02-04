@@ -75,4 +75,14 @@
         background-color: $fuschia;
     }
 
+    &-admin {
+        position: relative;
+        top: -2px;
+
+        &.incomplete {
+            color: $white;
+            background-color: $orange;
+        }
+    }
+
 }
