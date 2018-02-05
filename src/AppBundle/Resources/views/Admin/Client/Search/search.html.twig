@@ -35,7 +35,7 @@
         {% if clients | length  == filters.limit %}
             <p class="text">{{ (page ~ '.clientTable.resultsLimited') | trans|raw }}</p>
         {% else %}
-            <p>{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
+            <p class="behat-region-client-search-count">{{ (page ~ '.clientTable.results') | trans({'%numberOfClients%': clients | length }) | raw }}</p>
         {% endif %}
 
 
@@ -52,12 +52,12 @@
                 {% if clients | length %}
                 {% for client in clients %}
             <tr>
-                <td>
+                <td class="behat-region-client-name-{{ client.id }}">
                     <a href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
                         {{ client.fullName }}
                     </a>
                 </td>
-                <td>
+                <td class="behat-region-client-caseNumber-{{ client.id }}">
                     {{ client.caseNumber }}
                 </td>
             </tr>
