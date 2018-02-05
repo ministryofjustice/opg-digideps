@@ -58,7 +58,9 @@
                         {{ report.dueDate | date("j F Y") }}
                     </td>
                     <td>
-                        {{ report.submitDate | date("j F Y") }}
+                        {% if report.submitDate %}
+                            { report.submitDate | date("j F Y") }}
+                        {% endif %}
                     </td>
                     <td>
                         <span class="status flush--ends {{ report.status.state }}">{{ report.status.state }}</span>
