@@ -47,6 +47,32 @@
         </tr>
         </thead>
         <tbody>
+        {% if client.ndr is empty and client.reports is empty %}
+            <tr>
+                <td colspan="4">{{ (page ~ '.deputyTable.noResults') | trans  }}</td>
+            </tr>
+        {% endif %}
+        {% if client.ndr | length %}
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    {{ client.ndr.dueDate | date("j F Y") }}
+                </td>
+                <td>
+                    {% if client.ndr.submitDate %}
+                        { client.ndr.submitDate | date("j F Y") }}
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="status status-label status-admin flush--ends {{ client.ndr.getStatusService.status }}">{{ client.ndr.getStatusService.status }}</span>
+                </td>
+                <td class="change-answer width-tenth soft-half--left hard--right">
+                    <a href="#" class="action-link">Manage</a>
+                </td>
+            </tr>
+        {% endif %}
         {% if client.reports | length %}
             {% for report in client.reports %}
 
@@ -70,10 +96,6 @@
                     </td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="4">{{ (page ~ '.deputyTable.noResults') | trans  }}</td>
-            </tr>
         {% endif %}
         </tbody>
     </table>
