@@ -142,11 +142,10 @@ class ClientController extends RestController
     /**
      * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getAll(Request $request)
     {
-        $this->denyAccessUnlessGranted([EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_AD]);
-
         $this->setJmsSerialiserGroups(['client']);
 
         return $this->getRepository(EntityDir\Client::class)->searchClients(

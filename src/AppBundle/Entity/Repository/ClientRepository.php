@@ -36,8 +36,6 @@ class ClientRepository extends EntityRepository
             ->where('u.roleName = \'' . User::ROLE_LAY_DEPUTY . '\'');
         $qb->orderBy('c.' . $orderBy, $sortOrder);
 
-        // to do filter by LAY_DEPUTY
-
         if ($query) {
             if (preg_match('/^[0-9t]{8}$/i', $query)) { // case number
                 $qb->andWhere('lower(c.caseNumber) = :cn');
