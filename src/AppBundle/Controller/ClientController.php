@@ -144,7 +144,7 @@ class ClientController extends RestController
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function getAll(Request $request)
+    public function getAllAction(Request $request)
     {
         $this->setJmsSerialiserGroups(['client']);
 
