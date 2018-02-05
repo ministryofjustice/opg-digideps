@@ -61,7 +61,7 @@
                         {{ report.submitDate | date("j F Y") }}
                     </td>
                     <td>
-                        <span class="status status-label status-admin flush--ends incomplete">Marked as incomplete</span>
+                        <span class="status flush--ends {{ report.status.state }}">{{ report.status.state }}</span>
                     </td>
                     <td class="change-answer width-tenth soft-half--left hard--right">
                         <a href="#" class="action-link">Manage</a>
