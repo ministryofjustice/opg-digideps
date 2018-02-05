@@ -31,11 +31,13 @@ class ReportSubmissionRepository extends EntityRepository
         $qb = $this->createQueryBuilder('rs');
         $qb
             ->leftJoin('rs.report', 'r')
+            ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('rs.archivedBy', 'ab')
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.documents', 'd')
-            ->orderBy('rs.' . $orderBy, $order);
+            ->orderBy('rs.' . $orderBy, $order)
+        ;
 
         // search filter
         if ($q) {
