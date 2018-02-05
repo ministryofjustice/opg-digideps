@@ -1,6 +1,6 @@
 Feature: Admin cross checks
 
-  @deputy @shaun
+  @deputy
   Scenario: Client search
 #    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
 #    And I click on "admin-client-search"
