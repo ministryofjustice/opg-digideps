@@ -28,6 +28,18 @@ clientSearch:
     results: Found %numberOfClients% clients
     resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
     noResults: No clients found
+
+clientDetails:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Client details
+  reportsTable:
+    reportingPeriod: Reporting period
+    dateDue: Date due
+    submissionDate: Submission date
+    status: Status
+    noResults: No reports found
+
 homeForm:
   clear: Clear filters
 
