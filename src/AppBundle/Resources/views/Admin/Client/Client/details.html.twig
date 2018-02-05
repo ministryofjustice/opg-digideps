@@ -58,7 +58,9 @@
                         {{ report.dueDate | date("j F Y") }}
                     </td>
                     <td>
-                        {{ report.submitDate | date("j F Y") }}
+                        {% if report.submitDate %}
+                            { report.submitDate | date("j F Y") }}
+                        {% endif %}
                     </td>
                     <td>
                         <span class="status status-label status-admin flush--ends incomplete">Marked as incomplete</span>
