@@ -14,6 +14,8 @@ class ReportSubmissionRepository extends EntityRepository
      * @param string $createdByRole see values in USER::ROLE_*
      * @param int    $offset
      * @param int    $limit
+     * @param string    $orderBy default createdOn
+     * @param string    $order default ASC
      *
      * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
      */
