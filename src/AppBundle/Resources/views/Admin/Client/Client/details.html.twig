@@ -29,7 +29,7 @@
 {% block pageContent %}
 
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
-    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">11325471</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
 
     <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
 
