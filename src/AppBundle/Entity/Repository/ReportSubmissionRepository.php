@@ -36,6 +36,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.documents', 'd')
+            ->where('rs.downloadable = true')
             ->orderBy('rs.' . $orderBy, $order)
         ;
 
