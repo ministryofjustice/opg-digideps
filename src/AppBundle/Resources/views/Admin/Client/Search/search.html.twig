@@ -53,7 +53,7 @@
                 {% for client in clients %}
             <tr>
                 <td class="behat-region-client-name-{{ client.id }}">
-                    <a href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
+                    <a class="behat-link-client-details-{{ client.id }}" href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
                         {{ client.fullName }}
                     </a>
                 </td>
