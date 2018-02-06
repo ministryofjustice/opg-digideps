@@ -92,6 +92,14 @@ class Report implements ReportInterface
      */
     private $submitDate;
 
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"submit"})
+     */
+    private $unSubmitDate;
+
     /**
      * @JMS\Type("AppBundle\Entity\User")
      *
@@ -442,6 +450,14 @@ class Report implements ReportInterface
         }
 
         return $submitDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnSubmitDate()
+    {
+        return $this->unSubmitDate;
     }
 
     /**

@@ -37,6 +37,7 @@ clientDetails:
     reportingPeriod: Reporting period
     dateDue: Date due
     submissionDate: Submission date
+    unSubmissionDate: Unsubmission date
     status: Status
     noResults: No reports found
 

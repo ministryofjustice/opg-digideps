@@ -30,6 +30,7 @@
                 <th scope="col">{{ 'clientDetails.reportsTable.reportingPeriod' | trans() }}</th>
                 <th scope="col">{{ 'clientDetails.reportsTable.dateDue' | trans() }}</th>
                 <th scope="col">{{ 'clientDetails.reportsTable.submissionDate' | trans() }}</th>
+                <th scope="col">{{ 'clientDetails.reportsTable.unSubmissionDate' | trans() }}</th>
                 <th scope="col">{{ 'clientDetails.reportsTable.status' | trans() }}</th>
                 <th scope="col">
                     <span class="visually-hidden">{{ 'clientDetails.reportsTable.actions' | trans() }}</span>
@@ -50,6 +51,11 @@
                         <td>
                             {% if report.submitDate %}
                                 {{ report.submitDate | date("j F Y") }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if report.unSubmitDate %}
+                                {{ report.unSubmitDate | date("j F Y") }}
                             {% endif %}
                         </td>
                         <td>
