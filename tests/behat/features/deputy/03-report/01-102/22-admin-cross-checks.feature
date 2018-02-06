@@ -29,4 +29,5 @@ Feature: Admin cross checks
       | John 104 | client-name-6 |
       | test1040 | client-caseNumber-6 |
     And I click on "client-details-6"
-      Then I should be on "/admin/client/6/details"
+    Then I should be on "/admin/client/6/details"
+    
