@@ -53,7 +53,8 @@
 
     &.done,
     &.readyToSubmit,
-    &.explained {
+    &.explained,
+    &.submitted {
         color: $green;
         border-color: $green;
     }
@@ -73,16 +74,6 @@
     &.admin {
         color: $white;
         background-color: $fuschia;
-    }
-
-    &-admin {
-        position: relative;
-        top: -2px;
-
-        &.incomplete {
-            color: $white;
-            background-color: $orange;
-        }
     }
 
 }
