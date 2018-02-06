@@ -1,0 +1,72 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'clientDetails' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
+
+    <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
+
+    {# client report list #}
+    {% if client.reports is empty %}
+        <p>{{ (page ~ '.noResults') | trans  }}</p>
+    {% else %}
+        <table class="check-your-answers">
+            <thead>
+            <tr>
+                <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
+                <th scope="col">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if client.reports | length %}
+                {% for report in client.reports %}
+
+                    <tr>
+                        <td>
+                            {{ report.period | replace({'to': '-'}) }}
+                        </td>
+                        <td>
+                            {{ report.dueDate | date("j F Y") }}
+                        </td>
+                        <td>
+                            {% if report.submitDate %}
+                                {{ report.submitDate | date("j F Y") }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set status = report.status.status %}
+                            {% if status == 'readyToSubmit' and (report.submitDate is not empty) %}
+                                {% set status = 'submitted' %}
+                            {% endif %}
+                            <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
+                        </td>
+                        <td class="change-answer width-tenth">
+                            <a href="#" class="action-link">{{ 'manage' | trans({}, 'common') }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

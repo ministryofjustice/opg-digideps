@@ -37,12 +37,13 @@
         {% if app.user %}
             <ul id="proposition-links" class="behat-region-navbar">
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{% trans %}nav.adminArea{% endtrans %}</a></li>
-                    <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{% trans %}Lay CSV{% endtrans %}</a></li>
-                    <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{% trans %}PA/Prof CSV{% endtrans %}</a></li>
-                    <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{{ 'nav.adminArea' | trans }}</a></li>
+                    <li><a href="{{ path('admin_client_search') }}"  class="behat-link-admin-client-search">{{ 'nav.adminClients' | trans }}</a></li>
+                    <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{{ 'nav.adminUploadLay' | trans }}</a></li>
+                    <li><a href="{{ path('admin_pa_upload') }}" class="behat-link-admin-upload-pa">{{ 'nav.adminUploadPAProf' | trans }}</a></li>
+                    <li><a href="{{ path('admin_stats') }}">{{ 'nav.adminStats' | trans }}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
-                    <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{% trans %}nav.documents{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{{ 'nav.adminDocuments' | trans }}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_AD') %}

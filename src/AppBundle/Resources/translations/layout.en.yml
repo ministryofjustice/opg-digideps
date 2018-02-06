@@ -1,13 +1,15 @@
 nav:
-    documents: Documents
-    adminArea: Users
     adArea: Assisted Digital
-    userDetails: Your details
-    clientHome: Your client
     reports: Your reports
     userAccount: Deputyship details
     # only in case of exception, when it's not clear the user role not the page
     homepage: Homepage
+    adminArea: Users
+    adminClients: Clients
+    adminUploadLay: Lay CSV
+    adminUploadPAProf: PA/Prof CSV
+    adminStats: Stats
+    adminDocuments: Documents
 helpline: 0115 934 2700
 helplinePA: 0115 934 2817
 emailSupport: Email support
