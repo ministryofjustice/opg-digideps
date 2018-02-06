@@ -220,4 +220,52 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf('AppBundle\Entity\Client', $client);
         $this->assertEquals(0, count($client->getUsers()));
     }
+    
+    public function testDetailsAction()
+    {
+        $url = '/client/' . self::$client1->getId() . '/details';
+
+        $this->assertJsonRequest('GET', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertJsonRequest('GET', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        $this->assertEquals('Firstname', $data['firstname']);
+        $this->assertCount(1, $data['users']);
+        $this->assertCount(1, $data['reports']);
+    }
+
+    public function testGetAllAction()
+    {
+        $url = '/client/get-all';
+
+        $this->assertJsonRequest('GET', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+
+        $this->assertJsonRequest('GET', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenPa,
+        ])['data'];
+
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin,
+        ])['data'];
+
+        $this->assertCount(2, $data);
+        $this->assertEquals(5, $data[0]['id']);
+        $this->assertEquals(8, $data[1]['id']);
+    }
 }

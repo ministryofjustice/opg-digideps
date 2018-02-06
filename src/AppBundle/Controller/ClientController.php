@@ -95,6 +95,26 @@ class ClientController extends RestController
     }
 
     /**
+     * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"})
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @return null|object
+     *
+     */
+    public function detailsAction(Request $request, $id)
+    {
+        $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'report', 'client-reports', 'status']);
+
+        $result = $this->findEntityBy(EntityDir\Client::class, $id);
+
+        return $result;
+    }
+
+    /**
      * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
      * @Method({"PUT"})
      * @Security("has_role('ROLE_PA')")
@@ -117,5 +137,24 @@ class ClientController extends RestController
         return [
             'id' => $client->getId()
         ];
+    }
+
+    /**
+     * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"})
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function getAllAction(Request $request)
+    {
+        $this->setJmsSerialiserGroups(['client']);
+
+        return $this->getRepository(EntityDir\Client::class)->searchClients(
+            $request->get('q'),
+            $request->get('order_by'),
+            $request->get('sort_order'),
+            $request->get('limit'),
+            $request->get('offset')
+        );
+
     }
 }
