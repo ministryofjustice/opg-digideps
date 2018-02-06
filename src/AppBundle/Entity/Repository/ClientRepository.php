@@ -37,7 +37,7 @@ class ClientRepository extends EntityRepository
         $qb->orderBy('c.' . $orderBy, $sortOrder);
 
         if ($query) {
-            if (preg_match('/^[0-9t]{8}$/i', $query)) { // case number
+            if (Client::isValidCaseNumber($query)) { // case number
                 $qb->andWhere('lower(c.caseNumber) = :cn');
                 $qb->setParameter('cn', strtolower($query));
             } else { // client.lastname
