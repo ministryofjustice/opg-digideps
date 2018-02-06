@@ -789,6 +789,6 @@ class Client
      */
     public static function isValidCaseNumber($query)
     {
-        return (bool) preg_match('/^(test[0-9t{4})|[0-9t]{8}$/i', $query);
+        return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
 }
