@@ -26,7 +26,7 @@ class ClientRepository extends EntityRepository
      *
      * @return Client[]|array
      */
-    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 'id')
+    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
     {
 
         $qb = $this->createQueryBuilder('c');
@@ -45,6 +45,10 @@ class ClientRepository extends EntityRepository
                 $qb->setParameter('qLike', '%' . strtolower($query) . '%');
             }
         }
+
+        // ensure max 100 results
+        $limit = ($limit <= 100) ? $limit : 100;
+        $qb->setMaxResults($limit);
 
         $clients = $qb->getQuery()->getResult(); /* @var $clients Client[] */
 
