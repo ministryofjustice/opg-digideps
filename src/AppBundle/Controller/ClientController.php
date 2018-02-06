@@ -107,7 +107,7 @@ class ClientController extends RestController
      */
     public function detailsAction(Request $request, $id)
     {
-        $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'report', 'client-reports', 'status', 'ndr']);
+        $this->setJmsSerialiserGroups(['client', 'client-users', 'user', 'report', 'client-reports', 'status']);
 
         $result = $this->findEntityBy(EntityDir\Client::class, $id);
 
