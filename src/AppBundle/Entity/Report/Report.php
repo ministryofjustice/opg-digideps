@@ -247,6 +247,15 @@ class Report implements ReportInterface
 
     /**
      * @var \DateTime
+     *
+     * @JMS\Groups({"report"})
+     * @JMS\Type("DateTime")
+     * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
+     */
+    private $unSubmitDate;
+
+    /**
+     * @var \DateTime
      * @JMS\Accessor(getter="getLastedit")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
@@ -542,6 +551,25 @@ class Report implements ReportInterface
     public function getSubmitDate()
     {
         return $this->submitDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnSubmitDate()
+    {
+        return $this->unSubmitDate;
+    }
+
+    /**
+     * @param \DateTime $unSubmitDate
+     * @return Report
+     */
+    public function setUnSubmitDate($unSubmitDate)
+    {
+        $this->unSubmitDate = $unSubmitDate;
+
+        return $this;
     }
 
     /**
