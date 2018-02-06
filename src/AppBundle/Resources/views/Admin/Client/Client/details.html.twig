@@ -40,7 +40,7 @@
             {% if client.reports | length %}
                 {% for report in client.reports %}
 
-                    <tr>
+                    <tr class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}">
                         <td>
                             {{ report.getPeriod() }}
                         </td>
@@ -53,8 +53,14 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% set status = report.status.status %}
-                            <span class="status flush--ends {{ report.status.state }}">{{ (status) | trans({}, 'common') }}</span>
+                            {% if report.submitted %}
+                                {% set state = 'submitted' %}
+                                {% set statusLabel = 'submitted' %}
+                            {% else %}
+                                {% set state = report.status.state %}
+                                {% set statusLabel = report.status.status %}
+                            {% endif %}
+                            <span class="status flush--ends {{ report.status.state }}">{{ (statusLabel) | trans({}, 'common') }}</span>
                         </td>
                         <td class="change-answer width-tenth soft-half--left hard--right">
                             <a href="#" class="action-link">Manage</a>
