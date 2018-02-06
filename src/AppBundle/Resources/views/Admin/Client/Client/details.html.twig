@@ -13,19 +13,6 @@
 
 {% block helpline %}{% endblock %}
 
-{% block breadcrumbs %}
-{#     <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li>
-                <a href="/client/search">Clients</a>
-            </li>
-            <li>
-                Client details
-            </li>
-        </ol>
-    </div> #}
-{% endblock %}
-
 {% block pageContent %}
 
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
@@ -34,71 +21,49 @@
     <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
 
     {# client report list #}
-    <table class="check-your-answers">
-        <thead>
-        <tr>
-            <th scope="col">{{ 'clientDetails.reportsTable.reportingPeriod' | trans() }}</th>
-            <th scope="col">{{ 'clientDetails.reportsTable.dateDue' | trans() }}</th>
-            <th scope="col">{{ 'clientDetails.reportsTable.submissionDate' | trans() }}</th>
-            <th scope="col">{{ 'clientDetails.reportsTable.status' | trans() }}</th>
-            <th scope="col">
-                <span class="visually-hidden">{{ 'clientDetails.reportsTable.actions' | trans() }}</span>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% if client.reports is empty %}
+    {% if client.reports is empty %}
+        <p>{{ (page ~ '.reportsTable.noResults') | trans  }}</p>
+    {% else %}
+        <table class="check-your-answers">
+            <thead>
             <tr>
-                <td colspan="4">{{ (page ~ '.reportsTable.noResults') | trans  }}</td>
+                <th scope="col">{{ 'clientDetails.reportsTable.reportingPeriod' | trans() }}</th>
+                <th scope="col">{{ 'clientDetails.reportsTable.dateDue' | trans() }}</th>
+                <th scope="col">{{ 'clientDetails.reportsTable.submissionDate' | trans() }}</th>
+                <th scope="col">{{ 'clientDetails.reportsTable.status' | trans() }}</th>
+                <th scope="col">
+                    <span class="visually-hidden">{{ 'clientDetails.reportsTable.actions' | trans() }}</span>
+                </th>
             </tr>
-        {% endif %}
-        {% if false and client.ndr | length %}
-            {{ dump(client.ndr) }}
-            <tr>
-                <td>
+            </thead>
+            <tbody>
+            {% if client.reports | length %}
+                {% for report in client.reports %}
 
-                </td>
-                <td>
-                    {{ client.ndr.dueDate | date("j F Y") }}
-                </td>
-                <td>
-                    {% if client.ndr.submitDate %}
-                        { client.ndr.submitDate | date("j F Y") }}
-                    {% endif %}
-                </td>
-                <td>
-                    <span class="status status-label status-admin flush--ends {{ client.ndr.getStatusService.status }}">{{ client.ndr.getStatusService.status }}</span>
-                </td>
-                <td class="change-answer width-tenth soft-half--left hard--right">
-                    <a href="#" class="action-link">Manage</a>
-                </td>
-            </tr>
-        {% endif %}
-        {% if client.reports | length %}
-            {% for report in client.reports %}
-
-                <tr>
-                    <td>
-                        {{ report.getPeriod() }}
-                    </td>
-                    <td>
-                        {{ report.dueDate | date("j F Y") }}
-                    </td>
-                    <td>
-                        {% if report.submitDate %}
-                            {{ report.submitDate | date("j F Y") }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="status flush--ends {{ report.status.state }}">{{ report.status.state }}</span>
-                    </td>
-                    <td class="change-answer width-tenth soft-half--left hard--right">
-                        <a href="#" class="action-link">Manage</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-        </tbody>
-    </table>
+                    <tr>
+                        <td>
+                            {{ report.getPeriod() }}
+                        </td>
+                        <td>
+                            {{ report.dueDate | date("j F Y") }}
+                        </td>
+                        <td>
+                            {% if report.submitDate %}
+                                {{ report.submitDate | date("j F Y") }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set status = report.status.status %}
+                            <span class="status flush--ends {{ report.status.state }}">{{ (status) | trans({}, 'common') }}</span>
+                        </td>
+                        <td class="change-answer width-tenth soft-half--left hard--right">
+                            <a href="#" class="action-link">Manage</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    {% endif %}
 
 {% endblock %}
