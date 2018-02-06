@@ -28,7 +28,7 @@ class SearchController extends AbstractController
     {
         $filters = [
             'limit'       => 100,
-            'offset'      => $request->get('offset', 'id'),
+            'offset'      => $request->get('offset', '0'),
             'q'           => '',
             'order_by'    => 'id',
             'sort_order'  => 'DESC',
