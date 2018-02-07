@@ -53,7 +53,8 @@
 
     &.done,
     &.readyToSubmit,
-    &.explained {
+    &.explained,
+    &.submitted {
         color: $green;
         border-color: $green;
     }
