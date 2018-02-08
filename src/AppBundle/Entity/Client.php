@@ -779,4 +779,16 @@ class Client
         $this->clientContacts = $clientContacts;
         return $this;
     }
+
+    /**
+     * Regular expression to match a case number
+     *
+     * @param $query
+     *
+     * @return bool
+     */
+    public static function isValidCaseNumber($query)
+    {
+        return (bool) preg_match('/^[0-9t]{8}$/i', $query);
+    }
 }

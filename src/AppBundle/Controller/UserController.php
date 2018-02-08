@@ -263,7 +263,7 @@ class UserController extends RestController
         }
 
         if ($q) {
-            if (preg_match('/^[0-9t]{8}$/i', $q)) { // case number
+            if (EntityDir\Client::isValidCaseNumber($q)) { // case number
                 $qb->leftJoin('u.clients', 'c');
                 $qb->andWhere('lower(c.caseNumber) = :cn');
                 $qb->setParameter('cn', strtolower($q));
