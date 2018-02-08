@@ -41,7 +41,6 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('rs.archivedBy', 'ab')
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
-            ->leftJoin('rs.documents', 'd')
         ;
         // search filter
         if ($q) {
@@ -82,7 +81,8 @@ class ReportSubmissionRepository extends EntityRepository
         $counts = [];
         foreach ($statusFilters as $k=>$v) {
             $qbCount = clone $qb;
-            $counts[$k] = $qbCount->select('count(rs.id)')->andWhere($v)->getQuery()->getSingleScalarResult();
+            $queryCount = $qbCount->select('count(DISTINCT rs.id)')->andWhere($v)->getQuery();
+            $counts[$k] = $queryCount->getSingleScalarResult();
         }
 
         return [
@@ -102,7 +102,6 @@ class ReportSubmissionRepository extends EntityRepository
         $qb = $this->createQueryBuilder('rs');
         $qb
             ->leftJoin('rs.report', 'r')
-            ->leftJoin('rs.documents', 'd')
             ->where('rs.createdOn <= :olderThan')
             ->andWhere('rs.downloadable = true')
             ->setParameter(':olderThan', $olderThan);
