@@ -65,7 +65,6 @@ class ReportSubmissionRepository extends EntityRepository
         }
 
         // get results (base query + ordered + pagination + status filter)
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $qbSelect = clone $qb;
         $qbSelect->select('rs');
         if (isset($statusFilters[$status])) {
@@ -75,6 +74,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
