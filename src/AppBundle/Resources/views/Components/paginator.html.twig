@@ -21,7 +21,10 @@
             {{ messages.singlePage | transchoice(totalRecords) | raw }}
         </div>
     {% else %}
-        {% set pages = range(0, totalRecords, recordsPerPage) %}
+        {# range requires a maximum of totalRecords -1 to prevent an extra page being displayed when the records per
+        page is a multiple of totalRecords, hence -1 #}
+        {% set pages = range(0, (totalRecords-1), recordsPerPage) %}
+
         <div class="pager-controls">
             {# prev #}
             {% if currentOffset > 0 %}
