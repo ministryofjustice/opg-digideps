@@ -33,13 +33,7 @@ clientDetails:
   htmlTitle: Administration - Clients
   pageTitle: Admin
   supportTitle: Client details
-  reportsTable:
-    reportingPeriod: Reporting period
-    dateDue: Date due
-    submissionDate: Submission date
-    unSubmissionDate: Unsubmission date
-    status: Status
-    noResults: No reports found
+  noResults: No reports found
 
 homeForm:
   clear: Clear filters

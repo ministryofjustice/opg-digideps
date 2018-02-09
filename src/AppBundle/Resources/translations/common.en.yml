@@ -20,6 +20,7 @@ status:
   readyToSubmit: Continue
 next: Next
 previous: Previous
+manage: Manage
 
 # Report headings
 annualDeputyReport: Annual deputy report
@@ -45,6 +46,9 @@ courtOrderNumber: Court order number
 reportDueDate: Report due date
 reportStatus: Report status
 reports: Reports
+period: Period
+submissionDate: Submission date
+unsubmissionDate: Unsubmission date
 
 # Statuses
 notCreated: Not created
@@ -53,6 +57,8 @@ notStarted: Not started
 readyToSubmit: Ready to submit
 notAvailable: Not available
 inProgress: In progress
+submitted: Submitted
+unsubmitted: Unsubmitted
 
 # Breadcrumbs
 yourReports: Your reports

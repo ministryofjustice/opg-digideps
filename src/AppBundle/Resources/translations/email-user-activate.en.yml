@@ -13,17 +13,13 @@ default:
         <a style="word-wrap: break-word;" href="%homepageUrl%">
         complete-deputy-report.service.gov.uk</a> and register again.
 
-
-
-
 ROLE_PA_NAMED:
     youAreRegistered: |
         We’ve now registered you with the Office of the Public Guardian’s deputy service.
     youMustActivate: You must activate your account before you can start using the deputy service.
     linkExpires: |
-        The link we’ve given you expires after 48 hours. If you miss this deadline,
-        please contact the Office of the Public Guardian using the contact details
-        below to request a new activation email.
+        The link we’ve given you expires after 48 hours. If you miss this deadline, please
+        contact us using the details below and ask for a new activation email.
 
 ROLE_PA_ADMIN:
     youAreRegistered: |
@@ -48,9 +44,8 @@ ROLE_PROF_NAMED:
         We’ve now registered you with the Office of the Public Guardian’s deputy service.
     youMustActivate: You must activate your account before you can start using the deputy service.
     linkExpires: |
-        The link we’ve given you expires after 48 hours. If you miss this deadline,
-        please contact the Office of the Public Guardian using the contact details
-        below to request a new activation email.
+        The link we’ve given you expires after 48 hours. If you miss this deadline, please
+        contact us using the details below and ask for a new activation email.
 
 ROLE_PROF_ADMIN:
     youAreRegistered: |

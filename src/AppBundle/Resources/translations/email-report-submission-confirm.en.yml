@@ -4,7 +4,7 @@ default:
     thanksForSubmitting: |
         <strong>Thank you for submitting your annual deputy report</strong> for
         %startDate% to %endDate%.
-    currentlyReviewing: We're currently reviewing it, and we'll contact you when we've finished.
+    currentlyReviewing: We're currently reviewing it and we'll contact you when we've finished.
     reportAccess: <strong>Download a pdf of your report</strong>
     downloadInstructions01: |
         To view and download a copy of the report for your records, sign back into the deputy report

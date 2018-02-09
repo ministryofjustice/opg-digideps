@@ -22,18 +22,18 @@
 
     {# client report list #}
     {% if client.reports is empty %}
-        <p>{{ (page ~ '.reportsTable.noResults') | trans  }}</p>
+        <p>{{ (page ~ '.noResults') | trans  }}</p>
     {% else %}
         <table class="check-your-answers">
             <thead>
             <tr>
-                <th scope="col">{{ 'clientDetails.reportsTable.reportingPeriod' | trans() }}</th>
-                <th scope="col">{{ 'clientDetails.reportsTable.dateDue' | trans() }}</th>
-                <th scope="col">{{ 'clientDetails.reportsTable.submissionDate' | trans() }}</th>
-                <th scope="col">{{ 'clientDetails.reportsTable.unSubmissionDate' | trans() }}</th>
-                <th scope="col">{{ 'clientDetails.reportsTable.status' | trans() }}</th>
+                <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
                 <th scope="col">
-                    <span class="visually-hidden">{{ 'clientDetails.reportsTable.actions' | trans() }}</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
             </thead>
@@ -43,7 +43,7 @@
 
                     <tr class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}">
                         <td>
-                            {{ report.getPeriod() }}
+                            {{ report.period | replace({'to': '-'}) }}
                         </td>
                         <td>
                             {{ report.dueDate | date("j F Y") }}
@@ -59,17 +59,18 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if report.submitted %}
-                                {% set state = 'submitted' %}
-                                {% set statusLabel = 'submitted' %}
-                            {% else %}
-                                {% set state = report.status.state %}
-                                {% set statusLabel = report.status.status %}
+                            {% set status = report.status.status %}
+                            {% if status == 'readyToSubmit' and (report.submitDate is not empty) %}
+                                {% if report.unSubmitDate %}
+                                    {% set status = 'unsubmitted' %}
+                                {% else %}
+                                    {% set status = 'submitted' %}
+                                {% endif %}
                             {% endif %}
-                            <span class="status flush--ends {{ report.status.state }}">{{ (statusLabel) | trans({}, 'common') }}</span>
+                            <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
-                        <td class="change-answer width-tenth soft-half--left hard--right">
-                            <a href="#" class="action-link">Manage</a>
+                        <td class="change-answer width-tenth">
+                            <a href="#" class="action-link">{{ 'manage' | trans({}, 'common') }}</a>
                         </td>
                     </tr>
                 {% endfor %}
