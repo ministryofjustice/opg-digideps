@@ -319,6 +319,9 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+        if (!$report->getSubmitted()) {
+            throw new \RuntimeException('Cannot unsubmit an active report');
+        }
         $report->setSubmitted(false);
         $report->setUnSubmitDate(new \DateTime());
 
