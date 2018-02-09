@@ -51,9 +51,9 @@
             <tr>
                 {% if clients | length %}
                 {% for client in clients %}
-            <tr class="behat-region-client-{{ client.caseNumber }}">
+            <tr class="behat-region-client-row behat-region-client-{{ client.caseNumber }}">
                 <td >
-                    <a class="behat-link-client-{{ client.caseNumber }}-fullname" href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
+                    <a class="behat-link-client-details" href="{{ path('admin_client_details', {'id' : client.id}) }}" class="bold">
                         {{ client.fullName }}
                     </a>
                 </td>
