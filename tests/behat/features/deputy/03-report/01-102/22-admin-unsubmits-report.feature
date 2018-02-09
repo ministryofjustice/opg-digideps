@@ -18,10 +18,12 @@ Feature: Admin unsubmit report (from client page)
     And I save the current URL as "admin-client-search-client-behat001"
 
   @deputy
-  Scenario: Admin report page
+  Scenario: Admin report page + unsubmit report
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-search-client-behat001"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
     And I should see "SUBMITTED" in the "client-behat001-2016" region
     And I should see "NOT FINISHED" in the "client-behat001-2017" region
+    When I click on "manage" in the "behat001-2016" region
+

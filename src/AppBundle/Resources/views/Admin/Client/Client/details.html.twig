@@ -70,7 +70,7 @@
                             <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
                         <td class="change-answer width-tenth">
-                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link">{{ 'manage' | trans({}, 'common') }}</a>
+                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
                         </td>
                     </tr>
                 {% endfor %}
