@@ -36,7 +36,7 @@ clientDetails:
   noResults: No reports found
 
 reportManage:
-  htmlTitle: Administration - Report
+  htmlTitle: Administration - Manage report
   pageTitle: Admin
   supportTitle: Manage report
 
