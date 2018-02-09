@@ -70,18 +70,18 @@ class PaginatorTest extends WebTestCase
     public static function multiPageProvider()
     {
         return [
-            // page 1 of 2
-            [0, 20, 'Showing 1 - 15 of 20 records', [
+            // page 1 of 3
+            [0, 30, 'Showing 1 - 15 of 30 records', [
                 'prev' => null,
                 '1' => null,
                 '2' => 'route/a=b&offset=15',
                 'next' => 'route/a=b&offset=15']],
             // page 2 of 2
-            [15, 20, 'Showing 16 - 20 of 20 records', [
+            [15, 30, 'Showing 16 - 30 of 30 records', [
                 'prev' => 'route/a=b&offset=0',
                 '1' => 'route/a=b&offset=0',
                 '2' => null,
-                'next' => null]],
+                'next' => null]]
         ];
     }
 
