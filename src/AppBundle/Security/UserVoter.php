@@ -116,8 +116,10 @@ class UserVoter extends Voter
             case User::ROLE_PROF_ADMIN:
                 // Admin can edit everyone except Named
                 if ($subject->hasRoleOrgNamed()) {
-                    return true;
+                    return false;
                 }
+                return true;
+            default:
                 return false;
         }
 
