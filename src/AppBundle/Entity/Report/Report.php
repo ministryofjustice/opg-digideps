@@ -96,7 +96,7 @@ class Report implements ReportInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime")
-     * @JMS\Groups({"submit"})
+     * @JMS\Groups({"unsubmit_date"})
      */
     private $unSubmitDate;
 
@@ -452,13 +452,6 @@ class Report implements ReportInterface
         return $submitDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getUnSubmitDate()
-    {
-        return $this->unSubmitDate;
-    }
 
     /**
      * @param \DateTime $submitDate
@@ -470,6 +463,23 @@ class Report implements ReportInterface
         $this->submitDate = $submitDate;
 
         return $this;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnSubmitDate()
+    {
+        return $this->unSubmitDate;
+    }
+
+    /**
+     * @param \DateTime $unSubmitDate
+     */
+    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    {
+        $this->unSubmitDate = $unSubmitDate;
     }
 
     /**

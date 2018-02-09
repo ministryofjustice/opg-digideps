@@ -43,6 +43,7 @@
 
                     <tr class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}">
                         <td>
+                            {{ dump(report.id) }}
                             {{ report.period | replace({'to': '-'}) }}
                         </td>
                         <td>
@@ -60,13 +61,6 @@
                         </td>
                         <td>
                             {% set status = report.status.status %}
-                            {% if status == 'readyToSubmit' and (report.submitDate is not empty) %}
-                                {% if report.unSubmitDate %}
-                                    {% set status = 'unsubmitted' %}
-                                {% else %}
-                                    {% set status = 'submitted' %}
-                                {% endif %}
-                            {% endif %}
                             <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
                         <td class="change-answer width-tenth">

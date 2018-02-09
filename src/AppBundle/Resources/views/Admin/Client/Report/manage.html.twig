@@ -142,6 +142,20 @@
         <a class="button-link" href="#">Cancel</a>
     </p>
 
+    <hr />
+
+    {% trans_default_domain "registration" %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+    {{ form_known_date(form.endDate, 'endDate') }}
+
+    {{ form_submit(form.save,'unsubmit') }}
+
+    {{ form_end(form) }}
+
 
     <hr />
     {{ dump(report.period) }}
