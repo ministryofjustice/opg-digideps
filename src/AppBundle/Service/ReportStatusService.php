@@ -583,6 +583,10 @@ class ReportStatusService
             return 'notStarted';
         }
 
+        if ($this->report->getUnSubmitDate()) {
+            return 'unsubmitted';
+        }
+
         if ($this->report->isDue() && $this->isReadyToSubmit()) {
             return 'readyToSubmit';
         } else {

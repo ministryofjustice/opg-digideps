@@ -312,6 +312,9 @@ class ReportController extends RestController
      */
     public function unsubmit(Request $request, $id)
     {
+        /**
+         * @var $report Report
+         */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
 
         $data = $this->deserializeBodyContent($request);
