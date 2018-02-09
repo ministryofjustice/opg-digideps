@@ -81,7 +81,14 @@ class PaginatorTest extends WebTestCase
                 'prev' => 'route/a=b&offset=0',
                 '1' => 'route/a=b&offset=0',
                 '2' => null,
-                'next' => null]]
+                'next' => null]],
+                // page 2 of 2
+            [0, 0, 'Showing 0 records', [
+                'prev' => null,
+                'next' => null]],
+            [0, 1, 'Showing 1 record', [
+                'prev' => null,
+                'next' => null]],
         ];
     }
 
