@@ -58,6 +58,8 @@ class UserController extends RestController
             && !$this->isGranted(EntityDir\User::ROLE_AD)
             && !$this->isGranted(EntityDir\User::ROLE_PA_NAMED) //TODO check user is also part of the team
             && !$this->isGranted(EntityDir\User::ROLE_PA_ADMIN) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PROF_NAMED) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PROF_ADMIN) //TODO check user is also part of the team
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
