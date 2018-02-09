@@ -53,9 +53,10 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param int $id
+     * @return Report
      */
     public function getById(Request $request, $id)
     {
@@ -65,7 +66,9 @@ class ReportController extends RestController
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         /* @var $report Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
+        }
 
         return $report;
     }
