@@ -3,9 +3,7 @@ Feature: Admin unsubmit report (from client page)
   @deputy
   Scenario: Admin finds client in client search page
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I click on "admin-client-search"
-# TODO use new link instead when available
-    And I go to admin page "/admin/client/search"
+    And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
       | 8 clients | client-search-count |
     Then each text should be present in the corresponding region:
