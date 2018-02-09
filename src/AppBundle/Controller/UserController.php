@@ -19,7 +19,7 @@ class UserController extends RestController
     /**
      * @Route("")
      * @Method({"POST"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_PA_NAMED') or has_role('ROLE_PA_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
     {
