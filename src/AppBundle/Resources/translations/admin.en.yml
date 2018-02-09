@@ -35,6 +35,12 @@ clientDetails:
   supportTitle: Client details
   noResults: No reports found
 
+reportManage:
+  htmlTitle: Administration - Report
+  pageTitle: Admin
+  supportTitle: Manage report
+
+
 homeForm:
   clear: Clear filters
 
