@@ -1177,6 +1177,16 @@ class User implements UserInterface
     }
 
     /**
+     * Is user an organisation Team Member?
+     *
+     * @return bool
+     */
+    public function isOrgTeamMember()
+    {
+        return $this->isProfTeamMember() || $this->isPaTeamMember();
+    }
+    
+    /**
      * @deprecated ID shouldn't be used anymore anywhere
      *
      * @param int $id
