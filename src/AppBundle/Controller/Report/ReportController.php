@@ -306,6 +306,33 @@ class ReportController extends RestController
     }
 
     /**
+     * @Route("/{id}/unsubmit", requirements={"id":"\d+"})
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function unsubmit(Request $request, $id)
+    {
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+
+        $data = $this->deserializeBodyContent($request);
+
+        $report->setSubmitted(false);
+        $report->setUnSubmitDate(new \DateTime());
+
+        if (array_key_exists('start_date', $data)) {
+            $report->setStartDate(new \DateTime($data['start_date']));
+        }
+
+        if (array_key_exists('end_date', $data)) {
+            $report->setEndDate(new \DateTime($data['end_date']));
+        }
+
+        $this->getEntityManager()->flush();
+
+        return ['id' => $report->getId()];
+    }
+
+    /**
      * Get list of reports, currently only for PA users
      *
      *
