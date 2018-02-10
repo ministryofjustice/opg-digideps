@@ -28,7 +28,7 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($id, []);
 
-        $form = $this->createForm(UnsubmitReportType::class, $report);
+        $form = $this->createForm(UnsubmitReportType::class, $report, [ 'translation_domain' => 'admin']);
         $form->handleRequest($request);
 
         // edit client form

@@ -39,6 +39,13 @@ reportManage:
   htmlTitle: Administration - Manage report
   pageTitle: Admin
   supportTitle: Manage report
+  form:
+    startDate:
+      legend: "Start date"
+    endDate:
+      legend: "End date"
+    unsubmit:
+      label: Un-submit report
 
 
 homeForm:

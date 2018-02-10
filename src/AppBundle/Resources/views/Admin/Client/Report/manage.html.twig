@@ -18,57 +18,17 @@
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
 
-    <div id="form-group-report_edit_startDate" class="form-group ">
-        <fieldset>
-            <legend class="">
-                <span class="form-label-bold text">
-                    Reporting start date
-                </span>
-            </legend>
-            <div class="form-date">
-                <div class="form-group form-group-day">
-                    <label for="report_edit_startDate_day" class="required">Day</label>
-                    <input type="number" id="report_edit_startDate_day" name="report_edit[startDate][day]" required="required" class="form-control js-limit-chars-2" min="0" max="31" pattern="[0-9]*">
-                </div>
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-                <div class="form-group form-group-month">
-                    <label for="report_edit_startDate_month" class="required">Month</label>
-                    <input type="number" id="report_edit_startDate_month" name="report_edit[startDate][month]" required="required" class="form-control js-limit-chars-2" min="0" max="12" pattern="[0-9]*">
-                </div>
+    {{ form_known_date(form.startDate, 'reportManage.form.startDate') }}
 
-                <div class="form-group form-group-year">
-                    <label for="report_edit_startDate_year" class="required">Year</label>
-                    <input type="number" id="report_edit_startDate_year" name="report_edit[startDate][year]" required="required" class="form-control js-limit-chars-4" min="0" max="2500" pattern="[0-9]*">
-                </div>
-            </div>
-        </fieldset>
-    </div>
+    {{ form_known_date(form.endDate, 'reportManage.form.endDate') }}
 
-    <div id="form-group-report_edit_startDate" class="form-group ">
-        <fieldset>
-            <legend class="">
-                <span class="form-label-bold text">
-                    Reporting end date
-                </span>
-            </legend>
-            <div class="form-date">
-                <div class="form-group form-group-day">
-                    <label for="report_edit_startDate_day" class="required">Day</label>
-                    <input type="number" id="report_edit_startDate_day" name="report_edit[startDate][day]" required="required" class="form-control js-limit-chars-2" min="0" max="31" pattern="[0-9]*">
-                </div>
+    {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 
-                <div class="form-group form-group-month">
-                    <label for="report_edit_startDate_month" class="required">Month</label>
-                    <input type="number" id="report_edit_startDate_month" name="report_edit[startDate][month]" required="required" class="form-control js-limit-chars-2" min="0" max="12" pattern="[0-9]*">
-                </div>
+    <a href="#" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
-                <div class="form-group form-group-year">
-                    <label for="report_edit_startDate_year" class="required">Year</label>
-                    <input type="number" id="report_edit_startDate_year" name="report_edit[startDate][year]" required="required" class="form-control js-limit-chars-4" min="0" max="2500" pattern="[0-9]*">
-                </div>
-            </div>
-        </fieldset>
-    </div>
+    {{ form_end(form) }}
 
     <h2 class="heading-small">Mark sections as incomplete (optional)</h2>
 
@@ -141,21 +101,6 @@
         <a class="button" href="#" id="report_unsubmit_submit">Un-submit and mark as incomplete</a>
         <a class="button-link" href="#">Cancel</a>
     </p>
-
-    <hr />
-
-    {% trans_default_domain "registration" %}
-
-    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
-
-    {{ form_known_date(form.startDate, 'startDate') }}
-
-    {{ form_known_date(form.endDate, 'endDate') }}
-
-    {{ form_submit(form.save,'unsubmit') }}
-
-    {{ form_end(form) }}
-
 
     <hr />
     {{ dump(report.period) }}
