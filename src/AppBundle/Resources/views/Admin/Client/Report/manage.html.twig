@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% trans_default_domain "admin" %}
+{% trans_default_domain "admin-clients" %}
 {% set page = 'reportManage' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
@@ -96,11 +96,6 @@
             </div>
         </div>
     </div>
-
-    <p class="push--top">
-        <a class="button" href="#" id="report_unsubmit_submit">Un-submit and mark as incomplete</a>
-        <a class="button-link" href="#">Cancel</a>
-    </p>
 
     <hr />
     {{ dump(report.period) }}
