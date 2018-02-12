@@ -40,7 +40,7 @@ class UserService
     {
         $this->checkUserEmail($userToAdd);
 
-        if ($loggedInUser->isPaAdministrator()) {
+        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
             $this->addPaUser($loggedInUser, $userToAdd, $data);
         }
 
@@ -64,9 +64,10 @@ class UserService
     private function addPaUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
-        $userToAdd->generatePaTeam($loggedInUser, $data);
+        $userToAdd->generateOrgTeam($loggedInUser, $data);
 
-        if ($loggedInUser->isPaNamedDeputy() &&
+        /** duplicagtes line above? */
+        if ($loggedInUser->hasRoleOrgNamed() &&
             !empty($data['pa_team_name']) &&
             $userToAdd->getTeams()->isEmpty()
         ) {
@@ -74,8 +75,7 @@ class UserService
             $this->_em->flush($team);
         }
 
-        $isPaMemberBeingCreated = in_array($userToAdd->getRoleName(), [User::ROLE_PA_ADMIN, User::ROLE_PA_TEAM_MEMBER]);
-        if ($isPaMemberBeingCreated) {
+        if ($userToAdd->isDeputyOrg()) {
             // add to creator's team
             if ($team = $loggedInUser->getTeams()->first()) {
                 $userToAdd->addTeam($team);
@@ -98,7 +98,11 @@ class UserService
     public function editUser(User $originalUser, User $userToEdit)
     {
         if (empty($userToEdit->getRoleName())) {
-            $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+            if ($userToEdit->isProfDeputy()) {
+                $userToEdit->setRoleName(User::ROLE_PROF_TEAM_MEMBER);
+            } elseif ($userToEdit->isPaDeputy()) {
+                $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+            }
         }
 
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
