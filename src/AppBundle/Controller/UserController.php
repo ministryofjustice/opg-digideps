@@ -75,7 +75,7 @@ class UserController extends RestController
         $userService = $this->get('opg_digideps.user_service');
 
         // If Editing PA user
-        if ($loggedInUser->isPaAdministrator()) {
+        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
             $userService->editPaUser($originalUser, $user);
             $this->updateTeamAddresses($user, $data);
         } else {

@@ -1063,7 +1063,7 @@ class User implements UserInterface
      */
     public function isPaDeputy()
     {
-        return $this->isPaAdministrator() || $this->isPaTeamMember();
+        return $this->isPaNamedDeputy() ||$this->isPaAdministrator() || $this->isPaTeamMember();
     }
 
     /**
@@ -1073,7 +1073,7 @@ class User implements UserInterface
      */
     public function isProfDeputy()
     {
-        return $this->isProfAdministrator() || $this->isProfTeamMember();
+        return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember();
     }
 
     /**
@@ -1121,29 +1121,17 @@ class User implements UserInterface
      */
     public function isPaAdministrator()
     {
-        return in_array(
-            $this->getRoleName(),
-            [
-                self::ROLE_PA_NAMED,
-                self::ROLE_PA_ADMIN,
-            ]
-        );
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN]);
     }
 
     /**
-     * Is Professional Administrator?
+     * Is user a Professional Administrator?
      *
      * @return bool
      */
     public function isProfAdministrator()
     {
-        return in_array(
-            $this->getRoleName(),
-            [
-                self::ROLE_PROF_NAMED,
-                self::ROLE_PROF_ADMIN,
-            ]
-        );
+        return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
     }
 
     /**
@@ -1154,6 +1142,16 @@ class User implements UserInterface
     public function isOrgAdministrator()
     {
         return $this->isPaAdministrator() || $this->isProfAdministrator();
+    }
+
+    /**
+     * Is Organisation Named deputy?
+     *
+     * @return bool
+     */
+    public function isOrgNamedDeputy()
+    {
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
@@ -1185,7 +1183,17 @@ class User implements UserInterface
     {
         return $this->isProfTeamMember() || $this->isPaTeamMember();
     }
-    
+
+    /**
+     * Is user an Organisation deputy? Any role. PA or Org.
+     *
+     * @return bool
+     */
+    public function isDeputyOrg()
+    {
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
+    }
+
     /**
      * @deprecated ID shouldn't be used anymore anywhere
      *

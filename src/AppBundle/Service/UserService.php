@@ -40,7 +40,7 @@ class UserService
     {
         $this->checkUserEmail($userToAdd);
 
-        if ($loggedInUser->isOrgAdministrator()) {
+        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
             $this->addPaUser($loggedInUser, $userToAdd, $data);
         }
 
@@ -75,7 +75,7 @@ class UserService
             $this->_em->flush($team);
         }
 
-        if ($userToAdd->isOrgAdministrator() || $userToAdd->isOrgTeamMember()) {
+        if ($userToAdd->isDeputyOrg()) {
             // add to creator's team
             if ($team = $loggedInUser->getTeams()->first()) {
                 $userToAdd->addTeam($team);
