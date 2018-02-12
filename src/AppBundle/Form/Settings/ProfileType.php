@@ -34,7 +34,7 @@ class ProfileType extends AbstractType
             $builder->add('jobTitle', 'text', ['required' => true]);
         }
 
-        if ($loggedInUser->isPaAdministrator()) {
+        if ($loggedInUser->isOrgAdministrator()) {
             $builder->add('removeAdmin', 'choice', [
                     'choices' => ['remove-admin' => 'Give up administrator rights'],
                     'expanded' => true,

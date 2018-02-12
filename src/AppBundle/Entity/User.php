@@ -952,6 +952,26 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a Organisation Administrator?
+     *
+     * @return bool
+     */
+    public function isOrgAdministrator()
+    {
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN ,self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
+     * Is Organisation Named deputy?
+     *
+     * @return bool
+     */
+    public function isOrgNamedDeputy()
+    {
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
+    }
+
+    /**
      * Is user a PA Named Deputy?
      *
      * @return bool
@@ -959,6 +979,16 @@ class User implements AdvancedUserInterface
     public function isPaNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
+    }
+
+    /**
+     * Is user a Prof Named Deputy?
+     *
+     * @return bool
+     */
+    public function isProfNamedDeputy()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_NAMED]);
     }
 
     /**

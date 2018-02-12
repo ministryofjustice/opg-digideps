@@ -1,4 +1,4 @@
-Feature: Terßms and Conditions
+Feature: Terms and Conditions
     
     @deputy
     Scenario: The footer provides a link to terms and conditions in the login page
