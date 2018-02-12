@@ -32,14 +32,14 @@ class TeamMemberAccountType extends AbstractType
             ->add('phoneMain', 'text', ['required' => !empty($targetUser)]);
 
         if ($team->canAddAdmin($targetUser)) {
-            if (!$loggedInUser->isProfTeamMember()) {
+            if ($loggedInUser->isProfAdministrator() || $loggedInUser->isProfNamedDeputy()) {
                 // PROF ROLES
                 $builder->add('roleName', 'choice', [
                     'choices' => [User::ROLE_PROF_ADMIN => 'Yes', User::ROLE_PROF_TEAM_MEMBER => 'No'],
                     'expanded' => true,
                     'required' => true
                 ]);
-            } elseif (!$loggedInUser->isPaTeamMember()) {
+            } elseif ($loggedInUser->isPaAdministrator() || $loggedInUser->isPaNamedDeputy()) {
                 // PA ROLES
                 $builder->add('roleName', 'choice', [
                     'choices' => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],

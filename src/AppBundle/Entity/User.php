@@ -942,6 +942,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a PROF Administrator?
+     *
+     * @return bool
+     */
+    public function isProfAdministrator()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
      * Is user a PA Named Deputy?
      *
      * @return bool
