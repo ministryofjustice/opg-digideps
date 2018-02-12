@@ -32,7 +32,7 @@ class ReportController extends AbstractController
             throw new DisplayableException('Cannot manage active report');
         }
 
-        $form = $this->createForm(UnsubmitReportType::class, $report, [ 'translation_domain' => 'admin']);
+        $form = $this->createForm(UnsubmitReportType::class, $report);
         $form->handleRequest($request);
 
         // edit client form
