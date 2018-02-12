@@ -16,7 +16,8 @@
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {% if (app.user.roleName == 'ROLE_PA_NAMED' or app.user.roleName == 'ROLE_PA_ADMIN') %}
+        {% if ( app.user.roleName == 'ROLE_PA_NAMED' or app.user.roleName == 'ROLE_PA_ADMIN' or
+                app.user.roleName == 'ROLE_PROF_NAMED' or app.user.roleName == 'ROLE_PROF_ADMIN') %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
             {{ 'listPage.introPara' | trans }}
@@ -56,7 +57,8 @@
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
-                    {% if (user.roleName == 'ROLE_PA_NAMED' or user.roleName == 'ROLE_PA_ADMIN') %}
+                    {% if (user.roleName == 'ROLE_PA_NAMED' or user.roleName == 'ROLE_PA_ADMIN'
+                        or user.roleName == 'ROLE_PROF_NAMED' or user.roleName == 'ROLE_PROF_ADMIN') %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
