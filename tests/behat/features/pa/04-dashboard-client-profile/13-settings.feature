@@ -17,7 +17,6 @@ Feature: PA settings
     And I should see "Solicitor" in the "profile-job" region
     And I should see "10000000001" in the "profile-phone" region
 
-    @shaun
   Scenario: named PA logs in and updates profile and does not see removeAdmin field
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, profile-show, profile-edit"
