@@ -49,7 +49,7 @@
                             {{ report.dueDate | date("j F Y") }}
                         </td>
                         <td>
-                            {% if report.submitDate %}
+                            {% if report.submitted %}
                                 {{ report.submitDate | date("j F Y") }}
                             {% endif %}
                         </td>

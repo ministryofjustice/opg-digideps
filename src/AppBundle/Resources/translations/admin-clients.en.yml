@@ -25,9 +25,6 @@ reportManage:
     endDate:
       legend: "End date"
     unsubmit:
-      label: Un-submit report
-    unsubmittedSection:
-      decisions: Decisions
-      contacts: Contacts
+      label: Update and mark as incomplete
 
 
