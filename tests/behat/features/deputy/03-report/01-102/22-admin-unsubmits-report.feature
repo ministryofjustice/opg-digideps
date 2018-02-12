@@ -25,8 +25,8 @@ Feature: Admin unsubmit report (from client page)
     Then the URL should match "/admin/client/\d+/details"
     And I should see "SUBMITTED" in the "client-behat001-2016" region
     And I should see "NOT FINISHED" in the "client-behat001-2017" region
-    When I click on "manage" in the "behat001-2016" region
+    When I click on "manage" in the "client-behat001-2016" region
     And I press "unsubmit_report_save"
     Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
-    And I should see "unsubmitted" in the "client-behat001-2016" region
+    And I should see "Unsubmitted" in the "client-behat001-2016" region
 

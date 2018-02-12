@@ -59,7 +59,14 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% set status = report.status.status %}
+                            {% if report.unSubmitDate %}
+                                {% set status = 'unsubmitted' %}
+                            {% elseif report.submitted %}
+                                 {% set status = 'submitted' %}
+                            {% else %}
+                                {% set status = report.status.status %}
+                            {% endif %}
+
                             <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
                         <td class="change-answer width-tenth">
