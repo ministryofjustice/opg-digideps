@@ -66,7 +66,7 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 5) {
             $builder->add('oneOff', 'collection', [
-                'type' => new OneOffType(),
+                'type' => new UnsubmitSectionType(),
             ]);
         }
 

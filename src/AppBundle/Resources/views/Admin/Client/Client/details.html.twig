@@ -43,7 +43,6 @@
 
                     <tr class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}">
                         <td>
-                            {{ dump(report.id) }}
                             {{ report.period | replace({'to': '-'}) }}
                         </td>
                         <td>
@@ -64,7 +63,9 @@
                             <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
                         <td class="change-answer width-tenth">
-                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                            {% if report.submitted %}
+                                <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

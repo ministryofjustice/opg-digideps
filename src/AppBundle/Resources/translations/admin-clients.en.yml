@@ -26,4 +26,8 @@ reportManage:
       legend: "End date"
     unsubmit:
       label: Un-submit report
+    unsubmittedSection:
+      decisions: Decisions
+      contacts: Contacts
+
 

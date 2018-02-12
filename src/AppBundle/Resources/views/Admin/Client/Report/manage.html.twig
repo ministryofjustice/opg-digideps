@@ -24,82 +24,92 @@
 
     {{ form_known_date(form.endDate, 'reportManage.form.endDate') }}
 
+    <h2 class="heading-small">Mark sections as incomplete (optional)</h2>
+    {% for section in form.unsubmittedSection  %}
+        {{ form_row(section.id) }}
+        {{ form_checkbox(section.present, '', {
+            'fieldSetClass' : 'inline',
+            'useFormGroup': false,
+            'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+            'formGroupClass': 'form-group-compound',
+        }) }}
+    {% endfor %}
+
     {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 
     <a href="#" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
-    <h2 class="heading-small">Mark sections as incomplete (optional)</h2>
 
-    <div class="form-group">
-        <div class="multiple-choice--smaller">
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Decisions</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Contacts</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Visists and care</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Current fees and expenses</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Estimated fees and expenses</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Gifts</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Actions you plan to take</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Any other information</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Accounts</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Money transfers</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Money in</label>
-            </div>
-             <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Money out</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Assets</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Debts</label>
-            </div>
-            <div class="multiple-choice">
-                <input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">
-                <label for="cb1">Supporting documents</label>
-            </div>
-        </div>
-    </div>
+    {#<div class="form-group">#}
+        {#<div class="multiple-choice--smaller">#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Decisions</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Contacts</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Visists and care</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Current fees and expenses</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Estimated fees and expenses</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Gifts</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Actions you plan to take</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Any other information</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Accounts</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Money transfers</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Money in</label>#}
+            {#</div>#}
+             {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Money out</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Assets</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Debts</label>#}
+            {#</div>#}
+            {#<div class="multiple-choice">#}
+                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
+                {#<label for="cb1">Supporting documents</label>#}
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
 
-    <hr />
-    {{ dump(report.period) }}
-    {{ dump(report.client.firstname) }}
-    <hr />
+    {#<hr />#}
+    {#{{ dump(report.period) }}#}
+    {#{{ dump(report.client.firstname) }}#}
+    {#<hr />#}
 
 {% endblock %}

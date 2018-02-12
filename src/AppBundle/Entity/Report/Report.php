@@ -293,14 +293,6 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
-     * @deprecated  use availableSections instead, that only holds the config for the current report
-     *
-     * @JMS\Type("array")
-     * @var array
-     */
-    private $sectionsSettings;
-
-    /**
      * @JMS\Type("array")
      * @var array
      */
@@ -1148,5 +1140,35 @@ class Report implements ReportInterface
         }
 
         return true;
+    }
+
+    /**
+     * @var UnsubmittedSection[]
+     */
+    private $unsubmittedSection = [];
+
+    /**
+     * @param UnsubmittedSection[] $unsubmittedSection
+     */
+    public function setUnsubmittedSection($unsubmittedSection)
+    {
+        // TODO map into the model in order to read and use for next story
+        $this->unsubmittedSection = $unsubmittedSection;
+    }
+
+
+    /**
+     * @return UnsubmittedSection[]
+     */
+    public function getUnsubmittedSection()
+    {
+        // init with available section
+        if (empty($this->unsubmittedSection)) {
+            foreach($this->getAvailableSections() as $sectionId) {
+                $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
+            }
+        }
+
+        return $this->unsubmittedSection;
     }
 }

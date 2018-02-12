@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -27,6 +28,9 @@ class ReportController extends AbstractController
     public function manageAction(Request $request, $id)
     {
         $report = $this->getReport($id, []);
+        if (!$report->getSubmitted()) {
+            throw new DisplayableException('Cannot manage active report');
+        }
 
         $form = $this->createForm(UnsubmitReportType::class, $report, [ 'translation_domain' => 'admin']);
         $form->handleRequest($request);
