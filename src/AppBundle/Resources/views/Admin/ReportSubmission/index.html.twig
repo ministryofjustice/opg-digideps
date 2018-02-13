@@ -47,6 +47,7 @@
                         {% for value, label in {
                             'ROLE_PA_%': 'Public authority',
                             'ROLE_PROF_%': 'Professional deputy',
+                            'ROLE_LAY_DEPUTY': 'Lay deputy'
                         } %}
                             <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
                         {% endfor %}
