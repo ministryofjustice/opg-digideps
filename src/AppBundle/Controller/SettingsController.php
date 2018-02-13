@@ -7,6 +7,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 class SettingsController extends AbstractController
@@ -88,6 +89,7 @@ class SettingsController extends AbstractController
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/pa/settings/your-details/edit", name="pa_profile_edit")
      * @Template()
+     * @throw AccessDeniedException
      **/
     public function profileEditAction(Request $request)
     {
@@ -99,7 +101,7 @@ class SettingsController extends AbstractController
         } else if ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
-        } else if ($this->isGranted(EntityDir\User::ROLE_PA)) {
+        } else if ($this->isGranted(EntityDir\User::ROLE_ORG)) {
             $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_pa', 'profile_pa']]);
             $jmsPutGroups = ['user_details_pa', 'profile_pa'];
         } else {
@@ -112,13 +114,13 @@ class SettingsController extends AbstractController
             $formData = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $newRole = $this->isGranted(EntityDir\User::ROLE_PA) ? EntityDir\User::ROLE_PA_TEAM_MEMBER :EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+                $newRole = $this->determineNoAdminRole();
                 $user->setRoleName($newRole);
                 $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
                 $redirectRoute = 'logout';
             } else {
                 $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
-                $redirectRoute = $user->isDeputyPA()
+                $redirectRoute = ($user->isDeputyPA() || $user->isDeputyProf())
                     ? 'pa_profile_show'
                     : 'user_show';
             }
@@ -132,5 +134,23 @@ class SettingsController extends AbstractController
             'form'   => $form->createView(),
             'client_validated' => false // to allow change of name/postcode/email
         ];
+    }
+
+    /**
+     * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
+     * becoming Professional team members.
+     *
+     * @return string
+     *
+     * @throws AccessDeniedException
+     */
+    private function determineNoAdminRole()
+    {
+        if ($this->isGranted(EntityDir\User::ROLE_PA_ADMIN)) {
+            return EntityDir\User::ROLE_PA_TEAM_MEMBER;
+        } elseif ($this->isGranted(EntityDir\User::ROLE_PROF_ADMIN)) {
+            return EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+        }
+        $this->createAccessDeniedException('User role not recognised');
     }
 }
