@@ -70,7 +70,13 @@ class UserVoter extends Voter
 
         if ($attribute === self::ADD_USER) {
             // only Named and Admin can add users
-            return $this->decisionManager->decide($token, [User::ROLE_PA_NAMED, USER::ROLE_PA_ADMIN]);
+            return $this->decisionManager->decide(
+                $token,
+                [
+                    User::ROLE_ORG_NAMED,
+                    User::ROLE_ORG_ADMIN
+                ]
+            );
         }
 
         if ($attribute === self::DELETE_USER) {
@@ -94,25 +100,26 @@ class UserVoter extends Voter
     private function determineEditPermission(User $loggedInUser, User $subject)
     {
         if ($subject->getId() === $loggedInUser->getId() &&
-            $loggedInUser->getRoleName() !== User::ROLE_PA_TEAM_MEMBER) {
+            ($loggedInUser->hasRoleOrgNamed() || $loggedInUser->hasRoleOrgAdmin()) ) {
             // can always edit one's self except team members
             return true;
         }
 
         switch ($loggedInUser->getRoleName()) {
             case User::ROLE_PA_NAMED:
+            case User::ROLE_PROF_NAMED:
             case User::ROLE_ADMIN:
             case User::ROLE_AD:
                 // Admin, Assisted and Named Deputies can always edit everyone. Replicated from populate user.
                 return true;
             case User::ROLE_PA_ADMIN:
+            case User::ROLE_PROF_ADMIN:
                 // Admin can edit everyone except Named
-                if ($subject->getRoleName() !== User::ROLE_PA_NAMED) {
-                    return true;
+                if ($subject->hasRoleOrgNamed()) {
+                    return false;
                 }
-                return false;
-            case User::ROLE_PA_TEAM_MEMBER:
-                // Team members can only edit themselves (See above)
+                return true;
+            default:
                 return false;
         }
 
@@ -135,18 +142,19 @@ class UserVoter extends Voter
 
         switch ($loggedInUser->getRoleName()) {
             case User::ROLE_PA_NAMED:
+            case User::ROLE_PROF_NAMED:
                 // Named deputies can remove anyone
                 return true;
             case User::ROLE_PA_ADMIN:
+            case User::ROLE_PROF_ADMIN:
                 // Admin can remove everyone except Named
-                if ($subject->getRoleName() !== User::ROLE_PA_NAMED) {
+                if (!$subject->hasRoleOrgNamed()) {
                     return true;
                 }
                 return false;
-            case User::ROLE_PA_TEAM_MEMBER:
-                // Team members cannot remove anyone
-                return false;
         }
+
+        // Team members cannot remove anyone
         return false;
     }
 }
