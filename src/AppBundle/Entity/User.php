@@ -32,6 +32,8 @@ class User implements AdvancedUserInterface
     const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
     const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
 
+    const ROLE_ORG = 'ROLE_ORG';
+
     /**
      * @JMS\Exclude
      */
