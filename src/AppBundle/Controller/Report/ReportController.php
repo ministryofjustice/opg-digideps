@@ -77,13 +77,20 @@ class ReportController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
+        if (!$client) {
+            throw new \Exception('Client not added');
+        }
 
+        // read reports
         $reports = $client ? $client->getReports() : [];
         $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
         if (!($reportActive = $client->getActiveReport())) {
             throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
         }
+
+        //refresh client adding codeputes (another API call to avoid recursion with users)
+        $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'client' => $client,
@@ -189,10 +196,12 @@ class ReportController extends AbstractController
         // neede for clientContactVoter
         /** @var $client EntityDir\Client */
         $client = $this->getRestClient()->get('client/' . $report->getClient()->getId(), 'Client', [
-            'client', 'client-users', 'user',
+            'client',
+            'client-users', 'user',
             'client-reports', 'report',
+            'client-clientcontacts',
+            'client-notes',
             'notes',
-            'clientcontacts'
         ]);
         $report->setClient($client);
 

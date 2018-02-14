@@ -20,11 +20,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>{{ app.user.firstname }} {{ app.user.lastname }}</td>
-        <td>Registered</td>
-        <td class="change-answer"></td>
-    </tr>
+    {#<tr>#}
+        {#<td>{{ app.user.firstname }} {{ app.user.lastname }}</td>#}
+        {#<td>Registered</td>#}
+        {#<td class="change-answer"></td>#}
+    {#</tr>#}
     {% for deputy in coDeputies %}
         {% if deputy.coDeputyClientConfirmed %}
             <tr>
