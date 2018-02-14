@@ -51,7 +51,7 @@ class SettingsController extends AbstractController
             ]));
             $request->getSession()->getFlashBag()->add('notice', 'Password edited');
 
-            $successRoute = $this->getUser()->isDeputyPA() ? 'pa_settings' : 'user_password_edit_done';
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'pa_settings' : 'user_password_edit_done';
             return $this->redirect($this->generateUrl($successRoute));
         }
 

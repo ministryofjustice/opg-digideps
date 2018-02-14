@@ -109,65 +109,66 @@ Feature: PROF settings
     And I should see "AA1 2BB" in the "profile-address" region
     And I should see "United Kingdom" in the "profile-address" region
 
-#  Scenario: Named PROF logs in and changes password
-#    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    When I click on "pa-settings, password-edit"
-#    Then I should see "Change password"
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_current_password     |
-#      | change_password_plain_password_first |
-#    #incorrect password
-#    When I fill in the following:
-#      | change_password_current_password       | Moo       |
-#      | change_password_plain_password_first   | Abcd2345  |
-#      | change_password_plain_password_second  | Abcd2345  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_current_password     |
-#    #correct password, unmatching new passwords
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234  |
-#      | change_password_plain_password_first   | Abcd1111  |
-#      | change_password_plain_password_second  | Abcd2222  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_plain_password_first   |
-#    #various password inadequacies
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234 |
-#      | change_password_plain_password_first   | Abcd123  |
-#      | change_password_plain_password_second  | Abcd123  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_plain_password_first   |
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234  |
-#      | change_password_plain_password_first   | abcd1234  |
-#      | change_password_plain_password_second  | abcd1234  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_plain_password_first   |
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234  |
-#      | change_password_plain_password_first   | Abcdefgh  |
-#      | change_password_plain_password_second  | Abcdefgh  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_plain_password_first   |
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234  |
-#      | change_password_plain_password_first   | ABCD1234  |
-#      | change_password_plain_password_second  | ABCD1234  |
-#    When I press "change_password_save"
-#    Then the following fields should have an error:
-#      | change_password_plain_password_first   |
-#    # Finally a valid one
-#    When I fill in the following:
-#      | change_password_current_password       | Abcd1234  |
-#      | change_password_plain_password_first   | Abcd2345  |
-#      | change_password_plain_password_second  | Abcd2345  |
-#    When I press "change_password_save"
-#    Then the form should be valid
-#    And I should see "Password edited"
-#    And I should be on "/pa/settings"
+    @shaun
+  Scenario: Named PROF logs in and changes password
+    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    When I click on "pa-settings, password-edit"
+    Then I should see "Change password"
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_current_password     |
+      | change_password_plain_password_first |
+    #incorrect password
+    When I fill in the following:
+      | change_password_current_password       | Moo       |
+      | change_password_plain_password_first   | Abcd2345  |
+      | change_password_plain_password_second  | Abcd2345  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_current_password     |
+    #correct password, unmatching new passwords
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcd1111  |
+      | change_password_plain_password_second  | Abcd2222  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    #various password inadequacies
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234 |
+      | change_password_plain_password_first   | Abcd123  |
+      | change_password_plain_password_second  | Abcd123  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | abcd1234  |
+      | change_password_plain_password_second  | abcd1234  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcdefgh  |
+      | change_password_plain_password_second  | Abcdefgh  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | ABCD1234  |
+      | change_password_plain_password_second  | ABCD1234  |
+    When I press "change_password_save"
+    Then the following fields should have an error:
+      | change_password_plain_password_first   |
+    # Finally a valid one
+    When I fill in the following:
+      | change_password_current_password       | Abcd1234  |
+      | change_password_plain_password_first   | Abcd2345  |
+      | change_password_plain_password_second  | Abcd2345  |
+    When I press "change_password_save"
+    Then the form should be valid
+    And I should see "Password edited"
+    And I should be on "/pa/settings"
