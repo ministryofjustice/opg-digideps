@@ -86,7 +86,7 @@ class ClientContactController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? (array) $request->query->get('groups')
-            : ['clientcontacts', 'user'];
+            : ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $clientContact = $this->findEntityBy(EntityDir\ClientContact::class, $id);
