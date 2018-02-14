@@ -46,7 +46,7 @@ class Note
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","notes"})
+     * @JMS\Groups({"notes"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id

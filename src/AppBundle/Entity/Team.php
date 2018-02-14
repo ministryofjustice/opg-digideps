@@ -20,7 +20,7 @@ class Team
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","team"})
+     * @JMS\Groups({"team"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id

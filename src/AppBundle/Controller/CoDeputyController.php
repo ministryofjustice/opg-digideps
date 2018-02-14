@@ -59,9 +59,7 @@ class CoDeputyController extends RestController
 
         $userService->addUser($loggedInUser, $newUser, $data);
 
-        $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user'];
-        $this->setJmsSerialiserGroups($groups);
+        $this->setJmsSerialiserGroups(['user']);
 
         return $newUser;
     }

@@ -28,7 +28,7 @@ class Document
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","documents", "document-id"})
+     * @JMS\Groups({"documents", "document-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
