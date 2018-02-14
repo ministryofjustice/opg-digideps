@@ -17,8 +17,8 @@ class NdrController extends AbstractController
     private static $ndrGroupsForValidation = [
         'user',
         'user-clients',
+        'client',
         'client-ndr',
-        'client-id',
         'client-reports',
         'client-case-number',
         'ndr',
