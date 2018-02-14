@@ -25,3 +25,4 @@ export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceConta
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputy --profile=${PROFILE:=headless} --stop-on-failure
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=deputyndr --profile=${PROFILE:=headless} --stop-on-failure
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} --stop-on-failure
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=prof --profile=${PROFILE:=headless} --stop-on-failure
