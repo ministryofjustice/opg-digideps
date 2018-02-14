@@ -256,7 +256,7 @@ class IndexController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'report']);
+        $user = $this->getRestClient()->get("user/{$id}", 'User', ['user', 'client', 'client-reports', 'report']);
 
         $this->getRestClient()->delete('user/' . $id);
 

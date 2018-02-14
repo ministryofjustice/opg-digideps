@@ -82,7 +82,7 @@ class AdController extends AbstractController
         $filter = $request->get('filter');
 
         try {
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'report', 'ndr']);
+            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'client', 'client-reports', 'report', 'ndr']);
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin/Ad:error.html.twig', [
                 'error' => 'User not found',

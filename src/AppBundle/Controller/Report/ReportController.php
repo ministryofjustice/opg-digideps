@@ -68,7 +68,7 @@ class ReportController extends AbstractController
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
-        $user = $this->getUserWithData(['user-clients', 'client', 'client-users', 'report', 'client-reports', 'status']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
         // redirect if user has missing details or is on wrong page
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'lay_home')) {
