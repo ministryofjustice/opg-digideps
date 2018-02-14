@@ -37,7 +37,7 @@
 
     {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 
-    <a href="#" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
 
