@@ -200,6 +200,7 @@ class ReportController extends AbstractController
             'client-users', 'user',
             'client-reports', 'report',
             'client-clientcontacts',
+            'clientcontact',
             'client-notes',
             'notes',
         ]);
