@@ -81,6 +81,7 @@ abstract class AbstractController extends Controller
     public function getReport($reportId, array $groups = [])
     {
         $groups[] = 'report';
+        $groups[] = 'report-client';
         $groups[] = 'client';
         $groups = array_unique($groups);
         sort($groups); // helps HTTP caching
