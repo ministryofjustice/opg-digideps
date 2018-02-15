@@ -1,0 +1,47 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    {{ form_known_date(form.startDate, 'reportManage.form.startDate') }}
+
+    {{ form_known_date(form.endDate, 'reportManage.form.endDate') }}
+
+
+    <fieldset class="form-group">
+        <legend>
+            <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+        </legend>
+        {% for section in form.unsubmittedSection  %}
+            {{ form_row(section.id) }}
+            {{ form_checkbox(section.present, '', {
+                'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                'formGroupClass': 'multiple-choice--smaller',
+            }) }}
+        {% endfor %}
+    </fieldset>
+
+    {{ form_submit(form.save,'reportManage.form.unsubmit') }}
+
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

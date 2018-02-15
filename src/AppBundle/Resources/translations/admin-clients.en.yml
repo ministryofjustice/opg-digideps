@@ -1,0 +1,32 @@
+clientSearch:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Clients
+  searchBy: Search by client surname or case number
+  clientTable:
+    heading: Client list
+    results: Found %numberOfClients% clients
+    resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
+    noResults: No clients found
+
+clientDetails:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Client details
+  noResults: No reports found
+
+reportManage:
+  htmlTitle: Administration - Manage report
+  pageTitle: Admin
+  supportTitle: Manage report
+  form:
+    startDate:
+      legend: Start date
+    endDate:
+      legend: End date
+    markSections:
+      legend: Mark sections as incomplete (optional)
+    unsubmit:
+      label: Update and mark as incomplete
+
+

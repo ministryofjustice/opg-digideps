@@ -61,7 +61,8 @@
 
     &.incomplete,
     &.notFinished,
-    &.not-matching {
+    &.not-matching,
+    &.unsubmitted {
         color: $orange;
         border-color: $orange;
     }
