@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Ndr\OneOff;
 use AppBundle\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
