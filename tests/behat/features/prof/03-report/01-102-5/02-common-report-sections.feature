@@ -16,7 +16,7 @@ Feature: PROF user edits common report sections common to ALL report types
     And I should see a "#edit-gifts" element
     And I should see a "#edit-other_info" element
     And I should see a "#edit-actions" element
-    And I should see a "#edit-pa_fee_expense" element
+    #And I should see a "#edit-pa_fee_expense" element
     And I should see a "#edit-documents" element
 
   Scenario: PROF 102-5 user edit decisions section

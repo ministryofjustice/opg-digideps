@@ -109,7 +109,6 @@ Feature: PROF settings
     And I should see "AA1 2BB" in the "profile-address" region
     And I should see "United Kingdom" in the "profile-address" region
 
-    @shaun
   Scenario: Named PROF logs in and changes password
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "pa-settings, password-edit"

@@ -1,25 +1,25 @@
 Feature: PROF user edits 102-5 report sections
 
-  Scenario: PROF 102-5 deputy expenses (No fees exist)
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
-    And I click on "edit-pa_fee_expense, start"
-    # chose "no option"
-    Given the step cannot be submitted without making a selection
-    And the step with the following values cannot be submitted:
-      | fee_exist_hasFees_1 | no |
-    Given the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | fee_exist_reasonForNoFees | Some reason for no fees|
-    # "Fees outside practice direction" question
-    Given the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | yes_no_paidForAnything_1 | no |
-    # check record in summary page
-    And each text should be present in the corresponding region:
-      | no                            | no-contacts        |
-      | Some reason for no fees       | reason-no-fees     |
-      | no                            | paid-for-anything  |
+#  Scenario: PROF 102-5 deputy expenses (No fees exist)
+#    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#    And I click on "pa-report-open" in the "client-01000010" region
+#    And I click on "edit-pa_fee_expense, start"
+#    # chose "no option"
+#    Given the step cannot be submitted without making a selection
+#    And the step with the following values cannot be submitted:
+#      | fee_exist_hasFees_1 | no |
+#    Given the step cannot be submitted without making a selection
+#    And the step with the following values CAN be submitted:
+#      | fee_exist_reasonForNoFees | Some reason for no fees|
+#    # "Fees outside practice direction" question
+#    Given the step cannot be submitted without making a selection
+#    And the step with the following values CAN be submitted:
+#      | yes_no_paidForAnything_1 | no |
+#    # check record in summary page
+#    And each text should be present in the corresponding region:
+#      | no                            | no-contacts        |
+#      | Some reason for no fees       | reason-no-fees     |
+#      | no                            | paid-for-anything  |
 
   Scenario: PROF 102-5 gifts
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
