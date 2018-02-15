@@ -21,9 +21,11 @@ reportManage:
   supportTitle: Manage report
   form:
     startDate:
-      legend: "Start date"
+      legend: Start date
     endDate:
-      legend: "End date"
+      legend: End date
+    markSections:
+      legend: Mark sections as incomplete (optional)
     unsubmit:
       label: Update and mark as incomplete
 
