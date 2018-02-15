@@ -58,8 +58,7 @@ summaryPage:
   htmlTitle: "New deputy report - assets | GOV.UK"
   pageTitle: Assets
   supportTitle: ""
-  pageContent:
-    weAskAbout: In this section, we ask you about %client%'s assets, including property.
+  weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
   edit: Edit
 

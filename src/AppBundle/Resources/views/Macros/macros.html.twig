@@ -238,9 +238,9 @@
     <p class="text--right flush--bottom">
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="bold-small">
             {% if app.user.isDeputyOrg() %}
-                {{ 'summaryPage.pageContent.returnToClientProfile' | trans({}, 'common') }}
+                {{ 'returnToClientProfile' | trans({}, 'common') }}
             {% else %}
-                {{ 'summaryPage.pageContent.returnToReport' | trans({}, 'common') }}
+                {{ 'returnToReport' | trans({}, 'common') }}
             {% endif %}
         </a>
     </p>

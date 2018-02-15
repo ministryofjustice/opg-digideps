@@ -45,6 +45,8 @@ courtOrderNo: Court order no.
 courtOrderNumber: Court order number
 reportDueDate: Report due date
 reportStatus: Report status
+question: Question
+answer: Answer
 reports: Reports
 period: Period
 submissionDate: Submission date
@@ -66,12 +68,12 @@ reviewReport: Review report
 dashboard: Dashboard
 clientProfile: Client profile
 
-#Back links
+# Back links
 backToReportOverview: Back to report overview
 backToClientProfile: Back to client profile
 backToYourReports: Back to your reports
 
-#Search
+# Search
 search: Search
 clearSearch: Clear search
 sorryNoResultsFor: Sorry, no results were found for
@@ -102,12 +104,17 @@ registrationProgressBar:
 stepPage:
    skipLink: Skip this question for now
 
-summaryPage:
-  pageContent:
-    weHaveListed: We've listed your saved answers below.
-    checkCorrect: Check they're correct and edit them where necessary.
-    remindComplete: Don't worry if you've had to skip some questions. We'll remind you to complete them next time you log in.
-    canYouAnswer: Can you answer the missing questions? You won't be able to submit your annual deputy report until it's complete.
-    canYouAnswerNDR: Can you answer the missing questions? You won't be able to submit your new deputy report until it's complete.
-    returnToReport: Return to report overview
-    returnToClientProfile: Return to client profile
+# Summary page
+weHaveListed: We've listed your saved answers below.
+checkCorrect: Check they're correct and edit them where necessary.
+remindComplete: |
+  Don't worry if you've had to skip some questions. We'll remind you to complete them next time
+  you log in.
+canYouAnswer: |
+  Can you answer the missing questions? You won't be able to submit your annual deputy report
+  until it's complete.
+canYouAnswerNDR: |
+  Can you answer the missing questions? You won't be able to submit your new deputy report until
+  it's complete.
+returnToReport: Return to report overview
+returnToClientProfile: Return to client profile

@@ -4,10 +4,10 @@
 <table class="check-your-answers columns-2 push-double--bottom">
     <thead>
         <tr>
-            <th>Question</th>
-            <th>Answer</th>
+            <th>{{ 'question' | trans({}, 'common') }}</th>
+            <th>{{ 'answer' | trans({}, 'common') }}</th>
             <th>
-                <span class="visually-hidden">Actions</span>
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
             </th>
         </tr>
     </thead>
@@ -57,7 +57,7 @@
                 <th>Relationship</th>
                 <th>Reason for contact</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
