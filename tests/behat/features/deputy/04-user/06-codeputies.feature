@@ -145,7 +145,6 @@ Feature: Codeputy Self Registration
     Then the URL should match "/lay"
     And I should see the "codeputies" region
     And I click on "invite-codeputy-button"
-    Then the URL should match "/codeputy/\d+/add"
     When I fill in the following:
       | co_deputy_invite_email       | behat-jack.goodby+mld2@gmail.com |
     And I press "co_deputy_invite_submit"

@@ -68,7 +68,7 @@ class ReportController extends AbstractController
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
-        $user = $this->getUserWithData(['user-clients', 'client', 'client-users', 'report', 'client-reports', 'status']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
         // redirect if user has missing details or is on wrong page
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -77,13 +77,20 @@ class ReportController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
+        if (!$client) {
+            throw new \Exception('Client not added');
+        }
 
+        // read reports
         $reports = $client ? $client->getReports() : [];
         $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
         if (!($reportActive = $client->getActiveReport())) {
             throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
         }
+
+        //refresh client adding codeputes (another API call to avoid recursion with users)
+        $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'client' => $client,
@@ -189,10 +196,13 @@ class ReportController extends AbstractController
         // neede for clientContactVoter
         /** @var $client EntityDir\Client */
         $client = $this->getRestClient()->get('client/' . $report->getClient()->getId(), 'Client', [
-            'client', 'client-users', 'user',
+            'client',
+            'client-users', 'user',
             'client-reports', 'report',
+            'client-clientcontacts',
+            'clientcontact',
+            'client-notes',
             'notes',
-            'clientcontacts'
         ]);
         $report->setClient($client);
 

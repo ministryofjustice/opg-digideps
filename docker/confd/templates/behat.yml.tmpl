@@ -13,7 +13,7 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
 
-        deputy:
+        lay:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
             filters:
@@ -37,7 +37,7 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
             {{ end }}
 
-        deputyndr:
+        ndr:
             description: End to end journey for NDR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
             paths:    [ %paths.base%/features/deputy ]
             filters:
