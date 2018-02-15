@@ -114,7 +114,7 @@ Feature: Report submit
         # test search
         When I fill in the following:
             | search | behat001 |
-            | created_by_role | ROLE_PA_NAMED |
+            | created_by_role | ROLE_PA_% |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 0 times
         When I fill in the following:

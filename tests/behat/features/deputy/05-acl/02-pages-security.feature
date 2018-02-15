@@ -4,7 +4,7 @@ Feature: deputy / acl / security on pages
   Scenario: create backup
     Given I save the application status into "pages-security-init"
 
-  @deputy 
+  @deputy
   Scenario: create another user with client and report with data
     # restore status of first report before submitting
     Given emails are sent from "admin" area

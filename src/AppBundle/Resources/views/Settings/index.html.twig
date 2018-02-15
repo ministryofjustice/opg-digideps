@@ -26,7 +26,8 @@
             <h2 class="heading-small">{{ 'settings-page.links.team.title' | trans }}</h2>
         </a>
         <p class="text text-info">
-            {% if app.user.isPaNamedDeputy() or app.user.isPaAdministrator() %}
+            {% if app.user.isPaNamedDeputy() or app.user.isPaAdministrator() or
+                app.user.isProfNamedDeputy() or app.user.isProfAdministrator()%}
                 {{ 'settings-page.links.team.admin-description' | trans }}
             {% else %}
                 {{ 'settings-page.links.team.description' | trans }}

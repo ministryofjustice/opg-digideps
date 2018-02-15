@@ -38,7 +38,6 @@ class Note
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log"})
      */
     private $id;
 

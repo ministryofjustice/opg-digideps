@@ -192,14 +192,14 @@ class Team
     public function canAddAdmin(User $targetUser = null)
     {
         // don't show role for named deputy or if logged in user doesn't have permission
-        if (!empty($targetUser) && $targetUser->isPaNamedDeputy()) {
+        if (!empty($targetUser) && $targetUser->isOrgNamedDeputy()) {
             return false;
         }
 
         $adminCount = 0;
         /** @var User $member */
         foreach ($this->members as $member) {
-            if ($member->isPaAdministrator()) {
+            if ($member->isOrgAdministrator()) {
                 $adminCount++;
             }
         }

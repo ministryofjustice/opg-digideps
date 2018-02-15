@@ -18,6 +18,7 @@ class TeamMemberAccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $team         = $options['team'];
+        /** @var User $loggedInUser */
         $loggedInUser = $options['loggedInUser'];
         $targetUser   = $options['targetUser'];
 
@@ -30,15 +31,23 @@ class TeamMemberAccountType extends AbstractType
             ->add('jobTitle', 'text', ['required' => !empty($targetUser)])
             ->add('phoneMain', 'text', ['required' => !empty($targetUser)]);
 
-        if (!$loggedInUser->isTeamMember() && $team->canAddAdmin($targetUser)) {
-            $builder->add('roleName', 'choice', [
-                //TODO use $loggedInUser role name to detect PA/PRof ?
-                'choices'  => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
-                'expanded' => true,
-                'required' => true
-            ]);
+        if ($team->canAddAdmin($targetUser)) {
+            if ($loggedInUser->isProfAdministrator() || $loggedInUser->isProfNamedDeputy()) {
+                // PROF ROLES
+                $builder->add('roleName', 'choice', [
+                    'choices' => [User::ROLE_PROF_ADMIN => 'Yes', User::ROLE_PROF_TEAM_MEMBER => 'No'],
+                    'expanded' => true,
+                    'required' => true
+                ]);
+            } elseif ($loggedInUser->isPaAdministrator() || $loggedInUser->isPaNamedDeputy()) {
+                // PA ROLES
+                $builder->add('roleName', 'choice', [
+                    'choices' => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
+                    'expanded' => true,
+                    'required' => true
+                ]);
+            }
         }
-
         $builder->add('save', 'submit');
     }
 

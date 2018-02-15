@@ -136,7 +136,10 @@ class ClientContactController extends AbstractController
      */
     private function getContactById($id)
     {
-        return $this->getRestClient()->get('clientcontacts/' . $id, 'ClientContact', ['clientcontacts', 'client', 'client-users', 'current-report', 'report-id', 'user']
+        return $this->getRestClient()->get(
+            'clientcontacts/' . $id,
+            'ClientContact',
+            ['clientcontact', 'clientcontact-client', 'client', 'client-users', 'current-report', 'report-id', 'user']
         );
     }
 }

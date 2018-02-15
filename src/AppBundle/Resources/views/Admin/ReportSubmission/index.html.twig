@@ -44,7 +44,11 @@
                     <label for="created_by_role" class="form-label">{{ 'role' | trans({}, 'common' ) }}</label>
                     <select name="created_by_role" id="created_by_role" class="search-dropdown form-control width-two-thirds">
                         <option value="">All</option>
-                        {% for value, label in {'ROLE_PA_NAMED': 'Public authority', 'ROLE_PROF_NAMED': 'Professional deputy', 'ROLE_LAY_DEPUTY': 'Lay deputy'} %}
+                        {% for value, label in {
+                            'ROLE_PA_%': 'Public authority',
+                            'ROLE_PROF_%': 'Professional deputy',
+                            'ROLE_LAY_DEPUTY': 'Lay deputy'
+                        } %}
                             <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
                         {% endfor %}
                     </select>

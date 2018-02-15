@@ -29,6 +29,11 @@ class User implements AdvancedUserInterface
     const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
     const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
+    const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
+    const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
+
+    const ROLE_ORG = 'ROLE_ORG';
+
     /**
      * @JMS\Exclude
      */
@@ -883,13 +888,33 @@ class User implements AdvancedUserInterface
      *
      * @return bool
      */
-    public function isTeamMember()
+    public function isPaTeamMember()
     {
         return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
     }
 
     /**
-     * Is user a PA Deputy?
+     * Is user a Professional Team Member?
+     *
+     * @return bool
+     */
+    public function isProfTeamMember()
+    {
+        return $this->roleName === self::ROLE_PROF_TEAM_MEMBER;
+    }
+
+    /**
+     * Is user an organisation Team Member?
+     *
+     * @return bool
+     */
+    public function isOrgTeamMember()
+    {
+        return $this->isProfTeamMember() || $this->isPaTeamMember();
+    }
+
+    /**
+     * Is user a PA Depu ty?
      *
      * @return bool
      */
@@ -919,6 +944,36 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a PROF Administrator?
+     *
+     * @return bool
+     */
+    public function isProfAdministrator()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
+     * Is user a Organisation Administrator?
+     *
+     * @return bool
+     */
+    public function isOrgAdministrator()
+    {
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN ,self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
+     * Is Organisation Named deputy?
+     *
+     * @return bool
+     */
+    public function isOrgNamedDeputy()
+    {
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
+    }
+
+    /**
      * Is user a PA Named Deputy?
      *
      * @return bool
@@ -926,6 +981,16 @@ class User implements AdvancedUserInterface
     public function isPaNamedDeputy()
     {
         return in_array($this->roleName, [self::ROLE_PA_NAMED]);
+    }
+
+    /**
+     * Is user a Prof Named Deputy?
+     *
+     * @return bool
+     */
+    public function isProfNamedDeputy()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_NAMED]);
     }
 
     /**
@@ -956,5 +1021,15 @@ class User implements AdvancedUserInterface
     public function hasRoleOrgNamed()
     {
         return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
+    }
+
+    /**
+     * Is user a PA admin or a Prof admin ?
+     *
+     * @return bool
+     */
+    public function hasRoleOrgAdmin()
+    {
+        return in_array($this->getRoleName(), [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
     }
 }

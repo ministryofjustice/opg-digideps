@@ -22,11 +22,11 @@
     </div>
 
     {# Check answers text #}
-    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {% if report.getBankAccountsIncomplete() %}
-        {{ macros.notification('notice', 'summaryPage.pageContent.canYouAnswer' | trans(transOptions, 'common')) }}
+        {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
     {% endif %}
 
     {# Return to overview/client profile link #}

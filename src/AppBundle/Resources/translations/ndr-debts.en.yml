@@ -32,10 +32,8 @@ editPage:
   pageHint: If %client% has a mortgage on a property, use the Assets section to tell us about it
 
 summaryPage:
-  pageContent:
-    weAskAbout: |
-      In this section, we ask you about %client%'s debts, for example,
-      care fees, credit cards or loans.
+  weAskAbout: |
+    In this section, we ask you about %client%'s debts, for example, care fees, credit cards or loans.
   moreAbout: more about %client%'s other debts of £%amount%
 
 form:
