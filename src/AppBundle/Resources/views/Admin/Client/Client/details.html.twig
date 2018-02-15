@@ -2,6 +2,8 @@
 
 {% trans_default_domain "admin-clients" %}
 {% set page = 'clientDetails' %}
+{# DDPB-857: hide link, except for behat tests #}
+{% set enableManageLink = client.caseNumber == 'behat001' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -32,9 +34,11 @@
                 <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
                 <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
                 <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
-                <th scope="col">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
+                {% if enableManageLink %}
+                    <th scope="col">
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -72,11 +76,13 @@
 
                             <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
                         </td>
-                        <td class="change-answer width-tenth">
-                            {% if report.submitted %}
-                                <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
-                            {% endif %}
-                        </td>
+                        {% if enableManageLink %}
+                            <td class="change-answer width-tenth">
+                                {% if report.submitted%}
+                                    <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             {% endif %}
