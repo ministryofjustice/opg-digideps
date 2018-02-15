@@ -94,6 +94,10 @@ input[type=text]::-ms-clear {
 // https://home-office-digital-patterns.herokuapp.com/components/checkboxes
 
 .multiple-choice--smaller {
+    &.form-group {
+        margin-bottom: 10px;
+    }
+
     .multiple-choice {
         padding-top: 3px;
         padding-bottom: 2px;

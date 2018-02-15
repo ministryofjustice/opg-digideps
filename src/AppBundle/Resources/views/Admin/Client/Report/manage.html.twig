@@ -24,30 +24,24 @@
 
     {{ form_known_date(form.endDate, 'reportManage.form.endDate') }}
 
-    <h2 class="heading-small">Mark sections as incomplete (optional)</h2>
-    {% for section in form.unsubmittedSection  %}
-        {{ form_row(section.id) }}
-        {{ form_checkbox(section.present, '', {
-            'fieldSetClass' : 'inline',
-            'useFormGroup': false,
-            'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
-            'formGroupClass': 'form-group-compound',
-        }) }}
-    {% endfor %}
+
+    <fieldset class="form-group">
+        <legend>
+            <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+        </legend>
+        {% for section in form.unsubmittedSection  %}
+            {{ form_row(section.id) }}
+            {{ form_checkbox(section.present, '', {
+                'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                'formGroupClass': 'multiple-choice--smaller',
+            }) }}
+        {% endfor %}
+    </fieldset>
 
     {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 
     <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 
     {{ form_end(form) }}
-
-    {#<div class="form-group">#}
-        {#<div class="multiple-choice--smaller">#}
-            {#<div class="multiple-choice">#}
-                {#<input type="checkbox" id="cb1" name="checkboxes[1]" class="js-checkbox">#}
-                {#<label for="cb1">Decisions</label>#}
-            {#</div>#}
-        {#</div>#}
-    {#</div>#}
 
 {% endblock %}
