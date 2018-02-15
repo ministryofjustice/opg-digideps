@@ -53,9 +53,10 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param int $id
+     * @return Report
      */
     public function getById(Request $request, $id)
     {
@@ -65,7 +66,9 @@ class ReportController extends RestController
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         /* @var $report Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
+        }
 
         return $report;
     }
@@ -295,6 +298,39 @@ class ReportController extends RestController
             || ('no'  == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
+        }
+
+        $this->getEntityManager()->flush();
+
+        return ['id' => $report->getId()];
+    }
+
+    /**
+     * @Route("/{id}/unsubmit", requirements={"id":"\d+"})
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function unsubmit(Request $request, $id)
+    {
+        /**
+         * @var $report Report
+         */
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+
+        $data = $this->deserializeBodyContent($request);
+
+        if (!$report->getSubmitted()) {
+            throw new \RuntimeException('Cannot unsubmit an active report');
+        }
+        $report->setSubmitted(false);
+        $report->setUnSubmitDate(new \DateTime());
+
+        if (array_key_exists('start_date', $data)) {
+            $report->setStartDate(new \DateTime($data['start_date']));
+        }
+
+        if (array_key_exists('end_date', $data)) {
+            $report->setEndDate(new \DateTime($data['end_date']));
         }
 
         $this->getEntityManager()->flush();
