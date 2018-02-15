@@ -31,9 +31,13 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $ret = $this->getRestClient()->get('/report/get-all?' . http_build_query($currentFilters), 'array', ['client', 'report', 'status']);
+        $ret = $this->getRestClient()->get(
+            '/report/get-all?' . http_build_query($currentFilters),
+            'array',
+            ['report', 'report-client', 'client', 'status']
+        );
         /* @var $clients EntityDir\Client[] */
-        $reports = $this->get('restClient')->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
+        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
 
         return [
             'filters' => $currentFilters,

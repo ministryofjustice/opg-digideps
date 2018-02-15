@@ -67,8 +67,9 @@ summaryPage:
   supportTitle: Actions you plan to take
   pageTitle: Actions you plan to take
   supportTitle: ""
-  pageContent:
-    weAskAbout: In this section, we ask you about significant financial decisions you're planning to make on behalf of %client%.
+  weAskAbout: |
+    In this section, we ask you about significant financial decisions you're planning to make on
+    behalf of %client%.
 
 form:
   save:

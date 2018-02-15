@@ -15,16 +15,16 @@
         <th>Name or email</th>
         <th>Status</th>
         <th>
-            <span class="visually-hidden">Actions</span>
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
         </th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>{{ app.user.firstname }} {{ app.user.lastname }}</td>
-        <td>Registered</td>
-        <td class="change-answer"></td>
-    </tr>
+    {#<tr>#}
+        {#<td>{{ app.user.firstname }} {{ app.user.lastname }}</td>#}
+        {#<td>Registered</td>#}
+        {#<td class="change-answer"></td>#}
+    {#</tr>#}
     {% for deputy in coDeputies %}
         {% if deputy.coDeputyClientConfirmed %}
             <tr>
