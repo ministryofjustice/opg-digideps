@@ -66,17 +66,12 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 5) {
             $builder->add('oneOff', 'collection', [
-                'type' => new UnsubmitSectionType(),
+                'type' => new OneOffType(),
             ]);
         }
 
 
         $builder->add('save', 'submit');
-    }
-
-    private function translate($key)
-    {
-        return $this->translator->trans($key, ['%client%' => $this->clientFirstName], 'report-visits-care');
     }
 
     public function configureOptions(OptionsResolver $resolver)
