@@ -170,9 +170,7 @@ class Report implements ReportInterface
     /**
      * @var int
      *
-     * //TODO JMs GROUP "client" is deprecated
-     *
-     * @JMS\Groups({"client", "report-client"})
+     * @JMS\Groups({"report-client"})
      * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")

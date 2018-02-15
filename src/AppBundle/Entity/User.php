@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -76,7 +76,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -87,7 +87,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
      */
     private $lastname;
 

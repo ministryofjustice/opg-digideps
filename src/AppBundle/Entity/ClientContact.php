@@ -25,7 +25,7 @@ class ClientContact
      * @var int
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -38,7 +38,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -48,7 +48,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      */
@@ -58,7 +58,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
      */
@@ -68,7 +68,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
@@ -78,7 +78,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * The following is changed to unique=false, as the migration was missing,
      * and prod data contains duplicate, making it impossible to add the
@@ -92,7 +92,7 @@ class ClientContact
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"client", "clientcontacts"})
+     * @JMS\Groups({"clientcontact"})
      *
      * @ORM\Column(name="org_name", type="string", length=150, nullable=true)
      */
@@ -102,7 +102,7 @@ class ClientContact
      * @var Client
      *
      * @JMS\Type("AppBundle\Entity\Client")
-     * @JMS\Groups({"client", "clientcontact-client"})
+     * @JMS\Groups({"clientcontact-client"})
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="clientContacts")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
