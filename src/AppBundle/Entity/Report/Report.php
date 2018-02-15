@@ -92,6 +92,14 @@ class Report implements ReportInterface
      */
     private $submitDate;
 
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"unsubmit_date"})
+     */
+    private $unSubmitDate;
+
     /**
      * @JMS\Type("AppBundle\Entity\User")
      *
@@ -285,14 +293,6 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
-     * @deprecated  use availableSections instead, that only holds the config for the current report
-     *
-     * @JMS\Type("array")
-     * @var array
-     */
-    private $sectionsSettings;
-
-    /**
      * @JMS\Type("array")
      * @var array
      */
@@ -435,14 +435,9 @@ class Report implements ReportInterface
      */
     public function getSubmitDate()
     {
-        if ($this->submitted) {
-            $submitDate = $this->submitDate;
-        } else {
-            $submitDate = null;
-        }
-
-        return $submitDate;
+        return $this->submitDate;
     }
+
 
     /**
      * @param \DateTime $submitDate
@@ -454,6 +449,23 @@ class Report implements ReportInterface
         $this->submitDate = $submitDate;
 
         return $this;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnSubmitDate()
+    {
+        return $this->unSubmitDate;
+    }
+
+    /**
+     * @param \DateTime $unSubmitDate
+     */
+    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    {
+        $this->unSubmitDate = $unSubmitDate;
     }
 
     /**
@@ -1122,5 +1134,35 @@ class Report implements ReportInterface
         }
 
         return true;
+    }
+
+    /**
+     * @var UnsubmittedSection[]
+     */
+    private $unsubmittedSection = [];
+
+    /**
+     * @param UnsubmittedSection[] $unsubmittedSection
+     */
+    public function setUnsubmittedSection($unsubmittedSection)
+    {
+        // TODO map into the model in order to read and use for next story
+        $this->unsubmittedSection = $unsubmittedSection;
+    }
+
+
+    /**
+     * @return UnsubmittedSection[]
+     */
+    public function getUnsubmittedSection()
+    {
+        // init with available section
+        if (empty($this->unsubmittedSection)) {
+            foreach($this->getAvailableSections() as $sectionId) {
+                $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
+            }
+        }
+
+        return $this->unsubmittedSection;
     }
 }

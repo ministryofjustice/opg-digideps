@@ -8,7 +8,7 @@
 
     <title>{% block htmlTitle %}Deputy report{% endblock %}</title>
 
-    <script type="text/javascript">
+    <script>
       (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
     </script>
 
@@ -20,7 +20,7 @@
 
     <!--[if IE 8]><link href="{{ 'stylesheets/fonts-ie8.css' | assetUrl }}" media="all" rel="stylesheet" /><![endif]-->
     <!--[if gte IE 9]><!--><link href="{{ 'stylesheets/fonts.css'| assetUrl }}" media="all" rel="stylesheet" /><!--<![endif]-->
-    <!--[if lt IE 9]><script src="{{ 'javascripts/ie.js' | assetUrl }}" type="text/javascript"></script><![endif]-->
+    <!--[if lt IE 9]><script src="{{ 'javascripts/ie.js' | assetUrl }}"></script><![endif]-->
 
     <!-- Size for iPad and iPad mini (high resolution) -->
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset('images/apple-touch-icon-152x152.png') }}">
@@ -46,7 +46,7 @@
 
     {% block head %}{% endblock %}
 
-    <script src="{{ '/javascripts/jquery.min.js' | assetUrl }}" type="text/javascript"></script>
+    <script src="{{ '/javascripts/jquery.min.js' | assetUrl }}"></script>
   </head>
 
   <body>
@@ -69,7 +69,7 @@
         </script>
        {% endif %}
 
-    <script type="text/javascript">document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
     <div id="skiplink-container">
       <div>

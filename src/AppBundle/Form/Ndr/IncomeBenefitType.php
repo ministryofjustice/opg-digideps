@@ -74,11 +74,6 @@ class IncomeBenefitType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-    private function translate($key)
-    {
-        return $this->translator->trans($key, ['%client%' => $this->clientFirstName], 'report-visits-care');
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
