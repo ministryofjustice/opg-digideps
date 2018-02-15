@@ -49,7 +49,10 @@
                             {{ report.dueDate | date("j F Y") }}
                         </td>
                         <td>
-                            {% if report.submitted %}
+                            {# Display submit date regardless of being submitted or not.
+                            # An unsubmitted report still has a submit date from a previous submission
+                            #}
+                            {% if report.submitDate %}
                                 {{ report.submitDate | date("j F Y") }}
                             {% endif %}
                         </td>

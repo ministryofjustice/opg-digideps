@@ -435,13 +435,7 @@ class Report implements ReportInterface
      */
     public function getSubmitDate()
     {
-        if ($this->submitted) {
-            $submitDate = $this->submitDate;
-        } else {
-            $submitDate = null;
-        }
-
-        return $submitDate;
+        return $this->submitDate;
     }
 
 
