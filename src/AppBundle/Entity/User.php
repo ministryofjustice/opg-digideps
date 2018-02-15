@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"audit_log","user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -76,7 +76,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -87,7 +87,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "audit_log","user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
      */
     private $lastname;
 
@@ -1063,7 +1063,7 @@ class User implements UserInterface
      */
     public function isPaDeputy()
     {
-        return $this->isPaAdministrator() || $this->isPaTeamMember();
+        return $this->isPaNamedDeputy() ||$this->isPaAdministrator() || $this->isPaTeamMember();
     }
 
     /**
@@ -1071,9 +1071,19 @@ class User implements UserInterface
      *
      * @return bool
      */
-    public function isProfessionalDeputy()
+    public function isProfDeputy()
     {
-        return $this->isProfAdministrator() || $this->isProfTeamMember();
+        return $this->isProfNamedDeputy() || $this->isProfAdministrator() || $this->isProfTeamMember();
+    }
+
+    /**
+     * Is user a PA named or a Prof named ?
+     *
+     * @return bool
+     */
+    public function hasRoleOrgNamed()
+    {
+        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
 
     /**
@@ -1084,6 +1094,16 @@ class User implements UserInterface
     public function isPaNamedDeputy()
     {
         return $this->getRoleName() === self::ROLE_PA_NAMED;
+    }
+
+    /**
+     * Is PA Named deputy?
+     *
+     * @return bool
+     */
+    public function isProfNamedDeputy()
+    {
+        return $this->getRoleName() === self::ROLE_PROF_NAMED;
     }
 
     /**
@@ -1101,29 +1121,37 @@ class User implements UserInterface
      */
     public function isPaAdministrator()
     {
-        return in_array(
-            $this->getRoleName(),
-            [
-                self::ROLE_PA_NAMED,
-                self::ROLE_PA_ADMIN,
-            ]
-        );
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN]);
     }
 
     /**
-     * Is Professional Administrator?
+     * Is user a Professional Administrator?
      *
      * @return bool
      */
     public function isProfAdministrator()
     {
-        return in_array(
-            $this->getRoleName(),
-            [
-                self::ROLE_PROF_NAMED,
-                self::ROLE_PROF_ADMIN,
-            ]
-        );
+        return in_array($this->roleName, [self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
+     * Is Organisation Administrator?
+     *
+     * @return bool
+     */
+    public function isOrgAdministrator()
+    {
+        return $this->isPaAdministrator() || $this->isProfAdministrator();
+    }
+
+    /**
+     * Is Organisation Named deputy?
+     *
+     * @return bool
+     */
+    public function isOrgNamedDeputy()
+    {
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
@@ -1144,6 +1172,26 @@ class User implements UserInterface
     public function isProfTeamMember()
     {
         return $this->getRoleName() === self::ROLE_PROF_TEAM_MEMBER;
+    }
+
+    /**
+     * Is user an organisation Team Member?
+     *
+     * @return bool
+     */
+    public function isOrgTeamMember()
+    {
+        return $this->isProfTeamMember() || $this->isPaTeamMember();
+    }
+
+    /**
+     * Is user an Organisation deputy? Any role. PA or Org.
+     *
+     * @return bool
+     */
+    public function isDeputyOrg()
+    {
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator() || $this->isOrgTeamMember();
     }
 
     /**
@@ -1181,11 +1229,16 @@ class User implements UserInterface
                 $this->setRoleName(self::ROLE_PA_TEAM_MEMBER);
             }
         }
+        if ($this->isProfDeputy()) {
+            if (!in_array($this->getRoleName(), [self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER])) {
+                $this->setRoleName(self::ROLE_PROF_TEAM_MEMBER);
+            }
+        }
     }
 
-    public function generatePaTeam(User $creator, $data)
+    public function generateOrgTeam(User $creator, $data)
     {
-        if ($creator->isPaNamedDeputy() &&
+        if ($creator->hasRoleOrgNamed() &&
             !empty($data['pa_team_name']) &&
             $this->getTeams()->isEmpty()
         ) {

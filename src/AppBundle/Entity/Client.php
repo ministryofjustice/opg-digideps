@@ -186,7 +186,7 @@ class Client
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Note>")
-     * @JMS\Groups({"notes"})
+     * @JMS\Groups({"client-notes"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
@@ -196,7 +196,7 @@ class Client
      * @var ArrayCollection
      *
      * @JMS\Type("ArrayCollection<AppBundle\Entity\ClientContact>")
-     * @JMS\Groups({"clientcontacts"})
+     * @JMS\Groups({"client-clientcontacts"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
      * @ORM\OrderBy({"lastName"="ASC"})
      */

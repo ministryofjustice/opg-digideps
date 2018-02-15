@@ -16,7 +16,7 @@ class TeamController extends RestController
     /**
      * @Route("/members")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function getMembers(Request $request)
     {
@@ -33,7 +33,7 @@ class TeamController extends RestController
     /**
      * @Route("/member/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function getMemberById(Request $request, $id)
     {
@@ -53,7 +53,7 @@ class TeamController extends RestController
      *
      * @Route("/delete-user/{id}")
      * @Method({"DELETE"})
-     * @Security("has_role('ROLE_PA_NAMED') or has_role('ROLE_PA_ADMIN')")
+     * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      *
      * @param Request $request
      * @param int     $id

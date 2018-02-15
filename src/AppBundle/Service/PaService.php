@@ -186,7 +186,7 @@ class PaService
                 $this->userRepository->hardDeleteExistingUser($user);
                 $this->em->persist($user);
                 $this->em->flush($user);
-                if ($user->isProfessionalDeputy()) {
+                if ($user->isProfDeputy()) {
                     $this->added['prof_users'][] = $row['Email'];
                 } elseif ($user->isPaDeputy()) {
                     $this->added['pa_users'][] = $row['Email'];

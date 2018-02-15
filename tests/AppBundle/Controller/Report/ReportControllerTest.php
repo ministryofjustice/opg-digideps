@@ -191,7 +191,7 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report/' . self::$report1->getId();
 
-        $q = http_build_query(['groups' => ['report', 'client']]);
+        $q = http_build_query(['groups' => ['report', 'report-client', 'client']]);
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,

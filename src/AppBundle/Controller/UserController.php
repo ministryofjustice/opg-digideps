@@ -19,7 +19,7 @@ class UserController extends RestController
     /**
      * @Route("")
      * @Method({"POST"})
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_PA_NAMED') or has_role('ROLE_PA_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
     {
@@ -58,6 +58,8 @@ class UserController extends RestController
             && !$this->isGranted(EntityDir\User::ROLE_AD)
             && !$this->isGranted(EntityDir\User::ROLE_PA_NAMED) //TODO check user is also part of the team
             && !$this->isGranted(EntityDir\User::ROLE_PA_ADMIN) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PROF_NAMED) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_PROF_ADMIN) //TODO check user is also part of the team
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
@@ -73,7 +75,7 @@ class UserController extends RestController
         $userService = $this->get('opg_digideps.user_service');
 
         // If Editing PA user
-        if ($loggedInUser->isPaAdministrator()) {
+        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
             $userService->editPaUser($originalUser, $user);
             $this->updateTeamAddresses($user, $data);
         } else {
@@ -250,7 +252,12 @@ class UserController extends RestController
         $qb->orderBy('u.' . $order_by, $sort_order);
 
         if ($roleName) {
-            $qb->andWhere('u.roleName = :role');
+            if (strpos($roleName, '%'))
+            {
+                $qb->andWhere('u.roleName LIKE :role');
+            } else {
+                $qb->andWhere('u.roleName = :role');
+            }
             $qb->setParameter('role', $roleName);
         }
 
