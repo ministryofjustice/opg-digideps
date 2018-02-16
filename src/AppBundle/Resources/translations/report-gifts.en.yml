@@ -33,7 +33,7 @@ addAnotherPage:
   supportTitle: Gifts
   form:
     addAnother:
-      label: The gift has been saved. Would you like to add another gift now?
+      label: The gift has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more gifts
     save:
        label: Continue

@@ -73,7 +73,7 @@ addAnotherPage:
   pageTitle: Decisions
   form:
     addAnother:
-      label: The decision has been saved. Would you like to add another decision now?
+      label: The decision has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more decisions
     save:
        label: Continue

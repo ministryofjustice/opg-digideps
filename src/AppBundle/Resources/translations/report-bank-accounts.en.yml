@@ -29,7 +29,7 @@ addAnotherPage:
   pageTitle: Accounts
   form:
     addAnother:
-      label: The account has been saved. Would you like to add another account now?
+      label: The account has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more accounts
     save:
        label: Continue
