@@ -35,9 +35,13 @@ stepPage:
     hiddenText01:
       summary: More guidance on giving gifts on behalf of the client
       content:
-        para01: |
-          Gifts you make on behalf of %client% may include, for example, a birthday or wedding present
-          or charitable donations.
+        para01: "Gifts you make on %client%'s behalf may include:"
+        listItem01: birthday or wedding presents
+        listItem02: charitable donations
+        listItem03: paying someone's school or university fees
+        listItem04: |
+          someone living rent free or at a "friends and family" rate in a property belonging to %client%
+        listItem05: giving someone an interest free loan from %client%'s funds
         para02: |
           There are strict limits on gift-giving as a deputy. These rules help to look
           after %client%'s best interests.
@@ -75,7 +79,7 @@ form:
   save:
     label: Save
   actionGiveGiftsToClient:
-    label: Are you intending to give any gifts on behalf of %client%?
+    label: Are you planning to give any gifts on %client%'s behalf?
   actionGiveGiftsToClientDetails:
     label: Please tell us more about the gifts you intend to make.
     hint: |
