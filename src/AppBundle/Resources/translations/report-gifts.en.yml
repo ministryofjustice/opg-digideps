@@ -8,9 +8,13 @@ startPage:
   hiddenText01:
     summary: More guidance on giving gifts on behalf of the client
     content:
-      para01: |
-        Gifts you make on behalf of %client% may include, for example, a birthday or wedding present
-        or charitable donations.
+      para01: "Gifts you make on %client%'s behalf may include:"
+      listItem01: birthday or wedding presents
+      listItem02: charitable donations
+      listItem03: paying someone's school or university fees
+      listItem04: |
+        someone living rent free or at a "friends and family" rate in a property belonging to %client%
+      listItem05: giving someone an interest free loan from %client%'s funds
       para02: |
         There are strict limits on gift-giving as a deputy. These rules help to look
         after %client%'s best interests.
@@ -23,7 +27,7 @@ existPage:
   pageTitle: Gifts
   form:
     giftsExist:
-      label: Have you given any gifts to other people on behalf of %client% during this reporting period?
+      label: Have you given any gifts to other people on %client%'s behalf during this reporting period?
     save:
       label: Save and continue
 
@@ -33,7 +37,7 @@ addAnotherPage:
   supportTitle: Gifts
   form:
     addAnother:
-      label: The gift has been saved. Would you like to add another gift now?
+      label: The gift has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more gifts
     save:
        label: Continue
@@ -63,9 +67,9 @@ form:
   explanation:
     label: Description of gift
     hint: |
-      Tell us who you gave gifts to, on what occasion and roughly how much you spent.
-      For example, "Birthday gifts for the client's immediate family. I spent around £10 on
-      each gift"
+      Tell us who you gave gifts to, on what occasion and roughly how much you spent. You can tell
+      us about each individual gift or combine several related gifts. For example, "Birthday gifts
+      for client's immediate family. I spent around £10 on each gift"
   amount:
     label: Amount
   addAnother:

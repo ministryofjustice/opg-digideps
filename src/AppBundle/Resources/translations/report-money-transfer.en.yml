@@ -22,7 +22,7 @@ addAnotherPage:
   pageTitle: Money transfers
   form:
     addAnother:
-      label: The transfer has been saved. Would you like to add another transfer now?
+      label: The transfer has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more transfers
     save:
        label: Continue
@@ -54,4 +54,4 @@ form:
   accountTo:
     label: Which account did you transfer money to?
   amount:
-    label: How much money was transferred from %fromAccountName% to %toAccountName%?
+    label: How much money was transferred?
