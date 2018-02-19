@@ -13,21 +13,25 @@ Feature: Report 103-5 start
     # assert not submittable yet
     And I click on "pa-report-open" in the "client-01000010" region
     #test tabs
-    Then I should see the "edit-contacts" link
     Then I should see the "edit-decisions" link
+    Then I should see the "edit-contacts" link
     Then I should see the "edit-visits_care" link
-    #Then I should see the "edit-pa_fee_expense" link
-    Then I should see the "edit-gifts" link
     Then I should see the "edit-bank_accounts" link
-    Then I should not see the "edit-money_transfers" link
     Then I should see the "edit-money_in_short" link
     Then I should see the "edit-money_out_short" link
     Then I should see the "edit-assets" link
     Then I should see the "edit-debts" link
+    Then I should see the "edit-gifts" link
     Then I should see the "edit-actions" link
     Then I should see the "edit-other_info" link
+    #Then I should see the "edit-pa_fee_expense" link
     Then I should see the "edit-documents" link
-    # check not submittable (as 103 money section it not completed yet)
+    Then I should not see the "edit-lifestyle" link
+    Then I should not see the "edit-money_transfers" link
+    Then I should not see the "edit-money_in" link
+    Then I should not see the "edit-money_out" link
+    Then I should not see the "edit-balance" link
+        # check not submittable (as 103 money section it not completed yet)
     Then the PROF report should not be submittable
 
 
