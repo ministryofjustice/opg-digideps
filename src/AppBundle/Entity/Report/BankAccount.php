@@ -20,8 +20,8 @@ class BankAccount
         'current' => 'Current account',
         'savings' => 'Savings account',
         'isa' => 'ISA',
-        'postoffice' => 'Post office account',
-        'cfo' => 'Court funds office account',
+        'postoffice' => 'Post Office account',
+        'cfo' => 'Court Funds Office account',
         'other' => 'Other type of account',
         'other_no_sortcode' => 'Other type of account without sort code',
     ];

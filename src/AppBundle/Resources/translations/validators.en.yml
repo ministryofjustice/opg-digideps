@@ -292,11 +292,11 @@ gifts:
 
 transfer:
     accountFrom:
-        notBlank: Please choose the account you transfer money from
+        notBlank: Please select the account you transferred money from
     accountTo:
-        notBlank: Please choose the account you transfer money to
+        notBlank: Please select the account you transferred money to
     amount:
-          notBlank: You need to enter the amount
+          notBlank: Enter the amount transferred
           notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000

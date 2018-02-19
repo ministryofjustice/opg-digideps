@@ -55,7 +55,7 @@ otherAddAnotherPage:
   pageTitle: Add an expense
   form:
     addAnother:
-      label: The expense has been saved. Would you like to add another expense now?
+      label: The expense has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more expenses
     save:
        label: Continue

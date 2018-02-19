@@ -44,7 +44,7 @@ addAnotherPage:
   pageTitle: Assets
   form:
     addAnother:
-      label: The asset has been saved. Would you like to add another asset now?
+      label: The asset has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more assets
     save:
        label: Continue
