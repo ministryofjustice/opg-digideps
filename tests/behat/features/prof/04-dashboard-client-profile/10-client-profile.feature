@@ -1,24 +1,24 @@
 Feature: PROF client profile
-  
+
   Scenario: PROF view client details
     Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-01000011" region
     Then each text should be present in the corresponding region:
-      | Cly1 Hent1    | client-profile-details |
+      | Cly4 Hent4    | client-profile-details |
       | 1967          | client-profile-details |
-      | 078912345678  | client-profile-details |
-      | cly1@hent.com | client-profile-details |
+      | 078912345678   | client-profile-details |
+      | cly4@hent.com | client-profile-details |
       | B301QL        | client-profile-details |
     # edit
     When I click on "client-edit"
       # submit empty form and check errors
     Then the following fields should have the corresponding values:
-      | pa_client_edit_dateOfBirth_day   | 01            |
-      | pa_client_edit_dateOfBirth_month | 01            |
+      | pa_client_edit_dateOfBirth_day   | 04            |
+      | pa_client_edit_dateOfBirth_month | 04            |
       | pa_client_edit_dateOfBirth_year  | 1967          |
       | pa_client_edit_phone             | 078912345678  |
-      | pa_client_edit_email             | cly1@hent.com |
+      | pa_client_edit_email             | cly4@hent.com |
       | pa_client_edit_address           | ADD1          |
       | pa_client_edit_address2          | ADD2          |
       | pa_client_edit_county            | ADD3          |

@@ -1,15 +1,15 @@
-Feature: PA user edits 104 report sections
+Feature: PROF user edits 104 report sections
 
   @deputy @104
   Scenario: Complete lifestyle section
 
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
-    And I change the report of the client with case number "01000014" to "104-6"
+    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000010" region
+#    And I change the report of the client with case number "01000010" to "104-5"
     # assert not submittable yet
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # click on 104 report
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-lifestyle, start"
     Then the URL should match "report/\d+/lifestyle/step/1"
     Given the step with the following values CANNOT be submitted:
@@ -35,4 +35,4 @@ Feature: PA user edits 104 report sections
       | care appointments with physio     | care-appointments         |
       | No     | does-client-undertake-social-activities |
       | The client is immobile    | activity-details                     |
-    And I save the application status into "104-report-completed"
+    And I save the application status into "104-5-report-completed"

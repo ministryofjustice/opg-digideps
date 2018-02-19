@@ -1,11 +1,11 @@
-Feature: Report submit (client 01000011)
+Feature: Report submit (client 01000010)
 
-    @104
+    @104-5
     Scenario: Submit 104 report submission
-        Given I load the application status from "104-report-completed"
-        And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I load the application status from "104-5-report-completed"
+        And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # click on 104 report
-        And I click on "pa-report-open" in the "client-01000014" region
+        And I click on "pa-report-open" in the "client-01000010" region
         And I click on "edit-report_submit, declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |

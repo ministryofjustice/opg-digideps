@@ -16,9 +16,10 @@
     '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
-{% if report.hasSection('deputyExpenses') %}
-    {% set appendPA = '' %}
-{% elseif report.hasSection('paDeputyExpenses') %}
+
+{# todo set this to something for profs ?  once prof expenses sections are done #}
+{% set appendPA = '' %}
+{% if report.hasSection('paDeputyExpenses') %}
     {% set appendPA = 'PA' %}
 {% endif %}
 
