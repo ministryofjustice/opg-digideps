@@ -1,4 +1,4 @@
-Feature: PROF user edits common report sections common to ALL report types
+Feature: PROF user edits 102-5 report sections common to ALL report types
 
   Scenario: PROF-102-5 sections check
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
