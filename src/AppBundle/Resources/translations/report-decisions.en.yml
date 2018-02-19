@@ -73,7 +73,7 @@ addAnotherPage:
   pageTitle: Decisions
   form:
     addAnother:
-      label: The decision has been saved. Would you like to add another decision now?
+      label: The decision has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more decisions
     save:
        label: Continue
@@ -112,7 +112,7 @@ form:
   clientInvolvedBoolean:
     heading: %client%'s involvement
     label: Did you involve %client% in this decision?
-    hint: "You must help the client make all or part of a decision, if they can"
+    hint: ''
     defaultOption: Please select...
   clientInvolvedDetails:
     label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.

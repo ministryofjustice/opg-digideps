@@ -110,11 +110,11 @@ report:
         readyForSubmission: Report not ready for submission
     agree: If you want to submit your report, you must agree to the declaration
     agreedBehalfDeputy:
-        notBlank: You must select one option
+        notBlank: You must select an option
     agreedBehalfDeputyExplanation:
         notBlank: You must explain why you are not signing on everyone's behalf
     hasDebts:
-        notBlank: You must select one option
+        notBlank: You must select an option
         mustHaveAtLeastOneDebt: You must enter at least one debt
     debts-management:
         notBlank: Please tell us how the debt is being managed or reduced
@@ -158,15 +158,16 @@ contact:
     addAnother.notBlank: Please specify if you want to add another person
 decision:
     noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
-    reasonForNoDecisions.notBlank: Enter a reason why you don't have any decisions
+    reasonForNoDecisions.notBlank: |
+      Explain why you haven't had to make any significant decisions for the client
     addAnother.notBlank: Please specify if you want to add another decision
     description:
-        notBlank: You have to enter some details about this decision
+        notBlank: Enter some details about this decision
         length: This description must be at least {{ limit }} letters long
     clientInvolvedBoolean:
         notBlank: Please select either 'Yes' or 'No'
     clientInvolvedDetails:
-        notBlank: Tell us if you involved the client
+        notBlank: Tell us how you involved the client or why you couldn't
         length: This description must be at least {{ limit }} letters long
 
 document:
@@ -203,9 +204,9 @@ clientContact:
 # currently a subsection of decisions
 mentalCapacity:
     hasCapacityChanged:
-        notBlank: Select one option
+        notBlank: Select an option
     hasCapacityChangedDetails:
-        notBlank: You must tell us how the client's mental capacity has changed
+        notBlank: Tell us how the client's mental capacity has changed
     mentalAssessmentDate:
         notBlank: Please enter the last assessment date
 
@@ -391,7 +392,7 @@ visitsCare:
     doesClientReceivePaidCare:
         notBlank: Please select either 'Yes' or 'No'
     howIsCareFunded:
-        notBlank: Select one option
+        notBlank: Select an option
     whoIsDoingTheCaring:
         notBlank: Give us more details about who is caring for the client
     whenWasCarePlanLastReviewed:
@@ -438,7 +439,7 @@ feedbackAfterReport:
 ndr:
   agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
-      notBlank: Select one option
+      notBlank: Select an option
   agreedBehalfDeputyExplanation:
       notBlank: Give us more information about why you are not signing on everyone's behalf
   submissionExceptions:
@@ -536,7 +537,7 @@ ndr:
           owned:
               notBlank: Select one of the options below
           ownedPercentage:
-              notBlank: You must tell us what the client's share of the property is
+              notBlank: Tell us what the client's share of the property is
               type: Enter a number between 1 and 99 for the property share
           isSubjectToEquityRelease:
               notBlank: Please select either 'Yes' or 'No'
