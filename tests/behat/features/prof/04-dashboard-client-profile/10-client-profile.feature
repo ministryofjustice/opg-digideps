@@ -7,7 +7,7 @@ Feature: PROF client profile
     Then each text should be present in the corresponding region:
       | Cly4 Hent4    | client-profile-details |
       | 1967          | client-profile-details |
-      | 78912345678   | client-profile-details |
+      | 078912345678   | client-profile-details |
       | cly4@hent.com | client-profile-details |
       | B301QL        | client-profile-details |
     # edit
