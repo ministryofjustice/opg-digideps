@@ -138,8 +138,8 @@ Feature: PROF user edits 102-5 report sections
       | account_amount      | 50.00         |
     # add another: no
     And I choose "no" when asked for adding another record
-
-  Scenario: PROF 102 money out
+    
+  Scenario: PROF 102-5 money out
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-money_out, start"

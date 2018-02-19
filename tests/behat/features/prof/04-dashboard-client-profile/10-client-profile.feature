@@ -17,7 +17,7 @@ Feature: PROF client profile
       | pa_client_edit_dateOfBirth_day   | 04            |
       | pa_client_edit_dateOfBirth_month | 04            |
       | pa_client_edit_dateOfBirth_year  | 1967          |
-      | pa_client_edit_phone             | 78912345678  |
+      | pa_client_edit_phone             | 078912345678  |
       | pa_client_edit_email             | cly4@hent.com |
       | pa_client_edit_address           | ADD1          |
       | pa_client_edit_address2          | ADD2          |

@@ -4,7 +4,7 @@ Feature: Report 103-5 start
   Scenario: load app status to common sections completed, change type to 103 and check not submittable
     # Since 103 shares same section as 102, import status from 102 before money section (that is the only different section) were added
     # that checkpoint correspond to a 103 report without money added
-    Given I load the application status from "102-common-sections-complete"
+    Given I load the application status from "102-5-common-sections-complete"
     And I change the report of the client with case number "01000010" to "103-5"
 
   @deputy @103-5
