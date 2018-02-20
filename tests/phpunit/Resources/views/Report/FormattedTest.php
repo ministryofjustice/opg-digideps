@@ -141,7 +141,7 @@ class FormattedTest extends WebTestCase
     }
 
     /**
-     * @param array $additionalVars
+     * @param  array   $additionalVars
      * @return Crawler
      */
     private function renderTemplateAndGetCrawler($additionalVars = [])
@@ -312,7 +312,6 @@ class FormattedTest extends WebTestCase
             ->setBalanceMismatchExplanation('money lost');
     }
 
-
     public function testSummaryinfo()
     {
         $this->reportStatus->shouldReceive('getBalanceState')->andReturn(['state'=>'done']);
@@ -332,8 +331,6 @@ class FormattedTest extends WebTestCase
         $crawler = $this->renderTemplateAndGetCrawler(['showSummary'=>true]);
         $this->assertCount(0, $crawler->filter('#report-summary'));
     }
-
-
 
     public function tearDown()
     {

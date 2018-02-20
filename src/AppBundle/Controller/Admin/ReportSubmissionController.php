@@ -51,10 +51,10 @@ class ReportSubmissionController extends AbstractController
      *
      * @param Request $request request
      *
-     * @return void
      */
-    private function processPost(Request $request) {
-        if ($request->isMethod('POST')){
+    private function processPost(Request $request)
+    {
+        if ($request->isMethod('POST')) {
             if (empty($request->request->get('checkboxes'))) {
                 $request->getSession()->getFlashBag()->add('error', 'Please select at least one report submission');
                 return;
@@ -73,7 +73,7 @@ class ReportSubmissionController extends AbstractController
                         $notice = $translator->transChoice(
                             'page.postactions.archived.notice',
                             $totalChecked,
-                            array('%count%' => $totalChecked),
+                            ['%count%' => $totalChecked],
                             'admin-documents'
                             );
 
@@ -92,11 +92,10 @@ class ReportSubmissionController extends AbstractController
      *
      * @param array $checkedBoxes ids selected by the user
      *
-     * @return void
      */
     private function processArchive($checkedBoxes)
     {
-        foreach($checkedBoxes as $reportSubmissionId) {
+        foreach ($checkedBoxes as $reportSubmissionId) {
             $this->getRestClient()->put("report-submission/{$reportSubmissionId}", ['archive'=>true]);
         }
     }
@@ -104,8 +103,8 @@ class ReportSubmissionController extends AbstractController
     /**
      * Download multiple documents based on the supplied ids
      *
-     * @param Request $request request
-     * @param array $checkedBoxes ids selected by the user
+     * @param Request $request      request
+     * @param array   $checkedBoxes ids selected by the user
      *
      * @return Response
      */

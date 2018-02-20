@@ -113,7 +113,7 @@ class NdrStatusService
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } elseif (
             'no' == $hasDebts ||
-            (   'yes' == $hasDebts &&
+            ('yes' == $hasDebts &&
                 count($this->ndr->getDebtsWithValidAmount()) > 0) &&
             !empty($this->ndr->getDebtManagement()
             )

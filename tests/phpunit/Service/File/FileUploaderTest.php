@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service\File;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;

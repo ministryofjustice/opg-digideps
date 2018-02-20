@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -438,7 +438,6 @@ class Report implements ReportInterface
         return $this->submitDate;
     }
 
-
     /**
      * @param \DateTime $submitDate
      *
@@ -450,7 +449,6 @@ class Report implements ReportInterface
 
         return $this;
     }
-
 
     /**
      * @return \DateTime
@@ -1150,7 +1148,6 @@ class Report implements ReportInterface
         $this->unsubmittedSection = $unsubmittedSection;
     }
 
-
     /**
      * @return UnsubmittedSection[]
      */
@@ -1158,7 +1155,7 @@ class Report implements ReportInterface
     {
         // init with available section
         if (empty($this->unsubmittedSection)) {
-            foreach($this->getAvailableSections() as $sectionId) {
+            foreach ($this->getAvailableSections() as $sectionId) {
                 $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
             }
         }

@@ -98,10 +98,10 @@ class SettingsController extends AbstractController
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
             $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
             $jmsPutGroups = ['user_details_basic'];
-        } else if ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
+        } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
-        } else if ($this->isGranted(EntityDir\User::ROLE_ORG)) {
+        } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
             $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_pa', 'profile_pa']]);
             $jmsPutGroups = ['user_details_pa', 'profile_pa'];
         } else {
@@ -140,9 +140,9 @@ class SettingsController extends AbstractController
      * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
      * becoming Professional team members.
      *
+     * @throws AccessDeniedException
      * @return string
      *
-     * @throws AccessDeniedException
      */
     private function determineNoAdminRole()
     {

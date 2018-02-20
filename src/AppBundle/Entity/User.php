@@ -960,7 +960,7 @@ class User implements AdvancedUserInterface
      */
     public function isOrgAdministrator()
     {
-        return in_array($this->roleName, [self::ROLE_PA_ADMIN ,self::ROLE_PROF_ADMIN]);
+        return in_array($this->roleName, [self::ROLE_PA_ADMIN,self::ROLE_PROF_ADMIN]);
     }
 
     /**

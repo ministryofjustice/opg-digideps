@@ -97,7 +97,7 @@ class ReportSubmission
     }
 
     /**
-     * @param Report $ndr
+     * @param  Report           $ndr
      * @return ReportSubmission
      */
     public function setNdr($ndr)
@@ -106,7 +106,6 @@ class ReportSubmission
 
         return $this;
     }
-    
 
     /**
      * @return Document[]

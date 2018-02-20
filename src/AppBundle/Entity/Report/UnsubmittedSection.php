@@ -13,21 +13,20 @@ class UnsubmittedSection
 
     /**
      * Store checkbox value
-     * @var boolean
+     * @var bool
      */
     private $present;
 
     /**
      * UnsubmittedSection constructor.
      * @param string $id
-     * @param bool $present
+     * @param bool   $present
      */
     public function __construct($id, $present)
     {
         $this->id = $id;
         $this->present = $present;
     }
-
 
     /**
      * @return int
@@ -52,5 +51,4 @@ class UnsubmittedSection
     {
         $this->present = $present;
     }
-
 }
