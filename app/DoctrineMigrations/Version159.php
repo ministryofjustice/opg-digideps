@@ -20,7 +20,6 @@ class Version159 extends AbstractMigration
 
         $this->addSql('ALTER TABLE report ADD debt_management TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE odr ADD debt_management TEXT DEFAULT NULL');
-
     }
 
     /**

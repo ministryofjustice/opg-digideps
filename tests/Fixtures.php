@@ -94,6 +94,7 @@ class Fixtures
     /**
      * @param EntityDir\ReportInterface $report
      * @param $filename
+     *
      * @return EntityDir\Report\Document
      */
     public function createDocument(EntityDir\ReportInterface $report, $filename)

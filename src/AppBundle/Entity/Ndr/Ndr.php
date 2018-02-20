@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Ndr;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
+use AppBundle\Entity\ReportInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;

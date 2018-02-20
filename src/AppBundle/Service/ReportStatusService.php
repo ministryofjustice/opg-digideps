@@ -299,11 +299,10 @@ class ReportStatusService
         if (empty($hasDebts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } elseif ('no' == $hasDebts ||
-            (   'yes' == $hasDebts &&
+            ('yes' == $hasDebts &&
                 count($this->report->getDebtsWithValidAmount()) > 0) &&
                 !empty($this->report->getDebtManagement())
-        )
-        {
+        ) {
             return ['state' => self::STATE_DONE];
         } else {
             return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => count($this->report->getDebtsWithValidAmount())];

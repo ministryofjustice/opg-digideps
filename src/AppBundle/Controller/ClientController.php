@@ -155,6 +155,5 @@ class ClientController extends RestController
             $request->get('limit'),
             $request->get('offset')
         );
-
     }
 }

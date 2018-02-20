@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Component\Validator\ConstraintViolationList;
 
 /**
@@ -140,10 +139,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
                 $ndr = new Ndr($client);
                 $em->persist($ndr);
             }
-
         }
 
-        
+
         if ($options['flush']) {
             $em->flush();
         }

@@ -230,7 +230,7 @@ class PaServiceTest extends WebTestCase
         $this->assertEquals('Cly4', $client4->getFirstname());
         $this->assertEquals('Hent4', $client4->getLastname());
         $this->assertCount(1, $client4->getReports());
-        $this->assertEquals(EntityDir\Report\Report::TYPE_103_5 , $client4->getReports()->first()->getType());
+        $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $client4->getReports()->first()->getType());
 
         $client3 = $user1->getClientByCaseNumber('10002222');
         $this->assertEquals('Cly2', $client2->getFirstname());
@@ -269,7 +269,6 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $report = $client1->getReports()->first();
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_6, $report->getType());
-
     }
 
     public function testProfDepAddFromCasrecRows()
@@ -389,7 +388,6 @@ class PaServiceTest extends WebTestCase
         $this->assertCount(1, $client1->getReports());
         $report = $client1->getReports()->first();
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $report->getType());
-
     }
 
     /**

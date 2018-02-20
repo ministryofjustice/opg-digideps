@@ -171,15 +171,14 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report|Ndr    $currentReport
-     * @param User      $user
-     * @param \DateTime $submitDate
+     * @param Report|Ndr $currentReport
+     * @param User       $user
+     * @param \DateTime  $submitDate
      *
      * @return Report new year's report
      */
     public function submit($currentReport, User $user, \DateTime $submitDate)
     {
-
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
         }

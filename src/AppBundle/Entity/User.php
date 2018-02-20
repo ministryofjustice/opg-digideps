@@ -29,7 +29,7 @@ class User implements UserInterface
     const ROLE_DEPUTY = 'ROLE_DEPUTY';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
-    
+
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
@@ -846,12 +846,14 @@ class User implements UserInterface
 
     /**
      * convert 7 into 00000007
+     *
      * @param $deputyNo
+     *
      * @return string
      */
     public static function padDeputyNumber($deputyNo)
     {
-        return str_pad($deputyNo, 8, "0", STR_PAD_LEFT);
+        return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
     }
 
     /**

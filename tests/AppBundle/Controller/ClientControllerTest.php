@@ -220,7 +220,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf('AppBundle\Entity\Client', $client);
         $this->assertEquals(0, count($client->getUsers()));
     }
-    
+
     public function testDetailsAction()
     {
         $url = '/client/' . self::$client1->getId() . '/details';

@@ -55,7 +55,6 @@ class DocumentControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
     }
 
-
     public function testAddDocumentForDeputy()
     {
         $type = 'report';

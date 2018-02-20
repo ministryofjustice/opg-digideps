@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -561,6 +561,7 @@ class Report implements ReportInterface
 
     /**
      * @param \DateTime $unSubmitDate
+     *
      * @return Report
      */
     public function setUnSubmitDate($unSubmitDate)

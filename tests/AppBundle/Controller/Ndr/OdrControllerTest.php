@@ -2,8 +2,6 @@
 
 namespace Tests\AppBundle\Controller\Ndr;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use Tests\AppBundle\Controller\AbstractTestController;
 

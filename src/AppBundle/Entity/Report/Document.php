@@ -113,7 +113,7 @@ class Document
         //TODO create ReportInterface class and use as type hinting
         if ($report instanceof Report) {
             $this->report = $report;
-        } else if ($report instanceof Ndr) {
+        } elseif ($report instanceof Ndr) {
             $this->ndr = $report;
         }
         $this->isReportPdf = true;
