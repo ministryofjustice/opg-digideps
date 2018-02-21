@@ -18,7 +18,7 @@ class ReportSubmissionController extends AbstractController
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
 
-    private $allowedPostActions = [
+    private static $allowedPostActions = [
         self::ACTION_DOWNLOAD,
         self::ACTION_ARCHIVE,
     ];
@@ -35,14 +35,25 @@ class ReportSubmissionController extends AbstractController
 
         $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
+        $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
+            return $s->isDownloadable();
+        }));
+
+        $isNewPage = $currentFilters['status'] == 'new';
+
         return [
             'filters' => $currentFilters,
             'records' => $records,
-            'postActions' => $this->allowedPostActions,
+            'postActions' => $isNewPage ? [
+                self::ACTION_DOWNLOAD,
+                self::ACTION_ARCHIVE,
+            ] : [self::ACTION_DOWNLOAD],
             'counts'  => [
                 'new'      => $ret['counts']['new'],
                 'archived' => $ret['counts']['archived'],
             ],
+            'nOfdownloadableSubmissions' => $nOfdownloadableSubmissions,
+            'isNewPage' => $isNewPage,
         ];
     }
 
@@ -63,7 +74,7 @@ class ReportSubmissionController extends AbstractController
             $checkedBoxes = array_keys($request->request->get('checkboxes'));
             $action = strtolower($request->request->get('multiAction'));
 
-            if (in_array($action, $this->allowedPostActions)) {
+            if (in_array($action, [self::ACTION_DOWNLOAD,self::ACTION_ARCHIVE])) {
                 $totalChecked = count($checkedBoxes);
 
                 switch ($action) {
