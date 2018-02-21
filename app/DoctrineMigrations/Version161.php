@@ -23,7 +23,6 @@ class Version161 extends AbstractMigration
 
         // fix deputyNo
         $this->addSql(" UPDATE dd_user SET deputy_no = lpad(deputy_no, 8, '0')  WHERE char_length(deputy_no) !=8; ");
-
     }
 
     /**
@@ -33,6 +32,5 @@ class Version161 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
     }
 }

@@ -56,6 +56,7 @@ class ReportController extends RestController
      * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      *
      * @param int $id
+     *
      * @return Report
      */
     public function getById(Request $request, $id)

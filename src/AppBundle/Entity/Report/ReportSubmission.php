@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Traits\CreationAudit;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -90,15 +90,16 @@ class ReportSubmission
 
     /**
      * ReportSubmission constructor.
+     *
      * @param ReportInterface $report
-     * @param User $createdBy
+     * @param User            $createdBy
      */
     public function __construct(ReportInterface $report, User $createdBy)
     {
         if ($report instanceof Report) {
             $this->report = $report;
             $this->report->addReportSubmission($this);// double-link for UNIT test purposes
-        } else if ($report instanceof Ndr) {
+        } elseif ($report instanceof Ndr) {
             $this->ndr = $report;
         }
 

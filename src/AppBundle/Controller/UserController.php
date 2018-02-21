@@ -252,8 +252,7 @@ class UserController extends RestController
         $qb->orderBy('u.' . $order_by, $sort_order);
 
         if ($roleName) {
-            if (strpos($roleName, '%'))
-            {
+            if (strpos($roleName, '%')) {
                 $qb->andWhere('u.roleName LIKE :role');
             } else {
                 $qb->andWhere('u.roleName = :role');

@@ -253,11 +253,12 @@ class Client
      * One Lay deputy has a case number starting with zeros
      *
      * @param $caseNumber
+     *
      * @return string
      */
     public static function padCaseNumber($caseNumber)
     {
-        return str_pad($caseNumber, 8, "0", STR_PAD_LEFT);
+        return str_pad($caseNumber, 8, '0', STR_PAD_LEFT);
     }
 
     /**

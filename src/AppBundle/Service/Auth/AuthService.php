@@ -101,9 +101,9 @@ class AuthService
 
         // also allow inherited roles
         $hierarchy = $this->container->getParameter('security.role_hierarchy.roles');
-        foreach($hierarchy as $cr => $parents) { // ROLE_PA_NAMED => [ROLE_PA]
-            foreach($parents as $parent) {
-                if (in_array($parent, $allowedRoles) ) {
+        foreach ($hierarchy as $cr => $parents) { // ROLE_PA_NAMED => [ROLE_PA]
+            foreach ($parents as $parent) {
+                if (in_array($parent, $allowedRoles)) {
                     $allowedRoles[] = $cr; //ROLE_PA_NAMED
                 }
             }
@@ -112,5 +112,4 @@ class AuthService
 
         return in_array($roleName, $allowedRoles);
     }
-
 }

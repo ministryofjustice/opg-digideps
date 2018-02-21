@@ -3,8 +3,8 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Client;
-use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * ClientRepository.
@@ -14,21 +14,19 @@ use AppBundle\Entity\User;
  */
 class ClientRepository extends EntityRepository
 {
-
     /**
      * Search Clients
      *
-     * @param string $query Search query
-     * @param string $orderBy field to order by
+     * @param string $query     Search query
+     * @param string $orderBy   field to order by
      * @param string $sortOrder order of field order ASC|DESC
-     * @param int $limit number of results to return
+     * @param int    $limit     number of results to return
      * @param string $offset
      *
      * @return Client[]|array
      */
     public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
     {
-
         $qb = $this->createQueryBuilder('c');
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);

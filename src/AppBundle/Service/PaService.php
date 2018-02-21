@@ -37,7 +37,7 @@ class PaService
     /**
      * PaService constructor.
      *
-     * @param EntityManager $em
+     * @param EntityManager   $em
      * @param LoggerInterface $logger
      */
     public function __construct(EntityManager $em, LoggerInterface $logger)
@@ -192,7 +192,7 @@ class PaService
                     $this->added['pa_users'][] = $row['Email'];
                 }
             }
-        } 
+        }
 
         // update team name, if not set
         // can be removed if there is not need to update PA names after DDPB-1718
@@ -210,7 +210,7 @@ class PaService
     }
 
     /**
-     * @param array $row
+     * @param array          $row
      * @param EntityDir\User $user
      *
      * @return EntityDir\Client
@@ -283,7 +283,7 @@ class PaService
     }
 
     /**
-     * @param array $row
+     * @param array            $row
      * @param EntityDir\Client $client
      *
      * @return EntityDir\Report\Report
@@ -348,7 +348,7 @@ class PaService
      * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
      *
      * @param string $dateString e.g. 16-Dec-2014
-     * @param string $century e.g. 20/19 Prefix added to 2-digits year
+     * @param string $century    e.g. 20/19 Prefix added to 2-digits year
      *
      * @return \DateTime|false
      */
@@ -360,10 +360,10 @@ class PaService
 
         // prefix century if needed
         if (strlen($pieces[2]) === 2) {
-            $pieces[2] = ((string)$century) . $pieces[2];
+            $pieces[2] = ((string) $century) . $pieces[2];
         }
         // check format is d-M-Y
-        if ((int)$pieces[0] < 1 || (int)$pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
+        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
             return false;
             //throw new \InvalidArgumentException($errorMessage);
         }

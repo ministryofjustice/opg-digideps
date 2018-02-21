@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\PaService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
