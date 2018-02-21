@@ -7,13 +7,13 @@ namespace AppBundle\Entity;
  */
 interface ReportInterface
 {
-    function getId();
+    public function getId();
 
-    function getType();
+    public function getType();
 
-    function getClient();
+    public function getClient();
 
-    function createAttachmentName($format);
+    public function createAttachmentName($format);
 
-    function getZipName();
+    public function getZipName();
 }

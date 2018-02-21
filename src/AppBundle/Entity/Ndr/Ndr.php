@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity\Ndr;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Traits as NdrTraits;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\NdrStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -575,7 +575,6 @@ class Ndr implements ReportInterface
         return 'NdrReport-' . $client->getCaseNumber()
             . '_' . $this->getStartDate()->format('Y')
             . '.zip';
-
     }
 
     /**

@@ -4,8 +4,8 @@
 * Script to mask CSV files. For both PA and Lay (use any random 3rd argument for that)
 */
 if (count($argv) !== 4) {
-    echo "Usage: php [script name] source.csv output.csv name.surname\n" . "
-    e.g. php misc/scripts/maskCsv.php ~/Desktop/file.csv ~/Desktop/file.masked.csv elvis.ciotti";
+    echo "Usage: php [script name] source.csv output.csv name.surname\n" . '
+    e.g. php misc/scripts/maskCsv.php ~/Desktop/file.csv ~/Desktop/file.masked.csv elvis.ciotti';
     exit(1);
 }
 $replacer = new Replacer($argv[1], $argv[2], $argv[3] . '+pa[INDEX]@digital.justice.gov.uk');
@@ -46,7 +46,6 @@ class Replacer
         $this->baseEmailToUse = $baseEmailToUse;
     }
 
-
     public function run()
     {
         $firstRow = fgetcsv($this->f1);
@@ -54,7 +53,7 @@ class Replacer
         //fputcsv($this->f2, $firstRow);
         $columnIndexToName = array_reverse($firstRow, true);
         $cycleCount = 0;
-        while (($data = fgetcsv($this->f1)) !== FALSE) {
+        while (($data = fgetcsv($this->f1)) !== false) {
             $cycleCount++;
             foreach ($data as $columnIndex => $columnValue) {
                 $columnName = $columnIndexToName[$columnIndex];
@@ -65,7 +64,7 @@ class Replacer
 
                     case 'Case':
                         // case number becames Z9 + hash of the real case number (MLD compatible)
-                        $data[$columnIndex] = 'Z9'.strtoupper(substr(sha1($columnValue), 0, 6));
+                        $data[$columnIndex] = 'Z9' . strtoupper(substr(sha1($columnValue), 0, 6));
                         break;
 
                     case 'Forename':
@@ -101,9 +100,8 @@ class Replacer
         fclose($this->f2);
     }
 
-
     /**
-     * @param string $email
+     * @param  string $email
      * @return mixed
      */
     private function replaceEmail($email)
@@ -136,7 +134,4 @@ class Replacer
 
         return $string;
     }
-
-
 }
-

@@ -5,8 +5,8 @@ namespace AppBundle\Service\File;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\File\Storage\StorageInterface;
-use ZipArchive;
 use Mockery as m;
+use ZipArchive;
 
 class MultiDocumentZipFileCreatorTest extends m\Adapter\Phpunit\MockeryTestCase
 {

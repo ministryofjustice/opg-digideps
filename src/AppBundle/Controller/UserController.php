@@ -308,7 +308,7 @@ class UserController extends AbstractController
 
         if ($user->getRoleName() == EntityDir\User::ROLE_PA_NAMED) {
             $view = 'AppBundle:User:agreeTermsUsePa.html.twig';
-        } else if ($user->getRoleName() ==EntityDir\User::ROLE_PROF_NAMED) {
+        } elseif ($user->getRoleName() ==EntityDir\User::ROLE_PROF_NAMED) {
             $view = 'AppBundle:User:agreeTermsUseProf.html.twig';
         } else {
             throw new \RuntimeException('terms page not implemented');

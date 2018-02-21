@@ -207,7 +207,7 @@ class NdrController extends AbstractController
                 true
             );
 
-            $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId='.$document->getId(), $ndr, ['submit']);
+            $this->getRestClient()->put('ndr/' . $ndr->getId() . '/submit?documentId=' . $document->getId(), $ndr, ['submit']);
 
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
             $reportEmail = $this->getMailFactory()->createNdrEmail($this->getUser(), $ndr, $pdfBinaryContent);

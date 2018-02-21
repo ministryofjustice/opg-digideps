@@ -368,7 +368,7 @@ class ReportController extends AbstractController
      */
     public function pdfDebugAction($reportId)
     {
-        if (!$this->getParameter('kernel.debug') ) {
+        if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visite in debug mode');
         }
         /** @var EntityDir\Report\Report $report */
@@ -407,7 +407,7 @@ class ReportController extends AbstractController
 
     /**
      * @param  EntityDir\Report\Report $report
-     * @param  boolean $showSummary
+     * @param  bool                    $showSummary
      * @return string                  binary PDF content
      */
     private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)

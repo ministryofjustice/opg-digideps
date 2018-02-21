@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service\File;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
@@ -46,10 +46,10 @@ class FileUploader
     /**
      * Uploads a file into S3 + create and persist a Document entity using that reference
      *
-     * @param ReportInterface    $reportId
-     * @param string $body
-     * @param string $fileName
-     * @param bool   $isReportPdf
+     * @param ReportInterface $reportId
+     * @param string          $body
+     * @param string          $fileName
+     * @param bool            $isReportPdf
      *
      * @return Document
      */

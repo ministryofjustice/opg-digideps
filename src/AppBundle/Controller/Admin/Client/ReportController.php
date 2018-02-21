@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Admin\Client;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\UnsubmitReportType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,8 +41,8 @@ class ReportController extends AbstractController
                 ->setUnSubmitDate(new \DateTime())
             ;
 
-            $this->getRestClient()->put('report/' . $report->getId().'/unsubmit', $report, ['startEndDates', 'submit', 'unsubmit_date']);
-            $request->getSession()->getFlashBag()->add('notice', "Report unsubmitted");
+            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, ['startEndDates', 'submit', 'unsubmit_date']);
+            $request->getSession()->getFlashBag()->add('notice', 'Report unsubmitted');
 
             return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
         }
@@ -53,5 +52,4 @@ class ReportController extends AbstractController
             'form'     => $form->createView()
         ];
     }
-
 }

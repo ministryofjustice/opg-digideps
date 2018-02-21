@@ -54,8 +54,7 @@ class MultiDocumentZipFileCreator
 
         /** @var ReportSubmission $reportSubmission */
         foreach ($this->reportSubmissions as $reportSubmission) {
-
-            try{
+            try {
                 $zipFileCreator = new DocumentsZipFileCreator($reportSubmission, $this->s3Storage);
                 $filename = $zipFileCreator->createZipFile();
 
@@ -67,7 +66,6 @@ class MultiDocumentZipFileCreator
             } catch (\Exception $e) {
                 //for now using try/catch to skip reports not downloadable, may want to make this more intelligent later
             }
-
         }
 
         //check we at least some downloadable files
@@ -95,9 +93,7 @@ class MultiDocumentZipFileCreator
         return $parentFilename;
     }
 
-    /**
-     * @return void
-     */
+
     public function cleanUp()
     {
         if ($this->zipFile && file_exists($this->zipFile)) {

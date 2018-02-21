@@ -100,7 +100,7 @@ class UserVoter extends Voter
     private function determineEditPermission(User $loggedInUser, User $subject)
     {
         if ($subject->getId() === $loggedInUser->getId() &&
-            ($loggedInUser->hasRoleOrgNamed() || $loggedInUser->hasRoleOrgAdmin()) ) {
+            ($loggedInUser->hasRoleOrgNamed() || $loggedInUser->hasRoleOrgAdmin())) {
             // can always edit one's self except team members
             return true;
         }
