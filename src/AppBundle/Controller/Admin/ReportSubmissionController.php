@@ -18,11 +18,6 @@ class ReportSubmissionController extends AbstractController
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
 
-    private static $allowedPostActions = [
-        self::ACTION_DOWNLOAD,
-        self::ACTION_ARCHIVE,
-    ];
-
     /**
      * @Route("/list", name="admin_documents")
      * @Template
@@ -80,8 +75,7 @@ class ReportSubmissionController extends AbstractController
                 switch ($action) {
                     case self::ACTION_ARCHIVE:
                         $this->processArchive($checkedBoxes);
-                        $translator = $this->get('translator');
-                        $notice = $translator->transChoice(
+                        $notice = $this->get('translator')->transChoice(
                             'page.postactions.archived.notice',
                             $totalChecked,
                             ['%count%' => $totalChecked],
@@ -90,6 +84,7 @@ class ReportSubmissionController extends AbstractController
 
                         $request->getSession()->getFlashBag()->add('notice', $notice);
                         break;
+
                     case self::ACTION_DOWNLOAD:
                         $this->processDownload($request, $checkedBoxes);
                         break;
