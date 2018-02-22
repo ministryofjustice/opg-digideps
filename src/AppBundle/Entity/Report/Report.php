@@ -31,7 +31,7 @@ class Report implements ReportInterface
     use ReportTraits\MoneyTransferTrait;
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
-    use ReportTraits\ProfFeesTrait;
+    use ReportTraits\ProfServiceFeesTrait;
 
     /**
      * Reports with total amount of assets
@@ -412,6 +412,7 @@ class Report implements ReportInterface
         $this->documents = new ArrayCollection();
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
+        $this->profServicefees = new ArrayCollection();
     }
 
     /**
