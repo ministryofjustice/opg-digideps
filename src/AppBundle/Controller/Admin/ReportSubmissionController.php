@@ -117,12 +117,12 @@ class ReportSubmissionController extends AbstractController
     private function processDownload(Request $request, $checkedBoxes)
     {
         $reportSubmissions = [];
-        $zipFileCreator = new MultiDocumentZipFileCreator($this->get('s3_storage'), $reportSubmissions);
 
         try {
             foreach ($checkedBoxes as $reportSubmissionId) {
                 $reportSubmissions[] = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
             }
+            $zipFileCreator = new MultiDocumentZipFileCreator($this->get('s3_storage'), $reportSubmissions);
             $filename = $zipFileCreator->createZipFile();
 
             // send ZIP to user
@@ -142,7 +142,9 @@ class ReportSubmissionController extends AbstractController
 
             return $response;
         } catch (\Exception $e) {
-            $zipFileCreator->cleanUp();
+            if ($zipFileCreator instanceof $zipFileCreator) {
+                $zipFileCreator->cleanUp();
+            }
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
         }
     }
