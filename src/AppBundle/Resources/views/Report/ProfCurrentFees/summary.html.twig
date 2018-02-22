@@ -1,0 +1,246 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'summaryPage' %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{# {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %} #}
+
+{% block pageContent %}
+
+    {# Introduction text #}
+    <div class="text">
+        <p>{{ (page ~ '.pageSectionDescription') | trans }}</p>
+    </div>
+
+    {# Check answers text #}
+    <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
+    <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
+
+    {# Missing questions alerts #}
+    {# {% if report.status.paFeesExpensesState.state != 'done' %}
+        {{ macros.notification('notice', 'canYouAnswer' | trans({}, 'common')) }}
+    {% endif %} #}
+
+    {# Return to overview/client profile link #}
+    {# {{ macros.returnToOverview(report) }} #}
+
+    <p class="text--right flush--bottom">
+        <a href="/report/1153/overview" class="bold-small">Return to report overview</a>
+    </p>
+
+    <table class="check-your-answers columns-2 push-double--bottom">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
+                    <span class="visually-hidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="behat-region-paid-for-anything">
+                <td>
+                    During this reporting period, have you received any payments from the client?
+                </td>
+                <td>
+                    Yes
+                </td>
+                <td class="change-answer">
+                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="grid-row push--top">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">Charges and payments received</h2>
+        </div>
+        <div class="column-half text--right">
+            <a href="/report/3/money-out/step1" class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                Add a charge
+            </a>
+        </div>
+    </div>
+
+    <h3 class="heading-medium">Fixed costs</h3>
+
+    <table class="check-your-answers behat-region-list-accounts">
+        <thead>
+            <tr>
+                <th class="width-third">Service</th>
+                <th class="numeric">Charged</th>
+                <th class="numeric">Received</th>
+                <th class="numeric">Date received</th>
+                <th>
+                    <span class="visually-hidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="behat-region-transaction-">
+                <td class="width-third">Annual Management (interim)</td>
+                <td class="width-sixth numeric-small">£500.00</td>
+                <td class="numeric-small">£300.00</td>
+                <td class="numeric-small">21/03/2017</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
+                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
+                </td>
+            </tr>
+                <tr class="no-border">
+                <td>
+                    <span class="bold-small">Total amount</span>
+                </td>
+                <td class="text--right">
+                    <span class="bold-small behat-region-household-bills-total">£500.00</span>
+                </td>
+                <td class="text--right">
+                    <span class="bold-small behat-region-household-bills-total">£300.00</span>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h3 class="heading-medium">Assessed costs</h3>
+
+    <table class="check-your-answers behat-region-list-accounts">
+        <thead>
+            <tr>
+                <th class="width-third">Service</th>
+                <th class="numeric">Charged</th>
+                <th class="numeric">Received</th>
+                <th class="numeric">Date received</th>
+                <th>
+                    <span class="visually-hidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="width-third">Trust applications</td>
+                <td class="width-sixth numeric-small">£800.00</td>
+                <td class="numeric-small">£200.00</td>
+                <td class="numeric-small">02/02/2016</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
+                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-third">Litigation</td>
+                <td class="numeric-small">£1,200.00</td>
+                <td class="numeric-small">£1,000.00</td>
+                <td class="numeric-small">01/08/2017</td>
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
+                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
+                </td>
+            </tr>
+            <tr class="no-border">
+                <td>
+                    <span class="bold-small">Total amount</span>
+                </td>
+                <td class="text--right">
+                    <span class="bold-small behat-region-household-bills-total">£2,000.00</span>
+                </td>
+                <td class="text--right">
+                    <span class="bold-small behat-region-household-bills-total">£1,200.00</span>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="check-your-answers push--ends">
+        <tbody>
+            <tr class="no-border">
+                <td class="text--right width-third">
+                    <span class="heading-medium">Grand totals:</span>
+                </td>
+                <td class="numeric-small width-eighth">
+                    <span class="heading-medium">£2,500.00</span>
+                </td>
+                <td class="numeric-small width-eighth">
+                    <span class="heading-medium">£1,500.00</span>
+                </td>
+                <td class="width-sixth"></td>
+                <td class="width-sixth"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="check-your-answers columns-2 push-double--bottom">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>
+                    <span class="visually-hidden">Actions</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="behat-region-paid-for-anything">
+                <td>
+                    Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?
+                </td>
+                <td>
+                    Yes
+                </td>
+                <td class="change-answer">
+                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                </td>
+            </tr>
+            <tr class="behat-region-paid-for-anything">
+                <td>
+                    If your total charges of £ are 20% or more above your estimate please provide an explanation for the SCCO.
+                </td>
+                <td>
+                    Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae. Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.
+                </td>
+                <td class="change-answer">
+                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {# Pagination #}
+    {# {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }} #}
+
+    <nav class="pagination" role="navigation" aria-label="Pagination">
+        <ul class="group">
+            <li class="previous">
+                <a title="Navigate to previous part" rel="prev" href="/report/1153/visits-care">
+                    <span class="pagination-label">Previous section</span>
+                    <span class="pagination-part-title">Visits and care</span>
+                </a>
+            </li>
+            <li class="next">
+                <a title="Navigate to next part" rel="next" href="/report/1153/gifts">
+                    <span class="pagination-label">Next section</span>
+                    <span class="pagination-part-title">Gifts</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+{% endblock %}
+
+
+
