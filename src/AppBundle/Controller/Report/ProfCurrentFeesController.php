@@ -32,13 +32,13 @@ class ProfCurrentFeesController extends AbstractController
      */
     public function startAction($reportId)
     {
-        //$report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        //if ($report->getStatus()->getPaFeesExpensesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
-        //    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
-        //}
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
+        }
 
         return [
-          //  'report' => $report,
+            'report' => $report,
         ];
     }
 
@@ -74,7 +74,7 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/summary", name="prof_current_fees_expense_summary")
+     * @Route("/summary", name="prof_current_service_fees_summary")
      * @Template()
      *
      * @param int $reportId
