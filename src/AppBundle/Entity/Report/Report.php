@@ -31,6 +31,7 @@ class Report implements ReportInterface
     use ReportTraits\MoneyTransferTrait;
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
+    use ReportTraits\ProfFeesTrait;
 
     /**
      * Reports with total amount of assets
@@ -91,6 +92,10 @@ class Report implements ReportInterface
     const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
     const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
+    const SECTION_PROF_PREVIOUS_FEES = 'profPreviousFees';
+    const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
+    const SECTION_PROF_ESTIMATED_FEES = 'profEstimatedFees';
+
     const SECTION_DOCUMENTS = 'documents';
 
     /**
@@ -138,7 +143,9 @@ class Report implements ReportInterface
             self::SECTION_DEPUTY_EXPENSES    => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
-                //self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
+            ],
+            self::SECTION_PROF_CURRENT_FEES => [
+                self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ],
             self::SECTION_DOCUMENTS          => $allReports,
         ];

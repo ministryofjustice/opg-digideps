@@ -337,6 +337,31 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
+     * @JMS\Groups({"status", "fee-state"})
+     *
+     * @return array
+     */
+    public function getProfCurrentFeesState()
+    {
+        // if the section is not relevant for the report, then it's done
+        if (!$this->report->hasSection(Report::SECTION_PROF_CURRENT_FEES)) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        if ($this->report->profCurrentFeesNotStarted()) {
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
+
+        if ($this->report->profCurrentFeesCompleted()) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
      * @JMS\Groups({"status", "action-state"})
      *
      * @return array
@@ -487,6 +512,12 @@ class ReportStatusService
                 return $this->getExpensesState()['state'];
             case Report::SECTION_PA_DEPUTY_EXPENSES:
                 return $this->getPaFeesExpensesState()['state'];
+            case Report::SECTION_PROF_PREVIOUS_FEES:
+                return $this->getProfPreviousFeesState()['state'];
+            case Report::SECTION_PROF_CURRENT_FEES:
+                return $this->getProfCurrentFeesState()['state'];
+            case Report::SECTION_PROF_ESTIMATED_FEES:
+                return $this->getProfEstimatedFeesState()['state'];
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState()['state'];
             default:
