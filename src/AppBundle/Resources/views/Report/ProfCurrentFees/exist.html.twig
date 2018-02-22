@@ -1,0 +1,50 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'existPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# {% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %} #}
+
+{% block pageContent %}
+
+    <form action="#">
+
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom ">
+            <fieldset class="inline">
+
+                <legend class="form-label-bold text text push-half--bottom">During this reporting period, have you received any payments from the client?</legend>
+
+                <div class="multiple-choice text">
+                    <input type="radio" id="fee_exist_hasFees_0" name="fee_exist[hasFees]" required="required" value="yes">
+                    <label  for="fee_exist_hasFees_0">Yes</label>
+                </div>
+
+                <div class="multiple-choice text">
+                    <input type="radio" id="fee_exist_hasFees_1" name="fee_exist[hasFees]" required="required" value="no" aria-controls="reason-for-no-fee" aria-expanded="false">
+                    <label class="" for="fee_exist_hasFees_1">No</label>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+    <button type="submit" id="fee_exist_save" name="fee_exist[save]" class="button behat-link-save-and-continue">Save and continue</button>
+
+    </form>
+
+{% endblock %}
+
+
+
+
+

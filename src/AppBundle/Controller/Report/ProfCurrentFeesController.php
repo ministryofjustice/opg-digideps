@@ -43,6 +43,37 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
+     * @Route("/exist", name="prof_current_fees_exist")
+     * @Template()
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function existAction($reportId)
+    {
+
+        return [
+        ];
+    }
+
+    /**
+     * @Route("/step{step}", name="prof_current_fees_step")
+     * @Template()
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function stepAction($reportId, $step)
+    {
+
+        return [
+            'step' => $step,
+        ];
+    }
+
+    /**
      * @Route("/summary", name="prof_current_fees_expense_summary")
      * @Template()
      *

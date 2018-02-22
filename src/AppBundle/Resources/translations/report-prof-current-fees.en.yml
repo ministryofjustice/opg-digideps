@@ -1,25 +1,24 @@
 startPage:
-  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageTitle: Deputy fees and expenses
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Current fees and expenses
   pageSectionDescription1: |
-    Public authority deputies can be paid, or claim expenses, for the following
-    areas of work or cost:
-  listItem01: work done up to and including the date of the court order
-  listItem02: annual management (including incidental costs)
-  listItem03: property management
-  listItem04: completing an annual deputy report
-  listItem05: completing a tax return
-  listItem06: travel expenses
-  listItem07: specialist services (conveyancing, obtaining expert valuations and investment advice)
+    In cases where fixed costs have not been applied, professional deputy costs may include:
+  listItem01: |
+    interim bills paid from the client’s funds in the current reporting period before SCCO
+    assessment payments for the balance of costs due after SCCO assessment.
+  listItem02: |
+    payments for the balance of costs due after SCCO assessment. These final cost payments
+    may relate to costs from a previous reporting period, but we still need you to tell us
+    about them in this insert
   pageSectionDescription2: |
-    For more detail, you should refer to the court’s Practice Direction B Fixed Costs
+    For more detail, you should refer to the court's Practice Direction B Fixed Costs
     in the Court of Protection, published as part of the Court of Protection (Amendment)
     Rules 2017.
-  startButton: Start deputy fees and expenses
+  startButton: Start current fees and expenses
 
-feeExistPage:
-  htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
-  pageTitle: Deputy fees and expenses
+existPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Current fees and expenses
   form:
     hasFees:
       label: Have you charged the client any fees for your services during the reporting period?
@@ -27,6 +26,16 @@ feeExistPage:
       label: Please tell us why not
     save:
       label: Save and continue
+
+addTypePage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Add a charge
+  supportTitle: Current fees and expenses
+
+addDetailsPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: "Add a charge:"
+  supportTitle: Current fees and expenses
 
 editPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
