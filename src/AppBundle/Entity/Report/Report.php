@@ -26,6 +26,7 @@ class Report implements ReportInterface
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
+    use ReportTraits\ReportProfCurrentFeesTrait;
 
     const TYPE_103 = '103';
     const TYPE_102 = '102';
@@ -38,6 +39,12 @@ class Report implements ReportInterface
     const TYPE_104_6 = '104-6';
     const TYPE_103_4_6 = '104-4-6';
     const TYPE_102_4_6 = '102-4-6';
+
+    const TYPE_103_5 = '103-5';
+    const TYPE_102_5 = '102-5';
+    const TYPE_104_5 = '104-5';
+    const TYPE_103_4_5 = '103-4-5';
+    const TYPE_102_4_5 = '102-4-5';
 
     /**
      * @JMS\Type("integer")
