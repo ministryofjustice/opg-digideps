@@ -15,7 +15,7 @@ trait ProfServiceFeesTrait
      * @var string yes|no|null
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Groups({"current-prof-payment-received"})
      * @ORM\Column(name="current_prof_payments_received", type="string", length=3, nullable=true)
      */
     private $currentProfPaymentsReceived;
