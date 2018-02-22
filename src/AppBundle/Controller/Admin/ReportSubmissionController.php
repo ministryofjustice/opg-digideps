@@ -18,11 +18,6 @@ class ReportSubmissionController extends AbstractController
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
 
-    private $allowedPostActions = [
-        self::ACTION_DOWNLOAD,
-        self::ACTION_ARCHIVE,
-    ];
-
     /**
      * @Route("/list", name="admin_documents")
      * @Template
@@ -35,14 +30,25 @@ class ReportSubmissionController extends AbstractController
 
         $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
+        $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
+            return $s->isDownloadable();
+        }));
+
+        $isNewPage = $currentFilters['status'] == 'new';
+
         return [
             'filters' => $currentFilters,
             'records' => $records,
-            'postActions' => $this->allowedPostActions,
+            'postActions' => $isNewPage ? [
+                self::ACTION_DOWNLOAD,
+                self::ACTION_ARCHIVE,
+            ] : [self::ACTION_DOWNLOAD],
             'counts'  => [
                 'new'      => $ret['counts']['new'],
                 'archived' => $ret['counts']['archived'],
             ],
+            'nOfdownloadableSubmissions' => $nOfdownloadableSubmissions,
+            'isNewPage' => $isNewPage,
         ];
     }
 
@@ -63,14 +69,13 @@ class ReportSubmissionController extends AbstractController
             $checkedBoxes = array_keys($request->request->get('checkboxes'));
             $action = strtolower($request->request->get('multiAction'));
 
-            if (in_array($action, $this->allowedPostActions)) {
+            if (in_array($action, [self::ACTION_DOWNLOAD,self::ACTION_ARCHIVE])) {
                 $totalChecked = count($checkedBoxes);
 
                 switch ($action) {
                     case self::ACTION_ARCHIVE:
                         $this->processArchive($checkedBoxes);
-                        $translator = $this->get('translator');
-                        $notice = $translator->transChoice(
+                        $notice = $this->get('translator')->transChoice(
                             'page.postactions.archived.notice',
                             $totalChecked,
                             ['%count%' => $totalChecked],
@@ -79,6 +84,7 @@ class ReportSubmissionController extends AbstractController
 
                         $request->getSession()->getFlashBag()->add('notice', $notice);
                         break;
+
                     case self::ACTION_DOWNLOAD:
                         $this->processDownload($request, $checkedBoxes);
                         break;
@@ -116,7 +122,6 @@ class ReportSubmissionController extends AbstractController
             foreach ($checkedBoxes as $reportSubmissionId) {
                 $reportSubmissions[] = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
             }
-
             $zipFileCreator = new MultiDocumentZipFileCreator($this->get('s3_storage'), $reportSubmissions);
             $filename = $zipFileCreator->createZipFile();
 
@@ -137,7 +142,9 @@ class ReportSubmissionController extends AbstractController
 
             return $response;
         } catch (\Exception $e) {
-            $zipFileCreator->cleanUp();
+            if ($zipFileCreator instanceof $zipFileCreator) {
+                $zipFileCreator->cleanUp();
+            }
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
         }
     }

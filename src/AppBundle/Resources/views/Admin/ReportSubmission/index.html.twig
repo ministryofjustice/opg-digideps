@@ -2,8 +2,7 @@
 
 {% trans_default_domain "admin-documents" %}
 {% set transOptions = {} %}
-{% set isNewPage = (filters.status == 'new') %}
-{% set isArchivedPage = (filters.status == 'archived') %}
+
 {% set baseRoute = 'admin_documents' %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -17,7 +16,6 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
     {# params #}
     {% set filtersToPreserveInTabs = {
         'q': filters.q,
@@ -85,7 +83,7 @@
     {# table with records #}
     {% if  records | length %}
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
-        {% if isNewPage %}
+        {% if nOfdownloadableSubmissions > 0 %}
             {% for action in postActions %}
                 <input type="submit" id="action-{{ action }}" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled">
             {% endfor %}
@@ -94,20 +92,20 @@
         <table class="check-your-answers table-clickable push--bottom">
             <thead>
                 <tr>
-                    {% if isNewPage %}
-                        <th class="width-twentieth multiple-choice--smaller">
-                            <div class="multiple-choice">
-                                <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
-                                <label for="select-all"><span class="visually-hidden">{{ 'page.resultsTable.header.all' | trans }}</span></label>
-                            </div>
-                        </th>
+                    {% if nOfdownloadableSubmissions > 0 %}
+                      <th class="width-twentieth multiple-choice--smaller">
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
+                            <label for="select-all"><span class="visually-hidden">{{ 'page.resultsTable.header.all' | trans }}</span></label>
+                        </div>
+                      </th>
                     {% endif %}
                     <th>{{ 'page.resultsTable.header.clientAndCaseNo' | trans }}</th>
                     <th>{{ 'page.resultsTable.header.deputy' | trans }}</th>
                     <th>{{ 'period' | trans({}, 'common') }}</th>
                     <th>{{ 'page.resultsTable.header.documents' | trans }}</th>
                     <th>{{ 'page.resultsTable.header.date' | trans }}</th>
-                    {% if isArchivedPage %}
+                    {% if not isNewPage %}
                         <th>{{ 'page.resultsTable.header.user' | trans }}</th>
                     {% endif %}
                 </tr>
@@ -120,16 +118,18 @@
                     {# Period: report.period #}
                     {# Type: report.type #}
                     <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
-                        {% if isNewPage %}
-                            <td class="width-twentieth multiple-choice--smaller">
-                                <div class="multiple-choice">
-                                    <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
-                                           class="js-checkbox">
-                                    <label for="cb{{ reportSubmission.id }}">
-                                        <span class="visually-hidden">Select</span>
-                                    </label>
-                                </div>
-                            </td>
+                        {% if nOfdownloadableSubmissions > 0 %}
+                          <td class="width-twentieth multiple-choice--smaller">
+                            {% if reportSubmission.isDownloadable %}
+                              <div class="multiple-choice">
+                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
+                                       class="js-checkbox">
+                                <label for="cb{{ reportSubmission.id }}">
+                                    <span class="visually-hidden">Select</span>
+                                </label>
+                              </div>
+                            {% endif %}
+                          </td>
                         {% endif %}
                         <td class="width-fifth">
                             {{ client.fullname }}<br>
@@ -179,7 +179,7 @@
                             {# show hour and time #}
                             {{ submissionDate | date('g:ia') }}
                         </td>
-                        {% if isArchivedPage %}
+                        {% if not isNewPage %}
                             <td>
                                 <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
                             </td>
