@@ -26,7 +26,7 @@ class Report implements ReportInterface
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
-    use ReportTraits\ReportProfCurrentFeesTrait;
+    use ReportTraits\ReportProfServiceFeesTrait;
 
     const TYPE_103 = '103';
     const TYPE_102 = '102';

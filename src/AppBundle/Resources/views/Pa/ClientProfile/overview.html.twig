@@ -138,16 +138,16 @@
                                     } %}
                             {%  endif %}
 
-                            {% if report.hasSection('paDeputyExpenses') %}
+                            {% if report.hasSection('profCurrentFees') %}
                                 {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
-                                    transDomain: translationDomain,
-                                    subSection: 'pa_fee_expense',
-                                    report: report,
-                                    state: reportStatus.paFeesExpensesState,
-                                    linkToSubSection: path('pa_fee_expense', {'reportId': report.id}),
-                                    description: true
+                                transDomain: translationDomain,
+                                subSection: 'prof_current_fees',
+                                report: report,
+                                state: reportStatus.profCurrentFeesState,
+                                linkToSubSection: path('prof_current_fees', {'reportId': report.id}),
+                                description: true
                                 } %}
-                            {%  endif %}
+                            {% endif %}
 
                             {% if report.hasSection('gifts') %}
                                 {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {

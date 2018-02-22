@@ -79,6 +79,12 @@ pa_fee_expense:
     subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
     label:
       done: "Finished"
+prof_current_fees:
+    subSectionTitle: "Current fees"
+    subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
+    label:
+      done: "Finished"
+
 gifts:
     subSectionTitle: "Gifts"
     subSectionDescription: "Gifts you've given to other people on %client%'s behalf"
