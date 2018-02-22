@@ -50,10 +50,28 @@ class ProfCurrentFeesController extends AbstractController
      *
      * @return array
      */
-    public function existAction($reportId)
+    public function existAction(Request $request, $reportId)
     {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\Report\ProfCurrentServiceFeeExistType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            /* @var $data EntityDir\Report\Report */
+            $this->getRestClient()->put('report/' . $reportId, $data, ['current-prof-payment-received']);
+            return $this->redirectToRoute('current-service-fee-add', ['reportId' => $reportId, 'from'=>'exist']);
+        }
+
+        $backLink = $this->generateUrl('prof_current_fees', ['reportId' => $reportId]);
+        if ($request->get('from') == 'summary') {
+            $backLink = $this->generateUrl('prof_current_fees_summary', ['reportId' => $reportId]);
+        }
 
         return [
+            'backLink' => $backLink,
+            'form' => $form->createView(),
+            'report' => $report,
         ];
     }
 

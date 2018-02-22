@@ -17,4 +17,29 @@ trait ReportProfServiceFeesTrait
      * @var ProfServiceFee[]
      */
     private $profServiceFees = [];
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"current-prof-payment-received"})
+     * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-payment-received"})
+     */
+    private $currentProfPaymentsReceived;
+
+    /**
+     * @return string
+     */
+    public function getCurrentProfPaymentsReceived()
+    {
+        return $this->currentProfPaymentsReceived;
+    }
+
+    /**
+     * @param string $currentProfPaymentsReceived
+     */
+    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    {
+        $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
+    }
 }
