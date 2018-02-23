@@ -246,15 +246,6 @@ class Report implements ReportInterface
      */
     private $agreedBehalfDeputyExplanation;
 
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-metadata"})
-     *
-     * @var string
-     */
-    private $metadata;
-
     /**
      * @var Document[]
      * @JMS\Groups({"report-documents"})
@@ -1034,22 +1025,6 @@ class Report implements ReportInterface
             . '_' . $this->getStartDate()->format('Y')
             . '_' . $this->getEndDate()->format('Y')
             . '.zip';
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * @param string $metadata
-     */
-    public function setMetadata($metadata)
-    {
-        $this->metadata = $metadata;
     }
 
     /**
