@@ -29,4 +29,14 @@ reportManage:
     unsubmit:
       label: Update and mark as incomplete
 
-
+reportChangeDueDate:
+  form:
+    dueDateChoice:
+     label: New due date
+     choices:
+       keep: Keep existing due date
+       3weeks: 3 weeks from now
+       4weeks: 4 weeks from now
+       5weeks: 5 weeks from now
+    save:
+      label: Continue

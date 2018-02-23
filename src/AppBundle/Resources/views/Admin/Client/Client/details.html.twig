@@ -49,7 +49,7 @@
                         <td>
                             {{ report.period | replace({'to': '-'}) }}
                         </td>
-                        <td>
+                        <td class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}-due-date">
                             {{ report.dueDate | date("j F Y") }}
                         </td>
                         <td>

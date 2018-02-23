@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    {{ form_checkbox_group(form.dueDateChoice, 'reportChangeDueDate.form.dueDateChoice', {}) }}
+
+    {#{{ form_known_date(form.endDate, 'reportManage.form.endDate') }}#}
+
+
+    {{ form_submit(form.save,'reportChangeDueDate.form.save') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

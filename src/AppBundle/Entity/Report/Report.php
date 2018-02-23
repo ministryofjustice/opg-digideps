@@ -85,6 +85,16 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"report-due-date"})
+     * @Assert\NotBlank( message="report.dueDate.notBlank" )
+     * @Assert\Date( message="report.dueDate.invalidMessage" )
+     *
+     * @var \DateTime
+     */
+    private $dueDate;
+
+    /**
      * @var \DateTime
      * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
      * @JMS\Type("DateTime")
@@ -376,19 +386,22 @@ class Report implements ReportInterface
     }
 
     /**
+     * @param \DateTime $dueDate
+     */
+    public function setDueDate(\DateTime $dueDate)
+    {
+        $this->dueDate = $dueDate;
+    }
+
+
+    /**
      * Return the date 8 weeks after the end date.
      *
      * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
-        if (!$this->endDate instanceof \DateTime) {
-            return;
-        }
-        $dueDate = clone $this->endDate;
-        $dueDate->modify('+8 weeks');
-
-        return $dueDate;
+        return $this->dueDate;
     }
 
     /**

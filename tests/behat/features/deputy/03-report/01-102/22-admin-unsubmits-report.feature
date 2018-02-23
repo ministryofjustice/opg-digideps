@@ -25,8 +25,13 @@ Feature: Admin unsubmit report (from client page)
     Then the URL should match "/admin/client/\d+/details"
     And I should see "SUBMITTED" in the "client-behat001-2016" region
     And I should see "NOT FINISHED" in the "client-behat001-2017" region
+    And I should see "25 February 2017" in the "client-behat001-2016-due-date" region
     When I click on "manage" in the "client-behat001-2016" region
     And I press "unsubmit_report_save"
+    Then the URL should match "/admin/report/\d+/change-due-date"
+    When I fill in "report_change_due_date_dueDateChoice_1" with "3"
+    And I press "report_change_due_date_save"
     Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
     And I should see "Unsubmitted" in the "client-behat001-2016" region
+    And I should see "18 March 2017" in the "client-behat001-2016-due-date" region
 
