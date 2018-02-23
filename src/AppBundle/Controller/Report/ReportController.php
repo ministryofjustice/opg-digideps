@@ -203,6 +203,10 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
         }
 
+        if (array_key_exists('due_date', $data)) {
+            $report->setDueDate(new \DateTime($data['due_date']));
+        }
+
         if (array_key_exists('report_seen', $data)) {
             $report->setReportSeen((boolean) $data['report_seen']);
         }

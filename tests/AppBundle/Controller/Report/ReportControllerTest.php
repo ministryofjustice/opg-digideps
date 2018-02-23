@@ -365,21 +365,21 @@ class ReportControllerTest extends AbstractTestController
             'data'        => [
                 'start_date'                   => '2016-01-01',
                 'end_date'                     => '2016-11-30',
+                'due_date'                     => '2019-11-30',
                 'balance_mismatch_explanation' => 'bme',
-                'metadata'                     => 'md',
             ],
         ]);
 
         // both
-        $q = http_build_query(['groups' => ['report'/*, 'transactionsIn', 'transactionsOut'*/]]);
+        $q = http_build_query(['groups' => ['report']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
-        $this->assertArrayHasKey('start_date', $data);
-        $this->assertArrayHasKey('end_date', $data);
-        $this->assertEquals('md', $data['metadata']);
+        $this->assertEquals('2016-01-01', $data['start_date']);
+        $this->assertEquals('2016-11-30', $data['end_date']);
+        $this->assertEquals('2019-11-30', $data['due_date']);
     }
 
     public function testDebts()
