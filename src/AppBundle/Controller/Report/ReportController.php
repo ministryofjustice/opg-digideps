@@ -241,10 +241,6 @@ class ReportController extends RestController
             $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
         }
 
-        if (array_key_exists('metadata', $data)) {
-            $report->setMetadata($data['metadata']);
-        }
-
         if (array_key_exists('action_more_info', $data)) {
             $report->setActionMoreInfo($data['action_more_info']);
             if (array_key_exists('action_more_info_details', $data)) {

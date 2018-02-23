@@ -214,10 +214,9 @@ class Report implements ReportInterface
     private $mentalCapacity;
 
     /**
-     * @var \Date
+     * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
-     * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
@@ -306,17 +305,6 @@ class Report implements ReportInterface
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
-
-    /**
-     * @deprecated data needed for previous data migration
-     *
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report"})
-     * @ORM\Column(name="metadata", type="text", nullable=true)
-     */
-    private $metadata;
 
     /**
      * @var ArrayCollection
@@ -819,22 +807,6 @@ class Report implements ReportInterface
         $reportDueOn->setTime(0, 0, 0);
 
         return $today >= $reportDueOn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * @param string $metadata
-     */
-    public function setMetadata($metadata)
-    {
-        $this->metadata = $metadata;
     }
 
     /**
