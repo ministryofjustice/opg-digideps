@@ -111,22 +111,22 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
      */
     public function update(Request $request, $id)
     {
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
         /* @var $report Report */
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
+
+        // deputies can only edit their own reports
+        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
+        }
 
         $data = $this->deserializeBodyContent($request);
 
-
-        //TODO move to a unit-tested service
         if (!empty($data['type'])) {
             $report->setType($data['type']);
-            // enable if SQL report type is not needed anymore
-            //$this->getRepository(Report::class)->addMoneyShortCategoriesIfMissing($report);
         }
 
         if (array_key_exists('has_debts', $data) && in_array($data['has_debts'], ['yes', 'no'])) {
@@ -332,6 +332,7 @@ class ReportController extends RestController
 
         if (array_key_exists('end_date', $data)) {
             $report->setEndDate(new \DateTime($data['end_date']));
+            $report->getEndDate()->setTime(23, 59, 59);
         }
 
         $this->getEntityManager()->flush();
