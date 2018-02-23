@@ -87,8 +87,8 @@ class Report implements ReportInterface
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report-due-date"})
-     * @Assert\NotBlank( message="report.dueDate.notBlank" )
-     * @Assert\Date( message="report.dueDate.invalidMessage" )
+     * @Assert\NotBlank( message="report.dueDate.notBlank", groups={"report_due_date"} )
+     * @Assert\Date( message="report.dueDate.invalidMessage", groups={"report_due_date"} )
      *
      * @var \DateTime
      */
@@ -388,7 +388,7 @@ class Report implements ReportInterface
     /**
      * @param \DateTime $dueDate
      */
-    public function setDueDate(\DateTime $dueDate)
+    public function setDueDate(\DateTime $dueDate = null)
     {
         $this->dueDate = $dueDate;
     }

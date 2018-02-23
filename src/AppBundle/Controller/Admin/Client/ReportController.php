@@ -79,8 +79,10 @@ class ReportController extends AbstractController
         // edit client form
         if ($form->isValid()) {
             $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
-            $dueDate = $report->getDueDate()->modify("+{$weeksFromNow} weeks");
-            $report->setDueDate($dueDate);
+            if (!in_array($weeksFromNow, [0, 'other'])) {
+                $dueDate = $report->getDueDate()->modify("+{$weeksFromNow} weeks");
+                $report->setDueDate($dueDate);
+            }
 
             $this->getRestClient()->put('report/' . $report->getId(), $report, ['report-due-date']);
             $request->getSession()->getFlashBag()->add('notice', 'Report due date changed');

@@ -103,6 +103,11 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
+    dueDate:
+        notBlank: Enter the new due date
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+    dueDateChoice:
+        notBlank:  You must select an option
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
