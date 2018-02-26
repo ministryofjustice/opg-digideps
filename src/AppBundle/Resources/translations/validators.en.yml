@@ -127,6 +127,8 @@ report:
     balanceMismatchExplanation:
       notBlank: You must give an explanation for balance mismatching
       length: This explanation must be at least {{ limit }} letters long
+    reSubmission:
+      agree.notBlank: You must agree to this statement to continue
 
 report-declaration:
     agree:

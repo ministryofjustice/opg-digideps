@@ -82,7 +82,7 @@ Feature: Admin unsubmit report (from client page)
     And I should see "30 April 2022" in the "report-2016-due-date" region
 
   @deputy
-  Scenario: Deputy sees unsubmitted report
+  Scenario: Deputy resubmit report
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     When I click on "report-review" in the "report-unsubmitted" region
@@ -91,4 +91,9 @@ Feature: Admin unsubmit report (from client page)
     Then I should see the "report-hero-unsubmitted" region
     Then I should see the "section-decisions-needs-attention" region
     Then I should see the "section-deputyExpenses-needs-attention" region
-
+    When I press "report_resubmit_save"
+    Then the following fields should have an error:
+      | report_resubmit_agree |
+    When I check "report_resubmit_agree"
+    And I press "report_resubmit_save"
+    Then the URL should match "/report/\d+/review"

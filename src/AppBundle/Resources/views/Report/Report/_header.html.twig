@@ -16,9 +16,10 @@
     </div>
 {% endif %}
 
+{# TODO report.isDue needed here ? #}
 {# @biggs to style #}
 {% if report.unSubmitDate %}
-    <div class="hero hero-small behat-region-report-hero-unsubmitted">
+    <div class="hero hero-small orangeWarning behat-region-report-hero-unsubmitted">
         <h2 class="heading">{{ 'reportIsUnsubmitted' | trans({'%newLine%': '\n'})  | nl2br}}</h2>
     </div>
 {% endif %}

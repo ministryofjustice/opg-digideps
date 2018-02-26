@@ -170,7 +170,7 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template()
      */
-    public function overviewAction($reportId)
+    public function overviewAction(Request $request, $reportId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
@@ -202,7 +202,16 @@ class ReportController extends AbstractController
             ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
+        if ($report->getUnSubmitDate()) {
+            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
+            }
+        }
+
         return $this->render($template, [
+            'form' => $report->getUnSubmitDate() ? $form->createView() : null,
             'user' => $user,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
