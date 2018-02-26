@@ -119,8 +119,10 @@ class ReportController extends RestController
         /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $data = $this->deserializeBodyContent($request);
-
+        $data = $this->deserializeBodyContent(
+            $request,
+            ['current_prof_payments_received' => 'notEmpty']
+        );
 
         //TODO move to a unit-tested service
         if (!empty($data['type'])) {
@@ -299,6 +301,11 @@ class ReportController extends RestController
             || ('no'  == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
+        }
+
+        if (array_key_exists('current_prof_payments_received', $data)) {
+
+            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
         }
 
         $this->getEntityManager()->flush();

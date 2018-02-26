@@ -12,43 +12,18 @@ use JMS\Serializer\Annotation as JMS;
 trait ProfServiceFeesTrait
 {
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
-     * @ORM\Column(name="current_prof_payments_received", type="string", length=3, nullable=true)
-     */
-    private $currentProfPaymentsReceived;
-
-    /**
      * @var ProfServiceFee[]
      *
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Groups({"report-prof-service-fees"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profServiceFees;
 
-    /**
-     * @return string
-     */
-    public function getCurrentProfPaymentsReceived()
-    {
-        return $this->currentProfPaymentsReceived;
-    }
-
-    /**
-     * @param string $currentProfPaymentsReceived
-     */
-    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
-    {
-        $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
-    }
-
     public function addProfServiceFee(ProfServiceFee $profServiceFee)
     {
-        if (!$this->profServicefees->contains($profServiceFee)) {
-            $this->profServicefees->add($profServiceFee);
+        if (!$this->getCurrentProfServiceFees()->contains($profServiceFee)) {
+            $this->getCurrentProfServiceFees()->add($profServiceFee);
         }
 
         return $this;
@@ -88,5 +63,19 @@ trait ProfServiceFeesTrait
 //            && empty($this->getPaidForAnything());
     }
 
+    /**
+     * @return ProfServiceFee[]
+     */
+    public function getProfServiceFees()
+    {
+        return $this->profServiceFees;
+    }
 
+    /**
+     * @param ProfServiceFee[] $profServiceFees
+     */
+    public function setProfServiceFees($profServiceFees)
+    {
+        $this->profServiceFees = $profServiceFees;
+    }
 }

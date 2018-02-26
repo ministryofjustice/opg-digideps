@@ -350,6 +350,15 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "current-prof-payments-received"})
+     * @ORM\Column(name="current_prof_payments_received", type="string", nullable=true)
+     */
+    private $currentProfPaymentsReceived;
+
+    /**
      * Report constructor.
      *
      * @param Client $client
@@ -412,6 +421,7 @@ class Report implements ReportInterface
         $this->documents = new ArrayCollection();
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
+        $this->currentProfPaymentsReceived = null;
         $this->profServicefees = new ArrayCollection();
     }
 
@@ -1013,5 +1023,21 @@ class Report implements ReportInterface
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentProfPaymentsReceived()
+    {
+        return $this->currentProfPaymentsReceived;
+    }
+
+    /**
+     * @param string $currentProfPaymentsReceived
+     */
+    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    {
+        $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
     }
 }

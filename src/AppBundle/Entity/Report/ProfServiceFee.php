@@ -58,7 +58,7 @@ class ProfServiceFee
     /**
      * @var int
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -70,29 +70,39 @@ class ProfServiceFee
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof_service_fees")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof-service-fees")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $report;
 
     /**
      * @var string fixed|assessed
+     *
+     * @ORM\Column(name="assessed_or_fixed", type="string", nullable=true)
      */
     private $assessedOrFixed;
 
     /**
      * @var string a value in self:$feeTypeIds
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="fee_type_id", type="string", nullable=false)
      */
     private $feeTypeId;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-service-fees"})
+     *
+     * @ORM\Column(name="other_fee_details", type="string", nullable=true)
+     */
+    private $otherFeeDetails;
+
+    /**
      * @var string a value in self:$serviceTypeIds
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="service_type_id", type="string", nullable=false)
      */
@@ -102,16 +112,18 @@ class ProfServiceFee
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
+     * @ORM\Column(name="amount_charged", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amountCharged;
 
     /**
      * @var string yes|no
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
+     *
+     * @ORM\Column(name="payment_received", type="string", nullable=true)
      */
     private $paymentReceived;
 
@@ -119,14 +131,17 @@ class ProfServiceFee
      * @var decimal
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
+     *
+     * @ORM\Column(name="amount_received", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amountReceived;
 
     /**
+     * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
-     * @var \DateTime
+     * @ORM\Column(name="payment_received_date", type="datetime", nullable=true)
      */
     private $paymentReceivedDate;
 
@@ -135,14 +150,14 @@ class ProfServiceFee
      * @param string $serviceTypeId
      * @param float  $amount
      */
-    public function __construct(Report $report, $feeTypeId, $serviceTypeId, $amount)
+    public function __construct(Report $report)
     {
-        $this->report = $report;
-        $report->addProfServiceFee($this);
+        $this->setReport($report);
+        //$report->addProfServiceFee($this);
 
-        $this->setFeeTypeId($feeTypeId);
-        $this->setServiceTypeId($serviceTypeId);
-        $this->setAmount($amount);
+        //$this->setFeeTypeId($feeTypeId);
+        //$this->setServiceTypeId($serviceTypeId);
+        //$this->setAmount($amount);
     }
 
     /**
@@ -207,6 +222,22 @@ class ProfServiceFee
     public function setFeeTypeId($feeTypeId)
     {
         $this->feeTypeId = $feeTypeId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherFeeDetails()
+    {
+        return $this->otherFeeDetails;
+    }
+
+    /**
+     * @param mixed $otherFeeDetails
+     */
+    public function setOtherFeeDetails($otherFeeDetails)
+    {
+        $this->otherFeeDetails = $otherFeeDetails;
     }
 
     /**
