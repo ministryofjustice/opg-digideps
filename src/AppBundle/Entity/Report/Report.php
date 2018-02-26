@@ -89,7 +89,7 @@ class Report implements ReportInterface
      * @JMS\Groups({"report-due-date"})
      * @Assert\NotBlank( message="report.dueDate.notBlank", groups={"report_due_date"} )
      * @Assert\Date( message="report.dueDate.invalidMessage", groups={"report_due_date"} )
-     *
+     * @Assert\GreaterThan("today", message="report.dueDate.notInThePast", groups={"report_due_date"})
      * @var \DateTime
      */
     private $dueDate;

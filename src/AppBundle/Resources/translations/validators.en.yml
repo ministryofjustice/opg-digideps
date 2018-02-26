@@ -106,6 +106,7 @@ report:
     dueDate:
         notBlank: Enter the new due date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+        notInThePast: Due date cannot be in the past
     dueDateChoice:
         notBlank:  You must select an option
     submissionExceptions:

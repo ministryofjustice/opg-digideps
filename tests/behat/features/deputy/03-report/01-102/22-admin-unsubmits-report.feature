@@ -62,14 +62,14 @@ Feature: Admin unsubmit report (from client page)
       | report_change_due_date_dueDate_day   |
       | report_change_due_date_dueDate_month |
       | report_change_due_date_dueDate_year  |
-    # custom date: set to 30th of April
+    # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
     When I fill in the following:
       | report_change_due_date_dueDateChoice_4 | other |
       | report_change_due_date_dueDate_day     | 30    |
       | report_change_due_date_dueDate_month   | 04    |
-      | report_change_due_date_dueDate_year    | 2017  |
+      | report_change_due_date_dueDate_year    | 2022  |
     And I press "report_change_due_date_save"
     # check data is saved
     And I should see "Unsubmitted" in the "report-2016-label" region
-    And I should see "30 April 2017" in the "report-2016-due-date" region
+    And I should see "30 April 2022" in the "report-2016-due-date" region
 
