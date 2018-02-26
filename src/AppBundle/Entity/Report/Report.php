@@ -340,6 +340,16 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
+     * @var array
+     *
+     * @JMS\Groups({"report"})
+     * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
+     *
+     * @JMS\Type("string")
+     */
+    private $unsubmittedSectionsList;
+
+    /**
      * Report constructor.
      *
      * @param Client $client
@@ -989,5 +999,21 @@ class Report implements ReportInterface
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUnsubmittedSectionsList()
+    {
+        return $this->unsubmittedSectionsList;
+    }
+
+    /**
+     * @param array $unsubmittedSectionsList
+     */
+    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    {
+        $this->unsubmittedSectionsList = $unsubmittedSectionsList;
     }
 }

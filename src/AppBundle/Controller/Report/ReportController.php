@@ -330,6 +330,10 @@ class ReportController extends RestController
             $report->setStartDate(new \DateTime($data['start_date']));
         }
 
+        if (array_key_exists('unsubmitted_sections_list', $data)) {
+            $report->setUnsubmittedSectionsList($data['unsubmitted_sections_list']);
+        }
+
         if (array_key_exists('end_date', $data)) {
             $report->setEndDate(new \DateTime($data['end_date']));
             $report->getEndDate()->setTime(23, 59, 59);
