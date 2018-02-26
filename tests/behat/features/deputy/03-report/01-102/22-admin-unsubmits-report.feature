@@ -29,6 +29,10 @@ Feature: Admin unsubmit report (from client page)
     And I should see "25 February 2017" in the "report-2016-due-date" region
     And I save the application status into "report-2016-pre-unsubmission"
     When I click on "manage" in the "report-2016" region
+    # unsubmit with decisions and deputy expenses
+    When I fill in the following:
+      | unsubmit_report_unsubmittedSection_0_present | 1 |
+      | unsubmit_report_unsubmittedSection_13_present | 1 |
     And I press "unsubmit_report_save"
     Then the URL should match "/admin/report/\d+/change-due-date"
     # empty choice
@@ -74,7 +78,10 @@ Feature: Admin unsubmit report (from client page)
     And I should see "30 April 2022" in the "report-2016-due-date" region
 
   @deputy
-  Scenario: Deputy sees unsunbmitted report
+  Scenario: Deputy sees unsubmitted report
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
+    When I click on "report-review" in the "report-unsubmitted" region
+    Then I should see the "section-decisions-need-attention" region
+    Then I should see the "section-deputyExpenses-need-attention" region
 

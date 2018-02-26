@@ -7,6 +7,7 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e
 } %}
+{% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
 
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
@@ -101,6 +102,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'deputy_expenses',
+                        sectionId: 'deputyExpenses',
                         report: report,
                         state: reportStatus.expensesState,
                         linkToSubSection: path('deputy_expenses', {'reportId': report.id}),

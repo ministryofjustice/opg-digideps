@@ -62,6 +62,7 @@
         } %}
         <h2 class="heading-large">{{ 'unSubmittedReports' | trans({}, 'common') }}</h2>
         <div class="card behat-region-report-unsubmitted behat-region-report-{{ report.getPeriod() }}">
+
             <span class="status status-corner incomplete">{{ 'incomplete' | trans({}, 'common') }}</span>
             <h3 class="heading-medium flush--ends">
                 <a href="{{ path('report_overview', {'reportId': report.id}) }}">
@@ -79,7 +80,7 @@
             </div>
             <div class="card-actions">
                 <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                   class="button behat-link-report-start" >{{ (page ~ '.unsubmitted.reviewButton') | trans }}</a>
+                   class="button behat-link-report-review" >{{ (page ~ '.unsubmitted.reviewButton') | trans }}</a>
             </div>
         </div>
     {% endif %}

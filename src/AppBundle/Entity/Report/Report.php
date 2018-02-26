@@ -96,7 +96,6 @@ class Report implements ReportInterface
 
     /**
      * @var \DateTime
-     * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
@@ -218,7 +217,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"submit"})
+     * @JMS\Groups({"submit", "submitted"})
      *
      * @var bool
      */
@@ -232,7 +231,8 @@ class Report implements ReportInterface
      */
     private $reportSeen;
 
-    /** @var bool
+    /**
+     * @var bool
      * @JMS\Type("boolean")
      * @Assert\True(message="report.agree", groups={"declare"} )
      */
@@ -242,7 +242,7 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -251,7 +251,7 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
@@ -298,6 +298,14 @@ class Report implements ReportInterface
      * @var array
      */
     private $availableSections;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report_unsubmitted_sections"})
+     */
+    private $unsubmittedSectionsList;
 
     /**
      * @return int $id
@@ -464,10 +472,14 @@ class Report implements ReportInterface
 
     /**
      * @param \DateTime $unSubmitDate
+     *
+     * @return Report
      */
     public function setUnSubmitDate(\DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
+
+        return $this;
     }
 
     /**
@@ -1137,11 +1149,13 @@ class Report implements ReportInterface
     }
 
     /**
+     * Needed to fill form collection
+     *
      * @return UnsubmittedSection[]
      */
     public function getUnsubmittedSection()
     {
-        // init with available section
+        // init with available section if empty
         if (empty($this->unsubmittedSection)) {
             foreach ($this->getAvailableSections() as $sectionId) {
                 $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
@@ -1149,5 +1163,32 @@ class Report implements ReportInterface
         }
 
         return $this->unsubmittedSection;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnsubmittedSectionsList()
+    {
+        return $this->unsubmittedSectionsList;
+    }
+
+    /**
+     * @param string $unsubmittedSectionsList
+     *
+     * @return Report
+     */
+    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    {
+        $this->unsubmittedSectionsList = $unsubmittedSectionsList;
+
+        return $this;
+    }
+
+    public function getUnsubmittedSectionsIds()
+    {
+        return array_filter(array_map(function($us) {
+            return $us->isPresent() ? $us->getId() : null;
+        }, $this->getUnsubmittedSection()));
     }
 }

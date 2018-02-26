@@ -39,10 +39,14 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $report
                 ->setSubmitted(false)
+                ->setAgreedBehalfDeputy(false)
+                ->setAgreedBehalfDeputyExplanation(null)
                 ->setUnSubmitDate(new \DateTime())
+                ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
             ;
-
-            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, ['startEndDates', 'submit', 'unsubmit_date']);
+            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
+                'startEndDates', 'submitted', 'submit_agreed', 'report_unsubmitted_sections'
+            ]);
             $request->getSession()->getFlashBag()->add('notice', 'Report unsubmitted');
 
             return $this->redirect($this->generateUrl('admin_report_change_due_date', ['id'=>$report->getId()]));
