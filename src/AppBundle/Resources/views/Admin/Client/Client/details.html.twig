@@ -44,12 +44,12 @@
             <tbody>
             {% if client.reports | length %}
                 {% for report in client.reports %}
-
-                    <tr class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}">
+                    {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
+                    <tr class="{{ behatRegionPrefix }}">
                         <td>
                             {{ report.period | replace({'to': '-'}) }}
                         </td>
-                        <td class="behat-region-client-{{ client.caseNumber }}-{{ report.getPeriod() }}-due-date">
+                        <td class="{{ behatRegionPrefix }}-due-date">
                             {{ report.dueDate | date("j F Y") }}
                         </td>
                         <td>
@@ -74,7 +74,7 @@
                                 {% set status = report.status.status %}
                             {% endif %}
 
-                            <span class="status flush--ends {{ status }}">{{ (status) | trans({}, 'common') }}</span>
+                            <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
                         </td>
                         {% if enableManageLink %}
                             <td class="change-answer width-tenth">

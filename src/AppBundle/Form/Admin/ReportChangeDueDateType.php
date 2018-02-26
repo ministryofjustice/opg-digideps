@@ -41,8 +41,9 @@ class ReportChangeDueDateType extends AbstractType
             'translation_domain' => 'admin-clients',
             'name'               => 'report',
             'validation_groups'  => function (FormInterface $form) {
-                $ret = ['change_due_date'];
+                $ret = ['change_due_date']; //choice (see group defined in this form for the "choice" element)
 
+                // validate due date if the choice value is "other"
                 $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
                 if ($weeksFromNow == 'other') {
                     $ret[] = 'report_due_date';
