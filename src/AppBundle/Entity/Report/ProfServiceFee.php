@@ -106,8 +106,29 @@ class ProfServiceFee
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
-    private $amount;
+    private $amountCharged;
 
+    /**
+     * @var string yes|no
+     *
+     * @JMS\Groups({"prof_service_fee"})
+     */
+    private $paymentReceived;
+
+    /**
+     * @var decimal
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof_service_fee"})
+     */
+    private $amountReceived;
+
+    /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     *
+     * @var \DateTime
+     */
+    private $paymentReceivedDate;
 
     /**
      * @param Report $report
@@ -189,6 +210,70 @@ class ProfServiceFee
     }
 
     /**
+     * @return decimal
+     */
+    public function getAmountCharged()
+    {
+        return $this->amountCharged;
+    }
+
+    /**
+     * @param decimal $amountCharged
+     */
+    public function setAmountCharged($amountCharged)
+    {
+        $this->amountCharged = $amountCharged;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getAmountReceived()
+    {
+        return $this->amountReceived;
+    }
+
+    /**
+     * @param decimal $amountReceived
+     */
+    public function setAmountReceived($amountReceived)
+    {
+        $this->amountReceived = $amountReceived;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentReceivedDate()
+    {
+        return $this->paymentReceivedDate;
+    }
+
+    /**
+     * @param mixed $paymentReceivedDate
+     */
+    public function setPaymentReceivedDate($paymentReceivedDate)
+    {
+        $this->paymentReceivedDate = $paymentReceivedDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentReceived()
+    {
+        return $this->paymentReceived;
+    }
+
+    /**
+     * @param string $paymentReceived
+     */
+    public function setPaymentReceived($paymentReceived)
+    {
+        $this->paymentReceived = $paymentReceived;
+    }
+
+    /**
      * @return string
      */
     public function getServiceTypeId()
@@ -202,26 +287,6 @@ class ProfServiceFee
     public function setServiceTypeId($serviceTypeId)
     {
         $this->serviceTypeId = $serviceTypeId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param $amount
-     *
-     * @return $this
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-
-        return $this;
     }
 
     /**
