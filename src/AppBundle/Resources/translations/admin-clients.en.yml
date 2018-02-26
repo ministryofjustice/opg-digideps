@@ -30,6 +30,7 @@ reportManage:
       label: Update and mark as incomplete
 
 reportChangeDueDate:
+  overdueBy: Overdue by %overdueDays% days
   form:
     dueDateChoice:
      label: New due date

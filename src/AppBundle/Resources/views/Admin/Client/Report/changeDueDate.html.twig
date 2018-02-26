@@ -18,14 +18,22 @@
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
 
-    Current due date:
-    {{ report.dueDate | date("j M Y") }}
+    <p class="heading-small flush--ends">Current due date:</p>
+    <p>
+        {{ report.dueDate | date("j M Y") }}
+        <br/><span class="font-xsmall bold text-red">{{  'reportChangeDueDate.overdueBy' | trans ({
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            }) }}
+        </span>
+    </p>
+
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-
-
+    <div class="form-group push-half--bottom">
     {{ form_checkbox_group(form.dueDateChoice, 'reportChangeDueDate.form.dueDateChoice', {
+        'legendClass' : 'form-label-bold',
         'items': [
             {},
             {},
@@ -34,6 +42,7 @@
             {'dataTarget': 'due-date-custom' }
         ]
     }) }}
+    </div>
 
     <div id="due-date-custom" class="panel panel-border-narrow js-hidden">
         {{ form_known_date(form.dueDate, 'reportManage.form.endDate') }}
