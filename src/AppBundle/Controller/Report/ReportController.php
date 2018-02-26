@@ -76,17 +76,10 @@ class ReportController extends AbstractController
         }
 
         $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-        if (!$client) {
+        if (empty($clients)) {
             throw new \Exception('Client not added');
         }
-
-        // read reports
-        $reports = $client ? $client->getReports() : [];
-        $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
-        if (!($reportActive = $client->getActiveReport())) {
-            throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
-        }
+        $client = array_shift($clients);
 
         //refresh client adding codeputes (another API call to avoid recursion with users)
         $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
@@ -95,9 +88,6 @@ class ReportController extends AbstractController
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'reports' => $reports,
-            'reportActive' => $reportActive,
-            'reportsSubmitted' => $reportsSubmitted,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }

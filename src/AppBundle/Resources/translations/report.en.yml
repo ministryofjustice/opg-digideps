@@ -4,11 +4,18 @@ homepage:
   editReportingPeriodPara: |
     Your reporting period is %startDate% to %endDate%. If these dates are wrong,
   editReportingPeriodLink: edit your reporting period
+
   reportType: Report type
   reportingPeriod: Reporting period
   submissionDate: Submission date
   attachDocuments: Attach documents
   noActiveReportException: No active report found for this client
+  unsubmitted:
+    reportPara: |
+        We have marked your report as incomplete due to certain parts being
+        unfinished or requiring further attention. Pleaser review the
+        highlighted section in your report.
+    reviewButton: Review report
 
 codeputy:
   inviteAnotherDeputy: Invite another deputy

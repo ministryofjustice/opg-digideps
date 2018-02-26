@@ -738,10 +738,26 @@ class Client
     {
         $activeReport = null;
         foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted()) {
-                $activeReport = $report;
+            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
+                return $report;
             }
         }
-        return $activeReport;
+
+        return null;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getUnsubmittedReport()
+    {
+        $activeReport = null;
+        foreach ($this->getReports() as $report) {
+            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
     }
 }

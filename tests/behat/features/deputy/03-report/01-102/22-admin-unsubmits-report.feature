@@ -73,3 +73,8 @@ Feature: Admin unsubmit report (from client page)
     And I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
 
+  @deputy
+  Scenario: Deputy sees unsunbmitted report
+    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then I should see "30 April 2022" in the "report-unsubmitted" region
+
