@@ -11,6 +11,13 @@ class ProfServiceFee
     use HasReportTrait;
 
     /**
+     * @JMS\Type("integer")
+     *
+     * @var int
+     */
+    private $id;
+
+    /**
      * Hold service type
      *
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
@@ -36,21 +43,29 @@ class ProfServiceFee
     /**
      * @var string fixed|assessed
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      */
     private $assessedOrFixed;
 
     /**
      * @var string a value in self:$feeTypeIds
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      */
     private $feeTypeId;
 
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-service-fees"})
+     *
+     * @Assert\NotBlank(message="fee.otherFeeDetails.notBlank", groups={"other-prof-service-fees"})
+     */
+    private $otherFeeDetails;
+
+    /**
      * @var string a value in self:$serviceTypeIds
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      */
     private $serviceTypeId;
 
@@ -58,8 +73,8 @@ class ProfServiceFee
      * @var decimal
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof_service_fee"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
+     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fees"})
      * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
      */
     private $amountCharged;
@@ -68,7 +83,7 @@ class ProfServiceFee
     /**
      * @var string yes|no
      *
-     * @JMS\Groups({"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
      */
     private $paymentReceived;
 
@@ -76,8 +91,8 @@ class ProfServiceFee
      * @var decimal
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof_service_fee"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof_service_fee"})
+     * @JMS\Groups({"prof-service-fees"})
+     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fees"})
      * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
      */
     private $amountReceived;
@@ -135,6 +150,22 @@ class ProfServiceFee
     public function setFeeTypeId($feeTypeId)
     {
         $this->feeTypeId = $feeTypeId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOtherFeeDetails()
+    {
+        return $this->otherFeeDetails;
+    }
+
+    /**
+     * @param mixed $otherFeeDetails
+     */
+    public function setOtherFeeDetails($otherFeeDetails)
+    {
+        $this->otherFeeDetails = $otherFeeDetails;
     }
 
     /**

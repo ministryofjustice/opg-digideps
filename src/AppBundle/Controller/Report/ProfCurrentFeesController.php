@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfCurrentFeesController extends AbstractController
 {
     private static $jmsGroups = [
-        'prof-service-fees',
         'status'
     ];
 
@@ -106,12 +105,12 @@ class ProfCurrentFeesController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($feeId) {
-            $fee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
+            $profServiceFee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
                 return $f->getId() == $feeId;
             });
-            $fee = array_shift($fee);
+            $profServiceFee = array_shift($profServiceFee);
         } else {
-            $fee = new EntityDir\Report\ProfServiceFee($report, 'current', $serviceTypeId);
+            $profServiceFee = new EntityDir\Report\ProfServiceFee();
         }
 
         // add URL-data into model
@@ -124,7 +123,7 @@ class ProfCurrentFeesController extends AbstractController
         // crete and handle form
         $form = $this->createForm(
             FormDir\Report\ProfServiceFeeType::class,
-            $fee,
+            $profServiceFee,
             [
                 'step' => $step,
                 //'feeTypeId' => 'current',
@@ -138,10 +137,16 @@ class ProfCurrentFeesController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
+            $profServiceFee = $form->getData();
+            /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
+            $profServiceFee->setReport($report);
 
-            // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                // todo PUT profFee
+                if ($profServiceFee->getId() == null) {
+                    $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id']);
+                } else {
+                    $this->getRestClient()->put('report/' . $report->getId() . '/prof-service-fee' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+                }
 
                 return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 2]);
             } elseif ($step == 2) {
@@ -169,7 +174,7 @@ class ProfCurrentFeesController extends AbstractController
         }
 
         return [
-            'fee' => $fee,
+            'fee' => $profServiceFee,
             'report' => $report,
             'step' => $step,
             'reportStatus' => $report->getStatus(),

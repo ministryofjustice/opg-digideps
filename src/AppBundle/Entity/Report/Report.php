@@ -306,6 +306,15 @@ class Report implements ReportInterface
     private $availableSections;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "current-prof-payments-received"})
+     * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-payments-received"})
+     */
+    private $currentProfPaymentsReceived;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1168,5 +1177,25 @@ class Report implements ReportInterface
         }
 
         return $this->unsubmittedSection;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentProfPaymentsReceived()
+    {
+        return $this->currentProfPaymentsReceived;
+    }
+
+    /**
+     * @param $currentProfPaymentsReceived
+     *
+     * @return $this
+     */
+    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    {
+        $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
+
+        return $this;
     }
 }
