@@ -35,7 +35,10 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_unsubmittedSection_13_present | 1 |
     And I press "unsubmit_report_save"
     Then the URL should match "/admin/report/\d+/change-due-date"
-    # empty choice
+    # store status and URL for next scenarios
+    And I save the current URL as "report-2016-unsubmitted"
+    And I save the application status into "report-2016-unsubmitted"
+    # Due date form: empty
     When I press "report_change_due_date_save"
     Then the following fields should have an error:
       | report_change_due_date_dueDateChoice_0 |
@@ -43,18 +46,19 @@ Feature: Admin unsubmit report (from client page)
       | report_change_due_date_dueDateChoice_2 |
       | report_change_due_date_dueDateChoice_3 |
       | report_change_due_date_dueDateChoice_4 |
-    # 4 weeks from now
+    # Due date form: 4 weeks from now
     And I fill in the following:
       | report_change_due_date_dueDateChoice_2 | 4 |
     When I press "report_change_due_date_save"
     Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
     And I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "25 March 2017" in the "report-2016-due-date" region
-    # custom due date
-    Given I load the application status from "report-2016-pre-unsubmission"
-    And I go to the URL previously saved as "admin-client-search-client-behat001"
-    And I click on "manage" in the "report-2016" region
-    And I press "unsubmit_report_save"
+
+  @deputy
+  Scenario: Admin unsubmits report with custom due date
+    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I load the application status from "report-2016-unsubmitted"
+    And I go to the URL previously saved as "report-2016-unsubmitted"
     # custom due date: empty date throws an error
     When I fill in the following:
       | report_change_due_date_dueDateChoice_4 | other |
@@ -73,7 +77,7 @@ Feature: Admin unsubmit report (from client page)
       | report_change_due_date_dueDate_month   | 04    |
       | report_change_due_date_dueDate_year    | 2022  |
     And I press "report_change_due_date_save"
-    # check data is saved
+    # check client page
     And I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
 
@@ -82,6 +86,9 @@ Feature: Admin unsubmit report (from client page)
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     When I click on "report-review" in the "report-unsubmitted" region
-    Then I should see the "section-decisions-need-attention" region
-    Then I should see the "section-deputyExpenses-need-attention" region
+#    And print current URL
+#    And I save the page as "temp"
+    Then I should see the "report-hero-unsubmitted" region
+    Then I should see the "section-decisions-needs-attention" region
+    Then I should see the "section-deputyExpenses-needs-attention" region
 

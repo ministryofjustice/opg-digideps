@@ -2,6 +2,12 @@
 // SECTION LIST ITEM
 // Report sections list - Heading, title, description, status & action
 
+
+// @biggs temp
+.orangeWarning {
+    border-left: #fd971f 5px solid;
+}
+
 .section-list-item {
     @extend %contain-floats;
     border-top: 1px solid $grey-3;

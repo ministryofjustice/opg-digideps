@@ -8,7 +8,7 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" class="section-list-item behat-region-section-{{ sectionId }}-{{ needsAttention ? 'need-attention' : '' }}">
+<div id="{{ subSection }}-sub-section" class="section-list-item {{ needsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention orangeWarning') : '' }}">
 
     <a href="{{ linkToSubSection }}" class="edit-heading-link">
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
