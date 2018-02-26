@@ -19,8 +19,8 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        <div class="form-group flush--bottom {% if not form.hasFees.vars.valid %}form-group-error{% endif %}">
-            {{ form_checkbox_group(form.hasFees, 'feeExistPage.form.hasFees', {
+        <div class="form-group flush--bottom {% if not form.currentProfPaymentsReceived.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.currentProfPaymentsReceived, 'feeExistPage.form.hasFees', {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
                 'legendClass' : 'form-label-bold text text push-half--bottom',
@@ -32,7 +32,7 @@
 
         </div>
     </div>
-    
+
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}

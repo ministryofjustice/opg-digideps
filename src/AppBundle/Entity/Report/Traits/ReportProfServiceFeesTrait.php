@@ -12,7 +12,7 @@ trait ReportProfServiceFeesTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ProfServiceFee>")
-     * @JMS\Groups({"prof_service_fees"})
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @var ProfServiceFee[]
      */
@@ -22,8 +22,8 @@ trait ReportProfServiceFeesTrait
      * @var string yes/no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"current-prof-payment-received"})
-     * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-payment-received"})
+     * @JMS\Groups({"prof-service-fees"})
+     * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-fees-received-choice"})
      */
     private $currentProfPaymentsReceived;
 

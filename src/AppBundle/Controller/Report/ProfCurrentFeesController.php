@@ -17,9 +17,8 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfCurrentFeesController extends AbstractController
 {
     private static $jmsGroups = [
-        'fee',
-        'fee-state',
-        'expenses', //second part uses same endpoints as deputy expenses
+        'prof-service-fees',
+        'status'
     ];
 
     /**
@@ -53,14 +52,15 @@ class ProfCurrentFeesController extends AbstractController
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\ProfCurrentServiceFeeExistType::class, $report);
-        $form->handleRequest($request);
 
+        $form = $this->createForm(FormDir\Report\ProfServiceFeeExistType::class, $report);
+
+        $form->handleRequest($request);
         if ($form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
-            $this->getRestClient()->put('report/' . $reportId, $data, ['current-prof-payment-received']);
-            return $this->redirectToRoute('current-service-fee-add', ['reportId' => $reportId, 'from'=>'exist']);
+            $this->getRestClient()->put('report/' . $reportId, $data, ['prof-payments']);
+            return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
         }
 
         $backLink = $this->generateUrl('prof_current_fees', ['reportId' => $reportId]);
@@ -76,18 +76,101 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/step{step}", name="prof_current_fees_step")
+     * @Route("/fees/step/{step}/{feeId}", name="current-service-fee-step", requirements={"step":"\d+"})
      * @Template()
-     *
-     * @param int $reportId
-     *
-     * @return array
      */
-    public function stepAction($reportId, $step)
+    public function stepAction(Request $request, $reportId, $step, $feeId = null)
     {
+        $totalSteps = 2;
+        if ($step < 1 || $step > $totalSteps) {
+            return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
+        }
+
+        // common vars and data
+        $dataFromUrl = $request->get('data') ?: [];
+        $stepUrlData = $dataFromUrl;
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector()
+            ->setRoutes('prof_service_fee_type', 'service_fee_details', 'service_fees_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep($step)
+            ->setTotalSteps($totalSteps)
+            ->setRouteBaseParams(['reportId'=>$reportId, 'feeId' => $feeId]);
+
+        // create (add mode) or load transaction (edit mode)
+        if ($feeId) {
+            $fee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
+                return $f->getId() == $feeId;
+            });
+            $fee = array_shift($fee);
+        } else {
+            $fee = new EntityDir\Report\ProfServiceFee($report, 'current', $serviceTypeId);
+        }
+
+        // add URL-data into model
+        //isset($dataFromUrl['group']) && $fee->setGroup($dataFromUrl['group']);
+        //isset($dataFromUrl['category']) && $fee->setCategory($dataFromUrl['category']);
+//        $stepRedirector->setStepUrlAdditionalParams([
+//            'data' => $dataFromUrl
+//        ]);
+
+        // crete and handle form
+        $form = $this->createForm(
+            FormDir\Report\ProfServiceFeeType::class,
+            $fee,
+            [
+                'step' => $step,
+                //'feeTypeId' => 'current',
+                //'translator' => $this->get('translator'),
+                //'clientFirstName' => $report->getClient()->getFirstname(),
+                //'selectedGroup' => $fee->getGroup(),
+                //'selectedCategory' => $fee->getCategory()
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+
+            // decide what data in the partial form needs to be passed to next step
+            if ($step == 1) {
+                // todo PUT profFee
+
+                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 2]);
+            } elseif ($step == 2) {
+                // todo PUT profFee
+                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 3]);
+            } elseif ($step == $totalSteps) {
+//                if ($feeId) { // edit
+//                    $request->getSession()->getFlashBag()->add(
+//                        'notice',
+//                        'Entry edited'
+//                    );
+//                    $this->getRestClient()->put('/report/' . $reportId . '/professional-fee/' . $feeId, $fee, ['prof-service-fees']);
+                    return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
+//                } else { // add
+//                    $this->getRestClient()->post('/report/' . $reportId . '/professional-fee', $fee, ['prof-service-fees']);
+//                    return $this->redirectToRoute('add-another', ['reportId' => $reportId]);
+//                }
+            }
+
+            $stepRedirector->setStepUrlAdditionalParams([
+                'data' => $stepUrlData
+            ]);
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+        }
 
         return [
+            'fee' => $fee,
+            'report' => $report,
             'step' => $step,
+            'reportStatus' => $report->getStatus(),
+            'form' => $form->createView(),
+            //'backLink' => $stepRedirector->getBackLink(),
+            //'skipLink' => null,
         ];
     }
 

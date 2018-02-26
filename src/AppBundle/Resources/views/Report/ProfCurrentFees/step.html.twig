@@ -25,207 +25,260 @@
 
 {% block pageContent %}
 
-    <form action="#">
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {% if step == 1 %}
-
-        <p class="text">Here is usually a paragraph explaining what it is that is needed. Not sure if this is needed at all.</p>
-
-        <div class="form-group">
-            <fieldset>
-                <legend class="form-label-bold text push-half--bottom">
-                    What type of professional deputy services did you charge for?
-                </legend>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_annual" name="cost_type[value]" class=" form-control " value="annual report">
-                    <label class="form-label  text" for="cost_type_annual">
-                    Annual report
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_management_interim" name="cost_type[value]" class=" form-control " value="annual management (interim)">
-                    <label class="form-label  text" for="cost_type_management_interim">
-                    Annual management (interim)
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_management_final" name="cost_type[value]" class=" form-control " value="annual management (final)">
-                    <label class="form-label  text" for="cost_type_management_final">
-                    Annual management (final)
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_appointment" name="cost_type[value]" class=" form-control " value="appointment">
-                    <label class="form-label  text" for="cost_type_appointment">
-                    Appointment
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_conveyancing" name="cost_type[value]" class=" form-control " value="conveyancing">
-                    <label class="form-label  text" for="cost_type_conveyancing">
-                    Conveyancing
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_litigation" name="cost_type[value]" class=" form-control " value="litigation">
-                    <label class="form-label  text" for="cost_type_litigation">
-                    Litigation
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_specialist" name="cost_type[value]" class=" form-control " value="specialist advice">
-                    <label class="form-label  text" for="cost_type_specialist">
-                    Specialist advice
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_wills" name="cost_type[value]" class=" form-control " value="statutory wills">
-                    <label class="form-label  text" for="cost_type_wills">
-                    Statutory wills
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_tax" name="cost_type[value]" class=" form-control " value="tax returns">
-                    <label class="form-label  text" for="cost_type_tax">
-                    Tax returns
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_trust" name="cost_type[value]" class=" form-control " value="trust applications">
-                    <label class="form-label  text" for="cost_type_trust">
-                    Trust applications
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="more-info">
-                    <input type="radio" id="cost_type_other" name="cost_type[value]" class=" form-control " value="other costs" aria-controls="more-info" aria-expanded="false">
-                    <label class="form-label  text" for="cost_type_other">
-                    Other costs
-                    </label>
-                </div>
-
-                <div class="panel panel-border-narrow js-hidden" id="more-info" aria-hidden="true">
-                    <p>Please provide details of the service you charged for</p>
-                    <textarea id="debts_outstanding_details" name="debts_outstanding_details[value]" class=" form-control push-half--bottom"></textarea>
-                </div>
-            </fieldset>
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
+                'legendClass' : 'form-label-bold',
+                'legendText' : (page ~ '.form.serviceType.legend') | trans,
+                'formGroupClass': 'push--top'
+            }) }}
         </div>
-
-        <button type="submit" class="button">Save and continue</button>
 
     {% elseif step == 2 %}
-
-        <div class="form-group">
-            <fieldset class="inline">
-                <legend class="form-label-bold text">
-                    How did you charge for this service?
-                </legend>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_annual" name="cost_type[value]" class=" form-control " value="annual report">
-                    <label class="form-label  text" for="cost_type_annual">
-                    Fixed costs
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_management_interim" name="cost_type[value]" class=" form-control " value="annual management (interim)">
-                    <label class="form-label  text" for="cost_type_management_interim">
-                    Assessed costs
-                    </label>
-                </div>
-            </fieldset>
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
+                'legendClass' : 'form-label-bold text push-half--bottom',
+                'legendText' : (page ~ '.form.assessedOrFixed.legend') | trans,
+                'formGroupClass': 'push--top'
+            }) }}
         </div>
 
-        <div id="form-group-account_amount" class="form-group  form-group-value">
-            <label class="form-label-bold text  required" for="account_amount">How much was charged?</label>
-            <span class="input-group-prefix">£</span>
-            <input type="text" id="account_amount" name="account[amount]" required="required" class=" form-control form-control-1-4 js-format-currency">
+        <div>
+            {{ form_input(form.amountCharged, 'form.amountCharged', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'formGroupClass': ' form-group-value'
+            }) }}
         </div>
 
-        <div class="form-group">
-            <fieldset class="inline">
-                <legend class="form-label-bold text">
-                    Was payment received for this service?
-                </legend>
-
-                <div class="multiple-choice" data-target="more-info">
-                    <input type="radio" id="cost_type_other" name="cost_type[value]" class=" form-control " value="other costs" aria-controls="more-info" aria-expanded="false">
-                    <label class="form-label  text" for="cost_type_other">
-                    Yes
-                    </label>
-                </div>
-
-                <div class="multiple-choice" data-target="">
-                    <input type="radio" id="cost_type_trust" name="cost_type[value]" class=" form-control " value="trust applications">
-                    <label class="form-label  text" for="cost_type_trust">
-                    No
-                    </label>
-                </div>
-
-
-                <div class="panel panel-border-narrow js-hidden" id="more-info" aria-hidden="true">
-                    <div class="form-group">
-                        <fieldset>
-                            <legend>
-                                <span class="form-label text">How much was received?</span>
-                            </legend>
-
-                            <div class="form-group ">
-                                <span class="input-group-prefix" style="margin-top: 2px;">£</span>
-                                <input type="text" id="payment_received_amount" name="payment_received_amount[value]" class=" form-control form-control-1-4" value="">
-                            </div>
-                        </fieldset>
-                    </div>
-
-                    <div class="form-group">
-                        <fieldset>
-                            <legend>
-                                <span class="form-label text">
-                                    What date was payment received?
-                                </span>
-                                <span class="form-hint">For example, 31 3 2015</span>
-                            </legend>
-
-                            <div class="form-date">
-                                <div class="form-group form-group-day">
-                                    <label class="form-label  text" for="payment_received_day">Day</label>
-                                    <input type="text" id="payment_received_day" name="payment_received_day[value]" class=" form-control " value="">
-                                </div>
-
-                                <div class="form-group form-group-month">
-                                    <label class="form-label  text" for="payment_received_month">Month</label>
-                                    <input type="text" id="payment_received_month" name="payment_received_month[value]" class=" form-control " value="">
-                                </div>
-
-                                <div class="form-group form-group-year">
-                                    <label class="form-label  text" for="payment_received_year">Year</label>
-                                    <input type="text" id="payment_received_year" name="payment_received_year[value]" class=" form-control " value="">
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </fieldset>
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
+                'legendClass' : 'form-label-bold text push-half--bottom',
+                'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
+                'formGroupClass': 'push--top'
+            }) }}
         </div>
 
-        <button type="submit" class="button push-half--right push-half--bottom">Save and add another</button><br>
-        <p>or</p>
-        <button type="submit" class="button">Save and continue</button>
-
+        <div>
+            {{ form_input(form.amountReceived, 'form.amountReceived', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'formGroupClass': ' form-group-value'
+            }) }}
+        </div>
+        <div>
+            {{ form_known_date(form.paymentReceivedDate, 'form.paymentReceivedDate') }}
+        </div>
     {% endif %}
 
-    </form>
+    {#<form action="#">#}
+
+    {#{% if step == 1 %}#}
+
+        {#<p class="text">Here is usually a paragraph explaining what it is that is needed. Not sure if this is needed at all.</p>#}
+
+        {#<div class="form-group">#}
+            {#<fieldset>#}
+                {#<legend class="form-label-bold text push-half--bottom">#}
+                    {#What type of professional deputy services did you charge for?#}
+                {#</legend>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_annual" name="cost_type[value]" class=" form-control " value="annual report">#}
+                    {#<label class="form-label  text" for="cost_type_annual">#}
+                    {#Annual report#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_management_interim" name="cost_type[value]" class=" form-control " value="annual management (interim)">#}
+                    {#<label class="form-label  text" for="cost_type_management_interim">#}
+                    {#Annual management (interim)#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_management_final" name="cost_type[value]" class=" form-control " value="annual management (final)">#}
+                    {#<label class="form-label  text" for="cost_type_management_final">#}
+                    {#Annual management (final)#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_appointment" name="cost_type[value]" class=" form-control " value="appointment">#}
+                    {#<label class="form-label  text" for="cost_type_appointment">#}
+                    {#Appointment#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_conveyancing" name="cost_type[value]" class=" form-control " value="conveyancing">#}
+                    {#<label class="form-label  text" for="cost_type_conveyancing">#}
+                    {#Conveyancing#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_litigation" name="cost_type[value]" class=" form-control " value="litigation">#}
+                    {#<label class="form-label  text" for="cost_type_litigation">#}
+                    {#Litigation#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_specialist" name="cost_type[value]" class=" form-control " value="specialist advice">#}
+                    {#<label class="form-label  text" for="cost_type_specialist">#}
+                    {#Specialist advice#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_wills" name="cost_type[value]" class=" form-control " value="statutory wills">#}
+                    {#<label class="form-label  text" for="cost_type_wills">#}
+                    {#Statutory wills#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_tax" name="cost_type[value]" class=" form-control " value="tax returns">#}
+                    {#<label class="form-label  text" for="cost_type_tax">#}
+                    {#Tax returns#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_trust" name="cost_type[value]" class=" form-control " value="trust applications">#}
+                    {#<label class="form-label  text" for="cost_type_trust">#}
+                    {#Trust applications#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="more-info">#}
+                    {#<input type="radio" id="cost_type_other" name="cost_type[value]" class=" form-control " value="other costs" aria-controls="more-info" aria-expanded="false">#}
+                    {#<label class="form-label  text" for="cost_type_other">#}
+                    {#Other costs#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="panel panel-border-narrow js-hidden" id="more-info" aria-hidden="true">#}
+                    {#<p>Please provide details of the service you charged for</p>#}
+                    {#<textarea id="debts_outstanding_details" name="debts_outstanding_details[value]" class=" form-control push-half--bottom"></textarea>#}
+                {#</div>#}
+            {#</fieldset>#}
+        {#</div>#}
+
+        {#<button type="submit" class="button">Save and continue</button>#}
+
+    {#{% elseif step == 2 %}#}
+
+        {#<div class="form-group">#}
+            {#<fieldset class="inline">#}
+                {#<legend class="form-label-bold text">#}
+                    {#How did you charge for this service?#}
+                {#</legend>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_annual" name="cost_type[value]" class=" form-control " value="annual report">#}
+                    {#<label class="form-label  text" for="cost_type_annual">#}
+                    {#Fixed costs#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_management_interim" name="cost_type[value]" class=" form-control " value="annual management (interim)">#}
+                    {#<label class="form-label  text" for="cost_type_management_interim">#}
+                    {#Assessed costs#}
+                    {#</label>#}
+                {#</div>#}
+            {#</fieldset>#}
+        {#</div>#}
+
+        {#<div id="form-group-account_amount" class="form-group  form-group-value">#}
+            {#<label class="form-label-bold text  required" for="account_amount">How much was charged?</label>#}
+            {#<span class="input-group-prefix">£</span>#}
+            {#<input type="text" id="account_amount" name="account[amount]" required="required" class=" form-control form-control-1-4 js-format-currency">#}
+        {#</div>#}
+
+        {#<div class="form-group">#}
+            {#<fieldset class="inline">#}
+                {#<legend class="form-label-bold text">#}
+                    {#Was payment received for this service?#}
+                {#</legend>#}
+
+                {#<div class="multiple-choice" data-target="more-info">#}
+                    {#<input type="radio" id="cost_type_other" name="cost_type[value]" class=" form-control " value="other costs" aria-controls="more-info" aria-expanded="false">#}
+                    {#<label class="form-label  text" for="cost_type_other">#}
+                    {#Yes#}
+                    {#</label>#}
+                {#</div>#}
+
+                {#<div class="multiple-choice" data-target="">#}
+                    {#<input type="radio" id="cost_type_trust" name="cost_type[value]" class=" form-control " value="trust applications">#}
+                    {#<label class="form-label  text" for="cost_type_trust">#}
+                    {#No#}
+                    {#</label>#}
+                {#</div>#}
+
+
+                {#<div class="panel panel-border-narrow js-hidden" id="more-info" aria-hidden="true">#}
+                    {#<div class="form-group">#}
+                        {#<fieldset>#}
+                            {#<legend>#}
+                                {#<span class="form-label text">How much was received?</span>#}
+                            {#</legend>#}
+
+                            {#<div class="form-group ">#}
+                                {#<span class="input-group-prefix" style="margin-top: 2px;">£</span>#}
+                                {#<input type="text" id="payment_received_amount" name="payment_received_amount[value]" class=" form-control form-control-1-4" value="">#}
+                            {#</div>#}
+                        {#</fieldset>#}
+                    {#</div>#}
+
+                    {#<div class="form-group">#}
+                        {#<fieldset>#}
+                            {#<legend>#}
+                                {#<span class="form-label text">#}
+                                    {#What date was payment received?#}
+                                {#</span>#}
+                                {#<span class="form-hint">For example, 31 3 2015</span>#}
+                            {#</legend>#}
+
+                            {#<div class="form-date">#}
+                                {#<div class="form-group form-group-day">#}
+                                    {#<label class="form-label  text" for="payment_received_day">Day</label>#}
+                                    {#<input type="text" id="payment_received_day" name="payment_received_day[value]" class=" form-control " value="">#}
+                                {#</div>#}
+
+                                {#<div class="form-group form-group-month">#}
+                                    {#<label class="form-label  text" for="payment_received_month">Month</label>#}
+                                    {#<input type="text" id="payment_received_month" name="payment_received_month[value]" class=" form-control " value="">#}
+                                {#</div>#}
+
+                                {#<div class="form-group form-group-year">#}
+                                    {#<label class="form-label  text" for="payment_received_year">Year</label>#}
+                                    {#<input type="text" id="payment_received_year" name="payment_received_year[value]" class=" form-control " value="">#}
+                                {#</div>#}
+                            {#</div>#}
+                        {#</fieldset>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</fieldset>#}
+        {#</div>#}
+
+        {#<button type="submit" class="button push-half--right push-half--bottom">Save and add another</button><br>#}
+        {#<p>or</p>#}
+        {#<button type="submit" class="button">Save and continue</button>#}
+
+    {#{% endif %}#}
+
+    {#</form>#}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+
+    {{ form_end(form) }}
 
 {% endblock %}
 

@@ -8,12 +8,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ProfCurrentServiceFeeExistType extends AbstractType
+class ProfServiceFeeExistType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('hasFees', 'choice', [
+            ->add('currentProfPaymentsReceived', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['fee-exist']])],
@@ -26,10 +26,7 @@ class ProfCurrentServiceFeeExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-pa-fee-expense',
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['fee-exist'];
-                if ($form['hasFees']->getData() === 'no') {
-                    $validationGroups = ['reasonForNoFees'];
-                }
+                $validationGroups = ['current-prof-fees-received-choice'];
 
                 return $validationGroups;
             },
