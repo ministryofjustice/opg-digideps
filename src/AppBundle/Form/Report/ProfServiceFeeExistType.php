@@ -16,7 +16,7 @@ class ProfServiceFeeExistType extends AbstractType
             ->add('currentProfPaymentsReceived', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['fee-exist']])],
+                'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['current-prof-payments-received']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -35,6 +35,6 @@ class ProfServiceFeeExistType extends AbstractType
 
     public function getName()
     {
-        return 'fee_exist';
+        return 'prof_service_fees';
     }
 }

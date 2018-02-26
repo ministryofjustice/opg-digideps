@@ -57,10 +57,15 @@ class ProfCurrentFeesController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $data = $form->getData();
-            /* @var $data EntityDir\Report\Report */
-            $this->getRestClient()->put('report/' . $reportId, $data, ['prof-payments']);
-            return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
+            /* @var $report EntityDir\Report\Report */
+            $report = $form->getData();
+
+            $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
+            if ($report->getCurrentProfPaymentsReceived() == 'no') {
+                return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId, 'from'=>'exist']);
+            } else {
+                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
+            }
         }
 
         $backLink = $this->generateUrl('prof_current_fees', ['reportId' => $reportId]);
@@ -76,7 +81,7 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/fees/step/{step}/{feeId}", name="current-service-fee-step", requirements={"step":"\d+"})
+     * @Route("/step/{step}/fee/{feeId}", name="current-service-fee-step", requirements={"step":"\d+"})
      * @Template()
      */
     public function stepAction(Request $request, $reportId, $step, $feeId = null)
@@ -93,7 +98,7 @@ class ProfCurrentFeesController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
-            ->setRoutes('prof_service_fee_type', 'service_fee_details', 'service_fees_summary')
+            ->setRoutes('prof_current_fees_exist', 'current-service-fee-step', 'prof_current_service_fees_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)
             ->setTotalSteps($totalSteps)

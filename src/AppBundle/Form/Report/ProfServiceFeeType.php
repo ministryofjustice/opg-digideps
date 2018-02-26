@@ -78,8 +78,8 @@ class ProfServiceFeeType extends AbstractType
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Report\ProfServiceFee',
             'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Report\ProfServiceFee */
+                $data = $form->getData();
                 $validationGroups = ['prof_service_fee'];
 
 //                if ($data->getAmount() && $data->getHasMoreDetails()) {
@@ -96,6 +96,6 @@ class ProfServiceFeeType extends AbstractType
 
     public function getName()
     {
-        return 'service_fee_type';
+        return 'prof_service_fee_type';
     }
 }

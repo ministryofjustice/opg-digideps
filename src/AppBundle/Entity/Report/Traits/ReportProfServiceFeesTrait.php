@@ -22,7 +22,7 @@ trait ReportProfServiceFeesTrait
      * @var string yes/no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Groups({"current-prof-payments-received"})
      * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-fees-received-choice"})
      */
     private $currentProfPaymentsReceived;
