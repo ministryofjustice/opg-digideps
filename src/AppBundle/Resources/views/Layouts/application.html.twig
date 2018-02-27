@@ -107,7 +107,7 @@
     {% block progressBar %}{% endblock %}
 
     {% block validationSummary %}
-        {% if form is defined %}
+        {% if form | default(false) %}
             {{ form_errors_list(form) }}
         {% endif %}
     {% endblock %}

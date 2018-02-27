@@ -86,8 +86,6 @@ Feature: Admin unsubmit report (from client page)
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     When I click on "report-review" in the "report-unsubmitted" region
-#    And print current URL
-#    And I save the page as "temp"
     Then I should see the "report-hero-unsubmitted" region
     Then I should see the "section-decisions-needs-attention" region
     Then I should see the "section-deputyExpenses-needs-attention" region

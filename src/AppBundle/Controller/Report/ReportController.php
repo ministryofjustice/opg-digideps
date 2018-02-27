@@ -202,20 +202,22 @@ class ReportController extends AbstractController
             ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
+        $vars = [
+            'user' => $user,
+            'report' => $report,
+            'reportStatus' => $report->getStatus(),
+        ];
+
         if ($report->getUnSubmitDate()) {
             $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
             $form->handleRequest($request);
             if ($form->isValid()) {
                 return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
             }
+            $vars['form'] = $form->createView();
         }
 
-        return $this->render($template, [
-            'form' => $report->getUnSubmitDate() ? $form->createView() : null,
-            'user' => $user,
-            'report' => $report,
-            'reportStatus' => $report->getStatus(),
-        ]);
+        return $this->render($template, $vars);
     }
 
     /**
