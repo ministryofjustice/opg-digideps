@@ -45,9 +45,9 @@
     {% elseif step == 2 %}
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
-                'legendClass' : 'form-label-bold text push-half--bottom',
+                'legendClass' : 'form-label-bold',
                 'legendText' : (page ~ '.form.assessedOrFixed.legend') | trans,
-                'formGroupClass': 'push--top'
+                'formGroupClass': 'inline push--top'
             }) }}
         </div>
 
@@ -55,28 +55,32 @@
             {{ form_input(form.amountCharged, 'form.amountCharged', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control-1-4 js-format-currency',
+                'labelClass' : 'form-label-bold',
                 'formGroupClass': ' form-group-value'
             }) }}
         </div>
 
         <div class="form-section push--bottom">
-            {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
-                'legendClass' : 'form-label-bold text push-half--bottom',
-                'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
-                'formGroupClass': 'push--top'
-            }) }}
-        </div>
-
-        <div>
-            {{ form_input(form.amountReceived, 'form.amountReceived', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control-1-4 js-format-currency',
-                'formGroupClass': ' form-group-value'
-            }) }}
-        </div>
-        <div>
-            What date was payment received?
-            {{ form_known_date(form.paymentReceivedDate, 'form.paymentReceivedDate') }}
+            <div class="form-group flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
+                {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
+                    'formGroupClass': 'inline push--top',
+                    'items': [
+                        {'dataTarget': 'was-payment-received'},
+                        {}
+                    ],
+                }) }}
+                <div id="was-payment-received" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.amountReceived, 'form.amountReceived', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control-1-4 js-format-currency',
+                        'formGroupClass': ' form-group-value'
+                    }) }}
+                    What date was payment received?
+                    {{ form_known_date(form.paymentReceivedDate, 'form.paymentReceivedDate') }}
+                </div>
+            </div>
         </div>
 
         <button type="submit" class="button push-half--right push-half--bottom">Save and add another</button><br>

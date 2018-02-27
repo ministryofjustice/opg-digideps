@@ -36,6 +36,13 @@ addDetailsPage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
   pageTitle: "Add a charge:"
   supportTitle: Current fees and expenses
+  form:
+    assessedOrFixed:
+      legend: How did you charge for this service?
+    amountCharged:
+      label: How much was charged?
+    paymentReceived:
+      label: Was payment received for this service?
 
 estCostsPage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
