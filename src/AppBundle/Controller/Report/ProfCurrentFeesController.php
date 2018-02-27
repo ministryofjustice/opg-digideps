@@ -54,7 +54,11 @@ class ProfCurrentFeesController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\Report\ProfServiceFeeExistType::class, $report);
+        $form = $this->createForm(new FormDir\Report\ProfServiceFeeExistTyp(
+            EntityDir\Report\ProfServiceFee::$serviceTypeIds,
+            $this->get('translator'),
+            'report-prof_service_fee'
+        ), $report);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -118,13 +122,16 @@ class ProfCurrentFeesController extends AbstractController
 
         // crete and handle form
         $form = $this->createForm(
-            FormDir\Report\ProfServiceFeeType::class,
+            new FormDir\Report\ProfServiceFeeType(
+                EntityDir\Report\ProfServiceFee::$serviceTypeIds,
+                $this->get('translator'),
+                'report-prof_service_fee'
+            ),
             $profServiceFee,
             [
                 'step' => $step
             ]
         );
-
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

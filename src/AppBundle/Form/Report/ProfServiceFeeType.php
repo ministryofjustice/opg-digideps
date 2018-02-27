@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ProfServiceFeeType extends AbstractType
 {
@@ -18,14 +19,35 @@ class ProfServiceFeeType extends AbstractType
      */
     private $step;
 
+    /**
+     * @var array
+     */
+    protected $serviceTypeIds;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var string
+     */
+    protected $translatorDomain;
+
+    public function __construct(array $serviceTypeIds, TranslatorInterface $translator, $translatorDomain)
+    {
+        $this->serviceTypeIds = $serviceTypeIds;
+        $this->translator = $translator;
+        $this->translatorDomain = $translatorDomain;
+    }
+
     private function getServiceFeeTypes()
     {
         $ret = [];
 
-        foreach (ProfServiceFee::$serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
-            $ret[$serviceTypeId] = $serviceTypeId;
+        foreach ($this->serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
+            $ret[$serviceTypeId] = $this->translator->trans($serviceTypeId);
         }
-
         return array_unique($ret);
     }
 
