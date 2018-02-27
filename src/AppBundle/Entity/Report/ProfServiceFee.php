@@ -8,10 +8,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProfServiceFee
 {
+    const TYPE_ASSESSED_FEE = 'assessed';
+    const TYPE_FIXED_FEE = 'fixed';
+
+    const TYPE_PREVIOUS_FEE = 'previous';
+    const TYPE_CURRENT_FEE = 'current';
+    const TYPE_ESTIMATED_FEE = 'estimated';
+
     use HasReportTrait;
 
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @var int
      */
@@ -41,6 +49,7 @@ class ProfServiceFee
     ];
 
     /**
+     * @JMS\Type("string")
      * @var string fixed|assessed
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -48,6 +57,7 @@ class ProfServiceFee
     private $assessedOrFixed;
 
     /**
+     * @JMS\Type("string")
      * @var string a value in self:$feeTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -63,6 +73,7 @@ class ProfServiceFee
     private $otherFeeDetails;
 
     /**
+     * @JMS\Type("string")
      * @var string a value in self:$serviceTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -79,10 +90,10 @@ class ProfServiceFee
      */
     private $amountCharged;
 
-
     /**
      * @var string yes|no
      *
+     * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
      */
     private $paymentReceived;
@@ -100,6 +111,7 @@ class ProfServiceFee
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
+     * @JMS\Groups({"prof-service-fees"})
      * @var \DateTime
      */
     private $paymentReceivedDate;
@@ -246,5 +258,35 @@ class ProfServiceFee
     public function setServiceTypeId($serviceTypeId)
     {
         $this->serviceTypeId = $serviceTypeId;
+    }
+
+    /**
+     * Is a current Fee?
+     *
+     * @return bool
+     */
+    public function isCurrentFee()
+    {
+        return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
+    }
+
+    /**
+     * Is a previous Fee?
+     *
+     * @return bool
+     */
+    public function isPreviousFee()
+    {
+        return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
+    }
+
+    /**
+     * Is a estimated Fee?
+     *
+     * @return bool
+     */
+    public function isEstimatedFee()
+    {
+        return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
     }
 }

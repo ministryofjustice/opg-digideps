@@ -12,7 +12,7 @@ trait ReportProfServiceFeesTrait
 {
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ProfServiceFee>")
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Groups({"report-prof-service-fees"})
      *
      * @var ProfServiceFee[]
      */
@@ -32,5 +32,15 @@ trait ReportProfServiceFeesTrait
     public function setProfServiceFees($profServiceFees)
     {
         $this->profServiceFees = $profServiceFees;
+    }
+
+    /**
+     * @return ProfServiceFee[]
+     */
+    public function getCurrentProfServiceFees()
+    {
+        return array_filter($this->getProfServiceFees(), function($profServiceFee) {
+            return $profServiceFee->isCurrentFee();
+        });
     }
 }

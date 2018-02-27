@@ -33,6 +33,7 @@ class ProfServiceFeeType extends AbstractType
     {
         $this->step = (int) $options['step'];
 
+        $builder->add('id', 'hidden');
         $builder->add('feeTypeId', 'hidden');
 
         if ($this->step == 1) {

@@ -17,7 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfCurrentFeesController extends AbstractController
 {
     private static $jmsGroups = [
-        'status'
+        'status',
+        'report-prof-service-fees',
+        'prof-service-fees'
     ];
 
     /**
@@ -108,49 +110,40 @@ class ProfCurrentFeesController extends AbstractController
             $profServiceFee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
                 return $f->getId() == $feeId;
             });
+
             $profServiceFee = array_shift($profServiceFee);
         } else {
             $profServiceFee = new EntityDir\Report\ProfServiceFee();
         }
-
-        // add URL-data into model
-        //isset($dataFromUrl['group']) && $fee->setGroup($dataFromUrl['group']);
-        //isset($dataFromUrl['category']) && $fee->setCategory($dataFromUrl['category']);
-//        $stepRedirector->setStepUrlAdditionalParams([
-//            'data' => $dataFromUrl
-//        ]);
 
         // crete and handle form
         $form = $this->createForm(
             FormDir\Report\ProfServiceFeeType::class,
             $profServiceFee,
             [
-                'step' => $step,
-                //'feeTypeId' => 'current',
-                //'translator' => $this->get('translator'),
-                //'clientFirstName' => $report->getClient()->getFirstname(),
-                //'selectedGroup' => $fee->getGroup(),
-                //'selectedCategory' => $fee->getCategory()
+                'step' => $step
             ]
         );
 
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
-            $profServiceFee = $form->getData();
             /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
+            $profServiceFee = $form->getData();
+
             $profServiceFee->setReport($report);
 
             if ($step == 1) {
                 if ($profServiceFee->getId() == null) {
-                    $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id']);
+                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id']);
                 } else {
-                    $this->getRestClient()->put('report/' . $report->getId() . '/prof-service-fee' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+                    $result = $this->getRestClient()->put('prof-service-fee' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
                 }
 
-                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 2]);
+                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
             } elseif ($step == 2) {
-                // todo PUT profFee
+                $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+
                 return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 3]);
             } elseif ($step == $totalSteps) {
 //                if ($feeId) { // edit
@@ -158,17 +151,17 @@ class ProfCurrentFeesController extends AbstractController
 //                        'notice',
 //                        'Entry edited'
 //                    );
-//                    $this->getRestClient()->put('/report/' . $reportId . '/professional-fee/' . $feeId, $fee, ['prof-service-fees']);
-                    return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
+//
+//                    return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
 //                } else { // add
 //                    $this->getRestClient()->post('/report/' . $reportId . '/professional-fee', $fee, ['prof-service-fees']);
 //                    return $this->redirectToRoute('add-another', ['reportId' => $reportId]);
 //                }
             }
 
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData
-            ]);
+//            $stepRedirector->setStepUrlAdditionalParams([
+//                'data' => $stepUrlData
+//            ]);
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }

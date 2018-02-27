@@ -32,6 +32,8 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+
     {% if step == 1 %}
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
