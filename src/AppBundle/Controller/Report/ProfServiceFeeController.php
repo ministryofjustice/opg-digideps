@@ -38,7 +38,7 @@ class ProfServiceFeeController extends RestController
     /**
      * @Route("/prof-service-fee/{id}")
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_PROF')")
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
     {
@@ -131,12 +131,16 @@ class ProfServiceFeeController extends RestController
             $profServiceFee->setPaymentReceived($data['payment_received']);
         }
 
+        if (array_key_exists('amount_charged', $data)) {
+            $profServiceFee->setAmountCharged($data['amount_charged']);
+        }
+
         if (array_key_exists('amount_received', $data)) {
-            $profServiceFee->setAmountCharged($data['amount_received']);
+            $profServiceFee->setAmountReceived($data['amount_received']);
         }
 
         if (array_key_exists('payment_received_date', $data)) {
-            $profServiceFee->setPaymentReceivedDate($data['paymentR_received_date']);
+            $profServiceFee->setPaymentReceivedDate(new \DateTime($data['payment_received_date']));
         }
 
         return $profServiceFee;

@@ -34,7 +34,7 @@ trait ProfServiceFeesTrait
      */
     public function getCurrentProfServiceFees()
     {
-        return $this->profServicefees->filter(function($profServiceFee) {
+        return $this->getProfServiceFees()->filter(function($profServiceFee) {
             return $profServiceFee->isCurrentFee();
         });
     }

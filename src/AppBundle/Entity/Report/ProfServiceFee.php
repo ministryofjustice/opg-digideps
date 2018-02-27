@@ -57,6 +57,7 @@ class ProfServiceFee
 
     /**
      * @var int
+     * @JMS\Type("integer")
      *
      * @JMS\Groups({"prof-service-fees"})
      *
@@ -76,13 +77,16 @@ class ProfServiceFee
     private $report;
 
     /**
+     * @JMS\Type("string")
      * @var string fixed|assessed
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="assessed_or_fixed", type="string", nullable=true)
      */
     private $assessedOrFixed;
 
     /**
+     * @JMS\Type("string")
      * @var string a value in self:$feeTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -100,6 +104,7 @@ class ProfServiceFee
     private $otherFeeDetails;
 
     /**
+     * @JMS\Type("string")
      * @var string a value in self:$serviceTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -119,6 +124,7 @@ class ProfServiceFee
     private $amountCharged;
 
     /**
+     * @JMS\Type("string")
      * @var string yes|no
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -140,6 +146,7 @@ class ProfServiceFee
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"prof-service-fees"})
      *
      * @ORM\Column(name="payment_received_date", type="datetime", nullable=true)
      */
@@ -341,7 +348,7 @@ class ProfServiceFee
     }
 
     /**
-     * Is a current Fee?
+     * Is a estimated Fee?
      *
      * @return bool
      */
