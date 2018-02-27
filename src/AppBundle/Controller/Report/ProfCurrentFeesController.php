@@ -159,10 +159,6 @@ class ProfCurrentFeesController extends AbstractController
 //                }
             }
 
-//            $stepRedirector->setStepUrlAdditionalParams([
-//                'data' => $stepUrlData
-//            ]);
-
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
@@ -187,8 +183,10 @@ class ProfCurrentFeesController extends AbstractController
      */
     public function summaryAction($reportId)
     {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         return [
+            'report' => $report
         ];
     }
 

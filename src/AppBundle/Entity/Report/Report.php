@@ -3,6 +3,9 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\VisitsCare;
+use AppBundle\Entity\Report\Lifestyle;
+use AppBundle\Entity\Report\ProfServiceFee;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
@@ -753,7 +756,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return Report\VisitsCare
+     * @return VisitsCare
      */
     public function getVisitsCare()
     {
@@ -761,7 +764,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \AppBundle\Entity\Report\VisitsCare $visitsCare
+     * @param VisitsCare $visitsCare
      */
     public function setVisitsCare($visitsCare)
     {
@@ -769,7 +772,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return Report\Lifestyle
+     * @return Lifestyle
      */
     public function getLifestyle()
     {
@@ -777,7 +780,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Lifestyle $lifestyle
+     * @param Lifestyle $lifestyle
      */
     public function setLifestyle($lifestyle)
     {
@@ -848,7 +851,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  bool  $noTransfersToAdd
+     * @param  bool $noTransfersToAdd
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -977,7 +980,8 @@ class Report implements ReportInterface
      */
     public function getDocumentsExcludingReportPdf()
     {
-        return array_filter($this->documents, function ($document) { /* @var $document Document */
+        return array_filter($this->documents, function ($document) {
+            /* @var $document Document */
             return !$document->isReportPdf();
         });
     }
@@ -999,7 +1003,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param Status $status$statusrvice
+     * @param Status $status $statusrvice
      */
     public function setStatus($status)
     {
@@ -1046,6 +1050,7 @@ class Report implements ReportInterface
     public function getZipName()
     {
         $client = $this->getClient();
+
         return 'Report_' . $client->getCaseNumber()
             . '_' . $this->getStartDate()->format('Y')
             . '_' . $this->getEndDate()->format('Y')
@@ -1077,7 +1082,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  array  $availableSections
+     * @param  array $availableSections
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1103,7 +1108,7 @@ class Report implements ReportInterface
      */
     public function isSubmitted()
     {
-        return (bool) $this->getSubmitted();
+        return (bool)$this->getSubmitted();
     }
 
     /**
@@ -1139,7 +1144,8 @@ class Report implements ReportInterface
             case Report::TYPE_102_4:
                 // if a money section not started, dont show warning
                 if ($this->getStatus()->getMoneyInState()['state'] == Status::STATE_NOT_STARTED ||
-                    $this->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
+                    $this->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED
+                ) {
                     return false;
                 }
                 break;
@@ -1197,5 +1203,62 @@ class Report implements ReportInterface
         $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
 
         return $this;
+    }
+
+
+    /**
+     * Return filtered array of ProfServiceFee's
+     *
+     * @param string $feeTypeId current|estimated|previous
+     * @param string $fixedOrAssessed
+     * @return array
+     * @throws \Exception
+     */
+     public function getFilteredFees($feeTypeId, $fixedOrAssessed)
+    {
+        switch ($feeTypeId) {
+            case ProfServiceFee::TYPE_CURRENT_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_CURRENT_FEE);
+                break;
+            case ProfServiceFee::TYPE_ESTIMATED_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_ESTIMATED_FEE);
+                break;
+            case ProfServiceFee::TYPE_PREVIOUS_FEE:
+                $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_PREVIOUS_FEE);
+                break;
+            default:
+                throw new \Exception('Invalid Fee type Id:' . $feeTypeId);
+        }
+
+        return array_filter($fees, function ($profServiceFee) use ($fixedOrAssessed) {
+            /** @var $profServiceFee ProfServiceFee  */
+            return $profServiceFee->getAssessedOrFixed() === $fixedOrAssessed;
+        });
+    }
+
+    /**
+     * @param string $feeTypeId "current"|"estimated"|"previous"
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function getProfServiceFeesByType($feeTypeId)
+    {
+        if (!in_array(
+            $feeTypeId,
+            [
+                ProfServiceFee::TYPE_CURRENT_FEE,
+                ProfServiceFee::TYPE_PREVIOUS_FEE,
+                ProfServiceFee::TYPE_ESTIMATED_FEE
+            ]
+        )) {
+            throw new \Exception('Invalid feeTypeId: ' . $feeTypeId);
+        }
+
+        return array_filter($this->getProfServiceFees(), function ($profServiceFee) use ($feeTypeId) {
+            /** @var $profServiceFee \AppBundle\Entity\Report\ProfServiceFee */
+            return $profServiceFee->getFeeTypeId() === $feeTypeId;
+        });
     }
 }

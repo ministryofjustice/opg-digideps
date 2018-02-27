@@ -34,7 +34,7 @@
     {# {{ macros.returnToOverview(report) }} #}
 
     <p class="text--right flush--bottom">
-        <a href="/report/1153/overview" class="bold-small">Return to report overview</a>
+        <a href="/report/{{ report.id }}/overview" class="bold-small">Return to report overview</a>
     </p>
 
     <table class="check-your-answers columns-2 push-double--bottom">
@@ -53,10 +53,10 @@
                     During this reporting period, have you received any payments from the client?
                 </td>
                 <td>
-                    Yes
+                    {{ report.currentProfPaymentsReceived }}
                 </td>
                 <td class="change-answer">
-                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                    <a href="/report/{{ report.id }}/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
                 </td>
             </tr>
         </tbody>
