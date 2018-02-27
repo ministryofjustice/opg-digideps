@@ -24,7 +24,7 @@
 
     {# client report list #}
     {% if client.reports is empty %}
-        <p>{{ (page ~ '.noResults') | trans  }}</p>
+        <p>{{ (page ~ '.noResults') | trans }}</p>
     {% else %}
         <table class="check-your-answers">
             <thead>
@@ -44,46 +44,50 @@
             <tbody>
             {% if client.reports | length %}
                 {% for report in client.reports %}
-                    {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
-                    <tr class="{{ behatRegionPrefix }}">
-                        <td>
-                            {{ report.period | replace({'to': '-'}) }}
-                        </td>
-                        <td class="{{ behatRegionPrefix }}-due-date">
-                            {{ report.dueDate | date("j F Y") }}
-                        </td>
-                        <td>
-                            {# Display submit date regardless of being submitted or not.
-                            # An unsubmitted report still has a submit date from a previous submission
-                            #}
-                            {% if report.submitDate %}
-                                {{ report.submitDate | date("j F Y") }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if report.unSubmitDate %}
-                                {{ report.unSubmitDate | date("j F Y") }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if report.unSubmitDate %}
-                                {% set status = 'unsubmitted' %}
-                            {% elseif report.submitted %}
-                                 {% set status = 'submitted' %}
-                            {% else %}
-                                {% set status = report.status.status %}
-                            {% endif %}
-
-                            <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
-                        </td>
-                        {% if enableManageLink %}
-                            <td class="change-answer width-tenth">
-                                {% if report.submitted%}
-                                    <a href="{{ path('admin_report_manage', {'id': report.id}) }}" class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                    {# only show submitted and unsubmitted reports #}
+                    {% if report.submitted or report.submitDate %}
+                        {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
+                        <tr class="{{ behatRegionPrefix }}">
+                            <td>
+                                {{ report.period | replace({'to': '-'}) }}
+                            </td>
+                            <td class="{{ behatRegionPrefix }}-due-date">
+                                {{ report.dueDate | date("j F Y") }}
+                            </td>
+                            <td>
+                                {# Display submit date regardless of being submitted or not.
+                                # An unsubmitted report still has a submit date from a previous submission
+                                #}
+                                {% if report.submitDate %}
+                                    {{ report.submitDate | date("j F Y") }}
                                 {% endif %}
                             </td>
-                        {% endif %}
-                    </tr>
+                            <td>
+                                {% if report.unSubmitDate %}
+                                    {{ report.unSubmitDate | date("j F Y") }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if report.unSubmitDate %}
+                                    {% set status = 'unsubmitted' %}
+                                {% elseif report.submitted %}
+                                    {% set status = 'submitted' %}
+                                {% else %}
+                                    {% set status = report.status.status %}
+                                {% endif %}
+
+                                <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                            </td>
+                            {% if enableManageLink %}
+                                <td class="change-answer width-tenth">
+                                    {% if report.submitted %}
+                                        <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
+                                           class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             </tbody>
