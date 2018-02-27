@@ -41,6 +41,7 @@ summaryPage:
   totalBalance: Total balance on %endDate%: £%amount%
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageTitle: Accounts
+
 form:
   accountType:
       label: What type of account is it?

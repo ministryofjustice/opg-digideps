@@ -18,9 +18,8 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    {% if not step == 3 %}
+    {% if not (step == 3) %}
         <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-    }
     {% endif %}
 {% endblock %}
 
@@ -38,7 +37,7 @@
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
                 'legendClass' : 'form-label-bold',
-                'legendText' : (page ~ '.form.serviceType.legend') | trans,
+                'legendText' : (page ~ '.form.label') | trans,
                 'formGroupClass': 'push--top'
             }) }}
         </div>
