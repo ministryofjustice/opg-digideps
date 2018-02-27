@@ -29,69 +29,74 @@ Feature: Admin unsubmit report (from client page)
     And I should see "25 February 2017" in the "report-2016-due-date" region
     And I save the application status into "report-2016-pre-unsubmission"
     When I click on "manage" in the "report-2016" region
-    # unsubmit with decisions and deputy expenses
-    When I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present | 1 |
-      | unsubmit_report_unsubmittedSection_13_present | 1 |
-    And I press "unsubmit_report_save"
-    Then the URL should match "/admin/report/\d+/change-due-date"
-    # store status and URL for next scenarios
     And I save the current URL as "report-2016-unsubmitted"
     And I save the application status into "report-2016-unsubmitted"
-    # Due date form: empty
-    When I press "report_change_due_date_save"
-    Then the following fields should have an error:
-      | report_change_due_date_dueDateChoice_0 |
-      | report_change_due_date_dueDateChoice_1 |
-      | report_change_due_date_dueDateChoice_2 |
-      | report_change_due_date_dueDateChoice_3 |
-      | report_change_due_date_dueDateChoice_4 |
-    # Due date form: 4 weeks from now
-    And I fill in the following:
-      | report_change_due_date_dueDateChoice_2 | 4 |
-    When I press "report_change_due_date_save"
-    Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
-    And I should see "Unsubmitted" in the "report-2016-label" region
-    And I should see "25 March 2017" in the "report-2016-due-date" region
-
-  @deputy
-  Scenario: Admin unsubmits report with custom due date
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I load the application status from "report-2016-unsubmitted"
-    And I go to the URL previously saved as "report-2016-unsubmitted"
-    # custom due date: empty date throws an error
+    # unsubmit without a section selection
+    And I press "unsubmit_report_save"
+      | unsubmit_report_dueDateChoice_2 | 4 |
+    Then the form should be invalid
+    # unsubmit with decisions and deputy expenses, due date 4 weeks from now
     When I fill in the following:
-      | report_change_due_date_dueDateChoice_4 | other |
-      | report_change_due_date_dueDate_day     |       |
-      | report_change_due_date_dueDate_month   |       |
-      | report_change_due_date_dueDate_year    |       |
-    And I press "report_change_due_date_save"
-    Then the following fields should have an error:
-      | report_change_due_date_dueDate_day   |
-      | report_change_due_date_dueDate_month |
-      | report_change_due_date_dueDate_year  |
-    # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
-    When I fill in the following:
-      | report_change_due_date_dueDateChoice_4 | other |
-      | report_change_due_date_dueDate_day     | 30    |
-      | report_change_due_date_dueDate_month   | 04    |
-      | report_change_due_date_dueDate_year    | 2022  |
-    And I press "report_change_due_date_save"
+      | unsubmit_report_unsubmittedSection_0_present  | 1 |
+      | unsubmit_report_unsubmittedSection_13_present | 1 |
+      | unsubmit_report_dueDateChoice_2               | 4 |
+    And I press "unsubmit_report_save"
     # check client page
     And I should see "Unsubmitted" in the "report-2016-label" region
-    And I should see "30 April 2022" in the "report-2016-due-date" region
-
-  @deputy
-  Scenario: Deputy resubmit report
-    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    Then I should see "30 April 2022" in the "report-unsubmitted" region
-    When I click on "report-review" in the "report-unsubmitted" region
-    Then I should see the "report-hero-unsubmitted" region
-    Then I should see the "section-decisions-needs-attention" region
-    Then I should see the "section-deputyExpenses-needs-attention" region
-    When I press "report_resubmit_save"
+    And I should see "25 March 2017" in the "report-2016-due-date" region
+    # resubmit with custom due date
+    Given I load the application status from "report-2016-unsubmitted"
+    And I go to the URL previously saved as "report-2016-unsubmitted"
+    And I fill in the following:
+      | unsubmit_report_unsubmittedSection_0_present  | 1     |
+      | unsubmit_report_unsubmittedSection_13_present | 1     |
+      | unsubmit_report_dueDateChoice_4               | other |
+      | unsubmit_report_dueDate_day                   |       |
+      | unsubmit_report_dueDate_month                 |       |
+      | unsubmit_report_dueDate_year                  |       |
+    And I press "unsubmit_report_save"
     Then the following fields should have an error:
-      | report_resubmit_agree |
-    When I check "report_resubmit_agree"
-    And I press "report_resubmit_save"
-    Then the URL should match "/report/\d+/review"
+      | unsubmit_report_dueDate_day   |
+      | unsubmit_report_dueDate_month |
+      | unsubmit_report_dueDate_year  |
+    # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
+    When I fill in the following:
+      | unsubmit_report_unsubmittedSection_0_present  | 1     |
+      | unsubmit_report_unsubmittedSection_13_present | 1     |
+      | unsubmit_report_dueDateChoice_4               | other |
+      | unsubmit_report_dueDate_day                   | 30    |
+      | unsubmit_report_dueDate_month                 | 04    |
+      | unsubmit_report_dueDate_year                  | 2022  |
+    And I press "unsubmit_report_save"
+    And I should see "Unsubmitted" in the "report-2016-label" region
+    And I should see "30 April 2022" in the "report-2016-due-date" region
+#
+#    # Due date form: 4 weeks from now
+#    And I fill in the following:
+#
+#    When I press "report_change_due_date_save"
+#    Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
+#    And I should see "Unsubmitted" in the "report-2016-label" region
+#    And I should see "25 March 2017" in the "report-2016-due-date" region
+
+#  @deputy
+#  Scenario: Admin unsubmits report with custom due date
+#    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#    And I load the application status from "report-2016-unsubmitted"
+#    And I go to the URL previously saved as "report-2016-unsubmitted"
+#
+#
+#  @deputy
+#  Scenario: Deputy resubmit report
+#    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#    Then I should see "30 April 2022" in the "report-unsubmitted" region
+#    When I click on "report-review" in the "report-unsubmitted" region
+#    Then I should see the "report-hero-unsubmitted" region
+#    Then I should see the "section-decisions-needs-attention" region
+#    Then I should see the "section-deputyExpenses-needs-attention" region
+#    When I press "report_resubmit_save"
+#    Then the following fields should have an error:
+#      | report_resubmit_agree |
+#    When I check "report_resubmit_agree"
+#    And I press "report_resubmit_save"
+#    Then the URL should match "/report/\d+/review"

@@ -20,11 +20,6 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-    {{ form_known_date(form.startDate, 'reportManage.form.startDate') }}
-
-    {{ form_known_date(form.endDate, 'reportManage.form.endDate') }}
-
-
     <fieldset class="form-group">
         <legend>
             <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
@@ -37,6 +32,35 @@
             }) }}
         {% endfor %}
     </fieldset>
+
+    <p class="heading-small flush--ends">Current due date:</p>
+    <p>
+        {{ report.dueDate | date("j M Y") }}
+        <br/><span class="font-xsmall bold text-red">{{  'reportChangeDueDate.overdueBy' | trans ({
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            }) }}
+        </span>
+    </p>
+
+    <div class="form-group push-half--bottom">
+        {{ form_checkbox_group(form.dueDateChoice, 'reportChangeDueDate.form.dueDateChoice', {
+            'legendClass' : 'form-label-bold',
+            'items': [
+                {},
+                {},
+                {},
+                {},
+                {'dataTarget': 'due-date-custom' }
+            ]
+        }) }}
+    </div>
+
+    <div id="due-date-custom" class="panel panel-border-narrow js-hidden">
+        {{ form_known_date(form.dueDate, 'reportManage.form.endDate') }}
+    </div>
+
+
 
     {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 

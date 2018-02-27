@@ -28,6 +28,8 @@ class ReportController extends AbstractController
     public function manageAction(Request $request, $id)
     {
         $report = $this->getReport($id, []);
+        $reportDueDate = $report->getDueDate();
+
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
         }
@@ -44,52 +46,20 @@ class ReportController extends AbstractController
                 ->setUnSubmitDate(new \DateTime())
                 ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
             ;
-            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                'startEndDates', 'submitted', 'submit_agreed', 'report_unsubmitted_sections'
-            ]);
-            $request->getSession()->getFlashBag()->add('notice', 'Report unsubmitted');
 
-            return $this->redirect($this->generateUrl('admin_report_change_due_date', ['id'=>$report->getId()]));
-
-        }
-
-        return [
-            'report'   => $report,
-            'form'     => $form->createView()
-        ];
-    }
-
-
-    /**
-     * @Route("change-due-date", name="admin_report_change_due_date")
-     *
-     * @param Request $request
-     * @param $id
-     *
-     * @Template()
-     *
-     * @return array
-     */
-    public function changeDueDateAction(Request $request, $id)
-    {
-        $report = $this->getReport($id, []);
-        if ($report->getSubmitted() || !$report->getSubmitDate()) {
-            throw new DisplayableException('Can only change due date to unsubmitted report');
-        }
-
-        $form = $this->createForm(ReportChangeDueDateType::class, $report);
-        $form->handleRequest($request);
-
-        // edit client form
-        if ($form->isValid()) {
+            // TODO move to form ?
             $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
             if (!in_array($weeksFromNow, [0, 'other'])) {
-                $dueDate = $report->getDueDate()->modify("+{$weeksFromNow} weeks");
+                $dueDate = $reportDueDate->modify("+{$weeksFromNow} weeks");
                 $report->setDueDate($dueDate);
             }
 
+            //TODO merge API calls into one
+            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
+                'startEndDates', 'submitted', 'submit_agreed', 'report_unsubmitted_sections'
+            ]);
             $this->getRestClient()->put('report/' . $report->getId(), $report, ['report-due-date']);
-            $request->getSession()->getFlashBag()->add('notice', 'Report due date changed');
+            $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 
             return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
         }
@@ -99,4 +69,5 @@ class ReportController extends AbstractController
             'form'     => $form->createView()
         ];
     }
+
 }

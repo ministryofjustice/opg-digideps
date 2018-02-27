@@ -25,7 +25,7 @@ reportManage:
     endDate:
       legend: End date
     markSections:
-      legend: Mark sections as incomplete (optional)
+      legend: Mark sections as incomplete
     unsubmit:
       label: Update and mark as incomplete
 

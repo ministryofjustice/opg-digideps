@@ -129,6 +129,8 @@ report:
       length: This explanation must be at least {{ limit }} letters long
     reSubmission:
       agree.notBlank: You must agree to this statement to continue
+    unsubmissionSections:
+      atLeastOnce: You must select at least one section
 
 report-declaration:
     agree:
