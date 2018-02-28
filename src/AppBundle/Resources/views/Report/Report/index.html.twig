@@ -30,7 +30,7 @@
         <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
         {% set status = report.status.status %}
         {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
-        <div class="card">
+        <div class="card behat-region-active-report">
             <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
             <h3 class="heading-medium flush--ends">
                 <a href="{{ path('report_overview', {'reportId': report.id}) }}">

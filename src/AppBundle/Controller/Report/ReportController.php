@@ -255,17 +255,19 @@ class ReportController extends AbstractController
                 true
             );
 
-            // store report and get new YEAR report
-            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
+            // store report and get new YEAR report (only for reports submitted the first time)
+            $newYearReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
+            if ($newYearReportId) {
+                $newReport = $this->getRestClient()->get('report/' . $newYearReportId, 'Report\\Report');
 
-            //send confirmation email
-            if ($user->isDeputyOrg()) {
-                $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
-            } else {
-                $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                //send confirmation email
+                if ($user->isDeputyOrg()) {
+                    $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
+                } else {
+                    $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                }
             }
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));

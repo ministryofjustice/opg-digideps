@@ -24,12 +24,12 @@ Feature: Admin unsubmit report (from client page)
     And I go to the URL previously saved as "admin-client-search-client-behat001"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
-    And I should see "SUBMITTED" in the "report-2016-label" region
+    Then I should see "SUBMITTED" in the "report-2016-label" region
     # assert active report is not lsited
-    And I should not see the "report-2017" region
+    But I should not see the "report-2017" region
     And I should see "25 February 2017" in the "report-2016-due-date" region
-    And I save the application status into "report-2016-pre-unsubmission"
-    When I click on "manage" in the "report-2016" region
+    When I save the application status into "report-2016-pre-unsubmission"
+    And I click on "manage" in the "report-2016" region
     And I save the current URL as "report-2016-unsubmitted"
     And I save the application status into "report-2016-unsubmitted"
     # unsubmit without a section selection
@@ -43,7 +43,7 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_dueDateChoice_2               | 4 |
     And I press "unsubmit_report_save"
     # check client page
-    And I should see "Unsubmitted" in the "report-2016-label" region
+    Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "25 March 2017" in the "report-2016-due-date" region
     # resubmit with custom due date
     Given I load the application status from "report-2016-unsubmitted"
@@ -69,35 +69,54 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_dueDate_month                 | 04    |
       | unsubmit_report_dueDate_year                  | 2022  |
     And I press "unsubmit_report_save"
-    And I should see "Unsubmitted" in the "report-2016-label" region
+    Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
-#
-#    # Due date form: 4 weeks from now
-#    And I fill in the following:
-#
-#    When I press "report_change_due_date_save"
-#    Then the current URL should match with the URL previously saved as "admin-client-search-client-behat001"
-#    And I should see "Unsubmitted" in the "report-2016-label" region
-#    And I should see "25 March 2017" in the "report-2016-due-date" region
+    When I click on "admin-documents"
+    Then I should see the "report-submission" region exactly 2 times
 
-#  @deputy
-#  Scenario: Admin unsubmits report with custom due date
-#    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    And I load the application status from "report-2016-unsubmitted"
-#    And I go to the URL previously saved as "report-2016-unsubmitted"
-#
-#
-#  @deputy
-#  Scenario: Deputy resubmit report
-#    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-#    Then I should see "30 April 2022" in the "report-unsubmitted" region
-#    When I click on "report-review" in the "report-unsubmitted" region
-#    Then I should see the "report-hero-unsubmitted" region
-#    Then I should see the "section-decisions-needs-attention" region
-#    Then I should see the "section-deputyExpenses-needs-attention" region
-#    When I press "report_resubmit_save"
-#    Then the following fields should have an error:
-#      | report_resubmit_agree |
-#    When I check "report_resubmit_agree"
-#    And I press "report_resubmit_save"
-#    Then the URL should match "/report/\d+/review"
+  @deputy
+  Scenario: Deputy resubmit report
+    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then I should see "30 April 2022" in the "report-unsubmitted" region
+    And I should see the "active-report" region
+    But I should not see the "submitted-reports" region
+    When I click on "report-review" in the "report-unsubmitted" region
+    And I should see the "report-hero-unsubmitted" region
+    And I should see the "section-decisions-needs-attention" region
+    And I should see the "section-deputyExpenses-needs-attention" region
+    When I press "report_resubmit_save"
+    Then the following fields should have an error:
+      | report_resubmit_agree |
+    When I check "report_resubmit_agree"
+    And I press "report_resubmit_save"
+    And I click on "declaration-page"
+    Then the following fields should have the corresponding values:
+      | report_declaration_agreedBehalfDeputy_0 | only_deputy |
+      | report_declaration_agree                |             |
+    When I fill in the following:
+      | report_declaration_agree | 1 |
+      | report_declaration_agreedBehalfDeputy_0 | only_deputy |
+      | report_declaration_agreedBehalfDeputyExplanation |  |
+    And I press "report_declaration_save"
+    Then the form should be valid
+    And the URL should match "/report/\d+/submitted"
+    # check unsubmitted report disappeared from dashboard
+    When I click on "reports"
+    Then I should see the "active-report" region
+    And I should see the "submitted-reports" region
+    But I should not see the "report-unsubmitted" region
+
+
+  @deputy
+  Scenario: admin sees new submission and client page updated
+    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    # check report being resubmitted
+    And I go to the URL previously saved as "admin-client-search-client-behat001"
+    Then I should see "SUBMITTED" in the "report-2016-label" region
+    # check there is a new submission, with all the documents
+    When I click on "admin-documents"
+    Then I should see the "report-submission" region exactly 3 times
+
+
+
+

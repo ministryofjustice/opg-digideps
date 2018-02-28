@@ -112,7 +112,7 @@ class Report implements ReportInterface
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"unsubmit_date"})
      */
     private $unSubmitDate;
