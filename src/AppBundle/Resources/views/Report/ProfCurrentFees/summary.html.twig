@@ -90,25 +90,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="behat-region-transaction-">
-                <td class="width-third">Annual Management (interim)</td>
-                <td class="width-sixth numeric-small">£500.00</td>
-                <td class="numeric-small">£300.00</td>
-                <td class="numeric-small">21/03/2017</td>
+        {% for fixedServiceFee in fixedServiceFees %}
+            
+        <tr class="behat-region-transaction-">
+                <td class="width-third">{{ fixedServiceFee.serviceTypeId }}</td>
+                <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged }}</td>
+                <td class="numeric-small">£{{ fixedServiceFee.amountReceived }}</td>
+                <td class="numeric-small">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
                     <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
                     <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
                 </td>
             </tr>
+            {% endfor %}
                 <tr class="no-border">
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="text--right">
-                    <span class="bold-small behat-region-household-bills-total">£500.00</span>
+                    <span class="bold-small behat-region-household-bills-total">£{{ totalFixedFeesCharged }}</span>
                 </td>
                 <td class="text--right">
-                    <span class="bold-small behat-region-household-bills-total">£300.00</span>
+                    <span class="bold-small behat-region-household-bills-total">£{{ totalFixedFeesReceived }}</span>
                 </td>
                 <td></td>
             </tr>
@@ -131,35 +134,28 @@
             </tr>
         </thead>
         <tbody>
+        {% for assessedServiceFee in assessedServiceFees %}
+
             <tr>
-                <td class="width-third">Trust applications</td>
-                <td class="width-sixth numeric-small">£800.00</td>
-                <td class="numeric-small">£200.00</td>
-                <td class="numeric-small">02/02/2016</td>
+                <td class="width-third">{{ assessedServiceFee.serviceTypeId }}</td>
+                <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged }}</td>
+                <td class="numeric-small">£{{ assessedServiceFee.amountReceived }}</td>
+                <td class="numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
                     <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
                     <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
                 </td>
             </tr>
-            <tr>
-                <td class="width-third">Litigation</td>
-                <td class="numeric-small">£1,200.00</td>
-                <td class="numeric-small">£1,000.00</td>
-                <td class="numeric-small">01/08/2017</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
-                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
-                </td>
-            </tr>
+        {% endfor %}
             <tr class="no-border">
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="text--right">
-                    <span class="bold-small behat-region-household-bills-total">£2,000.00</span>
+                    <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesCharged }}</span>
                 </td>
                 <td class="text--right">
-                    <span class="bold-small behat-region-household-bills-total">£1,200.00</span>
+                    <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesReceived }}</span>
                 </td>
                 <td></td>
             </tr>
@@ -173,10 +169,10 @@
                     <span class="heading-medium">Grand totals:</span>
                 </td>
                 <td class="numeric-small width-eighth">
-                    <span class="heading-medium">£2,500.00</span>
+                    <span class="heading-medium">£{{ (totalAssessedFeesCharged + totalFixedFeesCharged) }}</span>
                 </td>
                 <td class="numeric-small width-eighth">
-                    <span class="heading-medium">£1,500.00</span>
+                    <span class="heading-medium">£{{ (totalAssessedFeesReceived + totalFixedFeesReceived) }}</span>
                 </td>
                 <td class="width-sixth"></td>
                 <td class="width-sixth"></td>

@@ -81,7 +81,7 @@ class ProfServiceFee
     private $serviceTypeId;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
@@ -99,7 +99,7 @@ class ProfServiceFee
     private $paymentReceived;
 
     /**
-     * @var decimal
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
@@ -181,7 +181,7 @@ class ProfServiceFee
     }
 
     /**
-     * @return decimal
+     * @return float
      */
     public function getAmountCharged()
     {
@@ -189,7 +189,7 @@ class ProfServiceFee
     }
 
     /**
-     * @param decimal $amountCharged
+     * @param float $amountCharged
      */
     public function setAmountCharged($amountCharged)
     {
@@ -197,7 +197,7 @@ class ProfServiceFee
     }
 
     /**
-     * @return decimal
+     * @return float
      */
     public function getAmountReceived()
     {
@@ -205,7 +205,7 @@ class ProfServiceFee
     }
 
     /**
-     * @param decimal $amountReceived
+     * @param float $amountReceived
      */
     public function setAmountReceived($amountReceived)
     {

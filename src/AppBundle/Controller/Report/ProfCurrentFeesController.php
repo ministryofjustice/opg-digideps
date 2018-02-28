@@ -5,9 +5,11 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use AppBundle\Service\ReportFeeService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Form\Report\ProfServiceFeeExistType;
 
 /**
  * Base route
@@ -16,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ProfCurrentFeesController extends AbstractController
 {
+
     private static $jmsGroups = [
         'status',
         'report-prof-service-fees',
@@ -54,8 +57,7 @@ class ProfCurrentFeesController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(new FormDir\Report\ProfServiceFeeExistTyp(
-            EntityDir\Report\ProfServiceFee::$serviceTypeIds,
+        $form = $this->createForm(new ProfServiceFeeExistType(
             $this->get('translator'),
             'report-prof_service_fee'
         ), $report);
@@ -190,11 +192,32 @@ class ProfCurrentFeesController extends AbstractController
      */
     public function summaryAction($reportId)
     {
+        $reportFeeService = $this->container->get('report_fee_service');
+
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        return [
-            'report' => $report
-        ];
+        $fixedServiceFees = $report->getFilteredFees(
+            EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
+            EntityDir\Report\ProfServiceFee::TYPE_FIXED_FEE
+        );
+        $assessedServiceFees = $report->getFilteredFees(
+            EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
+            EntityDir\Report\ProfServiceFee::TYPE_ASSESSED_FEE
+        );
+        $totalFixedFeesReceived = $reportFeeService->getTotalReceivedFees($fixedServiceFees);
+        $totalFixedFeesCharged = $reportFeeService->getTotalChargedFees($fixedServiceFees);
+        $totalAssessedFeesReceived = $reportFeeService->getTotalReceivedFees($assessedServiceFees);
+        $totalAssessedFeesCharged = $reportFeeService->getTotalChargedFees($assessedServiceFees);
+
+        return compact(
+            'report',
+            'fixedServiceFees',
+            'assessedServiceFees',
+            'totalFixedFeesCharged',
+            'totalFixedFeesReceived',
+            'totalAssessedFeesReceived',
+            'totalAssessedFeesCharged'
+        );
     }
 
     /**
