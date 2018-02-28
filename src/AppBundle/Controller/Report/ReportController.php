@@ -105,8 +105,8 @@ class ReportController extends RestController
         $nextYearReport = $this->get('opg_digideps.report_service')
             ->submit($currentReport, $this->getUser(), new \DateTime($data['submit_date']));
 
-        //response to pass back
-        return ['newReportId' => $nextYearReport->getId()];
+        //response to pass back. if the report was alreay submitted, no NY report is created
+        return $nextYearReport ? $nextYearReport->getId() : null;
     }
 
     /**

@@ -198,10 +198,17 @@ class ReportService
         }
         $this->_em->persist($submission);
 
-        $newYearReport = $this->createNextYearReport($currentReport);
+        if ($currentReport->getUnSubmitDate()) {
+            //unsubmitted report
+            $currentReport->setUnSubmitDate(null);
+            $currentReport->setUnsubmittedSectionsList(null);
+            $newYearReport = null;
+        } else {
+            // first-time submission
+            $newYearReport = $this->createNextYearReport($currentReport);
+        }
 
-        // single transaction flush: current report, submission, new year report
-        $this->_em->flush();
+        $this->_em->flush(); // single transaction for report.submitted flags + new year report creation
 
         return $newYearReport;
     }
