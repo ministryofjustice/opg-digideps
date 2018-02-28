@@ -111,7 +111,7 @@ class ProfServiceFeeType extends AbstractType
 
                 return $validationGroups;
             },
-            'translation_domain' => 'report-prof_service_fee',
+            'translation_domain' => 'report-prof-current-fees',
         ])
         ->setRequired(['step']);
 

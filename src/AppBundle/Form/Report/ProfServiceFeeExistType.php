@@ -41,7 +41,7 @@ class ProfServiceFeeExistType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-pa-fee-expense',
+            'translation_domain' => 'report-prof-current-fees',
             'validation_groups' => function (FormInterface $form) {
                 $validationGroups = ['current-prof-fees-received-choice'];
 
