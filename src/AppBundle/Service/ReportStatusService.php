@@ -352,7 +352,7 @@ class ReportStatusService
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-        if ($this->report->profCurrentFeesCompleted()) {
+        if ($this->report->profCurrentFeesSectionCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 

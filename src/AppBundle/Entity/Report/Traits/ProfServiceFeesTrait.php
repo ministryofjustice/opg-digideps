@@ -56,12 +56,9 @@ trait ProfServiceFeesTrait
      */
     public function profCurrentFeesNotStarted()
     {
-        return true;
-//        return 0 === count($this->getProfCurrentFeesWithValidAmount())
-//            && empty($this->getReasonForNoCurrentFees())
-//            && 0 === count($this->getExpenses())
-//            && empty($this->getPaidForAnything());
+        return empty($this->getCurrentProfPaymentsReceived());
     }
+
 
     /**
      * @return ProfServiceFee[]
