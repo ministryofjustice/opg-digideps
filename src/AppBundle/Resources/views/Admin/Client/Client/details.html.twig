@@ -45,7 +45,7 @@
             {% if client.reports | length %}
                 {% for report in client.reports %}
                     {# only show submitted and unsubmitted reports #}
-                    {% if report.submitted or report.submitDate %}
+                    {% if report.submitted or report.unSubmitDate %}
                         {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
                         <tr class="{{ behatRegionPrefix }}">
                             <td>

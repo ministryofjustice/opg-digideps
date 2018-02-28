@@ -14,6 +14,14 @@ trait ReportUnsubmittedSections
     private $unsubmittedSection = [];
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report_unsubmitted_sections_list"})
+     */
+    private $unsubmittedSectionsList;
+
+    /**
      * @param UnsubmittedSection[] $unsubmittedSection
      */
     public function setUnsubmittedSection($unsubmittedSection)

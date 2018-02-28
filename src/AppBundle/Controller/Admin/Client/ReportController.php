@@ -40,9 +40,6 @@ class ReportController extends AbstractController
         // edit client form
         if ($form->isValid()) {
             $report
-                ->setSubmitted(false)
-                ->setAgreedBehalfDeputy(false)
-                ->setAgreedBehalfDeputyExplanation(null)
                 ->setUnSubmitDate(new \DateTime())
                 ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
             ;
@@ -56,9 +53,8 @@ class ReportController extends AbstractController
 
             //TODO merge API calls into one
             $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                'startEndDates', 'submitted', 'submit_agreed', 'report_unsubmitted_sections'
+                'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date'
             ]);
-            $this->getRestClient()->put('report/' . $report->getId(), $report, ['report-due-date']);
             $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 
             return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));

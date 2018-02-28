@@ -67,10 +67,11 @@ class Report implements ReportInterface
     private $has106flag;
 
     /**
-     * @Assert\NotBlank( message="report.startDate.notBlank")
-     * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
+     * @Assert\NotBlank( message="report.startDate.notBlank")
+     * @Assert\Date( message="report.startDate.invalidMessage" )
      *
      * @var \DateTime
      */
@@ -79,6 +80,7 @@ class Report implements ReportInterface
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      *
@@ -88,16 +90,19 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"report-due-date"})
+     * @JMS\Groups({"report_due_date"})
+     *
      * @Assert\NotBlank( message="report.dueDate.notBlank", groups={"report_due_date"} )
      * @Assert\Date( message="report.dueDate.invalidMessage", groups={"report_due_date"} )
      * @Assert\GreaterThan("today", message="report.dueDate.notInThePast", groups={"report_due_date"})
+     *
      * @var \DateTime
      */
     private $dueDate;
 
     /**
      * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
@@ -106,6 +111,7 @@ class Report implements ReportInterface
 
     /**
      * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"unsubmit_date"})
      */
@@ -226,7 +232,6 @@ class Report implements ReportInterface
     private $submitted;
 
     /**
-     * @deprecated remove from view as well if not used
      * @JMS\Type("boolean")
      *
      * @var bool
@@ -236,6 +241,7 @@ class Report implements ReportInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
+     *
      * @Assert\True(message="report.agree", groups={"declare"} )
      */
     private $agree;
@@ -245,6 +251,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -254,12 +261,14 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
 
     /**
      * @var Document[]
+     *
      * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
@@ -283,6 +292,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
+     *
      * @var Status
      */
     private $status;
@@ -296,18 +306,12 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
-     * @JMS\Type("array")
      * @var array
+     *
+     * @JMS\Type("array")
      */
     private $availableSections;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report_unsubmitted_sections"})
-     */
-    private $unsubmittedSectionsList;
 
     /**
      * @return int $id
