@@ -277,26 +277,16 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('is_ready_to_submit', $data);
     }
 
-    public function testSubmitAuth()
-    {
-        $url = '/report/' . self::$report1->getId() . '/submit';
-
-        $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-    }
-
-    public function testSubmitAcl()
-    {
-        $url2 = '/report/' . self::$report2->getId() . '/submit';
-
-        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
-    }
-
     /**
      * @depends testAdd
      */
     public function testSubmit($reportId)
     {
+        $url = '/report/' . self::$report1->getId() . '/submit';
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+        $this->assertEndpointNotAllowedFor('PUT', '/report/' . self::$report2->getId() . '/submit', self::$tokenDeputy);
+
         $report = self::fixtures()->clear()->getReportById($reportId);
 
         // add one document
@@ -333,6 +323,43 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
+
+        return $report->getId();
+    }
+
+    /**
+     * @depends testAdd
+     */
+    public function testUnsubmit($reportId)
+    {
+        $url = '/report/' . $reportId . '/unsubmit';
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+
+        // assert get
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+            'data'        => [
+                'un_submit_date'             => '2018-01-01',
+                'due_date'                  => '2019-01-01',
+                'unsubmitted_sections_list' => 'decisions,contacts',
+            ],
+        ]);
+
+        // both
+        $q = http_build_query(['groups' => ['report']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', '/report/' . $reportId  . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals('2018-01-01', $data['un_submit_date']);
+        $this->assertEquals('2019-01-01', $data['due_date']);
+        $this->assertEquals('decisions,contacts', $data['unsubmitted_sections_list']);
+        $this->assertEquals(false, $data['submitted']);
+        $this->assertEquals(null, $data['submit_date']);
     }
 
     public function testUpdateAuth()
@@ -365,7 +392,6 @@ class ReportControllerTest extends AbstractTestController
             'data'        => [
                 'start_date'                   => '2016-01-01',
                 'end_date'                     => '2016-11-30',
-                'due_date'                     => '2019-11-30',
                 'balance_mismatch_explanation' => 'bme',
             ],
         ]);
@@ -379,8 +405,9 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2016-01-01', $data['start_date']);
         $this->assertEquals('2016-11-30', $data['end_date']);
-        $this->assertEquals('2019-11-30', $data['due_date']);
     }
+
+
 
     public function testDebts()
     {

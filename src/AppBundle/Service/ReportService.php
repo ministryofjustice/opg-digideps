@@ -207,6 +207,26 @@ class ReportService
     }
 
     /**
+     * @param Report $report
+     * @param \DateTime $unsubmitDate
+     * @param \DateTime $dueDate
+     * @param $sectionList
+     */
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, $sectionList)
+    {
+        // reset report.submitted so that the deputy will set the report back into the dashboard
+        $report->setSubmitted(false);
+        $report->setSubmitDate(null);
+
+        $report->setUnSubmitDate($unsubmitDate);
+        $report->setDueDate($dueDate);
+
+        $report->setUnsubmittedSectionsList($sectionList);
+
+        $this->_em->flush();
+    }
+
+    /**
      * Set report submission for additional documents
      *
      * @param Report    $currentReport

@@ -255,7 +255,7 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report"})
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
      */
     private $unSubmitDate;
@@ -832,10 +832,14 @@ class Report implements ReportInterface
 
     /**
      * @param \DateTime $dueDate
+     *
+     * @return Report
      */
     public function setDueDate(\DateTime $dueDate)
     {
         $this->dueDate = $dueDate;
+
+        return $this;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Service\ReportService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -37,7 +38,7 @@ class ReportController extends RestController
 
         $this->validateArray($reportData, [
             'start_date' => 'notEmpty',
-            'end_date' => 'notEmpty',
+            'end_date'   => 'notEmpty',
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
@@ -62,7 +63,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['report'];
+            ? (array)$request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
@@ -111,7 +112,7 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
     {
@@ -203,12 +204,9 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
         }
 
-        if (array_key_exists('due_date', $data)) {
-            $report->setDueDate(new \DateTime($data['due_date']));
-        }
 
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean) $data['report_seen']);
+            $report->setReportSeen((boolean)$data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
@@ -296,7 +294,7 @@ class ReportController extends RestController
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
             if ('yes' == $data['wish_to_provide_documentation']
-            || ('no'  == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
+                || ('no' == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
         }
@@ -317,27 +315,23 @@ class ReportController extends RestController
          * @var $report Report
          */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
-
-        $data = $this->deserializeBodyContent($request);
-
         if (!$report->getSubmitted()) {
             throw new \RuntimeException('Cannot unsubmit an active report');
         }
-        $report->setSubmitted(false);
-        $report->setUnSubmitDate(new \DateTime());
 
-        if (array_key_exists('start_date', $data)) {
-            $report->setStartDate(new \DateTime($data['start_date']));
-        }
+        $data = $this->deserializeBodyContent($request, [
+            'un_submit_date'            => 'notEmpty',
+            'due_date'                  => 'notEmpty',
+            'unsubmitted_sections_list' => 'notEmpty',
+        ]);
 
-        if (array_key_exists('unsubmitted_sections_list', $data)) {
-            $report->setUnsubmittedSectionsList($data['unsubmitted_sections_list']);
-        }
-
-        if (array_key_exists('end_date', $data)) {
-            $report->setEndDate(new \DateTime($data['end_date']));
-            $report->getEndDate()->setTime(23, 59, 59);
-        }
+        $rs = $this->get('opg_digideps.report_service'); /** @var $rs ReportService */
+        $rs->unSubmit(
+            $report,
+            new \DateTime($data['un_submit_date']),
+            new \DateTime($data['due_date']),
+            $data['unsubmitted_sections_list']
+        );
 
         $this->getEntityManager()->flush();
 
@@ -383,12 +377,13 @@ class ReportController extends RestController
             $qb->setParameter('q', $q);
         }
 
-        $records = $qb->getQuery()->getResult(); /* @var $records Report[] */
+        $records = $qb->getQuery()->getResult();
+        /* @var $records Report[] */
 
         // calculate counts, and apply limit/offset
-        $counts = ['total' => 0,
-                   'notStarted' => 0,
-                   'notFinished' => 0,
+        $counts = ['total'         => 0,
+                   'notStarted'    => 0,
+                   'notFinished'   => 0,
                    'readyToSubmit' => 0];
         foreach ($records as $report) {
             $counts[$report->getStatus()->getStatus()]++;
@@ -405,13 +400,13 @@ class ReportController extends RestController
         $records = array_slice($records, $offset, $limit);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups')
+            ? (array)$request->query->get('groups')
             : ['report', 'report-client', 'client', 'status'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return [
-            'counts'=>$counts,
-            'reports'=>$records
+            'counts'  => $counts,
+            'reports' => $records,
         ];
     }
 
