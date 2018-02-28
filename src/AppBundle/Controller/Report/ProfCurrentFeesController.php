@@ -209,6 +209,9 @@ class ProfCurrentFeesController extends AbstractController
         $totalAssessedFeesReceived = $reportFeeService->getTotalReceivedFees($assessedServiceFees);
         $totalAssessedFeesCharged = $reportFeeService->getTotalChargedFees($assessedServiceFees);
 
+        $grandTotalFeesCharged = number_format(($totalAssessedFeesCharged + $totalFixedFeesCharged), 2, '.', ',');
+        $grandTotalFeesReceived = number_format(($totalAssessedFeesReceived + $totalFixedFeesReceived), 2, '.', ',');
+
         return compact(
             'report',
             'fixedServiceFees',
@@ -216,7 +219,9 @@ class ProfCurrentFeesController extends AbstractController
             'totalFixedFeesCharged',
             'totalFixedFeesReceived',
             'totalAssessedFeesReceived',
-            'totalAssessedFeesCharged'
+            'totalAssessedFeesCharged',
+            'grandTotalFeesCharged',
+            'grandTotalFeesReceived'
         );
     }
 
