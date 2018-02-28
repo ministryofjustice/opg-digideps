@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
@@ -17,7 +18,6 @@ trait ReportUnsubmittedSections
      */
     public function setUnsubmittedSection($unsubmittedSection)
     {
-        // TODO map into the model in order to read and use for next story
         $this->unsubmittedSection = $unsubmittedSection;
     }
 
@@ -58,6 +58,9 @@ trait ReportUnsubmittedSections
         return $this;
     }
 
+    /**
+     * @return array of section IDs
+     */
     public function getUnsubmittedSectionsIds()
     {
         return array_filter(array_map(function($us) {
@@ -71,7 +74,11 @@ trait ReportUnsubmittedSections
     public function unsubmittedSectionAtLeastOnce(ExecutionContextInterface $context)
     {
         if (empty($this->getUnsubmittedSectionsIds())) {
-            $context->addViolationAt('unsubmittedSection', 'report.unsubmissionSections.atLeastOnce');
+            // add error to all the sections
+            $context->addViolationAt('unsubmittedSection[0].present', 'report.unsubmissionSections.atLeastOnce');
+            for($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; $i++) {
+                $context->addViolationAt("unsubmittedSection[$i].present", '');
+            }
         }
     }
 }

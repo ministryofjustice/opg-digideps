@@ -25,7 +25,8 @@ Feature: Admin unsubmit report (from client page)
     # reports page
     Then the URL should match "/admin/client/\d+/details"
     And I should see "SUBMITTED" in the "report-2016-label" region
-    And I should see "NOT FINISHED" in the "report-2017-label" region
+    # assert active report is not lsited
+    And I should not see the "report-2017" region
     And I should see "25 February 2017" in the "report-2016-due-date" region
     And I save the application status into "report-2016-pre-unsubmission"
     When I click on "manage" in the "report-2016" region

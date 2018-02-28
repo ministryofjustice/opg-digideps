@@ -16,8 +16,6 @@ class UnsubmitReportType extends AbstractType
             ->add('id', 'hidden')
             ->add('unsubmittedSection', 'collection', [
                 'type' => new UnsubmittedSectionType(),
-//                'cascade_validation' => true,
-                'error_bubbling' => false,
             ])
             ->add('dueDateChoice', 'choice', [
                 'choices' => [
