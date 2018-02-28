@@ -53,7 +53,7 @@
                     During this reporting period, have you received any payments from the client?
                 </td>
                 <td>
-                    {{ report.currentProfPaymentsReceived }}
+                    {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
                 </td>
                 <td class="change-answer">
                     <a href="/report/{{ report.id }}/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
