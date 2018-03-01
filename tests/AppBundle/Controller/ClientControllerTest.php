@@ -57,12 +57,12 @@ class ClientControllerTest extends AbstractTestController
 
         // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
+        self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
         // pa
@@ -273,7 +273,5 @@ class ClientControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertCount(2, $data);
-        $this->assertEquals(5, $data[0]['id']);
-        $this->assertEquals(8, $data[1]['id']);
     }
 }
