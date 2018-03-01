@@ -30,6 +30,10 @@ class User implements UserInterface
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
 
+    const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
+    const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
+    const ROLE_ORG_TEAM_MEMBER = 'ROLE_ORG_TEAM_MEMBER';
+
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
     const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
