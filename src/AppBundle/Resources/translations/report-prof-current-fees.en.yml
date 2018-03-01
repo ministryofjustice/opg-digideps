@@ -25,7 +25,7 @@ existPage:
 
 addTypePage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
-  pageTitle: Add a charge
+  pageTitle: Add a %service_type% charge
   supportTitle: Current fees and expenses
   form:
     label: What type of professional deputy services did you charge for?

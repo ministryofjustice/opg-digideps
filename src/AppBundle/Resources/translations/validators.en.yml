@@ -431,6 +431,9 @@ feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option
 
+profServiceFee:
+    serviceType:
+        notBlank: Choose the type of service from the list
 
 
 # ====================================================================================================

@@ -70,9 +70,22 @@ class ProfCurrentFeesController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
             if ($report->getCurrentProfPaymentsReceived() == 'no') {
-                return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId, 'from'=>'exist']);
+                return $this->redirectToRoute(
+                    'prof_current_service_fees_summary',
+                    [
+                        'reportId' => $reportId,
+                        'from' => 'exist'
+                    ]
+                );
             } else {
-                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
+                return $this->redirectToRoute(
+                    'current_service_fee_step',
+                    [
+                        'reportId' => $reportId,
+                        'from' => 'exist',
+                        'step' => 1
+                    ]
+                );
             }
         }
 
@@ -124,31 +137,19 @@ class ProfCurrentFeesController extends AbstractController
             $profServiceFee = new EntityDir\Report\ProfServiceFee();
         }
 
-        if ($step == 3) {
-            // crete and handle form
-            $form = $this->createForm(new FormDir\Report\ProfServicePreviousFeesEstimateType(
-                    $this->get('translator'),
-                    'report-prof_service_fee'
-                ),
-                $report,
-                [
+        // crete and handle form
+        $form = $this->createForm(
+            new FormDir\Report\ProfServiceFeeType(
+                EntityDir\Report\ProfServiceFee::$serviceTypeIds,
+                $this->get('translator'),
+                'report-prof_service_fee'
+            ),
+            $profServiceFee,
+            [
                 'step' => $step
-                ]
-            );
-        } else {
-            // crete and handle form
-            $form = $this->createForm(
-                new FormDir\Report\ProfServiceFeeType(
-                    EntityDir\Report\ProfServiceFee::$serviceTypeIds,
-                    $this->get('translator'),
-                    'report-prof_service_fee'
-                ),
-                $profServiceFee,
-                [
-                    'step' => $step
-                ]
-            );
-        }
+            ]
+        );
+
 
         $form->handleRequest($request);
 
@@ -160,9 +161,9 @@ class ProfCurrentFeesController extends AbstractController
 
             if ($step == 1) {
                 if ($profServiceFee->getId() == null) {
-                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id']);
+                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id', 'prof-service-fee-type']);
                 } else {
-                    $result = $this->getRestClient()->put('prof-service-fee' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+                    $result = $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
                 }
 
                 return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
@@ -170,18 +171,6 @@ class ProfCurrentFeesController extends AbstractController
                 $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
 
                 return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 3]);
-            } elseif ($step == $totalSteps) {
-//                if ($feeId) { // edit
-//                    $request->getSession()->getFlashBag()->add(
-//                        'notice',
-//                        'Entry edited'
-//                    );
-//
-//                    return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
-//                } else { // add
-//                    $this->getRestClient()->post('/report/' . $reportId . '/professional-fee', $fee, ['prof-service-fees']);
-//                    return $this->redirectToRoute('add-another', ['reportId' => $reportId]);
-//                }
             }
 
             return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
@@ -193,7 +182,7 @@ class ProfCurrentFeesController extends AbstractController
             'step' => $step,
             'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
-            //'backLink' => $stepRedirector->getBackLink(),
+            'backLink' => $stepRedirector->getBackLink(),
             //'skipLink' => null,
         ];
     }
