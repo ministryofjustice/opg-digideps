@@ -345,7 +345,7 @@ class ReportController extends RestController
      *
      * @Route("/get-all")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function getAll(Request $request)
     {
