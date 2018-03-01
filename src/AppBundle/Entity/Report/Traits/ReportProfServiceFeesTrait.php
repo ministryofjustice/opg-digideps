@@ -43,4 +43,22 @@ trait ReportProfServiceFeesTrait
             return $profServiceFee->isCurrentFee();
         });
     }
+
+    /**
+     * Has Report got profServiceFee?
+     *
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function hasProfServiceFeeWithId($id)
+    {
+        foreach ($this->getProfServiceFees() as $profServiceFee) {
+            if ($profServiceFee->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
