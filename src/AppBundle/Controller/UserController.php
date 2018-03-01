@@ -56,10 +56,8 @@ class UserController extends RestController
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
             && !$this->isGranted(EntityDir\User::ROLE_AD)
-            && !$this->isGranted(EntityDir\User::ROLE_PA_NAMED) //TODO check user is also part of the team
-            && !$this->isGranted(EntityDir\User::ROLE_PA_ADMIN) //TODO check user is also part of the team
-            && !$this->isGranted(EntityDir\User::ROLE_PROF_NAMED) //TODO check user is also part of the team
-            && !$this->isGranted(EntityDir\User::ROLE_PROF_ADMIN) //TODO check user is also part of the team
+            && !$this->isGranted(EntityDir\User::ROLE_ORG_NAMED)
+            && !$this->isGranted(EntityDir\User::ROLE_ORG_ADMIN)
         ) {
             throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
@@ -457,7 +455,7 @@ class UserController extends RestController
     /**
      * @Route("/{id}/team", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function getTeamByUserId(Request $request, $id)
     {

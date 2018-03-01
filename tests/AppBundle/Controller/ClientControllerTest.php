@@ -16,9 +16,11 @@ class ClientControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     private static $tokenPa = null;
+    private static $tokenProf = null;
 
     // pa
     private static $pa1;
+    private static $prof1;
     private static $pa1Client1;
     private static $pa1Client1Report1;
 
@@ -55,18 +57,21 @@ class ClientControllerTest extends AbstractTestController
 
         // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
+        self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
         // pa
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber'=>'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
+
+        // prof
+        self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
 
         self::fixtures()->flush()->clear();
     }
@@ -77,6 +82,7 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenPa = $this->loginAsPa();
+            self::$tokenProf = $this->loginAsProf();
         }
     }
 
@@ -121,6 +127,8 @@ class ClientControllerTest extends AbstractTestController
     public function testupsertPut()
     {
         $url = '/client/upsert';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
         // Lay deputy
         $return = $this->assertJsonRequest('PUT', $url, [
@@ -265,7 +273,5 @@ class ClientControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertCount(2, $data);
-        $this->assertEquals(5, $data[0]['id']);
-        $this->assertEquals(8, $data[1]['id']);
     }
 }

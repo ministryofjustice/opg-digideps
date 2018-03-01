@@ -117,7 +117,7 @@ class ClientController extends RestController
     /**
      * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      *
      * @param int $id
      */
