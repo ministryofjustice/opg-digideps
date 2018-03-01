@@ -70,10 +70,16 @@ estCostsPage:
       label: |
         If your total charges are 20% or more above your estimate please provide an explanation
         for the SCCO.
+
 summaryPage:
   htmlTitle: "Deputy report -  Current fees and expenses | GOV.UK"
   pageTitle:  Current fees and expenses
   pageSectionDescription: |
-    In this section, we asked you to tell us about any fees or expenses you have charged in line with the practice direction.
-  addButton: Add a deputy expense
-  edit: Edit
+    In this section, we asked you to tell us about any fees or expenses you have charged in line
+    with the practice direction.
+  addButton: Add a charge
+  table:
+    service: Service
+    charged: Charged
+    received: Received
+    dateReceived: Date received
