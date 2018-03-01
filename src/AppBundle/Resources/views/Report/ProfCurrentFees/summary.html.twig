@@ -25,30 +25,23 @@
     <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
     <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
 
-    {# Missing questions alerts #}
-    {# {% if report.status.paFeesExpensesState.state != 'done' %}
-        {{ macros.notification('notice', 'canYouAnswer' | trans({}, 'common')) }}
-    {% endif %} #}
-
     {# Return to overview/client profile link #}
-    {# {{ macros.returnToOverview(report) }} #}
-
     {{ macros.returnToOverview(report) }}
 
     <table class="check-your-answers columns-2 push-double--bottom">
         <thead>
             <tr>
-                <th>Question</th>
-                <th>Answer</th>
+                <th>{{ 'question' | trans({}, 'common') }}</th>
+                <th>{{ 'answer' | trans({}, 'common') }}</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr class="behat-region-paid-for-anything">
                 <td>
-                    During this reporting period, have you received any payments from the client?
+                    {{ 'existPage.form.hasFees.label' | trans  }}
                 </td>
                 <td>
                     {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
@@ -63,12 +56,12 @@
 
     <div class="grid-row push--top">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">Charges and payments received</h2>
+            <h2 class="heading-medium flush--ends">List of charges and payments received</h2>
         </div>
         <div class="column-half text--right">
             <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1 }) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
-                Add a charge
+                {{ 'summaryPage.addButton' | trans }}
             </a>
         </div>
     </div>
@@ -78,31 +71,33 @@
     <table class="check-your-answers behat-region-list-accounts">
         <thead>
             <tr>
-                <th class="width-third">Service</th>
-                <th class="numeric">Charged</th>
-                <th class="numeric">Received</th>
-                <th class="numeric">Date received</th>
+                <th class="width-third">{{ 'summaryPage.table.service' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.received' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.dateReceived' | trans }}</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
+
         <tbody>
+
         {% for fixedServiceFee in fixedServiceFees %}
-            
-        <tr class="behat-region-transaction-">
-                <td class="width-third">{{ fixedServiceFee.serviceTypeId }}</td>
+            <tr class="behat-region-transaction-">
+                <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
                 <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged }}</td>
-                <td class="numeric-small">£{{ fixedServiceFee.amountReceived }}</td>
+                <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived }}</td>
                 <td class="numeric-small">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ fixedServiceFee.id }}" class="behat-link-edit-fee action-link">Edit</a>
-                    <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ fixedServiceFee.id }}" class="behat-link-delete push-half--left action-link">Remove</a>
+                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ fixedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ fixedServiceFee.id }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                 </td>
             </tr>
-            {% endfor %}
-                <tr class="no-border">
-                <td>
+        {% endfor %}
+
+            <tr class="no-border">
+                <td class="width-third">
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="text--right">
@@ -112,6 +107,7 @@
                     <span class="bold-small behat-region-household-bills-total">£{{ totalFixedFeesReceived }}</span>
                 </td>
                 <td></td>
+                <td class="width-sixth"></td>
             </tr>
         </tbody>
     </table>
@@ -122,32 +118,34 @@
     <table class="check-your-answers behat-region-list-accounts">
         <thead>
             <tr>
-                <th class="width-third">Service</th>
-                <th class="numeric">Charged</th>
-                <th class="numeric">Received</th>
-                <th class="numeric">Date received</th>
+                <th class="width-third">{{ 'summaryPage.table.service' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.received' | trans }}</th>
+                <th class="numeric">{{ 'summaryPage.table.dateReceived' | trans }}</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
-        <tbody>
-        {% for assessedServiceFee in assessedServiceFees %}
 
+        <tbody>
+
+        {% for assessedServiceFee in assessedServiceFees %}
             <tr>
-                <td class="width-third">{{ assessedServiceFee.serviceTypeId }}</td>
+                <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
                 <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged }}</td>
-                <td class="numeric-small">£{{ assessedServiceFee.amountReceived }}</td>
+                <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountReceived }}</td>
                 <td class="numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
 
-                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">Edit</a>
-                    <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'fee': assessedServiceFee.id }) }}" class="behat-link-delete push-half--left action-link">Remove</a>
+                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'fee': assessedServiceFee.id }) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                 </td>
             </tr>
         {% endfor %}
+
             <tr class="no-border">
-                <td>
+                <td class="width-third">
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="text--right">
@@ -157,6 +155,7 @@
                     <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesReceived }}</span>
                 </td>
                 <td></td>
+                <td class="width-sixth"></td>
             </tr>
         </tbody>
     </table>
@@ -167,10 +166,10 @@
                 <td class="text--right width-third">
                     <span class="heading-medium">Grand totals:</span>
                 </td>
-                <td class="numeric-small width-eighth">
+                <td class="numeric-small width-sixth">
                     <span class="heading-medium">£{{ grandTotalFeesCharged }}</span>
                 </td>
-                <td class="numeric-small width-eighth">
+                <td class="numeric-small width-sixth">
                     <span class="heading-medium">£{{ grandTotalFeesReceived }}</span>
                 </td>
                 <td class="width-sixth"></td>
@@ -182,37 +181,38 @@
     <table class="check-your-answers columns-2 push-double--bottom">
         <thead>
             <tr>
-                <th>Question</th>
-                <th>Answer</th>
+                <th>{{ 'question' | trans({}, 'common') }}</th>
+                <th>{{ 'answer' | trans({}, 'common') }}</th>
                 <th>
-                    <span class="visually-hidden">Actions</span>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
                 </th>
             </tr>
         </thead>
         <tbody>
             <tr class="behat-region-paid-for-anything">
                 <td>
-                    Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?
+                    {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
                 </td>
                 <td>
                     {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
-
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">Edit</a>
+                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                 </td>
             </tr>
-            <tr class="behat-region-paid-for-anything">
-                <td>
-                    If your total charges of £ are 20% or more above your estimate please provide an explanation for the SCCO.
-                </td>
-                <td>
-                    {{ report.profFeesEstimateSccoReason }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">Edit</a>
-                </td>
-            </tr>
+            {% if report.previousProfFeesEstimateGiven == 'yes' %}
+                <tr class="behat-region-paid-for-anything">
+                    <td>
+                        {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
+                    </td>
+                    <td>
+                        {{ report.profFeesEstimateSccoReason }}
+                    </td>
+                    <td class="change-answer">
+                        <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 
