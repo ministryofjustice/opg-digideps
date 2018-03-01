@@ -33,7 +33,6 @@ class ProfServiceFeeExistType extends AbstractType
             ->add('currentProfPaymentsReceived', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['current-prof-payments-received']])],
             ])
             ->add('save', 'submit', ['label' => 'save.label']);
     }
@@ -43,7 +42,7 @@ class ProfServiceFeeExistType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-prof-current-fees',
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['current-prof-fees-received-choice'];
+                $validationGroups = ['current-prof-payments-received'];
 
                 return $validationGroups;
             },

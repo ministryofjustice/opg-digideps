@@ -607,6 +607,8 @@ note:
 # ====================================================================================================
 
 common:
+  yesnochoice:
+    notBlank: Please select either 'Yes' or 'No'
   summaryHeading: There are some problems on this page
   genericPhone:
     minLength: Check the phone number: it must have at least {{ limit }} numbers

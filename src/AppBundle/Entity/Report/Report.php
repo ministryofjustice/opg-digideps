@@ -313,7 +313,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "current-prof-payments-received"})
-     * @Assert\NotBlank(message="prof.fees.currentProfPaymentsReceived.notBlank", groups={"current-prof-payments-received"})
+     * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"current-prof-payments-received"})
      */
     private $currentProfPaymentsReceived;
 
