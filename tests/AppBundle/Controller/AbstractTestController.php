@@ -212,6 +212,14 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @return string token
      */
+    protected function loginAsProf()
+    {
+        return $this->login('prof@example.org', 'Abcd1234', '123abc-deputy');
+    }
+
+    /**
+     * @return string token
+     */
     protected function loginAsAdmin()
     {
         return $this->login('admin@example.org', 'Abcd1234', '123abc-admin');

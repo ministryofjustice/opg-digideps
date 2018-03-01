@@ -105,3 +105,15 @@ parameters:
             clientSurname:
             typeOfReport:
             corref:
+
+        prof@example.org:
+            firstname: test
+            lastname: prof
+            roleName: ROLE_PROF_NAMED
+            password: Abcd1234
+            deputyNo:
+            deputyPostcode:
+            caseNumber:
+            clientSurname:
+            typeOfReport:
+            corref:

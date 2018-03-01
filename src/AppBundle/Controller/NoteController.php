@@ -16,7 +16,7 @@ class NoteController extends RestController
     /**
      * @Route("{clientId}", requirements={"clientId":"\d+"})
      * @Method({"POST"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function add(Request $request, $clientId)
     {
@@ -44,7 +44,7 @@ class NoteController extends RestController
      *
      * @Route("{id}")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function getOneById(Request $request, $id)
     {
@@ -64,7 +64,7 @@ class NoteController extends RestController
      *
      * @Route("{id}")
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      */
     public function updateNote(Request $request, $id)
     {
@@ -92,7 +92,7 @@ class NoteController extends RestController
      *
      * @Method({"DELETE"})
      * @Route("{id}")
-     * @Security("has_role('ROLE_PA')")
+     * @Security("has_role('ROLE_ORG')")
      *
      * @param int $id
      *
