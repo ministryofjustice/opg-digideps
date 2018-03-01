@@ -14,7 +14,7 @@ use AppBundle\Form\Report\ProfServiceFeeExistType;
 /**
  * Base route
  *
- * @Route("/report/{reportId}/prof-current-fees")
+ * @Route("/report/{reportId}/prof-service-fee")
  */
 class ProfCurrentFeesController extends AbstractController
 {
@@ -94,18 +94,16 @@ class ProfCurrentFeesController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $feeId = null)
     {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         $totalSteps = 2;
-        if ($step == 3) {
+        if ($step == 3 && empty($report->getPreviousProfFeesEstimateGiven())) {
             return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
         }
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
         }
 
-        // common vars and data
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
@@ -287,6 +285,26 @@ class ProfCurrentFeesController extends AbstractController
             'grandTotalFeesCharged',
             'grandTotalFeesReceived'
         );
+    }
+
+    /**
+     * @Route("/delete/fee/{profServiceFeeId}", name="prof_service_fee_delete", requirements={"profServiceFeeId":"\d+"})
+     *
+     * @param Request $request
+     * @param $reportId
+     * @param $profServiceFeeId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction(Request $request, $reportId, $profServiceFeeId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        if ($report->hasProfServiceFeeWithId($profServiceFeeId)) {
+            $this->getRestClient()->delete("/prof-service-fee/{$profServiceFeeId}");
+            $request->getSession()->getFlashBag()->add('notice', 'Service fee removed');
+        }
+
+        return $this->redirect($this->generateUrl('prof_current_service_fees_summary', ['reportId' => $reportId]));
     }
 
     /**
