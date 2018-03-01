@@ -26,18 +26,16 @@
                 'fieldSetClass' : 'inline',
                 'legendClass' : 'form-label-bold text push-half--bottom',
                 'items': [
-                {},
+                    {'dataTarget': 'scco-reason'},
+                    {},
                 ],
                 'formGroupClass': 'flush--bottom'
             }) }}
 
-        </div>
+            <div id="scco-reason" class="panel panel-border-narrow js-hidden">
+                {{ form_input(form.profFeesEstimateSccoReason, 'estCostsPage.form.profFeesEstimateSccoReason') }}
+            </div>
 
-        <div id="scco-reason" class="panel panel-border-narrow ">
-            {{ form_input(form.profFeesEstimateSccoReason, (page ~ '.form.profFeesEstimateSccoReason'), {
-                'labelClass': 'required',
-                'labelParameters': {'%feeCharged%': '232' | e }
-            }) }}
         </div>
 
     </div>

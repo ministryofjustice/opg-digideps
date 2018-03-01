@@ -64,10 +64,12 @@ estCostsPage:
   form:
     estimateCosts:
       legend: |
-        Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?
+        Did you give OPG an estimate of your costs for the current reporting period in your
+        last deputyship report or in your opening deputyship record?
     profFeesEstimateSccoReason:
       label: |
-        If your total charges of %totalCharges% are 20% or more above your estimate, please provide an explanation for the SCCO.
+        If your total charges are 20% or more above your estimate please provide an explanation
+        for the SCCO.
 summaryPage:
   htmlTitle: "Deputy report -  Current fees and expenses | GOV.UK"
   pageTitle:  Current fees and expenses

@@ -48,6 +48,7 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
 
                 return $validationGroups;
             },
+            'translation_domain' => 'report-prof-current-fees',
         ]);
     }
 
