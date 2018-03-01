@@ -33,9 +33,7 @@
     {# Return to overview/client profile link #}
     {# {{ macros.returnToOverview(report) }} #}
 
-    <p class="text--right flush--bottom">
-        <a href="/report/{{ report.id }}/overview" class="bold-small">Return to report overview</a>
-    </p>
+    {{ macros.returnToOverview(report) }}
 
     <table class="check-your-answers columns-2 push-double--bottom">
         <thead>
@@ -56,7 +54,7 @@
                     {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
                 </td>
                 <td class="change-answer">
-                    <a href="/report/{{ report.id }}/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id }) }}" class="behat-link-edit-exist">Edit</a>
                 </td>
             </tr>
         </tbody>
@@ -68,7 +66,7 @@
             <h2 class="heading-medium flush--ends">Charges and payments received</h2>
         </div>
         <div class="column-half text--right">
-            <a href="/report/3/money-out/step1" class="bold-small move-quarter--up action-link behat-link-add">
+            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1 }) }}" class="bold-small move-quarter--up action-link behat-link-add">
                 <span class="icon icon-plus"></span>
                 Add a charge
             </a>
@@ -98,8 +96,8 @@
                 <td class="numeric-small">£{{ fixedServiceFee.amountReceived }}</td>
                 <td class="numeric-small">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
-                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
+                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ fixedServiceFee.id }}" class="behat-link-edit-fee action-link">Edit</a>
+                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ fixedServiceFee.id }}" class="behat-link-delete push-half--left action-link">Remove</a>
                 </td>
             </tr>
             {% endfor %}
@@ -142,8 +140,9 @@
                 <td class="numeric-small">£{{ assessedServiceFee.amountReceived }}</td>
                 <td class="numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link" href="/report/3/money-out/step3/4">Edit</a>
-                    <a class="behat-link-delete push-half--left action-link" href="/report/3/money-out/4/delete">Remove</a>
+
+                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">Edit</a>
+                    <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'fee': assessedServiceFee.id }) }}" class="behat-link-delete push-half--left action-link">Remove</a>
                 </td>
             </tr>
         {% endfor %}
@@ -196,10 +195,11 @@
                     Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?
                 </td>
                 <td>
-                    Yes
+                    {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
+
                 </td>
                 <td class="change-answer">
-                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">Edit</a>
                 </td>
             </tr>
             <tr class="behat-region-paid-for-anything">
@@ -207,10 +207,10 @@
                     If your total charges of £ are 20% or more above your estimate please provide an explanation for the SCCO.
                 </td>
                 <td>
-                    Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae. Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.
+                    {{ report.profFeesEstimateSccoReason }}
                 </td>
                 <td class="change-answer">
-                    <a href="/report/1153/deputy-expenses/exist?from=summary" class="behat-link-edit">Edit</a>
+                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">Edit</a>
                 </td>
             </tr>
         </tbody>
@@ -222,13 +222,13 @@
     <nav class="pagination" role="navigation" aria-label="Pagination">
         <ul class="group">
             <li class="previous">
-                <a title="Navigate to previous part" rel="prev" href="/report/1153/visits-care">
+                <a title="Navigate to previous part" rel="prev" href="/report/{{ report.id }}/visits-care">
                     <span class="pagination-label">Previous section</span>
                     <span class="pagination-part-title">Visits and care</span>
                 </a>
             </li>
             <li class="next">
-                <a title="Navigate to next part" rel="next" href="/report/1153/gifts">
+                <a title="Navigate to next part" rel="next" href="/report/{{ report.id }}/gifts">
                     <span class="pagination-label">Next section</span>
                     <span class="pagination-part-title">Gifts</span>
                 </a>

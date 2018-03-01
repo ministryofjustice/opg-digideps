@@ -22,7 +22,8 @@ class ProfCurrentFeesController extends AbstractController
     private static $jmsGroups = [
         'status',
         'report-prof-service-fees',
-        'prof-service-fees'
+        'prof-service-fees',
+        'report-prof-estimate-fees'
     ];
 
     /**
@@ -71,7 +72,7 @@ class ProfCurrentFeesController extends AbstractController
             if ($report->getCurrentProfPaymentsReceived() == 'no') {
                 return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId, 'from'=>'exist']);
             } else {
-                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'from'=>'exist', 'step' => 1]);
             }
         }
 
@@ -88,12 +89,15 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/step/{step}/fee/{feeId}", name="current-service-fee-step", requirements={"step":"\d+"})
+     * @Route("/step/{step}/fee/{feeId}", name="current_service_fee_step", requirements={"step":"\d+"})
      * @Template()
      */
     public function stepAction(Request $request, $reportId, $step, $feeId = null)
     {
         $totalSteps = 2;
+        if ($step == 3) {
+            return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
+        }
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('prof_current_service_fees_summary', ['reportId' => $reportId]);
         }
@@ -105,7 +109,7 @@ class ProfCurrentFeesController extends AbstractController
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector()
-            ->setRoutes('prof_current_fees_exist', 'current-service-fee-step', 'prof_current_service_fees_summary')
+            ->setRoutes('prof_current_fees_exist', 'current_service_fee_step', 'previous_estimates', 'prof_current_service_fees_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)
             ->setTotalSteps($totalSteps)
@@ -122,18 +126,32 @@ class ProfCurrentFeesController extends AbstractController
             $profServiceFee = new EntityDir\Report\ProfServiceFee();
         }
 
-        // crete and handle form
-        $form = $this->createForm(
-            new FormDir\Report\ProfServiceFeeType(
-                EntityDir\Report\ProfServiceFee::$serviceTypeIds,
-                $this->get('translator'),
-                'report-prof_service_fee'
-            ),
-            $profServiceFee,
-            [
+        if ($step == 3) {
+            // crete and handle form
+            $form = $this->createForm(new FormDir\Report\ProfServicePreviousFeesEstimateType(
+                    $this->get('translator'),
+                    'report-prof_service_fee'
+                ),
+                $report,
+                [
                 'step' => $step
-            ]
-        );
+                ]
+            );
+        } else {
+            // crete and handle form
+            $form = $this->createForm(
+                new FormDir\Report\ProfServiceFeeType(
+                    EntityDir\Report\ProfServiceFee::$serviceTypeIds,
+                    $this->get('translator'),
+                    'report-prof_service_fee'
+                ),
+                $profServiceFee,
+                [
+                    'step' => $step
+                ]
+            );
+        }
+
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -149,11 +167,11 @@ class ProfCurrentFeesController extends AbstractController
                     $result = $this->getRestClient()->put('prof-service-fee' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
                 }
 
-                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
             } elseif ($step == 2) {
                 $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
 
-                return $this->redirectToRoute('current-service-fee-step', ['reportId' => $reportId, 'step' => 3]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 3]);
             } elseif ($step == $totalSteps) {
 //                if ($feeId) { // edit
 //                    $request->getSession()->getFlashBag()->add(
@@ -179,6 +197,52 @@ class ProfCurrentFeesController extends AbstractController
             'form' => $form->createView(),
             //'backLink' => $stepRedirector->getBackLink(),
             //'skipLink' => null,
+        ];
+    }
+
+
+    /**
+     * @Route("/previous-estimates", name="previous_estimates")
+     * @Template()
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function previousEstimatesAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $form = $this->createForm(new FormDir\Report\ProfServicePreviousFeesEstimateType(
+            $this->get('translator'),
+            'report-prof_service_fee'
+        ), $report);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            /* @var $report EntityDir\Report\Report */
+            $report = $form->getData();
+
+            $this->getRestClient()->put('report/' . $reportId, $report, ['report-prof-estimate-fees']);
+
+            return $this->redirectToRoute(
+                'prof_current_service_fees_summary',
+                [
+                    'reportId' => $reportId,
+                    'from'=>'current_service_fee_step'
+                ]
+            );
+        }
+
+//        $backLink = $this->generateUrl('prof_current_fees', ['reportId' => $reportId]);
+//        if ($request->get('from') == 'summary') {
+//            $backLink = $this->generateUrl('prof_current_fees_summary', ['reportId' => $reportId]);
+//        }
+
+        return [
+            //'backLink' => $backLink,
+            'form' => $form->createView(),
+            'report' => $report,
         ];
     }
 

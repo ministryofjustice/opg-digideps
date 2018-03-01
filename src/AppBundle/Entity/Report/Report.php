@@ -318,6 +318,24 @@ class Report implements ReportInterface
     private $currentProfPaymentsReceived;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @Assert\NotBlank(message="prof.fees.previousProfFeesEstimateGiven.notBlank", groups={"previous-prof-fees-estimate-choice"})
+     */
+    private $previousProfFeesEstimateGiven;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @Assert\NotBlank(message="prof.fees.profFeesEstimateSccoReason.notBlank", groups={"prof-fees-estimate-scco-reason"})
+     */
+    private $profFeesEstimateSccoReason;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1261,4 +1279,42 @@ class Report implements ReportInterface
             return $profServiceFee->getFeeTypeId() === $feeTypeId;
         });
     }
+
+
+    /**
+     * @return string
+     */
+    public function getPreviousProfFeesEstimateGiven()
+    {
+        return $this->previousProfFeesEstimateGiven;
+    }
+
+    /**
+     * @param string $previousProfFeesEstimateGiven
+     * @return $this
+     */
+    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
+    {
+        $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfFeesEstimateSccoReason()
+    {
+        return $this->profFeesEstimateSccoReason;
+    }
+
+    /**
+     * @param string $profFeesEstimateSccoReason
+     * @return $this
+     */
+    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
+    {
+        $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
+        return $this;
+    }
+
 }

@@ -1,0 +1,82 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'estCostsPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# {% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %} #}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.previousProfFeesEstimateGiven, 'existPage.form.hasFees', {
+                'useFormGroup': false,
+                'legendText' : (page ~ '.form.estimateCosts.legend') | trans,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold text push-half--bottom',
+                'items': [
+                {},
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+
+        </div>
+
+        <div id="scco-reason" class="panel panel-border-narrow ">
+            {{ form_input(form.profFeesEstimateSccoReason, (page ~ '.form.profFeesEstimateSccoReason'), {
+                'labelClass': 'required',
+                'labelParameters': {'%feeCharged%': '232' | e }
+            }) }}
+        </div>
+
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {#<div class="form-section push--bottom">#}
+    {#<div class="form-group flush--bottom ">#}
+
+    {#<fieldset class="inline">#}
+    {#<legend class="form-label-bold text text push-half--bottom text push-half--bottom">Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?</legend>#}
+
+    {#<div class="multiple-choice text" data-target="reason-for-no-contact" value="no" aria-controls="reason-for-no-contact" aria-expanded="false">#}
+    {#<input type="radio" id="contact_exist_hasContacts_0" name="contact_exist[hasContacts]" required="required" class="" value="yes">#}
+    {#<label class="" for="contact_exist_hasContacts_0">Yes</label>#}
+    {#</div>#}
+
+    {#<div class="multiple-choice text">#}
+    {#<input type="radio" id="contact_exist_hasContacts_1" name="contact_exist[hasContacts]" required="required" class=""><label class="" for="contact_exist_hasContacts_1">No</label>#}
+    {#</div>#}
+
+    {#<div id="reason-for-no-contact" class="panel panel-border-narrow js-hidden">#}
+    {#<div id="form-group-contact_exist_reasonForNoContacts" class="form-group ">#}
+    {#<label class="form-label text required required" for="contact_exist_reasonForNoContacts">If your total charges are 20% or more above your estimate please provide an explanation for the SCCO.</label>#}
+    {#<textarea id="contact_exist_reasonForNoContacts" name="contact_exist[reasonForNoContacts]" required="required" class=" form-control "></textarea>#}
+    {#</div>#}
+    {#</div>#}
+
+    {#</fieldset>#}
+    {#</div>#}
+    {#</div>#}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+
+
+

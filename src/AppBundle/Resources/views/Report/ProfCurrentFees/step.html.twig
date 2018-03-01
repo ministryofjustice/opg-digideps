@@ -8,8 +8,6 @@
     {% set page = 'addTypePage' %}
 {% elseif step == 2 %}
     {% set page = 'addDetailsPage' %}
-{% elseif step == 3 %}
-    {% set page = 'estCostsPage' %}
 {% endif %}
 
 
@@ -18,9 +16,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    {% if not (step == 3) %}
-        <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-    {% endif %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {# {% block linkBack %}
@@ -31,9 +27,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
-
     {% if step == 1 %}
+
+        {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
                 'legendClass' : 'form-label-bold',
@@ -42,7 +39,12 @@
             }) }}
         </div>
 
+        {{ macros.saveAndContinueButton(form.save) }}
+
     {% elseif step == 2 %}
+
+        {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
                 'legendClass' : 'form-label-bold',
@@ -83,45 +85,9 @@
             </div>
         </div>
 
-    {% elseif step == 3 %}
-
-        <div class="form-section push--bottom">
-            <div class="form-group flush--bottom ">
-
-                <fieldset class="inline">
-                    <legend class="form-label-bold text text push-half--bottom text push-half--bottom">Did you give OPG an estimate of your costs for the current reporting period in your last deputyship report or in your opening deputyship record?</legend>
-
-                    <div class="multiple-choice text" data-target="reason-for-no-contact" value="no" aria-controls="reason-for-no-contact" aria-expanded="false">
-                        <input type="radio" id="contact_exist_hasContacts_0" name="contact_exist[hasContacts]" required="required" class="" value="yes">
-                        <label class="" for="contact_exist_hasContacts_0">Yes</label>
-                    </div>
-
-                    <div class="multiple-choice text">
-                        <input type="radio" id="contact_exist_hasContacts_1" name="contact_exist[hasContacts]" required="required" class=""><label class="" for="contact_exist_hasContacts_1">No</label>
-                    </div>
-
-                    <div id="reason-for-no-contact" class="panel panel-border-narrow js-hidden">
-                        <div id="form-group-contact_exist_reasonForNoContacts" class="form-group ">
-                            <label class="form-label text required required" for="contact_exist_reasonForNoContacts">If your total charges are 20% or more above your estimate please provide an explanation for the SCCO.</label>
-                            <textarea id="contact_exist_reasonForNoContacts" name="contact_exist[reasonForNoContacts]" required="required" class=" form-control "></textarea>
-                        </div>
-                    </div>
-
-                </fieldset>
-            </div>
-        </div>
-
-        <button type="submit" class="button behat-link-save-and-continue">Save and continue</button>
+        {{ macros.saveAndContinueButton(form.save) }}
 
     {% endif %}
-
-    {% if step == 2 %}
-        <button type="submit" class="button push-half--right push-half--bottom">Save and add another</button><br>
-        <p>or</p>
-    {% endif %}
-
-    {{ macros.saveAndContinueButton(form.save) }}
-
 
     {{ form_end(form) }}
 
