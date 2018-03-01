@@ -14,7 +14,7 @@ class ProfServiceFeeController extends RestController
     /**
      * @Route("/report/{reportId}/prof-service-fee")
      * @Method({"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_PROF')")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -38,7 +38,7 @@ class ProfServiceFeeController extends RestController
     /**
      * @Route("/prof-service-fee/{id}")
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_DEPUTY')")
+     * @Security("has_role('ROLE_PROF')")
      */
     public function updateAction(Request $request, $id)
     {
@@ -52,23 +52,6 @@ class ProfServiceFeeController extends RestController
 
         return ['id' => $profServiceFee->getId()];
     }
-
-    /**
-     * @Route("/{reportId}/prof-service-fee")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_PROF')")
-     *
-     * @param int $reportId
-     */
-//    public function findByReportIdAction($reportId)
-//    {
-//        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
-//        $this->denyAccessIfReportDoesNotBelongToUser($report);
-//
-//        $ret = $this->getRepository(EntityDir\Report\ProfServiceFee::class)->findByReport($report);
-//
-//        return $ret;
-//    }
 
     /**
      * @Route("/prof-service-fee/{id}")
