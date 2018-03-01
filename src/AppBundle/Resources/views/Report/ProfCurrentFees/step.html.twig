@@ -12,7 +12,13 @@
 
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%serviceType%' : fee.serviceTypeId | e }) }}{% endblock %}
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle') | trans }}
+
+    {% if step == 2 %}
+        {{ ('addTypePage.form.serviceType.' ~ fee.serviceTypeId) | trans }}
+    {% endif %}
+{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
