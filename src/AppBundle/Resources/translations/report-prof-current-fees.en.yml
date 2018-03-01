@@ -22,15 +22,25 @@ existPage:
   form:
     hasFees:
       label: During this reporting period, have you received any payments from the client?
-    serviceType:
-      options:
-        annual-report: Annual report
+
 addTypePage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
   pageTitle: Add a charge
   supportTitle: Current fees and expenses
   form:
     label: What type of professional deputy services did you charge for?
+    serviceType:
+      annual-report: Annual report
+      annual-management-interim: Annual management (interim)
+      annual-management-final: Annual management (final)
+      appointment: Appointment
+      conveyancing: Conveyancing
+      litigation: Litigation
+      specialist-advice: Specialist advice
+      statutory-wills: Statutory wills
+      tax-returns: Tax returns
+      trust-applications: Trust applications
+      other-costs: Other costs
 
 addDetailsPage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
