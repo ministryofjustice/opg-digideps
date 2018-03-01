@@ -22,7 +22,8 @@ class Version167 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_7829CE7E4BD2A4C0 ON prof_service_fee (report_id)');
         $this->addSql('ALTER TABLE prof_service_fee ADD CONSTRAINT FK_7829CE7E4BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE report ADD current_prof_payments_received VARCHAR(255) DEFAULT NULL');
-
+        $this->addSql('ALTER TABLE report ADD previous_prof_fees_estimate_given VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD prof_fees_estimate_scco_reason TEXT DEFAULT NULL');
     }
 
     /**

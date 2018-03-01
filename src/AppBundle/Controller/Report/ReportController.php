@@ -120,8 +120,7 @@ class ReportController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent(
-            $request,
-            ['current_prof_payments_received' => 'notEmpty']
+            $request
         );
 
         //TODO move to a unit-tested service
@@ -306,6 +305,14 @@ class ReportController extends RestController
         if (array_key_exists('current_prof_payments_received', $data)) {
 
             $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
+        }
+
+        if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
+            $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
+        }
+
+        if (array_key_exists('prof_fees_estimate_scco_reason', $data)) {
+            $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
         }
 
         $this->getEntityManager()->flush();

@@ -359,6 +359,24 @@ class Report implements ReportInterface
     private $currentProfPaymentsReceived;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @ORM\Column(name="previous_prof_fees_estimate_given", type="string", nullable=true)
+     */
+    private $previousProfFeesEstimateGiven;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @ORM\Column(name="prof_fees_estimate_scco_reason", type="string", nullable=true)
+     */
+    private $profFeesEstimateSccoReason;
+
+    /**
      * Report constructor.
      *
      * @param Client $client
@@ -1039,5 +1057,41 @@ class Report implements ReportInterface
     public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
     {
         $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviousProfFeesEstimateGiven()
+    {
+        return $this->previousProfFeesEstimateGiven;
+    }
+
+    /**
+     * @param string $previousProfFeesEstimateGiven
+     * @return $this
+     */
+    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
+    {
+        $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfFeesEstimateSccoReason()
+    {
+        return $this->profFeesEstimateSccoReason;
+    }
+
+    /**
+     * @param string $profFeesEstimateSccoReason
+     * @return $this
+     */
+    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
+    {
+        $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
+        return $this;
     }
 }
