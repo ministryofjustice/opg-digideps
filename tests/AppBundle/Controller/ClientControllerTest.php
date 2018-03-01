@@ -16,9 +16,11 @@ class ClientControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     private static $tokenPa = null;
+    private static $tokenProf = null;
 
     // pa
     private static $pa1;
+    private static $prof1;
     private static $pa1Client1;
     private static $pa1Client1Report1;
 
@@ -68,6 +70,9 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber'=>'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
+        // prof
+        self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
+
         self::fixtures()->flush()->clear();
     }
 
@@ -77,6 +82,7 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenPa = $this->loginAsPa();
+            self::$tokenProf = $this->loginAsProf();
         }
     }
 
@@ -121,6 +127,8 @@ class ClientControllerTest extends AbstractTestController
     public function testupsertPut()
     {
         $url = '/client/upsert';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
         // Lay deputy
         $return = $this->assertJsonRequest('PUT', $url, [
