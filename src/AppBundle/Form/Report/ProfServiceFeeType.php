@@ -46,7 +46,7 @@ class ProfServiceFeeType extends AbstractType
         $ret = [];
 
         foreach ($this->serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
-            $ret[$serviceTypeId] = $this->translator->trans($serviceTypeId);
+            $ret[$serviceTypeId] = $this->translator->trans('existPage.form.serviceType.options.' . $serviceTypeId);
         }
         return array_unique($ret);
     }

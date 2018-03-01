@@ -22,7 +22,9 @@ existPage:
   form:
     hasFees:
       label: During this reporting period, have you received any payments from the client?
-
+    serviceType:
+      options:
+        annual-report: Annual report
 addTypePage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
   pageTitle: Add a charge
