@@ -69,11 +69,11 @@
         </div>
 
         <div class="form-section push--bottom">
-            <div class="form-group flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
+            <div id="form-group-prof_service_fee_type_paymentReceived" class="form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
                 {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
+                    'useFormGroup': false,
                     'legendClass' : 'form-label-bold',
                     'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
-                    'formGroupClass': 'inline push--top flush--bottom',
                     'items': [
                         {'dataTarget': 'was-payment-received'},
                         {}
