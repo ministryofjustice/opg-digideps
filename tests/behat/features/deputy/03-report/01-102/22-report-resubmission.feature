@@ -67,11 +67,12 @@ Feature: Admin unsubmit report (from client page)
     And I should see the "report-hero-unsubmitted" region
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-deputyExpenses-needs-attention" region
-    When I press "report_resubmit_save"
-    Then the following fields should have an error:
-      | report_resubmit_agree |
-    When I check "report_resubmit_agree"
-    And I press "report_resubmit_save"
+    When I click on "edit-report-review"
+#    When I press "report_resubmit_save"
+#    Then the following fields should have an error:
+#      | report_resubmit_agree |
+#    When I check "report_resubmit_agree"
+#    And I press "report_resubmit_save"
     And I click on "declaration-page"
     Then the following fields should have the corresponding values:
       | report_declaration_agreedBehalfDeputy_0 | only_deputy |

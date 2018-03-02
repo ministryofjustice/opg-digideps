@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @TODO remove if not used after incomplete report have been merged and  no further changes are required
+ */
 class ReportResubmitType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -208,14 +208,16 @@ class ReportController extends AbstractController
             'reportStatus' => $report->getStatus(),
         ];
 
-        if ($report->getUnSubmitDate()) {
-            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
-            }
-            $vars['form'] = $form->createView();
-        }
+        // "agre" checkbox for unsubmitted report.
+        // KEEP THIS until incomplete report has merged and not further changes are required
+//        if ($report->getUnSubmitDate()) {
+//            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
+//            $form->handleRequest($request);
+//            if ($form->isValid()) {
+//                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
+//            }
+//            $vars['form'] = $form->createView();
+//        }
 
         return $this->render($template, $vars);
     }
