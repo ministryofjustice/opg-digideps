@@ -21,7 +21,7 @@ existPage:
   pageTitle: Current fees and expenses
   form:
     hasFees:
-      label: During this reporting period, have you received any payments from the client?
+      label: During this reporting period, have you charged the client for any services?
 
 addTypePage:
   htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
