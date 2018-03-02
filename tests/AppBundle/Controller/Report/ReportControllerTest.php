@@ -359,7 +359,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2019-01-01', $data['due_date']);
         $this->assertEquals('decisions,contacts', $data['unsubmitted_sections_list']);
         $this->assertEquals(false, $data['submitted']);
-        $this->assertEquals(null, $data['submit_date']);
+        $this->assertNotNull($data['submit_date']);
     }
 
     public function testUpdateAuth()

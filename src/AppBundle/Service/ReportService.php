@@ -223,7 +223,6 @@ class ReportService
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
-        $report->setSubmitDate(null);
 
         $report->setUnSubmitDate($unsubmitDate);
         $report->setDueDate($dueDate);
