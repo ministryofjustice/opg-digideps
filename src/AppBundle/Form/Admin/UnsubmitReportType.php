@@ -10,31 +10,42 @@ use Symfony\Component\Validator\Constraints as Constraints;
 
 class UnsubmitReportType extends AbstractType
 {
+    const DUE_DATE_OPTION_CUSTOM = 'custom';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $dueDateChoiceTransPrefix = 'reportManage.form.dueDateChoice.choices.';
         $builder
             ->add('id', 'hidden')
             ->add('unsubmittedSection', 'collection', [
                 'type' => new UnsubmittedSectionType(),
             ])
             ->add('dueDateChoice', 'choice', [
-                'choices' => [
-                    0 => 'reportChangeDueDate.form.dueDateChoice.choices.keep',
-                    3 => 'reportChangeDueDate.form.dueDateChoice.choices.3weeks',
-                    4 => 'reportChangeDueDate.form.dueDateChoice.choices.4weeks',
-                    5 => 'reportChangeDueDate.form.dueDateChoice.choices.5weeks',
-                    'other' => 'reportChangeDueDate.form.dueDateChoice.choices.other',
+                'choices'     => [
+                    'keep'  => $dueDateChoiceTransPrefix . 'keep',
+                    3       => $dueDateChoiceTransPrefix . '3weeks',
+                    4       => $dueDateChoiceTransPrefix . '4weeks',
+                    5       => $dueDateChoiceTransPrefix . '5weeks',
+                    self::DUE_DATE_OPTION_CUSTOM => $dueDateChoiceTransPrefix . 'custom',
                 ],
-                'expanded' => true,
-                'multiple' => false,
-                'mapped' => false,
-                'constraints' => [new Constraints\NotBlank(['message' => 'report.dueDateChoice.notBlank', 'groups'=>['change_due_date']])]
+                'expanded'    => true,
+                'multiple'    => false,
+                'mapped'      => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'report.dueDateChoice.notBlank', 'groups' => ['change_due_date']])
+                ],
             ])
-            ->add('dueDate', 'date', ['widget'          => 'text',
-                                      'input'           => 'datetime',
-                                      'format'          => 'yyyy-MM-dd',
-                                      'invalid_message' => 'report.endDate.invalidMessage',
-                                      'data' => null
+            ->add('dueDateCustom', 'date', [
+                'widget'      => 'text',
+                'input'       => 'datetime',
+                'format'      => 'yyyy-MM-dd',
+                 'invalid_message' => 'report.dueDate.invalidMessage',
+                'mapped'      => false,
+                'required'    => false,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'report.dueDate.notBlank', 'groups' => ['due_date_new']]),
+                    new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
+                ],
             ])
             ->add('save', 'submit');
     }
@@ -47,10 +58,8 @@ class UnsubmitReportType extends AbstractType
             'validation_groups'  => function (FormInterface $form) {
                 $ret = ['unsubmitted_sections', 'change_due_date'];
 
-                // validate due date if the choice value is "other"
-                $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
-                if ($weeksFromNow == 'other') {
-                    $ret[] = 'report_due_date';
+                if ($form['dueDateChoice']->getData() == self::DUE_DATE_OPTION_CUSTOM) {
+                    $ret[] = 'due_date_new';
                 }
 
                 return $ret;

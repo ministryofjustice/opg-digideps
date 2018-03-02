@@ -33,10 +33,10 @@
         {% endfor %}
     </fieldset>
 
-    <p class="heading-small flush--ends">Current due date:</p>
+    <p class="heading-small flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
     <p>
         {{ report.dueDate | date("j M Y") }}
-        <br/><span class="font-xsmall bold text-red">{{  'reportChangeDueDate.overdueBy' | trans ({
+        <br/><span class="font-xsmall bold text-red">{{  'reportManage.overdueBy' | trans ({
                 '%overdueDays%': report.dueDateDiffDays|abs,
                 '%dueDays%': report.dueDateDiffDays
             }) }}
@@ -44,7 +44,7 @@
     </p>
 
     <div class="form-group push-half--bottom">
-        {{ form_checkbox_group(form.dueDateChoice, 'reportChangeDueDate.form.dueDateChoice', {
+        {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
             'legendClass' : 'form-label-bold',
             'items': [
                 {},
@@ -57,7 +57,7 @@
     </div>
 
     <div id="due-date-custom" class="panel panel-border-narrow js-hidden">
-        {{ form_known_date(form.dueDate, 'reportManage.form.endDate') }}
+        {{ form_known_date(form.dueDateCustom, 'reportManage.form.dueDateCustom') }}
     </div>
 
 

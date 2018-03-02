@@ -44,10 +44,13 @@ class ReportController extends AbstractController
                 ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
             ;
 
-            $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
-            if (!in_array($weeksFromNow, [0, 'other'])) {
-                $dueDate = $reportDueDate->modify("+{$weeksFromNow} weeks");
-                $report->setDueDate($dueDate);
+            $dueDateChoice = $form['dueDateChoice']->getData();
+            if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
+                $report->setDueDate($form['dueDateCustom']->getData());
+            } else if (preg_match('/^\d+$/', $dueDateChoice)) {
+               $dd = new \DateTime();
+               $dd->modify("+{$dueDateChoice} weeks");
+               $report->setDueDate($dd);
             }
 
             $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
@@ -56,8 +59,6 @@ class ReportController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 
             return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
-        } else {
-            $report->setDueDate($reportDueDate); //needed by the view
         }
 
         return [
