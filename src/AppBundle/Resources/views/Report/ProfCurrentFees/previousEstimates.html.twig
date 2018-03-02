@@ -10,9 +10,9 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{# {% block linkBack %}
+{% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
-{% endblock %} #}
+{% endblock %}
 
 {% block pageContent %}
 
