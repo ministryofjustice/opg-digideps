@@ -90,7 +90,7 @@ class ProfServiceFeeType extends AbstractType
                 ->add('paymentReceivedDate', 'date', ['widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'yyyy-MM-dd',
-                    'invalid_message' => 'serviceFee.paymentReceived.invalidMessage',]);
+                    'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);
         }
 
         $builder->add('save', 'submit');
@@ -100,21 +100,36 @@ class ProfServiceFeeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Report\ProfServiceFee',
-            'validation_groups' => function (FormInterface $form) {
-                /* @var $data \AppBundle\Entity\Report\ProfServiceFee */
-                $data = $form->getData();
-                $validationGroups = ['prof-service-fee-type'];
-
-//                if ($data->getAmount() && $data->getHasMoreDetails()) {
-//                    $validationGroups[] = 'fees-more-details';
-//                }
-
-                return $validationGroups;
-            },
-            'translation_domain' => 'report-prof-current-fees',
+            'validation_groups' => $this->getValidationGroups(),
+            'translation_domain' => 'report-prof-current-fees'
         ])
         ->setRequired(['step']);
 
+    }
+
+    protected function getValidationGroups()
+    {
+        return function (FormInterface $form) {
+            /** @var $asset \AppBundle\Entity\Report\ProfServiceFee */
+            $profServiceFee = $form->getData();
+            switch($this->step)
+            {
+                case "1":
+                    $validationGroups = ['prof-service-fee-type'];
+                    break;
+                case "2":
+                    $validationGroups = ['prof-service-fee-details-type'];
+                    if ($profServiceFee->getPaymentReceived() == 'yes')
+                    {
+                        $validationGroups = ['prof-service-fee-details-type', 'prof-service-fee-details-type-payment-received'];
+                    }
+                    break;
+                default:
+                    throw new \Exception('Invalid step: validation groups not found');
+            }
+
+            return $validationGroups;
+        };
     }
 
     public function getName()

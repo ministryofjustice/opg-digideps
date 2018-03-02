@@ -53,6 +53,8 @@ class ProfServiceFee
      * @var string fixed|assessed
      *
      * @JMS\Groups({"prof-service-fees"})
+     *
+     * @Assert\NotBlank(message="profServiceFee.assessedOrFixed.notBlank", groups={"prof-service-fee-details-type"})
      */
     private $assessedOrFixed;
 
@@ -86,8 +88,9 @@ class ProfServiceFee
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fees"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
+     * @Assert\NotBlank(message="profServiceFee.amountCharged.notBlank", groups={"prof-service-fee-details-type"})
+     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fee-details-type"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"prof-service-fee-details-type"})
      */
     private $amountCharged;
 
@@ -96,6 +99,7 @@ class ProfServiceFee
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
+     * @Assert\NotBlank(message="profServiceFee.paymentReceived.notBlank", groups={"prof-service-fee-details-type"})
      */
     private $paymentReceived;
 
@@ -104,15 +108,19 @@ class ProfServiceFee
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-service-fees"})
-     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fees"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"fees"})
+     * @Assert\NotBlank(message="profServiceFee.amountReceived.notBlank", groups={"prof-service-fee-details-type-payment-received"})
+     * @Assert\Type(type="numeric", message="fee.amount.notNumeric", groups={"prof-service-fee-details-type"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "fee.amount.minMessage", maxMessage = "fee.amount.maxMessage", groups={"prof-service-fee-details-type"})
      */
     private $amountReceived;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     *
      * @JMS\Groups({"prof-service-fees"})
+     *
+     * @Assert\Date(message="profServiceFee.paymentReceivedDate.invalidMessage", groups={"prof-service-fee-details-type-payment-received"})
+     * @Assert\NotBlank(message="profServiceFee.paymentReceivedDate.notBlank", groups={"prof-service-fee-details-type-payment-received"})
+     *
      * @var \DateTime
      */
     private $paymentReceivedDate;

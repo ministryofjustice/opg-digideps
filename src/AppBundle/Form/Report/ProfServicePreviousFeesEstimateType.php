@@ -44,8 +44,14 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => $this->translatorDomain,
             'validation_groups' => function (FormInterface $form) {
-                $validationGroups = ['previous-prof-fees-estimate-choice'];
+                /** @var $report \AppBundle\Entity\Report\Report */
+                $report = $form->getData();
 
+                $validationGroups = ['previous-prof-fees-estimate-choice'];
+                if ($report->getPreviousProfFeesEstimateGiven() == 'yes')
+                {
+                    $validationGroups = ['previous-prof-fees-estimate-choice', 'prof-fees-estimate-scco-reason'];
+                }
                 return $validationGroups;
             },
             'translation_domain' => 'report-prof-current-fees',

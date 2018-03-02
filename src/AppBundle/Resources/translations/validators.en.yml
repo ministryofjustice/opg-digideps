@@ -432,10 +432,24 @@ feedbackAfterReport:
         notEmpty: Please selection an option
 
 profServiceFee:
+    assessedOrFixed:
+        notBlank: Please tell us how you charged for this service
+    amountCharged:
+        notBlank: Please tell use how much was charged for this service
     serviceType:
         notBlank: Choose the type of service from the list
-
-
+    paymentReceived:
+        notBlank: Please tell us whether a payment has been received
+    amountReceived:
+        notBlank: Please tell us how much was received for this service
+    paymentReceivedDate:
+        notBlank: Please enter date payment was received
+        invalidMessage: Enter the date in this format: DD/MM/YYYY
+    estimates:
+        previousProfFeesEstimateGiven:
+            notBlank: Please select either 'Yes' or 'No'
+        profFeesEstimateSccoReason:
+            notBlank: Please provide an explanation
 # ====================================================================================================
 #       NDR
 # ====================================================================================================

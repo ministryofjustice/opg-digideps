@@ -322,7 +322,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @Assert\NotBlank(message="prof.fees.previousProfFeesEstimateGiven.notBlank", groups={"previous-prof-fees-estimate-choice"})
+     * @Assert\NotBlank(message="profServiceFee.estimates.previousProfFeesEstimateGiven.notBlank", groups={"previous-prof-fees-estimate-choice"})
      */
     private $previousProfFeesEstimateGiven;
 
@@ -331,7 +331,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @Assert\NotBlank(message="prof.fees.profFeesEstimateSccoReason.notBlank", groups={"prof-fees-estimate-scco-reason"})
+     * @Assert\NotBlank(message="profServiceFee.estimates.profFeesEstimateSccoReason.notBlank", groups={"prof-fees-estimate-scco-reason"})
      */
     private $profFeesEstimateSccoReason;
 

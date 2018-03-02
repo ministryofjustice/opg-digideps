@@ -161,7 +161,7 @@ class ProfCurrentFeesController extends AbstractController
 
             if ($step == 1) {
                 if ($profServiceFee->getId() == null) {
-                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id', 'prof-service-fee-type']);
+                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fees', 'report-id']);
                 } else {
                     $result = $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
                 }
