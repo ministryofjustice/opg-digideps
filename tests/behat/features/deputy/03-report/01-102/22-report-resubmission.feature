@@ -30,44 +30,27 @@ Feature: Admin unsubmit report (from client page)
     And I should see "25 February 2017" in the "report-2016-due-date" region
     When I save the application status into "report-2016-pre-unsubmission"
     And I click on "manage" in the "report-2016" region
-    And I save the current URL as "report-2016-unsubmitted"
-    And I save the application status into "report-2016-unsubmitted"
-    # unsubmit without a section selection
-    And I press "unsubmit_report_save"
-      | unsubmit_report_dueDateChoice_2 | 4 |
-    Then the form should be invalid
-    # unsubmit with decisions and deputy expenses, due date 4 weeks from now
+    # unsubmit with custom due date
     When I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1 |
-      | unsubmit_report_unsubmittedSection_13_present | 1 |
-      | unsubmit_report_dueDateChoice_2               | 4 |
-    And I press "unsubmit_report_save"
-    # check client page
-    Then I should see "Unsubmitted" in the "report-2016-label" region
-    And I should see "25 March 2017" in the "report-2016-due-date" region
-    # resubmit with custom due date
-    Given I load the application status from "report-2016-unsubmitted"
-    And I go to the URL previously saved as "report-2016-unsubmitted"
-    And I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1     |
-      | unsubmit_report_unsubmittedSection_13_present | 1     |
-      | unsubmit_report_dueDateChoice_4               | other |
-      | unsubmit_report_dueDate_day                   |       |
-      | unsubmit_report_dueDate_month                 |       |
-      | unsubmit_report_dueDate_year                  |       |
+      | unsubmit_report_unsubmittedSection_0_present  | 1      |
+      | unsubmit_report_unsubmittedSection_13_present | 1      |
+      | unsubmit_report_dueDateChoice_4               | custom |
+      | unsubmit_report_dueDateCustom_day                   |        |
+      | unsubmit_report_dueDateCustom_month                 |        |
+      | unsubmit_report_dueDateCustom_year                  |        |
     And I press "unsubmit_report_save"
     Then the following fields should have an error:
-      | unsubmit_report_dueDate_day   |
-      | unsubmit_report_dueDate_month |
-      | unsubmit_report_dueDate_year  |
+      | unsubmit_report_dueDateCustom_day   |
+      | unsubmit_report_dueDateCustom_month |
+      | unsubmit_report_dueDateCustom_year  |
     # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
     When I fill in the following:
-      | unsubmit_report_unsubmittedSection_0_present  | 1     |
-      | unsubmit_report_unsubmittedSection_13_present | 1     |
-      | unsubmit_report_dueDateChoice_4               | other |
-      | unsubmit_report_dueDate_day                   | 30    |
-      | unsubmit_report_dueDate_month                 | 04    |
-      | unsubmit_report_dueDate_year                  | 2022  |
+      | unsubmit_report_unsubmittedSection_0_present  | 1      |
+      | unsubmit_report_unsubmittedSection_13_present | 1      |
+      | unsubmit_report_dueDateChoice_4               | custom |
+      | unsubmit_report_dueDateCustom_day                   | 30     |
+      | unsubmit_report_dueDateCustom_month                 | 04     |
+      | unsubmit_report_dueDateCustom_year                  | 2022   |
     And I press "unsubmit_report_save"
     Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
@@ -94,9 +77,9 @@ Feature: Admin unsubmit report (from client page)
       | report_declaration_agreedBehalfDeputy_0 | only_deputy |
       | report_declaration_agree                |             |
     When I fill in the following:
-      | report_declaration_agree | 1 |
-      | report_declaration_agreedBehalfDeputy_0 | only_deputy |
-      | report_declaration_agreedBehalfDeputyExplanation |  |
+      | report_declaration_agree                         | 1           |
+      | report_declaration_agreedBehalfDeputy_0          | only_deputy |
+      | report_declaration_agreedBehalfDeputyExplanation |             |
     And I press "report_declaration_save"
     Then the form should be valid
     And the URL should match "/report/\d+/submitted"
