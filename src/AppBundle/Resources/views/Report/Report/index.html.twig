@@ -25,7 +25,7 @@
         {% set report = client.activeReport %}
         {% set status = report.status.status %}
         {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
-        {% set behatRegion = 'behatRegion' %}
+        {% set behatRegion = 'report-active' %}
         {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
         {% set transOptions = {
             '%startDate%': report.startDate | date("j F Y"),
@@ -45,7 +45,7 @@
         {% set report = client.unsubmittedReport %}
         {% set status = report.status.status %}
         {% set statusClass = 'incomplete' %}
-        {% set behatRegion = 'incomplete' %}
+        {% set behatRegion = 'report-unsubmitted' %}
         {% set buttonText = 'reviewReport' %}
         {% set transOptions = {
             '%startDate%': report.startDate | date("j F Y"),

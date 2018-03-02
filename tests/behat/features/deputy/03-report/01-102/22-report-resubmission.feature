@@ -78,9 +78,9 @@ Feature: Admin unsubmit report (from client page)
   Scenario: Deputy resubmit report
     And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
-    And I should see the "active-report" region
+    And I should see the "report-active" region
     But I should not see the "submitted-reports" region
-    When I click on "report-review" in the "report-unsubmitted" region
+    When I click on "report-start" in the "report-unsubmitted" region
     And I should see the "report-hero-unsubmitted" region
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-deputyExpenses-needs-attention" region
@@ -102,7 +102,7 @@ Feature: Admin unsubmit report (from client page)
     And the URL should match "/report/\d+/submitted"
     # check unsubmitted report disappeared from dashboard
     When I click on "reports"
-    Then I should see the "active-report" region
+    Then I should see the "report-active" region
     And I should see the "submitted-reports" region
     But I should not see the "report-unsubmitted" region
 
