@@ -44,24 +44,25 @@ class ReportController extends AbstractController
                 ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
             ;
 
-            // TODO move to form ?
             $weeksFromNow = $form['dueDateChoice']->getData();// access unmapped field
             if (!in_array($weeksFromNow, [0, 'other'])) {
                 $dueDate = $reportDueDate->modify("+{$weeksFromNow} weeks");
                 $report->setDueDate($dueDate);
             }
 
-            //TODO merge API calls into one
             $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
                 'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date'
             ]);
             $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 
             return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        } else {
+            $report->setDueDate($reportDueDate); //needed by the view
         }
 
         return [
             'report'   => $report,
+            'reportDueDate'   => $reportDueDate,
             'form'     => $form->createView()
         ];
     }
