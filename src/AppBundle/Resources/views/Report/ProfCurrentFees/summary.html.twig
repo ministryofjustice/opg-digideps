@@ -90,8 +90,8 @@
                 <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived }}</td>
                 <td class="numeric-small">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ fixedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                    <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ fixedServiceFee.id }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
+                    <a href="/report/{{ report.id }}/prof-service-fee/step/1/fee/{{ fixedServiceFee.id }}?from=summary" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ fixedServiceFee.id }}?from=summary" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                 </td>
             </tr>
         {% endfor %}
@@ -138,7 +138,7 @@
                 <td class="numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                 <td class="change-answer soft-half--left hard--right width-sixth">
 
-                    <a href="/report/{{ report.id }}/prof-current-fees/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                    <a href="/report/{{ report.id }}/prof-service-fee/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                     <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'fee': assessedServiceFee.id }) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                 </td>
             </tr>

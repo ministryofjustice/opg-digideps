@@ -72,7 +72,7 @@ class ProfServiceFeeType extends AbstractType
                 ])
                 ->add('amountCharged', 'number', [
                     'precision' => 2,
-                    'data' => null,
+                    'empty_data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountCharged.type'
@@ -84,14 +84,14 @@ class ProfServiceFeeType extends AbstractType
                 ])
                 ->add('amountReceived', 'number', [
                     'precision' => 2,
-                    'data' => null,
+                    'empty_data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountReceived.type'
                 ])
                 ->add('paymentReceivedDate', 'date', ['widget' => 'text',
+                    'empty_data' => null,
                     'input' => 'datetime',
-                    'data' => null,
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);
         }
@@ -102,7 +102,8 @@ class ProfServiceFeeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Report\ProfServiceFee',
+            'amountCharged' => null,
+            'data_class' => ProfServiceFee::class,
             'validation_groups' => $this->getValidationGroups(),
             'translation_domain' => 'report-prof-current-fees'
         ])

@@ -331,7 +331,6 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @Assert\NotBlank(message="profServiceFee.estimates.profFeesEstimateSccoReason.notBlank", groups={"prof-fees-estimate-scco-reason"})
      */
     private $profFeesEstimateSccoReason;
 
