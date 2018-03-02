@@ -67,14 +67,15 @@ class ProfServiceFeeType extends AbstractType
 
         if ($this->step == 2) {
             $builder->add('assessedOrFixed', 'choice', [
-                    'choices' => ['fixed' => 'Fixed costs', 'assessed' => 'Assessed costs'],
+                    'choices' => [ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs'],
                     'expanded' => true,
                 ])
                 ->add('amountCharged', 'number', [
                     'precision' => 2,
+                    'data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                    'invalid_message' => 'serviceFee.form.amountCharged.type'
+                    'invalid_message' => 'profServiceFee.amountCharged.type'
                 ])
                 ->add('paymentReceived', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
@@ -83,12 +84,14 @@ class ProfServiceFeeType extends AbstractType
                 ])
                 ->add('amountReceived', 'number', [
                     'precision' => 2,
+                    'data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                    'invalid_message' => 'serviceFee.form.amountReceived.type'
+                    'invalid_message' => 'profServiceFee.amountReceived.type'
                 ])
                 ->add('paymentReceivedDate', 'date', ['widget' => 'text',
                     'input' => 'datetime',
+                    'data' => null,
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);
         }
