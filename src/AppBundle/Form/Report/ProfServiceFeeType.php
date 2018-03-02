@@ -84,7 +84,6 @@ class ProfServiceFeeType extends AbstractType
                 ])
                 ->add('amountReceived', 'number', [
                     'precision' => 2,
-                    'empty_data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountReceived.type'
@@ -94,6 +93,8 @@ class ProfServiceFeeType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);
+
+            $builder->add('saveAndAddAnother', 'submit');
         }
 
         $builder->add('save', 'submit');

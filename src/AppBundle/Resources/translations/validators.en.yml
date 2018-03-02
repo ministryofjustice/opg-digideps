@@ -436,6 +436,7 @@ profServiceFee:
         notBlank: Please tell us how you charged for this service
     amountCharged:
         notBlank: Please tell use how much was charged for this service
+        notNumeric: The amount charged must be in numbers
         type: The amount charged must be in numbers
     serviceType:
         notBlank: Choose the type of service from the list
@@ -443,7 +444,7 @@ profServiceFee:
         notBlank: Please tell us whether a payment has been received
     amountReceived:
         notBlank: Please tell us how much was received for this service
-        type: The amount charged must be in numbers
+        type: 1The amount received must be in numbers
     paymentReceivedDate:
         notBlank: Please enter date payment was received
         invalidMessage: Enter the date in this format: DD/MM/YYYY

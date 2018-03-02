@@ -152,7 +152,9 @@ class ProfCurrentFeesController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
+        $buttonClicked = $form->getClickedButton();
+
+        if ($buttonClicked && $form->isValid()) {
             /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
             $profServiceFee = $form->getData();
 
@@ -170,12 +172,22 @@ class ProfCurrentFeesController extends AbstractController
             } elseif ($step == 2) {
                 $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
 
+                if ('saveAndAddAnother' === $buttonClicked->getName()) {
+                    // use step 1 to begin the loop again
+                    return $this->redirectToRoute(
+                        'current_service_fee_step',
+                        [
+                            'reportId' => $reportId,
+                            'step' => 1
+                        ]
+                    );
+                }
                 return $this->redirectToRoute(
                     'current_service_fee_step',
                     [
                         'reportId' => $reportId,
-                        'feeId' => $profServiceFee->getId(),
-                        'step' => 3
+                        'feeId' => $profServiceFee->getId(), // needed for backLink
+                        'step' => 3 // step 3 forces check of estimates and redirect to summary
                     ]
                 );
             }

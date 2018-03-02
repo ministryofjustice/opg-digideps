@@ -192,6 +192,13 @@
     }) }}
 {% endmacro %}
 
+{% macro saveAndAddAnotherSaveButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'saveAndAddAnother' | trans({}, 'common'),
+        'buttonClass': 'behat-link-save-and-continue',
+    }) }}
+{% endmacro %}
+
 {% macro notification(alertType,message) %}
     {% if alertType is defined %}
         {% if alertType == 'notice' %}
