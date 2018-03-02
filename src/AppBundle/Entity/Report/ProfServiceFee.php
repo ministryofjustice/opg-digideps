@@ -45,7 +45,7 @@ class ProfServiceFee
         'statutory-wills' => false,
         'tax-returns' => false,
         'trust-applications' => false,
-        'other-costs' => false
+        //'other-costs' => false
     ];
 
     /**
