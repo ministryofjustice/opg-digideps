@@ -6,8 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * @ORM\Entity()
  * @ORM\Table(name="prof_service_fee")
- * @ORM\Entity
  */
 class ProfServiceFee
 {
@@ -154,17 +154,10 @@ class ProfServiceFee
 
     /**
      * @param Report $report
-     * @param string $serviceTypeId
-     * @param float  $amount
      */
     public function __construct(Report $report)
     {
         $this->setReport($report);
-        //$report->addProfServiceFee($this);
-
-        //$this->setFeeTypeId($feeTypeId);
-        //$this->setServiceTypeId($serviceTypeId);
-        //$this->setAmount($amount);
     }
 
     /**
@@ -248,7 +241,7 @@ class ProfServiceFee
     }
 
     /**
-     * @return decimal
+     * @return string
      */
     public function getAmountCharged()
     {
@@ -256,7 +249,7 @@ class ProfServiceFee
     }
 
     /**
-     * @param decimal $amountCharged
+     * @param string $amountCharged
      */
     public function setAmountCharged($amountCharged)
     {

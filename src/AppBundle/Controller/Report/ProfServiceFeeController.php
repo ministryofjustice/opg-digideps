@@ -28,7 +28,6 @@ class ProfServiceFeeController extends RestController
         $this->updateEntity($data, $profServiceFee);
 
         $profServiceFee->setFeeTypeId('current');
-        $profServiceFee->setAmountCharged(0);
 
         $this->persistAndFlush($profServiceFee);
 
