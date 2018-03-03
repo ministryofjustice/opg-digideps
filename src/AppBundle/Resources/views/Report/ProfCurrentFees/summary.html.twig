@@ -12,7 +12,7 @@
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
-{# {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %} #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
@@ -53,22 +53,25 @@
         </tbody>
     </table>
 
+    {% if (assessedServiceFees|length) or (fixedServiceFees|length) %}
 
-    <div class="grid-row push--top">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of charges and payments received</h2>
+        <div class="grid-row push--top">
+            <div class="column-half">
+                <h2 class="heading-medium flush--ends">List of charges and payments received</h2>
+            </div>
+            <div class="column-half text--right">
+                <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1 }) }}" class="bold-small move-quarter--up action-link behat-link-add">
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </a>
+            </div>
         </div>
-        <div class="column-half text--right">
-            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1 }) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                {{ 'summaryPage.addButton' | trans }}
-            </a>
-        </div>
-    </div>
+
+    {% endif %}
 
     {% if fixedServiceFees|length %}
 
-        <h3 class="heading-medium">Fixed costs</h3>
+        <h3 class="heading-small--table">Fixed costs</h3>
 
         <table class="check-your-answers behat-region-list-accounts">
             <thead>
@@ -117,7 +120,7 @@
 
     {% if assessedServiceFees|length %}
 
-        <h3 class="heading-medium">Assessed costs</h3>
+        <h3 class="heading-small--table">Assessed costs</h3>
 
         <table class="check-your-answers behat-region-list-accounts">
             <thead>
@@ -166,16 +169,16 @@
 
     {% if (assessedServiceFees|length) and (fixedServiceFees|length) %}
 
-        <table class="check-your-answers push--ends">
+        <table class="check-your-answers push--bottom push-half--top">
             <tbody>
-                <tr class="no-border">
-                    <td class="text--right width-third">
+                <tr class="no-border-bottom">
+                    <td class="text--right width-third grandtotals-border--transparent">
                         <span class="heading-medium">Grand totals:</span>
                     </td>
-                    <td class="numeric-small width-sixth">
+                    <td class="numeric-small width-sixth grandtotals-border">
                         <span class="heading-medium">£{{ grandTotalFeesCharged }}</span>
                     </td>
-                    <td class="numeric-small width-sixth">
+                    <td class="numeric-small width-sixth grandtotals-border">
                         <span class="heading-medium">£{{ grandTotalFeesReceived }}</span>
                     </td>
                     <td class="width-sixth"></td>
@@ -186,43 +189,47 @@
 
     {% endif %}
 
-    <table class="check-your-answers columns-2 push-double--bottom push--top">
-        <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="behat-region-paid-for-anything">
-                <td>
-                    {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
-                </td>
-                <td>
-                    {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            </tr>
-            {% if report.previousProfFeesEstimateGiven == 'yes' %}
+    {% if report.previousProfFeesEstimateGiven is not  null %}
+
+        <table class="check-your-answers columns-2 push-double--bottom push--top">
+            <thead>
+                <tr>
+                    <th>{{ 'question' | trans({}, 'common') }}</th>
+                    <th>{{ 'answer' | trans({}, 'common') }}</th>
+                    <th>
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
                 <tr class="behat-region-paid-for-anything">
                     <td>
-                        {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
+                        {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
                     </td>
                     <td>
-                        {{ report.profFeesEstimateSccoReason }}
+                        {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
                     </td>
                     <td class="change-answer">
                         <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                     </td>
                 </tr>
-            {% endif %}
-        </tbody>
-    </table>
+                {% if report.profFeesEstimateSccoReason is not null %}
+                    <tr class="behat-region-paid-for-anything">
+                        <td>
+                            {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
+                        </td>
+                        <td>
+                            {{ report.profFeesEstimateSccoReason }}
+                        </td>
+                        <td class="change-answer">
+                            <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+    {% endif %}
 
     {# Pagination #}
     {# {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }} #}

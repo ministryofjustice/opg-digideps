@@ -110,6 +110,14 @@
     }
 }
 
+.no-border-bottom {
+    border-bottom: none;
+
+    td {
+        border-bottom: none;
+    }
+}
+
 // Handling long words and URLs
 // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
 
