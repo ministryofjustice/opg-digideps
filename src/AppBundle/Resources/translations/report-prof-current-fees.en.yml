@@ -79,7 +79,13 @@ summaryPage:
     with the practice direction.
   addButton: Add a charge
   table:
+    heading: List of charges and payments received
+    subheading:
+      fixed: Fixed costs
+      assessed: Assessed costs
     service: Service
     charged: Charged
     received: Received
     dateReceived: Date received
+    total: Total amount
+    grandtotal: Grand total
