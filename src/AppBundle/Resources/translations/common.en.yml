@@ -27,7 +27,7 @@ manage: Manage
 annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
 submittedReports: Submitted reports
-unSubmittedReports: Incomplete deputy reports
+unsubmittedReport: Incomplete deputy report
 
 # Labels and table headings
 name: Name

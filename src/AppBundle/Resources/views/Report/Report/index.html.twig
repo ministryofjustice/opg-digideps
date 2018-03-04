@@ -20,6 +20,24 @@
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
+    {% if client.unsubmittedReport %}
+        {% set report = client.unsubmittedReport %}
+        {% set status = report.status.status %}
+        {% set statusClass = 'incomplete' %}
+        {% set behatRegion = 'report-unsubmitted' %}
+        {% set buttonText = 'reviewReport' %}
+        {% set transOptions = {
+            '%startDate%': report.startDate | date("j F Y"),
+            '%endDate%': report.endDate | date("j F Y")
+        } %}
+        <h2 class="heading-large">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
+        {% embed 'AppBundle:Report/Report:_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+                {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+
     {# current report #}
     {% if client.activeReport %}
         {% set report = client.activeReport %}
@@ -41,23 +59,6 @@
         {% endembed %}
     {% endif %}
 
-    {% if client.unsubmittedReport %}
-        {% set report = client.unsubmittedReport %}
-        {% set status = report.status.status %}
-        {% set statusClass = 'incomplete' %}
-        {% set behatRegion = 'report-unsubmitted' %}
-        {% set buttonText = 'reviewReport' %}
-        {% set transOptions = {
-            '%startDate%': report.startDate | date("j F Y"),
-            '%endDate%': report.endDate | date("j F Y")
-        } %}
-        <h2 class="heading-large">{{ 'unSubmittedReports' | trans({}, 'common') }}</h2>
-        {% embed 'AppBundle:Report/Report:_report_row.html.twig' %}
-            {% block bottomLeftContent %}
-                {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
-            {% endblock %}
-        {% endembed %}
-    {% endif %}
 
     {% if client.submittedReports %}
 

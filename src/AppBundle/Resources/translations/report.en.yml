@@ -12,9 +12,8 @@ homepage:
   noActiveReportException: No active report found for this client
   unsubmitted:
     reportPara: |
-        We have marked your report as incomplete due to certain parts being
-        unfinished or requiring further attention. Please review the
-        highlighted section in your report.
+      We have marked your report as incomplete due to certain parts being unfinished or
+      requiring further attention. Please review the highlighted sections in your report.
 
 codeputy:
   inviteAnotherDeputy: Invite another deputy
