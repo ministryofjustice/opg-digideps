@@ -24,18 +24,20 @@
         <legend>
             <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
         </legend>
-        {% for section in form.unsubmittedSection  %}
-            {{ form_row(section.id) }}
-            {{ form_checkbox(section.present, '', {
-                'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
-                'formGroupClass': 'multiple-choice--smaller',
-            }) }}
-        {% endfor %}
+        <div class="form-group form-group__checkbox multiple-choice--smaller push-half--bottom {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
+            {% for section in form.unsubmittedSection  %}
+                {{ form_row(section.id) }}
+                {{ form_checkbox(section.present, '', {
+                    'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                    'useFormGroup': false
+                }) }}
+            {% endfor %}
+        </div>
     </fieldset>
 
     <p class="heading-small flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
     <p>
-        {{ report.dueDate | date("j M Y") }}
+        {{ report.dueDate | date("j F Y") }}
         <br/><span class="font-xsmall bold text-red">{{  'reportManage.overdueBy' | trans ({
                 '%overdueDays%': report.dueDateDiffDays|abs,
                 '%dueDays%': report.dueDateDiffDays
@@ -43,9 +45,10 @@
         </span>
     </p>
 
-    <div class="form-group push-half--bottom">
+    <div class="form-group form-group__checkbox-group push--bottom {% if not form.dueDateChoice.vars.valid %}form-group-error{% endif %}">
         {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
             'legendClass' : 'form-label-bold',
+            'useFormGroup': false,
             'items': [
                 {},
                 {},
@@ -54,13 +57,10 @@
                 {'dataTarget': 'due-date-custom' }
             ]
         }) }}
+        <div id="due-date-custom" class="panel panel-border-narrow js-hidden">
+            {{ form_known_date(form.dueDateCustom, 'reportManage.form.dueDateCustom') }}
+        </div>
     </div>
-
-    <div id="due-date-custom" class="panel panel-border-narrow js-hidden">
-        {{ form_known_date(form.dueDateCustom, 'reportManage.form.dueDateCustom') }}
-    </div>
-
-
 
     {{ form_submit(form.save,'reportManage.form.unsubmit') }}
 
