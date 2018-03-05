@@ -16,7 +16,6 @@
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
-
     {% block pageHeader %}
         {% include 'AppBundle:Report/Report:_header.html.twig' %}
     {% endblock %}
@@ -59,6 +58,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'decisions',
+                    sectionId: 'decisions',
                     report: report,
                     description: true,
                     state: reportStatus.decisionsState,
@@ -69,6 +69,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'contacts',
+                    sectionId: 'contacts',
                     report: report,
                     description: true,
                     list: true,
@@ -84,6 +85,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'visits_care',
+                    sectionId: 'visitsCare',
                     report: report,
                     info: true,
                     description: true,
@@ -94,6 +96,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'lifestyle',
+                sectionId: 'lifestyle',
                 report: report,
                 info: true,
                 description: true,
@@ -121,6 +124,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'gifts',
+                    sectionId: 'gifts',
                     report: report,
                     state: reportStatus.giftsState,
                     linkToSubSection: path('gifts', {'reportId': report.id}),
@@ -132,6 +136,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'bank_accounts',
+                        sectionId: 'bankAccounts',
                         report: report,
                         state: reportStatus.bankAccountsState,
                         description: true
@@ -141,6 +146,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'money_transfers',
+                        sectionId: 'moneyTransfers',
                         report: report,
                         state: reportStatus.moneyTransferState,
                         description: true
@@ -150,6 +156,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
+                    sectionId: 'moneyIn',
                     report: report,
                     state: reportStatus.moneyInState,
                     description: true
@@ -157,6 +164,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out',
+                    sectionId: 'moneyOut',
                     report: report,
                     state: reportStatus.moneyOutState,
                     description: true
@@ -166,6 +174,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in_short',
+                    sectionId: 'moneyInShort',
                     report: report,
                     state: reportStatus.MoneyInShortState,
                     description: true
@@ -173,6 +182,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out_short',
+                    sectionId: 'moneyOutShort',
                     report: report,
                     state: reportStatus.MoneyOutShortState,
                     description: true
@@ -201,6 +211,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
+                        sectionId: 'balance',
                         report: report,
                         state: reportStatus.balanceState,
                         description: true,
@@ -215,6 +226,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'assets',
+                        sectionId: 'assets',
                         report: report,
                         state: reportStatus.assetsState,
                         list: true,
@@ -225,6 +237,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'debts',
+                    sectionId: 'debts',
                     report: report,
                     state: reportStatus.debtsState,
                     list: true,
@@ -241,6 +254,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'actions',
+                    sectionId: 'actions',
                     report: report,
                     description: true,
                     state: reportStatus.actionsState,
@@ -251,6 +265,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'other_info',
+                    sectionId: 'otherInfo',
                     linkToSubSection: path('other_info', {reportId: report.id}),
                     report: report,
                     info: true,
@@ -261,10 +276,11 @@
 
         <li id="report-submit-section" class="overview-section">
             <h2 class="heading">{{ 'heading.caseDocuments' | trans() }}</h2>
-            {% if report.hasSection('actions') %}
+            {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'documents',
+                    sectionId: 'documents',
                     report: report,
                     description: true,
                     state: reportStatus.documentsState,
