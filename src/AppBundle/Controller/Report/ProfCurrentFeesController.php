@@ -163,16 +163,22 @@ class ProfCurrentFeesController extends AbstractController
             if ($step == 1) {
                 if ($profServiceFee->getId() == null) {
                     $data = $form->getData();
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
                     $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $data, ['prof-service-fee-serviceType', 'report-id']);
                 } else {
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+
                     $result = $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
                 }
 
                 return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
             } elseif ($step == 2) {
+
                 $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
 
                 if ('saveAndAddAnother' === $buttonClicked->getName()) {
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+
                     // use step 1 to begin the loop again
                     return $this->redirectToRoute(
                         'current_service_fee_step',
@@ -182,6 +188,9 @@ class ProfCurrentFeesController extends AbstractController
                         ]
                     );
                 }
+
+                $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
+
                 return $this->redirectToRoute(
                     'current_service_fee_step',
                     [
