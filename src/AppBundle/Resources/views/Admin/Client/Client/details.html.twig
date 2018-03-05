@@ -3,7 +3,8 @@
 {% trans_default_domain "admin-clients" %}
 {% set page = 'clientDetails' %}
 {# DDPB-857: hide link, except for behat tests #}
-{% set enableManageLink = client.caseNumber == 'behat001' %}
+{#{% set enableManageLink = client.caseNumber == 'behat001' %}#}
+{% set enableManageLink = true %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
