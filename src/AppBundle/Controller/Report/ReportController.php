@@ -8,6 +8,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +56,9 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
         'report-documents',
         'balance-state',
-        'documents'
+        'documents',
+        'report-prof-service-fees',
+        'prof-service-fees'
     ];
 
     /**
@@ -353,11 +356,30 @@ class ReportController extends AbstractController
             $backLink = $this->generateUrl('lay_home');
         }
 
+        $currentFees = [];
+        if (!empty($report->getProfServiceFees())) {
+            $reportFeeService = $this->container->get('report_fee_service');
+            $currentFees['fixedServiceFees'] = $report->getFilteredFees(
+                EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
+                EntityDir\Report\ProfServiceFee::TYPE_FIXED_FEE
+            );
+            $currentFees['assessedServiceFees'] = $report->getFilteredFees(
+                EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
+                EntityDir\Report\ProfServiceFee::TYPE_ASSESSED_FEE
+            );
+            $currentFees['totalFixedFeesReceived'] = $reportFeeService->getTotalReceivedFees($currentFees['fixedServiceFees']);
+            $currentFees['totalFixedFeesCharged'] = $reportFeeService->getTotalChargedFees($currentFees['fixedServiceFees']);
+            $currentFees['totalAssessedFeesReceived'] = $reportFeeService->getTotalReceivedFees($currentFees['assessedServiceFees']);
+            $currentFees['totalAssessedFeesCharged'] = $reportFeeService->getTotalChargedFees($currentFees['assessedServiceFees']);
+
+        }
+
         return [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
-            'backLink' => $backLink
+            'backLink' => $backLink,
+            'currentFees' => $currentFees
         ];
     }
 

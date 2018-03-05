@@ -23,7 +23,7 @@ class ReportFeeService
             $total += $profFee->getAmountReceived();
         }
 
-        return number_format($total,2, '.', ',');
+        return $total;
     }
 
     /**
@@ -42,6 +42,6 @@ class ReportFeeService
             $total += $profFee->getAmountCharged();
         }
 
-        return number_format($total,2, '.', ',');
+        return $total;
     }
 }

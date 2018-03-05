@@ -145,7 +145,7 @@
                     <td class="width-fifth numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                     <td class="change-answer width-seventh">
                         <a href="/report/{{ report.id }}/prof-service-fee/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'fee': assessedServiceFee.id }) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
+                        <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ assessedServiceFee.id }}?from=summary" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -155,10 +155,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesCharged }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesCharged | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesReceived }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesReceived | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -176,10 +176,10 @@
                         <span class="heading-medium">{{ (page ~ '.table.grandtotal') | trans }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ grandTotalFeesCharged }}</span>
+                        <span class="heading-medium">£{{ grandTotalFeesCharged | number_format }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ grandTotalFeesReceived }}</span>
+                        <span class="heading-medium">£{{ grandTotalFeesReceived | number_format }}</span>
                     </td>
                     <td class="width-fifth"></td>
                     <td class="width-seventh"></td>
@@ -232,7 +232,7 @@
     {% endif %}
 
     {# Pagination #}
-    {# {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }} #}
+    {# {{ macros.reportSectionPrevNext(report, 'profCurrentFees') }} #}
 
     <nav class="pagination" role="navigation" aria-label="Pagination">
         <ul class="group">
