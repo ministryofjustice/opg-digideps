@@ -61,4 +61,63 @@ trait ReportProfServiceFeesTrait
 
         return false;
     }
+
+    public function getFeeTotals()
+    {
+
+        $fixedServiceFees = $this->getFilteredFees(
+            ProfServiceFee::TYPE_CURRENT_FEE,
+            ProfServiceFee::TYPE_FIXED_FEE
+        );
+        $assessedServiceFees = $this->getFilteredFees(
+            ProfServiceFee::TYPE_CURRENT_FEE,
+            ProfServiceFee::TYPE_ASSESSED_FEE
+        );
+
+        $feeTotals = [];
+        $feeTotals['totalFixedFeesReceived'] = $this->getTotalReceivedFees($fixedServiceFees);
+        $feeTotals['totalFixedFeesCharged'] = $this->getTotalChargedFees($fixedServiceFees);
+        $feeTotals['totalAssessedFeesReceived'] = $this->getTotalReceivedFees($assessedServiceFees);
+        $feeTotals['totalAssessedFeesCharged'] = $this->getTotalChargedFees($assessedServiceFees);
+
+        return $feeTotals;
+    }
+
+    /**
+     * Calculate total Received Fees
+     *
+     * @param array $profFees
+     * @return float
+     */
+    private function getTotalReceivedFees(array $profFees)
+    {
+        $total = 0.00;
+
+        foreach($profFees as $profFee)
+        {
+            /**  @var ProfServiceFee $profFee */
+            $total += $profFee->getAmountReceived();
+        }
+
+        return $total;
+    }
+
+    /**
+     * Calculate total Charged Fees
+     *
+     * @param array $profFees
+     * @return float
+     */
+    private function getTotalChargedFees(array $profFees)
+    {
+        $total = 0.00;
+
+        foreach($profFees as $profFee)
+        {
+            /**  @var ProfServiceFee $profFee */
+            $total += $profFee->getAmountCharged();
+        }
+
+        return $total;
+    }
 }

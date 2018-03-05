@@ -106,10 +106,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalFixedFeesCharged }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalFixedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalFixedFeesReceived }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalFixedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -155,10 +155,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesCharged | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ totalAssessedFeesReceived | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -176,10 +176,10 @@
                         <span class="heading-medium">{{ (page ~ '.table.grandtotal') | trans }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ grandTotalFeesCharged | number_format }}</span>
+                        <span class="heading-medium">£{{ (feeTotals['totalAssessedFeesCharged'] + feeTotals['totalFixedFeesCharged']) | number_format }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ grandTotalFeesReceived | number_format }}</span>
+                        <span class="heading-medium">£{{ (feeTotals['totalAssessedFeesReceived'] + feeTotals['totalFixedFeesReceived']) | number_format }}</span>
                     </td>
                     <td class="width-fifth"></td>
                     <td class="width-seventh"></td>

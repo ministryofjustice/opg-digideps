@@ -18,7 +18,7 @@
                 </tr>
             </table>
 
-            {% if currentFees and currentFees['fixedServiceFees'] %}
+            {% if currentFixedServiceFees %}
 
                 <div id="closing-summary" class="section">
                     <div class="box box-heading flush-half--bottom">
@@ -32,7 +32,7 @@
                             <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
                             <th class="numeric">{{ 'summaryPage.table.received' | trans }}</thclass>
 
-                            {% for currentFixedServiceFee in currentFees['fixedServiceFees'] %}
+                            {% for currentFixedServiceFee in currentFixedServiceFees %}
                                 <tr>
 
                                     <td class="width-fifth numeric-small no-wrap">{{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
@@ -43,8 +43,8 @@
                             {% endfor %}
                                 <td>
                                     <td class="width-third">&nbsp;</td>
-                                    <td class="width-sixth reverse numeric">£{{ currentFees['totalFixedFeesCharged'] | money_format }}</td>
-                                    <td class="width-sixth reverse numeric">£{{ currentFees['totalFixedFeesReceived'] | money_format  }}</td>
+                                    <td class="width-sixth reverse numeric">£{{ feeTotals['totalFixedFeesCharged'] | money_format }}</td>
+                                    <td class="width-sixth reverse numeric">£{{ feeTotals['totalFixedFeesReceived'] | money_format  }}</td>
                                     </td class="width-fifth">&nbsp;</td>
                                 </tr>
                         </table>
@@ -53,7 +53,7 @@
 
             {% endif %}
 
-            {% if currentFees and currentFees['assessedServiceFees'] %}
+            {% if currentAssessedServiceFees %}
 
                 <div id="closing-summary" class="section">
                     <div class="box box-heading flush-half--bottom">
@@ -67,7 +67,7 @@
                             <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
                             <th class="numeric">{{ 'summaryPage.table.received' | trans }}</thclass>
 
-                                {% for currentAssessedFee in currentFees['assessedServiceFees'] %}
+                                {% for currentAssessedFee in currentAssessedServiceFees %}
                                     <tr>
 
                                         <td class="width-fifth numeric-small no-wrap">{{ currentAssessedFee.paymentReceivedDate  | date("j F Y")}}</td>
@@ -78,8 +78,8 @@
                                 {% endfor %}
                             <td>
                             <td class="width-third">&nbsp;</td>
-                            <td class="width-sixth reverse numeric">£{{ currentFees['totalAssessedFeesCharged'] | money_format  }}</td>
-                            <td class="width-sixth reverse numeric">£{{ currentFees['totalAssessedFeesReceived'] | money_format  }}</td>
+                            <td class="width-sixth reverse numeric">£{{ feeTotals['totalAssessedFeesCharged'] | money_format  }}</td>
+                            <td class="width-sixth reverse numeric">£{{ feeTotals['totalAssessedFeesReceived'] | money_format  }}</td>
                             </td class="width-fifth">&nbsp;</td>
                             </tr>
                         </table>
