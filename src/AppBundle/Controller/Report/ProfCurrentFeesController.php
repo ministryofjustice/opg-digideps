@@ -285,19 +285,19 @@ class ProfCurrentFeesController extends AbstractController
     }
 
     /**
-     * @Route("/delete/fee/{profServiceFeeId}", name="prof_service_fee_delete", requirements={"profServiceFeeId":"\d+"})
+     * @Route("/delete/fee/{feeId}", name="prof_service_fee_delete", requirements={"feeId":"\d+"})
      *
      * @param Request $request
      * @param $reportId
-     * @param $profServiceFeeId
+     * @param $feeId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction(Request $request, $reportId, $profServiceFeeId)
+    public function deleteAction(Request $request, $reportId, $feeId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->hasProfServiceFeeWithId($profServiceFeeId)) {
-            $this->getRestClient()->delete("/prof-service-fee/{$profServiceFeeId}");
+        if ($report->hasProfServiceFeeWithId($feeId)) {
+            $this->getRestClient()->delete("/prof-service-fee/{$feeId}");
             $request->getSession()->getFlashBag()->add('notice', 'Service fee removed');
         }
 

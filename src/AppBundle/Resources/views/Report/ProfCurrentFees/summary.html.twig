@@ -95,8 +95,8 @@
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived | money_format }}</td>
                     <td class="width-fifth numeric-small no-wrap">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                     <td class="change-answer width-seventh">
-                        <a href="/report/{{ report.id }}/prof-service-fee/step/1/fee/{{ fixedServiceFee.id }}?from=summary" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ fixedServiceFee.id }}?from=summary" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
+                        <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1'}) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                        <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'from': 'summary'}) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -144,8 +144,9 @@
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountReceived | money_format }}</td>
                     <td class="width-fifth numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
                     <td class="change-answer width-seventh">
-                        <a href="/report/{{ report.id }}/prof-service-fee/step/1/fee/{{ assessedServiceFee.id }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        <a href="/report/{{ report.id }}/prof-service-fee/delete/fee/{{ assessedServiceFee.id }}?from=summary" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
+                        <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1'}) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                        <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'from': 'summary'}) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
+
                     </td>
                 </tr>
             {% endfor %}
@@ -232,24 +233,7 @@
     {% endif %}
 
     {# Pagination #}
-    {#{{ macros.reportSectionPrevNext(report, 'profCurrentFees') }}#}
-
-    <nav class="pagination" role="navigation" aria-label="Pagination">
-        <ul class="group">
-            <li class="previous">
-                <a title="Navigate to previous part" rel="prev" href="/report/{{ report.id }}/visits-care">
-                    <span class="pagination-label">Previous section</span>
-                    <span class="pagination-part-title">Visits and care</span>
-                </a>
-            </li>
-            <li class="next">
-                <a title="Navigate to next part" rel="next" href="/report/{{ report.id }}/gifts">
-                    <span class="pagination-label">Next section</span>
-                    <span class="pagination-part-title">Gifts</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    {{ macros.reportSectionPrevNext(report, 'profCurrentFees') }}
 
 {% endblock %}
 
