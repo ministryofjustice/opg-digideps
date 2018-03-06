@@ -42,10 +42,11 @@ class ProfCurrentFeesController extends AbstractController
         } else {
             // if fees received but none entered, redirect to add charge
             if ($report->getCurrentProfPaymentsReceived() == 'yes' && empty($report->getCurrentProfServiceFees())) {
-                return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1]);
             }
+
             // if fees entered but estimates question not answered
-            if (empty($report->getPreviousProfFeesEstimateGiven())) {
+            if (!empty($report->getCurrentProfServiceFees()) && empty($report->getPreviousProfFeesEstimateGiven())) {
                 return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
             }
         }
