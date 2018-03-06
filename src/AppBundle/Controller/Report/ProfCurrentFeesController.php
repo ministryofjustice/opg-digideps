@@ -307,16 +307,7 @@ class ProfCurrentFeesController extends AbstractController
 
         return
             [
-                'report' => $report,
-                'feeTotals' => $report->getFeeTotals(),
-                'fixedServiceFees' => $report->getFilteredFees(
-                    EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
-                    EntityDir\Report\ProfServiceFee::TYPE_FIXED_FEE
-                ),
-                'assessedServiceFees' => $report->getFilteredFees(
-                    EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
-                    EntityDir\Report\ProfServiceFee::TYPE_ASSESSED_FEE
-                )
+                'report' => $report
             ];
     }
 

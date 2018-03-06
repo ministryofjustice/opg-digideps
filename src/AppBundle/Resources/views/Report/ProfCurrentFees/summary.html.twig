@@ -53,7 +53,7 @@
         </tbody>
     </table>
 
-    {% if (assessedServiceFees|length) or (fixedServiceFees|length) %}
+    {% if (report.currentAssessedServiceFees|length) or (report.currentFixedServiceFees|length) %}
 
         <div class="grid-row push--top">
             <div class="column-half">
@@ -69,7 +69,7 @@
 
     {% endif %}
 
-    {% if fixedServiceFees|length %}
+    {% if report.currentFixedServiceFees|length %}
 
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
 
@@ -88,7 +88,7 @@
 
             <tbody>
 
-            {% for fixedServiceFee in fixedServiceFees %}
+            {% for fixedServiceFee in report.currentFixedServiceFees %}
                 <tr class="behat-region-transaction-">
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged | money_format }}</td>
@@ -108,10 +108,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalFixedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalFixedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalFixedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalFixedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -120,7 +120,7 @@
 
     {% endif %}
 
-    {% if assessedServiceFees|length %}
+    {% if report.currentAssessedServiceFees|length %}
 
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
 
@@ -139,7 +139,7 @@
 
             <tbody>
 
-            {% for assessedServiceFee in assessedServiceFees %}
+            {% for assessedServiceFee in report.currentAssessedServiceFees %}
                 <tr>
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged | money_format }}</td>
@@ -160,10 +160,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -172,7 +172,7 @@
 
     {% endif %}
 
-    {% if (assessedServiceFees|length) and (fixedServiceFees|length) %}
+    {% if (report.currentAssessedServiceFees|length) and (report.currentFixedServiceFees|length) %}
 
         <table class="check-your-answers push--bottom push-half--top">
             <tbody>
@@ -181,10 +181,10 @@
                         <span class="heading-medium">{{ (page ~ '.table.grandtotal') | trans }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ (feeTotals['totalAssessedFeesCharged'] + feeTotals['totalFixedFeesCharged']) | number_format }}</span>
+                        <span class="heading-medium">£{{ (report.feeTotals['totalAssessedFeesCharged'] + report.feeTotals['totalFixedFeesCharged']) | number_format }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium">£{{ (feeTotals['totalAssessedFeesReceived'] + feeTotals['totalFixedFeesReceived']) | number_format }}</span>
+                        <span class="heading-medium">£{{ (report.feeTotals['totalAssessedFeesReceived'] + report.feeTotals['totalFixedFeesReceived']) | number_format }}</span>
                     </td>
                     <td class="width-fifth"></td>
                     <td class="width-seventh"></td>
