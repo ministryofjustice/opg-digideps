@@ -187,7 +187,15 @@ class ProfCurrentFeesController extends AbstractController
                 {
                     throw new \Exception('Invalid service type');
                 }
-                $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fee-serviceType', 'report-id']);
+
+                $result = $this->getRestClient()->post(
+                    'report/' . $report->getId() . '/prof-service-fee',
+                    $profServiceFee,
+                    [
+                        'report-object',
+                        'prof-service-fees'
+                    ]
+                );
 
                 if ('saveAndAddAnother' === $buttonClicked->getName()) {
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
