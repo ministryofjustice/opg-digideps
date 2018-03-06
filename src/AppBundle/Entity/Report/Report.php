@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
+ * @Assert\Callback(methods={"unsubmittedSectionAtLeastOnce"}, groups={"unsubmitted_sections"})
  */
 class Report implements ReportInterface
 {
@@ -26,6 +27,7 @@ class Report implements ReportInterface
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
+    use ReportTraits\ReportUnsubmittedSections;
 
     const TYPE_103 = '103';
     const TYPE_102 = '102';
@@ -65,10 +67,11 @@ class Report implements ReportInterface
     private $has106flag;
 
     /**
-     * @Assert\NotBlank( message="report.startDate.notBlank")
-     * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
+     * @Assert\NotBlank( message="report.startDate.notBlank")
+     * @Assert\Date( message="report.startDate.invalidMessage" )
      *
      * @var \DateTime
      */
@@ -77,6 +80,7 @@ class Report implements ReportInterface
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      *
@@ -85,8 +89,16 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"report_due_date"})
+     *
      * @var \DateTime
-     * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
+     */
+    private $dueDate;
+
+    /**
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
@@ -95,7 +107,8 @@ class Report implements ReportInterface
 
     /**
      * @var \DateTime
-     * @JMS\Type("DateTime")
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"unsubmit_date"})
      */
     private $unSubmitDate;
@@ -208,22 +221,23 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"submit"})
+     * @JMS\Groups({"submit", "submitted"})
      *
      * @var bool
      */
     private $submitted;
 
     /**
-     * @deprecated remove from view as well if not used
      * @JMS\Type("boolean")
      *
      * @var bool
      */
     private $reportSeen;
 
-    /** @var bool
+    /**
+     * @var bool
      * @JMS\Type("boolean")
+     *
      * @Assert\True(message="report.agree", groups={"declare"} )
      */
     private $agree;
@@ -232,7 +246,8 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -241,22 +256,15 @@ class Report implements ReportInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
 
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-metadata"})
-     *
-     * @var string
-     */
-    private $metadata;
-
     /**
      * @var Document[]
+     *
      * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
@@ -280,6 +288,7 @@ class Report implements ReportInterface
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
+     *
      * @var Status
      */
     private $status;
@@ -293,10 +302,12 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
-     * @JMS\Type("array")
      * @var array
+     *
+     * @JMS\Type("array")
      */
     private $availableSections;
+
 
     /**
      * @return int $id
@@ -385,19 +396,22 @@ class Report implements ReportInterface
     }
 
     /**
+     * @param \DateTime $dueDate
+     */
+    public function setDueDate(\DateTime $dueDate = null)
+    {
+        $this->dueDate = $dueDate;
+    }
+
+
+    /**
      * Return the date 8 weeks after the end date.
      *
      * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
-        if (!$this->endDate instanceof \DateTime) {
-            return;
-        }
-        $dueDate = clone $this->endDate;
-        $dueDate->modify('+8 weeks');
-
-        return $dueDate;
+        return $this->dueDate;
     }
 
     /**
@@ -460,10 +474,14 @@ class Report implements ReportInterface
 
     /**
      * @param \DateTime $unSubmitDate
+     *
+     * @return Report
      */
     public function setUnSubmitDate(\DateTime $unSubmitDate)
     {
         $this->unSubmitDate = $unSubmitDate;
+
+        return $this;
     }
 
     /**
@@ -1037,22 +1055,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return string
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * @param string $metadata
-     */
-    public function setMetadata($metadata)
-    {
-        $this->metadata = $metadata;
-    }
-
-    /**
      * @return array
      */
     public function getAvailableSections()
@@ -1134,32 +1136,4 @@ class Report implements ReportInterface
         return true;
     }
 
-    /**
-     * @var UnsubmittedSection[]
-     */
-    private $unsubmittedSection = [];
-
-    /**
-     * @param UnsubmittedSection[] $unsubmittedSection
-     */
-    public function setUnsubmittedSection($unsubmittedSection)
-    {
-        // TODO map into the model in order to read and use for next story
-        $this->unsubmittedSection = $unsubmittedSection;
-    }
-
-    /**
-     * @return UnsubmittedSection[]
-     */
-    public function getUnsubmittedSection()
-    {
-        // init with available section
-        if (empty($this->unsubmittedSection)) {
-            foreach ($this->getAvailableSections() as $sectionId) {
-                $this->unsubmittedSection[] = new UnsubmittedSection($sectionId, false);
-            }
-        }
-
-        return $this->unsubmittedSection;
-    }
 }

@@ -76,17 +76,10 @@ class ReportController extends AbstractController
         }
 
         $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-        if (!$client) {
+        if (empty($clients)) {
             throw new \Exception('Client not added');
         }
-
-        // read reports
-        $reports = $client ? $client->getReports() : [];
-        $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
-        if (!($reportActive = $client->getActiveReport())) {
-            throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
-        }
+        $client = array_shift($clients);
 
         //refresh client adding codeputes (another API call to avoid recursion with users)
         $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
@@ -95,9 +88,6 @@ class ReportController extends AbstractController
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'reports' => $reports,
-            'reportActive' => $reportActive,
-            'reportsSubmitted' => $reportsSubmitted,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
@@ -180,7 +170,7 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template()
      */
-    public function overviewAction($reportId)
+    public function overviewAction(Request $request, $reportId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
@@ -212,11 +202,24 @@ class ReportController extends AbstractController
             ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
-        return $this->render($template, [
+        $vars = [
             'user' => $user,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
-        ]);
+        ];
+
+        // "agre" checkbox for unsubmitted report.
+        // KEEP THIS until incomplete report has merged and not further changes are required
+//        if ($report->getUnSubmitDate()) {
+//            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
+//            $form->handleRequest($request);
+//            if ($form->isValid()) {
+//                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
+//            }
+//            $vars['form'] = $form->createView();
+//        }
+
+        return $this->render($template, $vars);
     }
 
     /**
@@ -254,17 +257,19 @@ class ReportController extends AbstractController
                 true
             );
 
-            // store report and get new YEAR report
-            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
+            // store report and get new YEAR report (only for reports submitted the first time)
+            $newYearReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
+            if ($newYearReportId) {
+                $newReport = $this->getRestClient()->get('report/' . $newYearReportId, 'Report\\Report');
 
-            //send confirmation email
-            if ($user->isDeputyOrg()) {
-                $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
-            } else {
-                $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                //send confirmation email
+                if ($user->isDeputyOrg()) {
+                    $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
+                } else {
+                    $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                }
             }
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));

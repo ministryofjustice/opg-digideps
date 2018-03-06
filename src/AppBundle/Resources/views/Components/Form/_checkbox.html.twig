@@ -1,4 +1,6 @@
-<div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox{% if not element.vars.valid %} form-group-error{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
+{% if useFormGroup %}
+    <div id="form-group-{{ element.vars.id }}" class="form-group form-group__checkbox{% if not element.vars.valid %} form-group-error{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
+{% endif %}
 
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">{{ hintText }}</p>
@@ -25,4 +27,6 @@
         </label>
     </div>
 
-</div>
+{% if useFormGroup %}
+    </div>
+{% endif %}
