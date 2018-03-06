@@ -93,7 +93,9 @@
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged | money_format }}</td>
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived | money_format }}</td>
-                    <td class="width-fifth numeric-small no-wrap">{{ fixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
+                    <td class="width-fifth numeric-small no-wrap">
+                        {{ fixedServiceFee.paymentReceivedDate ? fixedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
+                    </td>
                     <td class="change-answer width-seventh">
                         <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1'}) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                         <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'from': 'summary'}) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
@@ -142,7 +144,9 @@
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged | money_format }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountReceived | money_format }}</td>
-                    <td class="width-fifth numeric-small">{{ assessedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
+                    <td class="width-fifth numeric-small">
+                        {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
+                    </td>
                     <td class="change-answer width-seventh">
                         <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1'}) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                         <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'from': 'summary'}) }}" class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
