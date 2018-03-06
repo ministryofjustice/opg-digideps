@@ -50,6 +50,7 @@
     {% elseif step == 2 %}
 
         {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+        {{ form_widget(form.serviceTypeId, { 'attr': {'class': 'hidden-row'} }) }}
 
         <div class="form-section push--bottom">
             {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {

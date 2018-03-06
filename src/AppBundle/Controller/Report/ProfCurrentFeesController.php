@@ -143,6 +143,9 @@ class ProfCurrentFeesController extends AbstractController
             $profServiceFee = array_shift($profServiceFee);
         } else {
             $profServiceFee = new EntityDir\Report\ProfServiceFee();
+            if (!empty($request->get('serviceTypeId'))) {
+                $profServiceFee->setServiceTypeId($request->get('serviceTypeId'));
+            }
         }
 
 
@@ -170,22 +173,24 @@ class ProfCurrentFeesController extends AbstractController
             $profServiceFee->setReport($report);
 
             if ($step == 1) {
-                if ($profServiceFee->getId() == null) {
-                    $data = $form->getData();
-                    $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $data, ['prof-service-fee-serviceType', 'report-id']);
-                } else {
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+
+                if (!empty($profServiceFee->getId())) {
 
                     $result = $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
                 }
 
-                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $result['id']]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId()]);
             } elseif ($step == 2) {
-
-                $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
+                if (!array_key_exists($profServiceFee->getServiceTypeId(), EntityDir\Report\ProfServiceFee::$serviceTypeIds))
+                {
+                    throw new \Exception('Invalid service type');
+                }
+                $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $profServiceFee, ['prof-service-fee-serviceType', 'report-id']);
 
                 if ('saveAndAddAnother' === $buttonClicked->getName()) {
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
 
                     // use step 1 to begin the loop again
                     return $this->redirectToRoute(

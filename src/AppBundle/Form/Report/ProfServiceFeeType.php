@@ -66,6 +66,7 @@ class ProfServiceFeeType extends AbstractType
         }
 
         if ($this->step == 2) {
+            $builder->add('serviceTypeId', 'hidden');
             $builder->add('assessedOrFixed', 'choice', [
                     'choices' => [ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs'],
                     'expanded' => true,
