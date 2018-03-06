@@ -38,7 +38,6 @@ class Version169 extends AbstractMigration
         $this->addSql('DROP TABLE prof_service_fee');
         $this->addSql('ALTER TABLE report DROP current_prof_payment_received');
         $this->addSql('ALTER TABLE report DROP prof_fees_estimate_scco_reason');
-        $this->addSql('ALTER TABLE report DROP prof_fees_estimate_scco_reason');
 
     }
 }
