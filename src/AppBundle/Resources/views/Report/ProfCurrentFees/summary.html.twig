@@ -39,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="behat-region-paid-for-anything">
+            <tr class="behat-region-has-fees">
                 <td>
                     {{ 'existPage.form.hasFees.label' | trans  }}
                 </td>
@@ -207,7 +207,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="behat-region-paid-for-anything">
+                <tr class="behat-region-previous-estimates">
                     <td>
                         {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
                     </td>
@@ -219,7 +219,7 @@
                     </td>
                 </tr>
                 {% if report.profFeesEstimateSccoReason is not null %}
-                    <tr class="behat-region-paid-for-anything">
+                    <tr class="behat-region-scco-reason">
                         <td>
                             {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
                         </td>
