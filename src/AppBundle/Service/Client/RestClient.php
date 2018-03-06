@@ -280,10 +280,6 @@ class RestClient
             $options['body'] = $this->toJson($data, $options);
         }
 
-//        if ($method=='put') {
-//            echo "<pre>";\Doctrine\Common\Util\Debug::dump($options, 4);die;
-//        }
-
         $response = $this->rawSafeCall($method, $endpoint, $options + [
             'addClientSecret' => !$authenticated,
             'addAuthToken' => $authenticated,
