@@ -1,12 +1,15 @@
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set sectionId = sectionId | default(null) %}
+{% set needsAttention =  sectionId in sectionsNeedsAttention %}
 
 {% if linkToSubSection is not defined %}
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" class="section-list-item">
+<div id="{{ subSection }}-sub-section" class="section-list-item {{ needsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
+
     <a href="{{ linkToSubSection }}" class="edit-heading-link">
         <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
     </a>
@@ -31,8 +34,7 @@
     </a>
 
     {%  if description | default(false) %}
-        <p class="description text {%  if descriptionLink | default(false) %}flush--bottom{% endif %}
-        ">
+        <p class="description text flush--bottom">
             {% if descriptionRaw | default(false)  %}
                 {{ descriptionRaw | raw }}
             {% else %}

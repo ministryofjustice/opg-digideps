@@ -6,6 +6,7 @@
     @extend %contain-floats;
     border-top: 1px solid $grey-3;
     clear: both;
+    padding-bottom: 15px;
 
     .heading {
         @include box-sizing(border-box);
@@ -76,6 +77,8 @@
 
     // PA Client Profile panels adjustments
     .panel-admin & {
+        padding-bottom: 0;
+
         &:last-child {
             border-bottom: 1px solid $grey-3;
         }
@@ -84,5 +87,11 @@
             display: block;
             text-decoration: underline;
         }
+    }
+
+    // Marking sections the need attention (incomplete report)
+    &.highlight {
+        padding-left: 10px;
+        border-left: 5px solid $orange;
     }
 }

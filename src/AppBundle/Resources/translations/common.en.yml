@@ -8,6 +8,7 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
+reviewReport: Review report
 saveAndContinue: Save and continue
 saveAndAddAnother: Save and add another
 back: Back
@@ -27,6 +28,7 @@ manage: Manage
 annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
 submittedReports: Submitted reports
+unsubmittedReport: Incomplete deputy report
 
 # Labels and table headings
 name: Name

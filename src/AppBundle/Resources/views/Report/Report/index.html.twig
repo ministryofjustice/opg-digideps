@@ -2,10 +2,7 @@
 
 {% set translationDomain = "report" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {
-    '%startDate%': reportActive.startDate | date("j F Y"),
-    '%endDate%': reportActive.endDate | date("j F Y")
-} %}
+
 {% set page = 'homepage' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
@@ -23,34 +20,47 @@
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
-    <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+    {% if client.unsubmittedReport %}
+        {% set report = client.unsubmittedReport %}
+        {% set status = report.status.status %}
+        {% set statusClass = 'incomplete' %}
+        {% set behatRegion = 'report-unsubmitted' %}
+        {% set buttonText = 'reviewReport' %}
+        {% set transOptions = {
+            '%startDate%': report.startDate | date("j F Y"),
+            '%endDate%': report.endDate | date("j F Y")
+        } %}
+        <h2 class="heading-large">{{ 'unsubmittedReport' | trans({}, 'common') }}</h2>
+        {% embed 'AppBundle:Report/Report:_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+                {{ (page ~ '.unsubmitted.reportPara') | trans(transOptions, translationDomain) }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 
-    {% set status = reportActive.status.status %}
-    {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
+    {# current report #}
+    {% if client.activeReport %}
+        {% set report = client.activeReport %}
+        {% set status = report.status.status %}
+        {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
+        {% set behatRegion = 'report-active' %}
+        {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
+        {% set transOptions = {
+            '%startDate%': report.startDate | date("j F Y"),
+            '%endDate%': report.endDate | date("j F Y")
+        } %}
+        <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+        {% embed 'AppBundle:Report/Report:_report_row.html.twig' %}
+            {% block bottomLeftContent %}
+              {{ (page ~ '.editReportingPeriodPara') | trans(transOptions, translationDomain) }}
+              <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}"
+                >{{ (page ~ '.editReportingPeriodLink') | trans({}, translationDomain) }}</a>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 
-    <div class="card">
-        <span class="status status-corner {{ statusClass }}">{{ (status) | trans({}, 'common') }}</span>
-        <h3 class="heading-medium flush--ends">
-            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
-                {{ reportActive.getPeriod() }} report
-            </a>
-        </h3>
-        <div class="card-body">
-            <p>
-                <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
-                {{ reportActive.dueDate | date("j F Y") }}
-            </p>
-            <p class="text flush--bottom">
-                 {{ (page ~ '.editReportingPeriodPara') | trans(transOptions) }} <a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ (page ~ '.editReportingPeriodLink') | trans }}</a>
-            </p>
-        </div>
-        {% set buttonText = reportActive.status.status != 'notStarted' ? 'continue' : 'startNow' %}
-        <div class="card-actions">
-            <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}" class="button behat-link-report-start" >{{ buttonText | trans({}, 'common') }}</a>
-        </div>
-    </div>
 
-    {% if reportsSubmitted %}
+    {% if client.submittedReports %}
 
         <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
@@ -64,7 +74,7 @@
                 </tr>
             </thead>
             <tbody class="behat-region-submitted-reports">
-            {% for report in reportsSubmitted %}
+            {% for report in client.submittedReports %}
                 <tr>
                     <td>
                         <a href="{{ path('report_review', {reportId: report.id}) }}">

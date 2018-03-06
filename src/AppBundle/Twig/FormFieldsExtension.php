@@ -388,6 +388,7 @@ class FormFieldsExtension extends \Twig_Extension
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
+            'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
             'preInputText' => $preInputText,
