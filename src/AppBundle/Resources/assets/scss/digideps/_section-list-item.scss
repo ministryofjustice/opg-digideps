@@ -77,6 +77,8 @@
 
     // PA Client Profile panels adjustments
     .panel-admin & {
+        padding-bottom: 0;
+
         &:last-child {
             border-bottom: 1px solid $grey-3;
         }
