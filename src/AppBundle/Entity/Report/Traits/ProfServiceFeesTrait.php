@@ -46,7 +46,10 @@ trait ProfServiceFeesTrait
      */
     public function profCurrentFeesSectionCompleted()
     {
-        return count($this->getCurrentProfServiceFees()) > 0 || $this->getCurrentProfPaymentsReceived() === 'no';
+        return
+            ($this->getCurrentProfPaymentsReceived() === 'no' ||
+            (count($this->getCurrentProfServiceFees()) > 0 && $this->getCurrentProfPaymentsReceived() === 'yes')) &&
+                !empty($this->getPreviousProfFeesEstimateGiven());
     }
 
     /**
