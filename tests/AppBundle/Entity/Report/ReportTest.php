@@ -36,6 +36,15 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->expense2 = m::mock(Expense::class, ['getAmount' => 20]);
     }
 
+    public function testDueDate()
+    {
+        $startDate = new \Datetime('2017-01-01');
+        $endDate = new \Datetime('2018-12-31');
+
+        $report = new Report($this->client, Report::TYPE_102, $startDate, $endDate, false);
+        $this->assertEquals('2019-02-25', $report->getDueDate()->format('Y-m-d'));
+    }
+
     public static function constructorProvider()
     {
         return [
@@ -49,7 +58,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider constructorProvider
      * */
-    public function testConstrutor($startDate, $endDate, array $clientReports, $expectedTextInException)
+    public function testConstructorExceptions($startDate, $endDate, array $clientReports, $expectedTextInException)
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
@@ -190,17 +199,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, $reportWith([])->getExpensesTotal());
         $this->assertEquals(1+1, $reportWith([$exp1, $exp1])->getExpensesTotal());
-    }
-
-    public function testDueDate()
-    {
-        $endDate = new \DateTime();
-        $dueDate = new \DateTime();
-        $dueDate->add(new \DateInterval('P56D'));
-        $this->report->setEndDate($endDate);
-        $reportDueDate = $this->report->getDueDate();
-
-        $this->assertEquals($dueDate->format('Y-m-d'), $reportDueDate->format('Y-m-d'));
     }
 
     public function testgetAssetsTotalValue()
