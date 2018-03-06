@@ -37,10 +37,18 @@ class ProfCurrentFeesController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getProfCurrentFeesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] == EntityDir\Report\Status::STATE_DONE) {
             return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
+        } else {
+            // if fees received but none entered, redirect to add charge
+            if ($report->getCurrentProfPaymentsReceived() == 'yes' && empty($report->getCurrentProfServiceFees())) {
+                return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
+            }
+            // if fees entered but estimates question not answered
+            if (empty($report->getPreviousProfFeesEstimateGiven())) {
+                return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
+            }
         }
-
         return [
             'report' => $report,
         ];
@@ -110,7 +118,7 @@ class ProfCurrentFeesController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $totalSteps = 2;
-        if ($step == 3 && empty($report->getPreviousProfFeesEstimateGiven())) {
+        if ($step == 3 && (empty($report->getPreviousProfFeesEstimateGiven()) || empty($report->getProfServiceFees()))) {
             return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId, 'feeId' => $feeId]);
         }
         if ($step < 1 || $step > $totalSteps) {
@@ -163,7 +171,6 @@ class ProfCurrentFeesController extends AbstractController
             if ($step == 1) {
                 if ($profServiceFee->getId() == null) {
                     $data = $form->getData();
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
                     $result = $this->getRestClient()->post('report/' . $report->getId() . '/prof-service-fee', $data, ['prof-service-fee-serviceType', 'report-id']);
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
