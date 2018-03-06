@@ -64,7 +64,7 @@ Feature: Admin unsubmit report (from client page)
     And I should see the "report-active" region
     But I should not see the "submitted-reports" region
     When I click on "report-start" in the "report-unsubmitted" region
-    And I should see the "report-hero-unsubmitted" region
+    And I should see the "report-ready-banner" region
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-deputyExpenses-needs-attention" region
     When I click on "edit-report-review"
