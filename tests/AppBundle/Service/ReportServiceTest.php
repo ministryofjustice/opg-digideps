@@ -86,6 +86,8 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testSubmitValid()
     {
+        $report = $this->report;
+        
         // mocks
         $this->em->shouldReceive('detach');
         // assert persists on report and submission record
@@ -97,7 +99,6 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
             return $report instanceof EntityDir\Report\ReportSubmission;
         }));
         // assert asset and bank accounts are copied. can't get from the returned report as they are added form the "Many" side
-        // TODO add a "Report.add<Entity>()" with $this->contains so that it can be tested from the report itself
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset) {
             return $asset instanceof EntityDir\Report\AssetProperty && $asset->getAddress() === 'SW1';
         }))->once();
@@ -106,22 +107,53 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         }))->once();
         $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
 
-        $this->report->setAgreedBehalfDeputy(true);
-        $newYearReport = $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
+        $report->setAgreedBehalfDeputy(true);
+        $newYearReport = $this->sut->submit($report, $this->user, new \DateTime('2016-01-15'));
 
         // assert current report
-        $this->assertTrue($this->report->getSubmitted());
+        $this->assertTrue($report->getSubmitted());
 
         // assert reportsubmissions
-        $submission = $this->report->getReportSubmissions()->first();
+        $submission = $report->getReportSubmissions()->first();
         $this->assertEquals($this->document1, $submission->getDocuments()->first());
-        $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
+        $this->assertEquals($report->getSubmittedBy(), $submission->getCreatedBy());
 
         //assert new year report
-        $this->assertEquals($this->report->getType(), $newYearReport->getType());
+        $this->assertEquals($report->getType(), $newYearReport->getType());
         $this->assertEquals('2016-01-01', $newYearReport->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
     }
+
+    public function testResubmit()
+    {
+        $report = $this->report;
+        $report->setUnSubmitDate(new \DateTime('2018-02-14'));
+
+        // mocks
+        $this->em->shouldReceive('detach');
+        // assert persists on report and submission record
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+            return $report instanceof EntityDir\Report\ReportSubmission;
+        }));
+        $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
+
+        $report->setAgreedBehalfDeputy(true);
+        $newYearReport = $this->sut->submit($report, $this->user, new \DateTime('2016-01-15'));
+
+        // assert current report
+        $this->assertTrue($report->getSubmitted());
+        $this->assertNull($report->getUnSubmitDate());
+        $this->assertNull($report->getUnsubmittedSectionsList());
+
+        // assert reportsubmissions
+        $submission = $report->getReportSubmissions()->first();
+        $this->assertEquals($this->document1, $submission->getDocuments()->first());
+        $this->assertEquals($report->getSubmittedBy(), $submission->getCreatedBy());
+
+        //assert new year report
+        $this->assertNull($newYearReport);
+    }
+
 
     public function testSubmitAdditionalDocuments()
     {

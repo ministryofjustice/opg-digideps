@@ -214,14 +214,22 @@ class Report implements ReportInterface
     private $mentalCapacity;
 
     /**
-     * @var \Date
+     * @var \DateTime
      *
      * @JMS\Groups({"report", "report-period"})
-     * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
     private $startDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Groups({"report", "report-period"})
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @ORM\Column(name="due_date", type="date", nullable=true)
+     */
+    private $dueDate;
 
     /**
      * @var \DateTime
@@ -247,7 +255,7 @@ class Report implements ReportInterface
      * @var \DateTime
      *
      * @JMS\Groups({"report"})
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)
      */
     private $unSubmitDate;
@@ -308,17 +316,6 @@ class Report implements ReportInterface
     private $agreedBehalfDeputyExplanation;
 
     /**
-     * @deprecated data needed for previous data migration
-     *
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report"})
-     * @ORM\Column(name="metadata", type="text", nullable=true)
-     */
-    private $metadata;
-
-    /**
      * @var ArrayCollection
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
@@ -343,6 +340,16 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
+     * @var array
+     *
+     * @JMS\Groups({"report"})
+     * @ORM\Column(name="unsubmitted_sections_list", type="text", nullable=true)
+     *
+     * @JMS\Type("string")
+     */
+    private $unsubmittedSectionsList;
+
+    /**
      * Report constructor.
      *
      * @param Client $client
@@ -360,7 +367,9 @@ class Report implements ReportInterface
         $this->client = $client;
         $this->startDate = new \DateTime($startDate->format('Y-m-d'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'));
-
+        // due date set to 8 exactly weeks (56 days) after the start date
+        $this->dueDate = clone $this->endDate;
+        $this->dueDate->add(new \DateInterval('P56D'));
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
             throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
@@ -822,34 +831,23 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return string
-     */
-    public function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * @param string $metadata
-     */
-    public function setMetadata($metadata)
-    {
-        $this->metadata = $metadata;
-    }
-
-    /**
-     * Function to get the due date for a report based on the logic that the due date is 8 weeks
-     * after the end of the report period.
+     * @param \DateTime $dueDate
      *
-     * @return bool|\DateTime
+     * @return Report
+     */
+    public function setDueDate(\DateTime $dueDate)
+    {
+        $this->dueDate = $dueDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
      */
     public function getDueDate()
     {
-        if (!$this->getEndDate() instanceof \DateTime) {
-            return false;
-        }
-
-        return $this->getEndDate()->add(new \DateInterval('P56D'));
+        return $this->dueDate;
     }
 
     /**
@@ -1005,5 +1003,21 @@ class Report implements ReportInterface
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUnsubmittedSectionsList()
+    {
+        return $this->unsubmittedSectionsList;
+    }
+
+    /**
+     * @param array $unsubmittedSectionsList
+     */
+    public function setUnsubmittedSectionsList($unsubmittedSectionsList)
+    {
+        $this->unsubmittedSectionsList = $unsubmittedSectionsList;
     }
 }
