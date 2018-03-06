@@ -41,6 +41,7 @@ class ProfServiceFeeController extends RestController
      */
     public function updateAction(Request $request, $id)
     {
+        /** @var EntityDir\Report\ProfServiceFee $profServiceFee */
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id);
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
@@ -109,20 +110,25 @@ class ProfServiceFeeController extends RestController
             $profServiceFee->setServiceTypeId($data['service_type_id']);
         }
 
-        if (array_key_exists('payment_received', $data)) {
-            $profServiceFee->setPaymentReceived($data['payment_received']);
-        }
-
         if (array_key_exists('amount_charged', $data)) {
             $profServiceFee->setAmountCharged($data['amount_charged']);
         }
 
-        if (array_key_exists('amount_received', $data)) {
-            $profServiceFee->setAmountReceived($data['amount_received']);
-        }
+        if (array_key_exists('payment_received', $data)) {
+            $profServiceFee->setPaymentReceived($data['payment_received']);
+            if ($profServiceFee->getPaymentReceived() == 'no') {
+                $profServiceFee->setAmountReceived(null);
+                $profServiceFee->setPaymentReceivedDate(null);
 
-        if (array_key_exists('payment_received_date', $data)) {
-            $profServiceFee->setPaymentReceivedDate(new \DateTime($data['payment_received_date']));
+            } else {
+                if (array_key_exists('amount_received', $data)) {
+                    $profServiceFee->setAmountReceived($data['amount_received']);
+                }
+
+                if (array_key_exists('payment_received_date', $data)) {
+                    $profServiceFee->setPaymentReceivedDate(new \DateTime($data['payment_received_date']));
+                }
+            }
         }
 
         return $profServiceFee;
