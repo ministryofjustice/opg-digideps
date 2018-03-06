@@ -148,7 +148,6 @@ class ProfCurrentFeesController extends AbstractController
             }
         }
 
-
         // crete and handle form
         $form = $this->createForm(
             new FormDir\Report\ProfServiceFeeType(
@@ -167,6 +166,7 @@ class ProfCurrentFeesController extends AbstractController
         $buttonClicked = $form->getClickedButton();
 
         if ($buttonClicked && $form->isValid()) {
+
             /* @var $profServiceFee EntityDir\Report\ProfServiceFee */
             $profServiceFee = $form->getData();
 
@@ -175,31 +175,39 @@ class ProfCurrentFeesController extends AbstractController
             if ($step == 1) {
 
                 if (!empty($profServiceFee->getId())) {
-
-                    $result = $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, self::$jmsGroups);
-
+                    // Update: update service type only
+                    $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType'] );
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId()]);
                 }
 
+                // Create. Just redirect to next step
                 return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId()]);
             } elseif ($step == 2) {
+                // Check we have a valid service type (now in URL)
                 if (!array_key_exists($profServiceFee->getServiceTypeId(), EntityDir\Report\ProfServiceFee::$serviceTypeIds))
                 {
                     throw new \Exception('Invalid service type');
                 }
 
-                $result = $this->getRestClient()->post(
-                    'report/' . $report->getId() . '/prof-service-fee',
-                    $profServiceFee,
-                    [
-                        'report-object',
-                        'prof-service-fees'
-                    ]
-                );
-
-                if ('saveAndAddAnother' === $buttonClicked->getName()) {
+                if (empty($profServiceFee->getId())) {
+                    // Create: POST entire entity + report
+                    $result = $this->getRestClient()->post(
+                        'report/' . $report->getId() . '/prof-service-fee',
+                        $profServiceFee,
+                        [
+                            'report-object',
+                            'prof-service-fees'
+                        ]
+                    );
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
+                } else {
+                    // Update: PUT entity
+                    $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fees']);
+                }
 
+                // Handle add another pattern
+                if ('saveAndAddAnother' === $buttonClicked->getName()) {
                     // use step 1 to begin the loop again
                     return $this->redirectToRoute(
                         'current_service_fee_step',
@@ -209,9 +217,7 @@ class ProfCurrentFeesController extends AbstractController
                         ]
                     );
                 }
-
-                $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
-
+                
                 return $this->redirectToRoute(
                     'current_service_fee_step',
                     [

@@ -79,7 +79,7 @@ class ProfServiceFee
      * @var string a value in self:$serviceTypeIds
      *
      * @Assert\NotBlank(message="profServiceFee.serviceType.notBlank", groups={"prof-service-fee-type"})
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Groups({"prof-service-fees", "prof-service-fee-serviceType"})
      */
     private $serviceTypeId;
 
