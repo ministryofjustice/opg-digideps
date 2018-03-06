@@ -20,6 +20,7 @@ class Version167 extends AbstractMigration
 
         $this->addSql('ALTER TABLE report ADD due_date DATE DEFAULT NULL');
         $this->addSql('ALTER TABLE report DROP metadata');
+        $this->addSql('ALTER TABLE report ADD unsubmitted_sections_list TEXT DEFAULT NULL');
 
     }
 
@@ -34,6 +35,7 @@ class Version167 extends AbstractMigration
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE report ADD metadata TEXT DEFAULT NULL');
         $this->addSql('ALTER TABLE report DROP due_date');
+        $this->addSql('ALTER TABLE report DROP unsubmitted_sections_list');
 
     }
 }
