@@ -1253,6 +1253,31 @@ class Report implements ReportInterface
         });
     }
 
+    /**
+     * Returns current Fixed service fees
+     *
+     * @return array
+     */
+    public function getCurrentFixedServiceFees()
+    {
+        return $this->getFilteredFees(
+            ProfServiceFee::TYPE_CURRENT_FEE,
+            ProfServiceFee::TYPE_FIXED_FEE
+        );
+    }
+
+    /**
+     * Returns current Assessed service fees
+     *
+     * @return array
+     */
+    public function getCurrentAssessedServiceFees()
+    {
+        return $this->getFilteredFees(
+            ProfServiceFee::TYPE_CURRENT_FEE,
+            ProfServiceFee::TYPE_ASSESSED_FEE
+        );
+    }
 
     /**
      * @return string

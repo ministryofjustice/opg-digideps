@@ -366,15 +366,7 @@ class ReportController extends AbstractController
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
-            'feeTotals' => $report->getFeeTotals(),
-            'currentFixedServiceFees' => $report->getFilteredFees(
-                EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
-                EntityDir\Report\ProfServiceFee::TYPE_FIXED_FEE
-            ),
-            'currentAssessedServiceFees' => $report->getFilteredFees(
-                EntityDir\Report\ProfServiceFee::TYPE_CURRENT_FEE,
-                EntityDir\Report\ProfServiceFee::TYPE_ASSESSED_FEE
-            )
+            'feeTotals' => $report->getFeeTotals()
         ];
     }
 
