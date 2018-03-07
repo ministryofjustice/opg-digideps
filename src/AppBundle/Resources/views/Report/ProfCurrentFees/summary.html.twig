@@ -73,7 +73,7 @@
 
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
 
-        <table class="check-your-answers behat-region-list-accounts">
+        <table class="check-your-answers behat-region-fixed-fees">
             <thead>
                 <tr>
                     <th>{{ 'summaryPage.table.service' | trans }}</th>
@@ -89,7 +89,7 @@
             <tbody>
 
             {% for fixedServiceFee in report.currentFixedServiceFees %}
-                <tr class="behat-region-transaction-">
+                <tr class="behat-region-service-fee-{{ fixedServiceFee.serviceTypeId }}">
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged | money_format }}</td>
                     <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived | money_format }}</td>
@@ -108,10 +108,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalFixedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalFixedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -124,7 +124,7 @@
 
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
 
-        <table class="check-your-answers behat-region-list-accounts">
+        <table class="check-your-answers behat-region-assess-fees">
             <thead>
                 <tr>
                     <th>{{ 'summaryPage.table.service' | trans }}</th>
@@ -141,7 +141,7 @@
 
             {% for assessedServiceFee in report.currentAssessedServiceFees %}
                 <tr>
-                    <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
+                    <td class="width-third behat-region-assessed-fee-{{ assessedServiceFee.serviceTypeId }}">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged | money_format }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountReceived | money_format }}</td>
                     <td class="width-fifth numeric-small">
@@ -160,10 +160,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small behat-region-household-bills-total">£{{ report.feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>

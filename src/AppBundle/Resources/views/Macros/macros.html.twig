@@ -213,9 +213,10 @@
 {% macro saveAndAddAnotherSaveButton(button) %}
     {{ form_submit(button, '', {
         'labelText': 'saveAndAddAnother' | trans({}, 'common'),
-        'buttonClass': 'behat-link-save-and-continue',
+        'buttonClass': 'behat-link-save-and-add-another',
     }) }}
 {% endmacro %}
+
 
 {% macro notification(alertType,message) %}
     {% if alertType is defined %}
