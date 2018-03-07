@@ -304,7 +304,9 @@ class ProfCurrentFeesController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirect($this->generateUrl('prof_current_fees', ['reportId' => $reportId]));
+        }
         return
             [
                 'report' => $report
