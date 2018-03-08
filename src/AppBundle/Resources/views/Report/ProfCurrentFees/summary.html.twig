@@ -188,45 +188,55 @@
     {% endif %}
 
     {# fees estimate question + Scco explanation given #}
-    {% if report.previousProfFeesEstimateGiven is not null %}
-        <table class="check-your-answers columns-2 push-double--bottom push--top">
-            <thead>
-                <tr>
-                    <th>{{ 'question' | trans({}, 'common') }}</th>
-                    <th>{{ 'answer' | trans({}, 'common') }}</th>
-                    <th>
-                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="behat-region-previous-estimates">
-                    <td>
+    <table class="check-your-answers columns-2 push-double--bottom push--top">
+        <thead>
+            <tr>
+                <th>{{ 'question' | trans({}, 'common') }}</th>
+                <th>{{ 'answer' | trans({}, 'common') }}</th>
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set answerGiven = report.previousProfFeesEstimateGiven is not null %}
+            <tr class="behat-region-previous-estimates">
+                <td>
+                    {% if answerGiven %}
                         {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
+                    {% else %}
+                      <span class="error">
+                        {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
+                      </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if answerGiven %}
+                        {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
+                    {% else %}
+                        <span class="error-message">Please answer this question</span>
+                    {% endif %}
+
+                </td>
+                <td class="change-answer">
+                    <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                </td>
+            </tr>
+            {% if answerGiven %}
+                <tr class="behat-region-scco-reason">
+                    <td>
+                        {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
                     </td>
                     <td>
-                        {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
+                        {{ report.profFeesEstimateSccoReason | nl2br }}
                     </td>
                     <td class="change-answer">
                         <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                     </td>
                 </tr>
-                {% if report.profFeesEstimateSccoReason is not null %}
-                    <tr class="behat-region-scco-reason">
-                        <td>
-                            {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
-                        </td>
-                        <td>
-                            {{ report.profFeesEstimateSccoReason | nl2br }}
-                        </td>
-                        <td class="change-answer">
-                            <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
-    {% endif %}
+            {% endif %}
+        </tbody>
+    </table>
 
     {# Pagination #}
     {{ macros.reportSectionPrevNext(report, 'profCurrentFees') }}
