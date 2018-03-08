@@ -208,7 +208,7 @@
                         {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
                     </td>
                     <td class="change-answer">
-                        <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                        <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                     </td>
                 </tr>
                 {% if report.profFeesEstimateSccoReason is not null %}
@@ -220,7 +220,7 @@
                             {{ report.profFeesEstimateSccoReason }}
                         </td>
                         <td class="change-answer">
-                            <a href="{{ path('previous_estimates', { 'reportId': report.id }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                         </td>
                     </tr>
                 {% endif %}
