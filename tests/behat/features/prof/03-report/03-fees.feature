@@ -29,7 +29,7 @@ Feature: PROF fees
       | prof_service_fee_type_paymentReceivedDate_day   |
       | prof_service_fee_type_paymentReceivedDate_month |
       | prof_service_fee_type_paymentReceivedDate_year  |
-    # Add a charge: empty paymeny received (yes to last answer)
+    # Add a charge: empty date (yes to last answer)
     When I fill in the following:
       | prof_service_fee_type_assessedOrFixed_0 | fixed |
       | prof_service_fee_type_amountCharged     | 1234  |
@@ -40,7 +40,7 @@ Feature: PROF fees
       | prof_service_fee_type_paymentReceivedDate_day   |
       | prof_service_fee_type_paymentReceivedDate_month |
       | prof_service_fee_type_paymentReceivedDate_year  |
-    # Add a charge: complete
+    # Add a fixed charge with a payment:
     When I fill in the following:
       | prof_service_fee_type_assessedOrFixed_0         | fixed |
       | prof_service_fee_type_amountCharged             | 1234  |
@@ -49,7 +49,16 @@ Feature: PROF fees
       | prof_service_fee_type_paymentReceivedDate_day   | 1     |
       | prof_service_fee_type_paymentReceivedDate_month | 1     |
       | prof_service_fee_type_paymentReceivedDate_year  | 2018  |
-    When I press "prof_service_fee_type_save"
+    When I click on "save-and-add-another"
+    Then the form should be valid
+    # Add another item: assessed-cost charge without payment:
+    And the step with the following values CAN be submitted:
+      | prof_service_fee_type_serviceTypeId_3 | appointment |
+    And I fill in the following:
+      | prof_service_fee_type_assessedOrFixed_1 | assessed |
+      | prof_service_fee_type_amountCharged     | 456      |
+      | prof_service_fee_type_paymentReceived_1 | no       |
+    When I click on "save-and-continue"
     Then the form should be valid
     # estimate of your costs
     Then the step cannot be submitted without making a selection
@@ -60,12 +69,16 @@ Feature: PROF fees
     Then each text should be present in the corresponding region:
       | Yes              | has-fees                  |
       | 1,234.00         | service-fee-annual-report |
+      | 1 January 2018   | service-fee-annual-report |
       | Yes              | previous-estimates        |
       | scoo-reason-test | scco-reason               |
+      | 1,690            | grand-total-charged       |
+      | 9,876            | grand-total-received      |
 
 
-  Scenario: fees edit
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+  Scenario: fees edit + remove
+    Given I save the application status into "prof-fees-expenses-before-edit"
+    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_current_fees"
     When I click on "edit-fee" in the "service-fee-annual-report" region
@@ -91,5 +104,12 @@ Feature: PROF fees
       | 11,223,344       | assessed-fee-annual-management-interim |
       | Yes              | previous-estimates                     |
       | scoo-reason-test | scco-reason                            |
+    # remove appointment
+    Given I load the application status from "prof-fees-expenses-before-edit"
+    When I click on "delete" in the "assessed-fee-annual-management-interim" region
+    Then I should not see the "assessed-fee-annual-management-interim" region
+    # restore data before scenario
+    And I load the application status from "prof-fees-expenses-before-edit"
+
 
 
