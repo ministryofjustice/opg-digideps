@@ -307,10 +307,11 @@ class ReportController extends RestController
 
         if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
             $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
-        }
-
-        if (array_key_exists('prof_fees_estimate_scco_reason', $data)) {
-            $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
+            if ($data['previous_prof_fees_estimate_given'] === 'no') {
+                $report->setProfFeesEstimateSccoReason(null);
+            } else {
+                $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
+            }
         }
 
         $this->getEntityManager()->flush();
