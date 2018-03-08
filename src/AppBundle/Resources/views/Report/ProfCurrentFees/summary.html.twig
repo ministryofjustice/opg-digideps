@@ -222,7 +222,7 @@
                     <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                 </td>
             </tr>
-            {% if answerGiven %}
+            {% if report.previousProfFeesEstimateGiven == 'yes' %}
                 <tr class="behat-region-scco-reason">
                     <td>
                         {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
