@@ -405,7 +405,9 @@ class Report implements ReportInterface
 
 
     /**
-     * Return the date 8 weeks after the end date.
+     * Due date
+     *
+     * as a default, 8 weeks after the end date
      *
      * @return \DateTime|null $dueDate
      */
