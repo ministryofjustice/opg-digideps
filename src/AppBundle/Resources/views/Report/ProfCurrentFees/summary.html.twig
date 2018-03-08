@@ -54,7 +54,6 @@
     </table>
 
     {% if (report.currentAssessedServiceFees|length) or (report.currentFixedServiceFees|length) %}
-
         <div class="grid-row push--top">
             <div class="column-half">
                 <h2 class="heading-medium flush--ends">{{ (page ~ '.table.heading') | trans }}</h2>
@@ -66,13 +65,11 @@
                 </a>
             </div>
         </div>
-
     {% endif %}
 
+    {# fixed fees #}
     {% if report.currentFixedServiceFees|length %}
-
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
-
         <table class="check-your-answers behat-region-fixed-fees">
             <thead>
                 <tr>
@@ -85,9 +82,7 @@
                     </th>
                 </tr>
             </thead>
-
             <tbody>
-
             {% for fixedServiceFee in report.currentFixedServiceFees %}
                 <tr class="behat-region-service-fee-{{ fixedServiceFee.serviceTypeId }}">
                     <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
@@ -102,7 +97,6 @@
                     </td>
                 </tr>
             {% endfor %}
-
                 <tr class="no-border">
                     <td>
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
@@ -117,14 +111,12 @@
                 </tr>
             </tbody>
         </table>
-
     {% endif %}
 
+    {# assessed fees #}
     {% if report.currentAssessedServiceFees|length %}
-
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
-
-        <table class="check-your-answers behat-region-assess-fees">
+        <table class="check-your-answers">
             <thead>
                 <tr>
                     <th>{{ 'summaryPage.table.service' | trans }}</th>
@@ -136,12 +128,10 @@
                     </th>
                 </tr>
             </thead>
-
             <tbody>
-
             {% for assessedServiceFee in report.currentAssessedServiceFees %}
-                <tr>
-                    <td class="width-third behat-region-assessed-fee-{{ assessedServiceFee.serviceTypeId }}">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
+                <tr class="behat-region-assessed-fee-{{ assessedServiceFee.serviceTypeId }}">
+                    <td class="width-third ">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountCharged | money_format }}</td>
                     <td class="width-sixth numeric-small">£{{ assessedServiceFee.amountReceived | money_format }}</td>
                     <td class="width-fifth numeric-small">
@@ -154,7 +144,6 @@
                     </td>
                 </tr>
             {% endfor %}
-
                 <tr class="no-border">
                     <td>
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
@@ -169,11 +158,10 @@
                 </tr>
             </tbody>
         </table>
-
     {% endif %}
 
+    {# show totals if assessed and fixed are both present #}
     {% if (report.currentAssessedServiceFees|length) and (report.currentFixedServiceFees|length) %}
-
         <table class="check-your-answers push--bottom push-half--top">
             <tbody>
                 <tr class="no-border-bottom">
@@ -191,11 +179,10 @@
                 </tr>
             </tbody>
         </table>
-
     {% endif %}
 
-    {% if report.previousProfFeesEstimateGiven is not  null %}
-
+    {# fees estimate question + Scco explanation given #}
+    {% if report.previousProfFeesEstimateGiven is not null %}
         <table class="check-your-answers columns-2 push-double--bottom push--top">
             <thead>
                 <tr>
@@ -233,7 +220,6 @@
                 {% endif %}
             </tbody>
         </table>
-
     {% endif %}
 
     {# Pagination #}
