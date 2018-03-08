@@ -8,8 +8,13 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="prof_service_fee")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="fee_type_id", type="string")
+ * @ORM\DiscriminatorMap({
+ *      "current"  = "AppBundle\Entity\Report\ProfServiceFeeCurrent",
+ * })
  */
-class ProfServiceFee
+abstract class ProfServiceFee
 {
     const TYPE_ASSESSED_FEE = 'assessed';
     const TYPE_FIXED_FEE = 'fixed';
@@ -86,12 +91,10 @@ class ProfServiceFee
     private $assessedOrFixed;
 
     /**
-     * @JMS\Type("string")
-     * @var string a value in self:$feeTypeIds
+     * Discriminator field
      *
-     * @JMS\Groups({"prof-service-fees"})
-     *
-     * @ORM\Column(name="fee_type_id", type="string", nullable=false)
+     * @var string
+     * @JMS\Exclude
      */
     private $feeTypeId;
 
@@ -209,12 +212,13 @@ class ProfServiceFee
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("string")
+     * @JMS\Groups({"prof-service-fees"})
+     *
      * @return string
      */
-    public function getFeeTypeId()
-    {
-        return $this->feeTypeId;
-    }
+    abstract public function getFeeTypeId();
 
     /**
      * @param string $feeTypeId
@@ -318,36 +322,6 @@ class ProfServiceFee
     public function setServiceTypeId($serviceTypeId)
     {
         $this->serviceTypeId = $serviceTypeId;
-    }
-
-    /**
-     * Is a current Fee?
-     *
-     * @return bool
-     */
-    public function isCurrentFee()
-    {
-        return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
-    }
-
-    /**
-     * Is a previous Fee?
-     *
-     * @return bool
-     */
-    public function isPreviousFee()
-    {
-        return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
-    }
-
-    /**
-     * Is a estimated Fee?
-     *
-     * @return bool
-     */
-    public function isEstimatedFee()
-    {
-        return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
     }
 
     /**

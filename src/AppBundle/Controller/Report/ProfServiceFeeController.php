@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfServiceFeeController extends RestController
 {
     /**
+     *
      * @Route("/report/{reportId}/prof-service-fee")
      * @Method({"POST"})
      * @Security("has_role('ROLE_PROF')")
@@ -23,10 +24,10 @@ class ProfServiceFeeController extends RestController
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $profServiceFee = new EntityDir\Report\ProfServiceFee($report);
+        $profServiceFee = new EntityDir\Report\ProfServiceFeeCurrent($report);
+        //TODO create a factory with ($data['fee_type_id'] value when/if needed
         $profServiceFee->setReport($report);
         $this->updateEntity($data, $profServiceFee);
-        $profServiceFee->setFeeTypeId('current');
         $report->setCurrentProfPaymentsReceived('yes');
         $this->persistAndFlush($profServiceFee);
         $this->getEntityManager()->flush($report);
@@ -85,7 +86,7 @@ class ProfServiceFeeController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         $this->getEntityManager()->remove($profServiceFee);
-        $this->getEntityManager()->flush($profServiceFee);
+        $this->getEntityManager()->flush();
 
         return [];
     }

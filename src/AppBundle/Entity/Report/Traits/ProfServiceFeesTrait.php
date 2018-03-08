@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Report\Traits;
 use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\ProfServiceFee;
+use AppBundle\Entity\Report\ProfServiceFeeCurrent;
 use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -22,8 +23,8 @@ trait ProfServiceFeesTrait
 
     public function addProfServiceFee(ProfServiceFee $profServiceFee)
     {
-        if (!$this->getCurrentProfServiceFees()->contains($profServiceFee)) {
-            $this->getCurrentProfServiceFees()->add($profServiceFee);
+        if (!$this->getProfServiceFees()->contains($profServiceFee)) {
+            $this->getProfServiceFees()->add($profServiceFee);
         }
 
         return $this;
@@ -35,7 +36,7 @@ trait ProfServiceFeesTrait
     public function getCurrentProfServiceFees()
     {
         return $this->getProfServiceFees()->filter(function($profServiceFee) {
-            return $profServiceFee->isCurrentFee();
+            return $profServiceFee instanceof ProfServiceFeeCurrent;
         });
     }
 

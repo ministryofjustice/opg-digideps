@@ -106,6 +106,13 @@ class DoctrineListener
             }
         }
 
+        if ($entity instanceof EntityDir\Report\ProfServiceFeeCurrent) {
+            $report = $entity->getReport();
+            if (count($report->getCurrentProfServiceFees()) === 1) {
+                $report->setCurrentProfPaymentsReceived(null);
+            }
+        }
+
         // NDR
         if ($entity instanceof EntityDir\Ndr\Expense) {
             $ndr = $entity->getNdr();
@@ -120,5 +127,7 @@ class DoctrineListener
                 $ndr->setNoAssetToAdd(null);
             }
         }
+
+
     }
 }
