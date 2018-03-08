@@ -20,16 +20,16 @@ class ProfServiceFeeController extends RestController
     {
         $data = $this->deserializeBodyContent($request);
 
+        /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $profServiceFee = new EntityDir\Report\ProfServiceFee($report);
         $profServiceFee->setReport($report);
-
         $this->updateEntity($data, $profServiceFee);
-
         $profServiceFee->setFeeTypeId('current');
-
+        $report->setCurrentProfPaymentsReceived('yes');
         $this->persistAndFlush($profServiceFee);
+        $this->getEntityManager()->flush($report);
 
         return ['id' => $profServiceFee->getId()];
     }

@@ -301,7 +301,6 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
-
             $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
         }
 
