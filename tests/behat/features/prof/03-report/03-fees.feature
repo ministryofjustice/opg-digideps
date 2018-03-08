@@ -67,7 +67,6 @@ Feature: PROF fees
       | prof_service_fees_profFeesEstimateSccoReason      | scoo-reason-test |
     #summary page
     Then each text should be present in the corresponding region:
-      | Yes              | has-fees                  |
       | 1,234.00         | service-fee-annual-report |
       | 1 January 2018   | service-fee-annual-report |
       | Yes              | previous-estimates        |

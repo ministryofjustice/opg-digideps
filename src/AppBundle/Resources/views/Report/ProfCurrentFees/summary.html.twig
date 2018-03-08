@@ -14,6 +14,9 @@
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
+{% set hasAssessedCostsFees = report.currentAssessedServiceFees | length > 0 %}
+{% set hasFixedFees = report.currentFixedServiceFees | length > 0 %}
+
 {% block pageContent %}
 
     {# Introduction text #}
@@ -28,32 +31,35 @@
     {# Return to overview/client profile link #}
     {{ macros.returnToOverview(report) }}
 
-    <table class="check-your-answers columns-2 push-double--bottom">
-        <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="behat-region-has-fees">
-                <td>
-                    {{ 'existPage.form.hasFees.label' | trans  }}
-                </td>
-                <td>
-                    {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id }) }}" class="behat-link-edit-exist">Edit</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    {# show the initial Yes/No question if there are records, otherwise useless #}
+    {% if not hasAssessedCostsFees and not hasFixedFees %}
+        <table class="check-your-answers columns-2 push-double--bottom">
+            <thead>
+                <tr>
+                    <th>{{ 'question' | trans({}, 'common') }}</th>
+                    <th>{{ 'answer' | trans({}, 'common') }}</th>
+                    <th>
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="behat-region-has-fees">
+                    <td>
+                        {{ 'existPage.form.hasFees.label' | trans  }}
+                    </td>
+                    <td>
+                        {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
+                    </td>
+                    <td class="change-answer">
+                        <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id }) }}" class="behat-link-edit-exist">Edit</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
 
-    {% if (report.currentAssessedServiceFees|length) or (report.currentFixedServiceFees|length) %}
+    {% if hasAssessedCostsFees or hasFixedFees %}
         <div class="grid-row push--top">
             <div class="column-half">
                 <h2 class="heading-medium flush--ends">{{ (page ~ '.table.heading') | trans }}</h2>
@@ -68,7 +74,7 @@
     {% endif %}
 
     {# fixed fees #}
-    {% if report.currentFixedServiceFees|length %}
+    {% if hasFixedFees %}
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
         <table class="check-your-answers behat-region-fixed-fees">
             <thead>
@@ -114,7 +120,7 @@
     {% endif %}
 
     {# assessed fees #}
-    {% if report.currentAssessedServiceFees|length %}
+    {% if hasAssessedCostsFees %}
         <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
         <table class="check-your-answers">
             <thead>
@@ -161,7 +167,7 @@
     {% endif %}
 
     {# show totals if assessed and fixed are both present #}
-    {% if (report.currentAssessedServiceFees|length) and (report.currentFixedServiceFees|length) %}
+    {% if hasAssessedCostsFees and hasFixedFees %}
         <table class="check-your-answers push--bottom push-half--top">
             <tbody>
                 <tr class="no-border-bottom">
