@@ -6,7 +6,12 @@ use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProfServiceFee
+/**
+ * @JMS\Discriminator(field = "fee_type_id", map = {
+ *    "current": "AppBundle\Entity\Report\ProfServiceFeeCurrent"
+ * })
+ */
+abstract class ProfServiceFee
 {
     const TYPE_ASSESSED_FEE = 'assessed';
     const TYPE_FIXED_FEE = 'fixed';
@@ -59,10 +64,7 @@ class ProfServiceFee
     private $assessedOrFixed;
 
     /**
-     * @JMS\Type("string")
-     * @var string a value in self:$feeTypeIds
-     *
-     * @JMS\Groups({"prof-service-fees"})
+     * @JMS\Exclude
      */
     private $feeTypeId;
 
@@ -156,20 +158,9 @@ class ProfServiceFee
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getFeeTypeId()
-    {
-        return $this->feeTypeId;
-    }
-
-    /**
-     * @param mixed $feeTypeId
-     */
-    public function setFeeTypeId($feeTypeId)
-    {
-        $this->feeTypeId = $feeTypeId;
-    }
+    abstract public function getFeeTypeId();
 
     /**
      * @return mixed
