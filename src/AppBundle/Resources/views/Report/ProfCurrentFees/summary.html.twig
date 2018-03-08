@@ -217,7 +217,7 @@
                             {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
                         </td>
                         <td>
-                            {{ report.profFeesEstimateSccoReason }}
+                            {{ report.profFeesEstimateSccoReason | nl2br }}
                         </td>
                         <td class="change-answer">
                             <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
