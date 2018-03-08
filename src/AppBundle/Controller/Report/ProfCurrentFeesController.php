@@ -37,19 +37,20 @@ class ProfCurrentFeesController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getProfCurrentFeesState()['state'] == EntityDir\Report\Status::STATE_DONE) {
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
-        } else {
-            // if fees received but none entered, redirect to add charge
-            if ($report->getCurrentProfPaymentsReceived() == 'yes' && empty($report->getCurrentProfServiceFees())) {
-                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1]);
-            }
-
-            // if fees entered but estimates question not answered
-            if (!empty($report->getCurrentProfServiceFees()) && empty($report->getPreviousProfFeesEstimateGiven())) {
-                return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
-            }
         }
+//        else {
+//            // if fees received but none entered, redirect to add charge
+//            if ($report->getCurrentProfPaymentsReceived() == 'yes' && empty($report->getCurrentProfServiceFees())) {
+//                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1]);
+//            }
+//
+//            // if fees entered but estimates question not answered
+//            if (!empty($report->getCurrentProfServiceFees()) && empty($report->getPreviousProfFeesEstimateGiven())) {
+//                return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId]);
+//            }
+//        }
         return [
             'report' => $report,
         ];
@@ -60,41 +61,33 @@ class ProfCurrentFeesController extends AbstractController
      * @Template()
      *
      * @param int $reportId
-     *
-     * @return array
      */
     public function existAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(new ProfServiceFeeExistType(
-            $this->get('translator'),
-            'report-prof_service_fee'
-        ), $report);
-
+        $form = $this->createForm(ProfServiceFeeExistType::class, $report);
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            /* @var $report EntityDir\Report\Report */
-            $report = $form->getData();
 
-            $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
-            if ($report->getCurrentProfPaymentsReceived() == 'no') {
-                return $this->redirectToRoute(
-                    'prof_service_fees_summary',
-                    [
-                        'reportId' => $reportId,
-                        'from' => 'exist'
-                    ]
-                );
-            } else {
-                return $this->redirectToRoute(
-                    'current_service_fee_step',
-                    [
-                        'reportId' => $reportId,
-                        'from' => 'exist',
-                        'step' => 1
-                    ]
-                );
+        if ($form->isValid()) {
+            switch($report->getCurrentProfPaymentsReceived()) {
+                case 'yes':
+                    return $this->redirectToRoute(
+                        'current_service_fee_step',
+                        [
+                            'reportId' => $reportId,
+                            'from' => 'exist',
+                            'step' => 1
+                        ]
+                    );
+                case 'no':
+                    $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
+                    return $this->redirectToRoute(
+                        'prof_service_fees_summary',
+                        [
+                            'reportId' => $reportId,
+                            'from' => 'exist'
+                        ]
+                    );
             }
         }
 

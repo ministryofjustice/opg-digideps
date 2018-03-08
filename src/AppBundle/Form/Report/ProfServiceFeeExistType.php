@@ -11,22 +11,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ProfServiceFeeExistType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var string
-     */
-    protected $translatorDomain;
-
-    public function __construct(TranslatorInterface $translator, $translatorDomain)
-    {
-        $this->translator = $translator;
-        $this->translatorDomain = $translatorDomain;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
