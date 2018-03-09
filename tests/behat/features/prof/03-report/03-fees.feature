@@ -107,6 +107,12 @@ Feature: PROF fees
     Given I load the application status from "prof-fees-expenses-before-edit"
     When I click on "delete" in the "assessed-fee-annual-management-interim" region
     Then I should not see the "assessed-fee-annual-management-interim" region
+    # change initial question to "no", check you are in start page
+     # change to yes
+    When I click on "edit-exist" in the "has-fees" region
+    And the step with the following values CAN be submitted:
+      | prof_service_fees_currentProfPaymentsReceived_1 | no |
+    Then I should see the "start-page" region
     # restore data before scenario
     And I load the application status from "prof-fees-expenses-before-edit"
 
