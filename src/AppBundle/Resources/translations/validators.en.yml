@@ -157,12 +157,12 @@ contact:
         minMessage: This description is too short
         maxMessage: The description can't be longer than {{ limit }} letters
     explanation:
-        notBlank: Enter a reason why you contacted this person
+        notBlank: Please add an explanation
         length: Please explain in a sentence why you chose this person
     noContactsChoice:
         notBlank: Please select either 'Yes' or 'No'
     reasonForNoContacts:
-        notBlank: Enter a reason why you don't have any contacts
+        notBlank: Enter an explanation
     phone:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
     addAnother.notBlank: Please specify if you want to add another person

@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageTitle: Contacts
   pageSectionDescription1: |
-    Please give us details of people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
+    Please tell us about the people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
   startButton: Start contacts
 
 existPage:
@@ -18,7 +18,7 @@ existPage:
         accountant or family member. For example, you may have asked a care worker to provide
         updates on %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
     reasonForNoContacts:
-      label: Please give us an explanation
+      label: Please explain why you didn't need anyone to help you
     save:
       label: Save and continue
 
@@ -27,7 +27,7 @@ addAnotherPage:
   pageTitle: Contacts
   form:
     addAnother:
-      label: The person you consulted has been saved. Would you like to add another now?
+      label: The person has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more people
     save:
        label: Continue
@@ -37,7 +37,8 @@ addPage:
   pageTitle: Add a contact
   supportTitle: Contacts
   pageSectionDescription: |
-    Please tell us more about the people you've consulted for your deputyship. Start by adding the first person; you'll be able to add more people later if you need to.
+    Please tell us about someone who has helped you make any significant decisions for %client%.
+    You'll be able to add more people later if you need to.
 
 editPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
@@ -48,9 +49,6 @@ summaryPage:
   htmlTitle: "Deputy report - contacts | GOV.UK"
   pageTitle: Contacts
   addButton: Add a contact
-  edit: Edit
-  relationship: Their relationship to %client%
-  reasonForContact: Your reason for consulting them
   weAskAbout: |
     In this section we ask you about the people who helped you make significant decisions as a deputy.
 
@@ -62,7 +60,7 @@ form:
       label: Their relationship to %client%
       hint: ''
   explanation:
-      label: Reason for consulting them
+      label: Why did you ask this person to help you?
       hint: ''
   address:
       label: Address (optional)
