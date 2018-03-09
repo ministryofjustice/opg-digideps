@@ -24,21 +24,9 @@ class ProfServiceFeeType extends AbstractType
      */
     protected $serviceTypeIds;
 
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var string
-     */
-    protected $translatorDomain;
-
-    public function __construct(array $serviceTypeIds, TranslatorInterface $translator, $translatorDomain)
+    public function __construct(array $serviceTypeIds)
     {
         $this->serviceTypeIds = $serviceTypeIds;
-        $this->translator = $translator;
-        $this->translatorDomain = $translatorDomain;
     }
 
     private function getServiceFeeTypes()
@@ -46,7 +34,7 @@ class ProfServiceFeeType extends AbstractType
         $ret = [];
 
         foreach ($this->serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
-            $ret[$serviceTypeId] = $this->translator->trans('addTypePage.form.serviceType.' . $serviceTypeId);
+            $ret[$serviceTypeId] = 'addTypePage.form.serviceType.' . $serviceTypeId;
         }
         return array_unique($ret);
     }

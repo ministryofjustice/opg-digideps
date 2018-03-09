@@ -37,7 +37,7 @@
     {{ macros.returnToOverview(report) }}
 
     {# only show the initial question if it's set to "no" #}
-    {% if report.currentProfPaymentsReceived == 'no' %}
+    {#{% if report.currentProfPaymentsReceived == 'no' %}#}
         <table class="check-your-answers columns-2 push-double--bottom">
             <thead>
             <tr>
@@ -57,13 +57,13 @@
                     {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
                 </td>
                 <td class="change-answer">
-                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id }) }}"
+                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
                        class="behat-link-edit-exist">Edit</a>
                 </td>
             </tr>
             </tbody>
         </table>
-    {% endif %}
+    {#{% endif %}#}
 
     {# yes scenario: show fees and last question #}
     {% if report.currentProfPaymentsReceived == 'yes' %}
@@ -106,7 +106,7 @@
                             {{ fixedServiceFee.paymentReceivedDate ? fixedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
                         </td>
                         <td class="change-answer width-seventh">
-                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1'}) }}"
+                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
                                class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                             <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'from': 'summary'}) }}"
                                class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
@@ -156,7 +156,7 @@
                             {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
                         </td>
                         <td class="change-answer width-seventh">
-                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1'}) }}"
+                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
                                class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                             <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'from': 'summary'}) }}"
                                class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>

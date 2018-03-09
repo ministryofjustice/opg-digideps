@@ -11,22 +11,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ProfServicePreviousFeesEstimateType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var string
-     */
-    protected $translatorDomain;
-
-    public function __construct(TranslatorInterface $translator, $translatorDomain)
-    {
-        $this->translator = $translator;
-        $this->translatorDomain = $translatorDomain;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -42,15 +26,8 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => $this->translatorDomain,
-            'validation_groups' => function (FormInterface $form) {
-                /** @var $report \AppBundle\Entity\Report\Report */
-                $report = $form->getData();
-
-                $validationGroups = ['previous-prof-fees-estimate-choice'];
-
-                return $validationGroups;
-            },
+            'translation_domain' => 'report-prof_service_fee',
+            'validation_groups' => ['previous-prof-fees-estimate-choice'],
             'translation_domain' => 'report-prof-current-fees',
         ]);
     }
