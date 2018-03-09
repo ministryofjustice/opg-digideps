@@ -2,7 +2,9 @@ startPage:
   htmlTitle: "Deputy report - visits and care | GOV.UK"
   pageTitle: Visits and care
   pageSectionDescription: |
-    Use this section to tell us about %client%'s care and contact with you and other people. We ask about this because it's OPG's responsibility to make sure you're looking after %client%'s best interests, which includes making health and welfare decisions.
+    Use this section to tell us about %client%'s care and contact with you and other people.
+    We ask about this because it's OPG's responsibility to make sure you're looking after
+    %client%'s best interests, which includes making health and welfare decisions.
   startButton: Start visits and care
 
 stepPage:
@@ -38,7 +40,9 @@ form:
     hint: For example, local authority or private residential care workers, live-in or visiting care workers, family members
   doesClientHaveACarePlan:
     label: Does %client% have a care plan?
-    hint: Local social services may provide a care plan to show how someone's welfare needs will be met
+    hint: |
+      If %client% receives care from a private organisation or local social services, they may have
+      a plan that sets out how %client%'s care needs will be met.
   whenWasCarePlanLastReviewed:
       label: When was the care plan last reviewed?
       hint: For example, 12 2015
