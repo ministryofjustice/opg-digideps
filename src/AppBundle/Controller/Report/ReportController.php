@@ -300,9 +300,6 @@ class ReportController extends RestController
             }
         }
 
-        if (array_key_exists('current_prof_payments_received', $data)) {
-            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
-        }
 
         if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
             $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
@@ -312,6 +309,18 @@ class ReportController extends RestController
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
             }
         }
+
+        if (array_key_exists('current_prof_payments_received', $data)) {
+            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
+            if ($data['current_prof_payments_received'] =='no') { //reset whole section
+                foreach ($report->getCurrentProfServiceFees() as $f) {
+                    $this->getEntityManager()->remove($f);
+                }
+                $report->setPreviousProfFeesEstimateGiven(null);
+                $report->setProfFeesEstimateSccoReason(null);
+            }
+        }
+
 
         $this->getEntityManager()->flush();
 
