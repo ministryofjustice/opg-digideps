@@ -8,7 +8,8 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e,
     '%moreless%': report.totalsOffset < 0 ? "less" : "more",
-    '%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
+    '%pathToAccounts%': path('bank_accounts', {'reportId': report.id}),
+    '%pathToMoneyOut%': path('money_out', {'reportId': report.id}),
 } %}
 
 {% set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}
@@ -348,6 +349,9 @@
             <ul class="list list-bullet">
                 <li>{{ 'moreInfo.listItem1' | trans }}</li>
                 <li>{{ 'moreInfo.listItem2' | trans }}</li>
+                <li>{{ 'moreInfo.listItem3' | trans(transOptions) | raw }}</li>
+                <li>{{ 'moreInfo.listItem4' | trans(transOptions) | raw }}</li>
+                <li>{{ 'moreInfo.listItem5' | trans(transOptions) | raw }}</li>
             </ul>
         {% endif %}
     </div>
