@@ -65,7 +65,7 @@
                             <th>{{ 'summaryPage.table.dateReceived' | trans }}</th>
                             <th>{{ 'summaryPage.table.service' | trans }}</th>
                             <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
-                            <th class="numeric">{{ 'summaryPage.table.received' | trans }}</thclass>
+                            <th class="numeric">{{ 'summaryPage.table.received' | trans }}</th>
 
                                 {% for currentAssessedFee in report.currentAssessedServiceFees %}
                                     <tr>
@@ -92,6 +92,7 @@
 
     </div>
 
+    {% if report.currentProfPaymentsReceived == 'yes' %}
     <div>
         {{ macros.answerYesNo({
             question: 'estCostsPage.form.estimateCosts.legend' | trans({}, 'report-prof-current-fees'),
@@ -100,5 +101,6 @@
             showMoreDetailsWith: 'yes'
         }) }}
     </div>
+    {% endif %}
 
 </div>
