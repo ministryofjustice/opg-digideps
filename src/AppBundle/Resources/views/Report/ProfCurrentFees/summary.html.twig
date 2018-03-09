@@ -28,6 +28,11 @@
     <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
     <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
 
+    {# Missing questions alerts #}
+    {# {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
+        {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+    {% endif %} #}
+
     {# Return to overview/client profile link #}
     {{ macros.returnToOverview(report) }}
 
