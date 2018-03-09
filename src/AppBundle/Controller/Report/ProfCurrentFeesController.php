@@ -88,29 +88,18 @@ class ProfCurrentFeesController extends AbstractController
     {
         $totalSteps = 2;
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        //TODO double check this
-//        if ($step == 3 && (empty($report->getPreviousProfFeesEstimateGiven()) || empty($report->getProfServiceFees()))) {
-//            return $this->redirectToRoute('previous_estimates', ['reportId' => $reportId, 'feeId' => $feeId]);
-//        }
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
         }
 
         $fromPage = $request->get('from');
 
-//        $stepRedirector = $this->stepRedirector()
-//            ->setRoutes('prof_current_fees_exist', 'current_service_fee_step', 'previous_estimates', 'prof_service_fees_summary')
-//            ->setFromPage($fromPage)
-//            ->setCurrentStep($step)
-//            ->setTotalSteps($totalSteps)
-//            ->setRouteBaseParams(['reportId' => $reportId, 'feeId' => $feeId]);
-
-        if ($feeId) { //add
+        if ($feeId) { //edit
             $profServiceFee = array_filter($report->getCurrentProfServiceFees(), function ($f) use ($feeId) {
                 return $f->getId() == $feeId;
             });
             $profServiceFee = array_shift($profServiceFee);
-        } else { // edit
+        } else { // add
             $profServiceFee = new EntityDir\Report\ProfServiceFeeCurrent();
             if (!empty($request->get('serviceTypeId'))) {
                 $profServiceFee->setServiceTypeId($request->get('serviceTypeId'));
@@ -135,7 +124,7 @@ class ProfCurrentFeesController extends AbstractController
                 if (!empty($profServiceFee->getId())) {
                     // Update: update service type only
                     $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType']);
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
 
                     return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId(), 'from' => $fromPage]);
                 }
@@ -150,15 +139,16 @@ class ProfCurrentFeesController extends AbstractController
                     throw new \Exception('Invalid service type');
                 }
 
-                if (empty($profServiceFee->getId())) {
+                if (empty($profServiceFee->getId())) { //NEW
                     // Create: POST entire entity + report
                     $this->getRestClient()->post(
                         'report/' . $report->getId() . '/prof-service-fee',
                         $profServiceFee, ['report-object', 'prof-service-fees']
                     );
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
-                } else {
-                    $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fees']);
+                } else { // EDIT
+                    $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType', 'prof-service-fees']);
+                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
                 }
 
                 // Handle add another pattern
