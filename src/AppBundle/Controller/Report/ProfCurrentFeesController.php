@@ -55,12 +55,12 @@ class ProfCurrentFeesController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(ProfServiceFeeExistType::class, $report);
         $form->handleRequest($request);
+        $fromPage = $request->get('from');
 
         if ($form->isValid()) {
             switch ($report->getCurrentProfPaymentsReceived()) {
                 case 'yes':
-                    // when the first fee is added, the answer will be set to "yes" from the API
-                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from'=>'exist']);
+                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from'=>$fromPage]);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
 
@@ -91,7 +91,6 @@ class ProfCurrentFeesController extends AbstractController
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
         }
-
         $fromPage = $request->get('from');
 
         if ($feeId) { //edit
