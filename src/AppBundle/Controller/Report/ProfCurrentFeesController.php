@@ -170,11 +170,11 @@ class ProfCurrentFeesController extends AbstractController
                     $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType']);
                     $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
 
-                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId()]);
+                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'feeId' => $profServiceFee->getId(), 'from'=>$fromPage]);
                 }
 
                 // Create. Just redirect to next step
-                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId()]);
+                return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 2, 'serviceTypeId' => $profServiceFee->getServiceTypeId(), 'from'=>$fromPage]);
             } elseif ($step == 2) {
                 // Check we have a valid service type (now in URL)
                 if (!array_key_exists($profServiceFee->getServiceTypeId(), EntityDir\Report\ProfServiceFee::$serviceTypeIds)) {
@@ -204,6 +204,7 @@ class ProfCurrentFeesController extends AbstractController
                         [
                             'reportId' => $reportId,
                             'step'     => 1,
+                            'from'=>$fromPage
                         ]
                     );
                 }
