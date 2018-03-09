@@ -17,88 +17,93 @@
                     <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
                 </tr>
             </table>
+        </div>
 
-            {% if report.currentFixedServiceFees %}
+        {% if report.currentFixedServiceFees %}
 
-                <div id="closing-summary" class="section">
-                    <div class="box box-heading flush-half--bottom">
-                        <h3 class="flush--bottom">Current Fixed Fees Summarised</h3>
-                    </div>
+            <div class="box box-heading flush-half--bottom">
+                <h3 class="flush--bottom">Fixed charges</h3>
+            </div>
+            <div class="box box-white">
+                <table class="money">
+                    <thead>
+                        <tr class="hard--top">
+                            <th class="hard--top">{{ 'summaryPage.table.service' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.charged' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.received' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.dateReceived' | trans }}</th>
+                        </tr>
+                    </thead>
 
-                    <div class="box box-white">
-                        <table class="money">
-                            <th>{{ 'summaryPage.table.dateReceived' | trans }}</th>
-                            <th>{{ 'summaryPage.table.service' | trans }}</th>
-                            <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
-                            <th class="numeric">{{ 'summaryPage.table.received' | trans }}</thclass>
+                    <tbody>
 
-                            {% for currentFixedServiceFee in report.currentFixedServiceFees %}
-                                <tr>
+                        {% for currentFixedServiceFee in report.currentFixedServiceFees %}
+                            <tr>
+                                <td>{{ ('addTypePage.form.serviceType.' ~ currentFixedServiceFee.serviceTypeId) | trans }}</td>
+                                <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountCharged | money_format }}</td>
+                                <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountReceived | money_format }}</td>
+                                <td class="numeric numeric-small no-wrap hard--right width-fifth">{{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="hard--bottom">
+                            <td class="noborder hard--bottom"><strong class="bold">Total</strong></td>
+                            <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalFixedFeesCharged'] | money_format }}</strong></td>
+                            <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalFixedFeesReceived'] | money_format  }}</strong></td>
+                            <td class="noborder hard--bottom"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                                    <td class="width-fifth numeric-small no-wrap">{{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
-                                    <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ currentFixedServiceFee.serviceTypeId) | trans }}</td>
-                                    <td class="grey numeric width-sixth numeric-small">£{{ currentFixedServiceFee.amountCharged | money_format }}</td>
-                                    <td class="grey numeric width-sixth numeric-small">£{{ currentFixedServiceFee.amountReceived | money_format }}</td>
-                                </tr>
-                            {% endfor %}
-                                <td>
-                                    <td class="width-third">&nbsp;</td>
-                                    <td class="width-sixth reverse numeric">£{{ report.feeTotals['totalFixedFeesCharged'] | money_format }}</td>
-                                    <td class="width-sixth reverse numeric">£{{ report.feeTotals['totalFixedFeesReceived'] | money_format  }}</td>
-                                    </td class="width-fifth">&nbsp;</td>
-                                </tr>
-                        </table>
-                    </div>
-                </div>
-
-            {% endif %}
+        {% endif %}
 
             {% if report.currentAssessedServiceFees %}
 
-                <div id="closing-summary" class="section">
-                    <div class="box box-heading flush-half--bottom">
-                        <h3 class="flush--bottom">Current Assessed Fees Summarised</h3>
-                    </div>
-
-                    <div class="box box-white">
-                        <table class="money">
-                            <th>{{ 'summaryPage.table.dateReceived' | trans }}</th>
-                            <th>{{ 'summaryPage.table.service' | trans }}</th>
-                            <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
-                            <th class="numeric">{{ 'summaryPage.table.received' | trans }}</thclass>
-
-                                {% for currentAssessedFee in report.currentAssessedServiceFees %}
-                                    <tr>
-
-                                        <td class="width-fifth numeric-small no-wrap">{{ currentAssessedFee.paymentReceivedDate  | date("j F Y")}}</td>
-                                        <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ currentAssessedFee.serviceTypeId) | trans }}</td>
-                                        <td class="grey numeric width-sixth numeric-small">£{{ currentAssessedFee.amountCharged | money_format }}</td>
-                                        <td class="grey numeric width-sixth numeric-small">£{{ currentAssessedFee.amountReceived | money_format }}</td>
-                                    </tr>
-                                {% endfor %}
-                            <td>
-                            <td class="width-third">&nbsp;</td>
-                            <td class="width-sixth reverse numeric">£{{ report.feeTotals['totalAssessedFeesCharged'] | money_format  }}</td>
-                            <td class="width-sixth reverse numeric">£{{ report.feeTotals['totalAssessedFeesReceived'] | money_format  }}</td>
-                            </td class="width-fifth">&nbsp;</td>
-                            </tr>
-                        </table>
-                    </div>
+                <div class="box box-heading flush-half--bottom">
+                    <h3 class="flush--bottom">Assessed charges</h3>
                 </div>
+                <div class="box box-white">
+                    <table class="money">
+                        <thead>
+                            <tr class="hard--top">
+                                <th class="hard--top">{{ 'summaryPage.table.service' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.charged' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.received' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.dateReceived' | trans }}</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+
+                            {% for currentAssessedFee in report.currentAssessedServiceFees %}
+                                <tr>
+                                    <td>{{ ('addTypePage.form.serviceType.' ~ currentAssessedFee.serviceTypeId) | trans }}</td>
+                                    <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountCharged | money_format }}</td>
+                                    <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountReceived | money_format }}</td>
+                                    <td class="numeric numeric-small no-wrap hard--right width-fifth">{{ currentAssessedFee.paymentReceivedDate  | date("j F Y")}}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="hard--bottom">
+                                <td class="noborder hard--bottom"><strong class="bold">Total</strong></td>
+                                <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalAssessedFeesCharged'] | money_format }}</strong></td>
+                                <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalAssessedFeesReceived'] | money_format  }}</strong></td>
+                                <td class="noborder hard--bottom"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             {% endif %}
         </div>
 
-    </div>
-
-    <div>
-        {{ macros.answerYesNo({
-            question: 'estCostsPage.form.estimateCosts.legend' | trans({}, 'report-prof-current-fees'),
-            answer: report.previousProfFeesEstimateGiven,
-            moreDetails: report.profFeesEstimateSccoReason,
-            showMoreDetailsWith: 'yes'
-        }) }}
-    </div>
+        {% if report.currentProfPaymentsReceived == 'yes' %}
+            {{ macros.answerYesNo({
+                question: 'estCostsPage.form.estimateCosts.legend' | trans({}, 'report-prof-current-fees'),
+                answer: report.previousProfFeesEstimateGiven,
+                moreDetails: report.profFeesEstimateSccoReason,
+                showMoreDetailsWith: 'yes',
+                moreDetailsLabel: 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans({}, 'report-prof-current-fees')
+            }) }}
+        {% endif %}
 
 </div>
