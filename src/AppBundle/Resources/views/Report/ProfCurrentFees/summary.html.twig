@@ -67,7 +67,7 @@
                 <h2 class="heading-medium flush--ends">{{ (page ~ '.table.heading') | trans }}</h2>
             </div>
             <div class="column-half text--right">
-                <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1 }) }}"
+                <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'step': 1, 'from':'summary' }) }}"
                    class="bold-small move-quarter--up action-link behat-link-add">
                     <span class="icon icon-plus"></span>
                     {{ 'summaryPage.addButton' | trans }}
