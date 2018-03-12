@@ -189,6 +189,14 @@ class Status
      */
     private $status;
 
+
+    /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
+    private $profCurrentFeesState;
+
     /**
      * @return mixed
      */
@@ -583,6 +591,22 @@ class Status
     public function setLifestyleState($lifestyleState)
     {
         $this->lifestyleState = $lifestyleState;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfCurrentFeesState()
+    {
+        return $this->profCurrentFeesState;
+    }
+
+    /**
+     * @param array $profCurrentFeesState
+     */
+    public function setProfCurrentFeesState($profCurrentFeesState)
+    {
+        $this->profCurrentFeesState = $profCurrentFeesState;
     }
 
     public function getState()

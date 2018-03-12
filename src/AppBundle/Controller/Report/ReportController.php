@@ -8,6 +8,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +56,9 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
         'report-documents',
         'balance-state',
-        'documents'
+        'documents',
+        'report-prof-service-fees',
+        'prof-service-fees'
     ];
 
     /**
@@ -362,7 +365,8 @@ class ReportController extends AbstractController
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
-            'backLink' => $backLink
+            'backLink' => $backLink,
+            'feeTotals' => $report->getFeeTotals()
         ];
     }
 

@@ -1,0 +1,116 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% if step == 1 %}
+    {% set page = 'addTypePage' %}
+{% elseif step == 2 %}
+    {% set page = 'addDetailsPage' %}
+{% endif %}
+
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle') | trans }}
+
+    {% if step == 2 %}
+        {{ ('addTypePage.form.serviceType.' ~ fee.serviceTypeId) | trans }}
+    {% endif %}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+
+        {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.serviceTypeId, 'form.serviceTypeId', {
+                'legendClass' : 'form-label-bold',
+                'legendText' : (page ~ '.form.label') | trans,
+                'formGroupClass': 'push--top'
+            }) }}
+        </div>
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {% elseif step == 2 %}
+
+        {{ form_widget(form.id, { 'attr': {'class': 'hidden-row'} }) }}
+        {{ form_widget(form.serviceTypeId, { 'attr': {'class': 'hidden-row'} }) }}
+
+        <div class="form-section push--bottom">
+            {{ form_checkbox_group(form.assessedOrFixed, 'form.assessedOrFixed', {
+                'legendClass' : 'form-label-bold',
+                'legendText' : (page ~ '.form.assessedOrFixed.legend') | trans,
+                'formGroupClass': 'inline push--top'
+            }) }}
+        </div>
+
+        <div>
+            {{ form_input(form.amountCharged, 'addDetailsPage.form.amountCharged', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'labelClass' : 'form-label-bold',
+                'formGroupClass': ' form-group-value'
+            }) }}
+        </div>
+
+        <div class="form-section push--bottom">
+            <div id="form-group-prof_service_fee_type_paymentReceived" class="form-group inline flush--bottom {% if not form.paymentReceived.vars.valid %}form-group-error{% endif %}">
+                {{ form_checkbox_group(form.paymentReceived, 'form.paymentReceived', {
+                    'useFormGroup': false,
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : (page ~ '.form.paymentReceived.legend') | trans,
+                    'items': [
+                        {'dataTarget': 'was-payment-received'},
+                        {}
+                    ],
+                }) }}
+                <div id="was-payment-received" class="panel panel-border-narrow js-hidden">
+                    {{ form_input(form.amountReceived, 'addDetailsPage.form.amountReceived', {
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control-1-4 js-format-currency',
+                        'labelClass' : 'form-label-bold',
+                        'formGroupClass': ' form-group-value'
+                    }) }}
+                    {{ form_known_date(form.paymentReceivedDate, 'addDetailsPage.form.paymentReceivedDate') }}
+                </div>
+            </div>
+        </div>
+
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+        <p class="push-half--ends">or</p>
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+
+
+

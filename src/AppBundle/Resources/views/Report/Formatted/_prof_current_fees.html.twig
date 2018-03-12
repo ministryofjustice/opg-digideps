@@ -1,0 +1,121 @@
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+<div class="section" id="prof-current-fees-xsection">
+
+    <div class="dont-break">
+        <h2 class="section-heading">{{ 'startPage.pageTitle'|trans }}</h2>
+        <div class="box">
+            <h3 class="label question bold">{{ 'existPage.form.hasFees.label'|trans }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if report.currentProfPaymentsReceived == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="value checkbox">{% if report.currentProfPaymentsReceived == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                </tr>
+            </table>
+        </div>
+
+        {% if report.currentFixedServiceFees %}
+
+            <div class="box box-heading flush-half--bottom">
+                <h3 class="flush--bottom">Fixed charges</h3>
+            </div>
+            <div class="box box-white">
+                <table class="money">
+                    <thead>
+                        <tr class="hard--top">
+                            <th class="hard--top">{{ 'summaryPage.table.service' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.charged' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.received' | trans }}</th>
+                            <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.dateReceived' | trans }}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for currentFixedServiceFee in report.currentFixedServiceFees %}
+                            <tr>
+                                <td>{{ ('addTypePage.form.serviceType.' ~ currentFixedServiceFee.serviceTypeId) | trans }}</td>
+                                <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountCharged | money_format }}</td>
+                                <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountReceived | money_format }}</td>
+                                <td class="numeric numeric-small no-wrap hard--right width-fifth">
+                                    {% if currentFixedServiceFee.paymentReceivedDate %}
+                                        {{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y") }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="hard--bottom">
+                            <td class="noborder hard--bottom"><strong class="bold">Total</strong></td>
+                            <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalFixedFeesCharged'] | money_format }}</strong></td>
+                            <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalFixedFeesReceived'] | money_format  }}</strong></td>
+                            <td class="noborder hard--bottom"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        {% endif %}
+
+            {% if report.currentAssessedServiceFees %}
+
+                <div class="box box-heading flush-half--bottom">
+                    <h3 class="flush--bottom">Assessed charges</h3>
+                </div>
+                <div class="box box-white">
+                    <table class="money">
+                        <thead>
+                            <tr class="hard--top">
+                                <th class="hard--top">{{ 'summaryPage.table.service' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.charged' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.received' | trans }}</th>
+                                <th class="numeric hard--top width-fifth">{{ 'summaryPage.table.dateReceived' | trans }}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for currentAssessedFee in report.currentAssessedServiceFees %}
+                                <tr>
+                                    <td>{{ ('addTypePage.form.serviceType.' ~ currentAssessedFee.serviceTypeId) | trans }}</td>
+                                    <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountCharged | money_format }}</td>
+                                    <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountReceived | money_format }}</td>
+                                    <td class="numeric numeric-small no-wrap hard--right width-fifth">
+                                        {% if currentAssessedFee.paymentReceivedDate %}
+                                            {{ currentAssessedFee.paymentReceivedDate  | date("j F Y") }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="hard--bottom">
+                                <td class="noborder hard--bottom"><strong class="bold">Total</strong></td>
+                                <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalAssessedFeesCharged'] | money_format }}</strong></td>
+                                <td class="numeric noborder hard--bottom"><strong class="bold">£{{ report.feeTotals['totalAssessedFeesReceived'] | money_format  }}</strong></td>
+                                <td class="noborder hard--bottom"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            {% endif %}
+        </div>
+
+        {% if report.currentProfPaymentsReceived == 'yes' %}
+            {{ macros.answerYesNo({
+                question: 'estCostsPage.form.estimateCosts.legend' | trans({}, 'report-prof-current-fees'),
+                answer: report.previousProfFeesEstimateGiven,
+                moreDetails: report.profFeesEstimateSccoReason,
+                showMoreDetailsWith: 'yes',
+                moreDetailsLabel: 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans({}, 'report-prof-current-fees')
+            }) }}
+        {% endif %}
+
+</div>

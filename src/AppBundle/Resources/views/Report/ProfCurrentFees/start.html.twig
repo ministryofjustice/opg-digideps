@@ -1,0 +1,28 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'startPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text behat-region-start-page">
+        <p>{{ (page ~ '.pageSectionDescription1') | trans }}</p>
+        <ul class="list list-bullet">
+        	<li>{{ (page ~ '.listItem01') | trans }}</li>
+        	<li>{{ (page ~ '.listItem02') | trans }}</li>
+        </ul>
+        <p>{{ (page ~ '.pageSectionDescription2') | trans }}</p>
+    </div>
+
+    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
+
+{% endblock %}

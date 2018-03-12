@@ -26,3 +26,7 @@ services:
     document_service:
       class: AppBundle\Service\DocumentService
       arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+
+    report_fee_service:
+      class: AppBundle\Service\ReportFeeService
+

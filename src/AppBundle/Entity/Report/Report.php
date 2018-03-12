@@ -3,6 +3,9 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\VisitsCare;
+use AppBundle\Entity\Report\Lifestyle;
+
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
@@ -27,7 +30,9 @@ class Report implements ReportInterface
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
+    use ReportTraits\ReportProfServiceFeesTrait;
     use ReportTraits\ReportUnsubmittedSections;
+
 
     const TYPE_103 = '103';
     const TYPE_102 = '102';
@@ -40,6 +45,12 @@ class Report implements ReportInterface
     const TYPE_104_6 = '104-6';
     const TYPE_103_4_6 = '104-4-6';
     const TYPE_102_4_6 = '102-4-6';
+
+    const TYPE_103_5 = '103-5';
+    const TYPE_102_5 = '102-5';
+    const TYPE_104_5 = '104-5';
+    const TYPE_103_4_5 = '103-4-5';
+    const TYPE_102_4_5 = '102-4-5';
 
     /**
      * @JMS\Type("integer")
@@ -307,6 +318,7 @@ class Report implements ReportInterface
      * @JMS\Type("array")
      */
     private $availableSections;
+
 
 
     /**
@@ -757,7 +769,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return Report\VisitsCare
+     * @return VisitsCare
      */
     public function getVisitsCare()
     {
@@ -765,7 +777,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \AppBundle\Entity\Report\VisitsCare $visitsCare
+     * @param VisitsCare $visitsCare
      */
     public function setVisitsCare($visitsCare)
     {
@@ -773,7 +785,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return Report\Lifestyle
+     * @return Lifestyle
      */
     public function getLifestyle()
     {
@@ -781,7 +793,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Lifestyle $lifestyle
+     * @param Lifestyle $lifestyle
      */
     public function setLifestyle($lifestyle)
     {
@@ -852,7 +864,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  bool  $noTransfersToAdd
+     * @param  bool $noTransfersToAdd
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -981,7 +993,8 @@ class Report implements ReportInterface
      */
     public function getDocumentsExcludingReportPdf()
     {
-        return array_filter($this->documents, function ($document) { /* @var $document Document */
+        return array_filter($this->documents, function ($document) {
+            /* @var $document Document */
             return !$document->isReportPdf();
         });
     }
@@ -1003,7 +1016,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param Status $status$statusrvice
+     * @param Status $status $statusrvice
      */
     public function setStatus($status)
     {
@@ -1050,6 +1063,7 @@ class Report implements ReportInterface
     public function getZipName()
     {
         $client = $this->getClient();
+
         return 'Report_' . $client->getCaseNumber()
             . '_' . $this->getStartDate()->format('Y')
             . '_' . $this->getEndDate()->format('Y')
@@ -1065,7 +1079,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  array  $availableSections
+     * @param  array $availableSections
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1091,7 +1105,7 @@ class Report implements ReportInterface
      */
     public function isSubmitted()
     {
-        return (bool) $this->getSubmitted();
+        return (bool)$this->getSubmitted();
     }
 
     /**
@@ -1108,34 +1122,6 @@ class Report implements ReportInterface
             ($this->getType() === '104' || $this->getType() === '104-6' ?
                 '-104' : ''
             );
-    }
-
-    public function shouldShowBalanceWarning()
-    {
-        // if not due dont show warning
-        if (!$this->isDue()) {
-            return false;
-        }
-
-        // if accounts not started don't show warning
-        if ($this->getStatus()->getBankAccountsState()['state'] == Status::STATE_NOT_STARTED) {
-            return false;
-        }
-
-        switch ($this->getType()) {
-            case Report::TYPE_102:
-            case Report::TYPE_102_4:
-                // if a money section not started, dont show warning
-                if ($this->getStatus()->getMoneyInState()['state'] == Status::STATE_NOT_STARTED ||
-                    $this->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-        }
-
-        return true;
     }
 
 }

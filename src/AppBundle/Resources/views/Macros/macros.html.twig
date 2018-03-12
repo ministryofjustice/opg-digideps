@@ -130,22 +130,39 @@
             'moneyOutShort': {'section':'moneyOutShort', 'link': path('money_out_short', routeParams)},
             'otherInfo': {'section':'otherInfo', 'link': path('other_info', routeParams)},
             'paDeputyExpenses': {'section': 'paFeeExpense','link': path('pa_fee_expense', routeParams)},
+            'profCurrentFees': {'section': 'profCurrentFees','link': path('prof_current_fees', routeParams)},
             'visitsCare': {'section':'visitsCare','link': path('visits_care', routeParams)},
         } %}
 
         {# Order for all the possible section in Lay and PA (*-6) reports. Must follow the order in the overview templates #}
-        {% set sectionIdOrder = ('-6' in report.type) ?
-            [
-                'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'paDeputyExpenses',
-                'gifts',
-                'actions', 'otherInfo',
-                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
-                'moneyInShort', 'moneyOutShort',
-                'assets', 'debts',
-                'documents'
-            ]
-            : [
+        {% if '-6' in report.type %}
+            {% set sectionIdOrder = [
+                    'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                    'paDeputyExpenses',
+                    'gifts',
+                    'actions', 'otherInfo',
+                    'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                    'moneyInShort', 'moneyOutShort',
+                    'assets', 'debts',
+                    'documents'
+                ]
+            %}
+        {% elseif '-5' in report.type %}
+            {% set sectionIdOrder =
+                [
+                    'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                    'profCurrentFees',
+                    'gifts',
+                    'actions', 'otherInfo',
+                    'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                    'moneyInShort', 'moneyOutShort',
+                    'assets', 'debts',
+                    'documents'
+                ]
+            %}
+        {% else %}
+            {% set sectionIdOrder =
+                [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'deputyExpenses',
                 'gifts',
@@ -154,8 +171,9 @@
                 'assets', 'debts',
                 'actions', 'otherInfo',
                 'documents'
-            ]
-        %}
+                ]
+            %}
+        {% endif %}
         {# first and last link #}
         {% set mainPageLinkConfig = {'section':'reportOverview', 'transKey': (('-6' in report.type) ? 'clientProfile' : 'reportOverview'), 'link': path('report_overview', routeParams)} %}
 
@@ -191,6 +209,14 @@
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}
+
+{% macro saveAndAddAnotherSaveButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'saveAndAddAnother' | trans({}, 'common'),
+        'buttonClass': 'behat-link-save-and-add-another',
+    }) }}
+{% endmacro %}
+
 
 {% macro notification(alertType,message) %}
     {% if alertType is defined %}
