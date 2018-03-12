@@ -45,12 +45,12 @@ abstract class ProfServiceFee
         'annual-management-final' => false,
         'appointment' => false,
         'conveyancing' => false,
-        'litigation' => true,
-        'specialist-advice' => true,
-        'statutory-wills' => false,
         'tax-returns' => false,
         'trust-applications' => false,
-        //'other-costs' => false
+//        'litigation' => true,
+//        'specialist-advice' => true,
+//        'statutory-wills' => false,
+        'other-costs' => false
     ];
 
     /**
