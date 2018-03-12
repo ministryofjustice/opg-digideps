@@ -119,7 +119,7 @@ abstract class ProfServiceFee
      * @JMS\Groups({"prof-service-fees"})
      *
      * @Assert\Date(message="profServiceFee.paymentReceivedDate.invalidMessage", groups={"prof-service-fee-details-type-payment-received"})
-     * @Assert\LessThan("today", message="profServiceFee.paymentReceivedDate.notInTheFuture", groups={"prof-service-fee-details-type-payment-received"})
+     * @Assert\LessThanOrEqual("today", message="profServiceFee.paymentReceivedDate.notInTheFuture", groups={"prof-service-fee-details-type-payment-received"})
      * @Assert\NotBlank(message="profServiceFee.paymentReceivedDate.notBlank", groups={"prof-service-fee-details-type-payment-received"})
      *
      * @var \DateTime
