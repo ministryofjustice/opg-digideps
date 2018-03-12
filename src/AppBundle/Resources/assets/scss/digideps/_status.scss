@@ -53,14 +53,16 @@
 
     &.done,
     &.readyToSubmit,
-    &.explained {
+    &.explained,
+    &.submitted {
         color: $green;
         border-color: $green;
     }
 
     &.incomplete,
     &.notFinished,
-    &.not-matching {
+    &.not-matching,
+    &.unsubmitted {
         color: $orange;
         border-color: $orange;
     }

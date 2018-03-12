@@ -9,14 +9,14 @@ if (!preg_match('(localhost|\.local)', $_SERVER['SERVER_NAME'])
 $frame = isset($_GET['frame']) ? $_GET['frame'] : null;
 if ($frame == 'page') {
     if (isset($_GET['f']) && strpos($_GET['f'], 'behat-') !== false) {
-        include '/tmp/behat/'.$_GET['f'];
+        include '/tmp/behat/' . $_GET['f'];
     } else {
         echo 'click on a link at the top';
     }
 } elseif ($frame == 'list') {
     foreach (['responses' => 'behat-response*.html', 'screenshots' => 'behat-screenshot*.html'] as $groupName => $regexpr) {
         ?><h2><?php echo $groupName ?></h2><?php
-        $files = glob('/tmp/behat/'.$regexpr);
+        $files = glob('/tmp/behat/' . $regexpr);
         usort($files, function ($a, $b) {
             return filemtime($a) < filemtime($b);
         });
@@ -27,8 +27,7 @@ if ($frame == 'page') {
             $newGroup = isset($previousGroup) && $previousGroup != $group;
             if ($newGroup) {
                 echo '------<br>';
-            }
-            ?><a href="?frame=page&f=<?php echo $file ?>" target="page" ><?php echo $fileCleaned ?></a><br/><?php
+            } ?><a href="?frame=page&f=<?php echo $file ?>" target="page" ><?php echo $fileCleaned ?></a><br/><?php
             $previousGroup = $group;
         }
     }

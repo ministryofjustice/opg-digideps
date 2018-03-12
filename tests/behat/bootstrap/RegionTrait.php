@@ -85,7 +85,7 @@ trait RegionTrait
         $regionCss = self::behatElementToCssSelector($region, 'region');
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
         if ($found !== 1) {
-            throw new \RuntimeException("Can't assert text existing in region, $found found");
+            throw new \RuntimeException("Can't assert text existing in region $region, $found found");
         }
 
         $this->assertSession()->elementTextContains('css', $regionCss, $text);

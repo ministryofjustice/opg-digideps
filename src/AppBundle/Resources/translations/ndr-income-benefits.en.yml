@@ -1,0 +1,95 @@
+startPage:
+  htmlTitle: "Deputy report - income and benefits | GOV.UK"
+  pageTitle: Income and benefits
+  pageSectionDescription: |
+    As a deputy, it's important that you look after %client%'s financial affairs throughout the year and explain any decisions you've made.
+    This includes making sure you claim all %client%'s benefits on his behalf.
+  hiddenText01:
+    summary: Find out what benefits %client% is entitled to
+    content:
+      para01: |
+        You can use a <a href="https://www.entitledto.co.uk/" target="_blank">benefits calculator</a>
+        to work out which benefits %client% could be claiming.
+  startButton: Start income and benefits
+
+stepPage:
+  supportTitle: Income and benefits
+  htmlTitle: "Deputy report - income and benefits | GOV.UK"
+  pageTitle:
+    stateBenefits: State benefits
+    pensions: Pensions and other income
+    damages: Damages and compensation awards
+    oneOff: One-off payments to %client%
+  backLink: Back
+
+summaryPage:
+  weAskAbout: In this section, we ask you about %client%'s income and benefits.
+  htmlTitle: "Deputy report - income and benefits | GOV.UK"
+  pageTitle: Income and benefits
+  supportTitle: ""
+  edit: Edit
+
+form:
+  stateBenefits:
+    label: Which benefits does %client% receive?
+    hint: Please tick all that apply
+    entries:
+      contributions_based_allowance:
+        label: Contributions based allowance
+      income_support_pension_guarantee_credit:
+        label: Income Support / Pension Guarantee Credit
+      income_related_employment_support_allowance:
+        label: Income-related Employment and Support Allowance
+      income_based_job_seeker_allowance:
+        label: Income-based Job Seeker's Allowance
+      housing_benefit:
+        label: Housing benefit
+      universal_credit:
+        label: Universal Credit
+      severe_disablement_allowance:
+        label: Severe Disablement Allowance
+      disability_living_allowance:
+        label: Disability Living Allowance
+      attendance_allowance:
+        label: Attendance Allowance
+      personal_independence_payment:
+        label: Personal Independence Payment
+      working_child_tax_credits:
+        label: Working and Child tax credits
+      other_benefits:
+        label: Other benefits
+        moreInfo: Please tell us more about these benefits
+  stateBenefitsOtherDetails.labelSummaryPage: More about other benefits
+  receiveStatePension:
+    label: Does %client% receive a state pension?
+  receiveOtherIncome:
+    label: Does %client% receive any other regular income?
+    hint: For example, private pension, dividends, wages or salary
+  receiveOtherIncomeDetails:
+      label: Please tell us more about %client%'s other regular sources of income
+      hint: For example, what the sources of income are, the amount they pay and how often
+      labelSummaryPage: More about %client%'s other regular sources of income
+  expectCompensationDamages:
+    label: Are you expecting %client% to get any money from compensation awards or damages?
+  expectCompensationDamagesDetails:
+    label: Please tell us more about any damages or compensation awards
+    hint: For example, what the damages or compensation is for (perhaps an accident or injury) and who will be paying the money out
+    labelSummaryPage: More about any damages or compensation paid to %client%
+  oneOff:
+    label: Has %client% received any one-off payments since the court order?
+    description: Which types of one-off payment has %client% received?
+    hint: Please tick all that apply
+    entries:
+      bequest_or_inheritance:
+        label: Bequest or inheritance
+      cash_gift_received:
+        label: Cash gift received
+      refunds:
+        label: Refunds
+      sale_of_an_asset:
+        label: Sale of an asset
+      sale_of_investment:
+        label: Sale of investment
+      sale_of_property:
+        label: Sale of property
+

@@ -30,11 +30,11 @@ class ProfileType extends AbstractType
             ->add('phoneAlternative', 'text')
             ->add('email', 'text', ['required' => true]);
 
-        if ($loggedInUser->isDeputyPa()) {
+        if ($loggedInUser->isDeputyOrg()) {
             $builder->add('jobTitle', 'text', ['required' => true]);
         }
 
-        if ($loggedInUser->isPaAdministrator()) {
+        if ($loggedInUser->isOrgAdministrator()) {
             $builder->add('removeAdmin', 'choice', [
                     'choices' => ['remove-admin' => 'Give up administrator rights'],
                     'expanded' => true,

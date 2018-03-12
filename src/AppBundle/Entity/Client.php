@@ -62,11 +62,11 @@ class Client
     private $currentReport;
 
     /**
-     * @var Odr\Odr
+     * @var Ndr\Ndr
      *
-     * @JMS\Type("AppBundle\Entity\Odr\Odr")
+     * @JMS\Type("AppBundle\Entity\Ndr\Ndr")
      */
-    private $odr;
+    private $ndr;
 
     /**
      * @JMS\Exclude()
@@ -257,6 +257,16 @@ class Client
     }
 
     /**
+     * @return array $reports
+     */
+    public function getReportsSubmittedAtLeastOnce()
+    {
+        return array_filter($this->getReports() ?: [], function(Report $report) {
+            return $report->getSubmitted() || $report->getUnSubmitDate();
+        });
+    }
+
+    /**
      * @param int $id report ID
      *
      * @return Report|null
@@ -313,19 +323,19 @@ class Client
     }
 
     /**
-     * @return Odr\Odr
+     * @return Ndr\Ndr
      */
-    public function getOdr()
+    public function getNdr()
     {
-        return $this->odr;
+        return $this->ndr;
     }
 
     /**
-     * @param Odr\Odr $odr
+     * @param Ndr\Ndr $ndr
      */
-    public function setOdr($odr)
+    public function setNdr($ndr)
     {
-        $this->odr = $odr;
+        $this->ndr = $ndr;
 
         return $this;
     }
@@ -738,10 +748,26 @@ class Client
     {
         $activeReport = null;
         foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted()) {
-                $activeReport = $report;
+            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
+                return $report;
             }
         }
-        return $activeReport;
+
+        return null;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getUnsubmittedReport()
+    {
+        $activeReport = null;
+        foreach ($this->getReports() as $report) {
+            if (!$report->isSubmitted() && $report->getUnSubmitDate()) {
+                return $report;
+            }
+        }
+
+        return null;
     }
 }

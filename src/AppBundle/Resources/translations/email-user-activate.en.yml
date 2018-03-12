@@ -13,16 +13,15 @@ default:
         <a style="word-wrap: break-word;" href="%homepageUrl%">
         complete-deputy-report.service.gov.uk</a> and register again.
 
-public-authority:
+ROLE_PA_NAMED:
     youAreRegistered: |
         We’ve now registered you with the Office of the Public Guardian’s deputy service.
     youMustActivate: You must activate your account before you can start using the deputy service.
     linkExpires: |
-        The link we’ve given you expires after 48 hours. If you miss this deadline,
-        please contact the Office of the Public Guardian using the contact details
-        below to request a new activation email.
+        The link we’ve given you expires after 48 hours. If you miss this deadline, please
+        contact us using the details below and ask for a new activation email.
 
-public-authority-admin:
+ROLE_PA_ADMIN:
     youAreRegistered: |
         The named deputy in your organisation has registered you for the Office of the Public
         Guardian’s deputy service.
@@ -31,7 +30,7 @@ public-authority-admin:
         The link we’ve given you expires after 48 hours. If you miss this deadline, you must
         request a new activation email from your named deputy.
 
-public-authority-team-member:
+ROLE_PA_TEAM_MEMBER:
     youAreRegistered: |
         The named deputy in your organisation has registered you for the Office of the Public
         Guardian’s deputy service.
@@ -39,3 +38,30 @@ public-authority-team-member:
     linkExpires: |
         The link we’ve given you expires after 48 hours. If you miss this deadline, you must
         request a new activation email from your named deputy.
+
+ROLE_PROF_NAMED:
+    youAreRegistered: |
+        We’ve now registered you with the Office of the Public Guardian’s deputy service.
+    youMustActivate: You must activate your account before you can start using the deputy service.
+    linkExpires: |
+        The link we’ve given you expires after 48 hours. If you miss this deadline, please
+        contact us using the details below and ask for a new activation email.
+
+ROLE_PROF_ADMIN:
+    youAreRegistered: |
+        The named deputy in your organisation has registered you for the Office of the Public
+        Guardian’s deputy service.
+    youMustActivate: You must activate your account before you can start using the deputy service.
+    linkExpires: |
+        The link we’ve given you expires after 48 hours. If you miss this deadline, you must
+        request a new activation email from your named deputy.
+
+ROLE_PROF_TEAM_MEMBER:
+    youAreRegistered: |
+        The named deputy in your organisation has registered you for the Office of the Public
+        Guardian’s deputy service.
+    youMustActivate: You must activate your account before you can start using the deputy service.
+    linkExpires: |
+        The link we’ve given you expires after 48 hours. If you miss this deadline, you must
+        request a new activation email from your named deputy.
+

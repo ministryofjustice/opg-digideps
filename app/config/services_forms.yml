@@ -5,11 +5,11 @@ services:
         tags:
             - { name: form.type, alias: asset_title }
 
-    app.form.type.odr.asset_title:
-            class: AppBundle\Form\Odr\Asset\AssetTypeTitle
-            arguments: ["%asset_dropdown%", "@translator", "odr-assets", "other_assets"]
+    app.form.type.ndr.asset_title:
+            class: AppBundle\Form\Ndr\Asset\AssetTypeTitle
+            arguments: ["%asset_dropdown%", "@translator", "ndr-assets", "other_assets"]
             tags:
-                - { name: form.type, alias: odr_asset_title }
+                - { name: form.type, alias: ndr_asset_title }
 
     app.form.type.feedback:
         class: AppBundle\Form\FeedbackType

@@ -26,3 +26,11 @@ table {
 tfoot {
   border-top: 2px solid $black;
 }
+
+.grandtotals-border {
+  border-top: 2px solid $border-colour;
+
+  &--transparent {
+    border-top: 2px solid transparent;
+  }
+}

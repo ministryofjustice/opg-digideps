@@ -96,7 +96,7 @@ class Redirector
             return $this->router->generate('admin_homepage');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
-        } elseif ($user->isDeputyPa()) {
+        } elseif ($user->isDeputyOrg()) {
             return $this->router->generate('pa_dashboard');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
@@ -113,8 +113,8 @@ class Redirector
     public function getCorrectRouteIfDifferent(EntityDir\User $user, $currentRoute)
     {
         // Redirect to appropriate homepage
-        if (in_array($currentRoute, ['lay_home','odr_index'])) {
-            $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+        if (in_array($currentRoute, ['lay_home','ndr_index'])) {
+            $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
         }
 
         //none of these corrections apply to admin
@@ -122,7 +122,7 @@ class Redirector
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
-                    $route = $user->isOdrEnabled() ? 'odr_index' : 'lay_home';
+                    $route = $user->isNdrEnabled() ? 'ndr_index' : 'lay_home';
                 }
 
                 // unverified codeputy invitation
@@ -136,7 +136,7 @@ class Redirector
                 }
 
                 // incomplete user info
-                if (!$user->isDeputyPa() && !$user->hasAddressDetails()) {
+                if (!$user->isDeputyOrg() && !$user->hasAddressDetails()) {
                     $route = 'user_details';
                 }
             }
@@ -150,7 +150,7 @@ class Redirector
      */
     private function getLayDeputyHomepage(EntityDir\User $user, $enabledLastAccessedUrl = false)
     {
-        // checks if user has missing details or is ODR
+        // checks if user has missing details or is NDR
         if ($route = $this->getCorrectRouteIfDifferent($user, 'lay_home')) {
             return $this->router->generate($route);
         }

@@ -19,3 +19,18 @@
 		max-width: 15em;
 	}
 }
+
+// Subheadings within multiple grouped tabled (summary page)
+.heading-small--table {
+    @include bold-19();
+
+    margin-top: em(10, 16);
+    margin-bottom: em(5, 16);
+
+    @include media(tablet) {
+        margin-top: em(20, 19);
+    }
+
+    border-bottom: 2px solid $border-colour;
+    color: $secondary-text-colour;
+}

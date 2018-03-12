@@ -18,10 +18,13 @@ class SearchType extends AbstractType
                     User::ROLE_ADMIN      => 'OPG Admin',
                     User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                     User::ROLE_AD         => 'Assisted Digital',
-                    User::ROLE_PA         => 'Public Authority',
+                    'ROLE_PA_%'   => 'All Public Authority deputies',
+                    User::ROLE_PA_NAMED   => 'Public Authority deputies (named) ',
+                    'ROLE_PROF_%' => 'All Professional Deputies',
+                    User::ROLE_PROF_NAMED => 'Professional Deputies (named)',
                 ],
             ])
-            ->add('odr_enabled', 'checkbox')
+            ->add('ndr_enabled', 'checkbox')
             ->add('search', 'submit');
     }
 

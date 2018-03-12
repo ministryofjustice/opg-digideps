@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% if 'National' in asset.title or 'Premium' in asset.title %}
+    {% set assetTitle = asset.title %}
+{% else %}
+    {% set assetTitle = asset.title | lcfirst %}
+{% endif %}
+
+{% set transOptions = {'%client%': ndr.client.firstname | e, '%assetTitle%': assetTitle } %}
+
+{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'addPage.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {% include 'AppBundle:Ndr/Asset/Other:_form.html.twig' %}
+
+{% endblock %}

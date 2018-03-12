@@ -27,7 +27,7 @@ addAnotherPage:
   pageTitle: Contacts
   form:
     addAnother:
-      label: The person you consulted has been saved. Would you like to add another person now?
+      label: The person you consulted has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more people
     save:
        label: Continue
@@ -51,9 +51,8 @@ summaryPage:
   edit: Edit
   relationship: Their relationship to %client%
   reasonForContact: Your reason for consulting them
-  pageContent:
-    weAskAbout: |
-      In this section we ask you about the people who helped you make significant decisions as a deputy.
+  weAskAbout: |
+    In this section we ask you about the people who helped you make significant decisions as a deputy.
 
 form:
   contactName:

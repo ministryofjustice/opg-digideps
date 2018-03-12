@@ -77,11 +77,11 @@ class MessageUtils
         $ret = '';
         foreach (self::$fieldsToSerialize as $field) {
             $method = 'get' . ucfirst($field);
-            $methodReturned = $message->$method();
-            if (is_array($methodReturned)) {
-                $methodReturned = print_r($methodReturned, true);
+            $methndreturned = $message->$method();
+            if (is_array($methndreturned)) {
+                $methndreturned = print_r($methndreturned, true);
             }
-            $ret .= sprintf("%s: %s\n", $field, $methodReturned);
+            $ret .= sprintf("%s: %s\n", $field, $methndreturned);
         }
 
         // add parts

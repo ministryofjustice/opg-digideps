@@ -369,7 +369,7 @@
         {{ macros.saveAndContinueButton(form.save) }}
 
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button-link">
-            {% if app.user.isDeputyPa() %}
+            {% if app.user.isDeputyOrg() %}
                 {{ 'backToClientProfile' | trans({}, 'common') }}
             {% else %}
                 {{ 'backToReportOverview' | trans({}, 'common') }}
@@ -381,7 +381,7 @@
     {% else %}
 
         <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">
-            {% if app.user.isDeputyPa() %}
+            {% if app.user.isDeputyOrg() %}
                 {{ 'backToClientProfile' | trans({}, 'common') }}
             {% else %}
                 {{ 'backToReportOverview' | trans({}, 'common') }}

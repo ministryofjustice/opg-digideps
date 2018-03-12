@@ -8,6 +8,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,7 +56,9 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
         'report-documents',
         'balance-state',
-        'documents'
+        'documents',
+        'report-prof-service-fees',
+        'prof-service-fees'
     ];
 
     /**
@@ -68,7 +71,7 @@ class ReportController extends AbstractController
     {
         // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
         // due to the way
-        $user = $this->getUserWithData(['user-clients', 'client', 'client-users', 'report', 'client-reports', 'status']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
 
         // redirect if user has missing details or is on wrong page
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'lay_home')) {
@@ -76,21 +79,18 @@ class ReportController extends AbstractController
         }
 
         $clients = $user->getClients();
-        $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
-
-        $reports = $client ? $client->getReports() : [];
-        $reportsSubmitted = $client ? $client->getSubmittedReports() : [];
-        if (!($reportActive = $client->getActiveReport())) {
-            throw new \RuntimeException($this->get('translator')->trans('homepage.noActiveReportException', [], 'report'));
+        if (empty($clients)) {
+            throw new \Exception('Client not added');
         }
+        $client = array_shift($clients);
+
+        //refresh client adding codeputes (another API call to avoid recursion with users)
+        $clientWithCoDeputies = $this->getRestClient()->get('client/' . $client->getId(), 'Client', ['client', 'client-users', 'user']);
+        $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'reports' => $reports,
-            'reportActive' => $reportActive,
-            'reportsSubmitted' => $reportsSubmitted,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn')
         ];
     }
@@ -107,7 +107,7 @@ class ReportController extends AbstractController
         $client = $report->getClient();
 
         $editReportDatesForm = $this->get('form.factory')->createNamed('report_edit', FormDir\Report\ReportType::class, $report, [ 'translation_domain' => 'report']);
-        $returnLink = $this->getUser()->isDeputyPa()
+        $returnLink = $this->getUser()->isDeputyOrg()
             ? $this->generateClientProfileLink($report->getClient())
             : $this->generateUrl('lay_home');
 
@@ -173,7 +173,7 @@ class ReportController extends AbstractController
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template()
      */
-    public function overviewAction($reportId)
+    public function overviewAction(Request $request, $reportId)
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
@@ -189,24 +189,40 @@ class ReportController extends AbstractController
         // neede for clientContactVoter
         /** @var $client EntityDir\Client */
         $client = $this->getRestClient()->get('client/' . $report->getClient()->getId(), 'Client', [
-            'client', 'client-users', 'user',
+            'client',
+            'client-users', 'user',
             'client-reports', 'report',
+            'client-clientcontacts',
+            'clientcontact',
+            'client-notes',
             'notes',
-            'clientcontacts'
         ]);
         $report->setClient($client);
 
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
-        $template = $this->getUser()->isDeputyPa()
+        $template = $this->getUser()->isDeputyOrg()
             ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
-        return $this->render($template, [
+        $vars = [
             'user' => $user,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
-        ]);
+        ];
+
+        // "agre" checkbox for unsubmitted report.
+        // KEEP THIS until incomplete report has merged and not further changes are required
+//        if ($report->getUnSubmitDate()) {
+//            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
+//            $form->handleRequest($request);
+//            if ($form->isValid()) {
+//                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
+//            }
+//            $vars['form'] = $form->createView();
+//        }
+
+        return $this->render($template, $vars);
     }
 
     /**
@@ -238,23 +254,25 @@ class ReportController extends AbstractController
             // store PDF (with summary info) as a document
             $fileUploader = $this->get('file_uploader');
             $fileUploader->uploadFile(
-                $report->getId(),
+                $report,
                 $this->getPdfBinaryContent($report, true),
                 $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
                 true
             );
 
-            // store report and get new YEAR report
-            $newReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
-            $newReport = $this->getRestClient()->get('report/' . $newReportId['newReportId'], 'Report\\Report');
+            // store report and get new YEAR report (only for reports submitted the first time)
+            $newYearReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
+            if ($newYearReportId) {
+                $newReport = $this->getRestClient()->get('report/' . $newYearReportId, 'Report\\Report');
 
-            //send confirmation email
-            if ($user->isDeputyPa()) {
-                $reportConfirmEmail = $this->getMailFactory()->createPaReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
-            } else {
-                $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                //send confirmation email
+                if ($user->isDeputyOrg()) {
+                    $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
+                } else {
+                    $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
+                }
             }
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
@@ -337,7 +355,7 @@ class ReportController extends AbstractController
         // check status
         $status = $report->getStatus();
 
-        if ($this->getUser()->isDeputyPa()) {
+        if ($this->getUser()->isDeputyOrg()) {
             $backLink = $this->generateClientProfileLink($report->getClient());
         } else {
             $backLink = $this->generateUrl('lay_home');
@@ -347,7 +365,8 @@ class ReportController extends AbstractController
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
-            'backLink' => $backLink
+            'backLink' => $backLink,
+            'feeTotals' => $report->getFeeTotals()
         ];
     }
 
@@ -358,7 +377,7 @@ class ReportController extends AbstractController
      */
     public function pdfDebugAction($reportId)
     {
-        if (!$this->getParameter('kernel.debug') ) {
+        if (!$this->getParameter('kernel.debug')) {
             throw new DisplayableException('Route only visite in debug mode');
         }
         /** @var EntityDir\Report\Report $report */
@@ -397,7 +416,7 @@ class ReportController extends AbstractController
 
     /**
      * @param  EntityDir\Report\Report $report
-     * @param  boolean $showSummary
+     * @param  bool                    $showSummary
      * @return string                  binary PDF content
      */
     private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)

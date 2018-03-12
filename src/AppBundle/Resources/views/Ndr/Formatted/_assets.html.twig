@@ -1,0 +1,43 @@
+{% set assets = ndr.assets %}
+
+{% if assets | length > 0 or ndr.noAssetToAdd == true %}
+    <div class="section" id="assets-section">
+        <h2 class="section-heading">Client's assets</h2>
+
+        {% if ndr.assets | length == 0 %}
+            <div class="box">
+                <h3 class="label question bold">Does the client have any assets?</h3>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">X</td>
+                        <td class="label">My client has no assets</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            {% set assetsTotalValue = 0 %}
+            <ul id="assets">
+                {% for groupId, assetsInGroup in ndr.getAssetsGroupedByTitle %}
+                    <li data-group="{{ groupId }}">
+                        {% if (groupId | lower) == 'property' %}
+                            {% include 'AppBundle:Ndr/Formatted/Asset:_property.html.twig' %}
+                        {% else %}
+                             {% include 'AppBundle:Ndr/Formatted/Asset:_other.html.twig' %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue">
+                    <tr>
+                        <td class="label bold">Assets Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ ndr.assetsTotalValue | money_format }}</td>
+                    </tr>
+                </table>
+            </div>
+
+        {% endif %}
+    </div>
+{% endif %}

@@ -53,8 +53,8 @@ Feature: deputy / user / set password
         And I press "login_login"
         Then I should not see an "#error-summary" element
 
-    @odr
-    Scenario: login and add user (deputy odr)
+    @ndr
+    Scenario: login and add user (deputy ndr)
         Given emails are sent from "admin" area
         Given I am on "/logout"
        # follow link as it is
@@ -65,7 +65,7 @@ Feature: deputy / user / set password
         When I go to "logout"
         And I go to "/login"
         And I fill in the following:
-            | login_email     | behat-user-odr@publicguardian.gsi.gov.uk |
+            | login_email     | behat-user-ndr@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I press "login_login"
         Then I should not see an "#error-summary" element

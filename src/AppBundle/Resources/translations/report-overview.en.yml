@@ -8,6 +8,11 @@ reportingPeriod: "Reporting period"
 edit: "Edit"
 dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
+reportIsUnsubmitted: |
+  The report you sent us was incomplete. We've marked the sections that need more information.
+  Please complete these sections, then resubmit your report.
+  %newLine%
+  Contact your caseworker if you have any questions.
 yourFinalStep: "Your final step"
 reviewAndSubmit: "Review and submit"
 sectionsRemaining: "sections remaining"
@@ -31,6 +36,17 @@ options:
 guidanceNotice: |
   You don't have to fill in all the sections in one go. You can complete the report in any
   order you want, save it and return to it.
+
+incompleteNotice: |
+  We have marked your report as incomplete due to certain parts being unfinished or requiring
+  further attention. Please see below for the items which we have highlighted
+
+unsubmittedConfirm:
+  notification: Before reviewing your report, please confirm that you've completed the sections marked above.
+  form:
+    agree.label: I have reviewed the items highlighted on this page.
+    save.label: Review report
+
 
 previewNoticeNotDue: |
   You may preview your report at anytime. You can't submit your report until %date%.
@@ -79,6 +95,12 @@ pa_fee_expense:
     subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
     label:
       done: "Finished"
+prof_current_fees:
+    subSectionTitle: "Current fees and expenses"
+    subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
+    label:
+      done: "Finished"
+
 gifts:
     subSectionTitle: "Gifts"
     subSectionDescription: "Gifts you've given to other people on %client%'s behalf"

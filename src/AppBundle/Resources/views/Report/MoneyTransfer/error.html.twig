@@ -19,7 +19,7 @@
     </div>
 
     <a href="{{ path('report_overview', { 'reportId': report.id}) }}">
-        {% if app.user.isDeputyPa() %}
+        {% if app.user.isDeputyOrg() %}
 			{{ 'errorPage.backToClientProfile' | trans }}
 		{% else %}
     		{{ 'errorPage.backToOverview' | trans }}

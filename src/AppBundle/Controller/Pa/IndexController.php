@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,8 +21,6 @@ class IndexController extends AbstractController
      */
     public function dashboardAction(Request $request)
     {
-        $user = $this->getUser();
-
         $currentFilters = [
             'q'                 => $request->get('q'),
             'status'            => $request->get('status'),
@@ -32,9 +31,13 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $ret = $this->getRestClient()->get('/report/get-all?' . http_build_query($currentFilters), 'array', ['client', 'report', 'status']);
+        $ret = $this->getRestClient()->get(
+            '/report/get-all?' . http_build_query($currentFilters),
+            'array',
+            ['report', 'report-client', 'client', 'status']
+        );
         /* @var $clients EntityDir\Client[] */
-        $reports = $this->get('restClient')->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
+        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
 
         return [
             'filters' => $currentFilters,
@@ -73,6 +76,39 @@ class IndexController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'The client details have been edited');
 
             return $this->redirect($returnLink);
+        }
+
+        return [
+            'backLink' => $returnLink,
+            'form' => $form->createView(),
+            'client'=>$client,
+        ];
+    }
+
+    /**
+     * Client archive page
+     *
+     * @Route("/client/{clientId}/archive", name="pa_client_archive")
+     * @Template
+     */
+    public function clientArchiveAction(Request $request, $clientId)
+    {
+        /** @var $client EntityDir\Client */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
+        // PA client profile is ATM relying on report ID, this is a working until next refactor
+        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+        $form = $this->createForm(FormDir\Pa\ClientArchiveType::class, $client);
+        $form->handleRequest($request);
+
+        // edit client form
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            if (true === $form->get('confirmArchive')->getData()) {
+                $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
+                $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
+                return $this->redirectToRoute('pa_dashboard');
+            } else {
+                $form->get('confirmArchive')->addError(new FormError($this->get('translator')->trans('form.error.confirmArchive', [], 'pa-client-archive')));
+            }
         }
 
         return [

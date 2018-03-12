@@ -1,0 +1,49 @@
+{% set translationDomain = "ndr-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>{{ 'question' | trans({}, 'common') }}</th>
+            <th>{{ 'answer' | trans({}, 'common') }}</th>
+            <th>
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="behat-region-more-info">
+            {% if ndr.actionMoreInfo is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">Please answer this question</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ ndr.actionMoreInfo | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </td>
+        </tr>
+        {% if ndr.actionMoreInfo == 'yes' %}
+            <tr class="behat-region-more-info-details">
+                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}</td>
+                <td>{{ ndr.actionMoreInfoDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>

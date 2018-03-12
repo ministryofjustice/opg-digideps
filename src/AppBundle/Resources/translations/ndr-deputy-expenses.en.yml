@@ -1,0 +1,68 @@
+startPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  pageTitle: Deputy expenses
+  pageSectionDescription1: |
+    You can use your new deputy report to claim back money for things you paid for on %client%'s behalf before your court order – for example, care home fees or domestic bills.
+  pageSectionDescription2: |
+    Over the course of your deputyship, you can claim expenses for things you have to do to carry out your role, like phone calls, postage and travel costs.
+  pageSectionDescription3: |
+    You can pay yourself back from %client%'s funds as you go along, but you must keep a record of the expenses for your annual deputy report, due on the anniversary of your court order.
+  hiddenText01:
+    summary: More about what you can and can't claim for
+    content:
+      para01: |
+        OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
+  startButton: Start deputy expenses
+
+existPage:
+  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  pageTitle: Deputy expenses
+  form:
+    paidForAnything:
+      label: Did you pay for anything for %client% before you got your court order?
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add deputy expense | GOV.UK"
+  pageTitle: Add an expense
+  supportTitle: Deputy expenses
+  form:
+    addAnother:
+      label: The expense has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more expenses
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  pageTitle: Add an expense
+  supportTitle: Deputy expenses
+  pageSectionDescription: |
+    Use this section to tell us about the money you spent on %client%'s care and other expenses (professional fees for example) before your court order.
+    You can add one or more items of expense and come back to complete the section later.
+
+editPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  supportTitle: Deputy expenses
+  pageTitle: Edit deputy expense
+
+summaryPage:
+  htmlTitle: "Deputy report - deputy expenses | GOV.UK"
+  pageTitle: Deputy expenses
+  pageSectionDescription: |
+    In this section we ask you to tell us about things you paid for on %client%'s behalf before your
+    court order.
+  addButton: Add a deputy expense
+  edit: Edit
+
+form:
+  explanation:
+    label: Description of expense
+  amount:
+    label: Amount
+  addAnother:
+    label: Add another expense
+  save:
+      label: Save expense
+

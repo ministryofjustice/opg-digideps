@@ -19,10 +19,10 @@
             var value = parseFloat($(event.target).val().replace(/,/g, ""));
             //console.log(value);
             if (!isNaN(value) && value !== 0) {
-                textareaGroup.removeClass('hidden');
-                textareaGroup.parent().removeClass('hidden');
+                textareaGroup.removeClass('js-hidden');
+                textareaGroup.parent().removeClass('js-hidden');
             } else {
-                textareaGroup.addClass('hidden');
+                textareaGroup.addClass('js-hidden');
             }
         }).trigger('keyup');
     };

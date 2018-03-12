@@ -103,6 +103,12 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
+    dueDate:
+        notBlank: Enter the new due date
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+        notInThePast: Due date cannot be in the past
+    dueDateChoice:
+        notBlank:  You must select an option
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
@@ -110,17 +116,21 @@ report:
         readyForSubmission: Report not ready for submission
     agree: If you want to submit your report, you must agree to the declaration
     agreedBehalfDeputy:
-        notBlank: You must select one option
+        notBlank: You must select an option
     agreedBehalfDeputyExplanation:
         notBlank: You must explain why you are not signing on everyone's behalf
     hasDebts:
-        notBlank: You must select one option
+        notBlank: You must select an option
         mustHaveAtLeastOneDebt: You must enter at least one debt
     debts-management:
         notBlank: Please tell us how the debt is being managed or reduced
     balanceMismatchExplanation:
       notBlank: You must give an explanation for balance mismatching
       length: This explanation must be at least {{ limit }} letters long
+    reSubmission:
+      agree.notBlank: You must agree to this statement to continue
+    unsubmissionSections:
+      atLeastOnce: You must select at least one section
 
 report-declaration:
     agree:
@@ -158,15 +168,16 @@ contact:
     addAnother.notBlank: Please specify if you want to add another person
 decision:
     noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
-    reasonForNoDecisions.notBlank: Enter a reason why you don't have any decisions
+    reasonForNoDecisions.notBlank: |
+      Explain why you haven't had to make any significant decisions for the client
     addAnother.notBlank: Please specify if you want to add another decision
     description:
-        notBlank: You have to enter some details about this decision
+        notBlank: Enter some details about this decision
         length: This description must be at least {{ limit }} letters long
     clientInvolvedBoolean:
         notBlank: Please select either 'Yes' or 'No'
     clientInvolvedDetails:
-        notBlank: Tell us if you involved the client
+        notBlank: Tell us how you involved the client or why you couldn't
         length: This description must be at least {{ limit }} letters long
 
 document:
@@ -203,9 +214,9 @@ clientContact:
 # currently a subsection of decisions
 mentalCapacity:
     hasCapacityChanged:
-        notBlank: Select one option
+        notBlank: Select an option
     hasCapacityChangedDetails:
-        notBlank: You must tell us how the client's mental capacity has changed
+        notBlank: Tell us how the client's mental capacity has changed
     mentalAssessmentDate:
         notBlank: Please enter the last assessment date
 
@@ -291,11 +302,11 @@ gifts:
 
 transfer:
     accountFrom:
-        notBlank: Please choose the account you transfer money from
+        notBlank: Please select the account you transferred money from
     accountTo:
-        notBlank: Please choose the account you transfer money to
+        notBlank: Please select the account you transferred money to
     amount:
-          notBlank: You need to enter the amount
+          notBlank: Enter the amount transferred
           notNumeric: Please use numbers only to enter the amount
           minMessage: The amount must be more than £{{ limit }}
           maxMessage: The amount must be less than £10,000,000,000
@@ -391,7 +402,7 @@ visitsCare:
     doesClientReceivePaidCare:
         notBlank: Please select either 'Yes' or 'No'
     howIsCareFunded:
-        notBlank: Select one option
+        notBlank: Select an option
     whoIsDoingTheCaring:
         notBlank: Give us more details about who is caring for the client
     whenWasCarePlanLastReviewed:
@@ -430,15 +441,36 @@ feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option
 
-
-
+profServiceFee:
+    assessedOrFixed:
+        notBlank: Please tell us how you charged for this service
+    amountCharged:
+        notBlank: Please tell use how much was charged for this service
+        notNumeric: The amount charged must be in numbers
+        type: The amount charged must be in numbers
+    serviceType:
+        notBlank: Choose the type of service from the list
+    paymentReceived:
+        notBlank: Please tell us whether a payment has been received
+    amountReceived:
+        notBlank: Please tell us how much was received for this service
+        type: 1The amount received must be in numbers
+    paymentReceivedDate:
+        notBlank: Please enter date payment was received
+        invalidMessage: Enter the date in this format: DD/MM/YYYY
+        notInTheFuture: Payment date cannot be in the future
+    estimates:
+        previousProfFeesEstimateGiven:
+            notBlank: Please select either 'Yes' or 'No'
+        profFeesEstimateSccoReason:
+            notBlank: Please provide an explanation
 # ====================================================================================================
 #       NDR
 # ====================================================================================================
-odr:
+ndr:
   agree: In order to submit your new deputy report, you must agree to the statement above
   agreedBehalfDeputy:
-      notBlank: Select one option
+      notBlank: Select an option
   agreedBehalfDeputyExplanation:
       notBlank: Give us more information about why you are not signing on everyone's behalf
   submissionExceptions:
@@ -536,7 +568,7 @@ odr:
           owned:
               notBlank: Select one of the options below
           ownedPercentage:
-              notBlank: You must tell us what the client's share of the property is
+              notBlank: Tell us what the client's share of the property is
               type: Enter a number between 1 and 99 for the property share
           isSubjectToEquityRelease:
               notBlank: Please select either 'Yes' or 'No'
@@ -606,6 +638,8 @@ note:
 # ====================================================================================================
 
 common:
+  yesnochoice:
+    notBlank: Please select either 'Yes' or 'No'
   summaryHeading: There are some problems on this page
   genericPhone:
     minLength: Check the phone number: it must have at least {{ limit }} numbers

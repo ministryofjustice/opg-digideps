@@ -29,7 +29,7 @@
             'inputClass': 'width-full',
             'formGroupClass': 'width-quarter'}) }}
 
-        {{ form_checkbox(form.odr_enabled, '', {
+        {{ form_checkbox(form.ndr_enabled, '', {
             'labelText': 'NDR enabled',
             'inputClass': 'width-full',
             'formGroupClass': 'width-quarter'}) }}
@@ -99,8 +99,8 @@
                         {% endif %}
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>
-                    <td class="behat-region-{{ user.email | behat_namify }}-odr-enabled">
-                        {{ user.odrEnabled ? 'Yes' : '-' }}
+                    <td class="behat-region-{{ user.email | behat_namify }}-ndr-enabled">
+                        {{ user.ndrEnabled ? 'Yes' : '-' }}
                     </td>
                     <td>
                         {% if user.active %}

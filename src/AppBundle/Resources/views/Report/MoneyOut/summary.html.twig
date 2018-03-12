@@ -13,9 +13,9 @@
     '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id})
 } %}
-{% if report.hasSection('deputyExpenses') %}
-    {% set appendPA = '' %}
-{% elseif report.hasSection('paDeputyExpenses') %}
+{# todo set this to something for profs ?  once prof expenses sections are done #}
+{% set appendPA = '' %}
+{% if report.hasSection('paDeputyExpenses') %}
     {% set appendPA = 'PA' %}
 {% endif %}
 
@@ -48,8 +48,8 @@
     </details>
 
     {# Check answers text #}
-    <h2 class="heading-small">{{ 'summaryPage.pageContent.weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'summaryPage.pageContent.checkCorrect' | trans(transOptions, 'common') }}</p>
+    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
     {# Return to overview/client profile link #}
     {{ macros.returnToOverview(report) }}

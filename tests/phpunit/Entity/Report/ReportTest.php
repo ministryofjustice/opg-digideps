@@ -212,7 +212,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             m::mock(AssetOther::class, ['getTitle'=>'National Savings certificates', 'getValueTotal'=>20]),
             m::mock(AssetOther::class, ['getTitle'=>'Stocks and shares', 'getValueTotal'=>30]),
             m::mock(AssetOther::class, ['getTitle'=>'Premium Bonds', 'getValueTotal'=>40]),
-            //
+
             m::mock(AssetOther::class, ['getTitle'=>'Artwork', 'getValueTotal'=>1]),
             m::mock(AssetOther::class, ['getTitle'=>'Antiques', 'getValueTotal'=>2]),
             m::mock(AssetOther::class, ['getTitle'=>'Jewellery', 'getValueTotal'=>3]),
@@ -223,6 +223,5 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100000, $report->getAssetsTotalsSummaryPage('property'));
         $this->assertEquals(10 + 20 + 30 + 40, $report->getAssetsTotalsSummaryPage('cash'));
         $this->assertEquals(1+2+3+4+5, $report->getAssetsTotalsSummaryPage('other'));
-
     }
 }

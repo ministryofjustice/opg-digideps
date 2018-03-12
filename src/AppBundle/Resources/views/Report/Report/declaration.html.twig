@@ -12,7 +12,7 @@
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li>
-                {% if app.user.isDeputyPa() %}
+                {% if app.user.isDeputyOrg() %}
                     <a href="{{ path('pa_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
                 {% else %}
                     <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
@@ -20,7 +20,7 @@
             </li>
             <li>
                 <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">
-                    {% if app.user.isDeputyPa() %}
+                    {% if app.user.isDeputyOrg() %}
                         {{ 'clientProfile' | trans({}, 'common' ) }}
                     {% else %}
                         {{ 'deputyReportOverview' | trans({}, 'common' ) }}

@@ -5,8 +5,8 @@
 {% set translationDomain = "settings" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ (app.user.isDeputyPa() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
-{% block pageTitle %}{{ (app.user.isDeputyPa() ? 'pageTitle.pa-settings-page'   : 'pageTitle.settings-page')   | trans }}{% endblock %}
+{% block htmlTitle %}{{ (app.user.isDeputyOrg() ? 'htmlTitle.pa-settings-page' : 'htmlTitle.settings-page') | trans }}{% endblock %}
+{% block pageTitle %}{{ (app.user.isDeputyOrg() ? 'pageTitle.pa-settings-page'   : 'pageTitle.settings-page')   | trans }}{% endblock %}
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsSettings('settings') }}
@@ -20,13 +20,14 @@
             <h2 class="heading-small">{{ 'settings-page.links.client.title' | trans(transOptions) }}</h2>
         </a>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
-    {% elseif app.user.isDeputyPa() %}
+    {% elseif app.user.isDeputyOrg() %}
         {% set transOptions = {} %}
         <a href="{{ path('pa_team') }}" class="behat-link-user-accounts">
             <h2 class="heading-small">{{ 'settings-page.links.team.title' | trans }}</h2>
         </a>
         <p class="text text-info">
-            {% if app.user.isNamedDeputy() or app.user.isPaAdministrator() %}
+            {% if app.user.isPaNamedDeputy() or app.user.isPaAdministrator() or
+                app.user.isProfNamedDeputy() or app.user.isProfAdministrator()%}
                 {{ 'settings-page.links.team.admin-description' | trans }}
             {% else %}
                 {{ 'settings-page.links.team.description' | trans }}
@@ -34,12 +35,12 @@
         </p>
     {% endif %}
 
-    <a href="{{ path(app.user.isDeputyPa() ? 'pa_profile_show' : 'user_show') }}" class="behat-link-profile-show">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_show' : 'user_show') }}" class="behat-link-profile-show">
         <h2 class="heading-small">{{ 'settings-page.links.profile.title' | trans }}</h2>
     </a>
-    <p class="text text-info">{{ (app.user.isDeputyPa() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
+    <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
-    <a href="{{ path(app.user.isDeputyPa() ? 'pa_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
         <h2 class="heading-small">{{ 'settings-page.links.password.title' | trans }}</h2>
     </a>
     <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>

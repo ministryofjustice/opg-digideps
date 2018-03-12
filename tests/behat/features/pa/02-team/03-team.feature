@@ -55,7 +55,7 @@ Feature: PA team
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
-    And I should see the "client-1000010" region
+    And I should see the "client-01000010" region
     # check I see all the users
     When I click on "pa-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
@@ -106,7 +106,7 @@ Feature: PA team
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
-    And I should see the "client-1000010" region
+    And I should see the "client-01000010" region
     # check I see all the users
     When I click on "pa-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
@@ -234,7 +234,7 @@ Feature: PA team
       | user_details_phoneMain | 20000000002         |
     And I press "user_details_save"
     Then the form should be valid
-    And I should see the "client-3000001" region
+    And I should see the "client-03000001" region
 
   Scenario: PA_ADMIN3 logs in, adds and activates PA_TEAM_MEMBER
     Given I am logged in as "behat-pa3-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -254,7 +254,7 @@ Feature: PA team
     And I press "user_details_save"
     Then the form should be valid
     And I save the application status into "team-users-complete"
-    And I should see the "client-3000001" region
+    And I should see the "client-03000001" region
 
   Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address
     Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"

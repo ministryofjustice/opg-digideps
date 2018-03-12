@@ -29,7 +29,7 @@ addAnotherPage:
   pageTitle: Accounts
   form:
     addAnother:
-      label: The account has been saved. Would you like to add another account now?
+      label: The account has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more accounts
     save:
        label: Continue
@@ -41,6 +41,7 @@ summaryPage:
   totalBalance: Total balance on %endDate%: £%amount%
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageTitle: Accounts
+
 form:
   accountType:
       label: What type of account is it?
@@ -59,6 +60,9 @@ form:
     label: How much was in the account on %endDate%?
   isJointAccount:
     label: Is this a joint account?
+    hint: |
+      Joint accounts are often used by married couples or couples who live together. The money in
+      a joint account is owned by both account holders.
   isClosed:
       label: You currently have £0 in this account on %endDate%.  Have you closed this account?
   save:

@@ -1,7 +1,6 @@
 startPage:
   htmlTitle: "Deputy report - Deputy fees and expenses | GOV.UK"
   pageTitle: Deputy fees and expenses
-  #TODO format me
   pageSectionDescription1: |
     Public authority deputies can be paid, or claim expenses, for the following
     areas of work or cost:
@@ -55,7 +54,7 @@ otherAddAnotherPage:
   pageTitle: Add an expense
   form:
     addAnother:
-      label: The expense has been saved. Would you like to add another expense now?
+      label: The expense has been saved. Would you like to add another now?
       hint: If you prefer, you can come back to this section later to add more expenses
     save:
        label: Continue

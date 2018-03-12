@@ -7,6 +7,9 @@ use Behat\Gherkin\Node\TableNode;
 trait FileTrait
 {
     /**
+     * | NdrRep-.*\.pdf | regexpName+sizeAtLeast | 50000  |
+     * | file2.pdf | exactFileName+md5sum | 6b871eed6b34b560895f221de1420a5a |
+     *
      * @Then the page content should be a zip file containing files with the following files:
      */
     public function thePagecontentShouldBeZipContainingFilesChecksum(TableNode $table)
@@ -29,6 +32,19 @@ trait FileTrait
                     $md5Sum = trim($lines[0], '- ');
                     if ($md5Sum !== $expectedChecksum) {
                         throw new \RuntimeException("File missing or wrong checksum for $file, expected $expectedChecksum, $md5Sum given");
+                    }
+                    break;
+
+                case 'exactFileName+filesize':
+                    $expectedSize = $value;
+
+                    exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
+                    if (empty($lines)) {
+                        throw new \RuntimeException("File matching $file not found in ZIP file");
+                    }
+                    $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
+                    if ($sizeBytes <> $value) {
+                        throw new \RuntimeException("File matching $file is $sizeBytes bytes, size $expectedSize expected");
                     }
                     break;
 

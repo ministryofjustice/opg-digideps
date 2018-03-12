@@ -1,0 +1,94 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientDetails' %}
+{# DDPB-857: hide link, except for behat tests #}
+{#{% set enableManageLink = client.caseNumber == 'behat001' %}#}
+{% set enableManageLink = true %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
+
+    <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
+
+    {# client report list #}
+    {% if client.reportsSubmittedAtLeastOnce | length == 0 %}
+        <p>{{ (page ~ '.noResults') | trans }}</p>
+    {% else %}
+        <table class="check-your-answers">
+            <thead>
+            <tr>
+                <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
+                {% if enableManageLink %}
+                    <th scope="col">
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in client.reportsSubmittedAtLeastOnce %}
+                {# only show submitted and unsubmitted reports #}
+                {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
+                <tr class="{{ behatRegionPrefix }}">
+                    <td>
+                        {{ report.period | replace({'to': '-'}) }}
+                    </td>
+                    <td class="{{ behatRegionPrefix }}-due-date">
+                        {{ report.dueDate | date("j F Y") }}
+                    </td>
+                    <td>
+                        {# Display submit date regardless of being submitted or not.
+                        # An unsubmitted report still has a submit date from a previous submission
+                        #}
+                        {% if report.submitDate %}
+                            {{ report.submitDate | date("j F Y") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.unSubmitDate %}
+                            {{ report.unSubmitDate | date("j F Y") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.unSubmitDate %}
+                            {% set status = 'unsubmitted' %}
+                        {% elseif report.submitted %}
+                            {% set status = 'submitted' %}
+                        {% else %}
+                            {% set status = report.status.status %}
+                        {% endif %}
+
+                        <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                    </td>
+                    {% if enableManageLink %}
+                        <td class="change-answer width-tenth">
+                            {% if report.submitted %}
+                                <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
+                                   class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

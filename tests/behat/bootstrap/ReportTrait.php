@@ -515,7 +515,7 @@ trait ReportTrait
             # Lay report
             $this->assertSession()->elementExists('css', '#edit-report-preview');
             $this->assertSession()->elementNotExists('css', '#edit-report-review');
-        } elseif ($usertype == 'pa') {
+        } elseif (in_array($usertype, ['pa', 'prof'])) {
             # PA
             $this->assertSession()->elementNotExists('css', '#edit-report_submit');
         } else {
@@ -534,7 +534,7 @@ trait ReportTrait
             # Lay report
             $this->assertSession()->elementExists('css', '#edit-report-review');
             $this->assertSession()->elementNotExists('css', '#edit-report-preview');
-        } elseif ($usertype == 'pa') {
+        } elseif (in_array($usertype, ['pa', 'prof'])) {
             # PA
             $this->assertSession()->elementExists('css', '#edit-report_submit');
         } else {

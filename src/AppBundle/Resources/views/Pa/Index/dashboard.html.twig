@@ -79,13 +79,17 @@
                     {{ report.client.caseNumber|upper }}
                 </td>
                 <td>
-                    <span>{{ report.dueDate | date("j M Y") }}</span><br>
-                    {% if report.dueDateDiffDays < 0 %}
-                        <span class="font-xsmall bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
-                    {% elseif report.dueDateDiffDays == 0 %}
-                        <span class="font-xsmall bold">{{ 'dueToday' | trans }}</span>
-                    {% elseif report.dueDateDiffDays <= 30 %}
-                        <span class="font-xsmall">{{ 'dueIn' | trans(transOptions) }}</span>
+                    {% if report.dueDate is not null %}
+                        <span>{{ report.dueDate | date("j M Y") }}</span><br>
+                        {% if report.dueDateDiffDays < 0 %}
+                            <span class="font-xsmall bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
+                        {% elseif report.dueDateDiffDays == 0 %}
+                            <span class="font-xsmall bold">{{ 'dueToday' | trans }}</span>
+                        {% elseif report.dueDateDiffDays <= 30 %}
+                            <span class="font-xsmall">{{ 'dueIn' | trans(transOptions) }}</span>
+                        {% endif %}
+                    {% else %}
+                        -
                     {% endif %}
                 </td>
                 <td class="numeric">

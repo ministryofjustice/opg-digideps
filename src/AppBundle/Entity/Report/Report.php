@@ -3,7 +3,11 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\VisitsCare;
+use AppBundle\Entity\Report\Lifestyle;
+
 use AppBundle\Entity\Report\Traits as ReportTraits;
+use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -12,8 +16,9 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
  * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
+ * @Assert\Callback(methods={"unsubmittedSectionAtLeastOnce"}, groups={"unsubmitted_sections"})
  */
-class Report
+class Report implements ReportInterface
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;
@@ -25,6 +30,9 @@ class Report
     use ReportTraits\ReportMoneyTransactionTrait;
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
+    use ReportTraits\ReportProfServiceFeesTrait;
+    use ReportTraits\ReportUnsubmittedSections;
+
 
     const TYPE_103 = '103';
     const TYPE_102 = '102';
@@ -37,6 +45,12 @@ class Report
     const TYPE_104_6 = '104-6';
     const TYPE_103_4_6 = '104-4-6';
     const TYPE_102_4_6 = '102-4-6';
+
+    const TYPE_103_5 = '103-5';
+    const TYPE_102_5 = '102-5';
+    const TYPE_104_5 = '104-5';
+    const TYPE_103_4_5 = '103-4-5';
+    const TYPE_102_4_5 = '102-4-5';
 
     /**
      * @JMS\Type("integer")
@@ -64,10 +78,11 @@ class Report
     private $has106flag;
 
     /**
-     * @Assert\NotBlank( message="report.startDate.notBlank")
-     * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
+     * @Assert\NotBlank( message="report.startDate.notBlank")
+     * @Assert\Date( message="report.startDate.invalidMessage" )
      *
      * @var \DateTime
      */
@@ -76,6 +91,7 @@ class Report
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
+     *
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      *
@@ -84,12 +100,29 @@ class Report
     private $endDate;
 
     /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"report_due_date"})
+     *
      * @var \DateTime
-     * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
+     */
+    private $dueDate;
+
+    /**
+     * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"unsubmit_date"})
+     */
+    private $unSubmitDate;
 
     /**
      * @JMS\Type("AppBundle\Entity\User")
@@ -199,22 +232,23 @@ class Report
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"submit"})
+     * @JMS\Groups({"submit", "submitted"})
      *
      * @var bool
      */
     private $submitted;
 
     /**
-     * @deprecated remove from view as well if not used
      * @JMS\Type("boolean")
      *
      * @var bool
      */
     private $reportSeen;
 
-    /** @var bool
+    /**
+     * @var bool
      * @JMS\Type("boolean")
+     *
      * @Assert\True(message="report.agree", groups={"declare"} )
      */
     private $agree;
@@ -223,7 +257,8 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
@@ -232,22 +267,15 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report","submit"})
+     * @JMS\Groups({"report","submit", "submit_agreed"})
+     *
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
 
-
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-metadata"})
-     *
-     * @var string
-     */
-    private $metadata;
-
     /**
      * @var Document[]
+     *
      * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
@@ -271,6 +299,7 @@ class Report
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
+     *
      * @var Status
      */
     private $status;
@@ -284,18 +313,13 @@ class Report
     private $wishToProvideDocumentation;
 
     /**
-     * @deprecated  use availableSections instead, that only holds the config for the current report
+     * @var array
      *
      * @JMS\Type("array")
-     * @var array
-     */
-    private $sectionsSettings;
-
-    /**
-     * @JMS\Type("array")
-     * @var array
      */
     private $availableSections;
+
+
 
     /**
      * @return int $id
@@ -384,19 +408,24 @@ class Report
     }
 
     /**
-     * Return the date 8 weeks after the end date.
+     * @param \DateTime $dueDate
+     */
+    public function setDueDate(\DateTime $dueDate = null)
+    {
+        $this->dueDate = $dueDate;
+    }
+
+
+    /**
+     * Due date
+     *
+     * as a default, 8 weeks after the end date
      *
      * @return \DateTime|null $dueDate
      */
     public function getDueDate()
     {
-        if (!$this->endDate instanceof \DateTime) {
-            return;
-        }
-        $dueDate = clone $this->endDate;
-        $dueDate->modify('+8 weeks');
-
-        return $dueDate;
+        return $this->dueDate;
     }
 
     /**
@@ -434,13 +463,7 @@ class Report
      */
     public function getSubmitDate()
     {
-        if ($this->submitted) {
-            $submitDate = $this->submitDate;
-        } else {
-            $submitDate = null;
-        }
-
-        return $submitDate;
+        return $this->submitDate;
     }
 
     /**
@@ -451,6 +474,26 @@ class Report
     public function setSubmitDate(\DateTime $submitDate = null)
     {
         $this->submitDate = $submitDate;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUnSubmitDate()
+    {
+        return $this->unSubmitDate;
+    }
+
+    /**
+     * @param \DateTime $unSubmitDate
+     *
+     * @return Report
+     */
+    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    {
+        $this->unSubmitDate = $unSubmitDate;
 
         return $this;
     }
@@ -726,7 +769,7 @@ class Report
     }
 
     /**
-     * @return Report\VisitsCare
+     * @return VisitsCare
      */
     public function getVisitsCare()
     {
@@ -734,7 +777,7 @@ class Report
     }
 
     /**
-     * @param \AppBundle\Entity\Report\VisitsCare $visitsCare
+     * @param VisitsCare $visitsCare
      */
     public function setVisitsCare($visitsCare)
     {
@@ -742,7 +785,7 @@ class Report
     }
 
     /**
-     * @return Report\Lifestyle
+     * @return Lifestyle
      */
     public function getLifestyle()
     {
@@ -750,7 +793,7 @@ class Report
     }
 
     /**
-     * @param \AppBundle\Entity\Report\Lifestyle $lifestyle
+     * @param Lifestyle $lifestyle
      */
     public function setLifestyle($lifestyle)
     {
@@ -821,7 +864,7 @@ class Report
     }
 
     /**
-     * @param  bool  $noTransfersToAdd
+     * @param  bool $noTransfersToAdd
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -950,7 +993,8 @@ class Report
      */
     public function getDocumentsExcludingReportPdf()
     {
-        return array_filter($this->documents, function ($document) { /* @var $document Document */
+        return array_filter($this->documents, function ($document) {
+            /* @var $document Document */
             return !$document->isReportPdf();
         });
     }
@@ -972,7 +1016,7 @@ class Report
     }
 
     /**
-     * @param Status $status$statusrvice
+     * @param Status $status $statusrvice
      */
     public function setStatus($status)
     {
@@ -999,16 +1043,15 @@ class Report
     }
 
     /**
-     * @param $format where %s are endDate (Y), submitDate Y-m-d, case number
+     * @param $format string where %s are endDate (Y), submitDate Y-m-d, case number
      * @return string
      */
     public function createAttachmentName($format)
     {
-        $client = $this->getClient();
         $attachmentName = sprintf($format,
             $this->getEndDate()->format('Y'),
             $this->getSubmitDate() ? $this->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
-            $client->getCaseNumber()
+            $this->getClient()->getCaseNumber()
         );
 
         return $attachmentName;
@@ -1017,17 +1060,14 @@ class Report
     /**
      * @return string
      */
-    public function getMetadata()
+    public function getZipName()
     {
-        return $this->metadata;
-    }
+        $client = $this->getClient();
 
-    /**
-     * @param string $metadata
-     */
-    public function setMetadata($metadata)
-    {
-        $this->metadata = $metadata;
+        return 'Report_' . $client->getCaseNumber()
+            . '_' . $this->getStartDate()->format('Y')
+            . '_' . $this->getEndDate()->format('Y')
+            . '.zip';
     }
 
     /**
@@ -1039,7 +1079,7 @@ class Report
     }
 
     /**
-     * @param  array  $availableSections
+     * @param  array $availableSections
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1065,7 +1105,7 @@ class Report
      */
     public function isSubmitted()
     {
-        return (bool) $this->getSubmitted();
+        return (bool)$this->getSubmitted();
     }
 
     /**
@@ -1084,31 +1124,4 @@ class Report
             );
     }
 
-    public function shouldShowBalanceWarning()
-    {
-        // if not due dont show warning
-        if (!$this->isDue()) {
-            return false;
-        }
-
-        // if accounts not started don't show warning
-        if ($this->getStatus()->getBankAccountsState()['state'] == Status::STATE_NOT_STARTED) {
-            return false;
-        }
-
-        switch ($this->getType()) {
-            case Report::TYPE_102:
-            case Report::TYPE_102_4:
-                // if a money section not started, dont show warning
-                if ($this->getStatus()->getMoneyInState()['state'] == Status::STATE_NOT_STARTED ||
-                    $this->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED) {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-        }
-
-        return true;
-    }
 }

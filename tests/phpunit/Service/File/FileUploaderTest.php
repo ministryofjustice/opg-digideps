@@ -31,9 +31,10 @@ class FileUploaderTest extends \PHPUnit_Framework_TestCase
         $fileContent = 'testcontent';
 
         $this->storage->shouldReceive('store')->once()->with(matchesPattern('/^dd_doc_1_\d+$/'), $fileContent);
-        $this->restClient->shouldReceive('post')->once()->with('/report/1/document', anInstanceOf(Document::class), ['document']);
+        $this->restClient->shouldReceive('post')->once()->with('/document/report/1', anInstanceOf(Document::class), ['document']);
 
-        $doc = $this->object->uploadFile(1, $fileContent, $fileName, false); /* @var $document Document */
+        $report = m::mock(Report::class, ['getId'=>1]);
+        $doc = $this->object->uploadFile($report, $fileContent, $fileName, false); /* @var $document Document */
 
         $this->assertStringMatchesFormat('dd_doc_1_%d', $doc->getStorageReference());
         $this->assertEquals($fileName, $doc->getFileName());

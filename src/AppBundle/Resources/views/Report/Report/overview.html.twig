@@ -7,6 +7,7 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e
 } %}
+{% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
 
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
@@ -15,7 +16,6 @@
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
 {% block pageContent %}
-
     {% block pageHeader %}
         {% include 'AppBundle:Report/Report:_header.html.twig' %}
     {% endblock %}
@@ -26,7 +26,8 @@
                 <li>{{ 'reportingPeriod' | trans() }}:
                     <span class="bold-small">{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</span>
                 </li>
-                <li>{{ 'dueDate' | trans() }}:
+                {# @biggs to style #}
+                <li class="{{ report.unSubmitDate ? 'orangeWarning' : '' }}">{{ 'dueDate' | trans() }}:
                     <span class="bold-small">{{ report.dueDate | date("j F Y") }}</span>
                 </li>
                 <li>Report status:
@@ -42,6 +43,12 @@
         </div>
     {% endif %}
 
+    {% if report.unSubmitDate %}
+        <div class="push--top">
+            {{ macros.notification('important', 'incompleteNotice' | trans) }}
+        </div>
+    {% endif %}
+
 
     <ul id="overview-sections" class="push--bottom">
 
@@ -51,6 +58,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'decisions',
+                    sectionId: 'decisions',
                     report: report,
                     description: true,
                     state: reportStatus.decisionsState,
@@ -61,6 +69,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'contacts',
+                    sectionId: 'contacts',
                     report: report,
                     description: true,
                     list: true,
@@ -76,6 +85,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'visits_care',
+                    sectionId: 'visitsCare',
                     report: report,
                     info: true,
                     description: true,
@@ -86,6 +96,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'lifestyle',
+                sectionId: 'lifestyle',
                 report: report,
                 info: true,
                 description: true,
@@ -101,6 +112,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'deputy_expenses',
+                        sectionId: 'deputyExpenses',
                         report: report,
                         state: reportStatus.expensesState,
                         linkToSubSection: path('deputy_expenses', {'reportId': report.id}),
@@ -112,6 +124,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'gifts',
+                    sectionId: 'gifts',
                     report: report,
                     state: reportStatus.giftsState,
                     linkToSubSection: path('gifts', {'reportId': report.id}),
@@ -123,6 +136,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'bank_accounts',
+                        sectionId: 'bankAccounts',
                         report: report,
                         state: reportStatus.bankAccountsState,
                         description: true
@@ -132,6 +146,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'money_transfers',
+                        sectionId: 'moneyTransfers',
                         report: report,
                         state: reportStatus.moneyTransferState,
                         description: true
@@ -141,6 +156,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in',
+                    sectionId: 'moneyIn',
                     report: report,
                     state: reportStatus.moneyInState,
                     description: true
@@ -148,6 +164,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out',
+                    sectionId: 'moneyOut',
                     report: report,
                     state: reportStatus.moneyOutState,
                     description: true
@@ -157,6 +174,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_in_short',
+                    sectionId: 'moneyInShort',
                     report: report,
                     state: reportStatus.MoneyInShortState,
                     description: true
@@ -164,6 +182,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'money_out_short',
+                    sectionId: 'moneyOutShort',
                     report: report,
                     state: reportStatus.MoneyOutShortState,
                     description: true
@@ -192,6 +211,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'balance',
+                        sectionId: 'balance',
                         report: report,
                         state: reportStatus.balanceState,
                         description: true,
@@ -206,6 +226,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                         transDomain: translationDomain,
                         subSection: 'assets',
+                        sectionId: 'assets',
                         report: report,
                         state: reportStatus.assetsState,
                         list: true,
@@ -216,6 +237,7 @@
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'debts',
+                    sectionId: 'debts',
                     report: report,
                     state: reportStatus.debtsState,
                     list: true,
@@ -232,6 +254,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'actions',
+                    sectionId: 'actions',
                     report: report,
                     description: true,
                     state: reportStatus.actionsState,
@@ -242,6 +265,7 @@
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'other_info',
+                    sectionId: 'otherInfo',
                     linkToSubSection: path('other_info', {reportId: report.id}),
                     report: report,
                     info: true,
@@ -252,10 +276,11 @@
 
         <li id="report-submit-section" class="overview-section">
             <h2 class="heading">{{ 'heading.caseDocuments' | trans() }}</h2>
-            {% if report.hasSection('actions') %}
+            {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
                     subSection: 'documents',
+                    sectionId: 'documents',
                     report: report,
                     description: true,
                     state: reportStatus.documentsState,
@@ -265,6 +290,22 @@
         </li>
     </ul>
 
+    {# KEEP THIS until incomplete report has merged and not further changes are required#}
+    {#{% if report.unSubmitDate %}#}
+        {#{{ macros.notification('important', 'unsubmittedConfirm.notification' | trans) }}#}
+
+        {#{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}#}
+
+        {#{{ form_checkbox(form.agree, 'unsubmittedConfirm.form.agree', { 'labelClass': 'required' }) }}#}
+
+        {#<div class="form-group push-half--top">#}
+            {#{{ form_submit(form.save,'unsubmittedConfirm.form.save') }}#}
+        {#</div>#}
+
+        {#{{ form_end(form) }}#}
+
+    {#{% endif %}#}
+
     {% if not report.isDue %}
 
         <div class="push--top">
@@ -273,7 +314,7 @@
 
             {{ macros.notification('info', 'previewNoticeNotDue' | trans(transOptions)) }}
         </div>
-        <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+        <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
 
     {% else %}
         {% if not reportStatus.isReadyToSubmit %}
@@ -281,14 +322,16 @@
             <div class="push--top">
                 {{ macros.notification('info', 'previewNotice' | trans()) }}
             </div>
-            <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a> 
+            <a id="edit-report-preview" class="button" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
 
         {% else %}
 
-            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a> 
+            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
 
         {% endif %}
 
     {% endif %}
+
+
 
 {% endblock %}

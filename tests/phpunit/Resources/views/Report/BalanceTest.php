@@ -47,7 +47,8 @@ class BalanceTest extends WebTestCase
             'user' => m::mock(User::class, [
                 'getGaTrackingId'=>null,
                 'isDeputyPa'=>false,
-                'isOdrEnabled'=>false,
+                'isDeputyOrg'=>false,
+                'isNdrEnabled'=>false,
             ])
         ]);
         $this->templating = $this->container->get('templating');

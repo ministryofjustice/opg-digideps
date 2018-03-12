@@ -4,14 +4,14 @@ Feature: deputy / acl / security on pages
   Scenario: create backup
     Given I save the application status into "pages-security-init"
 
-  @deputy 
+  @deputy
   Scenario: create another user with client and report with data
     # restore status of first report before submitting
     Given emails are sent from "admin" area
     And I reset the email log
     Given I load the application status from "report-submit-pre"
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I create a new "ODR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk" and postcode "SW1H 9AJ"
+    When I create a new "NDR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk" and postcode "SW1H 9AJ"
     And I activate the user with password "Abcd1234"
     And I set the user details to:
       | name    | Malicious        | User          |        |          |    |

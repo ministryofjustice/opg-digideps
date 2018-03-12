@@ -107,7 +107,6 @@ class DebtController extends AbstractController
         ];
     }
 
-
     /**
      * How debts are managed question.
      *

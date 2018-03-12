@@ -8,7 +8,9 @@ no: No
 ok: OK
 signOut: Sign out
 continue: Continue
+reviewReport: Review report
 saveAndContinue: Save and continue
+saveAndAddAnother: Save and add another
 back: Back
 start: Start
 startNow: Start now
@@ -20,11 +22,13 @@ status:
   readyToSubmit: Continue
 next: Next
 previous: Previous
+manage: Manage
 
 # Report headings
 annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
 submittedReports: Submitted reports
+unsubmittedReport: Incomplete deputy report
 
 # Labels and table headings
 name: Name
@@ -41,8 +45,15 @@ actions: Actions
 caseNumber: Case number
 client: Client
 courtOrderNo: Court order no.
+courtOrderNumber: Court order number
 reportDueDate: Report due date
 reportStatus: Report status
+question: Question
+answer: Answer
+reports: Reports
+period: Period
+submissionDate: Submission date
+unsubmissionDate: Unsubmission date
 
 # Statuses
 notCreated: Not created
@@ -51,6 +62,8 @@ notStarted: Not started
 readyToSubmit: Ready to submit
 notAvailable: Not available
 inProgress: In progress
+submitted: Submitted
+unsubmitted: Unsubmitted
 
 # Breadcrumbs
 yourReports: Your reports
@@ -60,14 +73,18 @@ reviewReport: Review report
 dashboard: Dashboard
 clientProfile: Client profile
 
-#Back links
+# Back links
 backToReportOverview: Back to report overview
 backToClientProfile: Back to client profile
+backToYourReports: Back to your reports
 
-#Search
+# Search
 search: Search
 clearSearch: Clear search
 sorryNoResultsFor: Sorry, no results were found for
+
+# Emails
+layDeputySupportEmail: laydeputysupport@publicguardian.gsi.gov.uk
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
@@ -92,12 +109,17 @@ registrationProgressBar:
 stepPage:
    skipLink: Skip this question for now
 
-summaryPage:
-  pageContent:
-    weHaveListed: We've listed your saved answers below.
-    checkCorrect: Check they're correct and edit them where necessary.
-    remindComplete: Don't worry if you've had to skip some questions. We'll remind you to complete them next time you log in.
-    canYouAnswer: Can you answer the missing questions? You won't be able to submit your annual deputy report until it's complete.
-    canYouAnswerNDR: Can you answer the missing questions? You won't be able to submit your new deputy report until it's complete.
-    returnToReport: Return to report overview
-    returnToClientProfile: Return to client profile
+# Summary page
+weHaveListed: We've listed your saved answers below.
+checkCorrect: Check they're correct and edit them where necessary.
+remindComplete: |
+  Don't worry if you've had to skip some questions. We'll remind you to complete them next time
+  you log in.
+canYouAnswer: |
+  Can you answer the missing questions? You won't be able to submit your annual deputy report
+  until it's complete.
+canYouAnswerNDR: |
+  Can you answer the missing questions? You won't be able to submit your new deputy report until
+  it's complete.
+returnToReport: Return to report overview
+returnToClientProfile: Return to client profile

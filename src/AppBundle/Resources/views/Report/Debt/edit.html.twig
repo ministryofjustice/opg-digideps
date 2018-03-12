@@ -35,7 +35,7 @@
             }) }}
 
             {% if debt.moreDetails is defined %}
-                <div class="hidden">
+                <div class="js-hidden">
                     {{ form_input(debt.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                         'formGroupClass': 'panel panel-border-narrow',

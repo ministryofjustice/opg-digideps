@@ -1,0 +1,38 @@
+clientSearch:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Clients
+  searchBy: Search by client surname or case number
+  clientTable:
+    heading: Client list
+    results: Found %numberOfClients% clients
+    resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
+    noResults: No clients found
+
+clientDetails:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Client details
+  noResults: No reports found
+
+reportManage:
+  htmlTitle: Administration - Manage report
+  pageTitle: Admin
+  supportTitle: Manage report
+  currentDueDate: Current due date:
+  overdueBy: Overdue by %overdueDays% days
+  form:
+    dueDateChoice:
+     label: New due date
+     choices:
+       keep: Keep existing due date
+       3weeks: 3 weeks from now
+       4weeks: 4 weeks from now
+       5weeks: 5 weeks from now
+       custom: Other
+    dueDateCustom:
+      legend: Specify a custom report due date
+    markSections:
+      legend: Mark sections as incomplete
+    unsubmit:
+      label: Update and mark as incomplete

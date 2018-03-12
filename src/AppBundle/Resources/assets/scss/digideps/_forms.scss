@@ -69,8 +69,10 @@ input[type=text]::-ms-clear {
     }
 }
 
+
 // Horizontally lined up form-groups
 // Currently only used on the admin search (Search, Role, NDR check)
+
 .form-groups-inline {
     .form-group {
         float: left;
@@ -83,6 +85,47 @@ input[type=text]::-ms-clear {
 
         &.form-group__checkbox {
             margin-top: 27px;
+        }
+    }
+}
+
+
+// Smaller checkboxes for admin
+// https://home-office-digital-patterns.herokuapp.com/components/checkboxes
+
+.multiple-choice--smaller {
+    &.form-group {
+        margin-bottom: 10px;
+    }
+
+    .multiple-choice {
+        padding-top: 3px;
+        padding-bottom: 2px;
+
+        @include media(mobile) {
+            margin-bottom: 15px;
+            padding-top: 2px;
+        }
+
+        label {
+            padding: 0;
+        }
+    }
+
+    [type=checkbox] {
+        + label {
+            &::before {
+                width: 21px;
+                height: 21px;
+            }
+
+            &::after {
+                width: 11px;
+                height: 4px;
+                top: 8px;
+                left: 6px;
+                border-width: 0 0 3px 3px;
+            }
         }
     }
 }

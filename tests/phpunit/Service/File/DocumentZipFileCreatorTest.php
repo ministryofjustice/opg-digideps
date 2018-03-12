@@ -26,9 +26,18 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
 
     public function testcreateZipFileNoDocuments()
     {
+        $this->reportSubmission->shouldReceive('isDownloadable')->once()->withNoArgs()->andReturn(true);
         $this->reportSubmission->shouldReceive('getDocuments')->andReturn([]);
 
         $this->setExpectedException('RuntimeException');
+        $this->object->createZipFile();
+    }
+
+    public function testcreateZipFileNotDownloadable()
+    {
+        $this->reportSubmission->shouldReceive('isDownloadable')->once()->withNoArgs()->andReturn(false);
+
+        $this->setExpectedException('RuntimeException', DocumentsZipFileCreator::MSG_NOT_DOWNLOADABLE);
         $this->object->createZipFile();
     }
 
@@ -51,6 +60,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
         $this->reportSubmission
             ->shouldReceive('getZipName')->andReturn($zipFileName)
             ->shouldReceive('getDocuments')->andReturn([$doc1, $doc2])
+            ->shouldReceive('isDownloadable')->once()->withNoArgs()->andReturn(true)
         ;
 
         $fileName = $this->object->createZipFile();

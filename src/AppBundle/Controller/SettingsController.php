@@ -7,6 +7,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 class SettingsController extends AbstractController
@@ -19,7 +20,7 @@ class SettingsController extends AbstractController
     public function indexAction()
     {
         // redirect if user has missing details or is on wrong page
-        $user = $this->getUserWithData(['user-clients', 'client', 'report']);
+        $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'account_settings')) {
             return $this->redirectToRoute($route);
         }
@@ -50,7 +51,7 @@ class SettingsController extends AbstractController
             ]));
             $request->getSession()->getFlashBag()->add('notice', 'Password edited');
 
-            $successRoute = $this->getUser()->isDeputyPA() ? 'pa_settings' : 'user_password_edit_done';
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'pa_settings' : 'user_password_edit_done';
             return $this->redirect($this->generateUrl($successRoute));
         }
 
@@ -88,27 +89,23 @@ class SettingsController extends AbstractController
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/pa/settings/your-details/edit", name="pa_profile_edit")
      * @Template()
+     * @throw AccessDeniedException
      **/
     public function profileEditAction(Request $request)
     {
         $user = $this->getUserWithData();
 
-        switch ($this->getUser()->getRoleName()) {
-            case EntityDir\User::ROLE_ADMIN:
-            case EntityDir\User::ROLE_AD:
-                $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
-                $jmsPutGroups = ['user_details_basic'];
-                break;
-            case EntityDir\User::ROLE_LAY_DEPUTY:
-                $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
-                $jmsPutGroups = ['user_details_full'];
-                break;
-            case EntityDir\User::ROLE_PA:
-            case EntityDir\User::ROLE_PA_ADMIN:
-            case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_pa', 'profile_pa']]);
-                $jmsPutGroups = ['user_details_pa', 'profile_pa'];
-                break;
+        if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
+            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, $user, []);
+            $jmsPutGroups = ['user_details_basic'];
+        } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
+            $jmsPutGroups = ['user_details_full'];
+        } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_pa', 'profile_pa']]);
+            $jmsPutGroups = ['user_details_pa', 'profile_pa'];
+        } else {
+            $this->createAccessDeniedException('User role not recognised');
         }
 
         $form->handleRequest($request);
@@ -117,12 +114,13 @@ class SettingsController extends AbstractController
             $formData = $form->getData();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $user->setRoleName('ROLE_PA_TEAM_MEMBER');
+                $newRole = $this->determineNoAdminRole();
+                $user->setRoleName($newRole);
                 $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
                 $redirectRoute = 'logout';
             } else {
                 $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
-                $redirectRoute = $user->isDeputyPA()
+                $redirectRoute = ($user->isDeputyPA() || $user->isDeputyProf())
                     ? 'pa_profile_show'
                     : 'user_show';
             }
@@ -136,5 +134,23 @@ class SettingsController extends AbstractController
             'form'   => $form->createView(),
             'client_validated' => false // to allow change of name/postcode/email
         ];
+    }
+
+    /**
+     * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
+     * becoming Professional team members.
+     *
+     * @throws AccessDeniedException
+     * @return string
+     *
+     */
+    private function determineNoAdminRole()
+    {
+        if ($this->isGranted(EntityDir\User::ROLE_PA_ADMIN)) {
+            return EntityDir\User::ROLE_PA_TEAM_MEMBER;
+        } elseif ($this->isGranted(EntityDir\User::ROLE_PROF_ADMIN)) {
+            return EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+        }
+        $this->createAccessDeniedException('User role not recognised');
     }
 }
