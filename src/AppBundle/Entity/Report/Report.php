@@ -31,6 +31,7 @@ class Report implements ReportInterface
     use ReportTraits\MoneyTransferTrait;
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
+    use ReportTraits\ProfServiceFeesTrait;
 
     /**
      * Reports with total amount of assets
@@ -91,6 +92,10 @@ class Report implements ReportInterface
     const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
     const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
+//    const SECTION_PROF_PREVIOUS_FEES = 'profPreviousFees';
+    const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
+//    const SECTION_PROF_ESTIMATED_FEES = 'profEstimatedFees';
+
     const SECTION_DOCUMENTS = 'documents';
 
     /**
@@ -138,7 +143,9 @@ class Report implements ReportInterface
             self::SECTION_DEPUTY_EXPENSES    => [self::TYPE_103, self::TYPE_102, self::TYPE_103_4, self::TYPE_102_4], // Lay except 104
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
-                //self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
+            ],
+            self::SECTION_PROF_CURRENT_FEES => [
+                self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ],
             self::SECTION_DOCUMENTS          => $allReports,
         ];
@@ -340,6 +347,33 @@ class Report implements ReportInterface
     private $wishToProvideDocumentation;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "current-prof-payments-received"})
+     * @ORM\Column(name="current_prof_payments_received", type="string", nullable=true)
+     */
+    private $currentProfPaymentsReceived;
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @ORM\Column(name="previous_prof_fees_estimate_given", type="string", nullable=true)
+     */
+    private $previousProfFeesEstimateGiven;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report", "report-prof-estimate-fees"})
+     * @ORM\Column(name="prof_fees_estimate_scco_reason", type="string", nullable=true)
+     */
+    private $profFeesEstimateSccoReason;
+
+    /**
      * @var array
      *
      * @JMS\Groups({"report"})
@@ -414,6 +448,8 @@ class Report implements ReportInterface
         $this->documents = new ArrayCollection();
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
+        $this->currentProfPaymentsReceived = null;
+        $this->profServicefees = new ArrayCollection();
     }
 
     /**
@@ -1001,6 +1037,59 @@ class Report implements ReportInterface
     public function setWishToProvideDocumentation($wishToProvideDocumentation)
     {
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentProfPaymentsReceived()
+    {
+        return $this->currentProfPaymentsReceived;
+    }
+
+    /**
+     * @param string $currentProfPaymentsReceived
+     */
+    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    {
+        $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPreviousProfFeesEstimateGiven()
+    {
+        return $this->previousProfFeesEstimateGiven;
+    }
+
+    /**
+     * @param string $previousProfFeesEstimateGiven
+     * @return $this
+     */
+    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
+    {
+        $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfFeesEstimateSccoReason()
+    {
+        return $this->profFeesEstimateSccoReason;
+    }
+
+    /**
+     * @param string $profFeesEstimateSccoReason
+     * @return $this
+     */
+    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
+    {
+        $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
 
         return $this;
     }

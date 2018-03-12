@@ -119,6 +119,7 @@ class ReportController extends RestController
         /* @var $report Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id, 'Report not found');
 
+
         // deputies can only edit their own reports
         if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -297,6 +298,27 @@ class ReportController extends RestController
                 || ('no' == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
+        }
+
+
+        if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
+            $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
+            if ($data['previous_prof_fees_estimate_given'] === 'no') {
+                $report->setProfFeesEstimateSccoReason(null);
+            } else {
+                $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
+            }
+        }
+
+        if (array_key_exists('current_prof_payments_received', $data)) {
+            if ($data['current_prof_payments_received'] =='no') { //reset whole section
+                foreach ($report->getCurrentProfServiceFees() as $f) {
+                    $this->getEntityManager()->remove($f);
+                }
+                $report->setPreviousProfFeesEstimateGiven(null);
+                $report->setProfFeesEstimateSccoReason(null);
+            }
+            $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
         }
 
         $this->getEntityManager()->flush();
