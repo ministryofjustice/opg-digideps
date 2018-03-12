@@ -167,19 +167,7 @@ class ProfCurrentFeesController extends AbstractController
                 }
 
                 return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
-
-//
-//                return $this->redirectToRoute(
-//                    'current_service_fee_step',
-//                    [
-//                        'reportId' => $reportId,
-//                        'feeId'    => $profServiceFee->getId(), // needed for backLink
-//                        'step'     => 3 // step 3 forces check of estimates and redirect to summary
-//                    ]
-//                );
             }
-
-//            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         $backLink = null;
