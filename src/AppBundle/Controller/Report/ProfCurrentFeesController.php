@@ -60,7 +60,7 @@ class ProfCurrentFeesController extends AbstractController
         if ($form->isValid()) {
             switch ($report->getCurrentProfPaymentsReceived()) {
                 case 'yes':
-                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from'=>$fromPage]);
+                    return $this->redirectToRoute('current_service_fee_step', ['reportId' => $reportId, 'step' => 1, 'from'=>'exist']);
                 case 'no':
                     $this->getRestClient()->put('report/' . $reportId, $report, ['current-prof-payments-received']);
 
