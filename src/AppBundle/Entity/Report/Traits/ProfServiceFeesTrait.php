@@ -53,16 +53,6 @@ trait ProfServiceFeesTrait
                 !empty($this->getPreviousProfFeesEstimateGiven());
     }
 
-    /**
-     * //TODO unit test
-     *
-     * @return bool
-     */
-    public function profCurrentFeesNotStarted()
-    {
-        return empty($this->getCurrentProfPaymentsReceived());
-    }
-
 
     /**
      * @return ProfServiceFee[]
