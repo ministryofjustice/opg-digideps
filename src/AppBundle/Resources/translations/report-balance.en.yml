@@ -48,13 +48,13 @@ moreInfo:
   listItem1: the figures you entered for opening and closing balances are correct
   listItem2: you've entered all money in, money out, gifts and expenses correctly
   listItem3: |
-    you haven't entered gifts in both the <a href="%pathToMoneyOut%">Money out</a> section
-    and the Gifts section. If you have, the amounts will be "double counted" and the accounts
+    you haven't entered gifts in both the money out section
+    and the gifts section. If you have, the amounts will be "double counted" and the accounts
     won't balance.
   listItem4: |
-    you haven't entered your deputy expenses in both the Money out section and the Expenses
+    you haven't entered your deputy expenses in both the money out section and the expenses
     section. If you have, the amounts will be "double counted" and the accounts won't balance.
-  listItem5: you've added interest earned on %client%'s account to the Money in section
+  listItem5: you've added interest earned on %client%'s account to the money in section
 
 cantFind:
   heading: Can't find the problem?

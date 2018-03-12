@@ -344,15 +344,22 @@
         {% if readyToBalance and not report.isTotalsMatch %}
 
             <p class="bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
-            <p>{{ 'moreInfo.para5' | trans }}</p>
 
-            <ul class="list list-bullet">
-                <li>{{ 'moreInfo.listItem1' | trans }}</li>
-                <li>{{ 'moreInfo.listItem2' | trans }}</li>
-                <li>{{ 'moreInfo.listItem3' | trans(transOptions) | raw }}</li>
-                <li>{{ 'moreInfo.listItem4' | trans(transOptions) | raw }}</li>
-                <li>{{ 'moreInfo.listItem5' | trans(transOptions) | raw }}</li>
-            </ul>
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'moreInfo.para5' | trans }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <ul class="list list-bullet">
+                        <li>{{ 'moreInfo.listItem1' | trans }}</li>
+                        <li>{{ 'moreInfo.listItem2' | trans }}</li>
+                        <li>{{ 'moreInfo.listItem3' | trans(transOptions) | raw }}</li>
+                        <li>{{ 'moreInfo.listItem4' | trans(transOptions) | raw }}</li>
+                        <li>{{ 'moreInfo.listItem5' | trans(transOptions) | raw }}</li>
+                    </ul>
+                </div>
+            </details>
+
         {% endif %}
     </div>
 
