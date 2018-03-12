@@ -110,6 +110,8 @@ class DoctrineListener
             $report = $entity->getReport();
             if (count($report->getCurrentProfServiceFees()) === 1) {
                 $report->setCurrentProfPaymentsReceived(null);
+                $report->setPreviousProfFeesEstimateGiven(null);
+                $report->setProfFeesEstimateSccoReason(null);
             }
         }
 
