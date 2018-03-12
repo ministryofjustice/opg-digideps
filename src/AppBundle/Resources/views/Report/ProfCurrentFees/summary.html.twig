@@ -237,7 +237,7 @@
                        class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
                 </td>
             </tr>
-            {% if report.previousProfFeesEstimateGiven == 'yes' %}
+            {% if report.previousProfFeesEstimateGiven == 'yes' and report.profFeesEstimateSccoReason %}
                 <tr class="behat-region-scco-reason">
                     <td>
                         {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
