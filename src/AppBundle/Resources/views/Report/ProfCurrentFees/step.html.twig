@@ -26,7 +26,15 @@
 {% endblock %}
 
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
 {% endblock %}
 
 {% block pageContent %}

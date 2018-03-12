@@ -16,6 +16,12 @@
     {% endif %}
 {% endblock %}
 
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+
 {% block pageContent %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
