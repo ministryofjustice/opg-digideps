@@ -42,7 +42,13 @@
                                 <td>{{ ('addTypePage.form.serviceType.' ~ currentFixedServiceFee.serviceTypeId) | trans }}</td>
                                 <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountCharged | money_format }}</td>
                                 <td class="numeric numeric-small width-fifth">£{{ currentFixedServiceFee.amountReceived | money_format }}</td>
-                                <td class="numeric numeric-small no-wrap hard--right width-fifth">{{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y")}}</td>
+                                <td class="numeric numeric-small no-wrap hard--right width-fifth">
+                                    {% if currentFixedServiceFee.paymentReceivedDate %}
+                                        {{ currentFixedServiceFee.paymentReceivedDate  | date("j F Y") }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                         <tr class="hard--bottom">
@@ -80,7 +86,13 @@
                                     <td>{{ ('addTypePage.form.serviceType.' ~ currentAssessedFee.serviceTypeId) | trans }}</td>
                                     <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountCharged | money_format }}</td>
                                     <td class="numeric numeric-small width-fifth">£{{ currentAssessedFee.amountReceived | money_format }}</td>
-                                    <td class="numeric numeric-small no-wrap hard--right width-fifth">{{ currentAssessedFee.paymentReceivedDate  | date("j F Y")}}</td>
+                                    <td class="numeric numeric-small no-wrap hard--right width-fifth">
+                                        {% if currentAssessedFee.paymentReceivedDate %}
+                                            {{ currentAssessedFee.paymentReceivedDate  | date("j F Y") }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                             <tr class="hard--bottom">
