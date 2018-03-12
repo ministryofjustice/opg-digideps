@@ -157,7 +157,7 @@ class ProfCurrentFeesController extends AbstractController
                         'current_service_fee_step', [
                             'reportId' => $reportId,
                             'step'     => 1,
-                            'from'     => 'summary', //2nd addition will have a link to go back to summary (or breadcrumbs)
+                            'from'     => 'another', //2nd addition will have a link to go back to summary (or breadcrumbs)
                         ]
                     );
                 }
@@ -182,10 +182,11 @@ class ProfCurrentFeesController extends AbstractController
 //            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
+        $backLink = null;
         if ($step == 1) {
-            if ($request->get('from') =='exist') {
+            if ($fromPage =='exist') {
                 $backLink =  $this->generateUrl('prof_current_fees_exist', ['reportId' => $reportId]);
-            } else {
+            } if ($fromPage == 'summary') {
                 $backLink =  $this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]);
             }
         }
