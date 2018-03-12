@@ -108,7 +108,7 @@ report:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         notInThePast: Due date cannot be in the past
     dueDateChoice:
-        notBlank:  You must select an option
+        notBlank:  Select an option
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
@@ -116,27 +116,26 @@ report:
         readyForSubmission: Report not ready for submission
     agree: If you want to submit your report, you must agree to the declaration
     agreedBehalfDeputy:
-        notBlank: You must select an option
+        notBlank: Select an option
     agreedBehalfDeputyExplanation:
-        notBlank: You must explain why you are not signing on everyone's behalf
+        notBlank: Explain why you are not signing on everyone's behalf
     hasDebts:
-        notBlank: You must select an option
-        mustHaveAtLeastOneDebt: You must enter at least one debt
+        notBlank: Select an option
+        mustHaveAtLeastOneDebt: Enter at least one debt
     debts-management:
         notBlank: Please tell us how the debt is being managed or reduced
     balanceMismatchExplanation:
-      notBlank: You must give an explanation for balance mismatching
+      notBlank: Give an explanation for balance mismatching
       length: This explanation must be at least {{ limit }} letters long
     reSubmission:
       agree.notBlank: You must agree to this statement to continue
     unsubmissionSections:
-      atLeastOnce: You must select at least one section
+      atLeastOnce: Select at least one section
 
 report-declaration:
     agree:
         notBlank: You must agree to this statement to continue
-report-review-submit:
-    notBlank: You must check this box to continue
+
 login:
     email:
         notBlank: Enter your email
@@ -380,19 +379,19 @@ debt:
       minMessage: The amount must be positive
       maxMessage: The amount must be less than £100,000,000
     moreDetails:
-      notEmpty: You must give us more information about this amount
+      notEmpty: Give us more information about this amount
 
 fee:
     reasonForNoFees:
        notBlank: Explain why you haven't charged any fees for your services
     noFeesChoice.notBlank: Please select either 'Yes' or 'No'
-    mustHaveAtLeastOneFee: You must enter at least one fee
+    mustHaveAtLeastOneFee: Enter at least one fee
     amount:
       notNumeric: Please use numbers only to enter the amount
       minMessage: The amount must be positive
       maxMessage: The amount must be less than £100,000,000
     moreDetails:
-      notEmpty: You must give us more information about this amount
+      notEmpty: Give us more information about this amount
 
 visitsCare:
     doYouLiveWithClient:
@@ -510,8 +509,8 @@ ndr:
         minMessage: The amount must be more than £{{ limit }}
         maxMessage: The amount must be less than £100,000,000
       moreDetails:
-        notEmpty: You must give us more information about this amount
-      atLeastOne: You must add at least one debt
+        notEmpty: Give us more information about this amount
+      atLeastOne: Add at least one debt
   asset:
       exist.notBlank: Please choose an option
       addAnother.notBlank: Please specify if you want to add another asset
