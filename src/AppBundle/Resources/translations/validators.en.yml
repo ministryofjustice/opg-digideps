@@ -458,6 +458,7 @@ profServiceFee:
     paymentReceivedDate:
         notBlank: Please enter date payment was received
         invalidMessage: Enter the date in this format: DD/MM/YYYY
+        notInTheFuture: Payment date cannot be in the future
     estimates:
         previousProfFeesEstimateGiven:
             notBlank: Please select either 'Yes' or 'No'
