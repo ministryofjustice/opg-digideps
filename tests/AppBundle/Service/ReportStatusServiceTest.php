@@ -87,7 +87,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getAvailableSections' => [ //102 sections
                     'decisions','contacts','visitsCare','balance','bankAccounts',
                     'moneyTransfers','moneyIn','moneyOut',
-                    'assets', 'debts','gifts','actions','otherInfo', 'deputyExpenses']
+                    'assets', 'debts','gifts','actions','otherInfo', 'deputyExpenses'],
             ]);
 
         $report->shouldReceive('hasSection')->with('balance')->andReturn($hasBalance);
@@ -483,6 +483,32 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
         $object = new StatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDebtsState()['state']);
+    }
+
+
+    public function profCurrentFeesProvider()
+    {
+
+        $debt = m::mock(Debt::class);
+
+        return [
+            [['getCurrentProfPaymentsReceived' => null], StatusService::STATE_NOT_STARTED],
+            [['getCurrentProfPaymentsReceived'=>'yes', 'profCurrentFeesSectionCompleted' => false], StatusService::STATE_INCOMPLETE],
+            [['getCurrentProfPaymentsReceived'=>'yes', 'profCurrentFeesSectionCompleted' => true], StatusService::STATE_DONE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider profCurrentFeesProvider
+     */
+    public function profCurrentFeesState($mocks, $state)
+    {
+        $report = $this->getReportMocked($mocks);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_CURRENT_FEES)->andReturn(true);
+
+        $object = new StatusService($report);
+        $this->assertEquals($state, $object->getProfCurrentFeesState()['state']);
     }
 
     public function balanceProvider()

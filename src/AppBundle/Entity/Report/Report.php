@@ -92,9 +92,9 @@ class Report implements ReportInterface
     const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
     const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
-    const SECTION_PROF_PREVIOUS_FEES = 'profPreviousFees';
+//    const SECTION_PROF_PREVIOUS_FEES = 'profPreviousFees';
     const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
-    const SECTION_PROF_ESTIMATED_FEES = 'profEstimatedFees';
+//    const SECTION_PROF_ESTIMATED_FEES = 'profEstimatedFees';
 
     const SECTION_DOCUMENTS = 'documents';
 

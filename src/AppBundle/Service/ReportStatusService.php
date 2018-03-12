@@ -343,8 +343,6 @@ class ReportStatusService
      */
     public function getProfCurrentFeesState()
     {
-        // if the section is not relevant for the report, then it's done
-        //TODO not sure this is needed. It shouln't even be called
         if (!$this->report->hasSection(Report::SECTION_PROF_CURRENT_FEES)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
@@ -513,12 +511,12 @@ class ReportStatusService
                 return $this->getExpensesState()['state'];
             case Report::SECTION_PA_DEPUTY_EXPENSES:
                 return $this->getPaFeesExpensesState()['state'];
-            case Report::SECTION_PROF_PREVIOUS_FEES:
-                return $this->getProfPreviousFeesState()['state'];
+//            case Report::SECTION_PROF_PREVIOUS_FEES:
+//                return $this->getProfPreviousFeesState()['state'];
             case Report::SECTION_PROF_CURRENT_FEES:
                 return $this->getProfCurrentFeesState()['state'];
-            case Report::SECTION_PROF_ESTIMATED_FEES:
-                return $this->getProfEstimatedFeesState()['state'];
+//            case Report::SECTION_PROF_ESTIMATED_FEES:
+//                return $this->getProfEstimatedFeesState()['state'];
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState()['state'];
             default:
