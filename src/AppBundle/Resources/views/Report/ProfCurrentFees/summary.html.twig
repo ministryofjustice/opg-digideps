@@ -118,10 +118,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesCharged'] | number_format(2) }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalFixedFeesReceived'] | number_format(2) }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -169,10 +169,10 @@
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesCharged'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesCharged'] | number_format(2) }}</span>
                     </td>
                     <td class="text--right">
-                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesReceived'] | number_format }}</span>
+                        <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesReceived'] | number_format(2) }}</span>
                     </td>
                     <td colspan="2"></td>
                 </tr>
@@ -189,10 +189,10 @@
                         <span class="heading-medium">{{ (page ~ '.table.grandtotal') | trans }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium behat-region-grand-total-charged">£{{ (report.feeTotals['totalAssessedFeesCharged'] + report.feeTotals['totalFixedFeesCharged']) | number_format }}</span>
+                        <span class="heading-medium behat-region-grand-total-charged">£{{ (report.feeTotals['totalAssessedFeesCharged'] + report.feeTotals['totalFixedFeesCharged']) | number_format(2) }}</span>
                     </td>
                     <td class="numeric-small width-sixth grandtotals-border">
-                        <span class="heading-medium behat-region-grand-total-received">£{{ (report.feeTotals['totalAssessedFeesReceived'] + report.feeTotals['totalFixedFeesReceived']) | number_format }}</span>
+                        <span class="heading-medium behat-region-grand-total-received">£{{ (report.feeTotals['totalAssessedFeesReceived'] + report.feeTotals['totalFixedFeesReceived']) | number_format(2) }}</span>
                     </td>
                     <td class="width-fifth"></td>
                     <td class="width-seventh"></td>
