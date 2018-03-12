@@ -144,10 +144,10 @@ class ProfCurrentFeesController extends AbstractController
                         'report/' . $report->getId() . '/prof-service-fee',
                         $profServiceFee, ['report-object', 'prof-service-fees']
                     );
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
+//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been added');
                 } else { // EDIT
                     $this->getRestClient()->put('prof-service-fee/' . $profServiceFee->getId(), $profServiceFee, ['prof-service-fee-serviceType', 'prof-service-fees']);
-                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
+//                    $request->getSession()->getFlashBag()->add('notice', 'Service fee has been updated');
                 }
 
                 // Handle add another pattern
