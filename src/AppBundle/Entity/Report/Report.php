@@ -63,6 +63,8 @@ class Report implements ReportInterface
     const TYPE_103_4_5 = '103-4-5';
     const TYPE_102_4_5 = '102-4-5';
 
+    const ENABLE_FEE_SECTIONS = false;
+
     private static $reportTypes = [
         self::TYPE_103, self::TYPE_102, self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4,
         self::TYPE_103_6, self::TYPE_102_6, self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6,
@@ -142,9 +144,9 @@ class Report implements ReportInterface
             self::SECTION_PA_DEPUTY_EXPENSES => [
                 self::TYPE_103_6, self::TYPE_102_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA except 104-6
             ],
-            self::SECTION_PROF_CURRENT_FEES => [
+            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
                 self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
-            ],
+            ] : [],
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }
