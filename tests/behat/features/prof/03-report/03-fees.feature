@@ -112,7 +112,10 @@ Feature: PROF fees
     When I click on "edit-exist" in the "has-fees" region
     And the step with the following values CAN be submitted:
       | prof_service_fees_currentProfPaymentsReceived_1 | no |
-    Then I should see the "start-page" region
+    And I should see "No" in the "has-fees" region
+    And I should not see the "assessed-fee-annual-management-interim" region
+    And I should not see the "previous-estimates" region
+    And I should not see the "scco-reason" region
     # restore data before scenario
     And I load the application status from "prof-fees-expenses-before-edit"
 

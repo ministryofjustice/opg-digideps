@@ -39,7 +39,6 @@ abstract class ProfServiceFee
      * @var array
      */
     public static $serviceTypeIds = [
-        // id => hasMoreDetails
         'annual-report' => false,
         'annual-management-interim' => false,
         'annual-management-final' => false,
@@ -47,9 +46,6 @@ abstract class ProfServiceFee
         'conveyancing' => false,
         'tax-returns' => false,
         'trust-applications' => false,
-//        'litigation' => true,
-//        'specialist-advice' => true,
-//        'statutory-wills' => false,
         'other-costs' => false
     ];
 
