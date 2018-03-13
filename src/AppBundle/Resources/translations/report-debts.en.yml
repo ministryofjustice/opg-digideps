@@ -2,7 +2,7 @@ startPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
   pageTitle: "Debts"
   pageSectionDescription: |
-    Use this section to tell us about %client%'s debts, for example,
+    Use this section to tell us about %client%'s debts, for example, overdue
     care fees, credit cards or loans.
   startButton: Start debts
 
@@ -34,8 +34,8 @@ editPage:
 
 summaryPage:
   weAskAbout: |
-    In this section, we ask you about %client%'s debts, for example, care fees, credit cards or loans.
-  moreAbout: more about %client%'s other debts of £%amount%
+    In this section, we ask you about %client%'s debts, for example, overdue care fees, credit cards or loans.
+  moreAbout: %client%'s other debts of £%amount%
 
 form:
   entries:
