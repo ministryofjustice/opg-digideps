@@ -511,12 +511,8 @@ class ReportStatusService
                 return $this->getExpensesState()['state'];
             case Report::SECTION_PA_DEPUTY_EXPENSES:
                 return $this->getPaFeesExpensesState()['state'];
-//            case Report::SECTION_PROF_PREVIOUS_FEES:
-//                return $this->getProfPreviousFeesState()['state'];
             case Report::SECTION_PROF_CURRENT_FEES:
                 return $this->getProfCurrentFeesState()['state'];
-//            case Report::SECTION_PROF_ESTIMATED_FEES:
-//                return $this->getProfEstimatedFeesState()['state'];
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState()['state'];
             default:

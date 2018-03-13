@@ -20,7 +20,6 @@ class Fee
      * @var array
      */
     public static $feeTypeIds = [
-        // id => hasMoreDetails
         'work-up-to-and-including-cot-made' => false,
         'annual-management-fee' => false,
         'annual-property-management-fee' => false,

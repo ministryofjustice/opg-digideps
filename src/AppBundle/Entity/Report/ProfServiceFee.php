@@ -24,43 +24,6 @@ abstract class ProfServiceFee
     const TYPE_ESTIMATED_FEE = 'estimated';
 
     /**
-     * Hold service type
-     *
-     * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
-     *  in order to keep it simple
-     *
-     * @var array
-     */
-    public static $serviceTypeIds = [
-        // id => hasMoreDetails
-        'annual-report' => false,
-        'annual-management-interim' => false,
-        'annual-management-final' => false,
-        'appointment' => false,
-        'conveyancing' => false,
-        'litigation' => true,
-        'specialist-advice' => true,
-        'statutory-wills' => false,
-        'tax-returns' => false,
-        'trust-applications' => false,
-        'other-costs' => false
-    ];
-
-
-    /**
-     * Static list of fee type ids
-     * previous, current or estimated
-     *
-     * @var array
-     */
-    public static $feeTypeIds = [
-        // id => hasMoreDetails
-        'previous' => false,
-        'estimated' => false,
-        'current' => false
-    ];
-
-    /**
      * @var int
      * @JMS\Type("integer")
      *

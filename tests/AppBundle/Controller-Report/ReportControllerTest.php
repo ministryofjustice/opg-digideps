@@ -553,13 +553,13 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(1.1 + 1.2, $data['fees_total']);
         $this->assertEquals('yes', $data['has_fees']);
 
-        $row = $data['fees'][1]; //position in Fee::$feeTypeIds
+        $row = $data['fees'][1];
         $this->assertEquals('annual-management-fee', $row['fee_type_id']);
         $this->assertEquals(1.1, $row['amount']);
         $this->assertEquals(false, $row['has_more_details']);
         $this->assertEquals(null, $row['more_details']);
 
-        $row = $data['fees'][5]; //position in Fee::$feeTypeIds
+        $row = $data['fees'][5];
         $this->assertEquals('travel-costs', $row['fee_type_id']);
         $this->assertEquals(1.2, $row['amount']);
         $this->assertEquals(true, $row['has_more_details']);
