@@ -397,13 +397,13 @@ visitsCare:
     doYouLiveWithClient:
         notBlank: Please select either 'Yes' or 'No'
     howOftenDoYouContactClient:
-        notBlank: Give us more details about how often you contact the client and make sure others are looking after the client's needs
+        notBlank: Tell us how often you contact the client and how you make sure others are looking after the client's needs
     doesClientReceivePaidCare:
         notBlank: Please select either 'Yes' or 'No'
     howIsCareFunded:
         notBlank: Select an option
     whoIsDoingTheCaring:
-        notBlank: Give us more details about who is caring for the client
+        notBlank: Tell us who is providing the client's care
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
         invalidMessage: Enter the date in this format: DD/MM/YYYY
@@ -485,11 +485,11 @@ ndr:
       doYouLiveWithClient:
           notBlank: Please select either 'Yes' or 'No'
       howOftenDoYouContactClient:
-          notBlank: Give us more information about how often you are in touch with the client and how you make sure their needs are met
+          notBlank: Tell us how often you contact the client and how you make sure others are looking after the client's needs
       doesClientReceivePaidCare:
           notBlank: Please select either 'Yes' or 'No'
       howIsCareFunded:
-          notBlank: Select one of the options below
+          notBlank: Select an option
       whoIsDoingTheCaring:
           notBlank: Give us more information about who is caring for the client
       whenWasCarePlanLastReviewed:
@@ -565,7 +565,7 @@ ndr:
               notBlank: Give us more information about who lives at the property
               maxMessage: Your answer can't be longer than 500 letters
           owned:
-              notBlank: Select one of the options below
+              notBlank: Select an option
           ownedPercentage:
               notBlank: Tell us what the client's share of the property is
               type: Enter a number between 1 and 99 for the property share
