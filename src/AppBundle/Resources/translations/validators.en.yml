@@ -158,7 +158,7 @@ contact:
         maxMessage: The description can't be longer than {{ limit }} letters
     explanation:
         notBlank: Please add an explanation
-        length: Please explain in a sentence why you chose this person
+        length: Please explain in a few words why you asked this person to help you
     noContactsChoice:
         notBlank: Please select either 'Yes' or 'No'
     reasonForNoContacts:
