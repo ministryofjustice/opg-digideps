@@ -384,6 +384,16 @@ class Report implements ReportInterface
     private $unsubmittedSectionsList;
 
     /**
+     * set Due date to +8 weeks after end date
+     */
+    public function updateDueDateBasedOnEndDate()
+    {
+        // due date set to 8 exactly weeks (56 days) after the start date
+        $this->dueDate = clone $this->endDate;
+        $this->dueDate->add(new \DateInterval('P56D'));
+    }
+
+    /**
      * Report constructor.
      *
      * @param Client $client
@@ -401,9 +411,7 @@ class Report implements ReportInterface
         $this->client = $client;
         $this->startDate = new \DateTime($startDate->format('Y-m-d'));
         $this->endDate = new \DateTime($endDate->format('Y-m-d'));
-        // due date set to 8 exactly weeks (56 days) after the start date
-        $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P56D'));
+        $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
             throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');

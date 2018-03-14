@@ -203,6 +203,9 @@ class ReportController extends RestController
 
         if (array_key_exists('end_date', $data)) {
             $report->setEndDate(new \DateTime($data['end_date']));
+            //end date could be updated automatically with a listener, but better not to overload
+            // the default behaviour until the logic is 100% clear
+            $report->updateDueDateBasedOnEndDate();
         }
 
 
