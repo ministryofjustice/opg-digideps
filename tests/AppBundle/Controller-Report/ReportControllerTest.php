@@ -321,7 +321,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
         ])['data'];
-        $this->assertEquals(['new'=>1, 'archived'=>0], $data['counts']);
+        $this->assertEquals(['new' => 1, 'archived' => 0], $data['counts']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
 
         return $report->getId();
@@ -342,7 +342,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
             'data'        => [
-                'un_submit_date'             => '2018-01-01',
+                'un_submit_date'            => '2018-01-01',
                 'due_date'                  => '2019-01-01',
                 'unsubmitted_sections_list' => 'decisions,contacts',
             ],
@@ -351,7 +351,7 @@ class ReportControllerTest extends AbstractTestController
         // both
         $q = http_build_query(['groups' => ['report']]);
         //assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', '/report/' . $reportId  . '?' . $q, [
+        $data = $this->assertJsonRequest('GET', '/report/' . $reportId . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenDeputy,
         ])['data'];
@@ -385,6 +385,9 @@ class ReportControllerTest extends AbstractTestController
         //        $reportId = self::$report1->getId();
         $url = '/report/' . $reportId;
 
+        self::fixtures()->getReportById($reportId)->setDueDate(new \DateTime('2016-11-30'));
+        self::fixtures()->flush()->clear();
+
         // assert get
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -405,8 +408,8 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2016-01-01', $data['start_date']);
         $this->assertEquals('2016-11-30', $data['end_date']);
+        $this->assertEquals('2017-01-25', $data['due_date']);
     }
-
 
 
     public function testDebts()
