@@ -10,9 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/pa")
+ * @Route("/org")
  */
-class PaController extends RestController
+class OrgController extends RestController
 {
     /**
      * Bulk insert

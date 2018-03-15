@@ -46,7 +46,7 @@ class PaControllerTest extends AbstractTestController
 
     public function testAddBulkAuth()
     {
-        $url = '/pa/bulk-add';
+        $url = '/org/bulk-add';
 
         $this->assertEndpointNeedsAuth('POST', $url);
 
@@ -56,7 +56,7 @@ class PaControllerTest extends AbstractTestController
     public function testAddBulk()
     {
         // add
-        $data = $this->assertJsonRequest('POST', '/pa/bulk-add', [
+        $data = $this->assertJsonRequest('POST', '/org/bulk-add', [
             'data' => CsvUploader::compressData(
                 [
                     ['Dep Type'=>23] + PaServiceTest::$deputy1 + PaServiceTest::$client1,
