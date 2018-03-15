@@ -394,7 +394,6 @@ class IndexController extends AbstractController
      */
     public function uploadPaUsersAction(Request $request)
     {
-        $this->get('pa_service');
         $chunkSize = 100;
 
         $form = $this->createForm(FormDir\UploadCsvType::class, null, [
@@ -440,7 +439,7 @@ class IndexController extends AbstractController
                 // small chunk => upload in same request
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
-                    $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+                    $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
                     return $this->redirect($this->generateUrl('admin_org_upload'));
                 }
 

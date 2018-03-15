@@ -71,7 +71,7 @@ class AjaxController extends AbstractController
                 new JsonResponse('Chunk not found', 500);
             }
 
-            $ret = $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+            $ret = $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
 
             $redis->del($chunkId);
 
