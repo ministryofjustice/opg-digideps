@@ -389,7 +389,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/pa-upload", name="admin_org_upload")
+     * @Route("/org-csv-upload", name="admin_org_upload")
      * @Template
      */
     public function uploadOrgUsersAction(Request $request)
