@@ -61,6 +61,7 @@ class ProfServiceFeeController extends RestController
 
      * @param Request $request
      * @param $id
+     *
      * @return null|object
      */
     public function getOneById(Request $request, $id)
@@ -92,7 +93,7 @@ class ProfServiceFeeController extends RestController
     }
 
     /**
-     * @param array                      $data
+     * @param array                           $data
      * @param EntityDir\Report\ProfServiceFee $profServiceFee
      *
      * @return \AppBundle\Entity\Report\Report $report
@@ -120,7 +121,6 @@ class ProfServiceFeeController extends RestController
             if ($profServiceFee->getPaymentReceived() == 'no') {
                 $profServiceFee->setAmountReceived(null);
                 $profServiceFee->setPaymentReceivedDate(null);
-
             } else {
                 if (array_key_exists('amount_received', $data)) {
                     $profServiceFee->setAmountReceived($data['amount_received']);

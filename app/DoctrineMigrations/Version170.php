@@ -24,7 +24,6 @@ class Version170 extends AbstractMigration
         $this->addSql('ALTER TABLE report ADD current_prof_payments_received VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD previous_prof_fees_estimate_given VARCHAR(3) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD prof_fees_estimate_scco_reason TEXT DEFAULT NULL');
-
     }
 
     /**
@@ -38,6 +37,5 @@ class Version170 extends AbstractMigration
         $this->addSql('DROP TABLE prof_service_fee');
         $this->addSql('ALTER TABLE report DROP current_prof_payment_received');
         $this->addSql('ALTER TABLE report DROP prof_fees_estimate_scco_reason');
-
     }
 }

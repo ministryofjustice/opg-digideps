@@ -20,7 +20,6 @@ class Version167 extends AbstractMigration
 
         $this->addSql('ALTER TABLE report ADD due_date DATE DEFAULT NULL');
         $this->addSql('ALTER TABLE report DROP metadata');
-
     }
 
     /**

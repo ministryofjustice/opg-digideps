@@ -411,7 +411,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2017-01-25', $data['due_date']);
     }
 
-
     public function testDebts()
     {
         $reportId = self::$report1->getId();

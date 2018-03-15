@@ -1075,6 +1075,7 @@ class Report implements ReportInterface
 
     /**
      * @param string $previousProfFeesEstimateGiven
+     *
      * @return $this
      */
     public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
@@ -1093,6 +1094,7 @@ class Report implements ReportInterface
 
     /**
      * @param string $profFeesEstimateSccoReason
+     *
      * @return $this
      */
     public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)

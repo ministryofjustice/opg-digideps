@@ -87,7 +87,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
     public function testSubmitValid()
     {
         $report = $this->report;
-        
+
         // mocks
         $this->em->shouldReceive('detach');
         // assert persists on report and submission record
@@ -153,7 +153,6 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         //assert new year report
         $this->assertNull($newYearReport);
     }
-
 
     public function testSubmitAdditionalDocuments()
     {

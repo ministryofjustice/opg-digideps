@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Expense;
-use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\ProfServiceFee;
 use AppBundle\Entity\Report\ProfServiceFeeCurrent;
 use AppBundle\Entity\Report\Report;
@@ -35,7 +33,7 @@ trait ProfServiceFeesTrait
      */
     public function getCurrentProfServiceFees()
     {
-        return $this->getProfServiceFees()->filter(function($profServiceFee) {
+        return $this->getProfServiceFees()->filter(function ($profServiceFee) {
             return $profServiceFee instanceof ProfServiceFeeCurrent;
         });
     }
@@ -55,7 +53,6 @@ trait ProfServiceFeesTrait
 
         return $answeredNoFirstQuestion || $answeredYesAndTheRestisCompleted;
     }
-
 
     /**
      * @return ProfServiceFee[]
