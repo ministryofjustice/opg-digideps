@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="pa_dashboard")
+     * @Route("/", name="org_dashboard")
      * @Template
      */
     public function dashboardAction(Request $request)
@@ -105,7 +105,7 @@ class IndexController extends AbstractController
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
-                return $this->redirectToRoute('pa_dashboard');
+                return $this->redirectToRoute('org_dashboard');
             } else {
                 $form->get('confirmArchive')->addError(new FormError($this->get('translator')->trans('form.error.confirmArchive', [], 'pa-client-archive')));
             }

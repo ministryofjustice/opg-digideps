@@ -161,12 +161,12 @@ class UserController extends AbstractController
             return $this->redirect($this->generateUrl([
                 EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
                 EntityDir\User::ROLE_AD             => 'ad_homepage',
-                EntityDir\User::ROLE_PA_NAMED       => 'pa_dashboard',
-                EntityDir\User::ROLE_PA_ADMIN       => 'pa_dashboard',
-                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'pa_dashboard',
-                EntityDir\User::ROLE_PROF_NAMED       => 'pa_dashboard',
-                EntityDir\User::ROLE_PROF_ADMIN       => 'pa_dashboard',
-                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'pa_dashboard',
+                EntityDir\User::ROLE_PA_NAMED       => 'org_dashboard',
+                EntityDir\User::ROLE_PA_ADMIN       => 'org_dashboard',
+                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'org_dashboard',
+                EntityDir\User::ROLE_PROF_NAMED       => 'org_dashboard',
+                EntityDir\User::ROLE_PROF_ADMIN       => 'org_dashboard',
+                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'org_dashboard',
                 EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
             ][$user->getRoleName()]));
         }

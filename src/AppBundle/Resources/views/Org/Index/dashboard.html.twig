@@ -9,7 +9,7 @@
 
 {% block pageContent %}
 
-    <form action="{{ path('pa_dashboard') }}" method="GET" class="search-form push--ends">
+    <form action="{{ path('org_dashboard') }}" method="GET" class="search-form push--ends">
         <fieldset>
             <legend class="visually-hidden">{{ 'search' | trans({}, 'common') }}</legend>
             <label for="search" class="search-label">{{ 'searchBy' | trans }}</label>
@@ -17,7 +17,7 @@
                    class="js-search-focus search-input form-control">
             <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
             {% if filters.q %}
-                <a href="{{ path('pa_dashboard', {'status': filters.status}) }}">{{ 'clearSearch' | trans({}, 'common') }}</a>
+                <a href="{{ path('org_dashboard', {'status': filters.status}) }}">{{ 'clearSearch' | trans({}, 'common') }}</a>
             {% endif %}
         </fieldset>
 
@@ -27,25 +27,25 @@
         <div class="tabs-nav">
             <ul class="tabs-list" role="tablist">
                 <li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
+                    <a href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
                         <span class="data-item bold-large">{{ counts.total }}</span>
                         <span class="data-item bold-xsmall">{{ 'tabClients' | trans }}</span>
                     </a>
                 </li>
                 <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-unstarted">
+                    <a href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-unstarted">
                         <span class="data-item bold-large">{{ counts.notStarted }}</span>
                         <span class="data-item bold-xsmall">{{ 'notStarted' | trans({}, 'common') }}</span>
                     </a>
                 </li>
                 <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-in-progress">
+                    <a href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-in-progress">
                         <span class="data-item bold-large">{{ counts.notFinished }}</span>
                         <span class="data-item bold-xsmall">{{ 'inProgress' | trans({}, 'common') }}</span>
                     </a>
                 </li>
                 <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('pa_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0"  class="behat-link-tab-ready">
+                    <a href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0"  class="behat-link-tab-ready">
                         <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
                         <span class="data-item bold-xsmall">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
                     </a>
@@ -114,7 +114,7 @@
         currentOffset: filters.offset,
         recordsPerPage: filters.limit,
         totalRecords: counts[filters.status ?: 'total'],
-        routeName: 'pa_dashboard',
+        routeName: 'org_dashboard',
         routeParams: {
             'status': filters.status,
             'q': filters.q
