@@ -40,7 +40,7 @@
     </a>
     <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
         <h2 class="heading-small">{{ 'settings-page.links.password.title' | trans }}</h2>
     </a>
     <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>

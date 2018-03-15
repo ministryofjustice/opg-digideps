@@ -34,7 +34,7 @@ class SettingsController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
-     * @Route("/pa/settings/your-details/change-password", name="pa_profile_password_edit")
+     * @Route("/pa/settings/your-details/change-password", name="org_profile_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
