@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Pa;
+namespace AppBundle\Controller\Org;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;

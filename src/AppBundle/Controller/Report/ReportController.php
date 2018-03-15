@@ -201,7 +201,7 @@ class ReportController extends AbstractController
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
         $template = $this->getUser()->isDeputyOrg()
-            ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
+            ? 'AppBundle:Org/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
         $vars = [

@@ -94,7 +94,7 @@
                     <div class="column-one-half">
                         <ul>
                             {% if report.hasSection('decisions') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'decisions',
                                     report: report,
@@ -105,7 +105,7 @@
                             {% endif %}
 
                             {% if report.hasSection('contacts') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'contacts',
                                     report: report,
@@ -117,7 +117,7 @@
                             {% endif %}
 
                             {% if report.hasSection('visitsCare') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'visits_care',
                                     report: report,
@@ -128,7 +128,7 @@
                             {% endif %}
 
                             {% if report.hasSection('lifestyle') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'lifestyle',
                                     report: report,
@@ -139,7 +139,7 @@
                             {%  endif %}
 
                             {% if report.hasSection('profCurrentFees') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'prof_current_fees',
                                 report: report,
@@ -150,7 +150,7 @@
                             {% endif %}
                             
                             {% if report.hasSection('paDeputyExpenses') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
                                 subSection: 'pa_fee_expense',
                                 report: report,
@@ -161,7 +161,7 @@
                             {%  endif %}
 
                             {% if report.hasSection('gifts') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'gifts',
                                     report: report,
@@ -172,7 +172,7 @@
                             {% endif %}
 
                             {% if report.hasSection('actions') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'actions',
                                     report: report,
@@ -183,7 +183,7 @@
                             {% endif %}
 
                             {% if report.hasSection('otherInfo') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'other_info',
                                     linkToSubSection: path('other_info', {reportId: report.id}),
@@ -201,7 +201,7 @@
                         <ul>
 
                             {% if report.hasSection('bankAccounts') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'bank_accounts',
                                     report: report,
@@ -212,7 +212,7 @@
                             {% endif %}
 
                             {% if report.hasSection('balance') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'balance',
                                     report: report,
@@ -224,7 +224,7 @@
                             {% endif %}
 
                             {% if report.hasSection('moneyTransfers') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_transfers',
                                     report: report,
@@ -235,7 +235,7 @@
                             {% endif %}
 
                             {% if report.hasSection('moneyIn') and report.hasSection('moneyOut') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_in',
                                     report: report,
@@ -243,7 +243,7 @@
                                     warning: true,
                                     description: true
                                 } %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_out',
                                     report: report,
@@ -253,7 +253,7 @@
                                 } %}
                             {% endif %}
                             {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_in_short',
                                     report: report,
@@ -261,7 +261,7 @@
                                     warning: true,
                                     description: true
                                 } %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'money_out_short',
                                     report: report,
@@ -272,7 +272,7 @@
                             {% endif %}
 
                             {% if report.hasSection('assets') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'assets',
                                     report: report,
@@ -283,7 +283,7 @@
                             {% endif %}
 
                             {% if report.hasSection('debts') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'debts',
                                     report: report,
@@ -294,7 +294,7 @@
                             {% endif %}
 
                             {% if report.hasSection('documents') %}
-                                {% include 'AppBundle:Pa/ClientProfile:_subsection.html.twig' with {
+                                {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                     transDomain: translationDomain,
                                     subSection: 'documents',
                                     report: report,
@@ -310,19 +310,19 @@
         </div>
     </div>
 
-    {% include 'AppBundle:Pa/ClientProfile:_notes.html.twig' with {
+    {% include 'AppBundle:Org/ClientProfile:_notes.html.twig' with {
     notes: report.client.notes,
     } %}
 
-    {% include 'AppBundle:Pa/ClientProfile:_contacts.html.twig' with {
+    {% include 'AppBundle:Org/ClientProfile:_contacts.html.twig' with {
     contacts: report.client.clientContacts,
     } %}
 
-    {% include 'AppBundle:Pa/ClientProfile:_reports.html.twig' with {
+    {% include 'AppBundle:Org/ClientProfile:_reports.html.twig' with {
     reports: report.client.submittedReports,
     } %}
 
-    {% include 'AppBundle:Pa/ClientProfile:_client.html.twig' with {
+    {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
     client: report.client,
     } %}
 

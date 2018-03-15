@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Pa;
+namespace AppBundle\Controller\Org;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
@@ -20,7 +20,7 @@ class ClientContactController extends AbstractController
 
     /**
      * @Route("add", name="clientcontact_add")
-     * @Template("AppBundle:Pa/ClientProfile:addContact.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:addContact.html.twig")
      */
     public function addAction(Request $request)
     {
@@ -58,7 +58,7 @@ class ClientContactController extends AbstractController
 
     /**
      * @Route("{id}/edit", name="clientcontact_edit")
-     * @Template("AppBundle:Pa/ClientProfile:editContact.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:editContact.html.twig")
      */
     public function editAction(Request $request, $id)
     {
@@ -88,7 +88,7 @@ class ClientContactController extends AbstractController
 
     /**
      * @Route("{id}/delete", name="clientcontact_delete")
-     * @Template("AppBundle:Pa/ClientProfile:deleteContactConfirm.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:deleteContactConfirm.html.twig")
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {
@@ -108,7 +108,7 @@ class ClientContactController extends AbstractController
 
     /**
      * @Route("{id}/delete/confirm", name="clientcontact_delete_confirm")
-     * @Template("AppBundle:Pa/ClientProfile:deleteContactConfirm.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:deleteContactConfirm.html.twig")
      */
     public function deleteConfirmedAction(Request $request, $id)
     {
