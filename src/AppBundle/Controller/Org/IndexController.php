@@ -56,7 +56,7 @@ class IndexController extends AbstractController
      * Report is only associated to one client, and it's needed for back link routing,
      * so it's retrieved with the report with a single API call
      *
-     * @Route("/client/{clientId}/edit", name="pa_client_edit")
+     * @Route("/client/{clientId}/edit", name="org_client_edit")
      * @Template
      */
     public function clientEditAction(Request $request, $clientId)
@@ -88,7 +88,7 @@ class IndexController extends AbstractController
     /**
      * Client archive page
      *
-     * @Route("/client/{clientId}/archive", name="pa_client_archive")
+     * @Route("/client/{clientId}/archive", name="org_client_archive")
      * @Template
      */
     public function clientArchiveAction(Request $request, $clientId)

@@ -48,6 +48,6 @@ class ClientType extends AbstractType
 
     public function getName()
     {
-        return 'pa_client_edit';
+        return 'org_client_edit';
     }
 }

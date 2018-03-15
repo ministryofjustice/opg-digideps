@@ -33,6 +33,6 @@ class ClientArchiveType extends AbstractType
 
     public function getName()
     {
-        return 'pa_client_archive';
+        return 'org_client_archive';
     }
 }
