@@ -392,7 +392,7 @@ class IndexController extends AbstractController
      * @Route("/pa-upload", name="admin_org_upload")
      * @Template
      */
-    public function uploadPaUsersAction(Request $request)
+    public function uploadOrgUsersAction(Request $request)
     {
         $chunkSize = 100;
 
