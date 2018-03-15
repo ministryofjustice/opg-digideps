@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TeamController extends AbstractController
 {
     /**
-     * @Route("", name="pa_team")
+     * @Route("", name="org_team")
      * @Template
      */
     public function listAction(Request $request)
@@ -68,7 +68,7 @@ class TeamController extends AbstractController
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                return $this->redirectToRoute('pa_team');
+                return $this->redirectToRoute('org_team');
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
@@ -120,7 +120,7 @@ class TeamController extends AbstractController
                     $redirectRoute = 'logout';
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'The user has been edited');
-                    $redirectRoute = 'pa_team';
+                    $redirectRoute = 'org_team';
                 }
 
                 return $this->redirectToRoute($redirectRoute);
@@ -173,7 +173,7 @@ class TeamController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('pa_team');
+        return $this->redirectToRoute('org_team');
     }
 
     /**
@@ -219,6 +219,6 @@ class TeamController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('pa_team');
+        return $this->redirectToRoute('org_team');
     }
 }
