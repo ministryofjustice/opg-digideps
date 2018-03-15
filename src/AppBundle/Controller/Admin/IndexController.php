@@ -447,7 +447,7 @@ class IndexController extends AbstractController
                 $chunks = array_chunk($data, $chunkSize);
                 foreach ($chunks as $k => $chunk) {
                     $compressedData = CsvUploader::compressData($chunk);
-                    $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
+                    $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
                 }
                 return $this->redirect($this->generateUrl('admin_org_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
