@@ -3,8 +3,6 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Report\VisitsCare;
-use AppBundle\Entity\Report\Lifestyle;
 
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
@@ -319,8 +317,6 @@ class Report implements ReportInterface
      */
     private $availableSections;
 
-
-
     /**
      * @return int $id
      */
@@ -414,7 +410,6 @@ class Report implements ReportInterface
     {
         $this->dueDate = $dueDate;
     }
-
 
     /**
      * Due date
@@ -864,7 +859,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  bool $noTransfersToAdd
+     * @param  bool  $noTransfersToAdd
      * @return $this
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
@@ -1079,7 +1074,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param  array $availableSections
+     * @param  array  $availableSections
      * @return Report
      */
     public function setAvailableSections($availableSections)
@@ -1105,7 +1100,7 @@ class Report implements ReportInterface
      */
     public function isSubmitted()
     {
-        return (bool)$this->getSubmitted();
+        return (bool) $this->getSubmitted();
     }
 
     /**
@@ -1123,5 +1118,4 @@ class Report implements ReportInterface
                 '-104' : ''
             );
     }
-
 }

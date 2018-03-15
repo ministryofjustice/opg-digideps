@@ -93,7 +93,6 @@ class MultiDocumentZipFileCreator
         return $parentFilename;
     }
 
-
     public function cleanUp()
     {
         if ($this->zipFile && file_exists($this->zipFile)) {

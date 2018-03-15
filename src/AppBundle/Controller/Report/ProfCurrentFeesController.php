@@ -174,7 +174,8 @@ class ProfCurrentFeesController extends AbstractController
         if ($step == 1) {
             if ($fromPage =='exist') {
                 $backLink =  $this->generateUrl('prof_current_fees_exist', ['reportId' => $reportId]);
-            } if ($fromPage == 'summary') {
+            }
+            if ($fromPage == 'summary') {
                 $backLink =  $this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]);
             }
         }
