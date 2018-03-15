@@ -35,7 +35,7 @@
         </p>
     {% endif %}
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_show' : 'user_show') }}" class="behat-link-profile-show">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="behat-link-profile-show">
         <h2 class="heading-small">{{ 'settings-page.links.profile.title' | trans }}</h2>
     </a>
     <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>

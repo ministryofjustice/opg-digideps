@@ -73,7 +73,7 @@ class SettingsController extends AbstractController
      * - display the Your details page
      *
      * @Route("/deputyship-details/your-details", name="user_show")
-     * @Route("/pa/settings/your-details", name="pa_profile_show")
+     * @Route("/pa/settings/your-details", name="org_profile_show")
      * @Template()
      **/
     public function profileAction()
@@ -121,7 +121,7 @@ class SettingsController extends AbstractController
             } else {
                 $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
                 $redirectRoute = ($user->isDeputyPA() || $user->isDeputyProf())
-                    ? 'pa_profile_show'
+                    ? 'org_profile_show'
                     : 'user_show';
             }
 
