@@ -389,7 +389,7 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/pa-upload", name="admin_pa_upload")
+     * @Route("/pa-upload", name="admin_org_upload")
      * @Template
      */
     public function uploadPaUsersAction(Request $request)
@@ -441,7 +441,7 @@ class IndexController extends AbstractController
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
                     $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
-                    return $this->redirect($this->generateUrl('admin_pa_upload'));
+                    return $this->redirect($this->generateUrl('admin_org_upload'));
                 }
 
                 // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
@@ -450,7 +450,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('pa_chunk' . $k, $compressedData);
                 }
-                return $this->redirect($this->generateUrl('admin_pa_upload', ['nOfChunks' => count($chunks)]));
+                return $this->redirect($this->generateUrl('admin_org_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
