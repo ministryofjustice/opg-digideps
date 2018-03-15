@@ -36,7 +36,7 @@ class ClientContactController extends AbstractController
 
         $clientContact = new EntityDir\ClientContact($client);
 
-        $form = $this->createForm(new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form = $this->createForm(new FormDir\Org\ClientContactType($this->get('translator')), $clientContact);
 
         $form->handleRequest($request);
 
@@ -68,7 +68,7 @@ class ClientContactController extends AbstractController
 
         $this->denyAccessUnlessGranted('edit-client-contact', $client, 'Access denied');
 
-        $form = $this->createForm(new FormDir\Pa\ClientContactType($this->get('translator')), $clientContact);
+        $form = $this->createForm(new FormDir\Org\ClientContactType($this->get('translator')), $clientContact);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

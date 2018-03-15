@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Pa;
+namespace AppBundle\Form\Org;
 
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
@@ -10,8 +10,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class TeamMemberAccountType
- **
- * @package AppBundle\Form\Pa
  */
 class TeamMemberAccountType extends AbstractType
 {

@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class ProfileType
  **
- * @package AppBundle\Form\Pa
+ *
  */
 class ProfileType extends AbstractType
 {
