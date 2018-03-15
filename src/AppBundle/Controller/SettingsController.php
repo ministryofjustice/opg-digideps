@@ -87,7 +87,7 @@ class SettingsController extends AbstractController
      * Change your own detials
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
-     * @Route("/pa/settings/your-details/edit", name="pa_profile_edit")
+     * @Route("/pa/settings/your-details/edit", name="org_profile_edit")
      * @Template()
      * @throw AccessDeniedException
      **/
