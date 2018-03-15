@@ -5,7 +5,7 @@ namespace Tests\AppBundle\Controller;
 use AppBundle\Entity\pa;
 use AppBundle\Service\CsvUploader;
 use Fixtures;
-use Tests\AppBundle\Service\PaServiceTest;
+use Tests\AppBundle\Service\OrgServiceTest;
 
 class PaControllerTest extends AbstractTestController
 {
@@ -59,8 +59,8 @@ class PaControllerTest extends AbstractTestController
         $data = $this->assertJsonRequest('POST', '/org/bulk-add', [
             'data' => CsvUploader::compressData(
                 [
-                    ['Dep Type'=>23] + PaServiceTest::$deputy1 + PaServiceTest::$client1,
-                    ['Dep Type'=>21] + PaServiceTest::$deputy2 + PaServiceTest::$client2
+                    ['Dep Type'=>23] + OrgServiceTest::$deputy1 + OrgServiceTest::$client1,
+                    ['Dep Type'=>21] + OrgServiceTest::$deputy2 + OrgServiceTest::$client2
                 ]
             ),
             'mustSucceed' => true,

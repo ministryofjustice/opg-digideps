@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
-use AppBundle\Service\PaService;
+use AppBundle\Service\OrgService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -38,7 +38,7 @@ class OrgController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $pa = new PaService($this->get('em'), $this->get('logger'));
+        $pa = new OrgService($this->get('em'), $this->get('logger'));
 
         try {
             $ret = $pa->addFromCasrecRows($data);

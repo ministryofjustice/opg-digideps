@@ -20,7 +20,7 @@ class ReportController extends RestController
     /**
      * Add a report
      * Currently only used by Lay deputy during registration steps
-     * Pa report are instead created via PaService::createReport()
+     * Pa report are instead created via OrgService::createReport()
      *
      * @Route("")
      * @Method({"POST"})

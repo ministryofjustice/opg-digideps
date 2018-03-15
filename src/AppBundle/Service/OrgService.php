@@ -6,7 +6,7 @@ use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 
-class PaService
+class OrgService
 {
     /**
      * @var EntityManager
@@ -35,8 +35,6 @@ class PaService
     protected $warnings = [];
 
     /**
-     * PaService constructor.
-     *
      * @param EntityManager   $em
      * @param LoggerInterface $logger
      */
