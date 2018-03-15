@@ -56,7 +56,7 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/pa-add", name="pa_add_ajax")
+     * @Route("/pa-add", name="org_add_ajax")
      * @Method({"POST"})
      * @Template
      */
