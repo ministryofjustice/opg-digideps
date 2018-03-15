@@ -27,7 +27,7 @@ class OrgService
      */
     public function uploadAndSetFlashMessages($compressedData, FlashBagInterface $flashBag)
     {
-        $ret = $this->restClient->setTimeout(600)->post('pa/bulk-add', $compressedData);
+        $ret = $this->restClient->setTimeout(600)->post('org/bulk-add', $compressedData);
         // MOVE TO SERVICE
         $flashBag->add(
             'notice',
