@@ -14,7 +14,7 @@ class SettingsController extends AbstractController
 {
     /**
      * @Route("/deputyship-details", name="account_settings")
-     * @Route("/pa/settings", name="pa_settings")
+     * @Route("/pa/settings", name="org_settings")
      * @Template()
      **/
     public function indexAction()
@@ -51,7 +51,7 @@ class SettingsController extends AbstractController
             ]));
             $request->getSession()->getFlashBag()->add('notice', 'Password edited');
 
-            $successRoute = $this->getUser()->isDeputyOrg() ? 'pa_settings' : 'user_password_edit_done';
+            $successRoute = $this->getUser()->isDeputyOrg() ? 'org_settings' : 'user_password_edit_done';
             return $this->redirect($this->generateUrl($successRoute));
         }
 
