@@ -13,14 +13,14 @@ Feature: PA client archive
 
     # archive-no-confirm
     When I click on "client-archive"
-    And I press "pa_client_archive_save"
+    And I press "org_client_archive_save"
     Then the following fields should have an error:
       | pa_client_archive_confirmArchive   |
 
     # correct form
     When I fill in the following:
       | pa_client_archive_confirmArchive | 1 |
-    And I press "pa_client_archive_save"
+    And I press "org_client_archive_save"
     Then the form should be valid
     And I should be on "/pa/"
     And I should see "The client has been archived"
