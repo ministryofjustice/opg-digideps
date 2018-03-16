@@ -15,11 +15,11 @@ Feature: PROF client archive
     When I click on "client-archive"
     And I press "org_client_archive_save"
     Then the following fields should have an error:
-      | pa_client_archive_confirmArchive   |
+      | org_client_archive_confirmArchive   |
 
     # correct form
     When I fill in the following:
-      | pa_client_archive_confirmArchive | 1 |
+      | org_client_archive_confirmArchive | 1 |
     And I press "org_client_archive_save"
     Then the form should be valid
     And I should be on "/pa/"
