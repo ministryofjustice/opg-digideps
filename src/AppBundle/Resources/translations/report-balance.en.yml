@@ -34,9 +34,9 @@ differenceTable:
 moreInfo:
   heading: More information
   para1: |
-    In the accounts section, we ask you tell us how much was
-    in %client%'s bank accounts at the start of your reporting period (the accounts opening
-    balance) and the end (the accounts closing balance).
+    In the accounts section, we ask you tell us how much was in %client%'s bank accounts
+    at the start of your reporting period (the accounts opening balance) and the end (the
+    accounts closing balance).
   para2: |
     We take the accounts opening balance, add the incoming payments you've told us about,
     and subtract the outgoing payments. The result is called the report closing balance.
