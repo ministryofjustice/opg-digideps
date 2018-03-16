@@ -177,7 +177,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
+     * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
      * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "verify-codeputy"} )
      *
@@ -187,8 +187,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_pa"} )
+     * @JMS\Groups({"user_details_full", "profile_org"})
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string
      */
@@ -196,8 +196,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
-     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_pa"} )
+     * @JMS\Groups({"user_details_full", "profile_org"})
+     * @Assert\Length( max=200, maxMessage="user.address1.maxMessage", groups={"user_details_full", "profile_org"} )
      *
      * @var string
      */
@@ -205,9 +205,9 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa", "admin_add_user", "ad_add_user"})
+     * @JMS\Groups({"user_details_full", "profile_org", "admin_add_user", "ad_add_user"})
      * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_pa", "verify-codeputy"} )
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full", "profile_org", "verify-codeputy"} )
      *
      * @var string
      */
@@ -215,7 +215,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
+     * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details_full", "verify-codeputy"} )
      *
      * @var string
@@ -235,7 +235,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full", "profile_pa"})
+     * @JMS\Groups({"user_details_full", "profile_org"})
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full"} )
      *
      * @var string
