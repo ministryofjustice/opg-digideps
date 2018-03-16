@@ -34,7 +34,7 @@ Feature: PA client profile
       | org_client_edit_address2          | 01234567890-01234567890-01234567890-01234567890-0123456789001234567890-01234567890-01234567890-01234567890-0123456789001234567890-01234567890-01234567890-01234567890-0123456789001234567890-01234567890-01234567890-01234567890-01234567890 more than 200 chars |
       | org_client_edit_county            | 01234567890-01234567890-01234567890-01234567890-0123456789001234567890-01234567890-01234567890-01234567890- more than 75 chars                                                                                                                                   |
       | org_client_edit_postcode          | 01234567890-01234567890 more than 10 chars                                                                                                                                                                                                                       |
-    And I press "pa_client_edit_save"
+    And I press "org_client_edit_save"
     Then the following fields should have an error:
       | org_client_edit_dateOfBirth_day   |
       | org_client_edit_dateOfBirth_month |
@@ -56,7 +56,7 @@ Feature: PA client profile
       | org_client_edit_address2          | ADD2-edited          |
       | org_client_edit_county            | ADD3-edited          |
       | org_client_edit_postcode          | B301QM               |
-    And I press "pa_client_edit_save"
+    And I press "org_client_edit_save"
     Then the form should be valid
     # assert view page contains edited values
     Then each text should be present in the corresponding region:
