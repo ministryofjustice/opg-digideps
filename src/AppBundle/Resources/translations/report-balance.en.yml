@@ -34,7 +34,7 @@ differenceTable:
 moreInfo:
   heading: More information
   para1: |
-    In the <a href="%pathToAccounts%">accounts section</a>, we ask you tell us how much was
+    In the accounts section, we ask you tell us how much was
     in %client%'s bank accounts at the start of your reporting period (the accounts opening
     balance) and the end (the accounts closing balance).
   para2: |
@@ -44,22 +44,23 @@ moreInfo:
   para4: |
     The accounts don't balance: the report closing balance is %moreless% than the accounts
     closing balance.
-  para5: "To fix this, please check that:"
-  listItem1: the figures you entered for opening and closing balances are correct
-  listItem2: you've entered all money in, money out, gifts and expenses correctly
-  listItem3: |
-    you haven't entered gifts in both the money out section
-    and the gifts section. If you have, the amounts will be "double counted" and the accounts
-    won't balance.
-  listItem4: |
-    you haven't entered your deputy expenses in both the money out section and the expenses
-    section. If you have, the amounts will be "double counted" and the accounts won't balance.
-  listItem5: you've added interest earned on %client%'s account to the money in section
+  whatToDo:
+    title: What to do when the accounts don’t balance
+    para1: "Please check that:"
+    listItem1: the figures you entered for opening and closing balances are correct
+    listItem2: you've entered all money in, money out, gifts and expenses correctly
+    listItem3: |
+      you haven't entered gifts in both the money out section and the gifts section. If you
+      have, the amounts will be "double counted" and the accounts won't balance.
+    listItem4: |
+      you haven't entered your deputy expenses in both the money out section and the
+      expenses section. If you have, the amounts will be "double counted"
+    listItem5: you've added interest earned on %client%'s account to the money in section
 
 cantFind:
   heading: Can't find the problem?
   para1: |
-    If you've checked the above, but still can't see what's gone wrong, use the form below to
+    If you've tried the suggestions above, but still can't see what's gone wrong, use the form below to
     explain why you weren't able to make the accounts balance.
   para2: |
     You'll still be able to submit your report and we may be able to help you work out why
