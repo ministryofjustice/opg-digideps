@@ -485,10 +485,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
-
     public function profCurrentFeesProvider()
     {
-
         $debt = m::mock(Debt::class);
 
         return [

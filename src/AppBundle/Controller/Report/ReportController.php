@@ -20,7 +20,7 @@ class ReportController extends RestController
     /**
      * Add a report
      * Currently only used by Lay deputy during registration steps
-     * Pa report are instead created via PaService::createReport()
+     * Pa report are instead created via OrgService::createReport()
      *
      * @Route("")
      * @Method({"POST"})
@@ -63,7 +63,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
-            ? (array)$request->query->get('groups') : ['report'];
+            ? (array) $request->query->get('groups') : ['report'];
         $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
@@ -210,7 +210,7 @@ class ReportController extends RestController
 
 
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean)$data['report_seen']);
+            $report->setReportSeen((boolean) $data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
@@ -425,7 +425,7 @@ class ReportController extends RestController
         $records = array_slice($records, $offset, $limit);
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array)$request->query->get('groups')
+            ? (array) $request->query->get('groups')
             : ['report', 'report-client', 'client', 'status'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 

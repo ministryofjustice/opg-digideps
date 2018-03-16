@@ -46,6 +46,7 @@ abstract class ProfServiceFee
 
     /**
      * @JMS\Type("string")
+     *
      * @var string fixed|assessed
      * @JMS\Groups({"prof-service-fees"})
      *
@@ -71,6 +72,7 @@ abstract class ProfServiceFee
 
     /**
      * @JMS\Type("string")
+     *
      * @var string a value in self:$serviceTypeIds
      *
      * @JMS\Groups({"prof-service-fees"})
@@ -91,6 +93,7 @@ abstract class ProfServiceFee
 
     /**
      * @JMS\Type("string")
+     *
      * @var string yes|no
      *
      * @JMS\Groups({"prof-service-fees"})

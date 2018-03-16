@@ -3,7 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use AppBundle\Service\PaService;
+use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
 use Fixtures;
 use Mockery as m;
@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class PaServiceTest extends WebTestCase
+class OrgServiceTest extends WebTestCase
 {
     /**
      * @var Client
@@ -107,7 +107,7 @@ class PaServiceTest extends WebTestCase
     ];
 
     /**
-     * @var PaService
+     * @var OrgService
      */
     private $pa = null;
 
@@ -123,7 +123,7 @@ class PaServiceTest extends WebTestCase
     public function setup()
     {
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->pa = new PaService(self::$em, $logger);
+        $this->pa = new OrgService(self::$em, $logger);
         Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
     }

@@ -129,7 +129,5 @@ class DoctrineListener
                 $ndr->setNoAssetToAdd(null);
             }
         }
-
-
     }
 }

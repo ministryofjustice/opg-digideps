@@ -214,7 +214,7 @@ class ReportService
     }
 
     /**
-     * @param Report $report
+     * @param Report    $report
      * @param \DateTime $unsubmitDate
      * @param \DateTime $dueDate
      * @param $sectionList

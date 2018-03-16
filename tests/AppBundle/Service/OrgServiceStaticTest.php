@@ -2,9 +2,9 @@
 
 namespace Tests\AppBundle\Service;
 
-use AppBundle\Service\PaService;
+use AppBundle\Service\OrgService;
 
-class PaServiceStaticTest extends \PHPUnit_Framework_TestCase
+class OrgServiceStaticTest extends \PHPUnit_Framework_TestCase
 {
     public static function parseDateProvider()
     {
@@ -51,7 +51,7 @@ class PaServiceStaticTest extends \PHPUnit_Framework_TestCase
      */
     public function testparseDate($in, $expectedYmd, $century)
     {
-        $actual = PaService::parseDate($in, $century);
+        $actual = OrgService::parseDate($in, $century);
 
         $this->assertEquals($expectedYmd, $actual ? $actual->format('Y-m-d'): $actual);
     }
