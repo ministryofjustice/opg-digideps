@@ -23,7 +23,7 @@
     transDomain: translationDomain,
     linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
     linkClass: 'button-link',
-    linkHref: path(app.user.isDeputyOrg() ? 'pa_profile_show' : 'user_show')
+    linkHref: path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show')
     } %}
 
     {{ form_end(form) }}

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Pa;
+namespace AppBundle\Form\Org;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,6 +33,6 @@ class ClientArchiveType extends AbstractType
 
     public function getName()
     {
-        return 'pa_client_archive';
+        return 'org_client_archive';
     }
 }

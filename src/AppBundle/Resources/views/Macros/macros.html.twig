@@ -6,7 +6,7 @@
         <ol class="group">
             <li>
                 {% if isOrgUser %}
-                    <a href="{{ path('pa_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
                 {% else %}
                     <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
                 {% endif %}
@@ -45,21 +45,21 @@
     <ol class="group">
         {% if app.user.isDeputyOrg() %}
             <li>
-                <a href="{{ path('pa_dashboard') }}">Dashboard</a>
+                <a href="{{ path('org_dashboard') }}">Dashboard</a>
             </li>
             {% if 'settings' in section and section != 'settings' %}
                 <li>
-                    <a href="{{ path('pa_settings') }}">Settings</a>
+                    <a href="{{ path('org_settings') }}">Settings</a>
                 </li>
             {% endif %}
             {% if 'team' in section and section != 'settings-team' %}
                 <li>
-                    <a href="{{ path('pa_team') }}">User accounts</a>
+                    <a href="{{ path('org_team') }}">User accounts</a>
                 </li>
             {% endif %}
             {% if section == 'settings-profile-edit' %}
                 <li>
-                    <a href="{{ path('pa_profile_show') }}">Your details</a>
+                    <a href="{{ path('org_profile_show') }}">Your details</a>
                 </li>
             {% endif %}
         {% else %}

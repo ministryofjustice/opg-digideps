@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Pa;
+namespace AppBundle\Form\Org;
 
 use AppBundle\Entity as EntityDir;
 use Common\Form\Elements\InputFilters\Text;
@@ -12,7 +12,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class ClientContactType
  *
- * @package AppBundle\Form\Pa
+ *
  */
 class ClientContactType extends AbstractType
 {

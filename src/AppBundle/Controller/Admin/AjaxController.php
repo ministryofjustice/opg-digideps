@@ -56,13 +56,13 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/pa-add", name="pa_add_ajax")
+     * @Route("/org-chunk-add", name="org_add_ajax")
      * @Method({"POST"})
      * @Template
      */
     public function uploadPaAjaxAction(Request $request)
     {
-        $chunkId = 'pa_chunk' . $request->get('chunk');
+        $chunkId = 'org_chunk' . $request->get('chunk');
         $redis = $this->get('snc_redis.default');
 
         try {
@@ -71,7 +71,7 @@ class AjaxController extends AbstractController
                 new JsonResponse('Chunk not found', 500);
             }
 
-            $ret = $this->get('pa_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
+            $ret = $this->get('org_service')->uploadAndSetFlashMessages($compressedData, $request->getSession()->getFlashBag());
 
             $redis->del($chunkId);
 

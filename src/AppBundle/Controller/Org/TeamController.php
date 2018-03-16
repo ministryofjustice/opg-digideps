@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Pa;
+namespace AppBundle\Controller\Org;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TeamController extends AbstractController
 {
     /**
-     * @Route("", name="pa_team")
+     * @Route("", name="org_team")
      * @Template
      */
     public function listAction(Request $request)
@@ -41,7 +41,7 @@ class TeamController extends AbstractController
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
         $validationGroups = $team->canAddAdmin() ? ['pa_team_add', 'pa_team_role_name'] : ['pa_team_add'];
 
-        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class, null, [ 'team'              => $team, 'loggedInUser'      => $this->getUser(), 'validation_groups' => $validationGroups
+        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, null, ['team' => $team, 'loggedInUser' => $this->getUser(), 'validation_groups' => $validationGroups
                                    ]
                                  );
 
@@ -68,7 +68,7 @@ class TeamController extends AbstractController
                 $activationEmail = $this->getMailFactory()->createActivationEmail($user);
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
-                return $this->redirectToRoute('pa_team');
+                return $this->redirectToRoute('org_team');
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
@@ -103,7 +103,7 @@ class TeamController extends AbstractController
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
         $validationGroups = $team->canAddAdmin() ? ['user_details_pa', 'pa_team_role_name'] : ['user_details_pa'];
 
-        $form = $this->createForm(FormDir\Pa\TeamMemberAccountType::class, $user, [ 'team'                => $team, 'loggedInUser'      => $this->getUser(), 'targetUser'        => $user, 'validation_groups' => $validationGroups
+        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, $user, ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
                                    ]
                                  );
 
@@ -120,7 +120,7 @@ class TeamController extends AbstractController
                     $redirectRoute = 'logout';
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'The user has been edited');
-                    $redirectRoute = 'pa_team';
+                    $redirectRoute = 'org_team';
                 }
 
                 return $this->redirectToRoute($redirectRoute);
@@ -173,7 +173,7 @@ class TeamController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('pa_team');
+        return $this->redirectToRoute('org_team');
     }
 
     /**
@@ -219,6 +219,6 @@ class TeamController extends AbstractController
             }
         }
 
-        return $this->redirectToRoute('pa_team');
+        return $this->redirectToRoute('org_team');
     }
 }

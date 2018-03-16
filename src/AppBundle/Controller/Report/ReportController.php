@@ -8,7 +8,6 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
-use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -202,7 +201,7 @@ class ReportController extends AbstractController
         // Lay and PA users have different views.
         // PA overview is named "client profile" from the business side
         $template = $this->getUser()->isDeputyOrg()
-            ? 'AppBundle:Pa/ClientProfile:overview.html.twig'
+            ? 'AppBundle:Org/ClientProfile:overview.html.twig'
             : 'AppBundle:Report/Report:overview.html.twig';
 
         $vars = [

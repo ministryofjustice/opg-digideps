@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Pa;
+namespace AppBundle\Controller\Org;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class IndexController extends AbstractController
 {
     /**
-     * @Route("/", name="pa_dashboard")
+     * @Route("/", name="org_dashboard")
      * @Template
      */
     public function dashboardAction(Request $request)
@@ -56,7 +56,7 @@ class IndexController extends AbstractController
      * Report is only associated to one client, and it's needed for back link routing,
      * so it's retrieved with the report with a single API call
      *
-     * @Route("/client/{clientId}/edit", name="pa_client_edit")
+     * @Route("/client/{clientId}/edit", name="org_client_edit")
      * @Template
      */
     public function clientEditAction(Request $request, $clientId)
@@ -65,7 +65,7 @@ class IndexController extends AbstractController
         $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
         // PA client profile is ATM relying on report ID, this is a working until next refactor
         $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
-        $form = $this->createForm(FormDir\Pa\ClientType::class, $client);
+        $form = $this->createForm(FormDir\Org\ClientType::class, $client);
         $form->handleRequest($request);
 
         // edit client form
@@ -88,7 +88,7 @@ class IndexController extends AbstractController
     /**
      * Client archive page
      *
-     * @Route("/client/{clientId}/archive", name="pa_client_archive")
+     * @Route("/client/{clientId}/archive", name="org_client_archive")
      * @Template
      */
     public function clientArchiveAction(Request $request, $clientId)
@@ -97,7 +97,7 @@ class IndexController extends AbstractController
         $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
         // PA client profile is ATM relying on report ID, this is a working until next refactor
         $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
-        $form = $this->createForm(FormDir\Pa\ClientArchiveType::class, $client);
+        $form = $this->createForm(FormDir\Org\ClientArchiveType::class, $client);
         $form->handleRequest($request);
 
         // edit client form
@@ -105,7 +105,7 @@ class IndexController extends AbstractController
             if (true === $form->get('confirmArchive')->getData()) {
                 $this->getRestClient()->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $request->getSession()->getFlashBag()->add('notice', 'The client has been archived');
-                return $this->redirectToRoute('pa_dashboard');
+                return $this->redirectToRoute('org_dashboard');
             } else {
                 $form->get('confirmArchive')->addError(new FormError($this->get('translator')->trans('form.error.confirmArchive', [], 'pa-client-archive')));
             }

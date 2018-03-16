@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Pa;
+namespace AppBundle\Form\Org;
 
 use AppBundle\Entity\Note as NoteEntity;
 use Common\Form\Elements\InputFilters\Text;
@@ -13,7 +13,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Class NoteType
  *
- * @package AppBundle\Form\Pa
+ *
  */
 class NoteType extends AbstractType
 {

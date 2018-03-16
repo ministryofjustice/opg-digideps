@@ -113,7 +113,6 @@ trait ReportBalanceTrait
         $this->totalsMatch = $totalsMatch;
     }
 
-
     public function shouldShowBalanceWarning()
     {
         // if not due dont show warning

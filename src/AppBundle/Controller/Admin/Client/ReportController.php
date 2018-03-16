@@ -4,7 +4,6 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Form\Admin\ReportChangeDueDateType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -47,10 +46,10 @@ class ReportController extends AbstractController
             $dueDateChoice = $form['dueDateChoice']->getData();
             if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
                 $report->setDueDate($form['dueDateCustom']->getData());
-            } else if (preg_match('/^\d+$/', $dueDateChoice)) {
-               $dd = new \DateTime();
-               $dd->modify("+{$dueDateChoice} weeks");
-               $report->setDueDate($dd);
+            } elseif (preg_match('/^\d+$/', $dueDateChoice)) {
+                $dd = new \DateTime();
+                $dd->modify("+{$dueDateChoice} weeks");
+                $report->setDueDate($dd);
             }
 
             $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
@@ -67,5 +66,4 @@ class ReportController extends AbstractController
             'form'     => $form->createView()
         ];
     }
-
 }

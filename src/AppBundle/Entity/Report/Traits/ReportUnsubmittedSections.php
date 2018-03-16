@@ -71,7 +71,7 @@ trait ReportUnsubmittedSections
      */
     public function getUnsubmittedSectionsIds()
     {
-        return array_filter(array_map(function($us) {
+        return array_filter(array_map(function ($us) {
             return $us->isPresent() ? $us->getId() : null;
         }, $this->getUnsubmittedSection()));
     }
@@ -84,7 +84,7 @@ trait ReportUnsubmittedSections
         if (empty($this->getUnsubmittedSectionsIds())) {
             // add error to all the sections
             $context->addViolationAt('unsubmittedSection[0].present', 'report.unsubmissionSections.atLeastOnce');
-            for($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; $i++) {
+            for ($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; $i++) {
                 $context->addViolationAt("unsubmittedSection[$i].present", '');
             }
         }

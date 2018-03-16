@@ -5,7 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
-class PaService
+class OrgService
 {
     /**
      * @var RestClient
@@ -13,7 +13,6 @@ class PaService
     private $restClient;
 
     /**
-     * PaService constructor.
      * @param RestClient $restClient
      */
     public function __construct(RestClient $restClient)
@@ -28,7 +27,7 @@ class PaService
      */
     public function uploadAndSetFlashMessages($compressedData, FlashBagInterface $flashBag)
     {
-        $ret = $this->restClient->setTimeout(600)->post('pa/bulk-add', $compressedData);
+        $ret = $this->restClient->setTimeout(600)->post('org/bulk-add', $compressedData);
         // MOVE TO SERVICE
         $flashBag->add(
             'notice',

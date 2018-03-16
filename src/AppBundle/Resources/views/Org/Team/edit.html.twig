@@ -3,8 +3,8 @@
 {% set translationDomain = "pa-team" %}
 {% trans_default_domain translationDomain %}
 
-{% block htmlTitle %}{{ 'addPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'addPage.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'editPage.pageTitle' | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}
@@ -12,34 +12,30 @@
 {% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ 'editPage.supportTitle' | trans }}</span>
 {% endblock %}
 
 {% block pageContent %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
     {{ form_input(form.firstname,'form.firstname') }}
-
     {{ form_input(form.lastname,'form.lastname') }}
-
     {{ form_input(form.email,'form.email') }}
+    {{ form_input(form.jobTitle, 'form.jobTitle') }}
+    {{ form_input(form.phoneMain,'form.phoneMain') }}
 
-    {{ form_input(form.jobTitle, 'form.add.jobTitle') }}
-
-    {{ form_input(form.phoneMain,'form.add.phoneMain') }}
-
-    {% if form.roleName is defined and form.roleName != null %}
+    {% if form.roleName is defined %}
         {{ form_checkbox_group(form.roleName, 'form.roleName', {
-            'fieldSetClass' : 'inline',
+            'fieldSetClass' : 'inline'
         }) }}
-    {%  endif %}
-    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
+    {% endif %}
 
+    {{ form_submit(form.save,'form.save', {'buttonClass': 'behat-link-save'}) }}
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: 'Cancel',
+        linkButtonLabel: 'cancel' | trans({}, 'common'),
         linkClass: 'button-link',
-        linkHref: path('pa_team')
+        linkHref: path('org_team')
     } %}
 
     {{ form_end(form) }}

@@ -261,7 +261,7 @@ class Client
      */
     public function getReportsSubmittedAtLeastOnce()
     {
-        return array_filter($this->getReports() ?: [], function(Report $report) {
+        return array_filter($this->getReports() ?: [], function (Report $report) {
             return $report->getSubmitted() || $report->getUnSubmitDate();
         });
     }

@@ -97,7 +97,7 @@ class Redirector
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
-            return $this->router->generate('pa_dashboard');
+            return $this->router->generate('org_dashboard');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
             return $this->getLayDeputyHomepage($user, false);
         } else {
@@ -220,7 +220,7 @@ class Redirector
         }
 
         if ($this->authChecker->isGranted(EntityDir\User::ROLE_PA)) {
-            return $this->router->generate('pa_dashboard');
+            return $this->router->generate('org_dashboard');
         }
 
         // deputy: if logged, redirect to overview pages

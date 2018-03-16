@@ -22,7 +22,7 @@
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
     {% elseif app.user.isDeputyOrg() %}
         {% set transOptions = {} %}
-        <a href="{{ path('pa_team') }}" class="behat-link-user-accounts">
+        <a href="{{ path('org_team') }}" class="behat-link-user-accounts">
             <h2 class="heading-small">{{ 'settings-page.links.team.title' | trans }}</h2>
         </a>
         <p class="text text-info">
@@ -35,12 +35,12 @@
         </p>
     {% endif %}
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_show' : 'user_show') }}" class="behat-link-profile-show">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="behat-link-profile-show">
         <h2 class="heading-small">{{ 'settings-page.links.profile.title' | trans }}</h2>
     </a>
     <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'pa_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
+    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
         <h2 class="heading-small">{{ 'settings-page.links.password.title' | trans }}</h2>
     </a>
     <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller\Pa;
+namespace AppBundle\Controller\Org;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
@@ -20,7 +20,7 @@ class NoteController extends AbstractController
 
     /**
      * @Route("add", name="add_note")
-     * @Template("AppBundle:Pa/ClientProfile:addNote.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:addNote.html.twig")
      */
     public function addAction(Request $request)
     {
@@ -36,7 +36,7 @@ class NoteController extends AbstractController
         $note = new EntityDir\Note($client);
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType($this->get('translator')),
+            new FormDir\Org\NoteType($this->get('translator')),
             $note
         );
 
@@ -61,7 +61,7 @@ class NoteController extends AbstractController
 
     /**
      * @Route("{noteId}/edit", name="edit_note")
-     * @Template("AppBundle:Pa/ClientProfile:editNote.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:editNote.html.twig")
      */
     public function editAction(Request $request, $noteId)
     {
@@ -71,7 +71,7 @@ class NoteController extends AbstractController
         $this->denyAccessUnlessGranted('edit-note', $note, 'Access denied');
 
         $form = $this->createForm(
-            new FormDir\Pa\NoteType($this->get('translator')),
+            new FormDir\Org\NoteType($this->get('translator')),
             $note
         );
 
@@ -101,7 +101,7 @@ class NoteController extends AbstractController
      * Confirm delete user form
      *
      * @Route("{noteId}/delete", name="delete_note")
-     * @Template("AppBundle:Pa/ClientProfile:deleteConfirm.html.twig")
+     * @Template("AppBundle:Org/ClientProfile:deleteConfirm.html.twig")
      */
     public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
     {

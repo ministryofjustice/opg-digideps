@@ -6,11 +6,8 @@ use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\ProfServiceFee;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class ProfServiceFeeType extends AbstractType
 {
@@ -98,7 +95,6 @@ class ProfServiceFeeType extends AbstractType
             'translation_domain' => 'report-prof-current-fees'
         ])
         ->setRequired(['step']);
-
     }
 
     protected function getValidationGroups()
@@ -106,15 +102,13 @@ class ProfServiceFeeType extends AbstractType
         return function (FormInterface $form) {
             /** @var $asset \AppBundle\Entity\Report\ProfServiceFee */
             $profServiceFee = $form->getData();
-            switch($this->step)
-            {
-                case "1":
+            switch ($this->step) {
+                case '1':
                     $validationGroups = ['prof-service-fee-type'];
                     break;
-                case "2":
+                case '2':
                     $validationGroups = ['prof-service-fee-details-type'];
-                    if ($profServiceFee->getPaymentReceived() == 'yes')
-                    {
+                    if ($profServiceFee->getPaymentReceived() == 'yes') {
                         $validationGroups = ['prof-service-fee-details-type', 'prof-service-fee-details-type-payment-received'];
                     }
                     break;
