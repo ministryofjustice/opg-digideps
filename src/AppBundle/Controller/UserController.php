@@ -339,13 +339,13 @@ class UserController extends AbstractController
             case EntityDir\User::ROLE_PA_NAMED:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
+                return [new FormDir\User\UserDetailsPaType($user), ['user_details_org']];
 
             // prof reuses pa so far
             case EntityDir\User::ROLE_PROF_NAMED:
             case EntityDir\User::ROLE_PROF_ADMIN:
             case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
-                return [new FormDir\User\UserDetailsPaType($user), ['user_details_pa']];
+                return [new FormDir\User\UserDetailsPaType($user), ['user_details_org']];
         }
     }
 }

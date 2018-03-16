@@ -19,7 +19,7 @@ class UserDetailsPaType extends UserDetailsBasicType
     {
         $resolver->setDefaults([
             'translation_domain' => 'settings',
-            'validation_groups' => 'user_details_pa',
+            'validation_groups' => 'user_details_org',
         ]);
     }
 }

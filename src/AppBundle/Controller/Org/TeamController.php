@@ -101,7 +101,7 @@ class TeamController extends AbstractController
         }
 
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
-        $validationGroups = $team->canAddAdmin() ? ['user_details_pa', 'pa_team_role_name'] : ['user_details_pa'];
+        $validationGroups = $team->canAddAdmin() ? ['user_details_org', 'pa_team_role_name'] : ['user_details_org'];
 
         $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, $user, ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
                                    ]
