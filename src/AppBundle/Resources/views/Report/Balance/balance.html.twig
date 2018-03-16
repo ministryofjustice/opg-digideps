@@ -7,8 +7,7 @@
 
 {% set transOptions = {
     '%client%': report.client.firstname | e,
-    '%moreless%': report.totalsOffset < 0 ? "less" : "more",
-    '%pathToMoneyOut%': path('money_out', {'reportId': report.id}),
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more"
 } %}
 
 {% set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}
