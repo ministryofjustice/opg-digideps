@@ -102,8 +102,8 @@ class SettingsController extends AbstractController
             $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
         } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_pa', 'profile_pa']]);
-            $jmsPutGroups = ['user_details_pa', 'profile_pa'];
+            $form = $this->createForm(FormDir\Settings\ProfileType::class, $user, ['validation_groups' => ['user_details_org', 'profile_org']]);
+            $jmsPutGroups = ['user_details_org', 'profile_org'];
         } else {
             $this->createAccessDeniedException('User role not recognised');
         }
