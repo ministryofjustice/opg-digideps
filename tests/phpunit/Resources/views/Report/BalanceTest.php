@@ -48,6 +48,7 @@ class BalanceTest extends WebTestCase
                 'getGaTrackingId'=>null,
                 'isDeputyPa'=>false,
                 'isDeputyOrg'=>false,
+                'isDeputyProf'=>false,
                 'isNdrEnabled'=>false,
             ])
         ]);
