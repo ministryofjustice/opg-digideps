@@ -17,7 +17,7 @@ existPage:
 
 managementPage:
   htmlTitle: "Deputy report - debts | GOV.UK"
-  pageSectionTitle: Debts
+  pageTitle: Debts
   pageSectionDescription: How is the debt being managed or reduced?
   pageHint: For example, list any regular payments to creditors or payment plans in place
   form:
