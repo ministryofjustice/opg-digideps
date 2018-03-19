@@ -3,7 +3,7 @@
 // Reusable icons
 
 .icon-tick-white {
-    @include icon(icon-tick-white, 40, 33, 'icons');
+    @include icon(icon-tick-white, 30, 25, 'icons');
     margin-right: 10px;
     background-size: contain;
 }
