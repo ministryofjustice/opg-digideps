@@ -7,8 +7,7 @@
 
 {% set transOptions = {
     '%client%': report.client.firstname | e,
-    '%moreless%': report.totalsOffset < 0 ? "less" : "more",
-    '%pathToAccounts%': path('bank_accounts', {'reportId': report.id})
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more"
 } %}
 
 {% set readyToBalance = reportStatus.balanceState['state'] != 'not-started' %}
@@ -343,12 +342,23 @@
         {% if readyToBalance and not report.isTotalsMatch %}
 
             <p class="bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
-            <p>{{ 'moreInfo.para5' | trans }}</p>
 
-            <ul class="list list-bullet">
-                <li>{{ 'moreInfo.listItem1' | trans }}</li>
-                <li>{{ 'moreInfo.listItem2' | trans }}</li>
-            </ul>
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'moreInfo.whatToDo.title' | trans }}</span>
+                </summary>
+                <div class="panel panel-border-narrow">
+                    <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
+                    <ul class="list list-bullet">
+                        <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
+                        <li>{{ 'moreInfo.whatToDo.listItem2' | trans }}</li>
+                        <li>{{ 'moreInfo.whatToDo.listItem3' | trans }}</li>
+                        <li>{{ 'moreInfo.whatToDo.listItem4' | trans }}</li>
+                        <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) | raw }}</li>
+                    </ul>
+                </div>
+            </details>
+
         {% endif %}
     </div>
 
