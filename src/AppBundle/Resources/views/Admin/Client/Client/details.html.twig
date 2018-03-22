@@ -21,7 +21,7 @@
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
 
-    <h2 class="heading-medium flush--ends">{{ 'reports' | trans({}, 'common') }}</h2>
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.reportsTitle') | trans }}</h2>
 
     {# client report list #}
     {% if client.reportsSubmittedAtLeastOnce | length == 0 %}
