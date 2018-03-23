@@ -6,10 +6,13 @@ alerts:
     Once you've added a bank account and started the money in and out, deputy expenses and
     gifts sections, you can use this page to check that %client%'s accounts
     balance
-  notStartedPA: |
+  notStarted-PA: |
     Once you've added a bank account and started the money in and out, deputy fees and expenses and
     gifts sections, you can use this page to check that %client%'s accounts
     balance
+  notStarted-PROF: |
+    Once you've added a bank account and started the money in and out and gifts sections,
+    you can use this page to check that %client%'s accounts balance
   balanced: Accounts balanced
   notBalanced: Accounts not balanced
   notBalancedSupport: "%moreless% in the report closing balance than in the accounts closing balance"
@@ -48,13 +51,25 @@ moreInfo:
     title: What to do when the accounts don’t balance
     para1: "Please check that:"
     listItem1: the figures you entered for opening and closing balances are correct
-    listItem2: you've entered all money in, money out, gifts and expenses correctly
+    listItem2: you've entered all money in, money out, gifts and deputy expenses correctly
+    listItem2-PA: you've entered all money in, money out, gifts and deputy fees and expenses correctly
+    listItem2-PROF: you've entered all money in, money out and gifts correctly
     listItem3: |
       you haven't entered gifts in both the money out section and the gifts section. If you
       have, the amounts will be "double counted" and the accounts won't balance.
+    listItem3-PA: |
+      you haven't entered gifts in both the money out section and the gifts section. If you
+      have, the amounts will be "double counted" and the accounts won't balance.
+    listItem3-PROF: |
+      when you entered professional fees in the money out section, you only included fees that
+      %client% has paid during this reporting period. Fees %client% has been charged but
+      hasn't paid for yet, shouldn't be included.
     listItem4: |
-      you haven't entered your deputy expenses in both the money out section and the
-      expenses section. If you have, the amounts will be "double counted"
+      you haven't entered any deputy expenses into the money out section. If you have, the amounts
+      will be "double counted"
+    listItem4-PA: |
+      you haven't entered any deputy fees and expenses into the money out section. If you have,
+      the amounts will be "double counted"
     listItem5: you've added interest earned on %client%'s account to the money in section
 
 cantFind:

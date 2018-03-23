@@ -18,7 +18,7 @@ homepage:
 codeputy:
   inviteAnotherDeputy: Invite another deputy
 
-# Edit reporting period page (Lay and PA)
+# Edit reporting period page (Lay and Organisation (PA/Prof))
 editReportingDates:
   htmlTitle: Annual deputy reports for %client%
   pageTitle: Annual deputy reports for %client%
@@ -33,7 +33,7 @@ editReportingDates:
       hint: "For example, 30 3 2016"
     save:
       label: "Save"
-editReportingDatesPA:
+editReportingDates-ORG:
   htmlTitle: Client profile - edit reporting period | GOV.UK
   pageTitle: Edit reporting period
   supportTitle: "Client profile:"

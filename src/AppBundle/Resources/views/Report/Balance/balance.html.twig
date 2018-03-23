@@ -24,11 +24,8 @@
             <span class="icon icon-information"></span>
             <div class="alert-message">
                 <p>
-                     {% if report.hasSection('paDeputyExpenses') %}
-                        {{ 'alerts.notStartedPA' | trans(transOptions) }}</p>
-                     {% else %}
-                        {{ 'alerts.notStarted' | trans(transOptions) }}</p>
-                     {% endif %}
+                    {{ ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions) }}
+                </p>
             </div>
         </div>
     {% else %}
@@ -351,9 +348,11 @@
                     <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
                     <ul class="list list-bullet">
                         <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
-                        <li>{{ 'moreInfo.whatToDo.listItem2' | trans }}</li>
-                        <li>{{ 'moreInfo.whatToDo.listItem3' | trans }}</li>
-                        <li>{{ 'moreInfo.whatToDo.listItem4' | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem2' ~ app.user.getRoleForTrans) | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem3' ~ app.user.getRoleForTrans) | trans(transOptions) }}</li>
+                        {% if app.user and not app.user.isDeputyProf() %}
+                            <li>{{ ('moreInfo.whatToDo.listItem4' ~ app.user.getRoleForTrans) | trans }}</li>
+                        {% endif %}
                         <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) | raw }}</li>
                     </ul>
                 </div>
