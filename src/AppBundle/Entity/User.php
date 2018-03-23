@@ -1032,4 +1032,22 @@ class User implements AdvancedUserInterface
     {
         return in_array($this->getRoleName(), [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
     }
+
+    /**
+     * Get a generic role output to append to translation keys (ie transkey-PROF)
+     *
+     * @return string
+     */
+    public function getRoleForTrans()
+    {
+        if ($this->isDeputyProf()) {
+            return '-PROF';
+        }
+        else if ($this->isDeputyPA()) {
+            return '-PA';
+        }
+        else {
+            return '';
+        }
+    }
 }
