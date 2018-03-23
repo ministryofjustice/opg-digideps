@@ -13,6 +13,7 @@ clientDetails:
   htmlTitle: Administration - Clients
   pageTitle: Admin
   supportTitle: Client details
+  reportsTitle: Submitted reports
   noResults: No reports found
 
 reportManage:
