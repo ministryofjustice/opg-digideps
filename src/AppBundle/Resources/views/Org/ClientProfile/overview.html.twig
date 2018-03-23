@@ -6,7 +6,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'htmlTitlePA' | trans }}{% endblock %}
+{% block htmlTitle %}{{ 'htmlTitle-ORG' | trans }}{% endblock %}
 {% block pageTitle %}
     {{ 'pageTitle' | trans({}, 'client-profile') }} {{ report.client.fullname | title }}
 {% endblock %}
@@ -148,7 +148,7 @@
                                 description: true
                                 } %}
                             {% endif %}
-                            
+
                             {% if report.hasSection('paDeputyExpenses') %}
                                 {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
