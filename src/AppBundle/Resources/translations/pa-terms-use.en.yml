@@ -49,6 +49,6 @@ section03:
 
 form:
   agreeTermsUse:
-    label: I agree to this statement
+    label: I agree to these terms of use
   save:
     label: Continue to the deputy report service

@@ -27,6 +27,10 @@
         <p>{{ 'section01.para01' | trans(transOptions) }}</p>
         <p>{{ 'section01.para02' | trans(transOptions) }}</p>
         <p>{{ 'section01.para03' | trans(transOptions) }}</p>
+        <ul class="list list-bullet">
+            <li>{{ 'section01.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section01.listItem02' | trans(transOptions) }}</li>
+        </ul>
 
 
         <h3 class="heading-small">
@@ -44,15 +48,23 @@
             <li>{{ 'section02.listItem05' | trans(transOptions) }}</li>
         </ul>
 
-        <p>{{ 'section02.para03' | trans(transOptions) }}</p>
-        <p>{{ 'section02.para04' | trans(transOptions) }}</p>
-
 
         <h3 class="heading-small">
             {{ 'section03.heading' | trans(transOptions) }}
         </h3>
 
         <p>{{ 'section03.para01' | trans(transOptions) }}</p>
+
+        <ul class="list list-bullet">
+            <li>{{ 'section03.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem02' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem03' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem04' | trans(transOptions) }}</li>
+        </ul>
+
+        <p>{{ 'section03.para02' | trans(transOptions) }}</p>
+        <p>{{ 'section03.para03' | trans(transOptions) }}</p>
+        <p>{{ 'section03.para04' | trans(transOptions) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
