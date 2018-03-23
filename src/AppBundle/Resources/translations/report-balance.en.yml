@@ -65,11 +65,11 @@ moreInfo:
       %client% has paid during this reporting period. Fees %client% has been charged but
       hasn't paid for yet, shouldn't be included.
     listItem4: |
-      you haven't entered your deputy expenses in both the money out section and the
-      expenses section. If you have, the amounts will be "double counted"
+      you haven't entered any deputy expenses into the money out section. If you have, the amounts
+      will be "double counted"
     listItem4-PA: |
-      you haven't entered your deputy fees and expenses in both the money out section and the
-      expenses section. If you have, the amounts will be "double counted"
+      you haven't entered any deputy fees and expenses into the money out section. If you have,
+      the amounts will be "double counted"
     listItem5: you've added interest earned on %client%'s account to the money in section
 
 cantFind:
