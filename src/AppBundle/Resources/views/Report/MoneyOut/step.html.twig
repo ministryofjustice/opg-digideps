@@ -17,12 +17,6 @@
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
 
-{# todo set this to something for profs ?  once prof expenses sections are done #}
-{% set appendPA = '' %}
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set appendPA = 'PA' %}
-{% endif %}
-
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
@@ -68,7 +62,7 @@
         <p class="text">
             {{ 'stepPage.moneyOut.pageSectionDescription.step1' | trans(transOptions) }}
         </p>
-        {{ macros.notification('default', ('stepPage.moneyOut.pageSectionDescription.differentSections' ~ appendPA) | trans(transOptions) ) }}
+        {{ macros.notification('default', ('stepPage.moneyOut.pageSectionDescription.differentSections' ~ app.user.getRoleForTrans) | trans(transOptions) ) }}
         {{ form_checkbox_group(form.group, 'form.group', {
             'legendClass' : 'form-label-bold',
             'legendText' : 'form.group.moneyOut.legend' | trans(transOptions),

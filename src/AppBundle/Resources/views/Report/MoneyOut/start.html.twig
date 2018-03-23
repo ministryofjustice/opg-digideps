@@ -13,11 +13,6 @@
     '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id})
 } %}
-{# todo set this to something for profs ?  once prof expenses sections are done #}
-{% set appendPA = '' %}
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set appendPA = 'PA' %}
-{% endif %}
 
 {% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.moneyOut.pageTitle' | trans(transOptions) }}{% endblock %}
@@ -29,7 +24,7 @@
 
     <div class="text">
         <p>{{ 'startPage.moneyOut.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ ('startPage.moneyOut.pageSectionDescription2' ~ appendPA) | trans(transOptions) | raw }}</p>
+        <p>{{ ('startPage.moneyOut.pageSectionDescription2' ~ app.user.getRoleForTrans) | trans(transOptions) | raw }}</p>
         <p>{{ 'startPage.moneyOut.pageSectionDescription3' | trans }}</p>
         <h2 class="heading-small">{{ 'startPage.moneyOut.totalOrIndividualHeading' | trans }}</h2>
         <p>{{ 'startPage.moneyOut.totalOrIndividualPara' | trans }}</p>
