@@ -50,6 +50,7 @@ class BalanceTest extends WebTestCase
                 'isDeputyOrg'=>false,
                 'isDeputyProf'=>false,
                 'isNdrEnabled'=>false,
+                'getRoleForTrans'=> ''
             ])
         ]);
         $this->templating = $this->container->get('templating');
