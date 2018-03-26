@@ -41,7 +41,7 @@ class MoneyInController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
-        $totalSteps = 3;
+        $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -78,9 +78,15 @@ class MoneyInController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [ 'step'             => $step, 'type'             => 'in', 'translator'       => $this->get('translator'), 'clientFirstName'  => $report->getClient()->getFirstname(), 'selectedGroup'    => $transaction->getGroup(), 'selectedCategory' => $transaction->getCategory()
-                                   ]
-                                 );
+        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [
+            'step' => $step,
+            'type'             => 'in',
+            'translator'       => $this->get('translator'),
+            'clientFirstName'  => $report->getClient()->getFirstname(),
+            'selectedGroup'    => $transaction->getGroup(),
+            'selectedCategory' => $transaction->getCategory()
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
