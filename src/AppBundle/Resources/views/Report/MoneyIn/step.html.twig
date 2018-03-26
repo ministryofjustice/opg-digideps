@@ -51,18 +51,6 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
-    {# if step == 1  #}
-        {#<p class="text">#}
-            {#{{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}#}
-        {#</p>#}
-        {#{{ macros.notification('default', 'stepPage.moneyIn.pageSectionDescription.transferWarning' | trans(transOptions) ) }}#}
-        {#{{ form_checkbox_group(form.group, 'form.group', {#}
-            {#'legendClass' : 'form-label-bold',#}
-            {#'legendText' : 'form.group.moneyIn.legend' | trans(transOptions),#}
-            {#'formGroupClass': 'push--top'#}
-        {#}) }}#}
-    {#{% endif %}#}
-
     {% if step == 1 %}
         {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
