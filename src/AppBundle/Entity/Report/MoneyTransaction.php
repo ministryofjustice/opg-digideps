@@ -7,10 +7,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class MoneyTransaction
 {
+    public static function getCategoriesGrouped($typeFilter)
+    {
+        $ret = [];
+        foreach (MoneyTransaction::$categories as $k => $row) {
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $row;
+            if ($type == $typeFilter) {
+                if (!isset($ret[$groupId])) {
+                    $ret[$groupId] = [];
+                }
+                $ret[$groupId][] = $categoryId;
+            }
+        }
+
+        return $ret;
+    }
+
     /**
      * Keep in sync with API
      * No need to do a separate call to get the list
      * Possible refactor would be moving some entities data into a shared library
+     * ORDER is deprecated, re-order moving elements in the code
      *
      * @JMS\Exclude
      */
@@ -48,7 +65,7 @@ class MoneyTransaction
         ['sale-of-investment', true, '260', 'one-off', 'in'],
         ['sale-of-property', true, '270', 'one-off', 'in'],
 
-        ['anything-else', true, '290', 'moneyin-other', 'in'],
+        ['anything-else', true, '290', 'anything-else', 'in'], // no group
 
         // Money Out
         ['broadband', false, '300', 'household-bills', 'out'],

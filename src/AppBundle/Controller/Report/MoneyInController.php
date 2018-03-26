@@ -120,6 +120,7 @@ class MoneyInController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
+            'categoriesGrouped' => EntityDir\Report\MoneyTransaction::getCategoriesGrouped('in')
         ];
     }
 

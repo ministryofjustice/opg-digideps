@@ -42,9 +42,9 @@ class MoneyTransactionType extends AbstractType
         foreach (MoneyTransaction::$categories as $cat) {
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($type == $this->type) {
-                $ret[$categoryId] =
-                    '['.$this->translate('form.group.entries.' . $groupId) . '] ' //TEMP
-                    . $this->translate('form.category.entries.' . $categoryId . '.label');
+                $ret[$categoryId] = null;
+//                    '['.$this->translate('form.group.entries.' . $groupId) . '] ' //TEMP
+//                    . $this->translate('form.category.entries.' . $categoryId . '.label');
             }
         }
 

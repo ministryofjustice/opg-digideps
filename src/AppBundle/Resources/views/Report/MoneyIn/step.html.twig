@@ -49,13 +49,69 @@
 {% endblock %}
 
 {% block pageContent %}
+
+    {#{% for el in form.category %}#}
+        {#<pre>#}
+        {#{{ dump(el.vars | keys) }}#}
+        {#{{ dump(el.vars.label) }}#}
+        {#{{ dump(el.vars.id) }}#}
+        {#{{ dump(el.vars.value) }}#}
+            {#</pre><hr/>#}
+    {#{% endfor %}#}
+
+
+    {#{{ dump(form.category | keys) }}#}
+
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        {{ form_checkbox_group(form.category, 'form.category', {
-            'legendClass' : 'form-label-bold',
-            'legendTextDISABLED' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans
-        }) }}
+        {% for group, categories in categoriesGrouped %}
+            <fieldset>
+            {% if categories | length > 1 %}
+                {# category under a group #}
+                <div class="multiple-choice text">
+                <input type="radio" id="group{{ group }}" name="group{{ group }}">
+                <label for="group{{ group }}">
+                    {{ ('form.group.entries.' ~ group) | trans({}, translationDomain)}}
+                </label>
+                </div>
+                <div class="form-group panel panel-border-narrow js-hidden*">
+                    {% for category in categories %}
+                        {% for el in form.category %}
+                            {% if el.vars.value ==  category%}
+                                <div class="multiple-choice text">
+                                {{ form_widget(el) }}
+                                <label for="{{ el.vars.id }}">
+                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain)}}
+                                </label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                {# category not under a group#}
+                {% set category = categories.0 %}
+                {% for el in form.category %}
+                    {% if el.vars.value == category %}
+                        <div class="multiple-choice text">
+                        {{ form_widget(el) }}
+                        <label for="{{ el.vars.id }}">
+                            {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain)}}
+                        </label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+                </fieldset>
+
+        {% endfor %}
+         {#{% do form.category.setRendered %}#}
+
+        {#{{ form_checkbox_group(form.category, 'form.category', {#}
+            {#'legendClass' : 'form-label-bold',#}
+            {#'legendTextDISABLED' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans#}
+        {#}) }}#}
     {% endif %}
 
     {% if step == 2 %}
