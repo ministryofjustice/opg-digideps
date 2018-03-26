@@ -6,18 +6,22 @@
 {% trans_default_domain translationDomain %}
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
-{% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
+{#{% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}#}
 {% set category = transaction.category %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({
-    '%group%': groupString,
     '%category%': categoryString,
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
 }) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
+    {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
+    {% if step == 2 %}
+        : {{ categoryString }}
+
+    {% endif %}
+
     {# NOT SURE WE NEED TO PORT THIS with DDBP-2040#}
     {#{% if step == 2 %}#}
         {#{% if transaction.group == 'one-off' %}#}
