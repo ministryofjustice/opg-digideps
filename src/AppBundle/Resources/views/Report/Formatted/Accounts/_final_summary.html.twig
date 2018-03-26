@@ -18,15 +18,17 @@
                 <td>Money out:</td>
                 <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
             </tr>
-            <tr>
-                {% if report.has106flag %}
-                    <td>Deputy fees and expenses:</td>
-                    <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
-                {% else %}
-                    <td>Deputy expenses:</td>
-                    <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
-                {% endif %}
-            </tr>
+            {% if not app.user.isDeputyProf() %}
+                <tr>
+                    {% if report.has106flag %}
+                        <td>Deputy fees and expenses:</td>
+                        <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
+                    {% else %}
+                        <td>Deputy expenses:</td>
+                        <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
+                    {% endif %}
+                </tr>
+            {% endif %}
             <tr>
                 <td>Gifts:</td>
                 <td class="grey numeric">&pound;{{ report.getGiftsTotalValue | money_format}}</td>
