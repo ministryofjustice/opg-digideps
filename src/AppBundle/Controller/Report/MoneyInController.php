@@ -71,7 +71,6 @@ class MoneyInController extends AbstractController
         }
 
         // add URL-data into model
-        isset($dataFromUrl['group']) && $transaction->setGroup($dataFromUrl['group']);
         isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
@@ -83,7 +82,6 @@ class MoneyInController extends AbstractController
             'type'             => 'in',
             'translator'       => $this->get('translator'),
             'clientFirstName'  => $report->getClient()->getFirstname(),
-            'selectedGroup'    => $transaction->getGroup(),
             'selectedCategory' => $transaction->getCategory()
             ]
         );
@@ -92,8 +90,6 @@ class MoneyInController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                $stepUrlData['group'] = $transaction->getGroup();
-            } elseif ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
             } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit

@@ -18,24 +18,25 @@
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
-    {% if step == 2 %}
-        {% if transaction.group == 'one-off' %}
-            one-off
-        {% else %}
-            {{ groupString | lower }}
-        {% endif %}
-    {% endif %}
-    {% if step == 3 %}
-        {% if transaction.group == 'state-benefits' %}
-            {% if categoryString == 'Other benefits' %}
-                {{ categoryString | lower }}
-            {% else %}
-                {{ categoryString }}
-            {% endif %}
-        {% else %}
-            {{ categoryString | lower }}
-        {% endif %}
-    {% endif %}
+    {# NOT SURE WE NEED TO PORT THIS with DDBP-2040#}
+    {#{% if step == 2 %}#}
+        {#{% if transaction.group == 'one-off' %}#}
+            {#one-off#}
+        {#{% else %}#}
+            {#{{ groupString | lower }}#}
+        {#{% endif %}#}
+    {#{% endif %}#}
+    {#{% if step == 3 %}#}
+        {#{% if transaction.group == 'state-benefits' %}#}
+            {#{% if categoryString == 'Other benefits' %}#}
+                {#{{ categoryString | lower }}#}
+            {#{% else %}#}
+                {#{{ categoryString }}#}
+            {#{% endif %}#}
+        {#{% else %}#}
+            {#{{ categoryString | lower }}#}
+        {#{% endif %}#}
+    {#{% endif %}#}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
@@ -50,26 +51,26 @@
 {% block pageContent %}
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
+    {# if step == 1  #}
+        {#<p class="text">#}
+            {#{{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}#}
+        {#</p>#}
+        {#{{ macros.notification('default', 'stepPage.moneyIn.pageSectionDescription.transferWarning' | trans(transOptions) ) }}#}
+        {#{{ form_checkbox_group(form.group, 'form.group', {#}
+            {#'legendClass' : 'form-label-bold',#}
+            {#'legendText' : 'form.group.moneyIn.legend' | trans(transOptions),#}
+            {#'formGroupClass': 'push--top'#}
+        {#}) }}#}
+    {#{% endif %}#}
+
     {% if step == 1 %}
-        <p class="text">
-            {{ 'stepPage.moneyIn.pageSectionDescription.step1' | trans(transOptions) }}
-        </p>
-        {{ macros.notification('default', 'stepPage.moneyIn.pageSectionDescription.transferWarning' | trans(transOptions) ) }}
-        {{ form_checkbox_group(form.group, 'form.group', {
+        {{ form_checkbox_group(form.category, 'form.category', {
             'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.moneyIn.legend' | trans(transOptions),
-            'formGroupClass': 'push--top'
+            'legendTextDISABLED' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans
         }) }}
     {% endif %}
 
     {% if step == 2 %}
-        {{ form_checkbox_group(form.category, 'form.category', {
-            'legendClass' : 'form-label-bold',
-            'legendText' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans
-        }) }}
-    {% endif %}
-
-    {% if step == 3 %}
         {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
             'labelParameters' : transOptions
         }) }}
