@@ -11,8 +11,6 @@ Feature: Report money 102
     And I click on "report-start, edit-money_in, start"
     # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | account_group_0 | pensions |
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
@@ -33,8 +31,6 @@ Feature: Report money 102
     And I choose "yes" when asked for adding another record
     # add transaction n.2
     And the step with the following values CAN be submitted:
-      | account_group_0 | pensions |
-    And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
     And the step with the following values CAN be submitted:
       | account_description | delete me |
@@ -42,8 +38,6 @@ Feature: Report money 102
     # add another: yes
     And I choose "yes" when asked for adding another record
     # add transaction n.3
-    And the step with the following values CAN be submitted:
-      | account_group_0 | moneyin-other |
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else |
     And the step with the following values CAN be submitted:
@@ -91,8 +85,6 @@ Feature: Report money 102
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
-    And the step with the following values CAN be submitted:
-      | account_group_0 | household-bills |
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
@@ -109,8 +101,6 @@ Feature: Report money 102
     And I choose "yes" when asked for adding another record
       # add transaction n.2
     And the step with the following values CAN be submitted:
-      | account_group_0 | household-bills |
-    And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
     And the step with the following values CAN be submitted:
       | account_description | delete me |
@@ -118,8 +108,6 @@ Feature: Report money 102
       # add another: yes
     And I choose "yes" when asked for adding another record
       # add transaction n.3
-    And the step with the following values CAN be submitted:
-      | account_group_0 | moneyout-other |
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else-paid-out |
     And the step with the following values CAN be submitted:
