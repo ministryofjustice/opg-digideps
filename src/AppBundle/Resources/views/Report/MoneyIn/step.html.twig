@@ -37,14 +37,14 @@
         <div class="form-group form-group__checkbox-group   push--top">
         {% for group, categories in categoriesGrouped %}
             <fieldset class="push--top">
-                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans({}, translationDomain) }}</legend>
+                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
                 {% for category in categories %}
                     {% for el in form.category %}
-                        {% if el.vars.value ==  category %}
+                        {% if el.vars.value == category %}
                             <div class="multiple-choice text">
                                 {{ form_widget(el) }}
                                 <label for="{{ el.vars.id }}">
-                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain) }}
+                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans(clientTransOptions, translationDomain) }}
                                 </label>
                             </div>
                         {% endif %}
