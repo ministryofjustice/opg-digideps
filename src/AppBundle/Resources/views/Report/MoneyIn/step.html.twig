@@ -68,9 +68,10 @@
 
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
+    <div class="form-group form-group__checkbox-group">
     {% if step == 1 %}
         {% for group, categories in categoriesGrouped %}
-            <fieldset>
+
             {% if categories | length > 1 %}
                 {% set dataTarget = 'group' ~ group ~ 'details' %}
                 {# category under a group #}
@@ -80,7 +81,8 @@
                     {{ ('form.group.entries.' ~ group) | trans({}, translationDomain)}}
                 </label>
                 </div>
-                <div id="{{ dataTarget }}" class="form-group panel panel-border-narrow js-hidden">
+                <div id="{{ dataTarget }}" class="form-group panel panel-border-narrow js-hidden form-group__checkbox-group">
+                    <fieldset>
                     {% for category in categories %}
                         {% for el in form.category %}
                             {% if el.vars.value ==  category%}
@@ -93,6 +95,7 @@
                             {% endif %}
                         {% endfor %}
                     {% endfor %}
+                    </fieldset>
                 </div>
             {% else %}
                 {# category not under a group#}
@@ -108,7 +111,7 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-                </fieldset>
+
 
         {% endfor %}
          {#{% do form.category.setRendered %}#}
@@ -118,6 +121,7 @@
             {#'legendTextDISABLED' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans#}
         {#}) }}#}
     {% endif %}
+    </div>
 
     {% if step == 2 %}
         {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
