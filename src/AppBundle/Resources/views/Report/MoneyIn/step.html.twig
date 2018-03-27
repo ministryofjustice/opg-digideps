@@ -39,22 +39,10 @@
             <fieldset>
                 {% for group, categories in categoriesGrouped %}
 
-                    {% if categories | length > 1 %}
                         {% set dataTarget = 'group' ~ group ~ 'details' %}
                         {# category under a group #}
-                        <div class="multiple-choice" data-radio-toggle-parent="{{ dataTarget }}"
-                             {#data-targetIDSABLED="{{ dataTarget }}"#}
-                        >
-                            {# TODO hide radio if JS is not enabled #}
-                            <input type="radio" id="group{{ group }}" name="radioparent">
-                            <label for="group{{ group }}">
-                                {{ ('form.group.entries.' ~ group) | trans({}, translationDomain) }}
-                            </label>
-                        </div>
-                        <fieldset
-                                {#id="{{ dataTarget }}"#}
-                                data-radio-toggle-child="{{ dataTarget }}"
-                                  class="form-group panel panel-border-narrow js-hidden form-group__checkbox-group">
+                        <fieldset class="form-group panel panel-border-narrow form-group__checkbox-group">
+                            <legend class="heading-secondary">{{ ('form.group.entries.' ~ group) | trans({}, translationDomain) }}</legend>
                             {% for category in categories %}
                                 {% for el in form.category %}
                                     {% if el.vars.value ==  category %}
@@ -68,59 +56,9 @@
                                 {% endfor %}
                             {% endfor %}
                         </fieldset>
-                    {% else %}
-                        {# category not under a group#}
-                        {% set category = categories.0 %}
-                        {% for el in form.category %}
-                            {% if el.vars.value == category %}
-                                <div class="multiple-choice text" data-radio-toggle-parent="none">
-                                    {{ form_widget(el) }}
-                                    <label for="{{ el.vars.id }}">
-                                        {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain) }}
-                                    </label>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-
-
                 {% endfor %}
             </fieldset>
         </div>
-        <script>
-            {# TODO move to component if the behaviour is correct #}
-            $(document).ready(function () {
-                // clicking on parent radio boxes toggle the subradios, and collapses the other ones
-                // the standard GOV.UK data-target cannot be used due to elements name being at the parent or child level
-                // Also, since we want a child selection to unselect the parent, that would collapse the section
-                $('[data-radio-toggle] [data-radio-toggle-parent] input[type=radio]').click(function(e) {
-                    var radioElement = $(e.target);
-                    var wrapper = radioElement.parents('[data-radio-toggle]');
-                    var groupName = radioElement.parents('[data-radio-toggle-parent]').attr('data-radio-toggle-parent');
-
-                    // collapse other groups
-                    wrapper.find('[data-radio-toggle-child]').addClass('js-hidden');
-                    wrapper.find('[data-radio-toggle-child="'+ groupName +'"]').removeClass('js-hidden');
-
-                    // uncheck other parents
-                    wrapper.find('[data-radio-toggle-parent] input[type=radio]').prop('checked', false);
-                    radioElement.prop('checked', true);
-
-                    // uncheck children too
-                    wrapper.find('[data-radio-toggle-child] input[type=radio]').prop('checked', false);
-
-                });
-
-                // a child selection remove the selection from the parent
-                $('[data-radio-toggle] [data-radio-toggle-child] input[type=radio]').click(function(e) {
-                    var subRadioElement = $(e.target);
-                    var wrapper = subRadioElement.parents('[data-radio-toggle]');
-                    var groupName = subRadioElement.parents('[data-radio-toggle-child]').attr('data-radio-toggle-child');
-
-                    wrapper.find('[data-radio-toggle-parent="'+ groupName +'"] input[type=radio]').prop('checked', false);
-                });
-            });
-        </script>
     {% endif %}
 
     {% if step == 2 %}
