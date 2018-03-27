@@ -97,10 +97,18 @@
                     var radioElement = $(e.target);
                     var wrapper = radioElement.parents('[data-radio-toggle]');
                     var groupName = radioElement.parents('[data-radio-toggle-parent]').attr('data-radio-toggle-parent');
+
+                    // collapse other groups
                     wrapper.find('[data-radio-toggle-child]').addClass('js-hidden');
                     wrapper.find('[data-radio-toggle-child="'+ groupName +'"]').removeClass('js-hidden');
+
+                    // uncheck other parents
                     wrapper.find('[data-radio-toggle-parent] input[type=radio]').prop('checked', false);
                     radioElement.prop('checked', true);
+
+                    // uncheck children too
+                    wrapper.find('[data-radio-toggle-child] input[type=radio]').prop('checked', false);
+
                 });
 
                 // a child selection remove the selection from the parent
