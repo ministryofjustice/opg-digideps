@@ -138,7 +138,7 @@ class MoneyInController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1]);
+                    return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_in_add_another']);
                 case 'no':
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
             }
