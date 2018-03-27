@@ -11,7 +11,6 @@ Feature: Report money 102
     And I click on "report-start, edit-money_in, start"
     # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
-    Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
     And the step with the following values CANNOT be submitted:
@@ -77,7 +76,7 @@ Feature: Report money 102
       | Some money found on the road | transaction-some-money-found-on-the-road |
       | £51.00 | transaction-some-money-found-on-the-road |
 
-  @deputy
+  @deputy @shaun
   Scenario: money out
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start"
