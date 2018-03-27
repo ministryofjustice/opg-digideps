@@ -21,20 +21,6 @@ class MoneyTransactionType extends AbstractType
      */
     private $translator;
 
-    private function getGroups()
-    {
-        $ret = [];
-
-        foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
-            if ($type == $this->type) {
-                $ret[$groupId] = $this->translate('form.group.entries.' . $groupId);
-            }
-        }
-
-        return array_unique($ret);
-    }
-
     private function getCategories()
     {
         $ret = [];
@@ -43,8 +29,6 @@ class MoneyTransactionType extends AbstractType
             list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($type == $this->type) {
                 $ret[$categoryId] = null;
-//                    '['.$this->translate('form.group.entries.' . $groupId) . '] ' //TEMP
-//                    . $this->translate('form.category.entries.' . $categoryId . '.label');
             }
         }
 
