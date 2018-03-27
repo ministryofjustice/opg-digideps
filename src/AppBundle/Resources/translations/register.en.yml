@@ -16,7 +16,7 @@ email:
     first:
       label: "Your email"
       existingError: |
-        There's a problem with your email address. Please contact us for help on 0115 934 2700.
+        This email address has already been registered. Please <a href="%login%">sign in</a> or <a href="%passwordForgotten%">reset your password</a>.
       invalid: Enter a valid email address
     second:
       label: "Confirm your email"
