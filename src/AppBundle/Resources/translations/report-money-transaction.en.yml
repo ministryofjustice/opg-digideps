@@ -125,6 +125,8 @@ form:
       major-purchases: Major purchase, such as property or investment
       debt-and-charges: Tax or charge
       moving-money: Moving money
+      cash-withdrawn: Cash withdrawn
+      transfers-out-to-other-accounts: Transfers from %client%'s account to other accounts
       moneyout-other: Other
   amount:
       label: Amount
@@ -323,4 +325,7 @@ form:
       anything-else-paid-out:
         label: Anything else paid out
         moreInformations: Give us more information
+      moneyout-other:
+        label: Anything else paid out
+        moreInformation: Give us more information
 

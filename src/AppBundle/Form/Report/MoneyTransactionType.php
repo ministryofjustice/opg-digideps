@@ -26,7 +26,7 @@ class MoneyTransactionType extends AbstractType
         $ret = [];
 
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
             if ($type == $this->type) {
                 $ret[$categoryId] = null;
             }
@@ -41,7 +41,7 @@ class MoneyTransactionType extends AbstractType
     private function isDescriptionMandatory()
     {
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
