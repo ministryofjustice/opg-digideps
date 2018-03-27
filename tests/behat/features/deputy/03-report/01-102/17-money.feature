@@ -76,7 +76,7 @@ Feature: Report money 102
       | Some money found on the road | transaction-some-money-found-on-the-road |
       | £51.00 | transaction-some-money-found-on-the-road |
 
-  @deputy @shaun
+  @deputy
   Scenario: money out
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start"
