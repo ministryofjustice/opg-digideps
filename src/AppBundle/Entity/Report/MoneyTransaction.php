@@ -216,7 +216,9 @@ class MoneyTransaction
      */
     public function setCategory($category)
     {
-        $this->category = $category;
+        if (MoneyTransaction::isValidCategory($category)) {
+            $this->category = $category;
+        }
 
         return $this;
     }
@@ -253,5 +255,25 @@ class MoneyTransaction
     public function setDescription($description)
     {
         $this->description = $description;
+    }
+
+    /**
+     * Checks category is valid
+     *
+     * @param string $category
+     * @return bool
+     */
+    public static function isValidCategory($category = '')
+    {
+        foreach (self::$categories as $cat) {
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+
+            if ((($groupId === $categoryId) && $category == $groupId) ||
+                $category == $categoryId
+            ) {
+                return true;
+            }
+        }
+        throw new \RuntimeException('Invalid category: ' . $category);
     }
 }
