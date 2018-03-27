@@ -113,6 +113,7 @@ form:
       pensions: Pension
       state-benefits: State benefit
       damages: Damages
+      compensation-or-damages-award: Compensation or damages award
       one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
