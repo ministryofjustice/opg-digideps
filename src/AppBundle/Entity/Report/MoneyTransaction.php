@@ -65,7 +65,7 @@ class MoneyTransaction
         ['sale-of-investment', true, '260', 'one-off', 'in'],
         ['sale-of-property', true, '270', 'one-off', 'in'],
 
-        ['anything-else', true, '290', 'anything-else', 'in'], // no group
+        ['anything-else', true, '290', 'moneyin-other', 'in'], // no group
 
         // Money Out
         ['broadband', false, '300', 'household-bills', 'out'],
