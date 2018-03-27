@@ -150,8 +150,7 @@ Feature: User Self Registration
       | self_registration_clientLastname  | Cross-Tolley                                |
       | self_registration_caseNumber      | 11112222                                    |
     And I press "self_registration_save"
-    Then the following fields should have an error:
-      | self_registration_email_first |
+    Then the form should be invalid
 
   @deputy
   Scenario: A user can self register and activate
