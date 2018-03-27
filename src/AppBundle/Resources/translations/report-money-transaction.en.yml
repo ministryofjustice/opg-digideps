@@ -108,6 +108,7 @@ form:
     moneyOut.legend: What category does the payment come under?
     entries:
       # money in
+      salary-or-wages: Salary or wages
       income-and-earnings: Income from interest, investments, or property
       pensions: Pension
       state-benefits: State benefit
@@ -203,9 +204,9 @@ form:
         label: Anything else
         moreInformations: Please give us more information
       broadband:
-          label: Broadband
+        label: Broadband
       food:
-          label: Food
+        label: Food
       water:
         label: Water
       insurance-eg-life-home-contents:
@@ -219,8 +220,6 @@ form:
       telephone:
         label: Phone
       council-tax:
-        label:
-        label:
         label: Council tax
       property-maintenance-improvement:
         label: Property maintenance/improvement

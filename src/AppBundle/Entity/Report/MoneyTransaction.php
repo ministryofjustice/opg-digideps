@@ -35,10 +35,11 @@ class MoneyTransaction
         // category | hasMoreDetails | order | group | type (in/out)
 
         // Money In
+        ['salary-or-wages', false, '10', 'salary-or-wages', 'in'],
+
         ['account-interest', false, '20', 'income-and-earnings', 'in'],
         ['dividends', false, '30', 'income-and-earnings', 'in'],
         ['income-from-property-rental', false, '50', 'income-and-earnings', 'in'],
-        ['salary-or-wages', false, '60', 'income-and-earnings', 'in'],
 
         ['personal-pension', false, '190', 'pensions', 'in'],
         ['state-pension', false, '200', 'pensions', 'in'],
@@ -56,7 +57,7 @@ class MoneyTransaction
         ['winter-fuel-cold-weather-payment', false, '170', 'state-benefits', 'in'],
         ['other-benefits', true, '180', 'state-benefits', 'in'],
 
-        ['compensation-or-damages-award', true, '210', 'damages', 'in'],
+        ['compensation-or-damages-award', true, '210', 'compensation-or-damages-award', 'in'],
 
         ['bequest-or-inheritance', false, '220', 'one-off', 'in'],
         ['cash-gift-received', false, '230', 'one-off', 'in'],
@@ -115,9 +116,11 @@ class MoneyTransaction
         ['unpaid-care-fees', false, '680', 'debt-and-charges', 'out'],
         ['debt-and-charges-other', true, '710', 'debt-and-charges', 'out'],
 
-        ['cash-withdrawn', true, '720', 'moving-money', 'out'],
-        ['transfers-out-to-other-accounts', true, '730', 'moving-money', 'out'],
-        ['anything-else-paid-out', true, '740', 'moneyout-other', 'out'],
+        ['cash-withdrawn', true, '720', 'cash-withdrawn', 'out'],
+
+        ['transfers-out-to-other-accounts', true, '730', 'transfers-out-to-other-accounts', 'out'],
+
+        ['moneyout-other', true, '740', 'moneyout-other', 'out'],
 
     ];
 
