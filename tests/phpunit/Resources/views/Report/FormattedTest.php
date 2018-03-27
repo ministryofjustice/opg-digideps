@@ -76,7 +76,7 @@ class FormattedTest extends WebTestCase
             ->setAmount(45)
             ->setId('electricity');
         $this->transactionOut1 = (new MoneyTransaction())
-            ->setCategory('moneyout-other') //or accommodation
+            ->setCategory('anything-else-paid-out') //or accommodation
             ->setAmount(1233)
             ->setId('anything-else-paid-out');
 
