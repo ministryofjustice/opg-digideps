@@ -34,29 +34,24 @@
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        <div class="form-group form-group__checkbox-group" data-radio-toggle="1">
-            <fieldset>
-                {% for group, categories in categoriesGrouped %}
-
-                        {% set dataTarget = 'group' ~ group ~ 'details' %}
-                        {# category under a group #}
-                        <fieldset class="form-group panel panel-border-narrow form-group__checkbox-group">
-                            <legend class="heading-secondary">{{ ('form.group.entries.' ~ group) | trans({}, translationDomain) }}</legend>
-                            {% for category in categories %}
-                                {% for el in form.category %}
-                                    {% if el.vars.value ==  category %}
-                                        <div class="multiple-choice text">
-                                            {{ form_widget(el) }}
-                                            <label for="{{ el.vars.id }}">
-                                                {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain) }}
-                                            </label>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </fieldset>
+        <div class="form-group form-group__checkbox-group   push--top">
+        {% for group, categories in categoriesGrouped %}
+            <fieldset class="push--top">
+                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans({}, translationDomain) }}</legend>
+                {% for category in categories %}
+                    {% for el in form.category %}
+                        {% if el.vars.value ==  category %}
+                            <div class="multiple-choice text">
+                                {{ form_widget(el) }}
+                                <label for="{{ el.vars.id }}">
+                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans({}, translationDomain) }}
+                                </label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
             </fieldset>
+        {% endfor %}
         </div>
     {% endif %}
 
