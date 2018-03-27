@@ -17,30 +17,8 @@
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
     {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
-    {% if step == 2 %}
-        : {{ categoryString }}
-
+    {% if step == 2 %} : {{ categoryString }}
     {% endif %}
-
-    {# NOT SURE WE NEED TO PORT THIS with DDBP-2040#}
-    {#{% if step == 2 %}#}
-        {#{% if transaction.group == 'one-off' %}#}
-            {#one-off#}
-        {#{% else %}#}
-            {#{{ groupString | lower }}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
-    {#{% if step == 3 %}#}
-        {#{% if transaction.group == 'state-benefits' %}#}
-            {#{% if categoryString == 'Other benefits' %}#}
-                {#{{ categoryString | lower }}#}
-            {#{% else %}#}
-                {#{{ categoryString }}#}
-            {#{% endif %}#}
-        {#{% else %}#}
-            {#{{ categoryString | lower }}#}
-        {#{% endif %}#}
-    {#{% endif %}#}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
@@ -54,18 +32,6 @@
 
 {% block pageContent %}
 
-    {#{% for el in form.category %}#}
-        {#<pre>#}
-        {#{{ dump(el.vars | keys) }}#}
-        {#{{ dump(el.vars.label) }}#}
-        {#{{ dump(el.vars.id) }}#}
-        {#{{ dump(el.vars.value) }}#}
-            {#</pre><hr/>#}
-    {#{% endfor %}#}
-
-
-    {#{{ dump(form.category | keys) }}#}
-
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     <div class="form-group form-group__checkbox-group">
@@ -75,14 +41,13 @@
             {% if categories | length > 1 %}
                 {% set dataTarget = 'group' ~ group ~ 'details' %}
                 {# category under a group #}
-                <div class="multiple-choice text" data-target="{{ dataTarget }}">
-                <input type="radio" id="group{{ group }}" name="group{{ group }}">
-                <label for="group{{ group }}">
-                    {{ ('form.group.entries.' ~ group) | trans({}, translationDomain)}}
-                </label>
+                <div class="multiple-choice text" data-radio-toggle="{{ dataTarget }}">
+                    <input type="radio" id="group{{ group }}" name="group{{ group }}">
+                    <label for="group{{ group }}">
+                        {{ ('form.group.entries.' ~ group) | trans({}, translationDomain)}}
+                    </label>
                 </div>
-                <div id="{{ dataTarget }}" class="form-group panel panel-border-narrow js-hidden form-group__checkbox-group">
-                    <fieldset>
+                <fieldset id="{{ dataTarget }}" class="form-group panel panel-border-narrow js-hidden form-group__checkbox-group">
                     {% for category in categories %}
                         {% for el in form.category %}
                             {% if el.vars.value ==  category%}
@@ -95,8 +60,7 @@
                             {% endif %}
                         {% endfor %}
                     {% endfor %}
-                    </fieldset>
-                </div>
+                </fieldset>
             {% else %}
                 {# category not under a group#}
                 {% set category = categories.0 %}
@@ -114,12 +78,6 @@
 
 
         {% endfor %}
-         {#{% do form.category.setRendered %}#}
-
-        {#{{ form_checkbox_group(form.category, 'form.category', {#}
-            {#'legendClass' : 'form-label-bold',#}
-            {#'legendTextDISABLED' : ('form.category.moneyIn.legend.' ~ transaction.group) | trans#}
-        {#}) }}#}
     {% endif %}
     </div>
 
