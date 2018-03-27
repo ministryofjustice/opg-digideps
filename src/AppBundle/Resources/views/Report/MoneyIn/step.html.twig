@@ -6,7 +6,6 @@
 {% trans_default_domain translationDomain %}
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
-{#{% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}#}
 {% set category = transaction.category %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({

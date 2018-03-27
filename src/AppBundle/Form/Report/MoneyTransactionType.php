@@ -21,30 +21,14 @@ class MoneyTransactionType extends AbstractType
      */
     private $translator;
 
-    private function getGroups()
-    {
-        $ret = [];
-
-        foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
-            if ($type == $this->type) {
-                $ret[$groupId] = $this->translate('form.group.entries.' . $groupId);
-            }
-        }
-
-        return array_unique($ret);
-    }
-
     private function getCategories()
     {
         $ret = [];
 
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($type == $this->type) {
                 $ret[$categoryId] = null;
-//                    '['.$this->translate('form.group.entries.' . $groupId) . '] ' //TEMP
-//                    . $this->translate('form.category.entries.' . $categoryId . '.label');
             }
         }
 
@@ -57,7 +41,7 @@ class MoneyTransactionType extends AbstractType
     private function isDescriptionMandatory()
     {
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
