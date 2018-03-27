@@ -120,7 +120,7 @@ class MoneyTransaction
 
         ['transfers-out-to-other-accounts', true, 'transfers-out-to-other-accounts', 'out'],
 
-        ['moneyout-other', true, 'moneyout-other', 'out'],
+        ['anything-else-paid-out', true, 'moneyout-other', 'out'],
 
     ];
 
