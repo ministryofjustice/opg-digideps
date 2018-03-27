@@ -88,6 +88,7 @@
             </fieldset>
         </div>
         <script>
+            {# TODO move to component if the behaviour is correct #}
             $(document).ready(function () {
                 // clicking on parent radio boxes toggle the subradios, and collapses the other ones
                 // the standard GOV.UK data-target cannot be used due to elements name being at the parent or child level
@@ -110,17 +111,9 @@
 
                     wrapper.find('[data-radio-toggle-parent="'+ groupName +'"] input[type=radio]').prop('checked', false);
                 });
-
-
-
-
             });
         </script>
     {% endif %}
-
-
-
-
 
     {% if step == 2 %}
         {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
