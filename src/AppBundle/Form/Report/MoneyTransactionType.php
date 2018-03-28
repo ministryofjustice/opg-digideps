@@ -14,7 +14,6 @@ class MoneyTransactionType extends AbstractType
     private $clientFirstName;
     private $step;
     private $type;
-    private $selectedGroup;
     private $selectedCategory;
 
     /**
@@ -22,28 +21,14 @@ class MoneyTransactionType extends AbstractType
      */
     private $translator;
 
-    private function getGroups()
-    {
-        $ret = [];
-
-        foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
-            if ($type == $this->type) {
-                $ret[$groupId] = $this->translate('form.group.entries.' . $groupId);
-            }
-        }
-
-        return array_unique($ret);
-    }
-
     private function getCategories()
     {
         $ret = [];
 
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
-            if ($groupId == $this->selectedGroup) {
-                $ret[$categoryId] = $this->translate('form.category.entries.' . $categoryId . '.label');
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+            if ($type == $this->type) {
+                $ret[$categoryId] = null;
             }
         }
 
@@ -56,7 +41,7 @@ class MoneyTransactionType extends AbstractType
     private function isDescriptionMandatory()
     {
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $order, $groupId, $type) = $cat;
+            list($categoryId, $hasDetails, $groupId, $type) = $cat;
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
@@ -70,47 +55,32 @@ class MoneyTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->step             = (int) $options['step'];
-        $this->type             = $options['type'];
-        $this->selectedGroup    = $options['selectedGroup'];
+        $this->step = (int)$options['step'];
+        $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
-        $this->translator       = $options['translator'];
-        $this->clientFirstName  = $options['clientFirstName'];
+        $this->translator = $options['translator'];
+        $this->clientFirstName = $options['clientFirstName'];
 
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
-            $builder->add('group', 'choice', [
-                'choices' =>  $this->getGroups(),
+            $builder->add('category', 'choice', [
+                'choices'  => $this->getCategories(),
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 2) {
-            $builder->add('category', 'choice', [
-                'choices' =>  $this->getCategories(),
-                'expanded' => true,
-            ]);
-        }
-
-        if ($this->step === 3) {
             $builder->add('description', 'textarea', [
                 'required' => $this->isDescriptionMandatory(),
             ]);
 
             $builder->add('amount', 'number', [
-                'precision' => 2,
-                'grouping' => true,
-                'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
+                'precision'       => 2,
+                'grouping'        => true,
+                'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
-
-//            $builder->add('createdAt', 'date', ['widget' => 'text',
-//                'mapped' => false, // Not in the model
-//                'input' => 'datetime',
-//                'format' => 'dd-MM-yyyy',
-//                'invalid_message' => 'Enter a valid date',
-//            ]);
         }
 
         $builder->add('save', 'submit');
@@ -124,19 +94,15 @@ class MoneyTransactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'selectedCategory' => null,
-            'translation_domain' => 'report-money-transaction',
+            'selectedCategory'          => null,
+            'translation_domain'        => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
-            'validation_groups' => function (FormInterface $form) {
+            'validation_groups'         => function (FormInterface $form) {
                 $validationGroups = [];
-
                 if ($this->step === 1) {
-                    $validationGroups[] = 'transaction-group';
-                }
-                if ($this->step === 2) {
                     $validationGroups[] = 'transaction-category';
                 }
-                if ($this->step === 3) {
+                if ($this->step === 2) {
                     $validationGroups[] = 'transaction-amount';
                     if ($this->isDescriptionMandatory()) {
                         $validationGroups[] = 'transaction-description';
@@ -146,7 +112,7 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-        ->setRequired(['step', 'type', 'translator', 'clientFirstName', 'selectedGroup'])
-        ->setAllowedTypes('translator', TranslatorInterface::class);
+            ->setRequired(['step', 'type', 'translator', 'clientFirstName'])
+            ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 }

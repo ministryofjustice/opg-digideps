@@ -6,10 +6,9 @@
 {% trans_default_domain translationDomain %}
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
-{% set groupString = ('form.group.entries.' ~ transaction.group) | trans(clientTransOptions) %}
+{% set category = transaction.category %}
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({
-    '%group%': groupString,
     '%category%': categoryString,
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
     '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
@@ -19,31 +18,7 @@
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {% endif %}
-    {% if step == 2 %}
-        {% if transaction.group == "fees" %}
-            {{ groupString }}
-        {% elseif transaction.group == "major-purchases" %}
-            major purchase
-        {% elseif transaction.group == "accommodation" %}
-            {{ transaction.group }}
-        {% else %}
-            {{ groupString | lower }}
-        {% endif %}
-    {% endif %}
-    {% if step == 3 %}
-        {% if categoryString == "TV services" or categoryString == "OPG's fees" %}
-            {{ categoryString }}
-        {% elseif categoryString == "Tax payments to HMRC" %}
-            {{ categoryString|replace({'Tax': 'tax'}) }}
-        {% elseif 'Cash' in categoryString %}
-            {{ categoryString|replace({'Cash': 'cash'}) }}
-        {% elseif 'Transfers' in categoryString %}
-            {{ categoryString|replace({'Transfers': 'transfers'}) }}
-        {% else %}
-            {{ categoryString | lower }}
-        {% endif %}
-    {% endif %}
+    {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {{ categoryString }}{% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
@@ -59,26 +34,31 @@
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        <p class="text">
-            {{ 'stepPage.moneyOut.pageSectionDescription.step1' | trans(transOptions) }}
-        </p>
-        {{ macros.notification('default', ('stepPage.moneyOut.pageSectionDescription.differentSections' ~ app.user.getRoleForTrans) | trans(transOptions) ) }}
-        {{ form_checkbox_group(form.group, 'form.group', {
-            'legendClass' : 'form-label-bold',
-            'legendText' : 'form.group.moneyOut.legend' | trans(transOptions),
-            'formGroupClass': 'push--top'
-        }) }}
+        <div class="form-group form-group__checkbox-group   push--top">
+        {% for group, categories in categoriesGrouped %}
+            <fieldset class="push--top">
+                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
+                {% for category in categories %}
+                    {% for el in form.category %}
+                        {% if el.vars.value == category %}
+                            <div class="multiple-choice text">
+                                {{ form_widget(el) }}
+                                <label for="{{ el.vars.id }}">
+                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans(clientTransOptions, translationDomain) }}
+                                </label>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+        </div>
     {% endif %}
 
     {% if step == 2 %}
-        {{ form_checkbox_group(form.category, 'form.category', {
-            'legendClass' : 'form-label-bold',
-            'legendText' : 'form.category.moneyOut.legend' | trans
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
+            'labelParameters' : transOptions
         }) }}
-    {% endif %}
-
-    {% if step == 3 %}
-        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {}) }}
 
         {{ form_input(form.amount, 'form.amount', {
             'inputPrefix' : '£',

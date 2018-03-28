@@ -130,8 +130,6 @@ Feature: PA user edits report sections
     And I click on "edit-money_in, start"
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
-      | account_group_0 | pensions |
-    And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
     And the step with the following values CAN be submitted:
       | account_description | pension received |
@@ -144,8 +142,6 @@ Feature: PA user edits report sections
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
-    And the step with the following values CAN be submitted:
-      | account_group_0 | household-bills |
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
     And the step with the following values CAN be submitted:

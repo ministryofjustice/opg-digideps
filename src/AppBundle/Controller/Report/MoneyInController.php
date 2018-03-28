@@ -41,7 +41,7 @@ class MoneyInController extends AbstractController
      */
     public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
-        $totalSteps = 3;
+        $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -71,23 +71,25 @@ class MoneyInController extends AbstractController
         }
 
         // add URL-data into model
-        isset($dataFromUrl['group']) && $transaction->setGroup($dataFromUrl['group']);
         isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl
         ]);
 
         // crete and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [ 'step'             => $step, 'type'             => 'in', 'translator'       => $this->get('translator'), 'clientFirstName'  => $report->getClient()->getFirstname(), 'selectedGroup'    => $transaction->getGroup(), 'selectedCategory' => $transaction->getCategory()
-                                   ]
-                                 );
+        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [
+            'step' => $step,
+            'type'             => 'in',
+            'translator'       => $this->get('translator'),
+            'clientFirstName'  => $report->getClient()->getFirstname(),
+            'selectedCategory' => $transaction->getCategory()
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
-                $stepUrlData['group'] = $transaction->getGroup();
-            } elseif ($step == 2) {
                 $stepUrlData['category'] = $transaction->getCategory();
             } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit
@@ -118,6 +120,7 @@ class MoneyInController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
+            'categoriesGrouped' => EntityDir\Report\MoneyTransaction::getCategoriesGrouped('in')
         ];
     }
 
@@ -135,7 +138,7 @@ class MoneyInController extends AbstractController
         if ($form->isValid()) {
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1]);
+                    return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_in_add_another']);
                 case 'no':
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
             }

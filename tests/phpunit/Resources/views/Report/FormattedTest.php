@@ -68,15 +68,15 @@ class FormattedTest extends WebTestCase
             ->setOpeningBalance(43);
 
         $this->transactionIn1 = (new MoneyTransaction())
-            ->setCategory('household-bills')
+            ->setCategory('council-tax')
             ->setAmount(1234)
             ->setId('gas');
         $this->transactionIn2 = (new MoneyTransaction())
-            ->setCategory('household-bills')
+            ->setCategory('council-tax')
             ->setAmount(45)
             ->setId('electricity');
         $this->transactionOut1 = (new MoneyTransaction())
-            ->setCategory('moneyout-other') //or accommodation
+            ->setCategory('anything-else-paid-out') //or accommodation
             ->setAmount(1233)
             ->setId('anything-else-paid-out');
 

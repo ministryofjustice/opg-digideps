@@ -108,10 +108,12 @@ form:
     moneyOut.legend: What category does the payment come under?
     entries:
       # money in
+      salary-or-wages: Salary or wages
       income-and-earnings: Income from interest, investments, or property
       pensions: Pension
       state-benefits: State benefit
       damages: Damages
+      compensation-or-damages-award: Compensation or damages award
       one-off: One-off, such as inheritance, sale of asset, or a refund
       moneyin-other: Other
       # money out
@@ -123,6 +125,8 @@ form:
       major-purchases: Major purchase, such as property or investment
       debt-and-charges: Tax or charge
       moving-money: Moving money
+      cash-withdrawn: Cash withdrawn
+      transfers-out-to-other-accounts: Transfers from %client%'s account to other accounts
       moneyout-other: Other
   amount:
       label: Amount
@@ -203,9 +207,9 @@ form:
         label: Anything else
         moreInformations: Please give us more information
       broadband:
-          label: Broadband
+        label: Broadband
       food:
-          label: Food
+        label: Food
       water:
         label: Water
       insurance-eg-life-home-contents:
@@ -219,8 +223,6 @@ form:
       telephone:
         label: Phone
       council-tax:
-        label:
-        label:
         label: Council tax
       property-maintenance-improvement:
         label: Property maintenance/improvement
@@ -323,4 +325,7 @@ form:
       anything-else-paid-out:
         label: Anything else paid out
         moreInformations: Give us more information
+      moneyout-other:
+        label: Anything else paid out
+        moreInformation: Give us more information
 
