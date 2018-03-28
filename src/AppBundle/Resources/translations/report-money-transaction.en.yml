@@ -159,26 +159,37 @@ form:
         label: Income from property rental
       attendance-allowance:
         label: Attendance Allowance
+        label2ndStep: Attendance Allowance
       disability-living-allowance:
         label: Disability Living Allowance
+        label2ndStep: Disability Living Allowance
       personal-independence-payment:
         label: Personal Independence Payment
+        label2ndStep: Personal Independence Payment
       severe-disablement-allowance:
         label: Severe Disablement Allowance
+        label2ndStep  : Severe Disablement Allowance
       winter-fuel-cold-weather-payment:
         label: Winter Fuel/Cold Weather Payment
+        label2ndStep: Winter Fuel/Cold Weather Payment
       housing-benefit:
         label: Housing Benefit
+        label2ndStep: Housing Benefit
       employment-support-allowance:
         label: Employment Support Allowance
+        label2ndStep: Employment Support Allowance
       incapacity-benefit:
         label: Incapacity Benefit
+        label2ndStep: Incapacity Benefit
       income-support:
         label: Income Support
+        label2ndStep: Income Support
       pension-credit:
         label: Pension Credit
+        label2ndStep: Pension Credit
       universal-credit:
         label: Universal Credit
+        label2ndStep: Universal Credit
       personal-pension:
         label: Private pension
       state-pension:
@@ -229,6 +240,7 @@ form:
         moreInformations: Please give us more information
       tv-services:
         label: TV services
+        label2ndStep: TV services
       rent:
         label: Rent
       mortgage:
@@ -272,6 +284,7 @@ form:
         label: Day trips
       tax-payments-to-hmrc:
         label: Tax payment to HMRC
+        label2ndStep: tax payment to HMRC
       debt-and-charges-other:
         label: Other
         moreInformations: Please give us more information
@@ -289,6 +302,7 @@ form:
         moreInformations: For each fee, please enter the date, the amount and what it was for
       opg-fees:
         label: OPG's fees
+        label2ndStep: OPG's fees
       stocks-and-shares-purchased:
         label: Stocks and shares
         moreInformations: For stocks and shares, please enter the date, a description and the value
