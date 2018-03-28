@@ -90,6 +90,9 @@ class MoneyInController extends AbstractController
         if ($form->get('save')->isClicked() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if ($step == 1) {
+                // unset from page to prevent step redirector skipping step 2
+                $stepRedirector->setFromPage(null);
+
                 $stepUrlData['category'] = $transaction->getCategory();
             } elseif ($step == $totalSteps) {
                 if ($transactionId) { // edit
