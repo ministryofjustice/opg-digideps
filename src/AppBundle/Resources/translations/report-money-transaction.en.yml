@@ -284,7 +284,6 @@ form:
         label: Day trips
       tax-payments-to-hmrc:
         label: Tax payment to HMRC
-        label2ndStep: tax payment to HMRC
       debt-and-charges-other:
         label: Other
         moreInformations: Please give us more information
