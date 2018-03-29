@@ -48,7 +48,7 @@
         {% endif %}
     </p>
 
-    <div class="form-group form-group__checkbox-group push--bottom {% if not form.dueDateChoice.vars.valid %}form-group-error{% endif %}">
+    <div class="form-group push--bottom {% if not form.dueDateChoice.vars.valid %}form-group-error{% endif %}">
         {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
             'legendClass' : 'form-label-bold',
             'useFormGroup': false,

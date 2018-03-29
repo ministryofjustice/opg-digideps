@@ -36,19 +36,17 @@
     {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {% if step == 1 %}
-        <div class="form-group form-group__checkbox-group   push--top">
+        <div id="form-group-account_category" class="form-group push--top {% if not form.category.vars.valid %}form-group-error{% endif %}">
         {% for group, categories in categoriesGrouped %}
             <fieldset class="push--top">
                 <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
                 {% for category in categories %}
                     {% for el in form.category %}
                         {% if el.vars.value == category %}
-                            <div class="multiple-choice text">
-                                {{ form_widget(el) }}
-                                <label for="{{ el.vars.id }}">
-                                    {{ ('form.category.entries.' ~ category ~ '.label') | trans(clientTransOptions, translationDomain) }}
-                                </label>
-                            </div>
+                            {{ form_checkbox(el, '', {
+                                'useFormGroup': false,
+                                'labelText': ('form.category.entries.' ~ category ~ '.label') | trans(clientTransOptions, translationDomain)
+                            }) }}
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
