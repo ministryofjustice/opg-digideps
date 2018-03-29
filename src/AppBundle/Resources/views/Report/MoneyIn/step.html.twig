@@ -7,16 +7,18 @@
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
 {% set category = transaction.category %}
-{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({
-    '%category%': categoryString,
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
 }) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
-    {% if step == 2 %} : {{ categoryString }}
+    {% if step == 2 %}
+        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+    {% else %}
+        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
     {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}

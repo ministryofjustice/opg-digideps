@@ -6,10 +6,7 @@
 {% trans_default_domain translationDomain %}
 
 {% set clientTransOptions = {'%client%': report.client.firstname | e } %}
-{% set category = transaction.category %}
-{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set transOptions = clientTransOptions | merge({
-    '%category%': categoryString,
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
     '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
     '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
@@ -18,7 +15,13 @@
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}{% if step != 1 %}: {{ categoryString }}{% endif %}
+    {% if step == 2 %}
+        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+    {% else %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
+    {% endif %}
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
