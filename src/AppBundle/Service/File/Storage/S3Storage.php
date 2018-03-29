@@ -4,6 +4,7 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 
 /**
  * Class to upload/download/delete files from S3
@@ -37,7 +38,7 @@ class S3Storage implements StorageInterface
      * @param S3Client $s3Client (Aws library)
      * @param $bucketName S3 bucket name
      */
-    public function __construct(S3Client $s3Client, $bucketName)
+    public function __construct(S3ClientInterface $s3Client, $bucketName)
     {
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;
@@ -80,6 +81,8 @@ class S3Storage implements StorageInterface
      */
     public function delete($key)
     {
+        $this->appendTagset($key, [['Key' => 'purge', 'Value' => 1]]);
+
         return $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
             'Key'    => $key
@@ -98,7 +101,41 @@ class S3Storage implements StorageInterface
             'Key'      => $key,
             'Body'     => $body,
             'ServerSideEncryption' => 'AES256',
-            'Metadata' => [
+            'Metadata' => []
+        ]);
+    }
+
+    /**
+     * Appends new tagset to S3 Object
+     *
+     * @param $key
+     * @param $newTagset
+     * @throws \Exception
+     */
+    public function appendTagset($key, $newTagset) {
+        if (empty($key)) {
+            throw new \Exception('Invalid Reference Key: ' . $key . ' when appending tag');
+        }
+        foreach ($newTagset as $newTag) {
+            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
+                throw new \Exception('Invalid Tagset updating: ' . $key . var_export($newTagset));
+            }
+        }
+
+        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
+        // get the objects tags and then append with PUT
+
+        $existingTags = $this->s3Client->getObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key
+        ]);
+
+        // Update tags in S3
+        $this->s3Client->putObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
+            'Tagging' => [
+                'TagSet' => array_merge($existingTags['TagSet'], $newTagset)
             ],
         ]);
     }

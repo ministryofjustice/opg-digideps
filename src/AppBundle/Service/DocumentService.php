@@ -5,8 +5,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
-use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;
 
 class DocumentService
@@ -16,12 +14,6 @@ class DocumentService
      * @var S3Storage
      */
     private $s3Storage;
-
-
-    /**
-     * @var S3Client
-     */
-    private $s3Client;
 
     /**
      * @var RestClient
@@ -36,14 +28,12 @@ class DocumentService
     /**
      * DocumentService constructor.
      * @param S3Storage       $s3Storage
-     * @param S3Client        $s3Client
      * @param RestClient      $restClient
      * @param LoggerInterface $logger
      */
-    public function __construct(S3Storage $s3Storage, S3Client $s3Client, RestClient $restClient, LoggerInterface $logger)
+    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger)
     {
         $this->s3Storage = $s3Storage;
-        $this->s3Client = $s3Client;
         $this->restClient = $restClient;
         $this->logger = $logger;
     }
@@ -138,8 +128,6 @@ class DocumentService
         }
 
         try {
-            $this->appendTagToS3Object($document, ['Key' => 'purge', 'Value' => 1]);
-
             $this->s3Storage->delete($ref);
             $this->log('notice', "deleting $ref from S3: no exception thrown from deleteObject operation");
 
@@ -150,46 +138,6 @@ class DocumentService
                 throw $e;
             }
         }
-    }
-
-    /**
-     * Appends a new TagSet to an S3 object
-     *
-     * @param Document $document
-     * @param array    $newTagset
-     * @throws \Exception
-     */
-    private function appendTagToS3Object(Document $document, $newTagset)
-    {
-        $ref = $document->getStorageReference();
-        if (empty($ref)) {
-            throw new \Exception('Invalid Reference: ' . $ref . ' when appending tag');
-        }
-        foreach ($newTagset as $newTag) {
-            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: ' . $ref . var_export($newTagset));
-            }
-        }
-
-        $bucketName = $this->getContainer()->getParameter('s3_bucket_name');
-        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
-        // get the objects tags and then append with PUT
-        $existingTags = $this->s3Client->getObjectTagging([
-            'Bucket' => $bucketName,
-            'Key' => $ref
-        ]);
-
-        $newTagset = array_merge($existingTags['TagSet'], ['Key' => 'purge', 'Value' => 1]);
-
-        // Update tags in S3
-        $this->s3Client->putObjectTagging([
-            'Bucket' => $bucketName,
-            'Key' => $ref,
-            'Tagging' => [
-                'TagSet' => $newTagset
-            ],
-        ]);
-        $this->log('notice', "Updating $ref from S3: No exception updating tags: " . var_export($newTagset));
     }
 
     /**
