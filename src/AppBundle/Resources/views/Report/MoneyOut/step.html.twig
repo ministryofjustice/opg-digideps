@@ -15,14 +15,13 @@
 
 {% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}
-    {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
     {% if step == 2 %}
         {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
         {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
-        : {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+    {% else %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
     {% endif %}
-
-
 {% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
