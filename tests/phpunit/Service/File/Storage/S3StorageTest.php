@@ -3,6 +3,7 @@
 namespace AppBundle\Service\File\Storage;
 
 use Mockery as m;
+use Psr\Log\LoggerInterface;
 
 class S3StorageTest extends \PHPUnit_Framework_TestCase
 {
@@ -86,7 +87,10 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             ->with(m::type('array'))
             ->andReturn($this->generateAwsResult(200, $this->fileContent));
 
-        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // store
         $ret = $this->object->store($key, $this->fileContent);
@@ -105,7 +109,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             m::type('array')
         )->andThrow(FileNotFoundException::class);
 
-        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // try retrieve after deletion (Exception expected)
         $this->setExpectedException(FileNotFoundException::class);
@@ -121,7 +125,10 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             m::type('array')
         )->andReturn($this->generateAwsResult(200, file_get_contents(__DIR__ . '/cat.jpg')));
 
-        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
