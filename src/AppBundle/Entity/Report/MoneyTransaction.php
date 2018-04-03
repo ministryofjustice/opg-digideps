@@ -60,6 +60,11 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['anything-else', true, 'moneyin-other', 'in'], // no group
 
         // Money Out
+        ['care-fees', false, 'care-and-medical', 'out'],
+        ['local-authority-charges-for-care', false, 'care-and-medical', 'out'],
+        ['medical-expenses', false, 'care-and-medical', 'out'],
+        ['medical-insurance', false, 'care-and-medical', 'out'],
+
         ['broadband', false, 'household-bills', 'out'],
         ['council-tax', false, 'household-bills', 'out'],
         ['electricity', false, 'household-bills', 'out'],
@@ -77,11 +82,6 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['mortgage', false, 'accommodation', 'out'],
         ['rent', false, 'accommodation', 'out'],
         ['accommodation-other', true, 'accommodation', 'out'],
-
-        ['care-fees', false, 'care-and-medical', 'out'],
-        ['local-authority-charges-for-care', false, 'care-and-medical', 'out'],
-        ['medical-expenses', false, 'care-and-medical', 'out'],
-        ['medical-insurance', false, 'care-and-medical', 'out'],
 
         ['client-transport-bus-train-taxi-fares', false, 'client-expenses', 'out'],
         ['clothes', false, 'client-expenses', 'out'],
@@ -107,9 +107,9 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['unpaid-care-fees', false, 'debt-and-charges', 'out'],
         ['debt-and-charges-other', true, 'debt-and-charges', 'out'],
 
-        ['cash-withdrawn', true, 'cash-withdrawn', 'out'],
+        ['cash-withdrawn', true, 'moving-money', 'out'],
 
-        ['transfers-out-to-other-accounts', true, 'transfers-out-to-other-accounts', 'out'],
+        ['transfers-out-to-other-accounts', true, 'moving-money', 'out'],
 
         ['anything-else-paid-out', true, 'moneyout-other', 'out'],
 
