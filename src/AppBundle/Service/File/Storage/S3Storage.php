@@ -167,7 +167,7 @@ class S3Storage implements StorageInterface
         //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 
         $this->logger->log($level, $message, ['extra' => [
-            'service' => 'documents-service',
+            'service' => 's3-storage',
         ]]);
     }
 }
