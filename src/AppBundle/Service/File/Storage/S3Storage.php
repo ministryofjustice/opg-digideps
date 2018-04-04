@@ -127,7 +127,7 @@ class S3Storage implements StorageInterface
         }
         foreach ($newTagset as $newTag) {
             if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: ' . $key . var_export($newTagset));
+                throw new \Exception('Invalid Tagset updating: ' . $key . print_r($newTagset, true));
             }
         }
 
