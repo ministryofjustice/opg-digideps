@@ -149,7 +149,7 @@ class S3Storage implements StorageInterface
             'Bucket' => $this->bucketName,
             'Key' => $key,
             'Tagging' => [
-                'TagSet' => array_merge($existingTags['TagSet'], $newTagset)
+                'TagSet' => $newTagset
             ],
         ]);
         $this->log('info', "Tagset Updated for $key ");
