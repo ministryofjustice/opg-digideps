@@ -128,8 +128,9 @@ class DocumentService
         }
 
         try {
+            $this->log('notice', "Deleting $ref from S3");
             $this->s3Storage->delete($ref);
-            $this->log('notice', "deleting $ref from S3: no exception thrown from deleteObject operation");
+            $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
 
             return true;
         } catch (\Exception $e) {

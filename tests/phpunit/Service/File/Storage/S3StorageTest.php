@@ -2,6 +2,9 @@
 
 namespace AppBundle\Service\File\Storage;
 
+use Mockery as m;
+use Psr\Log\LoggerInterface;
+
 class S3StorageTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -14,6 +17,8 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         // connect to fakes3 (https://github.com/jubos/fake-s3)
         // see docker-composer.yml for params
 
+        $this->fileContent = 'FILE-CONTENT-' . microtime(1);
+
         $options =[
             'version'     => 'latest',
             'region'      => 'eu-west-1',
@@ -25,10 +30,6 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $awsClient = new \Aws\S3\S3Client($options);
-
-        $this->object = new S3Storage($awsClient, 'unit_test_bucket');
-
         // check fake S3 connection. To test why failing on the infrastructure
         if (!@fsockopen('fakes3', '4569')) {
             echo "Can't connect to S3 ({$options['endpoint']})\n";
@@ -36,22 +37,79 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    private function generateAwsResult($statusCode, $body  ='')
+    {
+        $args = ['@metadata' => ['statusCode' => $statusCode]];
+        if (!empty($body)) {
+            $args['Body'] = $body;
+        }
+        return new \Aws\Result($args);
+    }
+
     public function testUploadDownloadDeleteTextContent()
     {
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete' . microtime(1);
-        $fileContent = 'FILE-CONTENT-' . microtime(1);
+
+        $awsClient = m::mock(\Aws\S3\S3ClientInterface::class);
+
+        $awsClient->shouldReceive('putObject')
+            ->with(m::type('array'))
+            ->once()
+            ->andReturn($this->generateAwsResult(200));
+
+        $awsClient->shouldReceive('getObjectTagging')
+            ->with(m::type('array'))
+            ->once()
+            ->andReturn(
+            [
+                'TagSet' => [
+                    [
+                        'Key' => 'someKey',
+                        'Value' => 'someValue',
+                    ],
+                ],
+                'VersionId' => 'someVersionId',
+            ]
+        );
+
+        $awsClient->shouldReceive('putObjectTagging')
+            ->with(m::type('array'))
+            ->once()
+            ->andReturn(['VersionId' => 'someVersionId']);
+
+        $awsClient->shouldReceive('deleteObject')
+            ->once()
+            ->andReturn($this->generateAwsResult(204));
+
+        // Initial call to getObject returns fileContent
+        $awsClient->shouldReceive('getObject')
+            ->with(m::type('array'))
+            ->andReturn($this->generateAwsResult(200, $this->fileContent));
+
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // store
-        $ret = $this->object->store($key, $fileContent);
+        $ret = $this->object->store($key, $this->fileContent);
         $this->assertEquals(200, $ret->toArray()['@metadata']['statusCode']);
 
         // retrieve
-        $this->assertEquals($fileContent, $this->object->retrieve($key));
+        $this->assertEquals($this->fileContent, $this->object->retrieve($key));
 
         // delete
         $ret = $this->object->delete($key);
         $this->assertEquals(204, $ret->toArray()['@metadata']['statusCode']);
+
+        // Subsequent call to getObject requires a new mock to allow getObject to throw Exception since file removed
+        $awsClient = m::mock(\Aws\S3\S3ClientInterface::class);
+        $awsClient->shouldReceive('getObject')->with(
+            m::type('array')
+        )->andThrow(FileNotFoundException::class);
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // try retrieve after deletion (Exception expected)
         $this->setExpectedException(FileNotFoundException::class);
@@ -60,6 +118,18 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
     public function testUploadBinaryContent()
     {
+        $awsClient = m::mock(\Aws\S3\S3ClientInterface::class);
+
+        $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
+        $awsClient->shouldReceive('getObject')->with(
+            m::type('array')
+        )->andReturn($this->generateAwsResult(200, file_get_contents(__DIR__ . '/cat.jpg')));
+
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+
         // create timestamped file and key to undo effects of potential previous executions
         $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
         $fileContent = file_get_contents(__DIR__ . '/cat.jpg');

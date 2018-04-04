@@ -4,6 +4,8 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class to upload/download/delete files from S3
@@ -32,15 +34,22 @@ class S3Storage implements StorageInterface
     private $bucketName;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * S3Storage constructor.
      *
      * @param S3Client $s3Client (Aws library)
      * @param $bucketName S3 bucket name
+     * @param LoggerInterface $logger
      */
-    public function __construct(S3Client $s3Client, $bucketName)
+    public function __construct(S3ClientInterface $s3Client, $bucketName, LoggerInterface $logger)
     {
         $this->s3Client = $s3Client;
         $this->bucketName = $bucketName;
+        $this->logger = $logger;
     }
 
     /**
@@ -80,6 +89,8 @@ class S3Storage implements StorageInterface
      */
     public function delete($key)
     {
+        $this->appendTagset($key, [['Key' => 'Purge', 'Value' => 1]]);
+
         return $this->s3Client->deleteObject([
             'Bucket' => $this->bucketName,
             'Key'    => $key
@@ -98,8 +109,65 @@ class S3Storage implements StorageInterface
             'Key'      => $key,
             'Body'     => $body,
             'ServerSideEncryption' => 'AES256',
-            'Metadata' => [
+            'Metadata' => []
+        ]);
+    }
+
+    /**
+     * Appends new tagset to S3 Object
+     *
+     * @param $key
+     * @param $newTagset
+     * @throws \Exception
+     */
+    public function appendTagset($key, $newTagset) {
+        $this->log('info', "Appending Purge tag for $key to S3");
+        if (empty($key)) {
+            throw new \Exception('Invalid Reference Key: ' . $key . ' when appending tag');
+        }
+        foreach ($newTagset as $newTag) {
+            if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
+                throw new \Exception('Invalid Tagset updating: ' . $key . var_export($newTagset));
+            }
+        }
+
+        // add purge tag to signal permanent deletion See: DDPB-2010/OPGOPS-2347
+        // get the objects tags and then append with PUT
+
+        $this->log('info', "Retrieving tagset for $key from S3");
+        $existingTags = $this->s3Client->getObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key
+        ]);
+
+        $newTagset = array_merge($existingTags['TagSet'], $newTagset);
+        $this->log('info', "Tagset retrieved for $key : " . print_r($existingTags, true));
+        $this->log('info', "Updating tagset for $key with " . print_r($newTagset, true));
+
+        // Update tags in S3
+        $this->s3Client->putObjectTagging([
+            'Bucket' => $this->bucketName,
+            'Key' => $key,
+            'Tagging' => [
+                'TagSet' => $newTagset
             ],
         ]);
+        $this->log('info', "Tagset Updated for $key ");
+
+    }
+
+    /**
+     * Log message using the internal logger
+     *
+     * @param $level
+     * @param $message
+     */
+    private function log($level, $message)
+    {
+        //echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
+
+        $this->logger->log($level, $message, ['extra' => [
+            'service' => 's3-storage',
+        ]]);
     }
 }
