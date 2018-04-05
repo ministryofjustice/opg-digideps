@@ -23,19 +23,31 @@ class CasRec
      */
     private static $csvToReportTypeMap = [
         // Lay
+        [true, User::ROLE_LAY_DEPUTY, ['p3', 'p3g', 'l3', 'l3g'], 'opg103', Report::TYPE_103],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103],
+        [true, User::ROLE_LAY_DEPUTY, ['p2', 'p2a', 'l2a', 'l2'], 'opg102', Report::TYPE_102],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_LAY_DEPUTY, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102],
         [true, User::ROLE_LAY_DEPUTY, ['hw'], '', Report::TYPE_104],
         [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg103', Report::TYPE_103_4],
         [true, User::ROLE_LAY_DEPUTY, ['hw'], 'opg102', Report::TYPE_102_4],
         // PA
+        [true, User::ROLE_PA_NAMED, ['a3'], 'opg103', Report::TYPE_103_6],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_6],
+        [true, User::ROLE_PA_NAMED, ['a2', 'a2a'], 'opg102', Report::TYPE_102_6],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_PA_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_6],
         [true, User::ROLE_PA_NAMED, ['hw'], '', Report::TYPE_104_6],
         [true, User::ROLE_PA_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_6],
         [true, User::ROLE_PA_NAMED, ['hw'], 'opg102', Report::TYPE_102_4_6],
         // Prof
+        [true, User::ROLE_PROF_NAMED, ['p3', 'p3g'], 'opg103', Report::TYPE_103_5],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg103', Report::TYPE_103_5],
+        [true, User::ROLE_PROF_NAMED, ['p2', 'p2a'], 'opg102', Report::TYPE_102_5],
+        // @deprecated (DDPB-2044)
         [true, User::ROLE_PROF_NAMED, ['l3', 'l3g', 'a3'], 'opg102', Report::TYPE_102_5],
         [true, User::ROLE_PROF_NAMED, ['hw'], '', Report::TYPE_104_5],
         [true, User::ROLE_PROF_NAMED, ['hw'], 'opg103', Report::TYPE_103_4_5],
@@ -337,8 +349,8 @@ class CasRec
      * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
      * 103: all the other cases;
      *
-     * @param string $typeOfRep    e.g. opg103
-     * @param string $corref       e.g. l3, l3g
+     * @param string $typeOfRep e.g. opg103
+     * @param string $corref e.g. l3, l3g
      * @param string $userRoleName e.g. ROLE_PA_NAMED
      *
      * @return string Report::TYPE_*
@@ -397,15 +409,15 @@ class CasRec
         };
 
         return [
-            'Uploaded at' => $dateFormat($this->createdAt, 'n.a.'),
-            'Stats updated at' => $dateFormat($this->updatedAt, '-'),
-            'Deputy registration date' => $dateFormat($this->registrationDate, 'n.a.'),
-            'Deputy last logged in' => $dateFormat($this->lastLoggedIn, 'n.a.'),
-            'Reports submitted' =>  $this->nOfReportsSubmitted ?: 'n.a.',
-            'Last report submitted at' =>  $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
-            'NDR submitted at' =>  $dateFormat($this->ndrSubmittedAt, 'n.a.'),
-            'Reports active' =>  $this->nOfReportsActive ?: 'n.a.'
-        ] + $this->getOtherColumns();
+                'Uploaded at'              => $dateFormat($this->createdAt, 'n.a.'),
+                'Stats updated at'         => $dateFormat($this->updatedAt, '-'),
+                'Deputy registration date' => $dateFormat($this->registrationDate, 'n.a.'),
+                'Deputy last logged in'    => $dateFormat($this->lastLoggedIn, 'n.a.'),
+                'Reports submitted'        => $this->nOfReportsSubmitted ?: 'n.a.',
+                'Last report submitted at' => $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
+                'NDR submitted at'         => $dateFormat($this->ndrSubmittedAt, 'n.a.'),
+                'Reports active'           => $this->nOfReportsActive ?: 'n.a.',
+            ] + $this->getOtherColumns();
     }
 
     /**
