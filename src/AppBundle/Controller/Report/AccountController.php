@@ -145,15 +145,18 @@ class AccountController extends RestController
      */
     protected function denyAccessIfAccountHasTransfers(EntityDir\Report\BankAccount $account)
     {
-        $transfers = $account->getReport()->getMoneyTransfers();
+        $report = $account->getReport();
+        $transfers = $report->getMoneyTransfers();
 
-        /** @var EntityDir\Report\MoneyTransfer $transfer */
-        foreach ($transfers as $transfer) {
-            if ($account === $transfer->getFrom() || ($account === $transfer->getTo())) {
-                throw new \RuntimeException(
-                    'report.bankAccount.deleteWithTransfers',
-                    401
-                );
+        if ($report->hasSection($report::SECTION_MONEY_TRANSFERS)) {
+            /** @var EntityDir\Report\MoneyTransfer $transfer */
+            foreach ($transfers as $transfer) {
+                if ($account === $transfer->getFrom() || ($account === $transfer->getTo())) {
+                    throw new \RuntimeException(
+                        'report.bankAccount.deleteWithTransfers',
+                        401
+                    );
+                }
             }
         }
     }
