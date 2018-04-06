@@ -17,6 +17,7 @@ class MoneyInController extends AbstractController
     private static $jmsGroups = [
         'transactionsIn',
         'money-in-state',
+        'account'
     ];
 
     /**
@@ -52,6 +53,12 @@ class MoneyInController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
+        $banks = [];
+        if ($step == 2) {
+            if ($this->getUser()->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY) {
+                $banks = $report->getBankAccounts();
+            }
+        }
 
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_in', 'money_in_step', 'money_in_summary')
@@ -82,7 +89,8 @@ class MoneyInController extends AbstractController
             'type'             => 'in',
             'translator'       => $this->get('translator'),
             'clientFirstName'  => $report->getClient()->getFirstname(),
-            'selectedCategory' => $transaction->getCategory()
+            'selectedCategory' => $transaction->getCategory(),
+            'banks'            => $banks
             ]
         );
         $form->handleRequest($request);

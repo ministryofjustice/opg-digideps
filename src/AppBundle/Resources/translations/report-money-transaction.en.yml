@@ -135,6 +135,8 @@ form:
       label: Description
     optional:
       label: Description (optional)
+  bankAccount:
+      label: Optionally, what account did this payment go in to?
   category:
     moneyOut.legend: What type of payment was it?
     moneyIn.legend:

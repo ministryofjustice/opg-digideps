@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -61,6 +62,12 @@ class MoneyTransactionType extends AbstractType
         $this->translator = $options['translator'];
         $this->clientFirstName = $options['clientFirstName'];
 
+        $banks = [];
+        foreach ($options['banks'] as $bank) {
+            /* @var $bank BankAccount */
+            $banks[$bank->getId()] = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
+        }
+
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
@@ -81,6 +88,14 @@ class MoneyTransactionType extends AbstractType
                 'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
+
+            if (!empty($banks)) {
+                $builder->add('bankAccount', 'choice', [
+                    'choices' => $banks,
+                    'empty_value' => 'Please select'
+                ]);
+            }
+
         }
 
         $builder->add('save', 'submit');
@@ -112,7 +127,8 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-            ->setRequired(['step', 'type', 'translator', 'clientFirstName'])
-            ->setAllowedTypes('translator', TranslatorInterface::class);
+            ->setRequired(['banks', 'step', 'type', 'translator', 'clientFirstName'])
+            ->setAllowedTypes('translator', TranslatorInterface::class)
+            ->setAllowedTypes('banks', 'array');
     }
 }
