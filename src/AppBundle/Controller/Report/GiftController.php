@@ -83,7 +83,11 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
 
-        $form = $this->createForm(FormDir\Report\GiftType::class, $gift, ['banks' => $report->getBankAccounts()]);
+        $banks = [];
+        if ($this->getUser()->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY) {
+            $banks = $report->getBankAccounts();
+        }
+        $form = $this->createForm(FormDir\Report\GiftType::class, $gift, ['banks' => $banks]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
