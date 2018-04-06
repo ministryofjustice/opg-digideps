@@ -74,6 +74,8 @@ form:
     label: Amount
   addAnother:
     label: Add another gift
+  fromAccount:
+    label: Optionally, what account did this payment go from?
   save:
       label: Save gift
 

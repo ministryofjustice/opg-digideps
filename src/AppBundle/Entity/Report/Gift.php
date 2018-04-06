@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\HasFromBankAccountTrait;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Gift
 {
     use HasReportTrait;
+    use HasFromBankAccountTrait;
 
     /**
      * @JMS\Type("integer")

@@ -6,6 +6,8 @@
         'inputClass' : 'form-control-1-4 js-more-info js-format-currency'
     }) }}
 
+    {{ form_select(form.fromAccount, 'form.fromAccount') }}
+
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
