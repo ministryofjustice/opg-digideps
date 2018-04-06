@@ -4,29 +4,29 @@ namespace AppBundle\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 
-trait HasFromBankAccountTrait
+trait HasBankAccountTrait
 {
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"gifts"})
      */
-    private $fromAccount;
+    private $bankAccount;
 
     /**
      * @return mixed
      */
-    public function getFromAccount()
+    public function getBankAccount()
     {
-        return $this->fromAccount;
+        return $this->bankAccount;
     }
 
     /**
      * @param mixed $accountFromId
      * @return $this
      */
-    public function setFromAccount($fromAccount)
+    public function setBankAccount($bankAccount)
     {
-        $this->fromAccount = $fromAccount;
+        $this->bankAccount = $bankAccount;
         return $this;
     }
 }

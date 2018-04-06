@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Gift
 {
     use HasReportTrait;
-    use HasFromBankAccountTrait;
+    use HasBankAccountTrait;
 
     /**
      * @JMS\Type("integer")

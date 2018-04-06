@@ -29,7 +29,7 @@ class GiftType extends AbstractType
             ]);
 
             if (!empty($banks)) {
-                $builder->add('fromAccount', 'choice', [
+                $builder->add('bankAccount', 'choice', [
                     'choices' => $banks,
                     'empty_value' => 'Please select'
                 ]);
