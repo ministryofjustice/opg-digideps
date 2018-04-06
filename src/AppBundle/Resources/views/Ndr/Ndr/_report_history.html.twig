@@ -17,7 +17,7 @@
         <tr>
             <td>
                 <a href="{{ path('report_review', {reportId: report.id}) }}">
-                    {{ 'history.reports.title' | trans }}
+                    {{ 'annualDeputyReport' | trans({}, 'common') }}
                 </a>
             </td>
             <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
