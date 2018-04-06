@@ -92,7 +92,8 @@ class MoneyTransactionType extends AbstractType
             if (!empty($banks)) {
                 $builder->add('bankAccount', 'choice', [
                     'choices' => $banks,
-                    'empty_value' => 'Please select'
+                    'empty_value' => 'Please select',
+                    'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
                 ]);
             }
 

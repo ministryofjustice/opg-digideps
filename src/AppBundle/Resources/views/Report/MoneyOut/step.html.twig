@@ -67,6 +67,8 @@
             'formGroupClass': ' form-group-value'
         }) }}
 
+        {{ form_select(form.bankAccount, 'form.bankAccount', {'labelText': form.bankAccount.vars.label | trans}) }}
+
         {# form_known_date(form.createdAt, 'form.createdAt') #}
 
     {% endif %}

@@ -14,6 +14,7 @@ class DeputyExpenseController extends AbstractController
     private static $jmsGroups = [
         'expenses',
         'expenses-state',
+        'account'
     ];
 
     /**
@@ -81,7 +82,18 @@ class DeputyExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
-        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
+        $banks = [];
+        if ($this->getUser()->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY) {
+            $banks = $report->getBankAccounts();
+        }
+
+        $form = $this->createForm(
+            FormDir\Report\DeputyExpenseType::class,
+            $expense,
+            [
+                'banks' => $banks
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {

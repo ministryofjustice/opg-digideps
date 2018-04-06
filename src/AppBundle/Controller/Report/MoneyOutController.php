@@ -17,6 +17,7 @@ class MoneyOutController extends AbstractController
     private static $jmsGroups = [
         'transactionsOut',
         'money-out-state',
+        'account'
     ];
 
     /**
@@ -52,7 +53,12 @@ class MoneyOutController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
+        $banks = [];
+        if ($step == 2) {
+            if ($this->getUser()->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY) {
+                $banks = $report->getBankAccounts();
+            }
+        }
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_out', 'money_out_step', 'money_out_summary')
             ->setFromPage($fromPage)
@@ -82,7 +88,8 @@ class MoneyOutController extends AbstractController
             'type'             => 'out',
             'translator'       => $this->get('translator'),
             'clientFirstName'  => $report->getClient()->getFirstname(),
-            'selectedCategory' => $transaction->getCategory()
+            'selectedCategory' => $transaction->getCategory(),
+            'banks'            => $banks
             ]
         );
         $form->handleRequest($request);

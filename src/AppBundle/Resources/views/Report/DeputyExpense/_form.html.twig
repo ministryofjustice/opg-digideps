@@ -9,6 +9,8 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
+    {{ form_select(form.bankAccount, 'form.bankAccount') }}
+
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
