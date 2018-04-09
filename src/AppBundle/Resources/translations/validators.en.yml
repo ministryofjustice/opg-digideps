@@ -631,7 +631,9 @@ note:
 
     #expenses: # shared with 102/103 expenses, contact developer to customise them for Ndr
 
-
+adminSetting:
+  content.notBlank: Please enter a content
+  active.notBlank:  Please select either 'Yes' or 'No'
 
 #       COMMON ELEMENTS
 # ====================================================================================================

@@ -44,7 +44,7 @@
                     <li><a href="{{ path('admin_stats') }}">{{ 'nav.adminStats' | trans }}</a></li>
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                     <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{{ 'nav.adminDocuments' | trans }}</a></li>
-                    <li><a href="{{ path('service_notification_home') }}"  class="behat-link-admin-settings">{{ 'nav.serviceNotification' | trans }}</a></li>
+                    <li><a href="{{ path('admin_setting_service_notifications') }}"  class="behat-link-admin-settings">{{ 'nav.serviceNotification' | trans }}</a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_AD') %}

@@ -1,0 +1,38 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-settings" %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ 'page.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="form-title heading-medium">
+        {{ 'serviceNotifications.title' | trans }}
+    </h2>
+    <p class="text">
+        {{ 'serviceNotifications.description' | trans }}
+    </p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.content, 'serviceNotifications.form.content') }}
+
+    {{ form_checkbox_group(form.active, 'serviceNotifications.form.active', {
+        'legendClass' : 'form-label-bold',
+        'useFormGroup': true
+    }) }}
+
+    {{ form_submit(form.save,'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
