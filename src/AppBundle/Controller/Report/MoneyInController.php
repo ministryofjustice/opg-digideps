@@ -108,10 +108,10 @@ class MoneyInController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }
