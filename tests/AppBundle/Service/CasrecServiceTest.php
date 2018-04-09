@@ -52,7 +52,7 @@ class CasrecServiceTest extends WebTestCase
         $this->validator = self::$frameworkBundleClient->getContainer()->get('validator');
 
         $this->object = new CasrecService(self::$em, $this->logger, $this->reportService, $this->validator);
-        Fixtures::deleteReportsData(['dd_user', 'client', 'report']);
+        Fixtures::deleteReportsData(['document', 'casrec', 'deputy_case', 'report_submission', 'report', 'odr', 'dd_team', 'dd_user', 'client', 'report']);
         self::$em->clear();
     }
 
