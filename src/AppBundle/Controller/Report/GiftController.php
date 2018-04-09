@@ -97,7 +97,7 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'associated-account', 'account']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
 
             return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
         }
@@ -156,7 +156,6 @@ class GiftController extends AbstractController
             'Report\Gift',
             [
                 'gifts',
-                'associated-account',
                 'account'
             ]
         );
@@ -182,7 +181,7 @@ class GiftController extends AbstractController
             $this->getRestClient()->put(
                 'report/' . $report->getId() . '/gift/' . $gift->getId(),
                 $data,
-                ['gift', 'account', 'associated-account']
+                ['gift', 'account']
             );
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));

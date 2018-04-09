@@ -11,13 +11,13 @@ trait HasBankAccountTrait
      * @JMS\SerializedName("bankAccount")
      * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      *
-     * @JMS\Groups({"associated-account"})
+     * @JMS\Groups({"account"})
      */
     private $bankAccount;
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"associated-account"})
+     * @JMS\Groups({"account"})
      **/
     private $bankAccountId;
 

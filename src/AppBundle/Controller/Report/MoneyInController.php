@@ -17,8 +17,7 @@ class MoneyInController extends AbstractController
     private static $jmsGroups = [
         'transactionsIn',
         'money-in-state',
-        'account',
-        'associated-account'
+        'account'
     ];
 
     /**
@@ -110,10 +109,10 @@ class MoneyInController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account', 'associated-account']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account', 'associated-account']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }
