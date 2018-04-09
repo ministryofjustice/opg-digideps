@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,11 +13,6 @@ class DeputyExpenseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $banks = [];
-        foreach ($options['banks'] as $bank) {
-            /* @var $bank BankAccount */
-            $banks[$bank->getId()] = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-        }
 
         $builder
             ->add('explanation', 'text', [
@@ -29,9 +25,9 @@ class DeputyExpenseType extends AbstractType
                 'invalid_message' => 'expenses.singleExpense.notNumeric',
             ]);
 
-        if (!empty($banks)) {
-            $builder->add('bankAccount', 'choice', [
-                'choices' => $banks,
+        if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
+            $builder->add('bankAccountId', 'choice', [
+                'choices' => $options['report']->getBankAccountOptions(),
                 'empty_value' => 'Please select'
             ]);
         }
@@ -45,9 +41,7 @@ class DeputyExpenseType extends AbstractType
             'data_class' => Expense::class,
             'validation_groups' => ['deputy-expense'],
             'translation_domain' => 'report-deputy-expenses',
-        ])
-        ->setRequired(['banks'])
-        ->setAllowedTypes('banks', 'array');
+        ])->setRequired(['user', 'report']);
     }
 
     public function getName()

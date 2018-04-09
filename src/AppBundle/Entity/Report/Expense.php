@@ -14,7 +14,7 @@ class Expense
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"expense"})
+     * @JMS\Groups({"expenses"})
      *
      * @var int
      */
@@ -24,7 +24,7 @@ class Expense
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"expense"})
+     * @JMS\Groups({"expenses"})
      *
      * @Assert\NotBlank(message="expenses.explanation.notBlank", groups={"deputy-expense"})
      */
@@ -34,7 +34,7 @@ class Expense
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"expense"})
+     * @JMS\Groups({"expenses"})
      *
      * @Assert\NotBlank(message="expenses.amount.notBlank", groups={"deputy-expense"})
      * @Assert\Type(type="numeric", message="expenses.amount.type", groups={"deputy-expense"})
