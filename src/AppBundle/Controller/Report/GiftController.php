@@ -97,7 +97,7 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'associated-account', 'account']);
 
             return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
         }
@@ -156,10 +156,11 @@ class GiftController extends AbstractController
             'Report\Gift',
             [
                 'gifts',
-                'gifts-account',
+                'associated-account',
                 'account'
             ]
         );
+
         if ($gift->getBankAccount() instanceof EntityDir\Report\BankAccount) {
             $gift->setBankAccountId($gift->getBankAccount()->getId());
         }
@@ -181,7 +182,7 @@ class GiftController extends AbstractController
             $this->getRestClient()->put(
                 'report/' . $report->getId() . '/gift/' . $gift->getId(),
                 $data,
-                ['gift', 'account', 'gifts-account']
+                ['gift', 'account', 'associated-account']
             );
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));

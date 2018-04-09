@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -62,12 +63,6 @@ class MoneyTransactionType extends AbstractType
         $this->translator = $options['translator'];
         $this->clientFirstName = $options['clientFirstName'];
 
-        $banks = [];
-        foreach ($options['banks'] as $bank) {
-            /* @var $bank BankAccount */
-            $banks[$bank->getId()] = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-        }
-
         $builder->add('id', 'hidden');
 
         if ($this->step === 1) {
@@ -90,7 +85,7 @@ class MoneyTransactionType extends AbstractType
             ]);
 
             if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
-                $builder->add('bankAccount', 'choice', [
+                $builder->add('bankAccountId', 'choice', [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'

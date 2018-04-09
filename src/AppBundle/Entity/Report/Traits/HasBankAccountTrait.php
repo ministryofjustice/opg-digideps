@@ -11,16 +11,14 @@ trait HasBankAccountTrait
      * @JMS\SerializedName("bankAccount")
      * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      *
-     * @JMS\Groups({"gifts-account", "money-in-account", "money-out-account"})
+     * @JMS\Groups({"associated-account"})
      */
     private $bankAccount;
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"gifts-account"})
-     *
-     * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
-     */
+     * @JMS\Groups({"associated-account"})
+     **/
     private $bankAccountId;
 
     /**
