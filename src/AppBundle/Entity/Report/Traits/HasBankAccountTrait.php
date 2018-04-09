@@ -8,12 +8,13 @@ use JMS\Serializer\Annotation as JMS;
 trait HasBankAccountTrait
 {
     /**
-     * @var integer
+     * @var AppBundle\Entity\Report\BankAccount
      *
-     * @JMS\Groups({"account"})
+     * @JMS\Groups({"associated-account"})
+     * @JMS\SerializedName("bankAccount")
      * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
-     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     private $bankAccount;
 

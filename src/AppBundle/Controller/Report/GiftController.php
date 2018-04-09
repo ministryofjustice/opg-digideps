@@ -50,8 +50,13 @@ class GiftController extends RestController
 
         $this->updateEntityWithData($gift, $data);
         $report->setGiftsExist('yes');
-        if (array_key_exists('bank_account', $data)) {
-            $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+
+        if (array_key_exists('bank_account_id', $data)) {
+            if (is_numeric($data['bank_account_id'])) {
+                $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
+            } else {
+                $gift->setBankAccount(null);
+            }
         }
 
         $this->persistAndFlush($gift);
@@ -73,11 +78,17 @@ class GiftController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
+
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $this->updateEntityWithData($gift, $data);
-        if (array_key_exists('bank_account', $data)) {
-            $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+
+        if (array_key_exists('bank_account_id', $data)) {
+            if (is_numeric($data['bank_account_id'])) {
+                $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
+            } else {
+                $gift->setBankAccount(null);
+            }
         }
         $this->getEntityManager()->flush($gift);
 
