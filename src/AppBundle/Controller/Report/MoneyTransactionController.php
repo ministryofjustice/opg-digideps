@@ -32,6 +32,9 @@ class MoneyTransactionController extends RestController
         if (array_key_exists('description', $data)) {
             $t->setDescription($data['description']);
         }
+        if (array_key_exists('bank_account', $data)) {
+            $t->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+        }
         $t->setReport($report);
         $this->getEntityManager()->persist($t);
         $this->getEntityManager()->flush($t);
@@ -62,7 +65,9 @@ class MoneyTransactionController extends RestController
         if (isset($data['amount'])) {
             $t->setAmount($data['amount']);
         }
-
+        if (array_key_exists('bank_account', $data)) {
+            $t->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+        }
         $this->getEntityManager()->flush();
 
         return $t->getId();

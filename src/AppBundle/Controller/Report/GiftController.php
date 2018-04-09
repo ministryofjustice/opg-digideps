@@ -50,6 +50,9 @@ class GiftController extends RestController
 
         $this->updateEntityWithData($gift, $data);
         $report->setGiftsExist('yes');
+        if (array_key_exists('bank_account', $data)) {
+            $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+        }
 
         $this->persistAndFlush($gift);
         $this->persistAndFlush($report);
@@ -73,7 +76,9 @@ class GiftController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
         $this->updateEntityWithData($gift, $data);
-
+        if (array_key_exists('bank_account', $data)) {
+            $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account']));
+        }
         $this->getEntityManager()->flush($gift);
 
         return ['id' => $gift->getId()];
