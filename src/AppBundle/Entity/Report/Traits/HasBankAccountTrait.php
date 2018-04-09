@@ -10,7 +10,7 @@ trait HasBankAccountTrait
     /**
      * @var AppBundle\Entity\Report\BankAccount
      *
-     * @JMS\Groups({"associated-account"})
+     * @JMS\Groups({"account"})
      * @JMS\SerializedName("bankAccount")
      * @JMS\Type("AppBundle\Entity\Report\BankAccount")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\BankAccount")
