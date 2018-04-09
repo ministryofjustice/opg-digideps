@@ -25,7 +25,7 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['expenses'];
+            ? (array) $request->query->get('groups') : ['expenses', 'account'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $expense;
@@ -105,5 +105,14 @@ class ExpenseController extends RestController
             'amount' => 'setAmount',
             'explanation' => 'setExplanation',
         ]);
+
+        if (array_key_exists('bank_account_id', $data)) {
+            if (is_numeric($data['bank_account_id'])) {
+                $expense->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
+            } else {
+                $expense->setBankAccount(null);
+            }
+        }
+
     }
 }
