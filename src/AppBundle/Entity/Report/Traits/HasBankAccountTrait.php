@@ -8,7 +8,7 @@ trait HasBankAccountTrait
 {
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"gifts"})
+     * @JMS\Groups({"gifts", "transactionsIn", "transactionsOut", "expenses"})
      */
     private $bankAccount;
 
