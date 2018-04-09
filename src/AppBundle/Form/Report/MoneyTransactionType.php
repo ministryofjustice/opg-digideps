@@ -89,14 +89,13 @@ class MoneyTransactionType extends AbstractType
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            if (!empty($banks)) {
+            if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
                 $builder->add('bankAccount', 'choice', [
-                    'choices' => $banks,
+                    'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
                 ]);
             }
-
         }
 
         $builder->add('save', 'submit');
@@ -128,8 +127,7 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-            ->setRequired(['banks', 'step', 'type', 'translator', 'clientFirstName'])
-            ->setAllowedTypes('translator', TranslatorInterface::class)
-            ->setAllowedTypes('banks', 'array');
+            ->setRequired(['user', 'report', 'step', 'type', 'translator', 'clientFirstName'])
+            ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 }

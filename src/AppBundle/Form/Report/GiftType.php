@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Gift;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,12 +13,6 @@ class GiftType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $banks = [];
-        foreach ($options['banks'] as $bank) {
-            /* @var $bank BankAccount */
-            $banks[$bank->getId()] = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
-        }
-
         $builder
             ->add('explanation', 'textarea', [
                 'required' => true,
@@ -28,9 +23,9 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-            if (!empty($banks)) {
-                $builder->add('bankAccount', 'choice', [
-                    'choices' => $banks,
+            if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
+                $builder->add('bankAccountId', 'choice', [
+                    'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select'
                 ]);
             }
@@ -45,8 +40,7 @@ class GiftType extends AbstractType
             'validation_groups' => ['gift'],
             'translation_domain' => 'report-gifts',
         ])
-        ->setRequired(['banks'])
-        ->setAllowedTypes('banks', 'array');
+        ->setRequired(['user', 'report']);
 
     }
 

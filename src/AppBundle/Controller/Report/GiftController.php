@@ -83,18 +83,21 @@ class GiftController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = new EntityDir\Report\Gift();
 
-        $banks = [];
-        if ($this->getUser()->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY) {
-            $banks = $report->getBankAccounts();
-        }
-        $form = $this->createForm(FormDir\Report\GiftType::class, $gift, ['banks' => $banks]);
+        $form = $this->createForm(
+            FormDir\Report\GiftType::class,
+            $gift,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
 
             return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
         }
@@ -105,7 +108,7 @@ class GiftController extends AbstractController
         return [
             'backLink' => $backLink,
             'form' => $form->createView(),
-            'report' => $report,
+            'report' => $report
         ];
     }
 
@@ -117,7 +120,13 @@ class GiftController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-gifts']);
+        $form = $this->createForm(
+            FormDir\AddAnotherRecordType::class,
+            $report,
+            [
+                'translation_domain' => 'report-gifts'
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -142,16 +151,38 @@ class GiftController extends AbstractController
     public function editAction(Request $request, $reportId, $giftId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $gift = $this->getRestClient()->get('report/' . $report->getId() . '/gift/' . $giftId, 'Report\Gift');
+        $gift = $this->getRestClient()->get(
+            'report/' . $report->getId() . '/gift/' . $giftId,
+            'Report\Gift',
+            [
+                'gifts',
+                'gifts-account',
+                'account'
+            ]
+        );
+        if ($gift->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+            $gift->setBankAccountId($gift->getBankAccount()->getId());
+        }
 
-        $form = $this->createForm(FormDir\Report\GiftType::class, $gift);
+        $form = $this->createForm(
+            FormDir\Report\GiftType::class,
+            $gift,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Gift edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/gift/' . $gift->getId(), $data, ['gift']);
+            $this->getRestClient()->put(
+                'report/' . $report->getId() . '/gift/' . $gift->getId(),
+                $data,
+                ['gift', 'account', 'gifts-account']
+            );
 
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
@@ -159,7 +190,7 @@ class GiftController extends AbstractController
         return [
             'backLink' => $this->generateUrl('gifts_summary', ['reportId' => $reportId]),
             'form' => $form->createView(),
-            'report' => $report,
+            'report' => $report
         ];
     }
 

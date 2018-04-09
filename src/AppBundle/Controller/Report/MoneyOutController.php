@@ -89,7 +89,8 @@ class MoneyOutController extends AbstractController
             'translator'       => $this->get('translator'),
             'clientFirstName'  => $report->getClient()->getFirstname(),
             'selectedCategory' => $transaction->getCategory(),
-            'banks'            => $banks
+            'user' => $this->getUser(),
+            'report' => $report
             ]
         );
         $form->handleRequest($request);
