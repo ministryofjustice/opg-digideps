@@ -21,9 +21,8 @@ class SettingController extends AbstractController
      */
     public function serviceNotificationAction(Request $request)
     {
-        /** @var $client EntityDir\Client */
-        $setting = new EntityDir\Setting(); //$this->getRestClient()->get('setting/service-notification', 'Setting');
-
+        $endpoint = 'setting/service-notification';
+        $setting = $this->getRestClient()->get($endpoint, 'Setting');
         $form = $this->createForm(
             new FormDir\Admin\SettingType(),
             $setting
@@ -33,19 +32,18 @@ class SettingController extends AbstractController
 
         if ($form->isValid()) {
             $setting = $form->getData();
-            echo "<pre>";\Doctrine\Common\Util\Debug::dump($setting, 4);die;
 
-            $this->getRestClient()->put('setting/service-notification', $setting, ['setting']);
+            $this->getRestClient()->put($endpoint, $setting, ['setting']);
             $request->getSession()->getFlashBag()->add(
                 'notice',
                 'The setting has been saved'
             );
 
-            return $this->redirectToRoute('service_notification_home');
+            return $this->redirectToRoute('admin_setting_service_notifications');
         }
 
         return [
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
         ];
     }
 

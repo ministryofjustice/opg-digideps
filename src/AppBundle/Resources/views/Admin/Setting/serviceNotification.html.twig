@@ -26,12 +26,12 @@
 
     {{ form_input(form.content, 'serviceNotifications.form.content') }}
 
-    {{ form_checkbox_group(form.active, 'serviceNotifications.form.active', {
+    {{ form_checkbox_group(form.enabled, 'serviceNotifications.form.enabled', {
         'legendClass' : 'form-label-bold',
         'useFormGroup': true
     }) }}
 
-    {{ form_submit(form.save,'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save, 'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
 

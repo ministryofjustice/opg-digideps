@@ -633,7 +633,7 @@ note:
 
 adminSetting:
   content.notBlank: Please enter a content
-  active.notBlank:  Please select either 'Yes' or 'No'
+  enabled.notBlank:  Please select either 'Yes' or 'No'
 
 #       COMMON ELEMENTS
 # ====================================================================================================

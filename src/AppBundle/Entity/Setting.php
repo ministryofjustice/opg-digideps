@@ -20,8 +20,8 @@ class Setting
     /**
      * @var string
      *
-     * @JMS\Groups({"admin_setting"})
-     * @Assert\NotBlank( message="adminSetting.content.notBlank", groups={"admin_setting"} )
+     * @JMS\Groups({"setting"})
+     * @Assert\NotBlank( message="adminSetting.content.notBlank", groups={"setting"} )
      *
      * @JMS\Type("string")
      */
@@ -31,13 +31,13 @@ class Setting
     /**
      * @var bool
      *
-     * @JMS\Groups({"admin_setting"})
-     * @Assert\NotBlank( message="adminSetting.active.notBlank", groups={"admin_setting"} )
+     * @JMS\Groups({"setting"})
+     * @Assert\NotBlank( message="adminSetting.enabled.notBlank", groups={"setting"} )
      *
      *
      * @JMS\Type("boolean")
      */
-    private $active;
+    private $enabled;
 
     /**
      * @return string
@@ -80,22 +80,20 @@ class Setting
     /**
      * @return bool
      */
-    public function isActive()
+    public function isEnabled()
     {
-        return $this->active;
+        return $this->enabled;
     }
 
     /**
-     * @param bool $active
+     * @param bool $enabled
      * @return Setting
      */
-    public function setActive($active)
+    public function setEnabled($enabled)
     {
-        $this->active = $active;
+        $this->enabled = $enabled;
 
         return $this;
     }
-
-
 
 }

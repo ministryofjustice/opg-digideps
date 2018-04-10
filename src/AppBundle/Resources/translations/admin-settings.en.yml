@@ -13,5 +13,5 @@ serviceNotifications:
       hint: |
         Service notifications will be seen by all visitors to the service.
         They should be used to inform users of scheduled periods of maintenance or changes to the service.
-    active.label: Display service notification message?
+    eneabled.label: Display service notification message?
     save.label: Save settings

@@ -105,9 +105,13 @@ class IndexController extends AbstractController
             ], 'signin');
         }
 
+        $snSetting = $this->getRestClient()->get('setting/service-notification', 'Setting', [], ['addAuthToken'=>false]);
+
         return $this->render('AppBundle:Index:login.html.twig', [
-                'form' => $form->createView()
-            ] + $vars);
+                'form' => $form->createView(),
+                'serviceNotificationContent' => $snSetting->isEnabled() ? $snSetting->getContent() : null
+
+        ] + $vars);
     }
 
     /**

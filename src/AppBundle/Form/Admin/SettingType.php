@@ -14,8 +14,8 @@ class SettingType extends AbstractType
         $builder
             ->add('id', 'hidden')
             ->add('content', 'textarea')
-            ->add('active', 'choice', [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+            ->add('enabled', 'choice', [
+                'choices' => [true => 'Yes', false => 'No'],
                 'expanded' => true,
             ])
             ->add('save', 'submit');
@@ -30,7 +30,7 @@ class SettingType extends AbstractType
     {
         $resolver->setDefaults(
             [
-                'validation_groups' => ['admin_setting'],
+                'validation_groups' => ['setting'],
                 'translation_domain' => 'admin-settings',
             ]
         );
