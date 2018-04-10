@@ -4,8 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
-
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -211,9 +211,26 @@ class BankAccountController extends AbstractController
                 'notice',
                 'Bank account deleted'
             );
+        } catch (RestClientException $e) {
+
+            /** @var Translator $translator */
+            $translator = $this->get('translator');
+            //$translatedMessage = $translator->trans('report.bankAccount.deleteWithTransactions', [], 'report-bank-accounts');
+            //$request->getSession()->getFlashBag()->add('error', $translatedMessage);
+
+            $errors = $e->getData()['data'];
+            foreach ($errors as $section => $errorCount) {
+                if ($errorCount) {
+                    $section = ucfirst($section);
+                    $translatedMessage = $translator->trans("report.bankAccount.deleteWith{$section}", ['errorCount' => $errorCount], 'report-bank-accounts');
+                    $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+                }
+            }
+
+            //$request->getSession()->getFlashBag()->add('error', $translatedMessage);
         } catch (\Exception $e) {
             $translator = $this->get('translator');
-            $translatedMessage = $translator->trans($e->getData()['message'], [], 'report-bank-accounts');
+            $translatedMessage = $translator->trans($e->getData()['message'], $e->getData(), 'report-bank-accounts');
 
             $request->getSession()->getFlashBag()->add('error', $translatedMessage);
         }
