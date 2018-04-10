@@ -55,7 +55,7 @@ class MoneyTransfer
      *
      * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
      * @Assert\Expression(
-     *     "value != this.getAccountFromId()",
+     *     "(value == '' or value != this.getAccountFromId() )",
      *     message="transfer.accountTo.sameAsFromAccount",
      *     groups={"money-transfer-account-to"}
      * )
