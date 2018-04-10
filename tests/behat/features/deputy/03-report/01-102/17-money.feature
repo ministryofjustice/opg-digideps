@@ -42,6 +42,7 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_description | money found on the road |
       | account_amount      | 50                      |
+      | account_bankAccountId | 1                      |
     # add another: no
     And I choose "no" when asked for adding another record
     # check record in summary page
@@ -68,6 +69,7 @@ Feature: Report money 102
     Then the following fields should have the corresponding values:
       | account_description | money found on the road |
       | account_amount      | 50.00                      |
+      | account_bankAccountId | 1                         |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                      |
@@ -112,6 +114,7 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_description | money found on the road |
       | account_amount      | 50                      |
+      | account_bankAccountId | 1                      |
       # add another: no
     And I choose "no" when asked for adding another record
       # check record in summary page
@@ -138,6 +141,7 @@ Feature: Report money 102
     Then the following fields should have the corresponding values:
       | account_description | money found on the road |
       | account_amount      | 50.00                   |
+      | account_bankAccountId | 1                      |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                           |

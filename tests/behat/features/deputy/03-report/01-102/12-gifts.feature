@@ -32,6 +32,7 @@ Feature: Report gifts
     And the step with the following values CAN be submitted:
       | gifts_single_explanation | birthday gift to daughter |
       | gifts_single_amount      | 35                        |
+      | gifts_single_bankAccountId       | 1                         |
         # add expense n.2
     And I choose "yes" when asked for adding another record
     And the step with the following values CAN be submitted:
@@ -58,6 +59,7 @@ Feature: Report gifts
     Then the following fields should have the corresponding values:
       | gifts_single_explanation | birthday gift to daughter |
       | gifts_single_amount      | 35.00                     |
+      | gifts_single_bankAccountId       | 1                         |
     And the step with the following values CAN be submitted:
       | gifts_single_explanation | birthday gift to the daughter |
       | gifts_single_amount      | 45                            |
