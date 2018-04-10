@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\BusinessRulesException;
+use AppBundle\Exception\UnauthorisedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -85,7 +87,7 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
-        $this->denyAccessIfAccountHasTransfers($account);
+        $this->denyAccessIfAccountHasTransactions($account);
 
         $this->getEntityManager()->remove($account);
 
@@ -139,25 +141,98 @@ class AccountController extends RestController
     }
 
     /**
-     * Check bank account has transfers
+     * Check bank account has transactions
      *
      * @param EntityDir\Report\BankAccount $account
      */
-    protected function denyAccessIfAccountHasTransfers(EntityDir\Report\BankAccount $account)
+    protected function denyAccessIfAccountHasTransactions(EntityDir\Report\BankAccount $account)
     {
         $report = $account->getReport();
-        $transfers = $report->getMoneyTransfers();
+        $errors =[];
 
-        if ($report->hasSection($report::SECTION_MONEY_TRANSFERS)) {
-            /** @var EntityDir\Report\MoneyTransfer $transfer */
-            foreach ($transfers as $transfer) {
-                if ($account === $transfer->getFrom() || ($account === $transfer->getTo())) {
-                    throw new \RuntimeException(
-                        'report.bankAccount.deleteWithTransfers',
-                        401
-                    );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_DEPUTY_EXPENSES,
+            $report->getExpenses(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_TRANSFERS,
+            $report->getMoneyTransfers(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_GIFTS,
+            $report->getGifts(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_IN,
+            $report->getMoneyTransactionsIn(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_OUT,
+            $report->getMoneyTransactionsOut(),
+            $errors
+        );
+
+        foreach($errors as $section => $errorCount) {
+            if ($errorCount > 0) {
+                $e = new BusinessRulesException('report.bankAccount.deleteWithTransactions', 401);
+                $e->setData($errors);
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * Check transactions are not linked to the bank account we are trying to delete
+     *
+     * @param EntityDir\Report\Report $report
+     * @param EntityDir\Report\BankAccount $account
+     * @param $section
+     * @param array $transactions
+     * @param array $errors
+     *
+     * @return array $errors
+     */
+    private function bankAccountAssociated(
+        EntityDir\Report\Report $report,
+        EntityDir\Report\BankAccount $account,
+        $section,
+        $transactions = [],
+        $errors = []
+    ) {
+        if ($report->hasSection($section)) {
+            if (!empty($transactions)) {
+                $errors[$section] = 0;
+                foreach ($transactions as $transaction) {
+                    // transfers behaves differently
+                    if ($section == EntityDir\Report\Report::SECTION_MONEY_TRANSFERS) {
+                        if (!empty($transaction->getFrom()->getId()) &&
+                            $account === $transaction->getFrom() || ($account === $transaction->getTo()))
+                        {
+                            $errors[$section]++;
+                        }
+                    } else {
+                        if ($transaction->getBankAccount()->getId() == $account->getId()) {
+                            $errors[$section]++;
+                        }
+                    }
                 }
             }
         }
+
+        return $errors;
     }
 }
