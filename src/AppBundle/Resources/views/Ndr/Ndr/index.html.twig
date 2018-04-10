@@ -39,7 +39,7 @@
         } %}
 
     {% else %}
-        <h2 class="heading-large">{{ 'currentDeputyReport' | trans({}, 'common') }}</h2>
+
         {% include 'AppBundle:Ndr/Ndr:_ndr_row.html.twig' with {
             reports: reportsSubmitted,
             ndrStatus: ndrStatus,
