@@ -20,7 +20,6 @@ history:
     reportingPeriod: Reporting period
     submissionDate: Submission date
   reports:
-    title: Current deputy report
     download: Download
     view: View
     attachDocuments: Attach documents
