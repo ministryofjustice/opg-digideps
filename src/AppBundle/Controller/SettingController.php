@@ -16,15 +16,14 @@ class SettingController extends RestController
     /**
      * @Route("/{id}")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getSetting(Request $request, $id)
     {
-        $setting = $this->findEntityBy(EntityDir\Setting::class, $id); /* @var $setting EntityDir\Setting */
+        $setting = $this->getRepository(EntityDir\Setting::class)->find($id);/* @var $setting EntityDir\Setting */
 
         $this->setJmsSerialiserGroups(['setting']);
 
-        return $setting;
+        return $setting ?: [];
 
     }
 

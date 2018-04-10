@@ -7,7 +7,7 @@ use AppBundle\Entity\Setting;
 use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 use Fixtures;
 
-class SettingTest extends AbstractTestController
+class SettingControllerTest extends AbstractTestController
 {
     // users
     private static $tokenDeputy;
@@ -18,23 +18,6 @@ class SettingTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-//        //deputy1
-//        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-//        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-//
-//        // pa 1
-//        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
-//        self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1']);
-//        self::$pa1Client1Note1 = self::fixtures()->createNote(self::$pa1Client1, self::$pa1, 'cat', 'title', 'content');
-//        self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2']);
-//        // pa2 (same team as pa1)
-//        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org')->addClient(self::$pa1Client1);
-//
-//        // pa 3 with other client (other team)
-//        self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
-//        self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
-
-//        self::fixtures()->flush()->clear();
     }
 
     /**
@@ -55,8 +38,23 @@ class SettingTest extends AbstractTestController
         }
     }
 
+    public function testgetOneByIdNotPresent()
+    {
+        Fixtures::deleteReportsData(['setting']);
 
-    public function testgetOneById()
+        $id = 'service-notification';
+        $url = '/setting/' . $id;
+
+        // assert get
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+        ])['data'];
+
+        $this->assertEquals([], $data);
+    }
+
+    public function testgetOneByIdPresent()
     {
         $id = 'service-notification';
         $url = '/setting/' . $id;
@@ -67,13 +65,11 @@ class SettingTest extends AbstractTestController
 
         // assert Auth and ACL
         $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-        $this->assertEndpointAllowedFor('GET', $url, self::$tokenAdmin);
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenAdmin,
+            'AuthToken'   => self::$tokenDeputy,
         ])['data'];
 
         $this->assertEquals($id, $data['id']);
