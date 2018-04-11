@@ -14,6 +14,7 @@ signInAdmin:
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been signed out because you've not used the service for more than %time%.
 bruteForceLocked: You've tried to sign in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
+serviceMessage: Service message
 
 signInForm:
   email:
