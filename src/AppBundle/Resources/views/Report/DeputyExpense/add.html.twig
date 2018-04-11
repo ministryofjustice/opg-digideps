@@ -20,8 +20,7 @@
 
 {% block pageContent %}
 
-    <p class="text">{{ 'addPage.pageSectionDescription1' | trans(transOptions) }}</p>
-    <p class="text">{{ 'addPage.pageSectionDescription2' | trans(transOptions) }}</p>
+    <p class="text">{{ 'addPage.pageSectionDescription' | trans(transOptions) }}</p>
 
     {% include 'AppBundle:Report/DeputyExpense:_form.html.twig' with {
 	    'translationDomain': translationDomain,

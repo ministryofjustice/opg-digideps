@@ -7,6 +7,12 @@ startPage:
     You can pay yourself back from %client%'s funds as you go along, but you need to keep an accurate record of your spending.
   pageSectionDescription3: |
     Use this section to tell us about your expenses between %startDate% and %endDate%.
+  pageSectionDescription4: |
+    You can enter a total amount or individual amounts for each type of expense.
+  pageSectionDescription5: |
+    For example, if you've claimed for travel costs, you can add an expense for each each journey,
+    or you add one expense that covers all your travel expenses for the reporting period.
+
   hiddenText01:
     summary: More about what you can and can't claim for
     content:
@@ -38,12 +44,8 @@ addPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageTitle: Add an expense
   supportTitle: Deputy expenses
-  pageSectionDescription1: |
+  pageSectionDescription: |
     Tell us about an expense you've claimed for. You'll be able to add more expenses if you need to.
-  pageSectionDescription2: |
-    You can enter a total amount or individual amounts for each type of expense. For example, if
-    you've claimed for travel costs, you can add an expense for each each journey, or you add one
-    expense that covers all your travel expenses for the reporting period.
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
