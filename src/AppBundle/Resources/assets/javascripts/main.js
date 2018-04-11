@@ -25,6 +25,9 @@ $(document).ready(function() {
     // Return HTML with ajax
     new GOVUK.returnHTML('.js-return-html');
 
+    // Money transfer
+    new GOVUK.moneyTransfer('.js-transfer-from');
+
     // Check upload progress
     new GOVUK.uploadProgress('.js-upload-progress');
     new GOVUK.uploadProgressPA('.js-upload-progress-pa');

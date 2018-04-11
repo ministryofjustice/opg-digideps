@@ -24,8 +24,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
 
     {% if step == 1 %}
-        {{ form_select(form.accountFromId, 'form.accountFrom') }}
-        {{ form_select(form.accountToId, 'form.accountTo') }}
+        {{ form_select(form.accountFromId, 'form.accountFrom', {
+            'inputClass': 'js-transfer-from'
+        }) }}
+        {{ form_select(form.accountToId, 'form.accountTo', {
+            'inputClass': 'js-transfer-to'
+        }) }}
     {% endif %}
 
     {% if step == 2 %}

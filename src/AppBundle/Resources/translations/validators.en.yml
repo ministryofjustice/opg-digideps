@@ -304,6 +304,7 @@ transfer:
         notBlank: Please select the account you transferred money from
     accountTo:
         notBlank: Please select the account you transferred money to
+        sameAsFromAccount: You can't transfer to and from the same account
     amount:
           notBlank: Enter the amount transferred
           notNumeric: Please use numbers only to enter the amount
