@@ -67,8 +67,19 @@
             'formGroupClass': ' form-group-value'
         }) }}
 
-        {% if not app.user.isDeputyOrg() %}
-            {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
+       {% if not app.user.isDeputyOrg() %}
+
+           {% if report.bankAccounts is empty %}
+               <div class="alert-info panel panel-border-narrow">
+                   <span class="icon icon-information"></span>
+                   <div class="behat-alert-message alert-message"><p>{{ 'form.bankAccount.noAccountsAdded' | trans({}, 'report-money-transaction') }}
+                       </p>
+                   </div>
+               </div>
+           {% endif %}
+
+           {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
+
         {% endif %}
         {# form_known_date(form.createdAt, 'form.createdAt') #}
 

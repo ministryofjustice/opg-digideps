@@ -63,6 +63,9 @@ form:
     label: Add another expense
   bankAccount:
     label: Optionally, what account did this payment go from?
+    noAccountsAdded: |
+      You have not added any accounts. If you would like to associate the payment of this expense with a bank account,
+      you must first add a bank account. Or you can leave the next field empty.
   save:
       label: Save expense
 

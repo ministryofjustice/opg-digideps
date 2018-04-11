@@ -16,6 +16,7 @@ Feature: Report gifts
     And the step with the following values CAN be submitted:
       | yes_no_giftsExist_0 | yes |
         # add expense n.1 (and validate form)
+    And I should see an "input#gifts_single_bankAccountId" element
     And the step with the following values CANNOT be submitted:
       | gifts_single_explanation |  | [ERR] |
       | gifts_single_amount      |  | [ERR] |

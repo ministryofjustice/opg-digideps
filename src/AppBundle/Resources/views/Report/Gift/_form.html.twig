@@ -7,8 +7,20 @@
     }) }}
 
     {% if not app.user.isDeputyOrg() %}
+
+        {% if report.bankAccounts is empty %}
+            <div class="alert-info panel panel-border-narrow">
+                <span class="icon icon-information"></span>
+                <div class="behat-alert-message alert-message"><p>{{ 'form.bankAccount.noAccountsAdded' | trans({}, 'report-gifts') }}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
         {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+
     {% endif %}
+
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
