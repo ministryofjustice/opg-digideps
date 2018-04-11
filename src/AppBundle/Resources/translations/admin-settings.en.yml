@@ -12,6 +12,6 @@ serviceNotifications:
       label: Message
       hint: |
         Service notifications will be seen by all visitors to the service.
-        They should be used to inform users of scheduled periods of maintenance or changes to the service.
+        They should be used to let users know about scheduled periods of maintenance or changes to the service..
     enabled.label: Display service notification message?
     save.label: Save settings
