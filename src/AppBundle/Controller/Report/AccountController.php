@@ -188,7 +188,7 @@ class AccountController extends RestController
 
         foreach($errors as $section => $errorCount) {
             if ($errorCount > 0) {
-                $e = new BusinessRulesException('report.bankAccount.deleteWithTransactions', 401);
+                $e = new BusinessRulesException('Unable to remove account ' . $account->getId() . ': has associated transactions', 401);
                 $e->setData($errors);
                 throw $e;
             }
@@ -225,7 +225,8 @@ class AccountController extends RestController
                             $errors[$section]++;
                         }
                     } else {
-                        if ($transaction->getBankAccount()->getId() == $account->getId()) {
+                        if ($transaction->getBankAccount() instanceof EntityDir\Report\BankAccount &&
+                            $transaction->getBankAccount()->getId() == $account->getId()) {
                             $errors[$section]++;
                         }
                     }
