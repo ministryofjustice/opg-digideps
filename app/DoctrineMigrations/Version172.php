@@ -18,7 +18,7 @@ class Version172 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE setting (id VARCHAR(64) NOT NULL, content VARCHAR(100) NOT NULL, enabled BOOLEAN NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE setting (id VARCHAR(64) NOT NULL, content TEXT NOT NULL, enabled BOOLEAN NOT NULL, PRIMARY KEY(id))');
     }
 
     /**

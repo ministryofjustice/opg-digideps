@@ -26,7 +26,7 @@ class Setting
      * @JMS\Type("string")
      * @JMS\Groups({"setting"})
      *
-     * @ORM\Column(name="content", type="string", length=100, nullable=false)
+     * @ORM\Column(name="content", type="text", nullable=false)
      */
     private $content;
 

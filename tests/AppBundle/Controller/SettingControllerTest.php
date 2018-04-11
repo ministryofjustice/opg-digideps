@@ -77,6 +77,7 @@ class SettingControllerTest extends AbstractTestController
     {
         $id = 'service-notification';
         $url = '/setting/' . $id;
+        $settingContent = 'snc1'.implode(range(1,1000),' ');
         Fixtures::deleteReportsData(['setting']);
 
         // assert Auth
@@ -88,14 +89,14 @@ class SettingControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenAdmin,
             'data'        => [
-                'content' => 'snc1',
+                'content' => $settingContent,
                 'enabled' => true,
             ],
         ]);
         $setting = self::fixtures()->clear()->getRepo('Setting')->find($id);
         /* @var $setting Setting */
         $this->assertEquals($id, $setting->getId());
-        $this->assertEquals('snc1', $setting->getContent());
+        $this->assertEquals($settingContent, $setting->getContent());
         $this->assertEquals(true, $setting->isEnabled());
 
         // assert PUT (first time / add)
