@@ -88,7 +88,7 @@ Feature: Report money 102
     Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
-    And I should see an "input#account_bankAccountId" element
+    And I should see an "select#account_bankAccountId" element
     And the step with the following values CANNOT be submitted:
       | account_description |  |       |
       | account_amount      |  | [ERR] |
@@ -139,7 +139,7 @@ Feature: Report money 102
     When I go back from the step
       # edit transaction n.3
     When I click on "edit" in the "transaction-money-found-on-the-road" region
-    And I should see an "input#account_bankAccountId" element
+    And I should see an "select#account_bankAccountId" element
     Then the following fields should have the corresponding values:
       | account_description | money found on the road |
       | account_amount      | 50.00                   |

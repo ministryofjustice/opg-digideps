@@ -16,7 +16,7 @@ Feature: Report deputy expenses
     And the step with the following values CAN be submitted:
       | yes_no_paidForAnything_0 | yes |
         # add expense n.1 (and validate form)
-    And I should see an "input#expenses_single_bankAccountId" element
+    And I should see an "select#expenses_single_bankAccountId" element
     And the step with the following values CANNOT be submitted:
       | expenses_single_explanation |  | [ERR] |
       | expenses_single_amount      |  | [ERR] |
