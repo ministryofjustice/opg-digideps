@@ -11,14 +11,12 @@ startPage:
     Use this section to tell us about any significant financial or health and welfare decisions you plan to
     make on %client%'s behalf in the next 12 months
   hiddenText01:
-    summary: Making decisions on the client's behalf
+    summary: Making decisions on %client%'s behalf
     content:
-      para01: |
-        You should refer to your court order for a reminder of what you can and can't do
-        on behalf of the client.
+      para01: Your court order tells you what you can and can't do on %client%'s behalf.
       para02: "When you're making a decision or planning future actions as a deputy, you must:"
-      listItem01: make sure it's in the client's best interests
-      listItem02: consider what they've done in the past
+      listItem01: make sure it's in %client%'s best interests
+      listItem02: consider what %client% has done in the past
       listItem03: |
         apply a high standard of care – this might mean involving other people, for example
         getting advice from relatives and professionals like doctors
@@ -41,15 +39,15 @@ summaryPage:
   pageTitle: Actions you plan to take
   supportTitle: ""
   weAskAbout: |
-    In this section, we ask you about significant decisions you may have to take on %client%'s
-    behalf over the coming year.
+    In this section, we ask you about significant financial decisions you may have to make on
+    %client%'s behalf over the coming year.
 
 form:
   save:
     label: Save
   doYouExpectFinancialDecisions:
     label: |
-      Do you expect to make any significant financial decisions on behalf of %client% in the
+      Do you expect to make any significant financial decisions on %client%'s behalf in the
       next 12 months?
     label-104: |
       Do you expect %client%'s circumstances to change in the next 12 months?
@@ -66,18 +64,17 @@ form:
       affect %client%'s welfare, carrying out an assessment of %client%'s care needs, making
       a large gift, alterations to %client%'s home, or buying and selling property for %client%.
     hiddenText01:
-      summary: Selling property on behalf of your client
+      summary: Selling property on %client%'s behalf
       content:
         para01: |
           Unless your court order already gives you authority to sell property %client% owns or
           has a share in, you need to apply to the Court of Protection for permission.
         para02: |
-          It costs £400 to apply – paid from the client's funds – and there may be additional
+          It costs £400 to apply – paid from %client%'s funds – and there may be additional
           costs if there's a court hearing.
         para03: |
-          You can also apply to pay less or no fee for an application to the court if the
-          client has a small estate (low funds).
-        para04: <a href="https://www.gov.uk/joint-property-ownership" target="_blank">Find out more</a>
+          If %client% has a small estate (low funds), you can apply to pay a smaller or no fee.
+        para04: <a href="https://www.gov.uk/joint-property-ownership/selling-when-an-owner-has-lost-mental-capacity" target="_blank">Find out more</a>
   doYouExpectFinancialDecisionsDetails:
       label: Please give us details about your decisions
       label-104: Please give us details of these changes
