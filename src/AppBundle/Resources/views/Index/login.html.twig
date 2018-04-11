@@ -12,7 +12,7 @@
 
 {% block pageContent %}
 
-    {% if serviceNotificationContent %}
+    {% if serviceNotificationContent is defined and serviceNotificationContent%}
         <div class="push--bottom behat-region-service-notification">
             {{ macros.notification('info', serviceNotificationContent | nl2br) }}
         </div>
