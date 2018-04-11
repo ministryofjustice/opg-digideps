@@ -72,4 +72,5 @@ Feature: Report account transfers
     And I click on "delete" in the "account-11cf" region
     # Account still visible
     Then I should see the "account-11cf" region
-    And I should see the "error" region
+    And I should see the "error" region exactly 2 times
+
