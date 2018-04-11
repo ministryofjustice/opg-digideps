@@ -12,7 +12,6 @@ class SettingControllerTest extends AbstractTestController
     // users
     private static $tokenDeputy;
     private static $tokenAdmin;
-    private static $tokenPa;
 
     public static function setUpBeforeClass()
     {
@@ -63,13 +62,9 @@ class SettingControllerTest extends AbstractTestController
         $setting = new Setting($id, 'snc', true);
         self::fixtures()->persist($setting)->flush();
 
-        // assert Auth and ACL
-        $this->assertEndpointNeedsAuth('GET', $url);
-
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
         ])['data'];
 
         $this->assertEquals($id, $data['id']);
@@ -97,7 +92,8 @@ class SettingControllerTest extends AbstractTestController
                 'enabled' => true,
             ],
         ]);
-        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id); /* @var $setting Setting */
+        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id);
+        /* @var $setting Setting */
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals('snc1', $setting->getContent());
         $this->assertEquals(true, $setting->isEnabled());
@@ -111,7 +107,8 @@ class SettingControllerTest extends AbstractTestController
                 'enabled' => false,
             ],
         ]);
-        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id); /* @var $setting Setting */
+        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id);
+        /* @var $setting Setting */
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals('snc2', $setting->getContent());
         $this->assertEquals(false, $setting->isEnabled());
