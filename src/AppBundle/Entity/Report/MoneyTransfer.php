@@ -54,6 +54,11 @@ class MoneyTransfer
      * @JMS\Groups({"money-transfer"})
      *
      * @Assert\NotBlank(message="transfer.accountTo.notBlank", groups={"money-transfer-account-to"})
+     * @Assert\Expression(
+     *     "(value == '' or value != this.getAccountFromId() )",
+     *     message="transfer.accountTo.sameAsFromAccount",
+     *     groups={"money-transfer-account-to"}
+     * )
      */
     private $accountToId;
 

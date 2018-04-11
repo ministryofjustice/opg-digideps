@@ -17,6 +17,9 @@ Feature: Report account transfers
       | yes_no_noTransfersToAdd_0 | 0 |
       # add transfer n.1 (and validate form)
     And the step cannot be submitted without making a selection
+    And the step with the following values CANNOT be submitted:
+      | money_transfers_type_accountFromId | 1 | |
+      | money_transfers_type_accountToId   | 1 | [ERR] |
     And the step with the following values CAN be submitted:
       | money_transfers_type_accountFromId | 1 |
       | money_transfers_type_accountToId   | 2 |
