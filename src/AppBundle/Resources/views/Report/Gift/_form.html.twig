@@ -6,8 +6,9 @@
         'inputClass' : 'form-control-1-4 js-more-info js-format-currency'
     }) }}
 
-    {{ form_select(form.bankAccountId, 'form.fromAccount') }}
-
+    {% if not app.user.isDeputyOrg() %}
+        {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+    {% endif %}
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}

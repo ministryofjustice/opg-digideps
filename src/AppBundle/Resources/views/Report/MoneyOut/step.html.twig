@@ -67,8 +67,9 @@
             'formGroupClass': ' form-group-value'
         }) }}
 
-        {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
-
+        {% if not app.user.isDeputyOrg() %}
+            {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
+        {% endif %}
         {# form_known_date(form.createdAt, 'form.createdAt') #}
 
     {% endif %}

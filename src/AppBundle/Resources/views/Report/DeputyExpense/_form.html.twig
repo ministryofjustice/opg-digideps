@@ -9,7 +9,9 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {{ form_select(form.bankAccountId, 'form.fromAccount') }}
+    {% if not app.user.isDeputyOrg() %}
+        {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+    {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

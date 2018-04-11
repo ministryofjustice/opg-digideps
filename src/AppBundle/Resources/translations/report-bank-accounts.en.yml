@@ -73,8 +73,13 @@ report:
   bankAccount:
     deleteWithTransactions: |
       Bank Account cannot be removed because it has associated money transactions.
-    deleteWithMoneyTransfers: Bank Account cannot be removed because it has errorCount associated money transfers
-    deleteWithDeputyExpenses: Bank Account cannot be removed because it has errorCount associated deputy expenses
-    deleteWithGifts: Bank Account cannot be removed because it has errorCount associated gifts
-    deleteWithMoneyIn: Bank Account cannot be removed because it has errorCount associated money in transactions
-    deleteWithMoneyOut: Bank Account cannot be removed because it has errorCount associated money out transactions
+    deleteWithMoneyTransfers: |
+      Bank Account cannot be removed because it has errorCount associated money transfers. Please remove all money transfers involving this account.
+    deleteWithDeputyExpenses: |
+      Bank Account cannot be removed because it has errorCount associated deputy expenses. Please remove all deputy expenses involving this account.
+    deleteWithGifts: |
+      Bank Account cannot be removed because it has errorCount associated gifts. Please remove all gifts involving this account.
+    deleteWithMoneyIn: |
+      Bank Account cannot be removed because it has errorCount associated money in transactions. Please remove all money in transacitons involving this account.
+    deleteWithMoneyOut: |
+      Bank Account cannot be removed because it has errorCount associated money out transactions. Please remove all money out transacitons involving this account.
