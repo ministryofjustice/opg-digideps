@@ -77,7 +77,7 @@ class Setting
         return $this->enabled;
     }
 
-    /**int-
+    /**
      * @param string $id
      * @return Setting
      */
