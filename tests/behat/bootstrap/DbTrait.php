@@ -99,4 +99,15 @@ trait DbTrait
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
+
+
+    /**
+     * @Then I delete the :setting app setting
+     */
+    public function IDeleteTheAppSetting($setting)
+    {
+        $query = "DELETE FROM setting where id='{$setting}'";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
 }

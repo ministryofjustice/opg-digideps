@@ -12,6 +12,12 @@
 
 {% block pageContent %}
 
+    {% if serviceNotificationContent is defined and serviceNotificationContent%}
+        <div class="push--bottom behat-region-service-notification">
+            {{ macros.notification('info', serviceNotificationContent | nl2br) }}
+        </div>
+    {% endif %}
+
     {# Content gets injected here when manually signing out (login-from-logout) #}
     {% block pageHeader %}
     {% endblock %}

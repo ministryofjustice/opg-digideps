@@ -146,7 +146,7 @@ class RestClient
 
     /**
      * Finds user by email.
-     *
+     * @TODO consider replace this call with ->get() using the new last param
      * @param string $token
      *
      * @throws UsernameNotFoundException
@@ -190,17 +190,18 @@ class RestClient
      *                                     e.g. "Account" (AppBundle\Entity\ prefix not needed)
      *                                     or "Account[]" to deseialise into an array of entities
      * @param array  $jmsGroups            deserialise_groups
+     * @param array  $optionsOverride      e.g. ['addAuthToken' => false]
      *
      * @return mixed $expectedResponseType type
      */
-    public function get($endpoint, $expectedResponseType, $jmsGroups = [])
+    public function get($endpoint, $expectedResponseType, $jmsGroups = [], $optionsOverride = [])
     {
         $options = [];
         if ($jmsGroups) {
             $options['query']['groups'] = $jmsGroups;
         }
 
-        return $this->apiCall('get', $endpoint, null, $expectedResponseType, [
+        return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
                 'addAuthToken' => true,
             ] + $options);
     }

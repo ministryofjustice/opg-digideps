@@ -43,7 +43,8 @@ startPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   pageTitle: Supporting documents
   pageSectionDescription1: |
-    Use this section to attach supporting documents to this deputy report.
+    Use this section to attach supporting documents to this deputy report. For example bank
+    statements and benefit statements.
   notice: |
     You do not need to attach a copy of this report. When you submit your report it will be
     sent to OPG automatically.
@@ -56,7 +57,7 @@ stepPage:
   backLink: Back
   form:
     wishToUploadDocumentation:
-        label: Would you like to provide documentation?
+        label: Would you like to provide any supporting documents?
 
 summaryPage:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
