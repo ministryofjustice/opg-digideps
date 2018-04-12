@@ -13,7 +13,6 @@
 {% block pageContent %}
 
     {% if serviceNotificationContent is defined and serviceNotificationContent%}
-        <p class="heading-small">{{ 'serviceMessage' | trans }}</p>
         <div class="push--bottom behat-region-service-notification">
             {{ macros.notification('info', serviceNotificationContent | nl2br) }}
         </div>
