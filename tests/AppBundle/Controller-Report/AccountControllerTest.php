@@ -14,6 +14,7 @@ class AccountControllerTest extends AbstractTestController
     private static $report2;
     private static $account2;
     private static $account3;
+    private static $expense1;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -36,9 +37,9 @@ class AccountControllerTest extends AbstractTestController
         self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
 
         // create an expense attached to account1 meaning account 1 cannot be removed
-        self::$account3 = self::fixtures()->createAccount(self::$report1, ['setId' => 999, 'setBank' => 'bank3']);
+        self::$account3 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank3']);
 
-        self::fixtures()->createReportExpense(
+        self::$expense1 = self::fixtures()->createReportExpense(
             'other',
             self::$report1,
             [
@@ -179,6 +180,7 @@ class AccountControllerTest extends AbstractTestController
         $account1Id = self::$account1->getId();
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
+        $url3 = '/account/' . self::$account3->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -186,18 +188,30 @@ class AccountControllerTest extends AbstractTestController
         // assert user cannot delete another users' account
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
 
-
         // assert user cannot delete an account with associated transactions
-        //$this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
+        $this->assertJsonRequest('DELETE', $url3, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
 
-        // this should fail... assert delete
+        $this->assertFalse(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
+
+        // clear expense
+        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenDeputy,
+        ]);
+
+        // delete should now succeed
+        $this->assertJsonRequest('DELETE', $url3, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
         self::fixtures()->clear();
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\BankAccount')->find($account1Id));
+        // assert bank account is removed
+        $this->assertTrue(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
     }
 }
