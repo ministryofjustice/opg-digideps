@@ -90,8 +90,8 @@ parameters:
         - stocks_shares
         - unit_trusts
         - vehicles
-        - other_assets
         - assets_held_outside_england_and_wales
+        - other_assets
 
 services:
     # Logtash formatter for Kibana

@@ -7,6 +7,12 @@ startPage:
     You can pay yourself back from %client%'s funds as you go along, but you need to keep an accurate record of your spending.
   pageSectionDescription3: |
     Use this section to tell us about your expenses between %startDate% and %endDate%.
+  pageSectionDescription4: |
+    You can enter a total amount or individual amounts for each type of expense.
+  pageSectionDescription5: |
+    For example, if you've claimed for travel costs, you can add an expense for each each journey,
+    or you add one expense that covers all your travel expenses for the reporting period.
+
   hiddenText01:
     summary: More about what you can and can't claim for
     content:
@@ -39,7 +45,7 @@ addPage:
   pageTitle: Add an expense
   supportTitle: Deputy expenses
   pageSectionDescription: |
-    Start by giving us details of the first item of expense you've claimed for. You'll be able to add more expenses if you need to.
+    Tell us about an expense you've claimed for. You'll be able to add more expenses if you need to.
 
 editPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
@@ -50,7 +56,8 @@ summaryPage:
   htmlTitle: "Deputy report - deputy expenses | GOV.UK"
   pageTitle: Deputy expenses
   pageSectionDescription: |
-    In this section, we ask you to give us details of expenses you've claimed as a deputy.
+    In this section, we asked you to tell us about any expenses you've claimed for things you have
+    to do to carry out your role as a deputy, such as phone calls, postage and travel costs.
   addButton: Add a deputy expense
   edit: Edit
 
@@ -68,9 +75,3 @@ form:
       you must first add a bank account. Or you can leave the next field empty.
   save:
       label: Save expense
-
-
-#form:
-#  paidForAnything:
-#    label: Did you pay for anything for %client% before you were given your court order?
-#  expe Add another expense
