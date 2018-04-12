@@ -189,7 +189,7 @@ class AccountController extends RestController
         foreach($errors as $section => $errorCount) {
             if ($errorCount > 0) {
                 $e = new BusinessRulesException('Unable to remove account ' . $account->getId() . ': has associated transactions', 401);
-                $e->setData($errors);
+                $e->setData(['sectionErrors' => $errors]);
                 throw $e;
             }
         }

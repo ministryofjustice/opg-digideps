@@ -10,7 +10,7 @@ namespace AppBundle\Exception;
  */
 class BusinessRulesException extends \RuntimeException implements HasDataInterface
 {
-    protected $code = 401;
+    protected $code = 409;
 
     protected $data;
 
