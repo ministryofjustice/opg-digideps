@@ -69,7 +69,7 @@ decisions:
       done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
 contacts:
     subSectionTitle: "Contacts"
-    subSectionDescription: "Give us details of the people you consulted about %client%"
+    subSectionDescription: Tell us who helped you make significant decisions as a deputy
     label:
       done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
 
@@ -103,7 +103,7 @@ prof_current_fees:
 
 gifts:
     subSectionTitle: "Gifts"
-    subSectionDescription: "Gifts you've given to other people on %client%'s behalf"
+    subSectionDescription: Tell us about gifts you've given to other people on %client%'s behalf
     label:
       done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
 bank_accounts:
@@ -142,7 +142,7 @@ money_out_short:
 balance:
     subSectionTitle: "Accounts balance check"
     subSectionDescription:
-      default: Check that %client%'s accounts balance.
+      default: Check that %client%'s accounts balance
       addExplanation: "Add explanation"
       editExplanation: "Edit explanation"
     label:
@@ -163,7 +163,7 @@ debts:
 heading.other: "Other information"
 actions:
     subSectionTitle: "Actions you plan to take"
-    subSectionDescription: "What major decisions will you need to take for %client% in the next year?"
+    subSectionDescription: What significant decisions will you need to take for %client% in the next year?
     label:
       done: "Finished"
 other_info:
