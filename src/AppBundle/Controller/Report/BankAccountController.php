@@ -213,11 +213,13 @@ class BankAccountController extends AbstractController
             );
         } catch (RestClientException $e) {
 
-            /** @var Translator $translator */
-            $translator = $this->get('translator');
+            // Business Rule is converted to RestClientException with code 409
+            if (isset($e->getData()['data']['sectionErrors']) && $e->getCode() == 409) {
 
-            if (isset($e->getData()['data'])) {
-                $errors = $e->getData()['data'];
+                /** @var Translator $translator */
+                $translator = $this->get('translator');
+
+                $errors = $e->getData()['data']['sectionErrors'];
                 foreach ($errors as $section => $errorCount) {
                     if ($errorCount) {
                         $section = ucfirst($section);
@@ -225,12 +227,13 @@ class BankAccountController extends AbstractController
                         $request->getSession()->getFlashBag()->add('error', $translatedMessage);
                     }
                 }
+
+            } else {
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                throw $e;
             }
         } catch (\Exception $e) {
-            $translator = $this->get('translator');
-            $translatedMessage = $translator->trans($e->getData()['message'], $e->getData(), 'report-bank-accounts');
-
-            $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+            $request->getSession()->getFlashBag()->add('error', 'Account could not be deleted.');
         }
 
         return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
