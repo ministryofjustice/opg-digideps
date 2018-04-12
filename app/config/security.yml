@@ -92,6 +92,10 @@ security:
            pattern: ^/report-submission/\d+/set-undownloadable
            security: false
            #methods: [PUT]
+        settingServiceNotification:
+           pattern: ^/setting/service-notification
+           security: false
+           methods: [GET]
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
