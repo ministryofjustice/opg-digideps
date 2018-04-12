@@ -12,6 +12,7 @@ class AccountControllerTest extends AbstractTestController
     private static $deputy2;
     private static $report2;
     private static $account2;
+    private static $account3;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
@@ -33,6 +34,17 @@ class AccountControllerTest extends AbstractTestController
         self::$report2 = self::fixtures()->createReport($client2);
         self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
 
+        // create an expense attached to account2 meaning account 2 cannot be removed
+        self::$account3 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
+        self::fixtures()->createReportExpense(
+            'other',
+            self::$report2,
+            [
+                'setExplanation' => 'e1',
+                'setAmount' => 1.1,
+                'setBankAccount' => self::$account3
+            ]
+        );
         self::fixtures()->flush()->clear();
     }
 
@@ -164,12 +176,16 @@ class AccountControllerTest extends AbstractTestController
         $account1Id = self::$account1->getId();
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
+        $url3 = '/account/' . self::$account3->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
 
         // assert user cannot delete another users' account
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
+
+        // assert user cannot delete an account with associated transactions
+        $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
 
         // assert delete
         $this->assertJsonRequest('DELETE', $url, [
