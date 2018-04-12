@@ -222,27 +222,27 @@ mentalCapacity:
 account:
     addAnother.notBlank: Please specify if you want to add another person
     bank:
-        notBlank: You need to enter the bank or building society name
+        notBlank: Enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} letters long
         maxMessage: The bank or building society name can't be longer than {{ limit }} letters
     accountType:
-          notBlank: You need to choose a type of account
+          notBlank: Choose an account type
           maxMessage: The account type can't be longer than {{ limit }} letters
     sortCode:
-        notBlank: You need to enter the sort code
-        type: The sort code must be in numbers
+        notBlank: Enter the sort code
+        type: The sort code should only contain numbers
         length: The sort code must be {{ limit }} numbers long
     accountNumber:
-        notBlank: You need to enter the last 4 numbers of the account number
+        notBlank: Enter the last 4 numbers of the account number
         type: The account number must only contain numbers or letters
         length: You need to enter the last 4 digits of the account number
     openingBalance:
-        notBlank: You need to enter an opening balance
-        type: The opening balance must be in numbers
+        notBlank: Enter an opening balance
+        type: The opening balance should only contain numbers
         outOfRange: The opening balance must be less than £1,000,000,000
     closingBalance:
         notBlank: You need to enter a closing balance
-        type: Enter a valid closing balance
+        type: The closing balance should only contain numbers
         outOfRange: The closing balance must be less than £1,000,000,000
     isJointAccount:
         notBlank: Please select either 'Yes' or 'No'
@@ -509,7 +509,7 @@ ndr:
             maxMessage: The account type can't be longer than {{ limit }} letters
       sortCode:
           notBlank: Enter the sort code
-          type: The sort code must be in numbers
+          type: The sort code should only contain numbers
           length: The sort code must be {{ limit }} numbers long
       accountNumber:
           notBlank: Enter the last 4 digits of the account number
