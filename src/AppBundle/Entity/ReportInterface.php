@@ -14,6 +14,4 @@ interface ReportInterface
     public function getClient();
 
     public function createAttachmentName($format);
-
-    public function getZipName();
 }

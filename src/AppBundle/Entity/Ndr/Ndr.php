@@ -566,18 +566,6 @@ class Ndr implements ReportInterface
     }
 
     /**
-     * @return string
-     */
-    public function getZipName()
-    {
-        $client = $this->getClient();
-
-        return 'NdrReport-' . $client->getCaseNumber()
-            . '_' . $this->getStartDate()->format('Y')
-            . '.zip';
-    }
-
-    /**
      * @return NdrStatusService
      */
     public function getStatusService()
