@@ -23,36 +23,13 @@ trait FileTrait
             list($check, $value) = $data;
             $lines = [];
             switch ($check) {
-                case 'exactFileName+md5sum':
-                    $expectedChecksum = $value;
-                    exec("unzip -c $tmpFile $file | md5sum", $lines);
-                    if (empty($lines)) {
-                        throw new \RuntimeException("$file not found in ZIP file");
-                    }
-                    $md5Sum = trim($lines[0], '- ');
-                    if ($md5Sum !== $expectedChecksum) {
-                        throw new \RuntimeException("File missing or wrong checksum for $file, expected $expectedChecksum, $md5Sum given");
-                    }
-                    break;
-
-                case 'exactFileName+filesize':
-                    $expectedSize = $value;
-
-                    exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
-                    if (empty($lines)) {
-                        throw new \RuntimeException("File matching $file not found in ZIP file");
-                    }
-                    $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
-                    if ($sizeBytes <> $value) {
-                        throw new \RuntimeException("File matching $file is $sizeBytes bytes, size $expectedSize expected");
-                    }
-                    break;
 
                 case 'regexpName+sizeAtLeast':
                     $sizeAtLeast = $value;
                     exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
                     if (empty($lines)) {
-                        throw new \RuntimeException("File matching $file not found in ZIP file");
+                        exec("unzip -l $tmpFile", $all);
+                        throw new \RuntimeException("File matching $file not found in ZIP file. Files:".implode(', ', $all));
                     }
                     $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
                     if ($sizeBytes < $sizeAtLeast) {
