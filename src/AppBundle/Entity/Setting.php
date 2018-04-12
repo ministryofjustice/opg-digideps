@@ -12,7 +12,8 @@ use JMS\Serializer\Annotation as JMS;
 class Setting
 {
     /**
-     * @var int
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"setting"})
      *
@@ -41,7 +42,7 @@ class Setting
 
     /**
      * Setting constructor.
-     * @param int $id
+     * @param string $id
      * @param string $content
      * @param bool $enabled
      */
@@ -53,7 +54,7 @@ class Setting
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
@@ -76,8 +77,8 @@ class Setting
         return $this->enabled;
     }
 
-    /**
-     * @param int $id
+    /**int-
+     * @param string $id
      * @return Setting
      */
     public function setId($id)
