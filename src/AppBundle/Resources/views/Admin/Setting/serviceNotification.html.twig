@@ -24,14 +24,14 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_input(form.content, 'serviceNotifications.form.content') }}
+        {{ form_input(form.content, 'serviceNotifications.form.content') }}
 
-    {{ form_checkbox_group(form.enabled, 'serviceNotifications.form.enabled', {
-        'legendClass' : 'form-label-bold',
-        'useFormGroup': true
-    }) }}
+        {{ form_checkbox_group(form.enabled, 'serviceNotifications.form.enabled', {
+            'formGroupClass': 'inline',
+            'legendClass' : 'form-label-bold'
+        }) }}
 
-    {{ form_submit(form.save, 'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
+        {{ form_submit(form.save, 'serviceNotifications.form.save', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
 
