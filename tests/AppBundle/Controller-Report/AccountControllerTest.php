@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\BankAccount;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
@@ -34,17 +35,19 @@ class AccountControllerTest extends AbstractTestController
         self::$report2 = self::fixtures()->createReport($client2);
         self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
 
-        // create an expense attached to account2 meaning account 2 cannot be removed
-        self::$account3 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
+        // create an expense attached to account1 meaning account 1 cannot be removed
+        self::$account3 = self::fixtures()->createAccount(self::$report1, ['setId' => 999, 'setBank' => 'bank3']);
+
         self::fixtures()->createReportExpense(
             'other',
-            self::$report2,
+            self::$report1,
             [
                 'setExplanation' => 'e1',
                 'setAmount' => 1.1,
                 'setBankAccount' => self::$account3
             ]
         );
+
         self::fixtures()->flush()->clear();
     }
 
@@ -111,7 +114,7 @@ class AccountControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data']['bank_accounts'];
-        $this->assertCount(2, $data);
+        $this->assertCount(3, $data);
         $this->assertTrue($data[0]['id'] != $data[1]['id']);
         $this->assertArrayHasKey('bank', $data[0]);
         $this->assertArrayHasKey('bank', $data[1]);
@@ -176,7 +179,6 @@ class AccountControllerTest extends AbstractTestController
         $account1Id = self::$account1->getId();
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
-        $url3 = '/account/' . self::$account3->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -184,10 +186,11 @@ class AccountControllerTest extends AbstractTestController
         // assert user cannot delete another users' account
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
 
-        // assert user cannot delete an account with associated transactions
-        $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
 
-        // assert delete
+        // assert user cannot delete an account with associated transactions
+        //$this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
+
+        // this should fail... assert delete
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
