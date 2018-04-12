@@ -192,6 +192,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertJsonRequest('DELETE', $url3, [
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 409
         ]);
 
         $this->assertFalse(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
