@@ -53,33 +53,4 @@ class SettingController extends RestController
         return $setting->getId();
     }
 
-    /**
-     * Delete note.
-     *
-     * @Method({"DELETE"})
-     * @Route("{id}")
-     * @Security("has_role('ROLE_ORG')")
-     *
-     * @param int $id
-     *
-     * @return array
-     */
-    public function delete($id)
-    {
-        try {
-            /** @var $note EntityDir\Note $note */
-            $note = $this->findEntityBy(EntityDir\Note::class, $id);
-
-            // enable if the check above is removed and the note is available for editing for the whole team
-            $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
-
-            $this->getEntityManager()->remove($note);
-
-            $this->getEntityManager()->flush($note);
-        } catch (\Exception $e) {
-            $this->get('logger')->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
-        }
-
-        return [];
-    }
 }
