@@ -23,7 +23,7 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-            if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
+            if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY && $options['report']->getType() == '102') {
                 $builder->add('bankAccountId', 'choice', [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select'
