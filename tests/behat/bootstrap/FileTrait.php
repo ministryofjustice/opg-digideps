@@ -28,8 +28,8 @@ trait FileTrait
                     $sizeAtLeast = $value;
                     exec("unzip -l $tmpFile | grep -E \"{$file}\" ", $lines);
                     if (empty($lines)) {
-                        exec("unzip -l $tmpFile", $all);
-                        throw new \RuntimeException("File matching $file not found in ZIP file. Files:".implode(', ', $all));
+                        exec("unzip -l $tmpFile", $allFiles);
+                        throw new \RuntimeException("File matching $file not found in ZIP file. Files:" . implode(', ', $allFiles));
                     }
                     $sizeBytes = array_shift(array_filter(explode(' ', $lines[0])));
                     if ($sizeBytes < $sizeAtLeast) {
