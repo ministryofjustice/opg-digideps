@@ -173,14 +173,13 @@ class ReportSubmission
     {
         /* @var $report ReportInterface */
         $report = $this->getReport() ? $this->getReport() : $this->getNdr();
-
         $client = $report->getClient();
 
         return ($report instanceof Ndr ? 'NdrReport-' : 'Report_')
             . $client->getCaseNumber()
             . '_' . $report->getStartDate()->format('Y')
             . ($report instanceof Ndr ? '' : ('_' . $report->getEndDate()->format('Y')))
-            // add report submission id, otherwise will collide with same report submission when multi-downloading DDPB-2049
+            // DDPB-2049 add report submission id to avoid collision with multi downloads
             . '_' . $this->getId()
             . '.zip';
     }
