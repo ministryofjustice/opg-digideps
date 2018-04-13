@@ -76,11 +76,12 @@
                        </p>
                    </div>
                </div>
-           {% endif %}
+           {% else %}
 
            {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
 
-        {% endif %}
+           {% endif %}
+       {% endif %}
         {# form_known_date(form.createdAt, 'form.createdAt') #}
 
     {% endif %}
