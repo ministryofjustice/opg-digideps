@@ -33,11 +33,19 @@ class MoneyTransactionController extends RestController
             $t->setDescription($data['description']);
         }
 
-        if (array_key_exists('bank_account_id', $data)) {
-            if (is_numeric($data['bank_account_id'])) {
-                $t->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
-            } else {
-                $t->setBankAccount(null);
+        // update bank account
+        $t->setBankAccount(null);
+        if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
+            $bankAccount = $this->getRepository(
+                EntityDir\Report\BankAccount::class
+            )->findOneBy(
+                [
+                    'id' => $data['bank_account_id'],
+                    'report' => $report->getId()
+                ]
+            );
+            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+                $t->setBankAccount($bankAccount);
             }
         }
 

@@ -48,16 +48,8 @@ class GiftController extends RestController
         ]);
         $gift = new EntityDir\Report\Gift($report);
 
-        $this->updateEntityWithData($gift, $data);
+        $this->updateEntityWithData($report, $gift, $data);
         $report->setGiftsExist('yes');
-
-        if (array_key_exists('bank_account_id', $data)) {
-            if (is_numeric($data['bank_account_id'])) {
-                $gift->setBankAccount($this->findEntityBy(EntityDir\Report\BankAccount::class, $data['bank_account_id']));
-            } else {
-                $gift->setBankAccount(null);
-            }
-        }
 
         $this->persistAndFlush($gift);
         $this->persistAndFlush($report);
@@ -81,7 +73,7 @@ class GiftController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
 
-        $this->updateEntityWithData($gift, $data);
+        $this->updateEntityWithData($report, $gift, $data);
 
         if (array_key_exists('bank_account_id', $data)) {
             if (is_numeric($data['bank_account_id'])) {
@@ -114,12 +106,28 @@ class GiftController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Gift $gift, array $data)
+    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Gift $gift, array $data)
     {
         // common props
         $this->hydrateEntityWithArrayData($gift, $data, [
             'amount' => 'setAmount',
             'explanation' => 'setExplanation',
         ]);
+
+        // update bank account
+        $gift->setBankAccount(null);
+        if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
+            $bankAccount = $this->getRepository(
+                EntityDir\Report\BankAccount::class
+            )->findOneBy(
+                [
+                    'id' => $data['bank_account_id'],
+                    'report' => $report->getId()
+                ]
+            );
+            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+                $gift->setBankAccount($bankAccount);
+            }
+        }
     }
 }
