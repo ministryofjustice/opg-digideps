@@ -1,11 +1,9 @@
 startPage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageTitle: Assets
-  pageSectionDescription1: |
-    Please tell us a bit more about %client%'s assets. Add a type of asset, then we'll ask you
-    for some details about it. You can come back and add more assets if you need to.
-  pageSectionDescription2: |
-    Only enter each individual asset into one category, so we don't count it twice.
+  pageSectionDescription: |
+    Use this section to tell us about %client%'s assets. They may include property, vehicles,
+    valuables or investments. We also need to know if %client% doesn't have any assets.
   startButton: Start assets
 
 existPage:
@@ -22,11 +20,11 @@ typePage:
   htmlTitle: "Deputy report - assets | GOV.UK"
   supportTitle: Assets
   pageTitle: Add an asset
-  pageSectionDescription: |
-    Please tell us a bit more about %client%'s assets.
-    Start by adding a type of asset; we'll then ask you for
-    some details about it.  You can go back and add more assets
-    if you need to.
+  pageSectionDescription1: |
+    Please tell us a bit more about %client%'s assets. Add a type of asset, then we'll ask you
+    for some details about it. You can come back and add more assets if you need to.
+  pageSectionDescription2: |
+    Only enter each individual asset into one category, so we don't count it twice.
   formstartButton: Save and continue
   backLink: Back
 
