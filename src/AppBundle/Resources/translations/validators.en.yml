@@ -235,13 +235,12 @@ account:
     accountNumber:
         notBlank: Enter the last 4 numbers of the account number
         type: The account number must only contain numbers or letters
-        length: You need to enter the last 4 digits of the account number
+        length: Enter the last 4 numbers of the account number
     openingBalance:
         notBlank: Enter an opening balance
         type: The opening balance should only contain numbers
         outOfRange: The opening balance must be less than £1,000,000,000
     closingBalance:
-        notBlank: You need to enter a closing balance
         type: The closing balance should only contain numbers
         outOfRange: The closing balance must be less than £1,000,000,000
     isJointAccount:
