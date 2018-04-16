@@ -60,7 +60,7 @@ form:
     label: Last 4 digits of the account number
     preInput: "* * * *"
   sortCode:
-    legend: Branch sort code
+    legend: Sort code
   balanceOnCourtOrderDate:
       label: How much was in the account on %cotDate%?
   isJointAccount:

@@ -2,13 +2,12 @@ startPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
   pageTitle: Accounts
   pageSectionDescription1: |
-    An important part of your role as a deputy is to keep a record of
-    the money that comes into and goes out of %client%'s accounts.
+    Use this section to tell us about all of %client%'s bank accounts, building society accounts,
+    savings accounts and ISAs.
   pageSectionDescription2: |
-    Use this section to tell us about all of %client%'s bank accounts, building society
-    accounts, savings accounts and ISAs.
-  pageSectionDescription3: |
     We will also need to know the balance of each account.
+  pageSectionDescription3: |
+    Interest can be added in the <a href="%moneyInPath%">money in</a> section.
   hiddenText01:
     summary: More on how to carry out your duties
     content:
@@ -53,7 +52,7 @@ form:
     label: Last 4 digits of the account number
     preInput: "* * * *"
   sortCode:
-    legend: Branch sort code
+    legend: Sort code
   openingBalance:
     label: How much was in the account on %startDate%?
   closingBalance:
