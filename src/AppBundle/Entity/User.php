@@ -552,6 +552,23 @@ class User implements UserInterface
     }
 
     /**
+     * Get users in all the teams the user belongs to
+     *
+     * @return User[] array indexed by user id
+     */
+    public function getMembersInAllTeams()
+    {
+        $ret = [];
+        foreach($this->getTeams() as $team) { /* @var $team Team */
+            foreach($team->getMembers() as $member) {
+                $ret[$member->getId()] = $member;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
      * @param $teams
      *
      * @return $this

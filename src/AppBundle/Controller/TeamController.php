@@ -22,12 +22,7 @@ class TeamController extends RestController
     {
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
-        $team = $this->getUser()->getTeams()->first(); /* @var $team EntityDir\Team */
-        if (!$team) {
-            return [];
-        }
-
-        return $team->getMembers();
+        return $this->getUser()->getMembersInAllTeams();
     }
 
     /**
@@ -38,18 +33,17 @@ class TeamController extends RestController
     public function getMemberById(Request $request, $id)
     {
         $user = $this->getRepository(EntityDir\User::class)->find($id);
-        if ($user->getTeams()->first() !== $this->getUser()->getTeams()->first()) {
+        if (!array_key_exists($id, $this->getUser()->getMembersInAllTeams())) {
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
 
-
         return $user;
     }
 
     /**
-     * Delete PA team member user.
+     * Delete Org team member user.
      *
      * @Route("/delete-user/{id}")
      * @Method({"DELETE"})
@@ -60,8 +54,12 @@ class TeamController extends RestController
      *
      * @return array
      */
-    public function deletePaTeamUser(Request $request, $id)
+    public function deleteOrgTeamUser(Request $request, $id)
     {
+        if (!array_key_exists($id, $this->getUser()->getMembersInAllTeams())) {
+            throw $this->createAccessDeniedException('User not part of the same team');
+        }
+
         /* @var $user EntityDir\User */
         $user = $this->getMemberById($request, $id);
 
