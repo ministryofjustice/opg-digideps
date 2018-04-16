@@ -84,7 +84,7 @@ class MoneyTransactionType extends AbstractType
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            if ($options['user']->getRoleName() == User::ROLE_LAY_DEPUTY) {
+            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->getType() == '102') {
                 $builder->add('bankAccountId', 'choice', [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select',

@@ -9,7 +9,8 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {% if not app.user.isDeputyOrg() and report.type == 102 %}
+    {% if report.type == 102 %}
+
         {% if report.bankAccounts is empty %}
             <div class="alert-info panel panel-border-narrow">
                 <span class="icon icon-information"></span>

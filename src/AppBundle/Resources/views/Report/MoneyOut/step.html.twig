@@ -67,9 +67,9 @@
             'formGroupClass': ' form-group-value'
         }) }}
 
-       {% if not app.user.isDeputyOrg() %}
+        {% if report.type == 102 %}
 
-           {% if report.bankAccounts is empty %}
+            {% if report.bankAccounts is empty %}
                <div class="alert-info panel panel-border-narrow">
                    <span class="icon icon-information"></span>
                    <div class="behat-alert-message alert-message"><p>{{ 'form.bankAccount.noAccountsAdded' | trans({}, 'report-money-transaction') }}
