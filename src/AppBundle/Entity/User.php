@@ -70,7 +70,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
-     * @JMS\Groups({"team"})
+     * @JMS\Groups({"user-teams"})
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EAGER")
      *
      * @var ArrayCollection
