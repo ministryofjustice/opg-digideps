@@ -41,7 +41,7 @@ class UserService
         $this->checkUserEmail($userToAdd);
 
         if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
-            $this->addPaUser($loggedInUser, $userToAdd, $data);
+            $this->addOrgUser($loggedInUser, $userToAdd, $data);
         }
 
         $userToAdd->setRegistrationDate(new \DateTime());
@@ -55,13 +55,15 @@ class UserService
     }
 
     /**
-     * Adds a new pa user to the database
+     * Adds a new Org user
+     * Also sets the team name if `pa_team_name` is set
+     *
      *
      * @param User $loggedInUser
      * @param User $userToAdd
      * @param $data
      */
-    private function addPaUser(User $loggedInUser, User $userToAdd, $data)
+    private function addOrgUser(User $loggedInUser, User $userToAdd, $data)
     {
         $userToAdd->ensureRoleNameSet();
         $userToAdd->generateOrgTeam($loggedInUser, $data);
@@ -75,7 +77,7 @@ class UserService
             $this->_em->flush($team);
         }
 
-        if ($userToAdd->isDeputyOrg()) {
+        if ($userToAdd->isDeputyOrg()) { // not needed as the caller already do this check
             // add to creator's team
             if ($team = $loggedInUser->getTeams()->first()) {
                 $userToAdd->addTeam($team);
