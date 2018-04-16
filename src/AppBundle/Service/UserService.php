@@ -55,9 +55,10 @@ class UserService
     }
 
     /**
-     * Adds a new Org user
-     * Also sets the team name if `pa_team_name` is set
-     *
+     * Adds a new Org user and
+     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
+     * - Add this new user to the logged user's team
+     * - Copy clients from logged in user into the this new user
      *
      * @param User $loggedInUser
      * @param User $userToAdd
@@ -65,6 +66,9 @@ class UserService
      */
     private function addOrgUser(User $loggedInUser, User $userToAdd, $data)
     {
+        if (!$userToAdd->isDeputyOrg()) {
+            throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
+        }
         $userToAdd->ensureRoleNameSet();
         $userToAdd->generateOrgTeam($loggedInUser, $data);
 
@@ -77,17 +81,15 @@ class UserService
             $this->_em->flush($team);
         }
 
-        if ($userToAdd->isDeputyOrg()) { // not needed as the caller already do this check
-            // add to creator's team
-            if ($team = $loggedInUser->getTeams()->first()) {
-                $userToAdd->addTeam($team);
-                $this->_em->flush($team);
-            }
+        // add to creator's team
+        if ($team = $loggedInUser->getTeams()->first()) {
+            $userToAdd->addTeam($team);
+            $this->_em->flush($team);
+        }
 
-            //copy clients
-            foreach ($loggedInUser->getClients() as $client) {
-                $userToAdd->addClient($client);
-            }
+        // copy clients
+        foreach ($loggedInUser->getClients() as $client) {
+            $userToAdd->addClient($client);
         }
     }
 
