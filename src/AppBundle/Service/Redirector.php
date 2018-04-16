@@ -130,14 +130,16 @@ class Redirector
                     $route = 'codep_verification';
                 }
             } else {
-                // client is not added
-                if (!$user->getIdOfClientWithDetails()) {
-                    $route = 'client_add';
-                }
+                if (!$user->isDeputyOrg()) {
+                    // client is not added
+                    if (!$user->getIdOfClientWithDetails()) {
+                        $route = 'client_add';
+                    }
 
-                // incomplete user info
-                if (!$user->isDeputyOrg() && !$user->hasAddressDetails()) {
-                    $route = 'user_details';
+                    // incomplete user info
+                    if (!$user->hasAddressDetails()) {
+                        $route = 'user_details';
+                    }
                 }
             }
         }
