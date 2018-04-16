@@ -72,15 +72,6 @@ class UserService
         $userToAdd->ensureRoleNameSet();
         $userToAdd->generateOrgTeam($loggedInUser, $data);
 
-        /** duplicagtes line above? */
-        if ($loggedInUser->hasRoleOrgNamed() &&
-            !empty($data['pa_team_name']) &&
-            $userToAdd->getTeams()->isEmpty()
-        ) {
-            $team = $userToAdd->getTeams()->first()->setTeamName($data['pa_team_name']);
-            $this->_em->flush($team);
-        }
-
         // add to creator's team
         if ($team = $loggedInUser->getTeams()->first()) {
             $userToAdd->addTeam($team);
