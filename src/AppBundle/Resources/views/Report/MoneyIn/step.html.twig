@@ -77,6 +77,7 @@
                 </div>
             {% else %}
 
+                {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
 
             {% endif %}
         {% endif %}
