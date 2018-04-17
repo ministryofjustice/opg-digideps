@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,6 +12,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class MoneyTransaction implements MoneyTransactionInterface
 {
+    use HasBankAccountTrait;
+
     /**
      * Static list of possible money transaction categories
      *

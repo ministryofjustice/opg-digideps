@@ -360,7 +360,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @ORM\Column(name="previous_prof_fees_estimate_given", type="string", nullable=true)
+     * @ORM\Column(name="previous_prof_fees_estimate_given", length=3, type="string", nullable=true)
      */
     private $previousProfFeesEstimateGiven;
 
@@ -369,7 +369,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report", "report-prof-estimate-fees"})
-     * @ORM\Column(name="prof_fees_estimate_scco_reason", type="string", nullable=true)
+     * @ORM\Column(name="prof_fees_estimate_scco_reason", type="text", nullable=true)
      */
     private $profFeesEstimateSccoReason;
 
