@@ -17,6 +17,7 @@ class MoneyInController extends AbstractController
     private static $jmsGroups = [
         'transactionsIn',
         'money-in-state',
+        'account'
     ];
 
     /**
@@ -52,7 +53,6 @@ class MoneyInController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_in', 'money_in_step', 'money_in_summary')
             ->setFromPage($fromPage)
@@ -63,6 +63,10 @@ class MoneyInController extends AbstractController
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
             $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
+                if ($t->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+                    $t->setBankAccountId($t->getBankAccount()->getId());
+                }
+
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
@@ -77,12 +81,17 @@ class MoneyInController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [
-            'step' => $step,
-            'type'             => 'in',
-            'translator'       => $this->get('translator'),
-            'clientFirstName'  => $report->getClient()->getFirstname(),
-            'selectedCategory' => $transaction->getCategory()
+        $form = $this->createForm(
+            FormDir\Report\MoneyTransactionType::class,
+            $transaction,
+            [
+                'step' => $step,
+                'type'             => 'in',
+                'translator'       => $this->get('translator'),
+                'clientFirstName'  => $report->getClient()->getFirstname(),
+                'selectedCategory' => $transaction->getCategory(),
+                'user' => $this->getUser(),
+                'report' => $report
             ]
         );
         $form->handleRequest($request);
@@ -100,10 +109,10 @@ class MoneyInController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }

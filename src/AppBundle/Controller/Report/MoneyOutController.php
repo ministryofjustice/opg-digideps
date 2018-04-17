@@ -17,6 +17,7 @@ class MoneyOutController extends AbstractController
     private static $jmsGroups = [
         'transactionsOut',
         'money-out-state',
+        'account'
     ];
 
     /**
@@ -52,17 +53,18 @@ class MoneyOutController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
 
-
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_out', 'money_out_step', 'money_out_summary')
             ->setFromPage($fromPage)
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId'=>$reportId, 'transactionId' => $transactionId]);
 
-
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
             $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId) {
+                if ($t->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+                    $t->setBankAccountId($t->getBankAccount()->getId());
+                }
                 return $t->getId() == $transactionId;
             });
             $transaction = array_shift($transaction);
@@ -82,7 +84,9 @@ class MoneyOutController extends AbstractController
             'type'             => 'out',
             'translator'       => $this->get('translator'),
             'clientFirstName'  => $report->getClient()->getFirstname(),
-            'selectedCategory' => $transaction->getCategory()
+            'selectedCategory' => $transaction->getCategory(),
+            'user' => $this->getUser(),
+            'report' => $report
             ]
         );
         $form->handleRequest($request);
@@ -100,10 +104,10 @@ class MoneyOutController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction']);
+                    $this->getRestClient()->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction']);
+                    $this->getRestClient()->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
                     return $this->redirectToRoute('money_out_add_another', ['reportId' => $reportId]);
                 }
             }

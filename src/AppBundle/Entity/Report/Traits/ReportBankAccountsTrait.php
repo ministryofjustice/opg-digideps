@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -126,5 +127,22 @@ trait ReportBankAccountsTrait
     public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
     {
         $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+    }
+
+    /**
+     * Returns a formatted list of bank accounts associated with this report
+     *
+     * @return array
+     */
+    public function getBankAccountOptions()
+    {
+        $banksList = [];
+        $banks = $this->getBankAccounts();
+        foreach ($banks as $bank) {
+            /* @var $bank BankAccount */
+            $banksList[$bank->getId()] = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
+        }
+
+        return $banksList;
     }
 }

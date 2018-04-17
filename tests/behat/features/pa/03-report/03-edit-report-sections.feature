@@ -131,6 +131,7 @@ Feature: PA user edits report sections
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
+    And I should not see an "select#account_bankAccountId" element
     And the step with the following values CAN be submitted:
       | account_description | pension received |
       | account_amount      | 50.00         |
@@ -144,6 +145,7 @@ Feature: PA user edits report sections
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
+    And I should not see an "select#account_bankAccountId" element
     And the step with the following values CAN be submitted:
       | account_description | january bill |
       | account_amount      | 50.00     |

@@ -42,6 +42,7 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_description | money found on the road |
       | account_amount      | 50                      |
+      | account_bankAccountId | 1                      |
     # add another: no
     And I choose "no" when asked for adding another record
     # check record in summary page
@@ -68,6 +69,7 @@ Feature: Report money 102
     Then the following fields should have the corresponding values:
       | account_description | money found on the road |
       | account_amount      | 50.00                      |
+      | account_bankAccountId | 1                         |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                      |
@@ -84,9 +86,9 @@ Feature: Report money 102
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     Then the step cannot be submitted without making a selection
-    Then the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
+    And I should see an "select#account_bankAccountId" element
     And the step with the following values CANNOT be submitted:
       | account_description |  |       |
       | account_amount      |  | [ERR] |
@@ -99,6 +101,7 @@ Feature: Report money 102
       # add another: yes
     And I choose "yes" when asked for adding another record
       # add transaction n.2
+
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
     And the step with the following values CAN be submitted:
@@ -112,6 +115,7 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_description | money found on the road |
       | account_amount      | 50                      |
+      | account_bankAccountId | 1                      |
       # add another: no
     And I choose "no" when asked for adding another record
       # check record in summary page
@@ -135,9 +139,11 @@ Feature: Report money 102
     When I go back from the step
       # edit transaction n.3
     When I click on "edit" in the "transaction-money-found-on-the-road" region
+    And I should see an "select#account_bankAccountId" element
     Then the following fields should have the corresponding values:
       | account_description | money found on the road |
       | account_amount      | 50.00                   |
+      | account_bankAccountId | 1                      |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                           |

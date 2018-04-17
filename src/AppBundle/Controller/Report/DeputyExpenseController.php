@@ -14,6 +14,7 @@ class DeputyExpenseController extends AbstractController
     private static $jmsGroups = [
         'expenses',
         'expenses-state',
+        'account'
     ];
 
     /**
@@ -81,14 +82,21 @@ class DeputyExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
-        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
+        $form = $this->createForm(
+            FormDir\Report\DeputyExpenseType::class,
+            $expense,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expense']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expenses', 'account']);
 
             return $this->redirect($this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]));
         }
@@ -136,16 +144,42 @@ class DeputyExpenseController extends AbstractController
     public function editAction(Request $request, $reportId, $expenseId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
+        $expense = $this->getRestClient()->get(
+            'report/' . $report->getId() . '/expense/' . $expenseId,
+            'Report\Expense',
+            [
+                'expenses',
+                'account'
+            ]
+        );
 
-        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
+        if ($expense->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+            $expense->setBankAccountId($expense->getBankAccount()->getId());
+        }
+
+        $form = $this->createForm(
+            FormDir\Report\DeputyExpenseType::class,
+            $expense,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expense']);
+            $this->getRestClient()->put(
+                'report/' . $report->getId() . '/expense/' . $expense->getId(),
+                $data,
+                [
+                    'expenses',
+                    'account'
+                ]
+            );
 
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
