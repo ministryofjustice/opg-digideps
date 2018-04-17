@@ -25,7 +25,7 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['expenses'];
+            ? (array) $request->query->get('groups') : ['expenses', 'account'];
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         return $expense;
@@ -48,7 +48,7 @@ class ExpenseController extends RestController
         ]);
         $expense = new EntityDir\Report\Expense($report);
 
-        $this->updateEntityWithData($expense, $data);
+        $this->updateEntityWithData($report, $expense, $data);
         $report->setPaidForAnything('yes');
 
         $this->persistAndFlush($expense);
@@ -72,7 +72,7 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
-        $this->updateEntityWithData($expense, $data);
+        $this->updateEntityWithData($report, $expense, $data);
 
         $this->getEntityManager()->flush($expense);
 
@@ -98,12 +98,29 @@ class ExpenseController extends RestController
         return [];
     }
 
-    private function updateEntityWithData(EntityDir\Report\Expense $expense, array $data)
+    private function updateEntityWithData(EntityDir\Report\Report $report, EntityDir\Report\Expense $expense, array $data)
     {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [
             'amount' => 'setAmount',
             'explanation' => 'setExplanation',
         ]);
+
+        // update bank account
+        $expense->setBankAccount(null);
+        if (array_key_exists('bank_account_id', $data) && is_numeric($data['bank_account_id'])) {
+            $bankAccount = $this->getRepository(
+                EntityDir\Report\BankAccount::class
+            )->findOneBy(
+                [
+                    'id' => $data['bank_account_id'],
+                    'report' => $report->getId()
+                ]
+            );
+            if ($bankAccount instanceof EntityDir\Report\BankAccount) {
+                $expense->setBankAccount($bankAccount);
+            }
+        }
+
     }
 }

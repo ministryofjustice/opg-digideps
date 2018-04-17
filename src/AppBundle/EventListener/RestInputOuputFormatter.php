@@ -2,6 +2,7 @@
 
 namespace AppBundle\EventListener;
 
+use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -167,6 +168,10 @@ class RestInputOuputFormatter
         // transform message and code
         if ($code < 400 || $code > 599) {
             $code = 500;
+        }
+
+        if ($e instanceof BusinessRulesException) {
+            $code = 409;
         }
         if ($e instanceof \InvalidArgumentException) {
             $code = 400;

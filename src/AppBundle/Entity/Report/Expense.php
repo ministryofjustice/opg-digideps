@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -15,6 +16,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Expense
 {
+    use HasBankAccountTrait;
+
     /**
      * @var int
      *

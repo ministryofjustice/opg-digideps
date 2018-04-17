@@ -2,15 +2,17 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-
 /**
  * @ORM\Entity()
  * @ORM\Table(name="gift")
  */
 class Gift
 {
+    use HasBankAccountTrait;
+
     /**
      * @var int
      *

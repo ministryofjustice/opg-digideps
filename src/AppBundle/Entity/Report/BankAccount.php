@@ -184,6 +184,16 @@ class BankAccount
     }
 
     /**
+     * Set id.
+     *
+     * @return int
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Set bank.
      *
      * @param string $bank
