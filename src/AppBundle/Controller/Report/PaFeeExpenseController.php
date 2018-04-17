@@ -158,14 +158,21 @@ class PaFeeExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = new EntityDir\Report\Expense();
 
-        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
+        $form = $this->createForm(
+            FormDir\Report\DeputyExpenseType::class,
+            $expense,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expense']);
+            $this->getRestClient()->post('report/' . $report->getId() . '/expense', $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense_add_another', ['reportId' => $reportId]));
         }
@@ -225,14 +232,22 @@ class PaFeeExpenseController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $expense = $this->getRestClient()->get('report/' . $report->getId() . '/expense/' . $expenseId, 'Report\Expense');
 
-        $form = $this->createForm(FormDir\Report\DeputyExpenseType::class, $expense);
+        $form = $this->createForm(
+            FormDir\Report\DeputyExpenseType::class,
+            $expense,
+            [
+                'user' => $this->getUser(),
+                'report' => $report
+            ]
+        );
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
             $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expense']);
+            $this->getRestClient()->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expenses']);
 
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
