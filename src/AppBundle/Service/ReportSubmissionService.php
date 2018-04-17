@@ -74,7 +74,7 @@ class ReportSubmissionService
     public function generateReportDocuments(Report $report)
     {
         $this->generateReportPdf($report);
-        //$this->generateTransactionsCsv($report);
+        $this->generateTransactionsCsv($report);
     }
 
     /**

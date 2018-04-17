@@ -395,4 +395,22 @@ class ReportController extends AbstractController
         return $response;
     }
 
+    /**
+     * @param  EntityDir\Report\Report $report
+     * @param  bool                    $showSummary
+     * @return string                  binary PDF content
+     */
+    private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)
+    {
+        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
+                'report' => $report,
+                'showSummary' => $showSummary
+            ])->getContent();
+
+        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+    }
+
+    private function getTransactionsCsvContent() {
+        return "Category... etc";
+    }
 }
