@@ -6,6 +6,22 @@
         'inputClass' : 'form-control-1-4 js-more-info js-format-currency'
     }) }}
 
+    {% if report.type == '102' %}
+
+        {% if report.bankAccounts is empty %}
+            <div class="alert-info panel panel-border-narrow">
+                <span class="icon icon-information"></span>
+                <div class="behat-alert-message alert-message"><p>{{ 'form.bankAccount.noAccountsAdded' | trans({}, 'report-gifts') }}
+                    </p>
+                </div>
+            </div>
+        {% else %}
+
+        {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+        {% endif %}
+
+    {% endif %}
+
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}

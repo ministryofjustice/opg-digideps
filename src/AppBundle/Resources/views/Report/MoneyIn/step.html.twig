@@ -66,6 +66,20 @@
             'formGroupClass': ' form-group-value'
         }) }}
 
+        {% if report.type == '102' %}
+
+            {% if report.bankAccounts is empty %}
+                <div class="alert-info panel panel-border-narrow">
+                    <span class="icon icon-information"></span>
+                    <div class="behat-alert-message alert-message"><p>{{ 'form.bankAccount.noAccountsAdded' | trans({}, 'report-money-transaction') }}
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+
+
+            {% endif %}
+        {% endif %}
         {# form_known_date(form.createdAt, 'form.createdAt') #}
 
     {% endif %}

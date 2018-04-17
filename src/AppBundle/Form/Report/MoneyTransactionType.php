@@ -2,7 +2,9 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -81,6 +83,14 @@ class MoneyTransactionType extends AbstractType
                 'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
+
+            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->getType() == '102') {
+                $builder->add('bankAccountId', 'choice', [
+                    'choices' => $options['report']->getBankAccountOptions(),
+                    'empty_value' => 'Please select',
+                    'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
+                ]);
+            }
         }
 
         $builder->add('save', 'submit');
@@ -112,7 +122,7 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-            ->setRequired(['step', 'type', 'translator', 'clientFirstName'])
+            ->setRequired(['user', 'report', 'step', 'type', 'translator', 'clientFirstName'])
             ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 }

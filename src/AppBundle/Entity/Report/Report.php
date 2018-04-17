@@ -1106,4 +1106,5 @@ class Report implements ReportInterface
                 '-104' : ''
             );
     }
+
 }
