@@ -96,7 +96,7 @@ class ReportSubmissionService
      * @param  bool                    $showSummary
      * @return string                  binary PDF content
      */
-    private function getPdfBinaryContent(Report $report, $showSummary = false)
+    public function getPdfBinaryContent(Report $report, $showSummary = false)
     {
         $html = $this->templating->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
             'report' => $report,
