@@ -410,7 +410,59 @@ class ReportController extends AbstractController
         return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
     }
 
-    private function getTransactionsCsvContent() {
-        return "Category... etc";
+
+    
+    private function getTransactionsCsvContent(EntityDir\Report\Report $report) {
+        $csv = '';
+        $csv .= $this->generateCSvHeaders($csv);
+        $csv .= $this->generateExpenditureRows($report, $csv);
+        $csv .= $this->generateIncomeRows($report, $csv);
+
+        return $csv;
+    }
+
+    private function generateCSvHeaders($csv)
+    {
+        $csv .= 'Type,Category,Amount,Account,Description'. PHP_EOL;
+        return $csv;
+    }
+
+    private function generateExpenditureRows(EntityDir\Report\Report $report, $csv)
+    {
+        // process gifts
+        $csv .= $this->generateGiftsRows($report, $csv);
+
+        // process expenses
+        $csv .= $this->generateExpensesRows($report, $csv);
+
+        // process money out
+        $csv .= $this->generateMoneyOutRows($rpeort, $csv);
+
+    }
+
+    private function generateGiftsRows(EntityDir\Report\Report $report, $csv)
+    {
+        $csv .= 'Type,Category,Amount,Account,Description';
+        return $csv;
+    }
+
+    private function generateExpensesRows(EntityDir\Report\Report $report, $csv)
+    {
+        $csv .= 'Type,Category,Amount,Account,Description';
+        return $csv;
+    }
+
+    private function generateMoneyOutRows(EntityDir\Report\Report $report, $csv)
+    {
+        $csv .= 'Type,Category,Amount,Account,Description';
+
+        return $csv;
+    }
+    private function generateIncomeRows(EntityDir\Report\Report $report, $csv)
+    {
+        // process money in
+        $csv .= $this->generateMoneyInRows($report, $csv);
+
+        return $csv;
     }
 }
