@@ -250,14 +250,8 @@ class ReportController extends AbstractController
         if ($form->isValid()) {
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
 
-            // store PDF (with summary info) as a document
-            $fileUploader = $this->get('file_uploader');
-            $fileUploader->uploadFile(
-                $report,
-                $this->getPdfBinaryContent($report, true),
-                $report->createAttachmentName('DigiRep-%s_%s_%s.pdf'),
-                true
-            );
+            $reportSubmissionService = $this->get('report_submission_service');
+            $reportSubmissionService->generateReportDocuments($report);
 
             // store report and get new YEAR report (only for reports submitted the first time)
             $newYearReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);

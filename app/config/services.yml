@@ -30,3 +30,7 @@ services:
     report_fee_service:
       class: AppBundle\Service\ReportFeeService
 
+    report_submission_service:
+      class: AppBundle\Service\ReportSubmissionService
+      arguments: [ "@file_uploader", "@rest_client", "@logger" ]
+
