@@ -32,5 +32,5 @@ services:
 
     report_submission_service:
       class: AppBundle\Service\ReportSubmissionService
-      arguments: [ "@file_uploader", "@rest_client", "@templating", "@wkhtmltopdf", "@logger" ]
+      arguments: [ "@service_container" ]
 

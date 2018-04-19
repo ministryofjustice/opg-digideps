@@ -11,6 +11,7 @@ use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 class ReportSubmissionService
 {
@@ -36,35 +37,38 @@ class ReportSubmissionService
     private $wkhtmltopdf;
 
     /**
+     * @var MailSender
+     */
+    private $mailSender;
+
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
      * ReportSubmissionService constructor.
-     * @param FileUploader $fileUploader
-     * @param RestClient $restClient
-     * @param $templating
-     * @param $wkhtmltopdf
-     * @param LoggerInterface $logger
+     * @param Container $container
+     * @throws \Exception
      */
-    public function __construct(
-        FileUploader $fileUploader,
-        RestClient $restClient,
-        $templating,
-        $wkhtmltopdf,
-        LoggerInterface $logger)
+    public function __construct(Container $container)
     {
-        $this->fileUploader = $fileUploader;
-        $this->restClient = $restClient;
-        $this->templating = $templating;
-        $this->wkhtmltopdf = $wkhtmltopdf;
-        $this->logger = $logger;
+        $this->fileUploader = $container->get('file_uploader');
+        $this->restClient = $container->get('rest_client');
+        $this->mailSender = $container->get('mail_sender');
+        $this->mailFactory =$container->get('mail_factory');
+        $this->templating = $container->get('templating');
+        $this->wkhtmltopdf = $container->get('wkhtmltopdf');
+        $this->logger =$container->get('logger');
     }
 
     /**
      * Wrapper method for all documents generated for a report submission
-     *
      * @param Report $report
      */
     public function generateReportDocuments(Report $report)
@@ -104,5 +108,27 @@ class ReportSubmissionService
         ]);
 
         return $this->wkhtmltopdf->getPdfFromHtml($html);
+    }
+
+    /**
+     * @param Report $report
+     * @param User $user
+     */
+    public function submit(Report $report, User $user)
+    {
+        // store report and get new YEAR report (only for reports submitted the first time)
+        $newYearReportId = $this->restClient->put('report/' . $report->getId() . '/submit', $report, ['submit']);
+        if ($newYearReportId) {
+            $newReport = $this->restClient->get('report/' . $newYearReportId, 'Report\\Report');
+
+            //send confirmation email
+            if ($user->isDeputyOrg()) {
+                $reportConfirmEmail = $this->mailFactory->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                $this->mailSender->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
+            } else {
+                $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                $this->mailSender->send($reportConfirmEmail, ['text', 'html']);
+            }
+        }
     }
 }

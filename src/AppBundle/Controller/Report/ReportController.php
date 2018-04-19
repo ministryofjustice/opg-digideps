@@ -8,6 +8,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
+use AppBundle\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -230,6 +231,8 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
+        $reportSubmissionService = $this->get('report_submission_service'); /* @var $reportSubmissionService ReportSubmissionService */
+
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
         /** @var TranslatorInterface $translator */
@@ -248,25 +251,10 @@ class ReportController extends AbstractController
         $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
+            //TODO the following into the submit method once the CSV is implemented (less conflicts this way)
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-
-            $reportSubmissionService = $this->get('report_submission_service');
             $reportSubmissionService->generateReportDocuments($report);
-
-            // store report and get new YEAR report (only for reports submitted the first time)
-            $newYearReportId = $this->getRestClient()->put('report/' . $report->getId() . '/submit', $report, ['submit']);
-            if ($newYearReportId) {
-                $newReport = $this->getRestClient()->get('report/' . $newYearReportId, 'Report\\Report');
-
-                //send confirmation email
-                if ($user->isDeputyOrg()) {
-                    $reportConfirmEmail = $this->getMailFactory()->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
-                } else {
-                    $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-                    $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
-                }
-            }
+            $reportSubmissionService->submit($report, $this->getUser());
 
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
         }
