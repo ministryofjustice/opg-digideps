@@ -86,9 +86,9 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                $user = $this->upsertUser($row);
-                $client = $this->upsertClient($row, $user);
-                $this->upsertReport($row, $client, $user);
+                $userOrgNamed = $this->upsertOrgNamedUser($row);
+                $client = $this->upsertClient($row, $userOrgNamed);
+                $this->upsertReport($row, $client, $userOrgNamed);
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -112,7 +112,7 @@ class OrgService
      *
      * @return EntityDir\User
      */
-    private function upsertUser(array $row)
+    private function upsertOrgNamedUser(array $row)
     {
         $depType = $row['Dep Type'];
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
@@ -209,11 +209,11 @@ class OrgService
 
     /**
      * @param array          $row
-     * @param EntityDir\User $user
+     * @param EntityDir\User $userOrgNamed
      *
      * @return EntityDir\Client
      */
-    private function upsertClient(array $row, EntityDir\User $user)
+    private function upsertClient(array $row, EntityDir\User $userOrgNamed)
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
@@ -264,12 +264,12 @@ class OrgService
         }
 
         //Add client to user
-        $user->addClient($client);
+        $userOrgNamed->addClient($client);
 
         //Also add client to team members
-        foreach ($user->getTeams() as $team) {
+        foreach ($userOrgNamed->getTeams() as $team) {
             foreach ($team->getMembers() as $member) {
-                if ($member->getId() != $user->getId()) {
+                if ($member->getId() != $userOrgNamed->getId()) {
                     $member->addClient($client);
                 }
             }
