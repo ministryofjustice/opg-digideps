@@ -44,8 +44,8 @@ class ReportSubmissionService
      * DocumentService constructor.
      * @param S3Storage       $s3Storage
      * @param RestClient      $restClient
-     * @param                 $templating
-     * @param                 $wkhtmltopdf
+     * @param                 $templating Used for rednering the HTML content of reports
+     * @param                 $wkhtmltopdf Used to convert HTML to PDF
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -62,12 +62,22 @@ class ReportSubmissionService
         $this->logger = $logger;
     }
 
+    /**
+     * Wrapper method for all documents generated for a report submission
+     *
+     * @param Report $report
+     */
     public function generateReportDocuments(Report $report)
     {
         $this->generateReportPdf($report);
         //$this->generateTransactionsCsv($report);
     }
 
+    /**
+     * Generates the PDF of the report
+     *
+     * @param Report $report
+     */
     private function generateReportPdf(Report $report)
     {
         // store PDF (with summary info) as a document
@@ -80,6 +90,8 @@ class ReportSubmissionService
     }
 
     /**
+     * Generate the HTML of the report and convert to PDF
+     *
      * @param  Report $report
      * @param  bool                    $showSummary
      * @return string                  binary PDF content
