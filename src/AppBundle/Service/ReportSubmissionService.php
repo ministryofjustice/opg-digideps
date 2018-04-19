@@ -123,10 +123,10 @@ class ReportSubmissionService
 
             //send confirmation email
             if ($user->isDeputyOrg()) {
-                $reportConfirmEmail = $this->mailFactory->createOrgReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                $reportConfirmEmail = $this->mailFactory->createOrgReportSubmissionConfirmationEmail($user, $report, $newReport);
                 $this->mailSender->send($reportConfirmEmail, ['text', 'html'], 'secure-smtp');
             } else {
-                $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+                $reportConfirmEmail = $this->mailFactory->createReportSubmissionConfirmationEmail($user, $report, $newReport);
                 $this->mailSender->send($reportConfirmEmail, ['text', 'html']);
             }
         }
