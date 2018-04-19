@@ -41,11 +41,11 @@ class ReportSubmissionService
     private $logger;
 
     /**
-     * DocumentService constructor.
-     * @param S3Storage       $s3Storage
-     * @param RestClient      $restClient
-     * @param                 $templating Used for rednering the HTML content of reports
-     * @param                 $wkhtmltopdf Used to convert HTML to PDF
+     * ReportSubmissionService constructor.
+     * @param FileUploader $fileUploader
+     * @param RestClient $restClient
+     * @param $templating
+     * @param $wkhtmltopdf
      * @param LoggerInterface $logger
      */
     public function __construct(
