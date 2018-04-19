@@ -26,6 +26,16 @@ class ReportSubmissionService
     private $restClient;
 
     /**
+     * @var Templating container
+     */
+    private $templating;
+
+    /**
+     * wkhtmltopdf
+     */
+    private $wkhtmltopdf;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -34,15 +44,21 @@ class ReportSubmissionService
      * DocumentService constructor.
      * @param S3Storage       $s3Storage
      * @param RestClient      $restClient
+     * @param                 $templating
+     * @param                 $wkhtmltopdf
      * @param LoggerInterface $logger
      */
     public function __construct(
         FileUploader $fileUploader,
         RestClient $restClient,
+        $templating,
+        $wkhtmltopdf,
         LoggerInterface $logger)
     {
         $this->fileUploader = $fileUploader;
         $this->restClient = $restClient;
+        $this->templating = $templating;
+        $this->wkhtmltopdf = $wkhtmltopdf;
         $this->logger = $logger;
     }
 
@@ -70,11 +86,11 @@ class ReportSubmissionService
      */
     private function getPdfBinaryContent(Report $report, $showSummary = false)
     {
-        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
+        $html = $this->templating->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
             'report' => $report,
             'showSummary' => $showSummary
-        ])->getContent();
+        ]);
 
-        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+        return $this->wkhtmltopdf->getPdfFromHtml($html);
     }
 }
