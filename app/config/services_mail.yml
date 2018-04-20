@@ -21,7 +21,7 @@ services:
         arguments: [ "@mailer.transport.smtp.secure" ]
 
     # mail sender accepting those the above-created swift mailer
-    mail_Sender:
+    mail_sender:
         class: AppBundle\Service\Mailer\MailSender
         arguments: [ "@validator", "@logger", "@snc_redis.default" ]
         calls:
