@@ -7,7 +7,6 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e,
     '%accountsPath%': path('bank_accounts', {reportId: report.id})
-
 } %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
@@ -40,8 +39,10 @@
             </div>
         </details>
 
-        <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
-        <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% if report.bankAccounts is empty %}
+            <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
+            <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% endif %}
     </div>
 
     <a href="{{ path('gifts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
