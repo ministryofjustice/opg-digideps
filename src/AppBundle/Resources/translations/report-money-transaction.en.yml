@@ -11,11 +11,16 @@ startPage:
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we don't count it twice.
     totalOrIndividualHeading: |
-      You can enter a total amount or individual amounts for each type of income.
+      Enter a total amount or individual amounts for each type of income
     totalOrIndividualPara: |
       For example, you can add one item of income that covers the total amount of state pension
       received over the reporting period, or you can add 12 items - one for each month's pension
       payment.
+    accountLinksHeading: Link payments to %client%'s bank accounts
+    accountLinksPara1: |
+      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
+      If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
+      before you start this section.
     startButton: Start money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
@@ -37,10 +42,15 @@ startPage:
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we don't count it twice.
     totalOrIndividualHeading: |
-      You can enter a total amount or individual amounts for each type of payment.
+      Enter a total amount or individual amounts for each type of payment
     totalOrIndividualPara: |
       For example, you can add one payment that covers the cost of rent for the whole reporting
       period, or you can add 12 payments - one for each month's rent.
+    accountLinksHeading: Link payments to %client%'s bank accounts
+    accountLinksPara1: |
+      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
+      out from. If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s
+      bank accounts</a> before you start this section.
     startButton: Start money out
 
 
