@@ -60,13 +60,17 @@ class TeamController extends AbstractController
             }
 
             try {
-                $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
-
-                $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
-
-                // activation link
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                // just add to team if user already exist
+                $ret = $this->getRestClient()->get("user/team-info/" . $user->getEmail(), 'array');
+                if ($ret['belongsToOtherTeam']) {
+                    $this->getRestClient()->put('user/' . $ret['userId'] .'/add-to-team/' . $ret['teamId'], $user, ['user'], 'User');
+                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team');
+                } else {
+                    $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
+                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                }
 
                 return $this->redirectToRoute('org_team');
             } catch (\Exception $e) {

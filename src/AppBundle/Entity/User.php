@@ -298,6 +298,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Team>")
+     * @JMS\Groups({"user_teams"})
      *
      * @var ArrayCollection
      */
