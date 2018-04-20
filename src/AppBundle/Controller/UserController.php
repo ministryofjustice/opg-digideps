@@ -74,7 +74,7 @@ class UserController extends RestController
 
         // If Editing PA user
         if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
-            $userService->editPaUser($originalUser, $user);
+            $userService->editOrgUser($originalUser, $user);
             $this->updateTeamAddresses($user, $data);
         } else {
             $userService->editUser($originalUser, $user);

@@ -78,7 +78,7 @@ class UserService
             $this->_em->flush($team);
         }
 
-        // copy clients
+        // copy clients from logged user into this new user
         foreach ($loggedInUser->getClients() as $client) {
             $userToAdd->addClient($client);
         }
@@ -108,7 +108,7 @@ class UserService
         $this->_em->flush($userToEdit);
     }
 
-    public function editPaUser(User $originalUser, User $userToEdit)
+    public function editOrgUser(User $originalUser, User $userToEdit)
     {
         if (empty($userToEdit->getRoleName())) {
             $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
