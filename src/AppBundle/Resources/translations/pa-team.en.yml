@@ -43,7 +43,7 @@ form:
   email:
     label: Email
     existingError: |
-      There's a problem with your email address. Please contact us for help on 0115 934 2817.
+      There's a problem with your email address. Please contact our helpline.
   jobTitle:
     label: Job title
   phoneMain:

@@ -96,13 +96,13 @@
     <div class="helpline">
         <h3>Helpline<br/>
             {% if app.user and app.user.isDeputyPA() %}
-                {{ 'helplinePA' | trans }}<br/>
+                {{ 'helplinePA' | trans({}, 'common') }}<br/>
                 <a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
             {% elseif app.user and app.user.isDeputyProf() %}
-                {{ 'helplineProf' | trans }}<br/>
+                {{ 'helplineProf' | trans({}, 'common') }}<br/>
                 <a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
             {% else %}
-                {{ 'helpline' | trans }}<br/>
+                {{ 'helpline' | trans({}, 'common') }}<br/>
                 <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
             {% endif %}
         </h3>
