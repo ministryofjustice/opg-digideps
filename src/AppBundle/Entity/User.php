@@ -544,11 +544,25 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed
+     * @return Team[]
      */
     public function getTeams()
     {
         return $this->teams;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getTeamIds()
+    {
+        $ret = [];
+        foreach($this->getTeams() as $team) {
+            $ret[] = $team->getId();
+        }
+
+        return $ret;
     }
 
     /**
