@@ -227,7 +227,7 @@ class Document
     /**
      * @return bool
      */
-    public function isIsReportPdf()
+    public function isReportPdf()
     {
         return $this->isReportPdf;
     }
@@ -242,5 +242,25 @@ class Document
         $this->isReportPdf = $isReportPdf;
 
         return $this;
+    }
+
+
+    /**
+     * Is document for OPG admin eyes only
+     *
+     * @return bool
+     */
+    public function isAdminDocument()
+    {
+        return ($this->isReportPdf() || $this->isTransactionDocument());
+    }
+
+    /**
+     * Is document a list of transaction document (admin only)
+     * @return bool|int
+     */
+    private function isTransactionDocument()
+    {
+        return strpos('DigiRepTransactions', $this->getFileName());
     }
 }
