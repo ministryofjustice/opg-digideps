@@ -191,7 +191,7 @@ class UserController extends RestController
             throw new \RuntimeException('The logged user belongs to more than a team. Cannot chose one to add the existing user into');
         }
         $newTeamId = $loggedInUserTeams->first()->getId();
-        if (in_array($newTeamId, $user->getTeamIds())) {
+        if (!isset($user->getTeamNames()[$newTeamId])) {
             throw new \RuntimeException('User already party of the team'); //TODO should be done elsewhere
         }
 
