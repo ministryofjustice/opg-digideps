@@ -40,10 +40,15 @@ class TeamController extends AbstractController
 
         $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
         $validationGroups = $team->canAddAdmin() ? ['org_team_add', 'org_team_role_name'] : ['org_team_add'];
-
-        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, null, ['team' => $team, 'loggedInUser' => $this->getUser(), 'validation_groups' => $validationGroups
-                                   ]
-                                 );
+        // PA also require users to have the same domain address. PROF don't as they allow cross-team members
+        if ($this->getUser()->isDeputyPa()) {
+            $validationGroups[] = 'email_same_domain';
+        }
+        $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, null, [
+            'team' => $team,
+            'loggedInUser' => $this->getUser(),
+            'validation_groups' => $validationGroups
+         ]);
 
         $form->handleRequest($request);
 
@@ -63,6 +68,9 @@ class TeamController extends AbstractController
                 // just add to team if user already exist
                 $ret = $this->getRestClient()->get("user/team-info/" . $user->getEmail(), 'array');
                 if ($ret['belongsToOtherTeam']) {
+                    if ($user->isDeputyPa()) {
+                        throw new \RuntimeException('User already belonging to another team', 422);
+                    }
                     $this->getRestClient()->put('user/' . $ret['userId'] .'/add-to-team/' . $ret['teamId'], $user, ['user'], 'User');
                     $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team');
                 } else {
