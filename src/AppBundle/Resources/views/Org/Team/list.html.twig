@@ -57,6 +57,9 @@
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
+                        {% if app.user.id == user.id %}
+                        <br/>(Current logged in)
+                        {% endif %}
                     </p>
                     {#TODO use "user.hasRoleOrgNamed or user.hasRoleOrgAdmin" instead #}
                     {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
@@ -64,7 +67,10 @@
                     {% endif %}
                     {% if user.jobTitle != '' %}
                         <p class="flush--top">{{ user.jobTitle }}</p>
-                    {% endif %}
+                    {% endif %}<br />Belongs to :
+                    {% for teamId, teamName in user.teamNames %}
+                    <strong class="bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
+                    {% endfor %}
                 </td>
                 <td>
                     <p class="flush--ends">

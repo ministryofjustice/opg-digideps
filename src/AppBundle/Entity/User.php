@@ -319,6 +319,13 @@ class User implements AdvancedUserInterface
     private $coDeputyClientConfirmed;
 
     /**
+     * @var array
+     *
+     * @JMS\Type("array")
+     */
+    private $teamNames;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1051,4 +1058,24 @@ class User implements AdvancedUserInterface
             return '';
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getTeamNames()
+    {
+        return $this->teamNames;
+    }
+
+    /**
+     * @param array $teamNames
+     * @return User
+     */
+    public function setTeamNames($teamNames)
+    {
+        $this->teamNames = $teamNames;
+        return $this;
+    }
+
+
 }
