@@ -205,4 +205,14 @@ class Document
     {
         return $this->reportSubmission;
     }
+
+    public function isAdminDocument()
+    {
+        return ($this->isReportPdf() || $this->isTransactionDocument());
+    }
+
+    private function isTransactionDocument()
+    {
+        return strpos('DigiRepTransactions', $this->getFileName());
+    }
 }
