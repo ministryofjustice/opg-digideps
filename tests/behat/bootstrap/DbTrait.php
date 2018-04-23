@@ -13,8 +13,8 @@ trait DbTrait
     public static function iSaveTheApplicationStatusInto($status)
     {
         $sqlFile = self::getSnapshotPath($status);
-        // manual data
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, dd_team, casrec, client cascade;" > ' . $sqlFile);
+        // truncate cascade + insert. faster than drop + table recreate
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, dd_team, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
         exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
