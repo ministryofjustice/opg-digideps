@@ -21,15 +21,15 @@ Feature: PROF team setup
       | team_member_account_email      |
       | team_member_account_roleName_0 |
       | team_member_account_roleName_1 |
-    # add user ADMIN invalid domain
-    When I fill in the following:
-      | team_member_account_firstname  | Markk Admin                               |
-      | team_member_account_lastname   | Yelloww                                   |
-      | team_member_account_email      | behat-prof1-admin@someotherdomain.gsi.gov.uk |
-      | team_member_account_roleName_0 | ROLE_PROF_ADMIN                             |
-    And I press "team_member_account_save"
-    Then the following fields should have an error:
-      | team_member_account_email      |
+#    # add user ADMIN invalid domain
+#    When I fill in the following:
+#      | team_member_account_firstname  | Markk Admin                               |
+#      | team_member_account_lastname   | Yelloww                                   |
+#      | team_member_account_email      | behat-prof1-admin@someotherdomain.gsi.gov.uk |
+#      | team_member_account_roleName_0 | ROLE_PROF_ADMIN                             |
+#    And I press "team_member_account_save"
+#    Then the following fields should have an error:
+#      | team_member_account_email      |
     # add valid user details
     When I fill in the following:
       | team_member_account_firstname  | Markk Admin                               |
@@ -285,35 +285,3 @@ Feature: PROF team setup
     And I press "team_member_account_save"
     Then the form should be valid
     And I should see "behat-prof3-admin@publicguardian.gsi.gov.uk" in the "team-user-behat-prof3-adminpublicguardiangsigovuk" region
-
-  Scenario: PROF_ADMIN3 logs in and adds PROF_TEAM_MEMBER using existing email address
-    Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "org-settings, user-accounts, add"
-    # add user team member
-    And I fill in the following:
-      | team_member_account_firstname  | PROF3                                             |
-      | team_member_account_lastname   | Team Member                                     |
-      | team_member_account_email      | behat-prof3-team-member@publicguardian.gsi.gov.uk |
-      | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
-    And I press "team_member_account_save"
-    Then the following fields should have an error:
-      | team_member_account_email |
-
-  Scenario: PROF_ADMIN3 logs in and adds PROF_TEAM_MEMBER using existing email address for a deleted user
-    Given I am logged in as "behat-prof3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "org-settings, user-accounts"
-    # delete existing admin user
-    And I click on "delete" in the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
-    And I click on "confirm"
-    When I click on "org-settings, user-accounts, add"
-    # add user team member
-    And I fill in the following:
-      | team_member_account_firstname  | PROF3                                             |
-      | team_member_account_lastname   | Team Member                                     |
-      | team_member_account_email      | behat-prof3-team-member@publicguardian.gsi.gov.uk |
-      | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
-    And I press "team_member_account_save"
-    Then the form should be valid
-    And I should see "behat-prof3-team-member@publicguardian.gsi.gov.uk" in the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
-    And I load the application status from "prof-team-users-complete"
