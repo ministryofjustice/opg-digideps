@@ -158,8 +158,20 @@ class UserController extends RestController
     }
 
     /**
+     * Retrieve user team info by email
+     * Used when a new user is added from team page
+     *
+     * [
+     *  belongsToOtherTeam => true/false
+     *  userId => user ID (based on the email)
+     *  teamId => Team ID
+     * ]
+     *
+     * @throws RuntimeException if user already part of the team, or user belongs to two ore more teams
+     *
      * @Route("/team-info/{email}")
      * @Method({"GET"})
+     *
      * @Security("has_role('ROLE_ORG')")
      */
     public function teamInfo(Request $request, $email)
