@@ -147,12 +147,9 @@ form:
       label: Description (optional)
   bankAccount:
     moneyIn:
-      label: Optionally, what account did this payment go in to?
+      label: Which bank account was this paid into? (optional)
     moneyOut:
-      label: Optionally, what account did this payment go from?
-    noAccountsAdded: |
-      You have not added any accounts. If you would like to associate this transaction with a bank account,
-      you must first add a bank account. Or you can leave the next field empty.
+      label: Which bank account was this paid from? (optional)
   category:
     moneyOut.legend: What type of payment was it?
     moneyIn.legend:
