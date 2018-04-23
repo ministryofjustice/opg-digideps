@@ -3,14 +3,14 @@ Feature: PA team setup
   Scenario: team page
     Given I load the application status from "pa-users-uploaded"
     And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings"
+    When I click on "org-settings"
     # settings page
     And I click on "user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
 
   Scenario: named PA logs in and adds PA_ADMIN user
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     # add user - test form
     When I click on "add"
     And I press "team_member_account_save"
@@ -57,13 +57,13 @@ Feature: PA team setup
     # check I'm in the dashboard and I see the same clients
     And I should see the "client-01000010" region
     # check I see all the users
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
     And I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
 
   Scenario: PA_ADMIN logs in and adds PA_TEAM_MEMBER with invalid email
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     # add user ADMIN
     When I fill in the following:
       | team_member_account_firstname  | Robertt Team member                             |
@@ -76,7 +76,7 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN logs in and adds PA_TEAM_MEMBER
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     # add user ADMIN
     When I fill in the following:
       | team_member_account_firstname  | Robertt Team member                             |
@@ -108,7 +108,7 @@ Feature: PA team setup
     # check I'm in the dashboard and I see the same clients
     And I should see the "client-01000010" region
     # check I see all the users
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should see the "team-user-behat-pa1publicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     Then I should see the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
@@ -116,7 +116,7 @@ Feature: PA team setup
 
   Scenario: PA (named) logs in and edit users
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should not see "edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
     # edit PA named
     When I click on "edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
@@ -157,14 +157,14 @@ Feature: PA team setup
 
   Scenario: PA admin logs in and edit users
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     And I should see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
 
   Scenario: PA (named) deputy adds, then removes a PA_ADMIN user
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should not see "Remove" in the "team-user-behat-pa1publicguardiangsigovuk" region
     When I click on "add"
     Then the response status code should be 200
@@ -194,7 +194,7 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN logs in, adds then removes a PA_TEAM_MEMBER
     Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     # add user team member
     When I fill in the following:
       | team_member_account_firstname  | Andy Team member                             |
@@ -217,7 +217,7 @@ Feature: PA team setup
 
   Scenario: named PA3 logs in, adds and activates PA_ADMIN user
     Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     And I click on "add"
     And I fill in the following:
       | team_member_account_firstname  | PA3                                       |
@@ -238,7 +238,7 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN3 logs in, adds and activates PA_TEAM_MEMBER
     Given I am logged in as "behat-pa3-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     When I fill in the following:
       | team_member_account_firstname  | PA3                                             |
       | team_member_account_lastname   | Team Member                                     |
@@ -258,7 +258,7 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address
     Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     # edit PA named
     When I click on "edit" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
     And I fill in the following:
@@ -271,7 +271,7 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN3 logs in and edits PA_TEAM_MEMBER using existing email address for a deleted user
     Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     # delete existing admin user
     And I click on "delete" in the "team-user-behat-pa3-adminpublicguardiangsigovuk" region
     And I click on "confirm"
@@ -288,7 +288,7 @@ Feature: PA team setup
   Scenario: PA_ADMIN3 logs in and adds PA_TEAM_MEMBER using existing email address
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     # add user team member
     And I fill in the following:
       | team_member_account_firstname  | PA3                                             |
@@ -301,11 +301,11 @@ Feature: PA team setup
 
   Scenario: PA_ADMIN3 logs in and adds PA_TEAM_MEMBER using existing email address for a deleted user
     Given I am logged in as "behat-pa3@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     # delete existing admin user
     And I click on "delete" in the "team-user-behat-pa3-team-memberpublicguardiangsigovuk" region
     And I click on "confirm"
-    When I click on "pa-settings, user-accounts, add"
+    When I click on "org-settings, user-accounts, add"
     # add user team member
     And I fill in the following:
       | team_member_account_firstname  | PA3                                             |

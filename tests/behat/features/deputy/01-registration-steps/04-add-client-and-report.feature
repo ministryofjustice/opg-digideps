@@ -167,4 +167,4 @@ Feature: deputy / user / add client and report
     And I should see the "logout" link
     #PA links
     And I should not see the "pa-dashboard" link
-    And I should not see the "pa-settings" link
+    And I should not see the "org-settings" link
