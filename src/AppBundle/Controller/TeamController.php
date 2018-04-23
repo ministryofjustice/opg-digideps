@@ -20,7 +20,7 @@ class TeamController extends RestController
      */
     public function getMembers(Request $request)
     {
-        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
         return $this->getUser()->getMembersInAllTeams();
     }

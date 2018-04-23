@@ -553,14 +553,20 @@ class User implements UserInterface
 
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("team_names")
+     * @JMS\Groups({"team-names"})
+     *
      * @return mixed
      */
-    public function getTeamIds()
+    public function getTeamNames()
     {
         $ret = [];
         foreach($this->getTeams() as $team) {
-            $ret[] = $team->getId();
+            $ret[$team->getId()] = $team->getTeamName();
         }
+
+        asort($ret);
 
         return $ret;
     }
@@ -905,9 +911,9 @@ class User implements UserInterface
      * Return Id of the client (if it has details)
      *
      * @JMS\VirtualProperty
+     * @JMS\SerializedName("id_of_client_with_details")
      * @JMS\Groups({"user"})
      * @JMS\Type("integer")
-     * @JMS\SerializedName("id_of_client_with_details")
      */
     public function getIdOfClientWithDetails()
     {
