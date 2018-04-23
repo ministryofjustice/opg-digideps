@@ -157,24 +157,6 @@ class UserController extends RestController
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
-    /**
-     * @Route("/{id}/add-to-team/{teamId}")
-     * @Method({"PUT"})
-     * @Security("has_role('ROLE_ORG')")
-     */
-    public function addToTeam(Request $request, $id, $teamId)
-    {
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
-        $team = $this->findEntityBy(EntityDir\Team::class, $teamId, 'Team not found');
-        /* @var $user EntityDir\User */
-
-        $user->addTeam($team);
-
-        $this->persistAndFlush($user);
-        $this->persistAndFlush($team);
-
-        return ['id' => $user->getId()];
-    }
 
 
     /**
@@ -220,6 +202,20 @@ class UserController extends RestController
             && !$requestedUserIsLogged) {
             throw $this->createAccessDeniedException("Not authorised to see other user's data");
         }
+
+        return $user;
+    }
+
+    /**
+     * @Route("/get-team-names-by-email/{email}")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_PROF')")
+     */
+    public function getUserTeamNames(Request $request, $email)
+    {
+        $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
+
+        $this->setJmsSerialiserGroups(['user-id', 'team-names']);
 
         return $user;
     }

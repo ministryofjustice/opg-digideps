@@ -37,60 +37,36 @@ class TeamController extends RestController
             throw $this->createAccessDeniedException('User not part of the same team');
         }
 
-        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
         return $user;
     }
 
 
     /**
-     * Retrieve user team info by email
-     * Used when a new user is added from team page to do cross-team checks. For PROF only
+     * Add the user (retrieved by Id) to the teams the current user belongs to
      *
-     * [
-     *  belongsToOtherTeam => true/false
-     *  userId => user ID (based on the email)
-     *  teamId => Team ID
-     * ]
-     *
-     * @throws RuntimeException if user already part of the team, or user belongs to two ore more teams
-     *
-     * @Route("/user-info-by-email/{email}")
-     * @Method({"GET"})
-     *
-     * @Security("has_role('ROLE_PROF')")
+     * @Route("/add-to-team/{userId}")
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_ORG')")
      */
-    public function teamInfo(Request $request, $email)
+    public function addToTeam(Request $request, $userId)
     {
-        $loggedInUser = $this->getUser();
-        $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $email]);
-        if (!$user) {
-            return;
-        }
-        $sameType = $user->isProfDeputy() && $loggedInUser->isProfDeputy();
-        if (!$sameType) {
-            return;
+        $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
+        /* @var $user EntityDir\User */
+
+        foreach($this->getUser()->getTeams() as $team) {
+            $user->addTeam($team);
         }
 
-        $loggedInUserTeams = $this->getUser()->getTeams();
-        if (count($loggedInUserTeams) > 1) {
-            throw new \RuntimeException('The logged user belongs to more than a team. Cannot chose one to add the existing user into');
-        }
-        $newTeamId = $loggedInUserTeams->first()->getId();
-        if (isset($user->getTeamNames()[$newTeamId])) {
-            throw new \RuntimeException('User already part of the team', 422); //TODO could be done in the view
-        }
+        $this->getEntityManager()->flush();
 
-        return [
-            'belongsToOtherTeam'=> count($user->getTeams()) > 0,
-            'userId' => $user->getId(),
-            'teamId'=>$newTeamId
-        ];
+        return ['id' => $user->getId()];
     }
 
 
     /**
-     * Delete Org team member user.
+     * Delete Org team membership, and also the user if belonging to no teams
      *
      * @Route("/delete-membership/{userId}")
      * @Method({"DELETE"})

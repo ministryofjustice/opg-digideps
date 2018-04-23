@@ -48,7 +48,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
