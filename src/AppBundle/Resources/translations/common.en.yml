@@ -88,6 +88,11 @@ layDeputySupportEmail: laydeputysupport@publicguardian.gov.uk
 paSupportEmail: opg.publicauthorityteam@publicguardian.gov.uk
 profSupportEmail: opg.pro@publicguardian.gsi.gov.uk
 
+# Helpline
+helpline: 0115 934 2700
+helplinePA: 0115 934 2817
+helplineProf: 0115 934 2819
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
