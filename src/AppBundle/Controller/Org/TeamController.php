@@ -51,7 +51,6 @@ class TeamController extends AbstractController
          ]);
 
         $form->handleRequest($request);
-
         if ($form->isValid()) {
             /** @var $user EntityDir\User */
             $user = $form->getData();
@@ -66,7 +65,7 @@ class TeamController extends AbstractController
 
             try {
                 // just add to team if user already exist
-                $ret = $this->getRestClient()->get("user/team-info/" . $user->getEmail(), 'array');
+                $ret = $this->getRestClient()->get("team/user-info-by-email/" . $user->getEmail(), 'array');
                 if ($ret['belongsToOtherTeam']) {
                     if ($user->isDeputyPa()) {
                         throw new \RuntimeException('User already belonging to another team', 422);
@@ -217,7 +216,7 @@ class TeamController extends AbstractController
 
             $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
 
-            $this->getRestClient()->delete('/team/delete-user/' . $userToRemove->getId());
+            $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
 
             $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
         } catch (\Exception $e) {
