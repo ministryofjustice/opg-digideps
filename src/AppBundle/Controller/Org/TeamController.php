@@ -64,20 +64,25 @@ class TeamController extends AbstractController
             }
 
             try {
-                // just add to team if user already exist
-                $ret = $this->getRestClient()->get("team/user-info-by-email/" . $user->getEmail(), 'array');
-                if ($ret['belongsToOtherTeam']) {
-                    if ($user->isDeputyPa()) {
+                // Check user belonging to another team. If so:
+                // PA: throw an exception
+                // PROF: add to all the teams the current user belongs to
+                $userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $user->getEmail(), 'User');
+                if (count($userInfo->getTeamNames()) > 0) {
+                    if ($userInfo->isDeputyPa()) {
                         throw new \RuntimeException('User already belonging to another team', 422);
                     }
-                    $this->getRestClient()->put('user/' . $ret['userId'] .'/add-to-team/' . $ret['teamId'], $user, ['user'], 'User');
-                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team');
-                } else {
-                    $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
-                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
-                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                    $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), $user, ['user'], 'User');
+                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
+
+                    return $this->redirectToRoute('org_team');
                 }
+
+                // if the above doesn't apply: continue adding the user
+                $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+                $request->getSession()->getFlashBag()->add('notice', 'The user has been added');
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
             } catch (\Exception $e) {

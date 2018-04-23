@@ -24,7 +24,8 @@ removePage:
   htmlTitle: Deputy report - remove user account | GOV.UK
   pageTitle: Remove user account
   supportTitle: User account
-  question: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
+  questionRemove: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
+  questionRevoke: Are you sure you want to remove <strong class="bold">%client%</strong> from the team ?
   confirmButton: Yes, remove user
 
 view:
