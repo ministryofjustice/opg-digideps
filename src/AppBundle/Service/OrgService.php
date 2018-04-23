@@ -181,7 +181,6 @@ class OrgService
                     $this->em->flush($team);
                 }
 
-                $this->userRepository->hardDeleteExistingUser($user);
                 $this->em->persist($user);
                 $this->em->flush($user);
                 if ($user->isProfDeputy()) {

@@ -48,8 +48,6 @@ class UserService
 
         $userToAdd->recreateRegistrationToken();
 
-        $this->userRepository->hardDeleteExistingUser($userToAdd);
-
         $this->_em->persist($userToAdd);
         $this->_em->flush();
     }
@@ -102,7 +100,6 @@ class UserService
 
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
             $this->checkUserEmail($userToEdit);
-            $this->userRepository->hardDeleteExistingUser($userToEdit);
         }
 
         $this->_em->flush($userToEdit);

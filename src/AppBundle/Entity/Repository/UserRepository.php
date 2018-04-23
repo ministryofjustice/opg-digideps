@@ -12,16 +12,5 @@ use AppBundle\Entity\User;
  */
 class UserRepository extends AbstractEntityRepository
 {
-    /**
-     * @param User $user
-     */
-    public function hardDeleteExistingUser(User $user)
-    {
-        $existingSoftDeletedUser = $this->findUnfilteredOneBy(['email' => $user->getEmail()]);
-        if ($existingSoftDeletedUser != null) {
-            // delete soft deleted user a second time to hard delete it
-            $this->_em->remove($existingSoftDeletedUser);
-            $this->_em->flush($existingSoftDeletedUser);
-        }
-    }
+
 }
