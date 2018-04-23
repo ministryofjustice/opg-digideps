@@ -59,8 +59,7 @@
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                     </p>
                     {#TODO use "user.hasRoleOrgNamed or user.hasRoleOrgAdmin" instead #}
-                    {% if (user.roleName == 'ROLE_PA_NAMED' or user.roleName == 'ROLE_PA_ADMIN'
-                        or user.roleName == 'ROLE_PROF_NAMED' or user.roleName == 'ROLE_PROF_ADMIN') %}
+                    {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
