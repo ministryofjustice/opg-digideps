@@ -1,4 +1,4 @@
-Feature: PA team
+Feature: PA team setup
 
   Scenario: team page
     Given I load the application status from "pa-users-uploaded"

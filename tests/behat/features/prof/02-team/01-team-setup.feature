@@ -1,4 +1,4 @@
-Feature: PROF team
+Feature: PROF team setup
 
   Scenario: team page
     Given I load the application status from "prof-users-uploaded"
