@@ -158,52 +158,11 @@ class UserController extends RestController
     }
 
     /**
-     * Retrieve user team info by email
-     * Used when a new user is added from team page
-     *
-     * [
-     *  belongsToOtherTeam => true/false
-     *  userId => user ID (based on the email)
-     *  teamId => Team ID
-     * ]
-     *
-     * @throws RuntimeException if user already part of the team, or user belongs to two ore more teams
-     *
-     * @Route("/team-info/{email}")
-     * @Method({"GET"})
-     *
-     * @Security("has_role('ROLE_ORG')")
-     */
-    public function teamInfo(Request $request, $email)
-    {
-        $loggedInUser = $this->getUser();
-        $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $email]);
-        if (!$user) {
-            return;
-        }
-        $sameType = ($user->isPaDeputy() && $loggedInUser->isPaDeputy()) || ($user->isProfDeputy() && $loggedInUser->isProfDeputy());
-        if (!$sameType) {
-            return;
-        }
-
-        $loggedInUserTeams = $this->getUser()->getTeams();
-        if (count($loggedInUserTeams) > 1) {
-            throw new \RuntimeException('The logged user belongs to more than a team. Cannot chose one to add the existing user into');
-        }
-        $newTeamId = $loggedInUserTeams->first()->getId();
-        if (!isset($user->getTeamNames()[$newTeamId])) {
-            throw new \RuntimeException('User already party of the team'); //TODO should be done elsewhere
-        }
-
-        return ['belongsToOtherTeam'=> count($user->getTeams()) > 0, 'userId' => $user->getId(), 'teamId'=>$newTeamId];
-    }
-
-    /**
      * @Route("/{id}/add-to-team/{teamId}")
      * @Method({"PUT"})
      * @Security("has_role('ROLE_ORG')")
      */
-    public function addtoTeam(Request $request, $id, $teamId)
+    public function addToTeam(Request $request, $id, $teamId)
     {
         $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
         $team = $this->findEntityBy(EntityDir\Team::class, $teamId, 'Team not found');
