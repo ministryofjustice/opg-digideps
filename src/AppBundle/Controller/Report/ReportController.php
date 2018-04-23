@@ -251,7 +251,6 @@ class ReportController extends AbstractController
         $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            //TODO the following into the submit method once the CSV is implemented (less conflicts this way)
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
             $reportSubmissionService->submit($report, $this->getUser());
@@ -393,76 +392,5 @@ class ReportController extends AbstractController
         $response->sendHeaders();
 
         return $response;
-    }
-
-    /**
-     * @param  EntityDir\Report\Report $report
-     * @param  bool                    $showSummary
-     * @return string                  binary PDF content
-     */
-    private function getPdfBinaryContent(EntityDir\Report\Report $report, $showSummary = false)
-    {
-        $html = $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
-                'report' => $report,
-                'showSummary' => $showSummary
-            ])->getContent();
-
-        return $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-    }
-
-
-    
-    private function getTransactionsCsvContent(EntityDir\Report\Report $report) {
-        $csv = '';
-        $csv .= $this->generateCSvHeaders($csv);
-        $csv .= $this->generateExpenditureRows($report, $csv);
-        $csv .= $this->generateIncomeRows($report, $csv);
-
-        return $csv;
-    }
-
-    private function generateCSvHeaders($csv)
-    {
-        $csv .= 'Type,Category,Amount,Account,Description'. PHP_EOL;
-        return $csv;
-    }
-
-    private function generateExpenditureRows(EntityDir\Report\Report $report, $csv)
-    {
-        // process gifts
-        $csv .= $this->generateGiftsRows($report, $csv);
-
-        // process expenses
-        $csv .= $this->generateExpensesRows($report, $csv);
-
-        // process money out
-        $csv .= $this->generateMoneyOutRows($rpeort, $csv);
-
-    }
-
-    private function generateGiftsRows(EntityDir\Report\Report $report, $csv)
-    {
-        $csv .= 'Type,Category,Amount,Account,Description';
-        return $csv;
-    }
-
-    private function generateExpensesRows(EntityDir\Report\Report $report, $csv)
-    {
-        $csv .= 'Type,Category,Amount,Account,Description';
-        return $csv;
-    }
-
-    private function generateMoneyOutRows(EntityDir\Report\Report $report, $csv)
-    {
-        $csv .= 'Type,Category,Amount,Account,Description';
-
-        return $csv;
-    }
-    private function generateIncomeRows(EntityDir\Report\Report $report, $csv)
-    {
-        // process money in
-        $csv .= $this->generateMoneyInRows($report, $csv);
-
-        return $csv;
     }
 }

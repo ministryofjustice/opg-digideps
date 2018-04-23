@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
@@ -64,6 +65,7 @@ class ReportSubmissionService
         $this->mailFactory =$container->get('mail_factory');
         $this->templating = $container->get('templating');
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');
+        $this->translator = $container->get('translator');
         $this->logger =$container->get('logger');
     }
 
@@ -131,4 +133,94 @@ class ReportSubmissionService
             }
         }
     }
+
+    /**
+     * Store the report transactions as document entry
+     *
+     * @param Report $report
+     */
+    private function generateTransactionsCsv(Report $report)
+    {
+        // initialize temporary fp
+        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
+        if($this->fd === FALSE) {
+            die('Failed to open temporary file');
+        }
+
+        $this->generateTransactionsCsvContent($report);
+
+        rewind($this->fd);
+        $csvContent = stream_get_contents($this->fd);
+        fclose($this->fd);
+
+        $this->fileUploader->uploadFile(
+            $report,
+            $csvContent,
+            $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+            true
+        );
+    }
+
+
+    private function generateTransactionsCsvContent(Report $report)
+    {
+        //foreach($report->getBankAccounts() as $bankAccount) {
+        //$this->generateBankAccountSummary($bankAccount);
+        $this->generateCsvHeaders();
+        $this->generateTransactionRows($report->getGifts(), 'gift');
+        $this->generateTransactionRows($report->getExpenses(), 'expenses');
+        $this->generateTransactionRows($report->getMoneyTransactionsOut(), 'money out');
+        $this->generateTransactionRows($report->getMoneyTransactionsIn(), 'money in');
+
+        //}
+    }
+
+    private function generateBankAccountSummary(BankAccount $bankAccount)
+    {
+        $summaryFields = [
+            [" "],
+            [" "],
+            ["ACCOUNT SUMMARY"],
+            [$bankAccount->getBank() . "   -   " . ucfirst($bankAccount->getAccountType()) ." account" ],
+            ["**** " . $bankAccount->getAccountNumber() . "      (" . $bankAccount->getSortCode(). ")"],
+            [$bankAccount->getIsJointAccount() ? "JOINT ACCOUNT" : ""],
+            [" "],
+            [" "],
+
+
+        ];
+
+        foreach($summaryFields as $line)
+        {
+            fputcsv($this->fd, $line);
+        }
+    }
+
+    private function generateCsvHeaders()
+    {
+        $headers = ['Type', 'Category' ,'Amount', 'Account', 'Description'];
+        fputcsv($this->fd, $headers);
+    }
+
+    private function generateTransactionRows($transactions, $type)
+    {
+        foreach($transactions as $t) {
+            /** @var $t \AppBundle\Entity\Report\MoneyTransaction */
+            fputcsv(
+                $this->fd, [
+                    ucFirst($type),
+                    (property_exists($t, 'category') ?
+                        $this->translator->trans(
+                            'form.category.entries.' . $t->getCategory().'.label',
+                            [],
+                            'report-money-transaction') : ''),
+                    "=TEXT(" . $t->getAmount(). ",\"#,##0.00\")",
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : "UNNASSIGNED"),
+                    (property_exists($t, 'description') ? $t->getDescription() : '')
+                ]
+            );
+        }
+
+    }
+
 }
