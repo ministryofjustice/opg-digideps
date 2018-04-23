@@ -65,17 +65,19 @@ class TeamController extends AbstractController
 
             try {
                 // Check user belonging to another team. If so:
-                // PA: throw an exception
-                // PROF: add to all the teams the current user belongs to
-                $userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $user->getEmail(), 'User');
-                if (count($userInfo->getTeamNames()) > 0) {
-                    if ($userInfo->isDeputyPa()) {
-                        throw new \RuntimeException('User already belonging to another team', 422);
-                    }
-                    $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), $user, ['user'], 'User');
-                    $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
+                // PROF named or admin: add to all the teams the current user belongs to
+                // all the other cases (PROF team member and all PAs): throw an exception
+                if ($this->getUser()->isProfNamedDeputy() || $this->getUser()->isProfAdministrator()) {
+                    $userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $user->getEmail(), 'User');
+                    if (count($userInfo->getTeamNames()) > 0) {
+                        if ($userInfo->isDeputyPa()) {
+                            throw new \RuntimeException('User already belonging to a PA team', 422);
+                        }
+                        $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), $user, ['user'], 'User');
+                        $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
 
-                    return $this->redirectToRoute('org_team');
+                        return $this->redirectToRoute('org_team');
+                    }
                 }
 
                 // if the above doesn't apply: continue adding the user
