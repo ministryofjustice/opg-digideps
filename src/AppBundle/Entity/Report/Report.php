@@ -979,7 +979,7 @@ class Report implements ReportInterface
     public function getUnsubmittedDocuments()
     {
         return $this->getDeputyDocuments()->filter(function ($d) {
-            return empty($d->getReportSubmission()) && !$d->isReportPdf();
+            return empty($d->getReportSubmission());
         });
     }
 
@@ -995,7 +995,7 @@ class Report implements ReportInterface
     public function getSubmittedDocuments()
     {
         return $this->getDeputyDocuments()->filter(function ($d) {
-            return !empty($d->getReportSubmission()) && !$d->isReportPdf();
+            return !empty($d->getReportSubmission());
         });
     }
 
@@ -1127,6 +1127,10 @@ class Report implements ReportInterface
      */
     public function getDeputyDocuments()
     {
+        $reportType = $options['report']->getType();
+        if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
+
+        }
         return $this->getDocuments()->filter(function ($document) {
             /* @var $document Document */
             return !($document->isAdminDocument() || $document->isReportPdf());
