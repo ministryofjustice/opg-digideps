@@ -363,4 +363,29 @@ class BankAccount
 
         return $this;
     }
+
+    /**
+     * Format the account name for CSV.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        switch($this->getAccountType()) {
+            case "current":
+                return ($this->getIsJointAccount() ? 'Joint current ': 'Current') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "savings":
+                return ($this->getIsJointAccount() ? 'Joint savings ': 'Savings') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "isa":
+                return ($this->getIsJointAccount() ? 'Joint ISA ': 'ISA') . ' (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "postoffice":
+                return ($this->getIsJointAccount() ? 'Joint Post office ': 'Post office') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "cfo":
+                return ($this->getIsJointAccount() ? 'Joint Court funds ': 'Court funds') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "other":
+                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getSortCode() . ')';
+            case "other_no_sortcode":
+                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
+        }
+    }
 }
