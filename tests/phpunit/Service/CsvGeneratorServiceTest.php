@@ -43,25 +43,29 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $this->generateMockReport(99, 0, 0, 0, 0);
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertContains('Type,Category,Amount,Account,Description', $csvString);
+        $this->assertContains('Type,Category,Amount,"Bank name",Account,Description', $csvString);
     }
 
     public function testGenerateTransactionsCsvWtihTransactions()
     {
         $this->generateMockReport(
             99,
-            10, // gifts
-            100, // expenses
-            200, // money out
-            50 // money in
+            20, // gifts
+            20, // expenses
+            50, // money out
+            10 // money in
         );
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertContains('Type,Category,Amount,Account,Description', $csvString);
-        $this->assertEquals(10, preg_match_all('/Gift/', $csvString));
-        $this->assertEquals(100, preg_match_all('/Expenses/', $csvString));
-        $this->assertEquals(200, preg_match_all('/Money out/', $csvString));
-        $this->assertEquals(50, preg_match_all('/Money in/', $csvString));
+        $this->assertContains('Type,Category,Amount,"Bank name",Account,Description', $csvString);
+        $this->assertEquals(20, preg_match_all('/Gift/', $csvString));
+        $this->assertEquals(20, preg_match_all('/Expenses/', $csvString));
+        $this->assertEquals(50, preg_match_all('/Money out/', $csvString));
+        $this->assertEquals(10, preg_match_all('/Money in/', $csvString));
+
+        $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
+        $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12\-34\-56\)/', $csvString));
+
     }
 
     /**
@@ -125,17 +129,20 @@ class CsvGeneratorServiceTest extends MockeryTestCase
             case Gift::class:
                 $mock->setExplanation('explanation for gift ' . $counter);
                 break;
+            case Expense::class:
+                $mock->setExplanation('explanation for expense ' . $counter);
+                break;
             case MoneyTransaction::class:
-
                 // Assign Category based on counter
                 $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories)-1)][0]);
+                $mock->setDescription('description for transaction ' . $counter);
 
                 break;
         }
 
 
         // set all even numbers to have a bank account
-        $bankAccount = ($counter%2 == 0) ? $this->generateBankAccount($counter) : null;
+        $bankAccount = ($counter%3 == 0) ? $this->generateBankAccount($counter) : null;
         $mock->setBankAccount($bankAccount);
 
         return $mock;
@@ -151,7 +158,8 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     private function generateBankAccount($counter)
     {
         $mockBankAccount = m::mock(BankAccount::class)->makePartial();
-        $mockBankAccount->shouldReceive('getDisplayName')->andReturn('Bank' . $counter);
+        $mockBankAccount->shouldReceive('getDisplayName')->andReturn('(**** 1234) 12-34-56)');
+        $mockBankAccount->shouldReceive('getBank')->andReturn('Custom bank name ' . $counter);
 
         return $mockBankAccount;
     }

@@ -3,18 +3,8 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\User;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\FileUploader;
-use AppBundle\Service\File\Storage\S3Storage;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CsvGeneratorService
@@ -35,10 +25,9 @@ class CsvGeneratorService
     private $fd;
 
     /**
-     * CsvGenerator constructor.
-     *
-     * @param Container $container
-     * @throws \Exception
+     * CsvGeneratorService constructor.
+     * @param TranslatorInterface $translator
+     * @param LoggerInterface $logger
      */
     public function __construct(TranslatorInterface $translator, LoggerInterface $logger)
     {
@@ -49,7 +38,7 @@ class CsvGeneratorService
     /**
      * Generate the report transactions as csv
      *
-     * @param Report $report
+     * @param ReportInterface $report
      *
      * @return string Csv content
      */
@@ -76,7 +65,7 @@ class CsvGeneratorService
     /**
      * Generates the lines of the CSV
      *
-     * @param Report $report
+     * @param ReportInterface $report
      */
     private function generateTransactionsCsvLines(ReportInterface $report)
     {
@@ -92,12 +81,13 @@ class CsvGeneratorService
     }
 
     /**
-     * Generates a Bank Account Summary
+     * Generates a Bank Account Summary to the CSV file pointer
      *
      * @param BankAccount $bankAccount
      */
     private function generateBankAccountSummary(BankAccount $bankAccount)
     {
+        // @todo remove following feedback on whether an account summary is required
         $summaryFields = [
             [" "],
             [" "],
@@ -122,7 +112,7 @@ class CsvGeneratorService
      */
     private function generateCsvHeaders()
     {
-        $headers = ['Type', 'Category' ,'Amount', 'Account', 'Description'];
+        $headers = ['Type', 'Category' ,'Amount', 'Bank name', 'Account', 'Description'];
         fputcsv($this->fd, $headers);
     }
 
@@ -143,10 +133,30 @@ class CsvGeneratorService
                         $this->translator->trans(
                             'form.category.entries.' . $t->getCategory().'.label', [], 'report-money-transaction') : ''),
                     $t->getAmount(),
-                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : "UNASSIGNED"),
-                    (property_exists($t, 'description') ? $t->getDescription() : '')
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ""),
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : ""),
+                    $this->generateDescription($t)
                 ]
             );
         }
+    }
+
+    /**
+     * Generates a description. Expenses and Gifts have an 'explanation' property,
+     * Money transactions have a description property.
+     *
+     * @param $transaction
+     * @return string
+     */
+    private function generateDescription($transaction)
+    {
+        if (method_exists($transaction, 'getDescription')) {
+            return $transaction->getDescription();
+        }
+
+        if (method_exists($transaction, 'getExplanation')) {
+            return $transaction->getExplanation();
+        }
+        return '';
     }
 }

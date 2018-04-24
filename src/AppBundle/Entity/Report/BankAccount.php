@@ -94,8 +94,6 @@ class BankAccount
      */
     private $sortCode;
 
-
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})

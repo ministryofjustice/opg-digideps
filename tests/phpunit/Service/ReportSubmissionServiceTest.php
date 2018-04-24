@@ -69,7 +69,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $mockContainer->shouldReceive('get')->with('wkhtmltopdf')->andReturn($this->mockPdfGenerator);
         $mockContainer->shouldReceive('get')->with('translator')->andReturn($this->mockTranslator);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
-        $mockContainer->shouldReceive('get')->with('csv_generator')->andReturn($this->mockCsvGenerator);
+        $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
 
         return new ReportSubmissionService($mockContainer);
     }
