@@ -73,7 +73,7 @@ class ReportSubmissionService
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');
         $this->translator = $container->get('translator');
         $this->logger =$container->get('logger');
-        $this->csvGenerator = $container->get('csv_generator');
+        $this->csvGenerator = $container->get('csv_generator_service');
     }
 
     /**
