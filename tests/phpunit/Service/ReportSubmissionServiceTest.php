@@ -2,22 +2,16 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
-use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery\Exception;
 use MockeryStub as m;
-use Olcs\Logging\Log\Logger;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\Container;
