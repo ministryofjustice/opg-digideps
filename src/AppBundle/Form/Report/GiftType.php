@@ -23,7 +23,9 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->getType() == '102') {
+            $reportType = $options['report']->getType();
+
+            if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
                 $builder->add('bankAccountId', 'choice', [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select'

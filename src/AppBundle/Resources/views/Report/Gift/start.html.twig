@@ -4,7 +4,10 @@
 
 {% set translationDomain = "report-gifts" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%accountsPath%': path('bank_accounts', {reportId: report.id})
+} %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
@@ -35,6 +38,11 @@
                 <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
             </div>
         </details>
+
+        {% if report.bankAccounts is empty and report.type in ['102', '102-4'] %}
+            <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
+            <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% endif %}
     </div>
 
     <a href="{{ path('gifts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>

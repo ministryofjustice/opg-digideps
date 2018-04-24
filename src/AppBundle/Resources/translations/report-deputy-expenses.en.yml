@@ -7,9 +7,9 @@ startPage:
     You can pay yourself back from %client%'s funds as you go along, but you need to keep an accurate record of your spending.
   pageSectionDescription3: |
     Use this section to tell us about your expenses between %startDate% and %endDate%.
-  pageSectionDescription4: |
-    You can enter a total amount or individual amounts for each type of expense.
-  pageSectionDescription5: |
+  totalOrIndividualHeading: |
+    Enter a total amount or individual amounts for each type of expense
+  totalOrIndividualPara: |
     For example, if you've claimed for travel costs, you can add an expense for each journey,
     or you can add one expense that covers all your travel expenses for the reporting period.
 
@@ -18,6 +18,11 @@ startPage:
     content:
       para01: |
         OPG'S <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties/" target="_blank">'How to be a deputy' (SD3) </a> booklet gives detailed guidance on what you can and can't claim for while carrying out your duties as a deputy.
+  accountLinksHeading: Link expenses to %client%'s bank accounts
+  accountLinksPara1: |
+    When you add an expense, you have the option to say which of %client%'s bank accounts it was paid from.
+    If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
+    before you start this section.
   startButton: Start deputy expenses
 
 existPage:
@@ -69,9 +74,6 @@ form:
   addAnother:
     label: Add another expense
   bankAccount:
-    label: Optionally, what account did this payment go from?
-    noAccountsAdded: |
-      You have not added any accounts. If you would like to associate the payment of this expense with a bank account,
-      you must first add a bank account. Or you can leave the next field empty.
+    label: Which bank account was this paid from? (optional)
   save:
       label: Save expense
