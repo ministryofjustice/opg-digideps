@@ -251,7 +251,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
+    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\ReportInterface $submittedReport, EntityDir\Report\Report $newReport)
     {
         $email = new ModelDir\Email();
 
@@ -283,7 +283,7 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report\Report $submittedReport, EntityDir\Report\Report $newReport)
+    public function createOrgReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\ReportInterface $submittedReport, EntityDir\ReportInterface $newReport)
     {
         $email = $this->createReportSubmissionConfirmationEmail($user, $submittedReport, $newReport);
 

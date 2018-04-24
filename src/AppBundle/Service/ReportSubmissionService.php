@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
@@ -48,6 +49,11 @@ class ReportSubmissionService
     private $mailFactory;
 
     /**
+     * @var CsvGeneratorService
+     */
+    private $csvGenerator;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -67,16 +73,24 @@ class ReportSubmissionService
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');
         $this->translator = $container->get('translator');
         $this->logger =$container->get('logger');
+        $this->csvGenerator = $container->get('csv_generator');
     }
 
     /**
      * Wrapper method for all documents generated for a report submission
      * @param Report $report
      */
-    public function generateReportDocuments(Report $report)
+    public function generateReportDocuments(ReportInterface $report)
     {
         $this->generateReportPdf($report);
-        $this->generateTransactionsCsv($report);
+        $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
+
+        $this->fileUploader->uploadFile(
+            $report,
+            $csvContent,
+            $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+            true
+        );
     }
 
     /**
@@ -84,7 +98,7 @@ class ReportSubmissionService
      *
      * @param Report $report
      */
-    private function generateReportPdf(Report $report)
+    private function generateReportPdf(ReportInterface $report)
     {
         // store PDF (with summary info) as a document
         $this->fileUploader->uploadFile(
@@ -102,7 +116,7 @@ class ReportSubmissionService
      * @param  bool                    $showSummary
      * @return string                  binary PDF content
      */
-    public function getPdfBinaryContent(Report $report, $showSummary = false)
+    public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
     {
         $html = $this->templating->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
             'report' => $report,
@@ -116,7 +130,7 @@ class ReportSubmissionService
      * @param Report $report
      * @param User $user
      */
-    public function submit(Report $report, User $user)
+    public function submit(ReportInterface $report, User $user)
     {
         // store report and get new YEAR report (only for reports submitted the first time)
         $newYearReportId = $this->restClient->put('report/' . $report->getId() . '/submit', $report, ['submit']);
@@ -133,92 +147,4 @@ class ReportSubmissionService
             }
         }
     }
-
-    /**
-     * Store the report transactions as document entry
-     *
-     * @param Report $report
-     */
-    private function generateTransactionsCsv(Report $report)
-    {
-        // initialize temporary fp
-        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
-        if($this->fd === FALSE) {
-            die('Failed to open temporary file');
-        }
-
-        $this->generateTransactionsCsvContent($report);
-
-        rewind($this->fd);
-        $csvContent = stream_get_contents($this->fd);
-        fclose($this->fd);
-
-        $this->fileUploader->uploadFile(
-            $report,
-            $csvContent,
-            $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
-            true
-        );
-    }
-
-
-    private function generateTransactionsCsvContent(Report $report)
-    {
-        //foreach($report->getBankAccounts() as $bankAccount) {
-        //$this->generateBankAccountSummary($bankAccount);
-        $this->generateCsvHeaders();
-        $this->generateTransactionRows($report->getGifts(), 'gift');
-        $this->generateTransactionRows($report->getExpenses(), 'expenses');
-        $this->generateTransactionRows($report->getMoneyTransactionsOut(), 'money out');
-        $this->generateTransactionRows($report->getMoneyTransactionsIn(), 'money in');
-
-        //}
-    }
-
-    private function generateBankAccountSummary(BankAccount $bankAccount)
-    {
-        $summaryFields = [
-            [" "],
-            [" "],
-            ["ACCOUNT SUMMARY"],
-            [$bankAccount->getBank() . "   -   " . ucfirst($bankAccount->getAccountType()) ." account" ],
-            ["**** " . $bankAccount->getAccountNumber() . "      (" . $bankAccount->getSortCode(). ")"],
-            [$bankAccount->getIsJointAccount() ? "JOINT ACCOUNT" : ""],
-            [" "],
-            [" "],
-
-
-        ];
-
-        foreach($summaryFields as $line)
-        {
-            fputcsv($this->fd, $line);
-        }
-    }
-
-    private function generateCsvHeaders()
-    {
-        $headers = ['Type', 'Category' ,'Amount', 'Account', 'Description'];
-        fputcsv($this->fd, $headers);
-    }
-
-    private function generateTransactionRows($transactions, $type)
-    {
-        foreach($transactions as $t) {
-            /** @var $t \AppBundle\Entity\Report\MoneyTransaction */
-            fputcsv(
-                $this->fd, [
-                    ucFirst($type),
-                    (property_exists($t, 'category') ?
-                        $this->translator->trans(
-                            'form.category.entries.' . $t->getCategory().'.label', [], 'report-money-transaction') : ''),
-                    $t->getAmount(),
-                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : "UNASSIGNED"),
-                    (property_exists($t, 'description') ? $t->getDescription() : '')
-                ]
-            );
-        }
-
-    }
-
 }
