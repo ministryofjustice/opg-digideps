@@ -223,6 +223,8 @@ class TeamController extends AbstractController
 
             $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
 
+            // delete the user from all the teams the logged user belongs to.
+            // Also removes the user if (after the operation) won't belong to any team any longer
             $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
 
             $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
