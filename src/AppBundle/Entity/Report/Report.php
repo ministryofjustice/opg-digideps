@@ -978,8 +978,8 @@ class Report implements ReportInterface
      */
     public function getUnsubmittedDocuments()
     {
-        return $this->getDocuments()->filter(function ($d) {
-            return empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        return $this->getDeputyDocuments()->filter(function ($d) {
+            return empty($d->getReportSubmission());
         });
     }
 
@@ -994,8 +994,8 @@ class Report implements ReportInterface
      */
     public function getSubmittedDocuments()
     {
-        return $this->getDocuments()->filter(function ($d) {
-            return !empty($d->getReportSubmission()) && !$d->isIsReportPdf();
+        return $this->getDeputyDocuments()->filter(function ($d) {
+            return !empty($d->getReportSubmission());
         });
     }
 
@@ -1118,5 +1118,18 @@ class Report implements ReportInterface
     public function setUnsubmittedSectionsList($unsubmittedSectionsList)
     {
         $this->unsubmittedSectionsList = $unsubmittedSectionsList;
+    }
+
+    /**
+     * Returns a list of deputy only documents. Those that should be visible to deputies only.
+     * Excludes Report PDF and transactions PDF
+     * @return Document[]
+     */
+    public function getDeputyDocuments()
+    {
+        return $this->getDocuments()->filter(function ($document) {
+            /* @var $document Document */
+            return !($document->isAdminDocument() || $document->isReportPdf());
+        });
     }
 }
