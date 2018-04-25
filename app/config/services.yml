@@ -34,3 +34,7 @@ services:
       class: AppBundle\Service\ReportSubmissionService
       arguments: [ "@service_container" ]
 
+    csv_generator_service:
+      class: AppBundle\Service\CsvGeneratorService
+      arguments: [ "@translator", "@logger" ]
+

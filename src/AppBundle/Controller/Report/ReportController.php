@@ -251,7 +251,6 @@ class ReportController extends AbstractController
         $form = $this->createForm(FormDir\Report\ReportDeclarationType::class, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            //TODO the following into the submit method once the CSV is implemented (less conflicts this way)
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
             $reportSubmissionService->submit($report, $this->getUser());
@@ -419,5 +418,4 @@ class ReportController extends AbstractController
 
         return $response;
     }
-
 }
