@@ -263,19 +263,20 @@ class OrgService
             $this->em->persist($client);
         }
 
-        //Add client to user
-        $userOrgNamed->addClient($client);
+        // Add client to named user (will be done later anyway)
+//        $userOrgNamed->addClient($client);
 
-        //Also add client to team members
+        // Add client to all the team members of all teams the user belongs to
+        // (duplicates are auto-skipped)
         foreach ($userOrgNamed->getTeams() as $team) {
             foreach ($team->getMembers() as $member) {
-                if ($member->getId() != $userOrgNamed->getId()) {
+//                if ($member->getId() != $userOrgNamed->getId()) {
                     $member->addClient($client);
-                }
+//                }
             }
         }
 
-        $this->em->flush($client);
+        $this->em->flush();
 
         return $client;
     }
@@ -296,6 +297,8 @@ class OrgService
         }
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
         $report = $client->getReportByEndDate($reportEndDate);
+
+        // already existing, just change type
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted()) {
@@ -304,19 +307,17 @@ class OrgService
                 $this->em->persist($report);
                 $this->em->flush();
             }
-        } else {
-            $this->log('Creating report');
 
-            $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
-
-            $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
-            $client->addReport($report);   //double link for testing reasons
-
-            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
-            $this->em->persist($report);
-            $this->em->flush();
+            return $report;
         }
 
+        $this->log('Creating report');
+        $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
+        $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
+        $client->addReport($report);   //double link for testing reasons
+        $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
+        $this->em->persist($report);
+        $this->em->flush();
 
         return $report;
     }
@@ -344,23 +345,19 @@ class OrgService
      * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
      * - Add this new user to the logged user's team
      * - Copy clients from logged in user into the this new user
+     * Needs a flush at the end
      *
      * @param User $loggedInUser
      * @param User $userToAdd
      * @param $data
      */
-    public function copyTeamAndClientsFrom(User $loggedInUser, User $userToAdd, $data)
+    public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd, $data)
     {
-        if (!$userToAdd->isDeputyOrg()) {
-            throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
-        }
         $userToAdd->ensureRoleNameSet();
-        $userToAdd->generateOrgTeam($loggedInUser, $data);
 
-        // add to creator's team
-        if ($team = $loggedInUser->getTeams()->first()) {
+        // add to creator's teams
+        foreach($loggedInUser->getTeams() as $team) {
             $userToAdd->addTeam($team);
-            $this->em->flush($team);
         }
 
         // copy clients from logged user into this new user

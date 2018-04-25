@@ -46,7 +46,15 @@ class UserService
     {
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
-        if ($loggedInUser->isOrgNamedOrAdmin()) {
+        // generate org team name
+        if ($loggedInUser->isOrgNamedDeputy() &&
+            !empty($data['pa_team_name']) &&
+            $this->getTeams()->isEmpty()
+        ) {
+            $this->getTeams()->first()->setTeamName($data['pa_team_name']);
+        }
+
+        if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
             $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
         }
 

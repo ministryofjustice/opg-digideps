@@ -78,7 +78,7 @@ class Team
     }
 
     /**
-     * @return mixed
+     * @return User[]
      */
     public function getMembers()
     {

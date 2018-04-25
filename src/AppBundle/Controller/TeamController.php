@@ -41,7 +41,6 @@ class TeamController extends RestController
 
     /**
      * Add the user (retrieved by Id) to the teams the current user belongs to
-     * //TODO move to service
      *
      * @Route("/add-to-team/{userId}")
      * @Method({"PUT"})

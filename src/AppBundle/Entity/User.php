@@ -1209,7 +1209,7 @@ class User implements UserInterface
      */
     public function isOrgNamedOrAdmin()
     {
-        return $this->isProfTeamMember() || $this->isPaTeamMember();
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
     }
 
     /**
@@ -1219,7 +1219,7 @@ class User implements UserInterface
      */
     public function isOrgTeamMember()
     {
-        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
+        return $this->isPaTeamMember() || $this->isProfTeamMember();
     }
 
     /**
@@ -1271,16 +1271,6 @@ class User implements UserInterface
             if (!in_array($this->getRoleName(), [self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER])) {
                 $this->setRoleName(self::ROLE_PROF_TEAM_MEMBER);
             }
-        }
-    }
-
-    public function generateOrgTeam(User $creator, $data)
-    {
-        if ($creator->isOrgNamedDeputy() &&
-            !empty($data['pa_team_name']) &&
-            $this->getTeams()->isEmpty()
-        ) {
-            $this->getTeams()->first()->setTeamName($data['pa_team_name']);
         }
     }
 
