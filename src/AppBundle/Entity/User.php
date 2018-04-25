@@ -1002,6 +1002,16 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * Is user a Prof Named or Admin Deputy?
+     *
+     * @return bool
+     */
+    public function isProfNamedOrAdmin()
+    {
+        return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN]);
+    }
+
+    /**
      * Is User a Deputy Either PA or Lay?
      *
      * @return bool true if user role is LAY or PA

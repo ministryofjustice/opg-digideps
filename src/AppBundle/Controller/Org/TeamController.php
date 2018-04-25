@@ -67,7 +67,7 @@ class TeamController extends AbstractController
                 // Check user belonging to another team. If so:
                 // PROF named or admin: add to all the teams the current user belongs to
                 // all the other cases (PROF team member and all PAs): throw an exception
-                if ($this->getUser()->isProfNamedDeputy() || $this->getUser()->isProfAdministrator()) {
+                if ($this->getUser()->isProfNamedOrAdmin()) {
                     $userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $user->getEmail(), 'User');
                     if (count($userInfo->getTeamNames()) > 0) {
                         if ($userInfo->isDeputyPa()) {
