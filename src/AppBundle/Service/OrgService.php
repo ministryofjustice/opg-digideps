@@ -382,6 +382,12 @@ class OrgService
             $user->getTeams()->removeElement($team);
         }
 
+        // remove client that also belongs to the creator
+        // (equivalent to remove client from all the teams of the creator)
+        foreach ($loggedInUser->getClients() as $client) {
+            $client->removeUser($user);
+        }
+
         // remove user if belonging to no teams
         if (count($user->getTeams()) === 0) {
             $this->em->remove($user);
