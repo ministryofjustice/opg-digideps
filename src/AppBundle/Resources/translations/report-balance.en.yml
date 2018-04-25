@@ -34,6 +34,10 @@ differenceTable:
   reportClosingBalance: Report closing balance (see above)
   footer: Difference
 
+download-transactions: |
+  <a href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
+   to import into your workflow.
+
 moreInfo:
   heading: More information
   para1: |
