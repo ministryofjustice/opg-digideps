@@ -329,6 +329,10 @@
         </table>
     {% endif %}
 
+    <a href="{{ path('report_tranactions_csv', {reportId: report.id}) }}" class="behat-link-transactions-download">
+        {{ 'download-transactions' | trans({}, 'common') }}
+    </a><br>
+    
     <h3 class="heading-medium">{{ 'moreInfo.heading' | trans }}</h3>
 
     <div class="text">
