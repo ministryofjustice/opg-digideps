@@ -86,7 +86,7 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                $userOrgNamed = $this->upsertOrgNamedUser($row);
+                $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
                 $client = $this->upsertClientFromCsv($row, $userOrgNamed);
                 $this->upsertReportFromCsv($row, $client, $userOrgNamed);
             } catch (\Exception $e) {
@@ -108,24 +108,24 @@ class OrgService
     }
 
     /**
-     * @param array $row
+     * @param array $csvRow
      *
      * @return EntityDir\User
      */
-    private function upsertOrgNamedUser(array $row)
+    private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
-        $depType = $row['Dep Type'];
+        $depType = $csvRow['Dep Type'];
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
-        $deputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
+        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
         $criteria = [
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
         ];
         $user = $this->userRepository->findOneBy($criteria);
-        $userEmail = strtolower($row['Email']);
+        $userEmail = strtolower($csvRow['Email']);
 
         if ($user) {
             // Notify email change
@@ -148,31 +148,31 @@ class OrgService
                 $user
                     ->setRegistrationDate(new \DateTime())
                     ->setDeputyNo($deputyNo)
-                    ->setEmail($row['Email'])
-                    ->setFirstname($row['Dep Forename'])
-                    ->setLastname($row['Dep Surname'])
+                    ->setEmail($csvRow['Email'])
+                    ->setFirstname($csvRow['Dep Forename'])
+                    ->setLastname($csvRow['Dep Surname'])
                     ->setRoleName($roleName);
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
                     // Dep Surname in the CSV is actually the PA team name
-                    $team = new EntityDir\Team($row['Dep Surname']);
+                    $team = new EntityDir\Team($csvRow['Dep Surname']);
 
                     // Address from upload is the team's address, not the user's
-                    if (!empty($row['Dep Adrs1'])) {
-                        $team->setAddress1($row['Dep Adrs1']);
+                    if (!empty($csvRow['Dep Adrs1'])) {
+                        $team->setAddress1($csvRow['Dep Adrs1']);
                     }
 
-                    if (!empty($row['Dep Adrs2'])) {
-                        $team->setAddress2($row['Dep Adrs2']);
+                    if (!empty($csvRow['Dep Adrs2'])) {
+                        $team->setAddress2($csvRow['Dep Adrs2']);
                     }
 
-                    if (!empty($row['Dep Adrs3'])) {
-                        $team->setAddress3($row['Dep Adrs3']);
+                    if (!empty($csvRow['Dep Adrs3'])) {
+                        $team->setAddress3($csvRow['Dep Adrs3']);
                     }
 
-                    if (!empty($row['Dep Postcode'])) {
-                        $team->setAddressPostcode($row['Dep Postcode']);
+                    if (!empty($csvRow['Dep Postcode'])) {
+                        $team->setAddressPostcode($csvRow['Dep Postcode']);
                         $team->setAddressCountry('GB'); //postcode given means a UK address is given
                     }
 
@@ -184,9 +184,9 @@ class OrgService
                 $this->em->persist($user);
                 $this->em->flush($user);
                 if ($user->isProfDeputy()) {
-                    $this->added['prof_users'][] = $row['Email'];
+                    $this->added['prof_users'][] = $csvRow['Email'];
                 } elseif ($user->isPaDeputy()) {
-                    $this->added['pa_users'][] = $row['Email'];
+                    $this->added['pa_users'][] = $csvRow['Email'];
                 }
             }
         }
@@ -196,10 +196,10 @@ class OrgService
         // is released and one PA CSV upload is done
         if ($user->getTeams()->count()
             && ($team = $user->getTeams()->first())
-            && $team->getTeamName() != $row['Dep Surname']
+            && $team->getTeamName() != $csvRow['Dep Surname']
         ) {
-            $team->setTeamName($row['Dep Surname']);
-            $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
+            $team->setTeamName($csvRow['Dep Surname']);
+            $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
 
