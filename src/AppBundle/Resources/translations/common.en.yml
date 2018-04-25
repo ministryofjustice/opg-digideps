@@ -15,7 +15,6 @@ back: Back
 start: Start
 startNow: Start now
 download: Download
-download-transactions: Download money transactions as CSV
 status:
   notCreated: Create report
   notStarted: Start now

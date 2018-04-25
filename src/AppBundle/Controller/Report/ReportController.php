@@ -397,7 +397,7 @@ class ReportController extends AbstractController
     /**
      * Generates Transactions CSV and returns as CSV file response
      *
-     * @Route("/report/transactions-{reportId}.csv", name="report_tranactions_csv")
+     * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
      */
     public function transactionsCsvViewAction($reportId)
     {
