@@ -201,7 +201,8 @@ class UserController extends RestController
 
     /**
      * Get user by email, and retrieve only id and team names the user belongs to.
-     * Only for ROLE_PROF named and admin, when adding users to multiple teams
+     * Only for ROLE_PROF named and admin, when adding users to multiple teams.
+     * Returns empty if user doesn't exist
      *
      * @Route("/get-team-names-by-email/{email}")
      * @Method({"GET"})
@@ -209,7 +210,7 @@ class UserController extends RestController
      */
     public function getUserTeamNames(Request $request, $email)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
+        $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $email]);
 
         $this->setJmsSerialiserGroups(['user-id', 'team-names']);
 
