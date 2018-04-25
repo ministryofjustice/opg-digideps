@@ -351,7 +351,7 @@ class OrgService
      * @param User $userToAdd
      * @param $data
      */
-    public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd, $data)
+    public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
         $userToAdd->ensureRoleNameSet();
 

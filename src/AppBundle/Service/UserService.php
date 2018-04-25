@@ -55,7 +55,7 @@ class UserService
         }
 
         if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
-            $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
+            $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd);
         }
 
         $userToAdd->setRegistrationDate(new \DateTime());
