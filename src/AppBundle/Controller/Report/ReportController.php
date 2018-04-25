@@ -393,4 +393,38 @@ class ReportController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * Generates Transactions CSV and returns as CSV file response
+     *
+     * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
+     */
+    public function transactionsCsvViewAction($reportId)
+    {
+        $report = $this->getReport($reportId, self::$reportGroupsAll);
+
+        // restrict access to only 102, 102-4 reports
+        $reportType = $report->getType();
+        if (!in_array($reportType, ['102', '102-4'])) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
+
+        $csvContent = $this->get('csv_generator_service')->generateTransactionsCsv($report);
+
+        $response = new Response($csvContent);
+        $response->headers->set('Content-Type', 'text/csv');
+
+        $attachmentName = sprintf('DigiRepTransactions-%s_%s_%s.csv',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+
+        return $response;
+    }
 }
