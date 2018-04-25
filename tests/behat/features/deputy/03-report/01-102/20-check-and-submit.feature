@@ -126,7 +126,7 @@ Feature: Report submit
         Given each text should be present in the corresponding region:
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
-            | 4 documents | report-submission-1 |
+            | 5 documents | report-submission-1 |
         When I check "cb1"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
@@ -142,7 +142,7 @@ Feature: Report submit
         And each text should be present in the corresponding region:
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
-            | 4 documents | report-submission-1 |
+            | 5 documents | report-submission-1 |
             | AU | report-submission-1 |
 
     @deputy
@@ -189,6 +189,7 @@ Feature: Report submit
         And I should see "file1.pdf" in the "document-list" region
         #And I should see "file2.pdf" in the "document-list" region
         And I should not see "DigiRep" in the "document-list" region
+        And I should not see "DigiRepTransactions" in the "document-list" region
         # test go back link
         When I click on "back-to-reports"
         Then the URL should match "/lay"

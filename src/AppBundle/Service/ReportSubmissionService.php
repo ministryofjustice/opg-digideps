@@ -2,8 +2,10 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
@@ -47,6 +49,11 @@ class ReportSubmissionService
     private $mailFactory;
 
     /**
+     * @var CsvGeneratorService
+     */
+    private $csvGenerator;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -64,17 +71,26 @@ class ReportSubmissionService
         $this->mailFactory =$container->get('mail_factory');
         $this->templating = $container->get('templating');
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');
+        $this->translator = $container->get('translator');
         $this->logger =$container->get('logger');
+        $this->csvGenerator = $container->get('csv_generator_service');
     }
 
     /**
      * Wrapper method for all documents generated for a report submission
      * @param Report $report
      */
-    public function generateReportDocuments(Report $report)
+    public function generateReportDocuments(ReportInterface $report)
     {
         $this->generateReportPdf($report);
-        //$this->generateTransactionsCsv($report);
+        $csvContent = $this->csvGenerator->generateTransactionsCsv($report);
+
+        $this->fileUploader->uploadFile(
+            $report,
+            $csvContent,
+            $report->createAttachmentName('DigiRepTransactions-%s_%s_%s.csv'),
+            true
+        );
     }
 
     /**
@@ -82,7 +98,7 @@ class ReportSubmissionService
      *
      * @param Report $report
      */
-    private function generateReportPdf(Report $report)
+    private function generateReportPdf(ReportInterface $report)
     {
         // store PDF (with summary info) as a document
         $this->fileUploader->uploadFile(
@@ -100,7 +116,7 @@ class ReportSubmissionService
      * @param  bool                    $showSummary
      * @return string                  binary PDF content
      */
-    public function getPdfBinaryContent(Report $report, $showSummary = false)
+    public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
     {
         $html = $this->templating->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
             'report' => $report,
@@ -114,7 +130,7 @@ class ReportSubmissionService
      * @param Report $report
      * @param User $user
      */
-    public function submit(Report $report, User $user)
+    public function submit(ReportInterface $report, User $user)
     {
         // store report and get new YEAR report (only for reports submitted the first time)
         $newYearReportId = $this->restClient->put('report/' . $report->getId() . '/submit', $report, ['submit']);
