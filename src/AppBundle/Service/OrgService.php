@@ -208,77 +208,6 @@ class OrgService
 
 
     /**
-     * @param EntityDir\User $userCreator
-     * @param $id
-     * @return EntityDir\User|null|object
-     *
-     * @throws AccessDeniedException if user not part of the team the creator user belongs to
-     */
-    public function getMemberById(EntityDir\User $userCreator, $id)
-    {
-        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
-        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
-            throw new AccessDeniedException('User not part of the same team');
-        }
-
-        return $user;
-    }
-
-    /**
-     * Adds a new Org user and
-     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
-     * - Add this new user to the logged user's team
-     * - Copy clients from logged in user into the this new user
-     *
-     * @param User $loggedInUser
-     * @param User $userToAdd
-     * @param $data
-     */
-    public function copyTeamAndClientsFrom(User $loggedInUser, User $userToAdd, $data)
-    {
-        if (!$userToAdd->isDeputyOrg()) {
-            throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
-        }
-        $userToAdd->ensureRoleNameSet();
-        $userToAdd->generateOrgTeam($loggedInUser, $data);
-
-        // add to creator's team
-        if ($team = $loggedInUser->getTeams()->first()) {
-            $userToAdd->addTeam($team);
-            $this->em->flush($team);
-        }
-
-        // copy clients from logged user into this new user
-        foreach ($loggedInUser->getClients() as $client) {
-            $userToAdd->addClient($client);
-        }
-    }
-
-
-    /**
-     * Delete $user from all the teams $loggedInUser belongs to
-     * Also removes the user, if doesn't belong to any team any longer
-     *
-     * @param EntityDir\User $loggedInUser
-     * @param EntityDir\User $user
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
-    {
-        // remove user from teams the logged-user (operation performer) belongs to
-        foreach($loggedInUser->getTeams() as $team) {
-            $user->getTeams()->removeElement($team);
-        }
-
-        // remove user if belonging to no teams
-        if (count($user->getTeams()) === 0) {
-            $this->em->remove($user);
-        }
-
-        $this->em->flush();
-    }
-
-    /**
      * @param array          $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
      * @param EntityDir\User $userOrgNamed
      *
@@ -391,6 +320,79 @@ class OrgService
 
         return $report;
     }
+
+
+    /**
+     * @param EntityDir\User $userCreator
+     * @param $id
+     * @return EntityDir\User|null|object
+     *
+     * @throws AccessDeniedException if user not part of the team the creator user belongs to
+     */
+    public function getMemberById(EntityDir\User $userCreator, $id)
+    {
+        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
+        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
+            throw new AccessDeniedException('User not part of the same team');
+        }
+
+        return $user;
+    }
+
+    /**
+     * Adds a new Org user and
+     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
+     * - Add this new user to the logged user's team
+     * - Copy clients from logged in user into the this new user
+     *
+     * @param User $loggedInUser
+     * @param User $userToAdd
+     * @param $data
+     */
+    public function copyTeamAndClientsFrom(User $loggedInUser, User $userToAdd, $data)
+    {
+        if (!$userToAdd->isDeputyOrg()) {
+            throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
+        }
+        $userToAdd->ensureRoleNameSet();
+        $userToAdd->generateOrgTeam($loggedInUser, $data);
+
+        // add to creator's team
+        if ($team = $loggedInUser->getTeams()->first()) {
+            $userToAdd->addTeam($team);
+            $this->em->flush($team);
+        }
+
+        // copy clients from logged user into this new user
+        foreach ($loggedInUser->getClients() as $client) {
+            $userToAdd->addClient($client);
+        }
+    }
+
+
+    /**
+     * Delete $user from all the teams $loggedInUser belongs to
+     * Also removes the user, if doesn't belong to any team any longer
+     *
+     * @param EntityDir\User $loggedInUser
+     * @param EntityDir\User $user
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
+    {
+        // remove user from teams the logged-user (operation performer) belongs to
+        foreach($loggedInUser->getTeams() as $team) {
+            $user->getTeams()->removeElement($team);
+        }
+
+        // remove user if belonging to no teams
+        if (count($user->getTeams()) === 0) {
+            $this->em->remove($user);
+        }
+
+        $this->em->flush();
+    }
+
 
 
 
