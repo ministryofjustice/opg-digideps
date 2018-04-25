@@ -984,13 +984,15 @@ class Report implements ReportInterface
     }
 
     /**
+     * Returns a list of deputy only documents. Those that should be visible to deputies only.
+     * Excludes Report PDF and transactions PDF
      * @return Document[]
      */
-    public function getDocumentsExcludingReportPdf()
+    public function getDeputyDocuments()
     {
         return array_filter($this->documents, function ($document) {
             /* @var $document Document */
-            return !$document->isReportPdf();
+            return !($document->isAdminDocument() || $document->isReportPdf());
         });
     }
 

@@ -4,7 +4,10 @@
 
 {% set translationDomain = "report-deputy-expenses" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%accountsPath%': path('bank_accounts', {reportId: report.id})
+} %}
 
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
@@ -22,8 +25,6 @@
         	'%endDate%': report.endDate | date("j F Y")
         	},translationDomain) }}
         </p>
-        <p><strong class="bold">{{ 'startPage.pageSectionDescription4' | trans(transOptions) }}</strong></p>
-        <p>{{ 'startPage.pageSectionDescription5' | trans(transOptions) }}</p>
 
         <details class="push--bottom">
             <summary>
@@ -33,6 +34,14 @@
                 <p>{{ 'startPage.hiddenText01.content.para01' |trans|raw }}</p>
             </div>
         </details>
+
+        <h3 class="heading-small">{{ 'startPage.totalOrIndividualHeading' | trans(transOptions) }}</h3>
+        <p>{{ 'startPage.totalOrIndividualPara' | trans(transOptions) }}</p>
+
+        {% if report.bankAccounts is empty and report.type in ['102', '102-4'] %}
+            <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
+            <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
+        {% endif %}
 
     </div>
 

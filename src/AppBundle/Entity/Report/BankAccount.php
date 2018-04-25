@@ -94,8 +94,6 @@ class BankAccount
      */
     private $sortCode;
 
-
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"account"})
@@ -362,5 +360,45 @@ class BankAccount
         $this->meta = $meta;
 
         return $this;
+    }
+
+    /**
+     * Format the account name for CSV.
+     *
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        switch($this->getAccountType()) {
+            case "current":
+                return ($this->getIsJointAccount() ? 'Joint current ': 'Current') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+            case "savings":
+                return ($this->getIsJointAccount() ? 'Joint savings ': 'Savings') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+            case "isa":
+                return ($this->getIsJointAccount() ? 'Joint ISA ': 'ISA') . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+            case "postoffice":
+                return ($this->getIsJointAccount() ? 'Joint Post office ': 'Post office') . ' account (****' . $this->getAccountNumber() . ')';
+            case "cfo":
+                return ($this->getIsJointAccount() ? 'Joint Court funds ': 'Court funds') . ' account (****' . $this->getAccountNumber() . ')';
+            case "other":
+                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
+            case "other_no_sortcode":
+                return ($this->getIsJointAccount() ? 'Joint other ': 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
+        }
+    }
+
+    /**
+     * Formats a sort code with hyphens
+     * 
+     * @return string
+     */
+    public function getDisplaySortCode()
+    {
+        if (strlen($this->getSortCode()) == 6)
+        {
+            $sc = str_split($this->getSortCode());
+            return $sc[0] . $sc[1] . '-' . $sc[2] . $sc[3] . '-' . $sc[4] . $sc[5];
+        }
+        return $this->getSortCode();
     }
 }
