@@ -1116,13 +1116,13 @@ class User implements UserInterface
     }
 
     /**
-     * Is user a PA named or a Prof named ?
+     * Is Organisation Named deputy?
      *
      * @return bool
      */
-    public function hasRoleOrgNamed()
+    public function isOrgNamedDeputy()
     {
-        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
@@ -1183,15 +1183,6 @@ class User implements UserInterface
         return $this->isPaAdministrator() || $this->isProfAdministrator();
     }
 
-    /**
-     * Is Organisation Named deputy?
-     *
-     * @return bool
-     */
-    public function isOrgNamedDeputy()
-    {
-        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
-    }
 
     /**
      * Is PA Team member?
@@ -1285,7 +1276,7 @@ class User implements UserInterface
 
     public function generateOrgTeam(User $creator, $data)
     {
-        if ($creator->hasRoleOrgNamed() &&
+        if ($creator->isOrgNamedDeputy() &&
             !empty($data['pa_team_name']) &&
             $this->getTeams()->isEmpty()
         ) {
