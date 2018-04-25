@@ -46,6 +46,7 @@ class User implements UserInterface
 
     public static $depTypeIdToUserRole = [
         21 => self::ROLE_PROF_NAMED,
+        63 => self::ROLE_PROF_NAMED,
         23 => self::ROLE_PA_NAMED,
     ];
 
