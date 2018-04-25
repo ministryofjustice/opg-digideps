@@ -264,7 +264,7 @@ class OrgService
         }
 
         // Add client to named user (will be done later anyway)
-//        $userOrgNamed->addClient($client);
+        $userOrgNamed->addClient($client);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)

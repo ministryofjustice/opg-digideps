@@ -74,7 +74,7 @@ class TeamController extends RestController
     public function deleteOrgTeamUser(Request $request, $userId)
     {
         /* @var $user EntityDir\User */
-        $user = $this->orgService()->getMemberById($request, $userId);
+        $user = $this->orgService()->getMemberById($this->getUser(), $userId);
         $this->orgService()->removeUserFromTeamsOf($this->getUser(), $user);
 
         return [];
