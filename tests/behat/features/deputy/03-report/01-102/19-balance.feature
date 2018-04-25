@@ -45,3 +45,9 @@ Feature: Report balance
         Then I should see the "balance-state-explained" region
         And the lay report should be submittable
 
+    @deputy
+    Scenario: Transactions CSV link
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "report-start, edit-balance"
+        And I click on "download-transactions"
+        And the response status code should be 200
