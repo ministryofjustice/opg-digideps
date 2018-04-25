@@ -47,7 +47,7 @@ class UserService
         $this->exceptionIfEmailExist($userToAdd->getEmail());
 
         if ($loggedInUser->isOrgNamedOrAdmin()) {
-            $this->orgService->addTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
+            $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
         }
 
         $userToAdd->setRegistrationDate(new \DateTime());

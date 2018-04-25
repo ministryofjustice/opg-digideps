@@ -52,7 +52,7 @@ class TeamController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
         /* @var $user EntityDir\User */
 
-        $this->orgService()->addTeamAndClientsFrom($this->getUser(), $user);
+        $this->orgService()->copyTeamAndClientsFrom($this->getUser(), $user);
 
         $this->getEntityManager()->flush();
 
@@ -76,7 +76,7 @@ class TeamController extends RestController
     {
         /* @var $user EntityDir\User */
         $user = $this->orgService()->getMemberById($request, $userId);
-        $this->orgService()->deleteUserFromTeamsOf($this->getUser(), $user);
+        $this->orgService()->removeUserFromTeamsOf($this->getUser(), $user);
 
         return [];
     }

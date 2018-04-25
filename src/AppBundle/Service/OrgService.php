@@ -208,6 +208,23 @@ class OrgService
 
 
     /**
+     * @param EntityDir\User $userCreator
+     * @param $id
+     * @return EntityDir\User|null|object
+     *
+     * @throws AccessDeniedException if user not part of the team the creator user belongs to
+     */
+    public function getMemberById(EntityDir\User $userCreator, $id)
+    {
+        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
+        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
+            throw new AccessDeniedException('User not part of the same team');
+        }
+
+        return $user;
+    }
+
+    /**
      * Adds a new Org user and
      * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
      * - Add this new user to the logged user's team
@@ -217,7 +234,7 @@ class OrgService
      * @param User $userToAdd
      * @param $data
      */
-    public function addTeamAndClientsFrom(User $loggedInUser, User $userToAdd, $data)
+    public function copyTeamAndClientsFrom(User $loggedInUser, User $userToAdd, $data)
     {
         if (!$userToAdd->isDeputyOrg()) {
             throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
@@ -237,22 +254,6 @@ class OrgService
         }
     }
 
-    /**
-     * @param EntityDir\User $userCreator
-     * @param $id
-     * @return EntityDir\User|null|object
-     *
-     * @throws AccessDeniedException if user not part of the team the creator user belongs to
-     */
-    public function getMemberById(EntityDir\User $userCreator, $id)
-    {
-        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
-        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
-            throw new AccessDeniedException('User not part of the same team');
-        }
-
-        return $user;
-    }
 
     /**
      * Delete $user from all the teams $loggedInUser belongs to
@@ -262,7 +263,7 @@ class OrgService
      * @param EntityDir\User $user
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function deleteUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
+    public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
     {
         // remove user from teams the logged-user (operation performer) belongs to
         foreach($loggedInUser->getTeams() as $team) {
