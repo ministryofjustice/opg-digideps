@@ -32,19 +32,16 @@ class TeamController extends RestController
      */
     public function getMemberById(Request $request, $id)
     {
-        $user = $this->getRepository(EntityDir\User::class)->find($id);
-        if (!array_key_exists($id, $this->getUser()->getMembersInAllTeams())) {
-            throw $this->createAccessDeniedException('User not part of the same team');
-        }
-
         $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
-        return $user;
+        return $this->orgService()
+            ->getMemberById($this->getUser(), $id);
     }
 
 
     /**
      * Add the user (retrieved by Id) to the teams the current user belongs to
+     * //TODO move to service
      *
      * @Route("/add-to-team/{userId}")
      * @Method({"PUT"})
@@ -55,9 +52,7 @@ class TeamController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
         /* @var $user EntityDir\User */
 
-        foreach($this->getUser()->getTeams() as $team) {
-            $user->addTeam($team);
-        }
+        $this->orgService()->addTeamAndClientsFrom($this->getUser(), $user);
 
         $this->getEntityManager()->flush();
 
@@ -79,26 +74,19 @@ class TeamController extends RestController
      */
     public function deleteOrgTeamUser(Request $request, $userId)
     {
-        if (!array_key_exists($userId, $this->getUser()->getMembersInAllTeams())) {
-            throw $this->createAccessDeniedException('User not part of the same team');
-        }
-
         /* @var $user EntityDir\User */
-        $user = $this->getMemberById($request, $userId);
-
-
-        // remove user from teams the logged-user (operation performer) belongs to
-        foreach($this->getUser()->getTeams() as $team) {
-            $user->getTeams()->removeElement($team);
-        }
-
-        // remove user if belonging to no teams
-        if (count($user->getTeams()) === 0) {
-            $this->getEntityManager()->remove($user);
-        }
-
-        $this->getEntityManager()->flush();
+        $user = $this->orgService()->getMemberById($request, $userId);
+        $this->orgService()->deleteUserFromTeamsOf($this->getUser(), $user);
 
         return [];
     }
+
+    /**
+     * @return \AppBundle\Service\OrgService
+     */
+    private function orgService()
+    {
+        return $this->get('org_service');
+    }
+
 }

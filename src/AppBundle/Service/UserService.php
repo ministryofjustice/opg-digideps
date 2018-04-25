@@ -62,14 +62,19 @@ class UserService
     /**
      * Update a user. Checks that the email is not in use then persists the entity
      *
+     * @param User $loggedInUser Original user for comparison checks
      * @param User $originalUser Original user for comparison checks
      * @param User $userToEdit   The user to edit
      */
-    public function editUser(User $originalUser, User $userToEdit)
+    public function editUser(User $loggedInUser, User $originalUser, User $userToEdit)
     {
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
             $this->exceptionIfEmailExist($userToEdit->getEmail());
         }
+
+//        if ($loggedInUser->isOrgNamedOrAdmin()) {
+//            $this->orgService->addTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
+//        }
 
         $this->em->flush($userToEdit);
     }

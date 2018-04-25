@@ -84,7 +84,7 @@ class CoDeputyController extends RestController
             $originalUser = clone $user;
             $user->setEmail($data['email']);
             $userService = $this->get('user_service');
-            $userService->editUser($originalUser, $user);
+            $userService->editUser($this->getUser(), $originalUser, $user);
         }
 
         return [];

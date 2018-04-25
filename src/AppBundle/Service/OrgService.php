@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class OrgService
 {
@@ -17,7 +18,6 @@ class OrgService
      * @var LoggerInterface
      */
     protected $logger;
-
 
     /**
      * @var array
@@ -87,8 +87,8 @@ class OrgService
             $row = array_map('trim', $row);
             try {
                 $userOrgNamed = $this->upsertOrgNamedUser($row);
-                $client = $this->upsertClient($row, $userOrgNamed);
-                $this->upsertReport($row, $client, $userOrgNamed);
+                $client = $this->upsertClientFromCsv($row, $userOrgNamed);
+                $this->upsertReportFromCsv($row, $client, $userOrgNamed);
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -238,12 +238,52 @@ class OrgService
     }
 
     /**
+     * @param EntityDir\User $userCreator
+     * @param $id
+     * @return EntityDir\User|null|object
+     *
+     * @throws AccessDeniedException if user not part of the team the creator user belongs to
+     */
+    public function getMemberById(EntityDir\User $userCreator, $id)
+    {
+        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
+        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
+            throw new AccessDeniedException('User not part of the same team');
+        }
+
+        return $user;
+    }
+
+    /**
+     * Delete $user from all the teams $loggedInUser belongs to
+     * Also removes the user, if doesn't belong to any team any longer
+     *
+     * @param EntityDir\User $loggedInUser
+     * @param EntityDir\User $user
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function deleteUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
+    {
+        // remove user from teams the logged-user (operation performer) belongs to
+        foreach($loggedInUser->getTeams() as $team) {
+            $user->getTeams()->removeElement($team);
+        }
+
+        // remove user if belonging to no teams
+        if (count($user->getTeams()) === 0) {
+            $this->em->remove($user);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
      * @param array          $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
      * @param EntityDir\User $userOrgNamed
      *
      * @return EntityDir\Client
      */
-    private function upsertClient(array $row, EntityDir\User $userOrgNamed)
+    private function upsertClientFromCsv(array $row, EntityDir\User $userOrgNamed)
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
@@ -286,7 +326,7 @@ class OrgService
             }
 
             if (!empty($row['Client Date of Birth'])) {
-                $client->setDateOfBirth(self::parseDate($row['Client Date of Birth'], '19') ?: null);
+                $client->setDateOfBirth(self::parseCsvDate($row['Client Date of Birth'], '19') ?: null);
             }
 
             $this->added['clients'][] = $client->getCaseNumber();
@@ -311,20 +351,20 @@ class OrgService
     }
 
     /**
-     * @param array $row keys: Last Report Day, Typeofrep, }
+     * @param array $csvRow keys: Last Report Day, Typeofrep, }
      * @param EntityDir\Client $client
      * @param EntityDir\User $user
      * @return EntityDir\Report\Report
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function upsertReport(array $row, EntityDir\Client $client, EntityDir\User $user)
+    private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
-        $reportEndDate = self::parseDate($row['Last Report Day'], '20');
+        $reportEndDate = self::parseCsvDate($csvRow['Last Report Day'], '20');
         if (!$reportEndDate) {
-            throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
+            throw new \RuntimeException("Cannot parse date {$csvRow['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], $user->getRoleName());
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
         $report = $client->getReportByEndDate($reportEndDate);
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
@@ -381,7 +421,7 @@ class OrgService
      *
      * @return \DateTime|false
      */
-    public static function parseDate($dateString, $century)
+    private static function parseCsvDate($dateString, $century)
     {
         $sep = '-';
         //$errorMessage = "Can't recognise format for date $dateString. expected d-M-Y or d-M-y e.g. 05-MAR-2005 or 05-MAR-05";

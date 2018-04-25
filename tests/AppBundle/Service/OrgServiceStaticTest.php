@@ -51,7 +51,7 @@ class OrgServiceStaticTest extends \PHPUnit_Framework_TestCase
      */
     public function testparseDate($in, $expectedYmd, $century)
     {
-        $actual = OrgService::parseDate($in, $century);
+        $actual = OrgService::parseCsvDate($in, $century);
 
         $this->assertEquals($expectedYmd, $actual ? $actual->format('Y-m-d'): $actual);
     }

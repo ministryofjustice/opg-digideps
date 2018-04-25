@@ -69,7 +69,7 @@ class UserController extends RestController
         $originalUser = clone $user;
         $data = $this->deserializeBodyContent($request);
         $this->populateUser($user, $data);
-        $userService->editUser($originalUser, $user);
+        $userService->editUser($loggedInUser, $originalUser, $user);
 
         if ($creatorIsOrg) {
             $this->updateTeamAddresses($user, $data);
@@ -152,7 +152,6 @@ class UserController extends RestController
     }
 
 
-
     /**
      * @Route("/get-one-by/{what}/{filter}", requirements={
      *   "what" = "(user_id|email|case_number)"
@@ -219,6 +218,7 @@ class UserController extends RestController
 
     /**
      * Delete user with clients.
+     * //TODO move to UserService
      *
      * @Route("/{id}")
      * @Method({"DELETE"})
