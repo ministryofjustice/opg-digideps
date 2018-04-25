@@ -329,9 +329,11 @@
         </table>
     {% endif %}
 
+    {% if report.type in ['102','102-4'] %}
     <a href="{{ path('report_tranactions_csv', {reportId: report.id}) }}" class="behat-link-transactions-download">
         {{ 'download-transactions' | trans({}, 'common') }}
     </a><br>
+    {% endif %}
     
     <h3 class="heading-medium">{{ 'moreInfo.heading' | trans }}</h3>
 

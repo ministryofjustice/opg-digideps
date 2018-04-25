@@ -395,11 +395,20 @@ class ReportController extends AbstractController
     }
 
     /**
+     * Generates Transactions CSV and returns as CSV file response
+     *
      * @Route("/report/transactions-{reportId}.csv", name="report_tranactions_csv")
      */
     public function transactionsCsvViewAction($reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsAll);
+
+        // restrict access to only 102, 102-4 reports
+        $reportType = $report->getType();
+        if (!in_array($reportType, ['102', '102-4'])) {
+            throw $this->createAccessDeniedException('Access denied');
+        }
+
         $csvContent = $this->get('csv_generator_service')->generateTransactionsCsv($report);
 
         $response = new Response($csvContent);
