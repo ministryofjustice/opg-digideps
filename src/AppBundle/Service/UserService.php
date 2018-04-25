@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -11,22 +12,27 @@ use Doctrine\ORM\EntityRepository;
 class UserService
 {
     /** @var EntityRepository */
-    protected $userRepository;
+    private $userRepository;
 
     /** @var EntityRepository */
-    protected $teamRepository;
+    private $teamRepository;
 
     /** @var EntityManager */
-    protected $_em;
+    private $em;
+
+    /**
+     * @var OrgService
+     */
+    private $orgService;
 
     public function __construct(
-        UserRepository $userRepository,
-        TeamRepository $teamRepository,
-        EntityManager $em
+        EntityManager $em,
+        OrgService $orgService
     ) {
-        $this->userRepository = $userRepository;
-        $this->teamRepository = $teamRepository;
-        $this->_em = $em;
+        $this->userRepository = $em->getRepository(User::class);
+        $this->teamRepository = $em->getRepository(Team::class);
+        $this->em = $em;
+        $this->orgService = $orgService;
     }
 
     /**
@@ -38,49 +44,20 @@ class UserService
      */
     public function addUser(User $loggedInUser, User $userToAdd, $data)
     {
-        $this->checkUserEmail($userToAdd);
+        $this->exceptionIfEmailExist($userToAdd->getEmail());
 
-        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
-            $this->addOrgUser($loggedInUser, $userToAdd, $data);
+        if ($loggedInUser->isOrgNamedOrAdmin()) {
+            $this->orgService->addTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
         }
 
         $userToAdd->setRegistrationDate(new \DateTime());
 
         $userToAdd->recreateRegistrationToken();
 
-        $this->_em->persist($userToAdd);
-        $this->_em->flush();
+        $this->em->persist($userToAdd);
+        $this->em->flush();
     }
 
-    /**
-     * Adds a new Org user and
-     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
-     * - Add this new user to the logged user's team
-     * - Copy clients from logged in user into the this new user
-     *
-     * @param User $loggedInUser
-     * @param User $userToAdd
-     * @param $data
-     */
-    private function addOrgUser(User $loggedInUser, User $userToAdd, $data)
-    {
-        if (!$userToAdd->isDeputyOrg()) {
-            throw new \InvalidArgumentException(__METHOD__.': only ORG user can be added with this method');
-        }
-        $userToAdd->ensureRoleNameSet();
-        $userToAdd->generateOrgTeam($loggedInUser, $data);
-
-        // add to creator's team
-        if ($team = $loggedInUser->getTeams()->first()) {
-            $userToAdd->addTeam($team);
-            $this->_em->flush($team);
-        }
-
-        // copy clients from logged user into this new user
-        foreach ($loggedInUser->getClients() as $client) {
-            $userToAdd->addClient($client);
-        }
-    }
 
     /**
      * Update a user. Checks that the email is not in use then persists the entity
@@ -90,37 +67,21 @@ class UserService
      */
     public function editUser(User $originalUser, User $userToEdit)
     {
-        if (empty($userToEdit->getRoleName())) {
-            if ($userToEdit->isProfDeputy()) {
-                $userToEdit->setRoleName(User::ROLE_PROF_TEAM_MEMBER);
-            } elseif ($userToEdit->isPaDeputy()) {
-                $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
-            }
-        }
-
         if ($originalUser->getEmail() != $userToEdit->getEmail()) {
-            $this->checkUserEmail($userToEdit);
+            $this->exceptionIfEmailExist($userToEdit->getEmail());
         }
 
-        $this->_em->flush($userToEdit);
+        $this->em->flush($userToEdit);
     }
 
-    public function editOrgUser(User $originalUser, User $userToEdit)
-    {
-        if (empty($userToEdit->getRoleName())) {
-            $userToEdit->setRoleName(User::ROLE_PA_TEAM_MEMBER);
-        }
-
-        $this->editUser($originalUser, $userToEdit);
-    }
 
     /**
-     * @param User $user
+     * @param $email
      */
-    private function checkUserEmail(User $user)
+    private function exceptionIfEmailExist($email)
     {
-        if ($this->userRepository->findOneBy(['email' => $user->getEmail()])) {
-            throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
+        if ($this->userRepository->findOneBy(['email' => $email])) {
+            throw new \RuntimeException("User with email {$email} already exists.", 422);
         }
     }
 }

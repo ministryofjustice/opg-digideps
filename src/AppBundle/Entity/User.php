@@ -1214,13 +1214,21 @@ class User implements UserInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isOrgNamedOrAdmin()
+    {
+        return $this->isProfTeamMember() || $this->isPaTeamMember();
+    }
+
+    /**
      * Is user an organisation Team Member?
      *
      * @return bool
      */
     public function isOrgTeamMember()
     {
-        return $this->isProfTeamMember() || $this->isPaTeamMember();
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
     }
 
     /**
@@ -1282,6 +1290,20 @@ class User implements UserInterface
             $this->getTeams()->isEmpty()
         ) {
             $this->getTeams()->first()->setTeamName($data['pa_team_name']);
+        }
+    }
+
+    /**
+     * Set role to team member
+     */
+    public function setDefaultRoleIfEmpty()
+    {
+        if (empty($this->getRoleName())) {
+            if ($this->isProfDeputy()) {
+                $this->setRoleName(User::ROLE_PROF_TEAM_MEMBER);
+            } elseif ($this->isPaDeputy()) {
+                $this->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+            }
         }
     }
 }

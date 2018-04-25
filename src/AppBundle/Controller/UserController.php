@@ -35,7 +35,7 @@ class UserController extends RestController
 
         $user = $this->populateUser($user, $data);
 
-        $userService = $this->get('opg_digideps.user_service');
+        $userService = $this->get('user_service');
         $userService->addUser($loggedInUser, $user, $data);
 
         $groups = $request->query->has('groups') ?
@@ -53,6 +53,9 @@ class UserController extends RestController
     {
         $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
         /* @var $user User */
+        $loggedInUser = $this->getUser();
+        $userService = $this->get('user_service');
+        $creatorIsOrg = $loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator();
 
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
@@ -64,22 +67,13 @@ class UserController extends RestController
         }
 
         $originalUser = clone $user;
-
         $data = $this->deserializeBodyContent($request);
-
         $this->populateUser($user, $data);
+        $userService->editUser($originalUser, $user);
 
-        $loggedInUser = $this->getUser();
-
-        $userService = $this->get('opg_digideps.user_service');
-
-        // If Editing PA user
-        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
-            $userService->editOrgUser($originalUser, $user);
+        if ($creatorIsOrg) {
             $this->updateTeamAddresses($user, $data);
-        } else {
-            $userService->editUser($originalUser, $user);
-        };
+        }
 
         return ['id' => $user->getId()];
     }
@@ -391,7 +385,7 @@ class UserController extends RestController
 
     /**
      * call setters on User when $data contains values.
-     *
+     * //TODO move to service
      * @param EntityDir\User $user
      * @param array $data
      */
@@ -442,6 +436,7 @@ class UserController extends RestController
 
     /**
      * Update both the team and other teammembers to have same address
+     * //TODO code seem to need a cleanup/refactor
      *
      * @param EntityDir\User $user
      * @param array $data
