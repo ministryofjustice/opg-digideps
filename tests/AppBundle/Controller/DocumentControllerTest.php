@@ -83,7 +83,7 @@ class DocumentControllerTest extends AbstractTestController
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
-        $this->assertEquals(true, $document->isIsReportPdf());
+        $this->assertEquals(true, $document->isReportPdf());
 
         return $document->getId();
     }

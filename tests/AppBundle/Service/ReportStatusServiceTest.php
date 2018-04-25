@@ -63,6 +63,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'getTotalsMatch'                    => null,
                 'getBalanceMismatchExplanation'     => null,
                 'getDocuments'                      => [],
+                'getDeputyDocuments'                => [],
                 'getWishToProvideDocumentation'     => null,
                 // 103
                 'getMoneyShortCategoriesIn'         => [],
@@ -425,8 +426,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [['getWishToProvideDocumentation' => 'no'], StatusService::STATE_DONE],
             [['getDocuments' => []], StatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => []], StatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDocuments' => [$document]], StatusService::STATE_DONE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => []], StatusService::STATE_NOT_STARTED],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => [$document]], StatusService::STATE_DONE],
         ];
     }
 

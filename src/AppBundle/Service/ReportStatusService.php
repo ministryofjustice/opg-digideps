@@ -408,7 +408,7 @@ class ReportStatusService
      */
     public function getDocumentsState()
     {
-        $numRecords = count($this->report->getDocuments());
+        $numRecords = count($this->report->getDeputyDocuments());
 
         if ($this->report->getWishToProvideDocumentation() === null || ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0)) {
             $status = ['state' => self::STATE_NOT_STARTED];
