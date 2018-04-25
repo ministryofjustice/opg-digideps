@@ -49,7 +49,7 @@ Feature: PROF cross team members
     And I should see the "client-03000001" region
 
   Scenario: "behat-prof1-team-member" removed from the team
-    And I am logged in as "behat-prof3@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof3@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
     And I click on "delete" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
     And I click on "confirm"
