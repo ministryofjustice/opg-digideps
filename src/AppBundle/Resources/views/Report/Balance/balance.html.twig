@@ -330,11 +330,9 @@
     {% endif %}
 
     {% if report.type in ['102','102-4'] %}
-        <div class="text">
-            <p>
+        <p class="text push--top">
             {{ 'download-transactions' | trans({ '%transactionsCsvPath%': path('report_transactions_csv', {reportId: report.id})}) | raw }}
-            </p>
-        </div>
+        </p>
     {% endif %}
 
     <h3 class="heading-medium">{{ 'moreInfo.heading' | trans }}</h3>
