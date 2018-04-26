@@ -228,7 +228,7 @@ class TeamController extends AbstractController
             // Also removes the user if (after the operation) won't belong to any team any longer
             $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
 
-            $request->getSession()->getFlashBag()->add('notice', $userToRemove->getFullName() . ' has been removed');
+            $request->getSession()->getFlashBag()->add('notice', 'Operation completed');
         } catch (\Exception $e) {
             $this->get('logger')->debug($e->getMessage());
 

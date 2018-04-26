@@ -17,7 +17,7 @@
 
 {% block pageContent %}
 
-    {% if user.teamNames | length > 0 %}
+    {% if user.teamNames | length > 1 %}
         <div class="push--bottom">
             {{ macros.notification('info', 'editPage.moreThanOneTeamNotification' |trans) }}
         </div>
