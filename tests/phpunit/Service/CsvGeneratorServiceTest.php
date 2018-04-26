@@ -59,7 +59,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
         $this->assertContains('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
         $this->assertEquals(20, preg_match_all('/Gift/', $csvString));
-        $this->assertEquals(20, preg_match_all('/Expenses/', $csvString));
+        $this->assertEquals(20, preg_match_all('/Expense/', $csvString));
         $this->assertEquals(50, preg_match_all('/Money out/', $csvString));
         $this->assertEquals(10, preg_match_all('/Money in/', $csvString));
 

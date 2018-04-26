@@ -329,9 +329,11 @@
     {% endif %}
 
     {% if report.type in ['102','102-4'] %}
+        {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}
         <p class="text push--top">
             {{ 'download-transactions' | trans({ '%transactionsCsvPath%': path('report_transactions_csv', {reportId: report.id})}) | raw }}
         </p>
+        {% endif %}
     {% endif %}
 
     <h3 class="heading-medium">{{ 'moreInfo.heading' | trans }}</h3>
