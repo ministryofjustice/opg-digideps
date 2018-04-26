@@ -73,7 +73,7 @@ class CsvGeneratorService
         //$this->generateBankAccountSummary($bankAccount);
         $this->generateCsvHeaders();
         $this->generateTransactionRows($report->getGifts(), 'gift');
-        $this->generateTransactionRows($report->getExpenses(), 'expenses');
+        $this->generateTransactionRows($report->getExpenses(), 'expense');
         $this->generateTransactionRows($report->getMoneyTransactionsOut(), 'money out');
         $this->generateTransactionRows($report->getMoneyTransactionsIn(), 'money in');
 
