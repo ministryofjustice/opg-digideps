@@ -112,7 +112,7 @@ class CsvGeneratorService
      */
     private function generateCsvHeaders()
     {
-        $headers = ['Type', 'Category' ,'Amount', 'Bank name', 'Account', 'Description'];
+        $headers = ['Type', 'Category' ,'Amount', 'Bank name', 'Account details', 'Description'];
         fputcsv($this->fd, $headers);
     }
 
@@ -133,8 +133,8 @@ class CsvGeneratorService
                         $this->translator->trans(
                             'form.category.entries.' . $t->getCategory().'.label', [], 'report-money-transaction') : ''),
                     $t->getAmount(),
-                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ""),
                     (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : ""),
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ""),
                     $this->generateDescription($t)
                 ]
             );
