@@ -28,7 +28,5 @@ class Version178 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('ALTER TABLE dd_user ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 }
