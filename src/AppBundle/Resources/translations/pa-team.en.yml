@@ -19,6 +19,7 @@ editPage:
   htmlTitle: Deputy report - edit user account | GOV.UK
   pageTitle: Edit user account
   supportTitle: User account
+  moreThanOneTeamNotification: This user is also a team member on other deputyships. Any changes you make will update their account across all deputyship teams.
 
 removePage:
   htmlTitle: Deputy report - remove user account | GOV.UK

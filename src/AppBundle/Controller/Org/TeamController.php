@@ -155,6 +155,7 @@ class TeamController extends AbstractController
         }
 
         return [
+            'user' => $user,
             'form' => $form->createView()
         ];
     }

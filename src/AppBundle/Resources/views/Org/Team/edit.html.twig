@@ -17,6 +17,12 @@
 
 {% block pageContent %}
 
+    {% if user.teamNames | length > 0 %}
+        <div class="push--bottom">
+            {{ macros.notification('info', 'editPage.moreThanOneTeamNotification' |trans) }}
+        </div>
+    {% endif %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_input(form.firstname,'form.firstname') }}
     {{ form_input(form.lastname,'form.lastname') }}
