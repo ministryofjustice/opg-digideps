@@ -51,6 +51,24 @@ class TeamController extends AbstractController
          ]);
 
         $form->handleRequest($request);
+
+        // If the email belong to another PROF team, just add the user to the team
+        // Validation is skipped
+        if ($form->isSubmitted()
+            && $this->getUser()->isProfNamedOrAdmin()
+            && ($email = $form->getData()->getEmail())
+            && ($userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $email, 'User'))
+            && count($userInfo->getTeamNames()) > 0
+        ) {
+            if ($userInfo->isDeputyPa()) {
+                throw new \RuntimeException('User already belonging to a PA team', 422);
+            }
+            $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), []);
+            $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
+            return $this->redirectToRoute('org_team');
+        }
+
+
         if ($form->isValid()) {
             /** @var $user EntityDir\User */
             $user = $form->getData();
@@ -67,18 +85,7 @@ class TeamController extends AbstractController
                 // Check user belonging to another team. If so:
                 // PROF named or admin: add to all the teams the current user belongs to
                 // all the other cases (PROF team member and all PAs): throw an exception
-                if ($this->getUser()->isProfNamedOrAdmin()) {
-                    $userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $user->getEmail(), 'User');
-                    if (count($userInfo->getTeamNames()) > 0) {
-                        if ($userInfo->isDeputyPa()) {
-                            throw new \RuntimeException('User already belonging to a PA team', 422);
-                        }
-                        $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), $user, ['user'], 'User');
-                        $request->getSession()->getFlashBag()->add('notice', 'The user has been added to the team'); // @biggs change if needed
 
-                        return $this->redirectToRoute('org_team');
-                    }
-                }
 
                 // if the above doesn't apply: continue adding the user
                 $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
