@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -63,6 +64,45 @@ class ReportController extends AbstractController
         return [
             'report'   => $report,
             'reportDueDate'   => $reportDueDate,
+            'form'     => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("checklist", name="admin_report_checklist")
+     *
+     * @param Request $request
+     * @param $id
+     *
+     * @Template()
+     *
+     * @return array
+     */
+    public function checklistAction(Request $request, $id)
+    {
+        $report = $this->getReport($id, []);
+
+        if (!$report->getSubmitted()) {
+            throw new DisplayableException('Cannot manage active report');
+        }
+
+        $form = $this->createForm(ReportChecklistType::class, $report);
+        $form->handleRequest($request);
+
+        // edit client form
+        if ($form->isValid()) {
+            $report->setLastCheckedDate(new \DateTime());
+
+            $this->getRestClient()->put('report/' . $report->getId() . '/checked', $report, [
+                'checklist'
+            ]);
+            $request->getSession()->getFlashBag()->add('notice', 'Report checklist updated');
+
+            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        }
+
+        return [
+            'report'   => $report,
             'form'     => $form->createView()
         ];
     }
