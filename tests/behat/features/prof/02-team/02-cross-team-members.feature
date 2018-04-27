@@ -31,10 +31,8 @@ Feature: PROF cross team members
     # add member from team1
     When I click on "add"
     And I fill in the following:
-      | team_member_account_firstname  | PROF3                                             |
-      | team_member_account_lastname   | Team Member                                       |
       | team_member_account_email      | behat-prof1-team-member@publicguardian.gsi.gov.uk |
-      | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
+      | team_member_account_roleName_1 |                                                   |
     And I press "team_member_account_save"
     Then the form should be valid
     And I should see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
