@@ -32,7 +32,6 @@ Feature: PROF cross team members
     When I click on "add"
     And I fill in the following:
       | team_member_account_email      | behat-prof1-team-member@publicguardian.gsi.gov.uk |
-      | team_member_account_roleName_1 |                                                   |
     And I press "team_member_account_save"
     Then the form should be valid
     And I should see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
