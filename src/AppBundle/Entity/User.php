@@ -1258,23 +1258,6 @@ class User implements UserInterface
     }
 
     /**
-     * Ensures a PA User has a role, if not default to TEAM MEMBER
-     */
-    public function ensureRoleNameSet()
-    {
-        if ($this->isPaDeputy()) {
-            if (!in_array($this->getRoleName(), [self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER])) {
-                $this->setRoleName(self::ROLE_PA_TEAM_MEMBER);
-            }
-        }
-        if ($this->isProfDeputy()) {
-            if (!in_array($this->getRoleName(), [self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER])) {
-                $this->setRoleName(self::ROLE_PROF_TEAM_MEMBER);
-            }
-        }
-    }
-
-    /**
      * Set role to team member
      */
     public function setDefaultRoleIfEmpty()

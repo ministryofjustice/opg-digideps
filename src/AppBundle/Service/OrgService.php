@@ -353,8 +353,6 @@ class OrgService
      */
     public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
-        $userToAdd->ensureRoleNameSet();
-
         // add to creator's teams
         foreach($loggedInUser->getTeams() as $team) {
             $userToAdd->addTeam($team);
