@@ -23,12 +23,13 @@ services:
         class: AppBundle\Service\UserRegistrationService
         arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
 
-    opg_digideps.user_service:
+    org_service:
+        class: AppBundle\Service\OrgService
+        arguments: [ "@em", "@logger"]
+
+    user_service:
         class: AppBundle\Service\UserService
-        arguments:
-          - "@opg_digideps.user_repository"
-          - "@opg_digideps.team_repository"
-          - "@em"
+        arguments: [ "@em", "@org_service"]
 
     monolog.processor.add_request_id:
         class: AppBundle\Service\RequestIdLoggerProcessor

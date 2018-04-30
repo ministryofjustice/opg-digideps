@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class OrgService
 {
@@ -17,7 +18,6 @@ class OrgService
      * @var LoggerInterface
      */
     protected $logger;
-
 
     /**
      * @var array
@@ -86,9 +86,9 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                $user = $this->upsertUser($row);
-                $client = $this->upsertClient($row, $user);
-                $this->upsertReport($row, $client, $user);
+                $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
+                $client = $this->upsertClientFromCsv($row, $userOrgNamed);
+                $this->upsertReportFromCsv($row, $client, $userOrgNamed);
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -108,24 +108,24 @@ class OrgService
     }
 
     /**
-     * @param array $row
+     * @param array $csvRow
      *
      * @return EntityDir\User
      */
-    private function upsertUser(array $row)
+    private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
-        $depType = $row['Dep Type'];
+        $depType = $csvRow['Dep Type'];
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
-        $deputyNo = EntityDir\User::padDeputyNumber($row['Deputy No']);
+        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
         $criteria = [
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
         ];
         $user = $this->userRepository->findOneBy($criteria);
-        $userEmail = strtolower($row['Email']);
+        $userEmail = strtolower($csvRow['Email']);
 
         if ($user) {
             // Notify email change
@@ -148,31 +148,31 @@ class OrgService
                 $user
                     ->setRegistrationDate(new \DateTime())
                     ->setDeputyNo($deputyNo)
-                    ->setEmail($row['Email'])
-                    ->setFirstname($row['Dep Forename'])
-                    ->setLastname($row['Dep Surname'])
+                    ->setEmail($csvRow['Email'])
+                    ->setFirstname($csvRow['Dep Forename'])
+                    ->setLastname($csvRow['Dep Surname'])
                     ->setRoleName($roleName);
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
                     // Dep Surname in the CSV is actually the PA team name
-                    $team = new EntityDir\Team($row['Dep Surname']);
+                    $team = new EntityDir\Team($csvRow['Dep Surname']);
 
                     // Address from upload is the team's address, not the user's
-                    if (!empty($row['Dep Adrs1'])) {
-                        $team->setAddress1($row['Dep Adrs1']);
+                    if (!empty($csvRow['Dep Adrs1'])) {
+                        $team->setAddress1($csvRow['Dep Adrs1']);
                     }
 
-                    if (!empty($row['Dep Adrs2'])) {
-                        $team->setAddress2($row['Dep Adrs2']);
+                    if (!empty($csvRow['Dep Adrs2'])) {
+                        $team->setAddress2($csvRow['Dep Adrs2']);
                     }
 
-                    if (!empty($row['Dep Adrs3'])) {
-                        $team->setAddress3($row['Dep Adrs3']);
+                    if (!empty($csvRow['Dep Adrs3'])) {
+                        $team->setAddress3($csvRow['Dep Adrs3']);
                     }
 
-                    if (!empty($row['Dep Postcode'])) {
-                        $team->setAddressPostcode($row['Dep Postcode']);
+                    if (!empty($csvRow['Dep Postcode'])) {
+                        $team->setAddressPostcode($csvRow['Dep Postcode']);
                         $team->setAddressCountry('GB'); //postcode given means a UK address is given
                     }
 
@@ -181,13 +181,12 @@ class OrgService
                     $this->em->flush($team);
                 }
 
-                $this->userRepository->hardDeleteExistingUser($user);
                 $this->em->persist($user);
                 $this->em->flush($user);
                 if ($user->isProfDeputy()) {
-                    $this->added['prof_users'][] = $row['Email'];
+                    $this->added['prof_users'][] = $csvRow['Email'];
                 } elseif ($user->isPaDeputy()) {
-                    $this->added['pa_users'][] = $row['Email'];
+                    $this->added['pa_users'][] = $csvRow['Email'];
                 }
             }
         }
@@ -197,23 +196,24 @@ class OrgService
         // is released and one PA CSV upload is done
         if ($user->getTeams()->count()
             && ($team = $user->getTeams()->first())
-            && $team->getTeamName() != $row['Dep Surname']
+            && $team->getTeamName() != $csvRow['Dep Surname']
         ) {
-            $team->setTeamName($row['Dep Surname']);
-            $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $row['Dep Surname'];
+            $team->setTeamName($csvRow['Dep Surname']);
+            $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
 
         return $user;
     }
 
+
     /**
-     * @param array          $row
-     * @param EntityDir\User $user
+     * @param array          $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
+     * @param EntityDir\User $userOrgNamed
      *
      * @return EntityDir\Client
      */
-    private function upsertClient(array $row, EntityDir\User $user)
+    private function upsertClientFromCsv(array $row, EntityDir\User $userOrgNamed)
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
@@ -256,45 +256,49 @@ class OrgService
             }
 
             if (!empty($row['Client Date of Birth'])) {
-                $client->setDateOfBirth(self::parseDate($row['Client Date of Birth'], '19') ?: null);
+                $client->setDateOfBirth(ReportUtils::parseCsvDate($row['Client Date of Birth'], '19') ?: null);
             }
 
             $this->added['clients'][] = $client->getCaseNumber();
             $this->em->persist($client);
         }
 
-        //Add client to user
-        $user->addClient($client);
+        // Add client to named user (will be done later anyway)
+        $userOrgNamed->addClient($client);
 
-        //Also add client to team members
-        foreach ($user->getTeams() as $team) {
+        // Add client to all the team members of all teams the user belongs to
+        // (duplicates are auto-skipped)
+        foreach ($userOrgNamed->getTeams() as $team) {
             foreach ($team->getMembers() as $member) {
-                if ($member->getId() != $user->getId()) {
+//                if ($member->getId() != $userOrgNamed->getId()) {
                     $member->addClient($client);
-                }
+//                }
             }
         }
 
-        $this->em->flush($client);
+        $this->em->flush();
 
         return $client;
     }
 
     /**
-     * @param array            $row
+     * @param array $csvRow keys: Last Report Day, Typeofrep, }
      * @param EntityDir\Client $client
-     *
+     * @param EntityDir\User $user
      * @return EntityDir\Report\Report
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    private function upsertReport(array $row, EntityDir\Client $client, EntityDir\User $user)
+    private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client, EntityDir\User $user)
     {
         // find or create reports
-        $reportEndDate = self::parseDate($row['Last Report Day'], '20');
+        $reportEndDate = ReportUtils::parseCsvDate($csvRow['Last Report Day'], '20');
         if (!$reportEndDate) {
-            throw new \RuntimeException("Cannot parse date {$row['Last Report Day']}");
+            throw new \RuntimeException("Cannot parse date {$csvRow['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($row['Typeofrep'], $row['Corref'], $user->getRoleName());
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
         $report = $client->getReportByEndDate($reportEndDate);
+
+        // already existing, just change type
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted()) {
@@ -303,77 +307,95 @@ class OrgService
                 $this->em->persist($report);
                 $this->em->flush();
             }
-        } else {
-            $this->log('Creating report');
 
-            $reportStartDate = self::generateReportStartDateFromEndDate($reportEndDate);
-
-            $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
-            $client->addReport($report);   //double link for testing reasons
-
-            $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
-            $this->em->persist($report);
-            $this->em->flush();
+            return $report;
         }
 
+        $this->log('Creating report');
+        $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
+        $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
+        $client->addReport($report);   //double link for testing reasons
+        $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
+        $this->em->persist($report);
+        $this->em->flush();
 
         return $report;
     }
 
-    /**
-     * Generates and returns the report start date from a given end date.
-     * -365 days + 1 if note a leap day (otherwise we get 2nd March)
-     *
-     * @param \DateTime $reportEndDate
-     *
-     * @return \DateTime $reportStartDate
-     */
-    public static function generateReportStartDateFromEndDate(\DateTime $reportEndDate)
-    {
-        $reportStartDate = clone $reportEndDate;
 
-        $isLeapDay = $reportStartDate->format('d-M') == '29-Feb';
-        $reportStartDate->sub(new \DateInterval('P1Y')); // One year behind end date
-        if (!$isLeapDay) {
-            $reportStartDate->add(new \DateInterval('P1D')); // + 1 day
+    /**
+     * @param EntityDir\User $userCreator
+     * @param $id
+     * @return EntityDir\User|null|object
+     *
+     * @throws AccessDeniedException if user not part of the team the creator user belongs to
+     */
+    public function getMemberById(EntityDir\User $userCreator, $id)
+    {
+        $user = $this->em->getRepository(EntityDir\User::class)->find($id);
+        if (!array_key_exists($id, $userCreator->getMembersInAllTeams())) {
+            throw new AccessDeniedException('User not part of the same team');
         }
 
-        return $reportStartDate;
+        return $user;
     }
 
     /**
-     * create DateTime object based on '16-Dec-2014' formatted dates
-     * '16-Dec-14' format is accepted too, although seem deprecated according to latest given CSV files
+     * Adds a new Org user and
+     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
+     * - Add this new user to the logged user's team
+     * - Copy clients from logged in user into the this new user
+     * Needs a flush at the end
      *
-     * @param string $dateString e.g. 16-Dec-2014
-     * @param string $century    e.g. 20/19 Prefix added to 2-digits year
-     *
-     * @return \DateTime|false
+     * @param User $loggedInUser
+     * @param User $userToAdd
+     * @param $data
      */
-    public static function parseDate($dateString, $century)
+    public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
-        $sep = '-';
-        //$errorMessage = "Can't recognise format for date $dateString. expected d-M-Y or d-M-y e.g. 05-MAR-2005 or 05-MAR-05";
-        $pieces = explode($sep, $dateString);
-
-        // prefix century if needed
-        if (strlen($pieces[2]) === 2) {
-            $pieces[2] = ((string) $century) . $pieces[2];
-        }
-        // check format is d-M-Y
-        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
-            return false;
-            //throw new \InvalidArgumentException($errorMessage);
+        // add to creator's teams
+        foreach($loggedInUser->getTeams() as $team) {
+            $userToAdd->addTeam($team);
         }
 
-        $ret = \DateTime::createFromFormat('d-M-Y', implode($sep, $pieces));
-        if (!$ret instanceof \DateTime) {
-            return false;
-            //throw new \InvalidArgumentException($errorMessage);
+        // copy clients from logged user into this new user
+        foreach ($loggedInUser->getClients() as $client) {
+            $userToAdd->addClient($client);
         }
-
-        return $ret;
     }
+
+
+    /**
+     * Delete $user from all the teams $loggedInUser belongs to
+     * Also removes the user, if doesn't belong to any team any longer
+     *
+     * @param EntityDir\User $loggedInUser
+     * @param EntityDir\User $user
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
+    {
+        // remove user from teams the logged-user (operation performer) belongs to
+        foreach($loggedInUser->getTeams() as $team) {
+            $user->getTeams()->removeElement($team);
+        }
+
+        // remove client that also belongs to the creator
+        // (equivalent to remove client from all the teams of the creator)
+        foreach ($loggedInUser->getClients() as $client) {
+            $client->removeUser($user);
+        }
+
+        // remove user if belonging to no teams
+        if (count($user->getTeams()) === 0) {
+            $this->em->remove($user);
+        }
+
+        $this->em->flush();
+    }
+
+
+
 
     /**
      * @param $message

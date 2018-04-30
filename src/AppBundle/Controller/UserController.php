@@ -35,11 +35,11 @@ class UserController extends RestController
 
         $user = $this->populateUser($user, $data);
 
-        $userService = $this->get('opg_digideps.user_service');
+        $userService = $this->get('user_service');
         $userService->addUser($loggedInUser, $user, $data);
 
         $groups = $request->query->has('groups') ?
-            $request->query->get('groups') : ['user'];
+            $request->query->get('groups') : ['user', 'user-teams', 'team'];
         $this->setJmsSerialiserGroups($groups);
 
         return $user;
@@ -51,7 +51,11 @@ class UserController extends RestController
      */
     public function update(Request $request, $id)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
+        /* @var $user User */
+        $loggedInUser = $this->getUser();
+        $userService = $this->get('user_service');
+        $creatorIsOrg = $loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator();
 
         if ($this->getUser()->getId() != $user->getId()
             && !$this->isGranted(EntityDir\User::ROLE_ADMIN)
@@ -63,22 +67,13 @@ class UserController extends RestController
         }
 
         $originalUser = clone $user;
-
         $data = $this->deserializeBodyContent($request);
-
         $this->populateUser($user, $data);
+        $userService->editUser($loggedInUser, $originalUser, $user);
 
-        $loggedInUser = $this->getUser();
-
-        $userService = $this->get('opg_digideps.user_service');
-
-        // If Editing PA user
-        if ($loggedInUser->isOrgNamedDeputy() || $loggedInUser->isOrgAdministrator()) {
-            $userService->editPaUser($originalUser, $user);
+        if ($creatorIsOrg) {
             $this->updateTeamAddresses($user, $data);
-        } else {
-            $userService->editUser($originalUser, $user);
-        };
+        }
 
         return ['id' => $user->getId()];
     }
@@ -93,7 +88,8 @@ class UserController extends RestController
     {
         // for both ADMIN and DEPUTY
 
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
+        /* @var $user User */
         if ($this->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to check other user's password");
         }
@@ -122,7 +118,8 @@ class UserController extends RestController
     {
         //for both admin and users
 
-        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found'); /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id, 'User not found');
+        /* @var $user EntityDir\User */
         if ($this->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException("Not authorised to change other user's data");
         }
@@ -153,6 +150,7 @@ class UserController extends RestController
     {
         return $this->getOneByFilter($request, 'user_id', $id);
     }
+
 
     /**
      * @Route("/get-one-by/{what}/{filter}", requirements={
@@ -202,7 +200,26 @@ class UserController extends RestController
     }
 
     /**
+     * Get user by email, and retrieve only id and team names the user belongs to.
+     * Only for ROLE_PROF named and admin, when adding users to multiple teams.
+     * Returns empty if user doesn't exist
+     *
+     * @Route("/get-team-names-by-email/{email}")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
+     */
+    public function getUserTeamNames(Request $request, $email)
+    {
+        $user = $this->getRepository(EntityDir\User::class)->findOneBy(['email' => $email]);
+
+        $this->setJmsSerialiserGroups(['user-id', 'team-names']);
+
+        return $user;
+    }
+
+    /**
      * Delete user with clients.
+     * //TODO move to UserService
      *
      * @Route("/{id}")
      * @Method({"DELETE"})
@@ -212,7 +229,8 @@ class UserController extends RestController
      */
     public function delete($id)
     {
-        $user = $this->findEntityBy(EntityDir\User::class, $id);  /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(EntityDir\User::class, $id);
+        /* @var $user EntityDir\User */
 
         // delete clients
         foreach ($user->getClients() as $client) {
@@ -235,14 +253,14 @@ class UserController extends RestController
      */
     public function getAll(Request $request)
     {
-        $order_by  = $request->get('order_by', 'id');
-        $sort_order  = strtoupper($request->get('sort_order', 'DESC'));
-        $limit  = $request->get('limit', 50);
-        $offset  = $request->get('offset', 0);
-        $roleName  = $request->get('role_name');
-        $adManaged  = $request->get('ad_managed');
-        $ndrEnabled  = $request->get('ndr_enabled');
-        $q  = $request->get('q');
+        $order_by = $request->get('order_by', 'id');
+        $sort_order = strtoupper($request->get('sort_order', 'DESC'));
+        $limit = $request->get('limit', 50);
+        $offset = $request->get('offset', 0);
+        $roleName = $request->get('role_name');
+        $adManaged = $request->get('ad_managed');
+        $ndrEnabled = $request->get('ndr_enabled');
+        $q = $request->get('q');
 
         $qb = $this->getRepository(EntityDir\User::class)->createQueryBuilder('u');
         $qb->setFirstResult($offset);
@@ -280,7 +298,8 @@ class UserController extends RestController
 
         $this->setJmsSerialiserGroups(['user']);
 
-        $users = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+        $users = $qb->getQuery()->getResult();
+        /* @var $reports Report[] */
 
         return $users;
         //$this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
@@ -305,7 +324,7 @@ class UserController extends RestController
 
         $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request);
 
-        if (!$hasAdminSecret && $user->getRoleName()==EntityDir\User::ROLE_ADMIN) {
+        if (!$hasAdminSecret && $user->getRoleName() == EntityDir\User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
 
@@ -328,7 +347,8 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found');
+        /* @var $user User */
 
         if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
@@ -350,7 +370,8 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
 
-        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found'); /* @var $user EntityDir\User */
+        $user = $this->findEntityBy(EntityDir\User::class, ['registrationToken' => $token], 'User not found');
+        /* @var $user EntityDir\User */
 
         if (!$this->getAuthService()->isSecretValidForRole($user->getRoleName(), $request)) {
             throw new \RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
@@ -365,9 +386,9 @@ class UserController extends RestController
 
     /**
      * call setters on User when $data contains values.
-     *
+     * //TODO move to service
      * @param EntityDir\User $user
-     * @param array          $data
+     * @param array $data
      */
     private function populateUser(EntityDir\User $user, array $data)
     {
@@ -416,9 +437,10 @@ class UserController extends RestController
 
     /**
      * Update both the team and other teammembers to have same address
+     * //TODO code seem to need a cleanup/refactor
      *
      * @param EntityDir\User $user
-     * @param array          $data
+     * @param array $data
      */
     private function updateTeamAddresses(EntityDir\User $user, array $data)
     {
