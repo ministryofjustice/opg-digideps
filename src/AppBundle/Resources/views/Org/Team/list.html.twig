@@ -58,7 +58,7 @@
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
                         {% if app.user.id == user.id %}
-                        <br/>(Current logged in)
+                        <br/>(Signed in)
                         {% endif %}
                     </p>
                     {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
