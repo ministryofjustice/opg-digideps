@@ -13,12 +13,12 @@
     {{ macros.breadcrumbsSettings('settings-team') }}
 {% endblock %}
 
+{% set showTeamMembershipInUserRow = app.user.isDeputyProf() %}
+
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {# TODO use "isGranted('ROLE_ORG_NAMED') or i'sGranted(ROLE_ORG_ADMIN')" instead #}
-        {% if ( app.user.roleName == 'ROLE_PA_NAMED' or app.user.roleName == 'ROLE_PA_ADMIN' or
-                app.user.roleName == 'ROLE_PROF_NAMED' or app.user.roleName == 'ROLE_PROF_ADMIN') %}
+        {% if app.user.hasRoleOrgNamed() or app.user.hasRoleOrgAdmin() %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
             {{ 'listPage.introPara' | trans }}
@@ -57,14 +57,21 @@
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
                         <strong class="bold">{{ user.firstname }} {{ user.lastname }}</strong>
+                        {% if app.user.id == user.id %}
+                        <br/>(Signed in)
+                        {% endif %}
                     </p>
-                    {#TODO use "user.hasRoleOrgNamed or user.hasRoleOrgAdmin" instead #}
-                    {% if (user.roleName == 'ROLE_PA_NAMED' or user.roleName == 'ROLE_PA_ADMIN'
-                        or user.roleName == 'ROLE_PROF_NAMED' or user.roleName == 'ROLE_PROF_ADMIN') %}
+                    {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
                         <p class="flush--top">{{ user.jobTitle }}</p>
+                    {% endif %}
+                    {% if showTeamMembershipInUserRow %}
+                        <br />Belongs to :
+                        {% for teamId, teamName in user.teamNames %}
+                        <strong class="bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
+                        {% endfor %}
                     {% endif %}
                 </td>
                 <td>

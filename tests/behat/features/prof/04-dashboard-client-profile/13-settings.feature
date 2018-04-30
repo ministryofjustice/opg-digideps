@@ -3,7 +3,7 @@ Feature: PROF settings
   Scenario: named PROF logs in and views profile page
     Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings"
+    When I click on "org-settings"
 
     # settings page
     Then I should see the "user-accounts" link
@@ -19,7 +19,7 @@ Feature: PROF settings
 
   Scenario: named PROF logs in and updates profile and does not see removeAdmin field
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, profile-edit"
+    When I click on "org-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | John Named Chap                       |
@@ -42,7 +42,7 @@ Feature: PROF settings
 
   Scenario: PROF Admin logs in and updates profile and sees removeAdmin field but does not
     Given I am logged in as "behat-prof1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, profile-edit"
+    When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | Mark Admin Chap                           |
@@ -59,7 +59,7 @@ Feature: PROF settings
 
   Scenario: PROF Admin logs in and updates profile and removes admin
     Given I am logged in as "behat-prof1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, profile-edit"
+    When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     When I check "profile_removeAdmin_0"
     And I press "profile_save"
@@ -68,14 +68,14 @@ Feature: PROF settings
 
   Scenario: PROF Admin is no longer admin and tests nav
     Given I am logged in as "behat-prof1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     Then I should not see "Edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
     And I should not see "Edit" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
     But I should not see "Edit" in the "team-user-behat-prof1publicguardiangsigovuk" region
 
   Scenario: PROF Team member logs in and edits info
     Given I am logged in as "behat-prof3-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, profile-show, profile-edit"
+    When I click on "org-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     When I fill in the following:
       | profile_firstname  |                                                 |
@@ -111,7 +111,7 @@ Feature: PROF settings
 
   Scenario: Named PROF logs in and changes password
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, password-edit"
+    When I click on "org-settings, password-edit"
     Then I should see "Change password"
     When I press "change_password_save"
     Then the following fields should have an error:

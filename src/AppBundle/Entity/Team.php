@@ -16,7 +16,7 @@ class Team
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user"})
+     * @JMS\Groups({"team_id","user_details_full", "user_details_basic", "admin_add_user"})
      *
      * @var int
      */

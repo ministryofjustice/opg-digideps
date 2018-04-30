@@ -65,7 +65,7 @@ Feature: PROF cannot access other's PROF's reports and clients
   Scenario: PROF_ADMIN logs in, edits own account and removes admin privilege should be logged out
     Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
     And I fill in the following:
       | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
@@ -77,7 +77,7 @@ Feature: PROF cannot access other's PROF's reports and clients
   Scenario: PROF_ADMIN logs in, edits own account keeps admin privilege should remain logged in
     Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I click on "pa-settings, user-accounts"
+    When I click on "org-settings, user-accounts"
     When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
     And I fill in the following:
       | team_member_account_firstname  | edit                                             |
