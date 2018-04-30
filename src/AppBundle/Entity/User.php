@@ -918,7 +918,10 @@ class User implements AdvancedUserInterface
      */
     public function isOrgTeamMember()
     {
-        return $this->isProfTeamMember() || $this->isPaTeamMember();
+        return in_array($this->roleName, [
+            self::ROLE_PA_TEAM_MEMBER,
+            self::ROLE_PROF_TEAM_MEMBER
+        ]);
     }
 
     /**
@@ -928,7 +931,11 @@ class User implements AdvancedUserInterface
      */
     public function isDeputyPa()
     {
-        return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER]);
+        return in_array($this->roleName, [
+            self::ROLE_PA_NAMED,
+            self::ROLE_PA_ADMIN,
+            self::ROLE_PA_TEAM_MEMBER
+        ]);
     }
 
     /**
@@ -938,7 +945,11 @@ class User implements AdvancedUserInterface
      */
     public function isDeputyProf()
     {
-        return in_array($this->roleName, [self::ROLE_PROF_NAMED, self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER]);
+        return in_array($this->roleName, [
+            self::ROLE_PROF_NAMED,
+            self::ROLE_PROF_ADMIN,
+            self::ROLE_PROF_TEAM_MEMBER
+        ]);
     }
 
     /**
@@ -978,7 +989,7 @@ class User implements AdvancedUserInterface
      */
     public function isOrgNamedDeputy()
     {
-        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
+        return in_array($this->roleName, [self::ROLE_PA_NAMED, self::ROLE_PROF_NAMED]);
     }
 
     /**
@@ -1028,7 +1039,14 @@ class User implements AdvancedUserInterface
      */
     public function isDeputyOrg()
     {
-        return $this->isDeputyPa() || $this->isDeputyProf();
+        return in_array($this->roleName, [
+            self::ROLE_PA_NAMED,
+            self::ROLE_PA_ADMIN,
+            self::ROLE_PA_TEAM_MEMBER,
+            self::ROLE_PROF_NAMED,
+            self::ROLE_PROF_ADMIN,
+            self::ROLE_PROF_TEAM_MEMBER
+        ]);
     }
 
     /**
@@ -1038,7 +1056,7 @@ class User implements AdvancedUserInterface
      */
     public function hasRoleOrgNamed()
     {
-        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
+        return in_array($this->roleName, [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
     }
 
     /**
@@ -1048,7 +1066,7 @@ class User implements AdvancedUserInterface
      */
     public function hasRoleOrgAdmin()
     {
-        return in_array($this->getRoleName(), [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
+        return in_array($this->roleName, [User::ROLE_PA_ADMIN, User::ROLE_PROF_ADMIN]);
     }
 
     /**

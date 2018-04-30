@@ -16,9 +16,7 @@
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {# TODO use "isGranted('ROLE_ORG_NAMED') or i'sGranted(ROLE_ORG_ADMIN')" instead #}
-        {% if ( app.user.roleName == 'ROLE_PA_NAMED' or app.user.roleName == 'ROLE_PA_ADMIN' or
-                app.user.roleName == 'ROLE_PROF_NAMED' or app.user.roleName == 'ROLE_PROF_ADMIN') %}
+        {% if app.user.hasRoleOrgNamed() or app.user.hasRoleOrgAdmin() %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
             {{ 'listPage.introPara' | trans }}
@@ -61,7 +59,6 @@
                         <br/>(Current logged in)
                         {% endif %}
                     </p>
-                    {#TODO use "user.hasRoleOrgNamed or user.hasRoleOrgAdmin" instead #}
                     {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
