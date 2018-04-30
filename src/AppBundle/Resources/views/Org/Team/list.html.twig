@@ -13,6 +13,8 @@
     {{ macros.breadcrumbsSettings('settings-team') }}
 {% endblock %}
 
+{% set showTeamMembershipInUserRow = app.user.isDeputyProf() %}
+
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
@@ -64,10 +66,13 @@
                     {% endif %}
                     {% if user.jobTitle != '' %}
                         <p class="flush--top">{{ user.jobTitle }}</p>
-                    {% endif %}<br />Belongs to :
-                    {% for teamId, teamName in user.teamNames %}
-                    <strong class="bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
-                    {% endfor %}
+                    {% endif %}
+                    {% if showTeamMembershipInUserRow %}
+                        <br />Belongs to :
+                        {% for teamId, teamName in user.teamNames %}
+                        <strong class="bold">{{ teamName }}</strong>{{ loop.last ? '':', ' }}
+                        {% endfor %}
+                    {% endif %}
                 </td>
                 <td>
                     <p class="flush--ends">
