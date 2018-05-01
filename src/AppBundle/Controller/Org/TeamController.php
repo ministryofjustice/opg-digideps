@@ -97,7 +97,7 @@ class TeamController extends AbstractController
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:
@@ -152,7 +152,7 @@ class TeamController extends AbstractController
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:

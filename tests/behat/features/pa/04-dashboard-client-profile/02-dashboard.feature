@@ -16,13 +16,13 @@ Feature: PA dashboard
     When I click on "tab-ready"
     Then I should not see the "client" region
     # check navigation links
-    When I click on "pa-dashboard" in the navbar region
+    When I click on "org-dashboard" in the navbar region
     Then I should be on "/pa/"
 
   Scenario: PA links in header
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     #PA links
-    Then I should see the "pa-dashboard" link
+    Then I should see the "org-dashboard" link
     And I should see the "org-settings" link
     And I should see the "logout" link
     #Lay deputy links

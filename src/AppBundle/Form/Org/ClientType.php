@@ -41,8 +41,8 @@ class ClientType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'pa-client-edit',
-            'validation_groups' => 'pa-client',
+            'translation_domain' => 'org-client-edit',
+            'validation_groups' => 'org-client',
         ]);
     }
 
