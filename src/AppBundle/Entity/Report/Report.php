@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -382,6 +383,14 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      */
     private $unsubmittedSectionsList;
+
+    /**
+     * @var Checklist
+     *
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist")
+     * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $checklist;
 
     /**
      * set Due date to +8 weeks after end date
@@ -1131,5 +1140,21 @@ class Report implements ReportInterface
             /* @var $document Document */
             return !($document->isAdminDocument() || $document->isReportPdf());
         });
+    }
+
+    /**
+     * @return Checklist
+     */
+    public function getChecklist()
+    {
+        return $this->checklist;
+    }
+
+    /**
+     * @param Checklist $checklist
+     */
+    public function setChecklist($checklist)
+    {
+        $this->checklist = $checklist;
     }
 }

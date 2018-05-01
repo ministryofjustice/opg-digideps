@@ -455,4 +455,29 @@ class ReportController extends RestController
         //response to pass back
         return ['reportId' => $currentReport->getId()];
     }
+
+    /**
+     * Add a checklist for the report
+     *
+     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
+     * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function checkedAction(Request $request, $report_id)
+    {
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+
+        $checklistData = $this->deserializeBodyContent($request);
+var_dump($checklistData);exit;
+        $this->validateArray($checklistData, [
+            'report_id' => 'notEmpty',
+        ]);
+
+        // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
+        $report->setChecklist($checklist);
+
+        $this->persistAndFlush($report);
+
+        return ['checklist' => $checklist->getId()];
+    }
 }
