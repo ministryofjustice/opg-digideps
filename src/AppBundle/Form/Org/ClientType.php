@@ -42,7 +42,7 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'org-client-edit',
-            'validation_groups' => 'org-client',
+            'validation_groups' => 'pa-client',
         ]);
     }
 
