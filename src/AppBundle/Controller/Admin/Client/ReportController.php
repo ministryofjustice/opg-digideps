@@ -86,15 +86,16 @@ class ReportController extends AbstractController
             throw new DisplayableException('Cannot manage active report');
         }
 
-        $form = $this->createForm(ReportChecklistType::class, $report);
+        $checklist = $report->getChecklist();
+        $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
 
         // edit client form
         if ($form->isValid()) {
-            $report->setLastCheckedDate(new \DateTime());
+            //$report->setLastCheckedDate(new \DateTime());
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/checked', $report, [
-                'checklist'
+            $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
+                'report-checklist'
             ]);
             $request->getSession()->getFlashBag()->add('notice', 'Report checklist updated');
 

@@ -1,0 +1,51 @@
+reportChecklist:
+  htmlTitle: Administration - Report checklist
+  pageTitle: Admin
+  supportTitle: Checklist
+  form:
+    save:
+      label: Submit checklist
+    reportingPeriodAccurate:
+      label: Is the Reporting period accurate?
+    contactDetailsUptoDate:
+      label: Are all contact details correct and up to date? (and updated on CASREC in full, where applicable)
+    deputyFullNameAccurateinCasrec:
+      label: Are the deputies full name(s) on CASREC accurate?
+    decisionsSatisfactory:
+      label: DECISIONS Have satisfactory responses been provided by the deputy?
+    consultationsSatisfactory:
+      label: People consulted: Have satisfactory responses been provided by the deputy?
+    careArrangements:
+      label: Visits and care consultations: Have satisfactory responses been provided by the deputy?
+    assetsDeclaredAndManaged:
+      label: Are you satisfied the deputy has accurately declared all of the client’s assets AND are they being appropriately managed?
+    debtsManaged:
+      label: If the client has any debt, are you satisfied that the debt is appropriate and/or is it being managed by the deputy in an appropriate manner?
+    openClosingBalancesMatch:
+      label: Account balance: Does the opening balance(s) match last year’s closing balance?
+    accountsBalance:
+      label: Account balance: Does the account summary balance (and match bank statements where provided)  (up to £250 leeway for lay deputies)?
+    moneyMovementsAcceptable:
+      label: Are you satisfied that the ‘money in’ and ‘money out’ entries (including transfers), along with any comments, are: acceptable, appear reasonable and inline with the terms of the court order?
+    bondAdequate:
+      label: Bonds:  Is the bond adequate protection for the client’s assets? If ‘NO’, refer to the Security Bonds Discrepancy Resolution Job Card.
+    bondOrderMatchCasrec:
+      label: Bonds: And/or does the bond amount on CASREC match the order? If ‘NO’, refer to the Security Bonds Discrepancy Resolution Job Card.
+    futureSignificantFinancialDecisions:
+      label: Are there significant financial decision(s) in the next reporting period?
+    hasDeputyRaisedConcerns:
+      label: Does the deputy raise any concerns about their deputyship?
+    caseWorkerSatisified:
+      label: Are you satisfied with the deputy’s declaration?
+    decision:
+      label: Decision (document the decision of the Band D):
+    caseManagerName:
+      label: Band D case manager (name):
+    lodgingSummary:
+      label: Lodging Summary (This section must be completed)
+    finalDecision:
+      label: Final Decision?
+    furtherInformationReceived:
+      label: Further Information received: (Document all your decisions made and why).
+
+

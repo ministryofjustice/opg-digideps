@@ -1,0 +1,209 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'reportChecklist' %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.reportingPeriodAccurate, 'reportChecklist.form.reportingPeriodAccurate', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.contactDetailsUptoDate, 'reportChecklist.form.contactDetailsUptoDate', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.deputyFullNameAccurateinCasrec, 'reportChecklist.form.deputyFullNameAccurateinCasrec', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.decisionsSatisfactory, 'reportChecklist.form.decisionsSatisfactory', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.consultationsSatisfactory, 'reportChecklist.form.consultationsSatisfactory', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.careArrangements, 'reportChecklist.form.careArrangements', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.assetsDeclaredAndManaged, 'reportChecklist.form.assetsDeclaredAndManaged', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.debtsManaged, 'reportChecklist.form.debtsManaged', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.openClosingBalancesMatch, 'reportChecklist.form.openClosingBalancesMatch', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.accountsBalance, 'reportChecklist.form.accountsBalance', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.moneyMovementsAcceptable, 'reportChecklist.form.moneyMovementsAcceptable', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.bondAdequate, 'reportChecklist.form.bondAdequate', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.bondOrderMatchCasrec, 'reportChecklist.form.bondOrderMatchCasrec', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.futureSignificantFinancialDecisions, 'reportChecklist.form.futureSignificantFinancialDecisions', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.hasDeputyRaisedConcerns, 'reportChecklist.form.hasDeputyRaisedConcerns', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.caseWorkerSatisified, 'reportChecklist.form.caseWorkerSatisified', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.decision, 'reportChecklist.form.decision', {
+            'formGroupClass': 'explanation',
+        }) }}
+    </div>
+
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.caseManagerName, 'reportChecklist.form.caseManagerName', {
+            'formGroupClass': 'explanation',
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.lodgingSummary, 'reportChecklist.form.lodgingSummary') }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.finalDecision, 'reportChecklist.form.finalDecision', {
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.furtherInformationReceived, 'reportChecklist.form.furtherInformationReceived', {
+            'formGroupClass': 'explanation',
+        }) }}
+    </div>
+
+    {{ form_submit(form.save,'reportChecklist.form.save') }}
+
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

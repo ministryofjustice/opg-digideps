@@ -15,7 +15,6 @@ class ReportChecklistType extends AbstractType
             $builder
             ->add('id', 'hidden')
             ->add('reportingPeriodAccurate', 'choice', [
-                'label' => 'Is the: Reporting period accurate?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
@@ -139,7 +138,7 @@ class ReportChecklistType extends AbstractType
             ])
 
             // Lodging summary
-            ->add('lodgingSummary', 'text', [
+            ->add('lodgingSummary', 'textarea', [
                 'label' => 'Lodging Summary (This section must be completed)'
             ])
 
@@ -156,7 +155,7 @@ class ReportChecklistType extends AbstractType
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
             ])
             // Further information received
-            ->add('furtherInformationReceived', 'text', [
+            ->add('furtherInformationReceived', 'textarea', [
                 'label' => 'Further Information received: (Document all your decisions made and why).'
             ])
 
@@ -166,14 +165,10 @@ class ReportChecklistType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'admin-clients',
-            'name'               => 'report',
+            'translation_domain' => 'admin-checklist',
+            'name'               => 'checklist',
             'validation_groups'  => function (FormInterface $form) {
-                $ret = ['unsubmitted_sections', 'change_due_date'];
-
-                if ($form['dueDateChoice']->getData() == self::DUE_DATE_OPTION_CUSTOM) {
-                    $ret[] = 'due_date_new';
-                }
+                $ret = ['checklist'];
 
                 return $ret;
             },
