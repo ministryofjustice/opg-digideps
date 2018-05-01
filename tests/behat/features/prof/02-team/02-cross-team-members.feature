@@ -3,14 +3,14 @@ Feature: PROF cross team members
   Scenario: Assert "behat-prof1-team-member" (TEAM1) has 18 clients
     Given I load the application status from "prof-team-users-complete"
     And I am logged in as "behat-prof1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I go to "/pa/?limit=50"
+    When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 18 times
     And I should see the "client-01000010" region
 
   Scenario: TEAM3 named deputy adds used "behat-prof1-team-member" (TEAM1)
     Given I am logged in as "behat-prof3@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # assert I see 3 clients from team3
-    When I go to "/pa/?limit=50"
+    When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 3 times
     Then I should see the "client-03000001" region
     Then I should see the "client-03000002" region
@@ -40,7 +40,7 @@ Feature: PROF cross team members
     Given I am logged in as "behat-prof1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
     Then the form should be valid
      # assert I now see 18+3 clients
-    When I go to "/pa/?limit=50"
+    When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 21 times
     And I should see the "client-01000010" region
     And I should see the "client-03000001" region
@@ -56,7 +56,7 @@ Feature: PROF cross team members
 
   Scenario: new team member can still access TEAM1, but not TEAM3 clients
     Given I am logged in as "behat-prof1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I go to "/pa/?limit=50"
+    When I go to "/org/?limit=50"
     Then I should see the "client" region exactly 18 times
 
 

@@ -84,5 +84,5 @@ Feature: PA cannot access other's PA's reports and clients
     And I press "team_member_account_save"
     Then the form should be valid
     And the response status code should be 200
-    And I go to "/pa/team"
+    And I go to "/org/team"
 

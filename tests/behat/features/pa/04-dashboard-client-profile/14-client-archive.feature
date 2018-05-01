@@ -22,6 +22,6 @@ Feature: PA client archive
       | org_client_archive_confirmArchive | 1 |
     And I press "org_client_archive_save"
     Then the form should be valid
-    And I should be on "/pa/"
+    And I should be on "/org/"
     And I should see "The client has been archived"
     And I should not see the "client-01000016" region
