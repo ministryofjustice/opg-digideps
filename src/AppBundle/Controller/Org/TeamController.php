@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/pa/settings/user-accounts")
+ * @Route("/org/settings/user-accounts")
  */
 class TeamController extends AbstractController
 {
