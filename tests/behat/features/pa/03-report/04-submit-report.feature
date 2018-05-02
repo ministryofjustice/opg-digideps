@@ -27,8 +27,8 @@ Feature: Report submit (client 01000014)
         And the URL should match "/report/\d+/submitted"
         And I should not see the "report-submit-submitted" link
         # assert report display page is not broken
-        When I click on "return-to-pa-dashboard"
-        Then the URL should match "/pa"
+        When I click on "return-to-org-dashboard"
+        Then the URL should match "/org"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
         And the last email should have been sent to "behat-pa1@publicguardian.gsi.gov.uk"

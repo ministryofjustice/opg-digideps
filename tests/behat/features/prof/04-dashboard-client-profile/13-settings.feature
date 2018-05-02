@@ -170,4 +170,4 @@ Feature: PROF settings
     When I press "change_password_save"
     Then the form should be valid
     And I should see "Password edited"
-    And I should be on "/pa/settings"
+    And I should be on "/org/settings"

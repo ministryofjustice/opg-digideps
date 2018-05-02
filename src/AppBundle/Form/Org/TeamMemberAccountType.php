@@ -52,7 +52,7 @@ class TeamMemberAccountType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'pa-team',
+            'translation_domain' => 'org-team',
             'data_class'         => User::class,
             'targetUser'         => null
         ])

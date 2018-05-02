@@ -26,7 +26,7 @@ class ClientArchiveType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'pa-client-archive',
+            'translation_domain' => 'org-client-archive',
             'validation_groups' => 'pa-client',
         ]);
     }

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/pa/settings/user-accounts")
+ * @Route("/org/settings/user-accounts")
  */
 class TeamController extends AbstractController
 {
@@ -97,7 +97,7 @@ class TeamController extends AbstractController
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:
@@ -152,7 +152,7 @@ class TeamController extends AbstractController
             } catch (\Exception $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'pa-team')));
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
                         break;
 
                     default:
