@@ -74,7 +74,6 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['food', false, 'household-bills', 'out'],
         ['gas', false, 'household-bills', 'out'],
         ['insurance-eg-life-home-contents', false, 'household-bills', 'out'],
-        ['other-insurance', false, 'household-bills', 'out'],
         ['property-maintenance-improvement', true, 'household-bills', 'out'],
         ['telephone', false, 'household-bills', 'out'],
         ['tv-services', false, 'household-bills', 'out'],
@@ -168,6 +167,16 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * Used to serve migrations and recover data in case of errors
+     * Remove when DDPB-1852 is fully released
+     * @var string
+     *
+     *
+     * @ORM\Column(name="meta", type="text", nullable=true)
+     */
+    private $meta;
 
     /**
      * MoneyTransaction constructor.
