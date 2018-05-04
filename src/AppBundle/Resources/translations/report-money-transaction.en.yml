@@ -240,8 +240,6 @@ form:
         label: Water
       insurance-eg-life-home-contents:
         label: Insurance (for example, life, home and contents)
-      other-insurance:
-        label: Other insurance
       gas:
         label: Gas
       electricity:
@@ -262,9 +260,6 @@ form:
         label: Mortgage
       accommodation-service-charge:
         label: Accommodation service charge
-      accommodation-other:
-        label: Other
-        moreInformations: Give us more information
       buildings-or-contents-insurance:
         label: Buildings or contents insurance
       care-fees:
@@ -280,9 +275,6 @@ form:
       other-benefits:
         label: Other benefits
         moreInformations: Please enter the type of benefit %client% gets
-      households-bills-other:
-        label: Other
-        moreInformations: Please give us more information
       client-transport-bus-train-taxi-fares:
         label: Transport (for example, bus, train, taxi fares)
       food:
@@ -299,16 +291,10 @@ form:
         label: Day trips
       tax-payments-to-hmrc:
         label: Tax payment to HMRC
-      debt-and-charges-other:
-        label: Other
-        moreInformations: Please give us more information
       deputy-security-bond:
         label: Deputy security bond
       solicitor-fees:
         label: Solicitor's fees
-      other-fees:
-        label: Other fees
-        moreInformations: For each fee, please tell us the date, the amount and what it was for
       accountant-fees:
         label: Accountant's fees
       professional-fees-eg-solicitor-accountant:
