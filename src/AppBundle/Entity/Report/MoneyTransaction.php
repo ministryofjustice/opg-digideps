@@ -78,12 +78,12 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['telephone', false, 'household-bills', 'out'],
         ['tv-services', false, 'household-bills', 'out'],
         ['water', false, 'household-bills', 'out'],
-        ['households-bills-other', true, 'household-bills', 'out'],
+//        ['households-bills-other', true, 'household-bills', 'out'], // Household bills and expenses
 
         ['accommodation-service-charge', false, 'accommodation', 'out'],
         ['mortgage', false, 'accommodation', 'out'],
         ['rent', false, 'accommodation', 'out'],
-        ['accommodation-other', true, 'accommodation', 'out'],
+//        ['accommodation-other', true, 'accommodation', 'out'], // Accomodations costs
 
         ['client-transport-bus-train-taxi-fares', false, 'client-expenses', 'out'],
         ['clothes', false, 'client-expenses', 'out'],
@@ -95,7 +95,7 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['deputy-security-bond', false, 'fees', 'out'],
         ['opg-fees', false, 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, 'fees', 'out'],
-        ['other-fees', true, 'fees', 'out'],
+//        ['other-fees', true, 'fees', 'out'], // OPG and other professional fees
 
         ['investment-bonds-purchased', true, 'major-purchases', 'out'],
         ['investment-account-purchased', true, 'major-purchases', 'out'],
@@ -107,7 +107,7 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['loans', false, 'debt-and-charges', 'out'],
         ['tax-payments-to-hmrc', false, 'debt-and-charges', 'out'],
         ['unpaid-care-fees', false, 'debt-and-charges', 'out'],
-        ['debt-and-charges-other', true, 'debt-and-charges', 'out'],
+//        ['debt-and-charges-other', true, 'debt-and-charges', 'out'], //Tax or Charge
 
         ['cash-withdrawn', true, 'moving-money', 'out'],
 
