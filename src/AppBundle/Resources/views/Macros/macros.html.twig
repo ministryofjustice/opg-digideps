@@ -272,3 +272,27 @@
         </a>
     </p>
 {% endmacro %}
+
+{# Related section links on the summary pages #}
+{% macro relatedSections(report) %}
+    <aside class="govuk-related-items" role="complementary">
+        <h3 class="heading-small flush--top">Related sections</h3>
+        <ul class="list font-xsmall">
+            <li>
+                <a href="{{ path('report_overview', {'reportId': report.id}) }}">
+                    {% if app.user.isDeputyOrg() %}
+                        Client profile
+                    {% else %}
+                        Deputy report overview
+                    {% endif %}
+                </a>
+            </li>
+            <li>
+                <a href="#">Next section: Gifts</a>
+            </li>
+            <li>
+                <a href="#">Account balance check</a>
+            </li>
+        </ul>
+    </aside>
+{% endmacro %}
