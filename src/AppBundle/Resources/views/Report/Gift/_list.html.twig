@@ -45,6 +45,7 @@
         <thead>
             <tr>
                 <th>Description of gift</th>
+                <th>Bank account</th>
                 <th class="text--right">Amount</th>
                 <th>
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
@@ -57,6 +58,7 @@
                     <td class="">
                         {{ gift.explanation }}<br/>
                     </td>
+                    <td class="width-quarter">HSBC - Current account (****1111)</td>
                     <td class="numeric-small">
                         £{{ gift.amount | money_format }}
                     </td>
@@ -67,7 +69,7 @@
                 </tr>
             {% endfor %}
             <tr class="no-border">
-                <td>
+                <td colspan="2">
                     <span class="bold-small">Total amount</span>
                 </td>
                 <td class="numeric-small">
