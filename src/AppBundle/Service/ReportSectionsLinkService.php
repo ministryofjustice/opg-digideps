@@ -1,0 +1,139 @@
+<?php
+
+namespace AppBundle\Service;
+
+use AppBundle\Entity\ReportInterface;
+use Symfony\Component\Routing\RouterInterface;
+
+class ReportSectionsLinkService
+{
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+
+
+    /**
+     * ReportSectionsLinkService constructor.
+     * @param RouterInterface $router
+     */
+    public function __construct(RouterInterface $router)
+    {
+        $this->router = $router;
+    }
+
+    /**
+     * @param ReportInterface $report
+     * @return array
+     */
+    public function getOptions(ReportInterface $report)
+    {
+        if ($report->getType() == 'ndr') {
+            $routeParams = ['ndrId' => $report->getId()];
+            return [
+                ['section' => 'reportOverview', 'link' => $this->router->generate('ndr_overview', $routeParams)],
+                ['section' => 'visitsCare', 'link' => $this->router->generate('ndr_visits_care', $routeParams)],
+                ['section' => 'deputyExpenses', 'link' => $this->router->generate('ndr_deputy_expenses', $routeParams)],
+                ['section' => 'incomeBenefits', 'link' => $this->router->generate('ndr_income_benefits', $routeParams)],
+                ['section' => 'bankAccounts', 'link' => $this->router->generate('ndr_bank_accounts', $routeParams)],
+                ['section' => 'assets', 'link' => $this->router->generate('ndr_assets', $routeParams)],
+                ['section' => 'debts', 'link' => $this->router->generate('ndr_debts', $routeParams)],
+                ['section' => 'actions', 'link' => $this->router->generate('ndr_actions', $routeParams)],
+                ['section' => 'otherInfo', 'link' => $this->router->generate('ndr_other_info', $routeParams)],
+                ['section' => 'reportOverview', 'link' => $this->router->generate('ndr_overview', $routeParams)],
+            ];
+        }
+
+        $routeParams = ['reportId' => $report->getId()];
+
+        $allSectionsAvailable = [
+            'actions' => ['section' => 'actions', 'link' => $this->router->generate('actions', $routeParams)],
+            'assets' => ['section' => 'assets', 'link' => $this->router->generate('assets', $routeParams)],
+            'bankAccounts' => ['section' => 'bankAccounts', 'link' => $this->router->generate('bank_accounts', $routeParams)],
+            'contacts' => ['section' => 'contacts', 'link' => $this->router->generate('contacts', $routeParams)],
+            'debts' => ['section' => 'debts', 'link' => $this->router->generate('debts', $routeParams)],
+            'deputyExpenses' => ['section' => 'deputyExpenses', 'link' => $this->router->generate('deputy_expenses', $routeParams)],
+            'decisions' => ['section' => 'decisions', 'link' => $this->router->generate('decisions', $routeParams)],
+            'documents' => ['section' => 'documents', 'link' => $this->router->generate('documents', $routeParams)],
+            'gifts' => ['section' => 'gifts', 'link' => $this->router->generate('gifts', $routeParams)],
+            'lifestyle' => ['section' => 'lifestyle', 'link' => $this->router->generate('lifestyle', $routeParams)],
+            'moneyTransfers' => ['section' => 'moneyTransfers', 'link' => $this->router->generate('money_transfers', $routeParams)],
+            'moneyIn' => ['section' => 'moneyIn', 'link' => $this->router->generate('money_in', $routeParams)],
+            'moneyOut' => ['section' => 'moneyOut', 'link' => $this->router->generate('money_out', $routeParams)],
+            'moneyInShort' => ['section' => 'moneyInShort', 'link' => $this->router->generate('money_in_short', $routeParams)],
+            'moneyOutShort' => ['section' => 'moneyOutShort', 'link' => $this->router->generate('money_out_short', $routeParams)],
+            'otherInfo' => ['section' => 'otherInfo', 'link' => $this->router->generate('other_info', $routeParams)],
+            'paDeputyExpenses' => ['section' => 'paFeeExpense', 'link' => $this->router->generate('pa_fee_expense', $routeParams)],
+            'profCurrentFees' => ['section' => 'profCurrentFees', 'link' => $this->router->generate('prof_current_fees', $routeParams)],
+            'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
+        ];
+
+        //Order for all the possible section in Lay and PA (*-6) reports. Must follow the order in the overview templates
+        if (strpos($report->getType(), '-6') !== false) {
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'paDeputyExpenses',
+                'gifts',
+                'actions', 'otherInfo',
+                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                'moneyInShort', 'moneyOutShort',
+                'assets', 'debts',
+                'documents'
+            ];
+        } else if (strpos($report->getType(), '-5') !== false) {
+            $sectionIdOrder =
+                [
+                    'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                    'profCurrentFees',
+                    'gifts',
+                    'actions', 'otherInfo',
+                    'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                    'moneyInShort', 'moneyOutShort',
+                    'assets', 'debts',
+                    'documents'
+                ];
+        } else {
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'bankAccounts',
+                'deputyExpenses',
+                'gifts',
+                'moneyTransfers',
+                'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
+                'assets', 'debts',
+                'actions', 'otherInfo',
+                'documents'
+            ];
+        }
+        //first and last link
+        $mainPageLinkConfig = [
+            'section' => 'reportOverview',
+            'transKey' => strpos($report->getType(), '-6') !== false ? 'clientProfile' : 'reportOverview',
+            'link' => $this->router->generate('report_overview', $routeParams)
+        ];
+
+        $config = [$mainPageLinkConfig];
+
+        foreach ($sectionIdOrder as $sectionId) {
+            if ($report->hasSection($sectionId)) {
+                $config[] = $allSectionsAvailable[$sectionId];
+            }
+        }
+
+        $config[] = $mainPageLinkConfig;
+
+        return $config;
+    }
+
+    public function prevLink(ReportInterface $report)
+    {
+
+    }
+
+    public function nextLink(ReportInterface $report)
+    {
+
+    }
+
+
+}

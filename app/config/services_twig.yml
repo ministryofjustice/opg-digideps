@@ -9,7 +9,7 @@ services:
     twig.components_extension:
         class: AppBundle\Twig\ComponentsExtension
         public: false
-        arguments: [  "@translator" ]
+        arguments: [  "@translator", "@report_section_link_service" ]
         tags:
             - { name: twig.extension }
 
