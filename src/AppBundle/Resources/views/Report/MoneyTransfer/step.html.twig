@@ -39,11 +39,8 @@
             'labelClass' : 'text'
         }) }}
 
-        {% set accountFrom = ((transfer.accountFrom.bank is not empty) ? transfer.accountFrom.bank ~ ' - ' : '') ~  transfer.accountFrom.accountTypeText ~ ' (****' ~  transfer.accountFrom.accountNumber ~ ')' %}
-        {% set accountTo = ((transfer.accountTo.bank is not empty) ? transfer.accountTo.bank ~ ' - ' : '') ~ transfer.accountTo.accountTypeText ~ ' (****' ~  transfer.accountTo.accountNumber ~ ')' %}
-
-        <p class="text flush--bottom">From: {{ accountFrom }}</p>
-        <p class="text flush--top">To: {{ accountTo }}</p>
+        <p class="text flush--bottom">From: {{ transfer.accountFrom.nameOneLine }}</p>
+        <p class="text flush--top">To: {{ transfer.accountTo.nameOneLine }}</p>
 
     {% endif %}
 
