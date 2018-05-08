@@ -35,7 +35,7 @@ differenceTable:
   footer: Difference
 
 download-transactions: |
-  <a href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
+  <a id="transactionsCsv" href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
    to import into your workflow.
 
 moreInfo:
