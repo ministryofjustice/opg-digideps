@@ -46,8 +46,8 @@ class ComponentsExtension extends \Twig_Extension
         return [
             'progress_bar_registration' => new \Twig_Function_Method($this, 'progressBarRegistration'),
             'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
-            'get_section_options' => new \Twig_SimpleFunction('get_section_options', function ($report) {
-                return $this->reportSectionsLinkService->getOptions($report);
+            'section_link_params' => new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
+                return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),
         ];
     }

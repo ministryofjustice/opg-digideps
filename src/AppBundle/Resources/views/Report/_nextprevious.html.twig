@@ -9,44 +9,32 @@
     - link= full link to the section
    When all the NDR OTPP section are implemented, consider merge up the included template
  #}
-{% set previousLink = false %}
-{% set nextLink = false %}
 
+{% set previousLinkConfig = section_link_params(report, sectionId, -1) %}
+{% set nextLinkConfig = section_link_params(report, sectionId, 1) %}
 
-{% for k,s in config %}
-    {% if s.section == section %}
-        {% if config[k-1] is defined %}
-            {% set previousLink = config[k-1].link %}
-            {% set labelKey = config[k-1].transKey | default(config[k-1].section) %}
-            {% set previousLabel = ('prevNextLinks.sections.' ~ labelKey) | trans %}
+{% if previousLinkConfig or nextLinkConfig %}
+  <nav class="pagination" role="navigation" aria-label="Pagination">
+    <ul class="group">
+        {% if previousLinkConfig %}
+            {% set labelKey = nextLinkConfig.transKey | default(previousLinkConfig.section) %}
+            <li class="previous">
+                <a title="Navigate to previous part" rel="prev" href="{{ previousLinkConfig.link }}">
+                    <span class="pagination-label">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
+                    <span class="pagination-part-title">{{ ('prevNextLinks.sections.' ~ labelKey) | trans }}</span>
+                </a>
+            </li>
         {% endif %}
-        {% if config[k+1] is defined %}
-            {% set nextLink = config[k+1].link%}
-            {% set labelKey = config[k+1].transKey | default(config[k+1].section) %}
-            {% set nextLabel = ('prevNextLinks.sections.' ~ labelKey) | trans %}
+        {% if nextLinkConfig %}
+            {% set labelKey = nextLinkConfig.transKey | default(nextLinkConfig.section) %}
+            <li class="next">
+                <a title="Navigate to next part" rel="next" href="{{ nextLinkConfig.link }}">
+                    <span class="pagination-label">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
+                    <span class="pagination-part-title">{{ ('prevNextLinks.sections.' ~ labelKey) | trans }}</span>
+                </a>
+            </li>
         {% endif %}
-
-        <nav class="pagination" role="navigation" aria-label="Pagination">
-            <ul class="group">
-                {% if previousLink %}
-                    <li class="previous">
-                        <a title="Navigate to previous part" rel="prev" href="{{ previousLink }}">
-                            <span class="pagination-label">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
-                            <span class="pagination-part-title">{{ previousLabel }}</span>
-                        </a>
-                    </li>
-                {% endif %}
-                {% if nextLink %}
-                    <li class="next">
-                        <a title="Navigate to next part" rel="next" href="{{ nextLink }}">
-                            <span class="pagination-label">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
-                            <span class="pagination-part-title">{{ nextLabel }}</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-
-    {% endif %}
-{% endfor %}
+    </ul>
+  </nav>
+{% endif %}
 

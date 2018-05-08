@@ -26,7 +26,7 @@ class ReportSectionsLinkService
      * @param ReportInterface $report
      * @return array
      */
-    public function getOptions(ReportInterface $report)
+    private function getOptions(ReportInterface $report)
     {
         if ($report->getType() == 'ndr') {
             $routeParams = ['ndrId' => $report->getId()];
@@ -125,15 +125,23 @@ class ReportSectionsLinkService
         return $config;
     }
 
-    public function prevLink(ReportInterface $report)
+    /**
+     * @param ReportInterface $report
+     * @param $sectionId
+     * @param int $offset
+     * @return array
+     */
+    public function getSectionParams(ReportInterface $report, $sectionId, $offset = 0)
     {
+        $config = $this->getOptions($report);
 
+        foreach($config as $index => $currentSectionParams) {
+            if ($currentSectionParams['section'] == $sectionId) {
+                return isset($config[$index + $offset]) ? $config[$index + $offset] : [];
+            }
+        }
+
+        return [];
     }
-
-    public function nextLink(ReportInterface $report)
-    {
-
-    }
-
 
 }

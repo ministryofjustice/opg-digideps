@@ -91,13 +91,11 @@
     {% endif %}
 {% endmacro %}
 
-{% macro reportSectionPrevNext(report, currentSectionId) %}
-
-    {% set config = get_section_options(report)  %}
-
+{# TODO remove macro. just use the template directly #}
+{% macro reportSectionPrevNext(report, sectionId) %}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {
-    'section': currentSectionId,
-    'config': config,
+        'report': report,
+        'sectionId': sectionId,
     } %}
 {% endmacro %}
 
