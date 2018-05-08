@@ -23,6 +23,10 @@
     margin-left: 20px;
     top: 1px;
     position: relative;
+
+    @include media(mobile) {
+        margin-left: 0;
+    }
 }
 
 .action-link {

@@ -77,6 +77,24 @@
     }
 }
 
+.icon-pdf {
+    @include icon(icon-pdf, 32, 32, 'icons');
+    margin-right: 8px;
+
+    @include media(mobile) {
+        @include icon(icon-pdf, 28, 28, 'icons');
+        margin-right: 6px;
+        background-size: contain;
+    }
+
+    // Spacing tweak for PDF icon within button-link
+    .button-link & {
+        top: 8px;
+        margin-top: -4px;
+    }
+
+}
+
 //adjusting icon within a link
 .icon {
     a & {
