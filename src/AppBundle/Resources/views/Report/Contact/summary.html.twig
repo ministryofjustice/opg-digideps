@@ -21,6 +21,9 @@
          {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
     </p>
 
+    {# @biggs remove me #}
+    <a href="{{ section_link_params(report, 'contacts', +1).link }}">{{ 'prevNextLinks.sections.contacts' | trans({}, 'report-common') }}</a>
+
     {# Check answers text #}
     <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
     <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
