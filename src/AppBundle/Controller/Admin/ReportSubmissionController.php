@@ -24,7 +24,10 @@ class ReportSubmissionController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $this->processPost($request);
+        $ret = $this->processPost($request);
+        if ($ret instanceof Response) {
+            return $ret;
+        }
         $currentFilters = self::getFiltersFromRequest($request);
         $ret = $this->getRestClient()->get('/report-submission?' . http_build_query($currentFilters), 'array');
 
@@ -86,7 +89,10 @@ class ReportSubmissionController extends AbstractController
                         break;
 
                     case self::ACTION_DOWNLOAD:
-                        $this->processDownload($request, $checkedBoxes);
+                        $ret = $this->processDownload($request, $checkedBoxes);
+                        if ($ret instanceof Response) {
+                            return $ret;
+                        }
                         break;
                 }
             }
@@ -134,7 +140,7 @@ class ReportSubmissionController extends AbstractController
             $response->headers->set('Content-Description', 'File Transfer');
             $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($filename) . '";');
             // currently disabled as behat goutte driver gets a corrupted file with this setting
-            //$response->headers->set('Content-Length', filesize($filename));
+            $response->headers->set('Content-Length', filesize($filename));
             $response->sendHeaders();
             $response->setContent(readfile($filename));
 
