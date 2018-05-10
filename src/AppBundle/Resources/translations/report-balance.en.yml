@@ -35,13 +35,13 @@ differenceTable:
   footer: Difference
 
 download-transactions: |
-  <a href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
+  <a id="transactionsCsv" href="%transactionsCsvPath%" class="behat-link-download-transactions">Download a copy of your transactions (csv)</a>
    to import into your workflow.
 
 moreInfo:
   heading: More information
   para1: |
-    In the accounts section, we ask you tell us how much was in %client%'s bank accounts
+    In the accounts section, we ask you to tell us how much was in %client%'s bank accounts
     at the start of your reporting period (the accounts opening balance) and the end (the
     accounts closing balance).
   para2: |
