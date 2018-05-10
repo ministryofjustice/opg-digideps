@@ -36,7 +36,9 @@
         <tr class="behat-region-transaction-{{ t.description | behat_namify }}">
             <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans }}</td>
             <td class="width-quarter">{{ t.description | nl2br }}</td>
-            <td class="width-fifth">HSBC - Current account (****1111)</td>
+            <td class="width-fifth">
+                {{ (t.bankAccount) ? t.bankAccount.nameOneLine : '-' }}
+            </td>
             <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
             <td class="change-answer soft-half--left hard--right width-sixth">
                 <a class="behat-link-edit action-link"
