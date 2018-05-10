@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ 'deleteConfirm.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'deleteConfirm.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {% if dp.moneyTransfers > 0 %}
+        <div class="alert alert-error">
+            This bank account cannot be removed because you've added money transfers [...]
+        </div>
+    {% elseif dp.paymentsTotal > 0 %}
+        <div class="alert alert-info">
+                You have {{ dp.payments | keys | join(',') }}
+                linked to this bank account. If you remove the account,
+                we' unlink the payments for you
+        </div>
+        <a href="{{ path('bank_account_delete', { reportId: report.id, 'accountId': accountId, 'confirm': 1 }) }}" class="button push-half--right behat-link-confirm">{{ ('deleteConfirm.linkButtonLabel') | trans }}</a>
+    {% endif %}
+
+    <a href="{{ path('bank_accounts_summary', { reportId: report.id }) }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
+
+{% endblock %}
