@@ -45,7 +45,9 @@
         <thead>
             <tr>
                 <th>Description of gift</th>
-                <th>Bank account</th>
+                {% if report.type in ['102','102-4'] %}
+                    <th>Bank account</th>
+                {% endif %}
                 <th class="text--right">Amount</th>
                 <th>
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
@@ -58,7 +60,11 @@
                     <td class="">
                         {{ gift.explanation }}<br/>
                     </td>
-                    <td class="width-quarter">HSBC - Current account (****1111)</td>
+                    {% if report.type in ['102','102-4'] %}
+                        <td class="width-quarter">
+                            {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : '-' }}
+                        </td>
+                    {% endif %}
                     <td class="numeric-small">
                         £{{ gift.amount | money_format }}
                     </td>
@@ -69,9 +75,12 @@
                 </tr>
             {% endfor %}
             <tr class="no-border">
-                <td colspan="2">
+                <td>
                     <span class="bold-small">Total amount</span>
                 </td>
+                {% if report.type in ['102','102-4'] %}
+                    <td></td>
+                {% endif %}
                 <td class="numeric-small">
                     <span class="bold-small behat-region-gift-total">£{{ report.giftsTotalValue | money_format }}</span>
                 </td>

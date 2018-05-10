@@ -45,7 +45,9 @@
         <thead>
             <tr>
                 <th>Description of expense</th>
-                <th>Bank account</th>
+                {% if report.type in ['102','102-4'] %}
+                    <th>Bank account</th>
+                {% endif %}
                 <th class="text--right">Amount</th>
                 <th>
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
@@ -58,13 +60,11 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    <td class="width-quarter">
-                        {% if expense.bankAccount %}
-                            {{ expense.bankAccount.nameOneLine }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
+                    {% if report.type in ['102','102-4'] %}
+                        <td class="width-quarter">
+                            {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
+                        </td>
+                    {% endif %}
                     <td class="numeric-small">
                         £{{ expense.amount | money_format }}
                     </td>
@@ -75,9 +75,12 @@
                 </tr>
             {% endfor %}
             <tr class="no-border">
-                <td colspan="2">
+                <td>
                     <span class="bold-small">Total amount</span>
                 </td>
+                {% if report.type in ['102','102-4'] %}
+                    <td></td>
+                {% endif %}
                 <td class="numeric-small">
                     <span class="bold-small behat-region-expense-total">£{{ report.expensesTotal | money_format }}</span>
                 </td>
