@@ -16,23 +16,30 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <p class="text">
-         {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
-    </p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
 
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
 
-    {# Missing questions alerts #}
-    {% if status.visitsCareState.state != 'done' and comingFromLastStep%}
-        {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
-    {% endif %}
+            {# Missing questions alerts #}
+            {% if status.visitsCareState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
 
-    {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
-        {{ macros.notification('notice', 'canYouAnswerNDR' | trans(transOptions, 'common')) }}
-    {% endif %}
+            {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswerNDR' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(ndr, 'visitsCare') }}
+        </div>
+    </div>
 
     {# Return to overview link #}
     <p class="text--right flush--bottom">
