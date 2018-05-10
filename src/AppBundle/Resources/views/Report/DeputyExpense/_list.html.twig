@@ -58,7 +58,13 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    <td class="width-quarter">HSBC - Current account (****1111)</td>
+                    <td class="width-quarter">
+                        {% if expense.bankAccount %}
+                            {{ expense.bankAccount.nameOneLine }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td class="numeric-small">
                         £{{ expense.amount | money_format }}
                     </td>
