@@ -201,6 +201,13 @@
                 <a href="{{ section_link_params(report, section, +1).link }}">Next section:
                     {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
             </li>
+            {% if report.hasSection('balance')%}
+                {% if section in ['gifts','deputyExpenses','moneyIn','moneyOut']  %}
+                    <li>
+                        <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
+                    </li>
+                {% endif %}
+            {% endif %}
         </ul>
     </aside>
 {% endmacro %}
