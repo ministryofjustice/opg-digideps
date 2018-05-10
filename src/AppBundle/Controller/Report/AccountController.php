@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
-use AppBundle\Entity\Report\Report as Report;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\UnauthorisedException;
@@ -21,7 +20,7 @@ class AccountController extends RestController
      */
     public function addAccountAction(Request $request, $reportId)
     {
-        $report = $this->findEntityBy(Report::class, $reportId);
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request, [
@@ -79,51 +78,6 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/account/{id}/dependent-records")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_DEPUTY')")
-     */
-    public function accountDependentRecords($id)
-    {
-        $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
-        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
-
-        $report = $account->getReport();
-
-        $transferFilter = function($transfer) use ($account) {
-            return $transfer->getFrom() === $account || $transfer->getTo() === $account;
-        };
-
-        $paymentsFilter = function($expense) use ($account) {
-            return $expense->getBankAccount() === $account;
-        };
-
-        $ret = [
-            Report::SECTION_MONEY_TRANSFERS => $report->hasSection(Report::SECTION_MONEY_TRANSFERS)
-                ? count($report->getMoneyTransfers()->filter($transferFilter))
-                : null,
-            'payments' => [
-                Report::SECTION_DEPUTY_EXPENSES => $report->hasSection(Report::SECTION_DEPUTY_EXPENSES)
-                    ?  count($report->getExpenses()->filter($paymentsFilter))
-                    : null,
-                Report::SECTION_GIFTS => $report->hasSection(Report::SECTION_GIFTS)
-                    ? count($report->getGifts()->filter($paymentsFilter))
-                    : null,
-                Report::SECTION_MONEY_IN => $report->hasSection(Report::SECTION_MONEY_IN)
-                   ? count($report->getMoneyTransactionsIn()->filter($paymentsFilter))
-                    : null,
-                Report::SECTION_MONEY_IN => $report->hasSection(Report::SECTION_MONEY_OUT)
-                    ? count($report->getMoneyTransactionsOut()->filter($paymentsFilter))
-                    : null
-            ]
-        ];
-
-        $ret['paymentsTotal'] = array_sum($ret['payments']);
-
-        return $ret;
-    }
-
-    /**
      * @Route("/account/{id}")
      * @Method({"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -133,7 +87,7 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
-//        $this->denyAccessIfAccountHasTransactions($account);
+        $this->denyAccessIfAccountHasTransactions($account);
 
         $this->getEntityManager()->remove($account);
 
@@ -191,60 +145,60 @@ class AccountController extends RestController
      *
      * @param EntityDir\Report\BankAccount $account
      */
-//    protected function denyAccessIfAccountHasTransactions(EntityDir\Report\BankAccount $account)
-//    {
-//        $report = $account->getReport();
-//        $errors =[];
-//
-//        $errors = $this->bankAccountAssociated(
-//            $report,
-//            $account,
-//            $report::SECTION_DEPUTY_EXPENSES,
-//            $report->getExpenses(),
-//            $errors
-//        );
-//        $errors = $this->bankAccountAssociated(
-//            $report,
-//            $account,
-//            $report::SECTION_MONEY_TRANSFERS,
-//            $report->getMoneyTransfers(),
-//            $errors
-//        );
-//        $errors = $this->bankAccountAssociated(
-//            $report,
-//            $account,
-//            $report::SECTION_GIFTS,
-//            $report->getGifts(),
-//            $errors
-//        );
-//        $errors = $this->bankAccountAssociated(
-//            $report,
-//            $account,
-//            $report::SECTION_MONEY_IN,
-//            $report->getMoneyTransactionsIn(),
-//            $errors
-//        );
-//        $errors = $this->bankAccountAssociated(
-//            $report,
-//            $account,
-//            $report::SECTION_MONEY_OUT,
-//            $report->getMoneyTransactionsOut(),
-//            $errors
-//        );
-//
-//        foreach($errors as $section => $errorCount) {
-//            if ($errorCount > 0) {
-//                $e = new BusinessRulesException('Unable to remove account ' . $account->getId() . ': has associated transactions', 401);
-//                $e->setData(['sectionErrors' => $errors]);
-//                throw $e;
-//            }
-//        }
-//    }
+    protected function denyAccessIfAccountHasTransactions(EntityDir\Report\BankAccount $account)
+    {
+        $report = $account->getReport();
+        $errors =[];
+
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_DEPUTY_EXPENSES,
+            $report->getExpenses(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_TRANSFERS,
+            $report->getMoneyTransfers(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_GIFTS,
+            $report->getGifts(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_IN,
+            $report->getMoneyTransactionsIn(),
+            $errors
+        );
+        $errors = $this->bankAccountAssociated(
+            $report,
+            $account,
+            $report::SECTION_MONEY_OUT,
+            $report->getMoneyTransactionsOut(),
+            $errors
+        );
+
+        foreach($errors as $section => $errorCount) {
+            if ($errorCount > 0) {
+                $e = new BusinessRulesException('Unable to remove account ' . $account->getId() . ': has associated transactions', 401);
+                $e->setData(['sectionErrors' => $errors]);
+                throw $e;
+            }
+        }
+    }
 
     /**
      * Check transactions are not linked to the bank account we are trying to delete
      *
-     * @param Report $report
+     * @param EntityDir\Report\Report $report
      * @param EntityDir\Report\BankAccount $account
      * @param $section
      * @param array $transactions
@@ -252,65 +206,34 @@ class AccountController extends RestController
      *
      * @return array $errors
      */
-//    private function bankAccountAssociated(
-//        Report $report,
-//        EntityDir\Report\BankAccount $account,
-//        $section,
-//        $transactions = [],
-//        $errors = []
-//    ) {
-//        if ($report->hasSection($section)) {
-//            if (!empty($transactions)) {
-//                $errors[$section] = 0;
-//                foreach ($transactions as $transaction) {
-//                    // transfers behaves differently
-//                    if ($section == Report::SECTION_MONEY_TRANSFERS) {
-//                        if (!empty($transaction->getFrom()->getId()) &&
-//                            $account === $transaction->getFrom() || ($account === $transaction->getTo()))
-//                        {
-//                            $errors[$section]++;
-//                        }
-//                    } else {
-//                        if ($transaction->getBankAccount() instanceof EntityDir\Report\BankAccount &&
-//                            $transaction->getBankAccount()->getId() == $account->getId()) {
-//                            $errors[$section]++;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return $errors;
-//    }
+    private function bankAccountAssociated(
+        EntityDir\Report\Report $report,
+        EntityDir\Report\BankAccount $account,
+        $section,
+        $transactions = [],
+        $errors = []
+    ) {
+        if ($report->hasSection($section)) {
+            if (!empty($transactions)) {
+                $errors[$section] = 0;
+                foreach ($transactions as $transaction) {
+                    // transfers behaves differently
+                    if ($section == EntityDir\Report\Report::SECTION_MONEY_TRANSFERS) {
+                        if (!empty($transaction->getFrom()->getId()) &&
+                            $account === $transaction->getFrom() || ($account === $transaction->getTo()))
+                        {
+                            $errors[$section]++;
+                        }
+                    } else {
+                        if ($transaction->getBankAccount() instanceof EntityDir\Report\BankAccount &&
+                            $transaction->getBankAccount()->getId() == $account->getId()) {
+                            $errors[$section]++;
+                        }
+                    }
+                }
+            }
+        }
 
-//    private function bankAccountAssociated(
-//        Report $report,
-//        EntityDir\Report\BankAccount $account,
-//        $section,
-//        $transactions = [],
-//        $errors = []
-//    ) {
-//        if ($report->hasSection($section)) {
-//            if (!empty($transactions)) {
-//                $errors[$section] = 0;
-//                foreach ($transactions as $transaction) {
-//                    // transfers behaves differently
-//                    if ($section == Report::SECTION_MONEY_TRANSFERS) {
-//                        if (!empty($transaction->getFrom()->getId()) &&
-//                            $account === $transaction->getFrom() || ($account === $transaction->getTo()))
-//                        {
-//                            $errors[$section]++;
-//                        }
-//                    } else {
-//                        if ($transaction->getBankAccount() instanceof EntityDir\Report\BankAccount &&
-//                            $transaction->getBankAccount()->getId() == $account->getId()) {
-//                            $errors[$section]++;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return $errors;
-//    }
+        return $errors;
+    }
 }
