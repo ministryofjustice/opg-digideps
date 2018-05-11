@@ -6,24 +6,61 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {} %}
 
-{% block htmlTitle %}{{ 'deleteConfirm.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}{{ 'deleteConfirm.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}Remove account{% endblock %}
+{% block pageTitle %}Remove account{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+{% block supportTitleTop %}
+    <span class="heading-secondary">Accounts</span>
+{% endblock %}
+
+{% block linkBack %}
+    <a href="{{ 'backLink' }}" class="link-back behat-link-step-back">{{ 'back' | trans({},'common') }}</a>
+{% endblock %}
 
 {% block pageContent %}
 
-    <div class="alert alert-info">
-            You have {{ dp.payments | keys | join(',') }}
-            linked to this bank account. If you remove the account,
-            we' unlink the payments for you
+    <p class="text"><strong class="bold">Are you sure you want to remove this account?</strong></p>
+    <table class="text push--bottom">
+        <tbody>
+            <tr>
+                <th scope="row">Bank or building society name:</th>
+                <td>HSBC and a longer name</td>
+            </tr>
+            <tr>
+                <th scope="row">Type of account:</th>
+                <td>Current account</td>
+            </tr>
+            <tr>
+                <th scope="row">Sort code:</th>
+                <td>11 - 11 - 11</td>
+            </tr>
+            <tr>
+                <th scope="row">Account number:</th>
+                <td>**** - 1111</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert-important panel panel-border-narrow push--bottom">
+        <span class="icon icon-important-small"></span>
+        <div class="alert-message">
+            <p>
+                You have
+                {% set count, total = 1, (dp.paymentsTotal) %}
+                {% for key,payment in dp.payments %}
+                    {% if payment > 0 %}{{ key }}{% if count == (total-1) %} and {% elseif count < total %}, {% endif %}
+                        {% set count = count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                payments linked to this bank account. If you remove the account, we'll unlink the payments for you.</p>
+        </div>
     </div>
 
-    <a href="{{ path('bank_account_delete', { reportId: report.id, 'accountId': accountId, 'confirm': 1 }) }}" class="button push-half--right behat-link-confirm">{{ ('deleteConfirm.linkButtonLabel') | trans }}</a>
+    <a href="{{ path('bank_account_delete', { reportId: report.id, 'accountId': accountId, 'confirm': 1 }) }}" class="button push-half--right behat-link-confirm">Yes, remove account</a>
 
     <a href="{{ path('bank_accounts_summary', { reportId: report.id }) }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
 
-    <pre>{{ dump(dp) }}</pre>
+    {# <pre>{{ dump(dp) }}</pre> #}
 
 {% endblock %}
