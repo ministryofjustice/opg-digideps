@@ -180,6 +180,22 @@ class BankAccount
         return $this->bank;
     }
 
+    /**
+     * Get bank account name in one line
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     * Natwest - ISA (****4444)
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+         return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
+             . $this->getAccountTypeText()
+             . ' (****' . $this->getAccountNumber() . ')';
+    }
+
+
     public function setSortCode($sortCode)
     {
         $this->sortCode = $sortCode;

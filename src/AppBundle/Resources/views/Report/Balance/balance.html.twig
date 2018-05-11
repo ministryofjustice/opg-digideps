@@ -413,4 +413,11 @@
         'sectionId': 'balance',
     } %}
 
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('#transactionsCsv'));
+        });
+    </script>
+
 {% endblock %}
