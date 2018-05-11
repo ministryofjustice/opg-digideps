@@ -32,26 +32,42 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->router = m::mock(RouterInterface::class);
         $this->router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
-            return $a . '-' . print_r($b, true);
+            return $a . '-link-' . print_r($b, true);
         });
         $this->report = m::mock(ReportInterface::class);
-        $this->report->shouldReceive('getType')->andReturn('102');
+
         $this->report->shouldReceive('getId')->andReturn('1');
         $this->report->shouldReceive('hasSection')->andReturn(true);
-
+        //$this->report->shouldReceive('getType')->andReturn('irrelevant');
 
         $this->sut = new ReportSectionsLinkService($this->router);
     }
 
-    public function testgetSectionParams()
+    public function testgetSectionParamsLay()
     {
+        $this->report->shouldReceive('isLayReport')->andReturn(true);
 
         $actual = $this->sut->getSectionParams($this->report, 'contacts', -1);
         $this->assertEquals('decisions', $actual['section']);
+        $this->assertContains('decisions-link-', $actual['link']);
 
         $actual = $this->sut->getSectionParams($this->report, 'contacts', 1);
         $this->assertEquals('visitsCare', $actual['section']);
 
+        $actual = $this->sut->getSectionParams($this->report, 'documents', -1);
+        $this->assertEquals('otherInfo', $actual['section']);
+
+        $actual = $this->sut->getSectionParams($this->report, 'documents', +1);
+        $this->assertEquals([], $actual);
+
+    }
+
+    public function testgetSectionParamsOrg()
+    {
+        $this->report->shouldReceive('isLayReport')->andReturn(false);
+
+        $actual = $this->sut->getSectionParams($this->report, 'profCurrentFees', +1);
+        $this->assertEquals('gifts', $actual['section']);
     }
 
 

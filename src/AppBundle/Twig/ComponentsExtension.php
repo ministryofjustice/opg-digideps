@@ -49,6 +49,7 @@ class ComponentsExtension extends \Twig_Extension
             'section_link_params' => new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),
+
         ];
     }
 

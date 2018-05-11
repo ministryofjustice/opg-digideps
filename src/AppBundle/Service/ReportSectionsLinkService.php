@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\ReportInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -28,10 +29,9 @@ class ReportSectionsLinkService
      */
     private function getOptions(ReportInterface $report)
     {
-        if ($report->getType() == 'ndr') {
+        if ($report instanceof Ndr) {
             $routeParams = ['ndrId' => $report->getId()];
             return [
-                ['section' => 'reportOverview', 'link' => $this->router->generate('ndr_overview', $routeParams)],
                 ['section' => 'visitsCare', 'link' => $this->router->generate('ndr_visits_care', $routeParams)],
                 ['section' => 'deputyExpenses', 'link' => $this->router->generate('ndr_deputy_expenses', $routeParams)],
                 ['section' => 'incomeBenefits', 'link' => $this->router->generate('ndr_income_benefits', $routeParams)],
@@ -40,7 +40,6 @@ class ReportSectionsLinkService
                 ['section' => 'debts', 'link' => $this->router->generate('ndr_debts', $routeParams)],
                 ['section' => 'actions', 'link' => $this->router->generate('ndr_actions', $routeParams)],
                 ['section' => 'otherInfo', 'link' => $this->router->generate('ndr_other_info', $routeParams)],
-                ['section' => 'reportOverview', 'link' => $this->router->generate('ndr_overview', $routeParams)],
             ];
         }
 
@@ -68,31 +67,8 @@ class ReportSectionsLinkService
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
         ];
 
-        //Order for all the possible section in Lay and PA (*-6) reports. Must follow the order in the overview templates
-        if (strpos($report->getType(), '-6') !== false) {
-            $sectionIdOrder = [
-                'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'paDeputyExpenses',
-                'gifts',
-                'actions', 'otherInfo',
-                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
-                'moneyInShort', 'moneyOutShort',
-                'assets', 'debts',
-                'documents'
-            ];
-        } else if (strpos($report->getType(), '-5') !== false) {
-            $sectionIdOrder =
-                [
-                    'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                    'profCurrentFees',
-                    'gifts',
-                    'actions', 'otherInfo',
-                    'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
-                    'moneyInShort', 'moneyOutShort',
-                    'assets', 'debts',
-                    'documents'
-                ];
-        } else {
+        // reorganize
+        if ($report->isLayReport()) { // Lay
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'bankAccounts',
@@ -104,23 +80,28 @@ class ReportSectionsLinkService
                 'actions', 'otherInfo',
                 'documents'
             ];
+        } else { // PA and PROF: client profile page
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'paDeputyExpenses', //PA
+                'profCurrentFees', // PROF
+                'gifts',
+                'actions', 'otherInfo',
+                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                'moneyInShort', 'moneyOutShort',
+                'assets', 'debts',
+                'documents'
+            ];
         }
-        //first and last link
-        $mainPageLinkConfig = [
-            'section' => 'reportOverview',
-            'transKey' => strpos($report->getType(), '-6') !== false ? 'clientProfile' : 'reportOverview',
-            'link' => $this->router->generate('report_overview', $routeParams)
-        ];
 
-        $config = [$mainPageLinkConfig];
+        $config = [];
 
+        // cycle order and add config for each one
         foreach ($sectionIdOrder as $sectionId) {
             if ($report->hasSection($sectionId)) {
                 $config[] = $allSectionsAvailable[$sectionId];
             }
         }
-
-        $config[] = $mainPageLinkConfig;
 
         return $config;
     }
@@ -129,7 +110,7 @@ class ReportSectionsLinkService
      * @param ReportInterface $report
      * @param $sectionId
      * @param int $offset
-     * @return array
+     * @return array empty if it's the last or first section
      */
     public function getSectionParams(ReportInterface $report, $sectionId, $offset = 0)
     {
