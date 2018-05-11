@@ -17,13 +17,17 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <p class="text">
-         {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
-    </p>
-
-    {# Return to overview/client profile link #}
-    <p class="text">{{ macros.returnToOverview(report) }}</p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'documents') }}
+        </div>
+    </div>
 
     <table class="check-your-answers columns-2 push-double--bottom">
         <thead>

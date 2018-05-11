@@ -18,7 +18,6 @@
 
     <div class="grid-row">
         <div class="column-two-thirds">
-
             {# Introduction text #}
             <div class="text">
                 <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
@@ -27,17 +26,11 @@
             {# Check answers text #}
             <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
             <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
         </div>
-
         <div class="column-third">
-            {{ macros.relatedSections(report) }}
+            {{ macros.relatedSections(report, 'gifts') }}
         </div>
-
     </div>
-
-    {# Return to overview/client profile link #}
-    {# {{ macros.returnToOverview(report) }} #}
 
     {# Items list #}
     {% include 'AppBundle:Report/Gift:_list.html.twig' with {

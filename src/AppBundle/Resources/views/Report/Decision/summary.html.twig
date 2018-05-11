@@ -16,16 +16,19 @@
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">{{ 'summaryPage.weAskAbout' | trans(transOptions) }}</p>
 
-    {# Introduction text #}
-    <p class="text">{{ 'summaryPage.weAskAbout' | trans(transOptions) }}</p>
-
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'decisions') }}
+        </div>
+    </div>
 
     {# Items list #}
     {% include 'AppBundle:Report/Decision:_list.html.twig' with {
