@@ -177,13 +177,12 @@
 
 {# Related section links on the summary pages #}
 {% macro relatedSections(report,section) %}
-    {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
     <aside class="govuk-related-items" role="complementary">
         <ul class="list font-xsmall">
             <li>
-                {% if isUserNdrEnabled %}
+                {% if report.type == 'ndr' %}
                     <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}">
                         New deputy report overview
                     </a>
@@ -197,15 +196,19 @@
                     </a>
                 {% endif %}
             </li>
-            <li>
-                <a href="{{ section_link_params(report, section, +1).link }}">Next section:
-                    {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
-            </li>
-            {% if report.hasSection('balance')%}
-                {% if section in ['gifts','deputyExpenses','moneyIn','moneyOut']  %}
-                    <li>
-                        <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
-                    </li>
+            {% if (section_link_params(report, section, +1)) %}
+                <li>
+                    <a href="{{ section_link_params(report, section, +1).link }}">Next section:
+                        {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
+                </li>
+            {% endif %}
+            {% if report.type != 'ndr' %}
+                {% if report.hasSection('balance') %}
+                    {% if section in ['gifts','deputyExpenses','moneyIn','moneyOut'] %}
+                        <li>
+                            <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </ul>
