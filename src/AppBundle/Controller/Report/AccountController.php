@@ -112,7 +112,7 @@ class AccountController extends RestController
                 Report::SECTION_MONEY_IN => $report->hasSection(Report::SECTION_MONEY_IN)
                    ? count($report->getMoneyTransactionsIn()->filter($paymentsFilter))
                     : null,
-                Report::SECTION_MONEY_IN => $report->hasSection(Report::SECTION_MONEY_OUT)
+                Report::SECTION_MONEY_OUT => $report->hasSection(Report::SECTION_MONEY_OUT)
                     ? count($report->getMoneyTransactionsOut()->filter($paymentsFilter))
                     : null
             ]
