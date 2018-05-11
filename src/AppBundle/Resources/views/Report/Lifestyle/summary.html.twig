@@ -45,7 +45,10 @@
     {% include 'AppBundle:Report/Lifestyle:_answers.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'lifestyle') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'lifestyle',
+    } %}
 
 {% endblock %}
 

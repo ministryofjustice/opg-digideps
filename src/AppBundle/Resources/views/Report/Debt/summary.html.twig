@@ -144,8 +144,9 @@
     {% endif %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'debts') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'debts',
+    } %}
 
 {% endblock %}

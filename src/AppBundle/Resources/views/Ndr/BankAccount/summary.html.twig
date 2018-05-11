@@ -36,6 +36,9 @@
     {% include "AppBundle:Ndr/BankAccount:_list.html.twig" %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(ndr, 'bankAccounts') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'bankAccounts',
+    } %}
 
 {% endblock %}

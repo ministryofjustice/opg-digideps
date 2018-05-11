@@ -39,8 +39,9 @@
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(ndr, 'deputyExpenses') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'deputyExpenses',
+    } %}
 
 {% endblock %}

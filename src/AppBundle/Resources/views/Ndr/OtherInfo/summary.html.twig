@@ -45,7 +45,10 @@
     {% include 'AppBundle:Ndr/OtherInfo:_answers.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(ndr, 'otherInfo') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'otherInfo',
+    } %}
 
 {% endblock %}
 

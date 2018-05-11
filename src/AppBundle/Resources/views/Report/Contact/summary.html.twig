@@ -39,8 +39,9 @@
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'contacts') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'contacts',
+    } %}
 
 {% endblock %}

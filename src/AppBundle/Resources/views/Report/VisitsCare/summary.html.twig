@@ -45,7 +45,10 @@
     {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'visitsCare') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'visitsCare',
+    } %}
 
 {% endblock %}
 

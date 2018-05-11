@@ -36,6 +36,9 @@
     {% include 'AppBundle:Ndr/Asset:_list.html.twig' %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(ndr, 'assets') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'assets',
+    } %}
 
 {% endblock %}

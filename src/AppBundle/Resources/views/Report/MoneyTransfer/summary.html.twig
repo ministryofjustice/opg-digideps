@@ -39,6 +39,9 @@
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'moneyTransfers') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyTransfers',
+    } %}
 
 {% endblock %}

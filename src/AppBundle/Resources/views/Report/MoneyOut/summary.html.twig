@@ -57,6 +57,9 @@
     {% include "AppBundle:Report/MoneyOut:_list.html.twig" %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'moneyOut') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyOut',
+    } %}
 
 {% endblock %}
