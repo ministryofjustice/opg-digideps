@@ -102,7 +102,7 @@ class AccountController extends RestController
             Report::SECTION_MONEY_TRANSFERS => $report->hasSection(Report::SECTION_MONEY_TRANSFERS)
                 ? count($report->getMoneyTransfers()->filter($transferFilter))
                 : null,
-            'payments' => [
+            'transactions' => [
                 Report::SECTION_DEPUTY_EXPENSES => $report->hasSection(Report::SECTION_DEPUTY_EXPENSES)
                     ?  count($report->getExpenses()->filter($paymentsFilter))
                     : null,
@@ -118,7 +118,7 @@ class AccountController extends RestController
             ]
         ];
 
-        $ret['paymentsCount'] = array_sum($ret['payments']);
+        $ret['transactionsCount'] = array_sum($ret['transactions']);
 
         return $ret;
     }
