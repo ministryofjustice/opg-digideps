@@ -56,7 +56,7 @@ Feature: Report money 102
       | Anything else           | transaction-money-found-on-the-road |
       | money found on the road | transaction-money-found-on-the-road |
       | £50.00                  | transaction-money-found-on-the-road |
-      | £12,346.67              | pensions-total                      |
+      | £12,344.67              | pensions-total                      |
     # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
     Then I should not see the "transaction-delete-me" region
@@ -129,7 +129,7 @@ Feature: Report money 102
       | Anything else           | transaction-money-found-on-the-road |
       | money found on the road | transaction-money-found-on-the-road |
       | £50.00                  | transaction-money-found-on-the-road |
-      | £12,346.68              | household-bills-total               |
+      | £12,344.68              | household-bills-total               |
       # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
     Then I should not see the "transaction-delete-me" region
