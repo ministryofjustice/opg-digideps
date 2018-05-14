@@ -235,33 +235,6 @@ class BankAccountController extends AbstractController
             'accountId' => $accountId,
             'dp' => $dependentRecords,
         ];
-
-//        try {
-
-//        } catch (RestClientException $e) {
-//
-//            // Business Rule is converted to RestClientException with code 409
-//            if (isset($e->getData()['data']['sectionErrors']) && $e->getCode() == 409) {
-//
-//
-//                $errors = $e->getData()['data']['sectionErrors'];
-//                foreach ($errors as $section => $errorCount) {
-//                    if ($errorCount) {
-//                        $section = ucfirst($section);
-//                        $translatedMessage = $translator->trans("report.bankAccount.deleteWith{$section}", ['errorCount' => $errorCount], 'report-bank-accounts');
-//                        $request->getSession()->getFlashBag()->add('error', $translatedMessage);
-//                    }
-//                }
-//
-//            } else {
-//                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
-//                throw $e;
-//            }
-//        } catch (\Exception $e) {
-//            $request->getSession()->getFlashBag()->add('error', 'Account could not be deleted.');
-//        }
-
-
     }
 
     /**
