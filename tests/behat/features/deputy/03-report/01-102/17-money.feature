@@ -49,7 +49,7 @@ Feature: Report money 102
     And each text should be present in the corresponding region:
       | State Pension           | transaction-pension-received        |
       | pension received        | transaction-pension-received        |
-      | £12,345.67              | transaction-pension-received        |
+      | £12,343.67              | transaction-pension-received        |
       | State Pension           | transaction-delete-me               |
       | delete me               | transaction-delete-me               |
       | £1                      | transaction-delete-me               |
@@ -72,11 +72,11 @@ Feature: Report money 102
       | account_bankAccountId | 1                       |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
-      | account_amount      | 49                           |
+      | account_amount      | 51                           |
     And each text should be present in the corresponding region:
       | Anything else                | transaction-some-money-found-on-the-road |
       | Some money found on the road | transaction-some-money-found-on-the-road |
-      | £49.00                       | transaction-some-money-found-on-the-road |
+      | £51.00                       | transaction-some-money-found-on-the-road |
 
   @deputy
   Scenario: money out
@@ -97,7 +97,7 @@ Feature: Report money 102
       | account_amount      |  | [ERR] |
     And the step with the following values CAN be submitted:
       | account_description | january bill |
-      | account_amount      | 12345.68     |
+      | account_amount      | 12343.68     |
       # add another: yes
     And I choose "yes" when asked for adding another record
       # add transaction n.2
@@ -122,7 +122,7 @@ Feature: Report money 102
     And each text should be present in the corresponding region:
       | Broadband               | transaction-january-bill            |
       | january bill            | transaction-january-bill            |
-      | £12,345.68              | transaction-january-bill            |
+      | £12,343.68              | transaction-january-bill            |
       | Broadband               | transaction-delete-me               |
       | delete me               | transaction-delete-me               |
       | £1                      | transaction-delete-me               |
@@ -146,11 +146,11 @@ Feature: Report money 102
       | account_bankAccountId | 1                       |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
-      | account_amount      | 49                           |
+      | account_amount      | 51                           |
     And each text should be present in the corresponding region:
       | Anything else                | transaction-some-money-found-on-the-road |
       | Some money found on the road | transaction-some-money-found-on-the-road |
-      | £49.00                       | transaction-some-money-found-on-the-road |
+      | £51.00                       | transaction-some-money-found-on-the-road |
 
   @deputy
   Scenario: Add a 3rd transaction associate to the 3rd bank account

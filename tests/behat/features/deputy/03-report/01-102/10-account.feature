@@ -126,7 +126,7 @@ Feature: Report accounts
       | account_isJointAccount_1          | no           |
     And the step with the following values CAN be submitted:
       | account_openingBalance | 100 |
-      | account_closingBalance | 200 |
+      | account_closingBalance | 100 |
     And I choose "no" when asked for adding another record
     # check record in summary page
     And each text should be present in the corresponding region:
