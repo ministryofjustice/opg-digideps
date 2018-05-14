@@ -110,3 +110,24 @@ Feature: Report accounts
       | 445566                | account-02ca |
       | £101.40               | account-02ca |
       | £201.50               | account-02ca |
+
+  @deputy
+  Scenario: add a 3rd account (it'll be deleted before submission)
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "report-start, edit-bank_accounts, add"
+    And the step with the following values CAN be submitted:
+      | account_accountType_0 | current |
+    And the step with the following values CAN be submitted:
+      | account_bank                      | TEMP account |
+      | account_accountNumber             | 03ta         |
+      | account_sortCode_sort_code_part_1 | 55           |
+      | account_sortCode_sort_code_part_2 | 55           |
+      | account_sortCode_sort_code_part_3 | 55           |
+      | account_isJointAccount_1          | no           |
+    And the step with the following values CAN be submitted:
+      | account_openingBalance | 100 |
+      | account_closingBalance | 200 |
+    And I choose "no" when asked for adding another record
+    # check record in summary page
+    And each text should be present in the corresponding region:
+      | TEMP account | account-03ta |
