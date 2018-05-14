@@ -73,5 +73,5 @@ Feature: Report account transfers
     # Account still visible
     Then I should see the "account-11cf" region
     # should have 2 transactions errors 1 error for a transfer and 1 expense
-    And I should see the "error" region exactly 2 times
+    And I should see the "error" region
 
