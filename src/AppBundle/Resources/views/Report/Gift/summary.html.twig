@@ -16,17 +16,21 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <div class="text">
-        <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+            </div>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'gifts') }}
+        </div>
     </div>
-
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
 
     {# Items list #}
     {% include 'AppBundle:Report/Gift:_list.html.twig' with {
@@ -35,8 +39,9 @@
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'gifts') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'gifts',
+    } %}
 
 {% endblock %}
