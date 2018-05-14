@@ -118,7 +118,7 @@ class AccountController extends RestController
             ]
         ];
 
-        $ret['paymentsTotal'] = array_sum($ret['payments']);
+        $ret['paymentsCount'] = array_sum($ret['payments']);
 
         return $ret;
     }
