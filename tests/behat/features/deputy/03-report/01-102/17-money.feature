@@ -25,7 +25,7 @@ Feature: Report money 102
     And the "#error-summary" element should contain "10,000,000"
     And the step with the following values CAN be submitted:
       | account_description | pension received |
-      | account_amount      | 12345.67         |
+      | account_amount      | 12343.67         |
     # add another: yes
     And I choose "yes" when asked for adding another record
     # add transaction n.2
