@@ -47,7 +47,7 @@
         <div class="alert-message">
             <p>
                 You have
-                {% set count, total = 1, (dp.paymentsTotal) %}
+                {% set count, total = 1, (dp.paymentsCount) %}
                 {% for key,payment in dp.payments %}
                     {% if payment > 0 %}{{ key }}{% if count == (total-1) %} and {% elseif count < total %}, {% endif %}
                         {% set count = count + 1 %}
