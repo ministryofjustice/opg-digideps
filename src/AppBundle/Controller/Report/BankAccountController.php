@@ -216,7 +216,7 @@ class BankAccountController extends AbstractController
 
 
         // delete the bank acount if the confirm button is pushed, or there are no payments. Then go back to summary page
-        if ($request->get('confirm') || $dependentRecords['paymentsCount'] == 0) {
+        if ($request->get('confirm') || $dependentRecords['transactionsCount'] == 0) {
             if ($report->getBankAccountById($accountId)) {
                 $this->getRestClient()->delete("/account/{$accountId}");
             }
