@@ -73,6 +73,9 @@ Feature: Report accounts
       | £235.00                    | account-11cf |
     # remove account
     When I click on "delete" in the "account-temp" region
+    # ONLY FOR TEST PURPOSES
+    And die 1
+    # 500 on jenkins
     Then I should not see the "account-temp" region
     # test add link
     When I click on "add"
