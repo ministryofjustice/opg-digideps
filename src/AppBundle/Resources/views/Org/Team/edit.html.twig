@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "pa-team" %}
+{% set translationDomain = "org-team" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
@@ -16,6 +16,12 @@
 {% endblock %}
 
 {% block pageContent %}
+
+    {% if user.teamNames | length > 1 %}
+        <div class="push--bottom">
+            {{ macros.notification('info', 'editPage.moreThanOneTeamNotification' |trans) }}
+        </div>
+    {% endif %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_input(form.firstname,'form.firstname') }}

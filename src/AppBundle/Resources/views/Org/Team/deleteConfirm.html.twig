@@ -1,6 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "pa-team" %}
+{% set translationDomain = "org-team" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': user.getFullname() } %}
 
@@ -19,7 +19,13 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-    <p class="text">{{ 'removePage.question' | trans(transOptions) | raw }}</p>
+    {% set nOfteams = user.teamNames | length %}
+    {% if nOfteams >= 2 %}
+        {# @biggs custom content here #}
+        <p class="text">{{ 'removePage.questionRevoke' | trans(transOptions) | raw }}</p>
+    {% else %}
+        <p class="text">{{ 'removePage.questionRemove' | trans(transOptions) | raw }}</p>
+    {% endif %}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,

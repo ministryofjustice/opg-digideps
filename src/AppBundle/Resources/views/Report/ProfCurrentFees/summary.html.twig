@@ -19,22 +19,21 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <div class="text">
-        <p>{{ (page ~ '.pageSectionDescription') | trans }}</p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ (page ~ '.pageSectionDescription') | trans }}</p>
+            </div>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'profCurrentFees') }}
+        </div>
     </div>
-
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans({}, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans({}, 'common') }}</p>
-
-    {# Missing questions alerts #}
-    {# {% if status.visitsCareState.state != 'done' and not comingFromLastStep%}
-        {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
-    {% endif %} #}
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
 
     {# only show the initial question if it's set to "no" #}
     {#{% if report.currentProfPaymentsReceived == 'no' %}#}
@@ -256,7 +255,10 @@
     {% endif %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'profCurrentFees') }}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'profCurrentFees',
+    } %}
 
 {% endblock %}
 

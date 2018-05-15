@@ -300,7 +300,7 @@ class RestClient
         } elseif (substr($expectedResponseType, -2) == '[]') {
             return $this->arrayToEntities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
         } elseif (class_exists('AppBundle\\Entity\\' . $expectedResponseType)) {
-            return $this->arrayToEntity($expectedResponseType, $responseArray);
+            return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
         }

@@ -3,6 +3,7 @@
 namespace AppBundle\Twig;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\ReportSectionsLinkService;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ComponentsExtension extends \Twig_Extension
@@ -18,14 +19,21 @@ class ComponentsExtension extends \Twig_Extension
     private $translator;
 
     /**
-     * ComponentsExtension constructor.
-     *
-     * @param TranslatorInterface $translator
+     * @var ReportSectionsLinkService
      */
-    public function __construct(TranslatorInterface $translator)
+    private $reportSectionsLinkService;
+
+    /**
+     * ComponentsExtension constructor.
+     * @param TranslatorInterface $translator
+     * @param ReportSectionsLinkService $reportSectionsLinkService
+     */
+    public function __construct(TranslatorInterface $translator, ReportSectionsLinkService $reportSectionsLinkService)
     {
         $this->translator = $translator;
+        $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
+
 
     public function initRuntime(\Twig_Environment $environment)
     {
@@ -38,6 +46,10 @@ class ComponentsExtension extends \Twig_Extension
         return [
             'progress_bar_registration' => new \Twig_Function_Method($this, 'progressBarRegistration'),
             'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
+            'section_link_params' => new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
+                return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
+            }),
+
         ];
     }
 

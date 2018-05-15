@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/pa")
+ * @Route("/org")
  */
 class IndexController extends AbstractController
 {

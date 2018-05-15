@@ -38,3 +38,7 @@ services:
       class: AppBundle\Service\CsvGeneratorService
       arguments: [ "@translator", "@logger" ]
 
+    report_section_link_service:
+      class: AppBundle\Service\ReportSectionsLinkService
+      arguments: [ "@router" ]
+
