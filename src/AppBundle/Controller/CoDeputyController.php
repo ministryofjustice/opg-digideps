@@ -55,7 +55,7 @@ class CoDeputyController extends RestController
             $newUser->addClient($client);
         }
 
-        $userService = $this->get('opg_digideps.user_service');
+        $userService = $this->get('user_service');
 
         $userService->addUser($loggedInUser, $newUser, $data);
 
@@ -83,8 +83,8 @@ class CoDeputyController extends RestController
         if (!empty($data['email'])) {
             $originalUser = clone $user;
             $user->setEmail($data['email']);
-            $userService = $this->get('opg_digideps.user_service');
-            $userService->editUser($originalUser, $user);
+            $userService = $this->get('user_service');
+            $userService->editUser($this->getUser(), $originalUser, $user);
         }
 
         return [];

@@ -20,7 +20,7 @@ class Team
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"team"})
+     * @JMS\Groups({"team", "team-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -78,7 +78,7 @@ class Team
     }
 
     /**
-     * @return mixed
+     * @return User[]
      */
     public function getMembers()
     {

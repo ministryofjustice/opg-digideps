@@ -20,14 +20,9 @@ class TeamController extends RestController
      */
     public function getMembers(Request $request)
     {
-        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
-        $team = $this->getUser()->getTeams()->first(); /* @var $team EntityDir\Team */
-        if (!$team) {
-            return [];
-        }
-
-        return $team->getMembers();
+        return $this->getUser()->getMembersInAllTeams();
     }
 
     /**
@@ -37,37 +32,60 @@ class TeamController extends RestController
      */
     public function getMemberById(Request $request, $id)
     {
-        $user = $this->getRepository(EntityDir\User::class)->find($id);
-        if ($user->getTeams()->first() !== $this->getUser()->getTeams()->first()) {
-            throw $this->createAccessDeniedException('User not part of the same team');
-        }
+        $this->setJmsSerialiserGroups(['team', 'team-users', 'user', 'team-names']);
 
-        $this->setJmsSerialiserGroups(['team', 'team-users', 'user']);
-
-
-        return $user;
+        return $this->orgService()
+            ->getMemberById($this->getUser(), $id);
     }
 
+
     /**
-     * Delete PA team member user.
+     * Add the user (retrieved by Id) to the teams the current user belongs to
      *
-     * @Route("/delete-user/{id}")
+     * @Route("/add-to-team/{userId}")
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_ORG')")
+     */
+    public function addToTeam(Request $request, $userId)
+    {
+        $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
+        /* @var $user EntityDir\User */
+
+        $this->orgService()->copyTeamAndClientsFrom($this->getUser(), $user);
+
+        $this->getEntityManager()->flush();
+
+        return ['id' => $user->getId()];
+    }
+
+
+    /**
+     * Delete Org team membership, and also the user if belonging to no teams
+     *
+     * @Route("/delete-membership/{userId}")
      * @Method({"DELETE"})
      * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      *
      * @param Request $request
-     * @param int     $id
+     * @param int     $userId
      *
      * @return array
      */
-    public function deletePaTeamUser(Request $request, $id)
+    public function deleteOrgTeamUser(Request $request, $userId)
     {
         /* @var $user EntityDir\User */
-        $user = $this->getMemberById($request, $id);
-
-        $this->getEntityManager()->remove($user);
-        $this->getEntityManager()->flush();
+        $user = $this->orgService()->getMemberById($this->getUser(), $userId);
+        $this->orgService()->removeUserFromTeamsOf($this->getUser(), $user);
 
         return [];
     }
+
+    /**
+     * @return \AppBundle\Service\OrgService
+     */
+    private function orgService()
+    {
+        return $this->get('org_service');
+    }
+
 }

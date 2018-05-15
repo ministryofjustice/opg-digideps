@@ -74,17 +74,14 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['food', false, 'household-bills', 'out'],
         ['gas', false, 'household-bills', 'out'],
         ['insurance-eg-life-home-contents', false, 'household-bills', 'out'],
-        ['other-insurance', false, 'household-bills', 'out'],
         ['property-maintenance-improvement', true, 'household-bills', 'out'],
         ['telephone', false, 'household-bills', 'out'],
         ['tv-services', false, 'household-bills', 'out'],
         ['water', false, 'household-bills', 'out'],
-        ['households-bills-other', true, 'household-bills', 'out'],
 
         ['accommodation-service-charge', false, 'accommodation', 'out'],
         ['mortgage', false, 'accommodation', 'out'],
         ['rent', false, 'accommodation', 'out'],
-        ['accommodation-other', true, 'accommodation', 'out'],
 
         ['client-transport-bus-train-taxi-fares', false, 'client-expenses', 'out'],
         ['clothes', false, 'client-expenses', 'out'],
@@ -96,7 +93,6 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['deputy-security-bond', false, 'fees', 'out'],
         ['opg-fees', false, 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, 'fees', 'out'],
-        ['other-fees', true, 'fees', 'out'],
 
         ['investment-bonds-purchased', true, 'major-purchases', 'out'],
         ['investment-account-purchased', true, 'major-purchases', 'out'],
@@ -108,7 +104,6 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['loans', false, 'debt-and-charges', 'out'],
         ['tax-payments-to-hmrc', false, 'debt-and-charges', 'out'],
         ['unpaid-care-fees', false, 'debt-and-charges', 'out'],
-        ['debt-and-charges-other', true, 'debt-and-charges', 'out'],
 
         ['cash-withdrawn', true, 'moving-money', 'out'],
 
@@ -168,6 +163,16 @@ class MoneyTransaction implements MoneyTransactionInterface
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * Used to serve migrations and recover data in case of errors
+     * Remove when DDPB-1852 is fully released
+     * @var string
+     *
+     *
+     * @ORM\Column(name="meta", type="text", nullable=true)
+     */
+    private $meta;
 
     /**
      * MoneyTransaction constructor.

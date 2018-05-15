@@ -3,10 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Traits\AddressTrait;
-use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,11 +13,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Table(name="dd_user", indexes={@ORM\Index(name="deputy_no_idx", columns={"deputy_no"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\UserRepository")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class User implements UserInterface
 {
-    use IsSoftDeleteableEntity;
     use AddressTrait;
 
     const TOKEN_EXPIRE_HOURS = 48;
@@ -46,13 +42,14 @@ class User implements UserInterface
 
     public static $depTypeIdToUserRole = [
         21 => self::ROLE_PROF_NAMED,
+        63 => self::ROLE_PROF_NAMED,
         23 => self::ROLE_PA_NAMED,
     ];
 
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-id"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -70,7 +67,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
-     * @JMS\Groups({"team"})
+     * @JMS\Groups({"user-teams"})
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EAGER")
      *
      * @var ArrayCollection
@@ -544,11 +541,48 @@ class User implements UserInterface
     }
 
     /**
-     * @return mixed
+     * @return Team[]
      */
     public function getTeams()
     {
         return $this->teams;
+    }
+
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("team_names")
+     * @JMS\Groups({"team-names"})
+     *
+     * @return mixed
+     */
+    public function getTeamNames()
+    {
+        $ret = [];
+        foreach($this->getTeams() as $team) {
+            $ret[$team->getId()] = $team->getTeamName();
+        }
+
+        asort($ret);
+
+        return $ret;
+    }
+
+    /**
+     * Get users in all the teams the user belongs to
+     *
+     * @return User[] array indexed by user id
+     */
+    public function getMembersInAllTeams()
+    {
+        $ret = [];
+        foreach($this->getTeams() as $team) { /* @var $team Team */
+            foreach($team->getMembers() as $member) {
+                $ret[$member->getId()] = $member;
+            }
+        }
+
+        return $ret;
     }
 
     /**
@@ -874,9 +908,9 @@ class User implements UserInterface
      * Return Id of the client (if it has details)
      *
      * @JMS\VirtualProperty
+     * @JMS\SerializedName("id_of_client_with_details")
      * @JMS\Groups({"user"})
      * @JMS\Type("integer")
-     * @JMS\SerializedName("id_of_client_with_details")
      */
     public function getIdOfClientWithDetails()
     {
@@ -1083,13 +1117,13 @@ class User implements UserInterface
     }
 
     /**
-     * Is user a PA named or a Prof named ?
+     * Is Organisation Named deputy?
      *
      * @return bool
      */
-    public function hasRoleOrgNamed()
+    public function isOrgNamedDeputy()
     {
-        return in_array($this->getRoleName(), [User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED]);
+        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
     }
 
     /**
@@ -1150,15 +1184,6 @@ class User implements UserInterface
         return $this->isPaAdministrator() || $this->isProfAdministrator();
     }
 
-    /**
-     * Is Organisation Named deputy?
-     *
-     * @return bool
-     */
-    public function isOrgNamedDeputy()
-    {
-        return $this->isPaNamedDeputy() || $this->isProfNamedDeputy();
-    }
 
     /**
      * Is PA Team member?
@@ -1181,13 +1206,21 @@ class User implements UserInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isOrgNamedOrAdmin()
+    {
+        return $this->isOrgNamedDeputy() || $this->isOrgAdministrator();
+    }
+
+    /**
      * Is user an organisation Team Member?
      *
      * @return bool
      */
     public function isOrgTeamMember()
     {
-        return $this->isProfTeamMember() || $this->isPaTeamMember();
+        return $this->isPaTeamMember() || $this->isProfTeamMember();
     }
 
     /**
@@ -1226,29 +1259,16 @@ class User implements UserInterface
     }
 
     /**
-     * Ensures a PA User has a role, if not default to TEAM MEMBER
+     * Set role to team member
      */
-    public function ensureRoleNameSet()
+    public function setDefaultRoleIfEmpty()
     {
-        if ($this->isPaDeputy()) {
-            if (!in_array($this->getRoleName(), [self::ROLE_PA_ADMIN, self::ROLE_PA_TEAM_MEMBER])) {
-                $this->setRoleName(self::ROLE_PA_TEAM_MEMBER);
+        if (empty($this->getRoleName())) {
+            if ($this->isProfDeputy()) {
+                $this->setRoleName(User::ROLE_PROF_TEAM_MEMBER);
+            } elseif ($this->isPaDeputy()) {
+                $this->setRoleName(User::ROLE_PA_TEAM_MEMBER);
             }
-        }
-        if ($this->isProfDeputy()) {
-            if (!in_array($this->getRoleName(), [self::ROLE_PROF_ADMIN, self::ROLE_PROF_TEAM_MEMBER])) {
-                $this->setRoleName(self::ROLE_PROF_TEAM_MEMBER);
-            }
-        }
-    }
-
-    public function generateOrgTeam(User $creator, $data)
-    {
-        if ($creator->hasRoleOrgNamed() &&
-            !empty($data['pa_team_name']) &&
-            $this->getTeams()->isEmpty()
-        ) {
-            $this->getTeams()->first()->setTeamName($data['pa_team_name']);
         }
     }
 }

@@ -38,7 +38,7 @@ class OrgController extends RestController
             throw new \RuntimeException("Max $maxRecords records allowed in a single bulk insert");
         }
 
-        $pa = new OrgService($this->get('em'), $this->get('logger'));
+        $pa = $this->get('org_service');
 
         try {
             $ret = $pa->addFromCasrecRows($data);
