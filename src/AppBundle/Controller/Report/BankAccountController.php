@@ -205,6 +205,7 @@ class BankAccountController extends AbstractController
         $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
 
         $dependentRecords = $this->getRestClient()->get("/account/{$accountId}/dependent-records", 'array');
+        $bankAccount = $report->getBankAccountById($accountId);
 
         // if money transfer are added, always go to summary page with the error displayed
         if ($dependentRecords['moneyTransfers'] > 0) {
@@ -233,7 +234,9 @@ class BankAccountController extends AbstractController
         return [
             'report' => $report,
             'accountId' => $accountId,
+            'account' => $bankAccount,
             'dp' => $dependentRecords,
+            'backLink' => $summaryPageUrl
         ];
     }
 
