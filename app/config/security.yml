@@ -33,7 +33,7 @@ services:
 security:
     role_hierarchy:
         ROLE_AD: [ ROLE_AD ]
-        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY ]
+        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY, ROLE_CASE_MANAGER ]
 
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY
         ROLE_ORG:             ROLE_DEPUTY
