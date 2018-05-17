@@ -83,9 +83,9 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($id, ['report-checklist']);
 
-//        if (!$report->getSubmitted()) {
-//            throw new DisplayableException('Cannot manage active report');
-//        }
+        // if (!$report->getSubmitted()) {
+        //     throw new DisplayableException('Cannot manage active report');
+        // }
 
         $checklist = $report->getChecklist();
         $checklist = empty($checlist) ? new Checklist($report) : $checklist;
