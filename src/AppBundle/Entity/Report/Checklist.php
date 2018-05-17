@@ -2,32 +2,32 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Report\Report;
 
 /**
  * Checklist.
  *
- * @ORM\Entity
  */
 class Checklist
 {
+    use HasReportTrait;
+
     /**
      * @var int
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("integer")
      */
     private $id;
 
-    /**
-     * @var Report
-     */
-    private $report;
 
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $reportingPeriodAccurate;
@@ -35,6 +35,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $contactDetailsUptoDate;
@@ -42,6 +43,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $deputyFullNameAccurateinCasrec;
@@ -49,6 +51,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $decisionsSatisfactory;
@@ -56,6 +59,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $consultationsSatisfactory;
@@ -63,6 +67,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $careArrangements;
@@ -70,6 +75,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $assetsDeclaredAndManaged;
@@ -77,6 +83,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $debtsManaged;
@@ -84,6 +91,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $openClosingBalancesMatch;
@@ -91,6 +99,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $accountsBalance;
@@ -98,6 +107,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $moneyMovementsAcceptable;
@@ -105,6 +115,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $bondAdequate;
@@ -112,6 +123,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $bondOrderMatchCasrec;
@@ -119,6 +131,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $futureSignificantFinancialDecisions;
@@ -126,6 +139,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $hasDeputyRaisedConcerns;
@@ -133,6 +147,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $caseWorkerSatisified;
@@ -140,6 +155,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $decision;
@@ -147,6 +163,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $caseManagerName;
@@ -154,6 +171,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $lodgingSummary;
@@ -161,6 +179,7 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $finalDecision;
@@ -168,9 +187,22 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      */
     private $furtherInformationReceived;
+
+    public function __construct(ReportInterface $report, $data = [])
+    {
+        $this->setReport($report);
+
+        foreach ($data as $k => $v) {
+            if (property_exists($this, $k)) {
+                $setter = 'set' . ucFirst($k);
+                $this->$setter($v);
+            }
+        }
+    }
 
     /**
      * @return int
@@ -187,24 +219,6 @@ class Checklist
     public function setId($id)
     {
         $this->id = $id;
-        return $this;
-    }
-
-    /**
-     * @return Report
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     * @return $this
-     */
-    public function setReport($report)
-    {
-        $this->report = $report;
         return $this;
     }
 
