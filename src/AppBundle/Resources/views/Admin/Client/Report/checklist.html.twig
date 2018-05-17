@@ -32,28 +32,40 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.info') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-            'fieldSetClass' : 'inline'
+            'fieldSetClass': 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
-        {{ form_checkbox_group(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
-            'fieldSetClass' : 'inline'
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
+        {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
+            'labelClass': 'text'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
-        {{ form_checkbox_group(form.deputyFullNameAccurateinCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
-            'fieldSetClass' : 'inline'
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
+        {{ form_checkbox(form.deputyFullNameAccurateinCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
+            'labelClass': 'text'
         }) }}
     </div>
 
 
     <h3 class="heading-medium">{{ (page ~ '.heading.decisions') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -62,7 +74,10 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.contacts') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.consultationsSatisfactory, (page ~ '.form.consultationsSatisfactory'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -71,7 +86,10 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.careArrangements, (page ~ '.form.careArrangements'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -80,13 +98,19 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
             'fieldSetClass' : 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -95,19 +119,28 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.money') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
             'fieldSetClass' : 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
             'fieldSetClass' : 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -116,13 +149,19 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.bonds') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
             'fieldSetClass' : 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -131,13 +170,19 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (page ~ '.form.futureSignificantFinancialDecisions'), {
             'fieldSetClass' : 'inline'
         }) }}
     </div>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -146,7 +191,10 @@
 
     <h3 class="heading-medium">{{ (page ~ '.heading.declaration') | trans }}</h3>
 
-    <div class="form-section push--bottom">
+    <div class="form-section form-section--meta last">
+        <div class="form-group-meta">
+            <p>Manual check required</p>
+        </div>
         {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
             'fieldSetClass' : 'inline'
         }) }}
@@ -155,7 +203,7 @@
 
     <h3 class="heading-medium">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
 
-    <ul class="list list-bullet">
+    <ul class="list list-bullet text">
         <li>{{ (page ~ '.lodgingSummary.listItem1') | trans }}</li>
         <li>{{ (page ~ '.lodgingSummary.listItem2') | trans }}</li>
         <li>{{ (page ~ '.lodgingSummary.listItem3') | trans }}</li>
@@ -171,6 +219,38 @@
     <div class="form-section push--bottom">
         {{ form_input(form.lodgingSummary, 'checklistPage.form.lodgingSummary') }}
     </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
+
+    <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
+
+    <table class="push--bottom">
+        <thead>
+            <tr>
+                <th>Information provided</th>
+                <th>Saved by</th>
+                <th class="numeric">Date saved</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
+                <td>Samantha Hodgson, Lay Deputy Team</td>
+                <td class="numeric no-wrap align--top">10 May 2018</td>
+            </tr>
+            <tr>
+                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
+                <td>Samantha Hodgson, Lay Deputy Team</td>
+                <td class="numeric no-wrap align--top">10 May 2018</td>
+            </tr>
+            <tr>
+                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
+                <td>Samantha Hodgson, Lay Deputy Team</td>
+                <td class="numeric no-wrap align--top">10 May 2018</td>
+            </tr>
+        </tbody>
+    </table>
 
     <div class="form-section push--bottom">
         {{ form_input(form.furtherInformationReceived, 'checklistPage.form.furtherInformationReceived', {
