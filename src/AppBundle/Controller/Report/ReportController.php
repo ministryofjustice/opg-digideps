@@ -468,11 +468,14 @@ class ReportController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
-var_dump($checklistData);exit;
+
         $this->validateArray($checklistData, [
-            'report_id' => 'notEmpty',
+            'report' => 'notEmpty',
         ]);
 
+        $checklist = new EntityDir\Report\Checklist($report, $checklistData);
+
+        \Doctrine\Common\Util\Debug::dump($checklist);exit;
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
         $report->setChecklist($checklist);
 

@@ -387,6 +387,7 @@ class Report implements ReportInterface
     /**
      * @var Checklist
      *
+     * @JMS\Groups({"report-checklist"})
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist")
      * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE")
      */

@@ -2,18 +2,21 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\HasReportTrait;
+use AppBundle\Entity\ReportInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Report\Report;
 
 /**
  * Checklist.
  *
  * @ORM\Table(name="checklist")
- * @ORM\Entity
+ * @ORM\Entity()
  */
 class Checklist
 {
+    use HasReportTrait;
+
     /**
      * @var int
      *
@@ -214,6 +217,18 @@ class Checklist
      * @ORM\Column(name="furtherInformationReceived", type="text", nullable=false)
      */
     private $furtherInformationReceived;
+
+    public function __construct(ReportInterface $report, $data = [])
+    {
+        $this->setReport($report);
+
+        foreach ($data as $k => $v) {
+            if (property_exists($this, $k)) {
+                $setter = 'set' . ucFirst($k);
+                $this->$setter($v);
+            }
+        }
+    }
 
     /**
      * @return int
