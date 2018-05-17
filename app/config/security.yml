@@ -101,9 +101,9 @@ security:
 
     access_control:
         # /admin accessible only from ADMIN, super users and AD users
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
         # client settings not available to PA users
-        - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD] }
+        - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
         - { path: ^/user-account/, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
         - { path: ^/ad, roles: [ROLE_AD] }
         - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }

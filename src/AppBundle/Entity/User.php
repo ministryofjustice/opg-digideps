@@ -18,6 +18,7 @@ class User implements AdvancedUserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
+    const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
 
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';

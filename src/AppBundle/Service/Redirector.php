@@ -94,6 +94,8 @@ class Redirector
 
         if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
+        } if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+            return $this->router->generate('admin_client_search');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
@@ -210,9 +212,11 @@ class Redirector
     {
         if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)
-            ) {
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
+            }
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+                return $this->router->generate('admin_client_search');
             }
             if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');

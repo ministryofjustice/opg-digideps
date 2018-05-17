@@ -38,14 +38,23 @@
             <ul id="proposition-links" class="behat-region-navbar">
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{{ 'nav.adminArea' | trans }}</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_CASE_MANAGER') %}
                     <li><a href="{{ path('admin_client_search') }}"  class="behat-link-admin-client-search">{{ 'nav.adminClients' | trans }}</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{{ 'nav.adminUploadLay' | trans }}</a></li>
                     <li><a href="{{ path('admin_org_upload') }}" class="behat-link-admin-upload-pa">{{ 'nav.adminUploadPAProf' | trans }}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{{ 'nav.adminStats' | trans }}</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_CASE_MANAGER') %}
                     <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{{ 'nav.adminDocuments' | trans }}</a></li>
                     <li><a href="{{ path('admin_setting_service_notifications') }}"  class="behat-link-admin-settings">{{ 'nav.serviceNotification' | trans }}</a></li>
                 {% endif %}
+
 
                 {% if is_granted('ROLE_AD') %}
                     <li><a href="{{ path('ad_homepage') }}">{% trans %}nav.adArea{% endtrans %}</a></li>

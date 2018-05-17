@@ -158,17 +158,21 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
-            return $this->redirect($this->generateUrl([
-                EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
-                EntityDir\User::ROLE_AD             => 'ad_homepage',
-                EntityDir\User::ROLE_PA_NAMED       => 'org_dashboard',
-                EntityDir\User::ROLE_PA_ADMIN       => 'org_dashboard',
-                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_NAMED       => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_ADMIN       => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'org_dashboard',
-                EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
-            ][$user->getRoleName()]));
+            return $this->redirect($this->get('redirector_service')->getHomepageRedirect());
+
+//
+//            return $this->redirect($this->generateUrl([
+//                EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
+//                EntityDir\User::ROLE_CASE_MANAGER   => 'admin_homepage',
+//                EntityDir\User::ROLE_AD             => 'ad_homepage',
+//                EntityDir\User::ROLE_PA_NAMED       => 'org_dashboard',
+//                EntityDir\User::ROLE_PA_ADMIN       => 'org_dashboard',
+//                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'org_dashboard',
+//                EntityDir\User::ROLE_PROF_NAMED       => 'org_dashboard',
+//                EntityDir\User::ROLE_PROF_ADMIN       => 'org_dashboard',
+//                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'org_dashboard',
+//                EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
+//            ][$user->getRoleName()]));
         }
 
         return [
@@ -335,6 +339,7 @@ class UserController extends AbstractController
         switch ($user->getRoleName()) {
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
+            case EntityDir\User::ROLE_CASE_MANAGER:
                 return [new FormDir\User\UserDetailsBasicType($user), ['user_details_basic']];
 
             case EntityDir\User::ROLE_LAY_DEPUTY:
