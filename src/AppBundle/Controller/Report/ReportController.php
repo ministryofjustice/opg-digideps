@@ -469,17 +469,32 @@ class ReportController extends RestController
 
         $checklistData = $this->deserializeBodyContent($request);
 
-        $this->validateArray($checklistData, [
-            'report' => 'notEmpty',
+        $checklist = new EntityDir\Report\Checklist($report);
+        $this->hydrateEntityWithArrayData($checklist, $checklistData, [
+            'reporting_period_accurate' => 'setReportingPeriodAccurate',
+            'contact_details_upto_date' => 'setContactDetailsUptoDate',
+            'deputy_full_name_accuratein_casrec' => 'setDeputyFullNameAccurateinCasrec',
+            'decisions_satisfactory' => 'setDecisionsSatisfactory',
+            'consultations_satisfactory' => 'setConsultationsSatisfactory',
+            'care_arrangements' => 'setCareArrangements',
+            'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
+            'debts_managed' => 'setDebtsManaged',
+            'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
+            'accounts_balance' => 'setAccountsBalance',
+            'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
+            'bond_adequate' => 'setBondAdequate',
+            'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
+            'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
+            'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
+            'case_worker_satisified' => 'setCaseWorkerSatisified',
+            'decision' => 'setDecision',
+            'case_manager_name' => 'setCaseManagerName',
+            'lodging_summary' => 'setLodgingSummary',
+            'final_decision' => 'setFinalDecision',
+            'further_information_received' => 'setFurtherInformationReceived'
         ]);
 
-        $checklist = new EntityDir\Report\Checklist($report, $checklistData);
-
-        \Doctrine\Common\Util\Debug::dump($checklist);exit;
-        // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
-        $report->setChecklist($checklist);
-
-        $this->persistAndFlush($report);
+        $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];
     }

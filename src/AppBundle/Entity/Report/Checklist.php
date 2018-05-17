@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -15,8 +14,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Checklist
 {
-    use HasReportTrait;
-
     /**
      * @var int
      *
@@ -28,6 +25,14 @@ class Checklist
      * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
+
+    /**
+     * @JMS\Type("AppBundle\Entity\Report\Report")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
+     * @JMS\Groups({"checklist-report"})
+     */
+    private $report;
 
     /**
      * @var string
@@ -218,16 +223,10 @@ class Checklist
      */
     private $furtherInformationReceived;
 
-    public function __construct(ReportInterface $report, $data = [])
+    public function __construct(ReportInterface $report)
     {
         $this->setReport($report);
 
-        foreach ($data as $k => $v) {
-            if (property_exists($this, $k)) {
-                $setter = 'set' . ucFirst($k);
-                $this->$setter($v);
-            }
-        }
     }
 
     /**
@@ -245,6 +244,25 @@ class Checklist
     public function setId($id)
     {
         $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return ReportInterface
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param ReportInterface $report
+     * @return $this
+     */
+    public function setReport(ReportInterface $report)
+    {
+        $this->report = $report;
+
         return $this;
     }
 
