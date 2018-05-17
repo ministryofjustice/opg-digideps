@@ -133,10 +133,10 @@ class ReportChecklistType extends AbstractType
             ->add('finalDecision', 'choice', [
                 'label' => 'Final Decision?',
                 'choices' => [
-                    'for-review' => 'I am referring the case for a Staff Review/Gifting Review.',
+                    'for-review' => 'I am referring the case for a staff review or gifting review',
                     'incomplete' => 'The report is incomplete',
-                    'further-casework-required' => 'I have lodged and acknowledged the report but issues require further case work.',
-                    'satisfied' => 'I am satisfied with the deputy’s report, no further action is required and I have sent an acknowledgment to the deputy(s).'
+                    'further-casework-required' => 'I have lodged and acknowledged the report but issues require further case work',
+                    'satisfied' => 'I am satisfied with the deputy’s report, no further action is required and I have sent an acknowledgment to the deputy(s)'
                 ],
                 'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
