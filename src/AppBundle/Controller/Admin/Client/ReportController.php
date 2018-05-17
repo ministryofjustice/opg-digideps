@@ -82,11 +82,10 @@ class ReportController extends AbstractController
     public function checklistAction(Request $request, $id)
     {
         $report = $this->getReport($id, ['report-checklist']);
-        \Doctrine\Common\Util\Debug::dump($report->getChecklist(), 2);
 
-        if (!$report->getSubmitted()) {
-            throw new DisplayableException('Cannot manage active report');
-        }
+//        if (!$report->getSubmitted()) {
+//            throw new DisplayableException('Cannot manage active report');
+//        }
 
         $checklist = $report->getChecklist();
         $checklist = empty($checlist) ? new Checklist($report) : $checklist;
@@ -95,7 +94,6 @@ class ReportController extends AbstractController
 
         // edit client form
         if ($form->isValid()) {
-            //$report->setLastCheckedDate(new \DateTime());
 
             $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
                 'report-checklist'

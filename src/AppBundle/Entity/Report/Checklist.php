@@ -3,9 +3,9 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Report\Traits\HasReportTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Report\Traits\HasReportTrait;
 
 /**
  * Checklist.
