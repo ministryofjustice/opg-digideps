@@ -16,21 +16,21 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <p class="text">
-         {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
-    </p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
 
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Return to overview link #}
-    <p class="text--right flush--bottom">
-        <a href="{{ path('ndr_overview', {'ndrId': ndr.id}) }}" class="bold-small">
-            {{ 'returnToReport' | trans(transOptions, 'common') }}
-        </a>
-    </p>
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(ndr, 'debts') }}
+        </div>
+    </div>
 
     {# Questions and answers table #}
     <table class="check-your-answers columns-2 push-double--bottom">
@@ -134,8 +134,9 @@
     {% endif %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(ndr, 'debts') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'debts',
+    } %}
 
 {% endblock %}

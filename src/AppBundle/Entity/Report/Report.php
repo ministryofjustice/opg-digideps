@@ -346,6 +346,15 @@ class Report implements ReportInterface
     }
 
     /**
+     * @return boolean
+     */
+    public function isLayReport()
+    {
+        return strpos($this->type, '-6') === false && strpos($this->type, '-5') === false;
+    }
+
+
+    /**
      * @param  string $type
      * @return $this
      */

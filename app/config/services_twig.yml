@@ -2,14 +2,14 @@ services:
     twig.form_fields_extension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
-        arguments: [ @translator ]
+        arguments: [ "@translator" ]
         tags:
             - { name: twig.extension }
 
     twig.components_extension:
         class: AppBundle\Twig\ComponentsExtension
         public: false
-        arguments: [  "@translator" ]
+        arguments: [  "@translator", "@report_section_link_service" ]
         tags:
             - { name: twig.extension }
 

@@ -16,22 +16,26 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <div class="text">
-        <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ 'summaryPage.pageSectionDescription' | trans(transOptions) }}</p>
+            </div>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if report.status.paFeesExpensesState.state != 'done' %}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'paFeeExpense') }}
+        </div>
     </div>
-
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Missing questions alerts #}
-    {% if report.status.paFeesExpensesState.state != 'done' %}
-        {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
-    {% endif %}
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
 
     {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
     'report': report,
@@ -49,8 +53,9 @@
     } %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'paFeeExpense') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'paFeeExpense',
+    } %}
 
 {% endblock %}

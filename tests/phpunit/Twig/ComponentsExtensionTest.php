@@ -10,7 +10,8 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->object = new \AppBundle\Twig\ComponentsExtension($this->translator);
+        $this->reportSectionsLinkService = m::mock('AppBundle\Service\ReportSectionsLinkService');
+        $this->object = new \AppBundle\Twig\ComponentsExtension($this->translator, $this->reportSectionsLinkService);
     }
 
     public static function accordionLinksProvider()

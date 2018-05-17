@@ -21,37 +21,42 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <div class="text">
-        <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-    </div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+            </div>
 
-    {# More details (from the start page) #}
-    <details class="push--bottom">
-        <summary>
-            <span class="summary">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
-        </summary>
-        <div class="panel panel-border-narrow text">
-            <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
-            <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
-            <h2 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h2>
-            <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+            {# More details (from the start page) #}
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
+                </summary>
+                <div class="panel panel-border-narrow text">
+                    <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+                    <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+                    <h2 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h2>
+                    <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+                </div>
+            </details>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
-    </details>
-
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'moneyIn') }}
+        </div>
+    </div>
 
     {# Items list #}
     {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'moneyIn') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyIn',
+    } %}
 
 {% endblock %}

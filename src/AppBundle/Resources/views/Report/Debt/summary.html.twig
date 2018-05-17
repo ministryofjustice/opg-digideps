@@ -16,17 +16,21 @@
 
 {% block pageContent %}
 
-    {# Introduction text #}
-    <p class="text">
-         {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
-    </p>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
 
-    {# Check answers text #}
-    <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-    <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
-
-    {# Return to overview/client profile link #}
-    {{ macros.returnToOverview(report) }}
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'debts') }}
+        </div>
+    </div>
 
     {# Questions and answers table #}
     <table class="check-your-answers columns-2 push-double--bottom">
@@ -140,8 +144,9 @@
     {% endif %}
 
     {# Pagination #}
-    {{ macros.reportSectionPrevNext(report, 'debts') }}
-
-
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'debts',
+    } %}
 
 {% endblock %}

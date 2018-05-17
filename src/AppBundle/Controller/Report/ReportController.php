@@ -288,7 +288,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
