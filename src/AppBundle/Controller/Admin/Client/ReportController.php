@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
@@ -80,13 +81,15 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport($id, []);
+        $report = $this->getReport($id, ['report-checklist']);
+        \Doctrine\Common\Util\Debug::dump($report->getChecklist(), 2);
 
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
         }
 
         $checklist = $report->getChecklist();
+        $checklist = empty($checlist) ? new Checklist($report) : $checklist;
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
 
