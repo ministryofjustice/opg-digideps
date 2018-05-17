@@ -19,16 +19,12 @@ class ReportChecklistType extends AbstractType
                 'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
             ])
-            ->add('contactDetailsUptoDate', 'choice', [
+            ->add('contactDetailsUptoDate', 'checkbox', [
                 'label' => 'Are all contact details correct and up to date? (and updated on CASREC in full, where applicable)',
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
             ])
-            ->add('deputyFullNameAccurateinCasrec', 'choice', [
+            ->add('deputyFullNameAccurateinCasrec', 'checkbox', [
                 'label' => 'Are the deputies full name(s) on CASREC accurate? ',
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
             ])
 
@@ -126,15 +122,6 @@ class ReportChecklistType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
                 'expanded' => true,
                 'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
-            ])
-
-            // Decision
-            ->add('decision', 'textarea', [
-                'label' => 'Decision (document the decision of the Band D):'
-            ])
-            ->add('caseManagerName', 'text', [
-                'label' => 'Band D case manager (name):'
-
             ])
 
             // Lodging summary
