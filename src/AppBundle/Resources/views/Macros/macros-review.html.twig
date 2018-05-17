@@ -25,7 +25,7 @@
 
             <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
             <dd class="value address-value">
-                {% if deputy.isDeputyOrg %}
+                {% if deputy.isDeputyOrg and paTeam %}
                     {{ paTeam.address1 }}<br/>
                     {{ paTeam.address2 }}<br/>
                     {{ paTeam.address3 }}<br/>

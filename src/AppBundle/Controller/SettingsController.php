@@ -14,7 +14,7 @@ class SettingsController extends AbstractController
 {
     /**
      * @Route("/deputyship-details", name="account_settings")
-     * @Route("/pa/settings", name="org_settings")
+     * @Route("/org/settings", name="org_settings")
      * @Template()
      **/
     public function indexAction()
@@ -34,7 +34,7 @@ class SettingsController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
-     * @Route("/pa/settings/your-details/change-password", name="org_profile_password_edit")
+     * @Route("/org/settings/your-details/change-password", name="org_profile_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
@@ -73,7 +73,7 @@ class SettingsController extends AbstractController
      * - display the Your details page
      *
      * @Route("/deputyship-details/your-details", name="user_show")
-     * @Route("/pa/settings/your-details", name="org_profile_show")
+     * @Route("/org/settings/your-details", name="org_profile_show")
      * @Template()
      **/
     public function profileAction()
@@ -87,7 +87,7 @@ class SettingsController extends AbstractController
      * Change your own detials
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
-     * @Route("/pa/settings/your-details/edit", name="org_profile_edit")
+     * @Route("/org/settings/your-details/edit", name="org_profile_edit")
      * @Template()
      * @throw AccessDeniedException
      **/

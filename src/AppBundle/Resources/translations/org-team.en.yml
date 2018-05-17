@@ -1,3 +1,4 @@
+# //TODO rename to org-team and replace occurences in TWIG files using regexpr search
 listPage:
   htmlTitle: Deputy report - user accounts | GOV.UK
   pageTitle: User accounts
@@ -19,12 +20,17 @@ editPage:
   htmlTitle: Deputy report - edit user account | GOV.UK
   pageTitle: Edit user account
   supportTitle: User account
+  moreThanOneTeamNotification: This user is also a team member on other deputyships. Any changes you make will update their account across all deputyship teams.
 
 removePage:
   htmlTitle: Deputy report - remove user account | GOV.UK
   pageTitle: Remove user account
   supportTitle: User account
-  question: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
+  questionRemove: Are you sure you want to remove <strong class="bold">%client%</strong> from the Deputy Report Service?
+  questionRevoke: |
+    This will delete the user from this team only.
+    They’ll still be a member of any other deputy teams they’ve been added to.
+    Are you sure you want to remove <strong class="bold">%client%</strong> from the team ?
   confirmButton: Yes, remove user
 
 view:

@@ -16,14 +16,14 @@ Feature: PROF dashboard
     When I click on "tab-ready"
     Then I should not see the "client" region
     # check navigation links
-    When I click on "pa-dashboard" in the navbar region
-    Then I should be on "/pa/"
+    When I click on "org-dashboard" in the navbar region
+    Then I should be on "/org/"
 
   Scenario: PROF links in header
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     #PROF links
-    Then I should see the "pa-dashboard" link
-    And I should see the "pa-settings" link
+    Then I should see the "org-dashboard" link
+    And I should see the "org-settings" link
     And I should see the "logout" link
     #Lay deputy links
     And I should not see the "user-account" link

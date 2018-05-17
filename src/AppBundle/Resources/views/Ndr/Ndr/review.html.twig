@@ -39,12 +39,16 @@
                 <a class="button" href="{{ path("ndr_overview" , {'ndrId': ndr.id }) }}">
                     {{ 'incomplete.backToEditingReport' | trans() }}
                 </a>
-                <a class="link-icon link-icon-pdf button-link" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+                <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+                    <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+                </a>
             {% endif %}
         {% else %}
             <p class="text">{{ (page ~ '.introPara') | trans() }} {{ ndr.submitDate | date("j F Y") }}.</p>
             <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
-            <a class="link-icon link-icon-pdf button-link" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+            <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+                <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+            </a>
         {% endif %}
     </div>
 
@@ -67,12 +71,14 @@
         <a class="button" href="{{ path('homepage') }}">{{ 'backToYourReports' | trans({}, 'common') }}</a>
     {% endif %}
 
-    <a class="link-icon link-icon-pdf button-link" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">{{ 'downloadAsPdf' | trans() }}</a>
+    <a class="button-link js-trackDownloadLink" href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}">
+        <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+    </a>
 
     <script>
         $(document).ready(function() {
             var ga = new opg.Ga({'timeout': 250});
-            ga.trackDownloadableLink($('.link-icon-pdf'));
+            ga.trackDownloadableLink($('.js-trackDownloadLink'));
         });
     </script>
 {% endblock %}
