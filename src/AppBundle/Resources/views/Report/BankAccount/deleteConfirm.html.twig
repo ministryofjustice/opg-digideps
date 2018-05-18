@@ -1,0 +1,68 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ 'deletePage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'deletePage.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'deletePage.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    <a href="{{ backLink }}" class="link-back behat-link-step-back">{{ 'back' | trans({},'common') }}</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text"><strong class="bold">{{ 'deletePage.question' | trans }}</strong></p>
+    <table class="text push--bottom">
+        <tbody>
+            {% if (account.bank) %}
+                <tr>
+                    <th scope="row">{{ 'bankName' | trans({},'common') }}:</th>
+                    <td>{{ account.bank }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">{{ 'typeOfAccount' | trans({},'common') }}:</th>
+                <td>{{ account.accountTypeText }}</td>
+            </tr>
+            {% if (account.sortCode) %}
+                <tr>
+                    <th scope="row">{{ 'sortCode' | trans({},'common') }}:</th>
+                    <td>{{ account.sortCode }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th scope="row">{{ 'accountNumber' | trans({},'common') }}:</th>
+                <td>****{{ account.accountNumber }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert-important panel panel-border-narrow push--bottom">
+        <span class="icon icon-important-small"></span>
+        <div class="alert-message">
+            <p>
+                You have
+                {% set count, total = 1, (dp.transactionsCount) %}
+                {% for key,transaction in dp.transactions %}
+                    {% if transaction > 0 %}{{ key | trans({},'common') | lower  }}{% if count == (total-1) %} and {% elseif count < total %}, {% endif %}
+                        {% set count = count + 1 %}
+                    {% endif %}
+                {% endfor %}
+                payments linked to this bank account. If you remove the account, we'll unlink the payments for you.</p>
+        </div>
+    </div>
+
+    <a href="{{ path('bank_account_delete', { reportId: report.id, 'accountId': accountId, 'confirm': 1 }) }}" class="button push-half--right behat-link-confirm">{{ 'deletePage.linkButtonLabel' | trans }}</a>
+
+    <a href="{{ path('bank_accounts_summary', { reportId: report.id }) }}" class="button-link behat-link-confirm-cancel">{{ 'cancel' | trans({}, 'common') }}</a>
+
+{% endblock %}

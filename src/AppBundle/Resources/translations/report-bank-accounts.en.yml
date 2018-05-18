@@ -34,12 +34,21 @@ addAnotherPage:
        label: Continue
 
 summaryPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageTitle: Accounts
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society accounts,
     savings accounts and ISAs.
   totalBalance: Total balance on %endDate%: £%amount%
+
+deletePage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageTitle: Accounts
+  pageTitle: Remove account
+  supportTitle: Accounts
+  question: Are you sure you want to remove this account?
+  linkButtonLabel: Yes, remove account
+  transferPresentError: |
+    This bank account cannot be removed because you've added money transfers to or from this account.
 
 form:
   accountType:
@@ -68,17 +77,4 @@ form:
     label: Save and continue
   cancel:
     label: Cancel
-report:
-  bankAccount:
-    deleteWithTransactions: |
-      Bank Account cannot be removed because it has associated money transactions.
-    deleteWithMoneyTransfers: |
-      Bank Account cannot be removed because it has errorCount associated money transfer(s). Please remove all money transfers involving this account.
-    deleteWithDeputyExpenses: |
-      Bank Account cannot be removed because it has errorCount associated deputy expense(s). Please remove all deputy expenses involving this account.
-    deleteWithGifts: |
-      Bank Account cannot be removed because it has errorCount associated gift(s). Please remove all gifts involving this account.
-    deleteWithMoneyIn: |
-      Bank Account cannot be removed because it has errorCount associated money in transaction(s). Please remove all money in transacitons involving this account.
-    deleteWithMoneyOut: |
-      Bank Account cannot be removed because it has errorCount associated money out transaction(s). Please remove all money out transacitons involving this account.
+

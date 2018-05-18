@@ -64,14 +64,14 @@ Feature: Report account transfers
     And each text should be present in the corresponding region:
       | £1,234.57 | transfer-11cf-02ca-123457 |
 
-  @deputy
-  Scenario: Remove account with transfers
-    # navigate to accounts list (that now have transfers)
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "report-start, edit-bank_accounts"
-    And I click on "delete" in the "account-11cf" region
-    # Account still visible
-    Then I should see the "account-11cf" region
-    # should have 2 transactions errors 1 error for a transfer and 1 expense
-    And I should see the "error" region exactly 2 times
 
+  @deputy
+    Scenario: Remove account with transfers
+      # navigate to accounts list (that now have transfers)
+      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      And I click on "report-start, edit-bank_accounts"
+      And I click on "delete" in the "account-11cf" region
+      # Account still visible
+      Then I should see the "account-11cf" region
+      # should have 2 transactions errors 1 error for a transfer and 1 expense
+      And I should see the "error" region
