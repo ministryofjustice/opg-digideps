@@ -23,8 +23,8 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInToAdminAsWithPassword($email, $password)
     {
-        $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . '/logout');
+        $this->iAmOnAdminPage('/logout');
+
         $this->iAmAtAdminLogin();
         $this->fillField('login_email', $email);
         $this->fillField('login_password', $password);
@@ -33,12 +33,12 @@ trait AuthenticationTrait
     }
 
     /**
+     * @deprecated Use  I am on admin page "/login" instead
      * @Given I am on admin login page
      */
     public function iAmAtAdminLogin()
     {
-        $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . '/login');
+        $this->iAmOnAdminPage('/login');
     }
 
     /**
@@ -48,6 +48,17 @@ trait AuthenticationTrait
     {
         $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($url);
+        $this->assertResponseStatus(500);
+        $this->visit($previousUrl);
+    }
+
+    /**
+     * @Then the admin URL :url should not be accessible
+     */
+    public function theAdminUrlShouldNotBeAccessible($url)
+    {
+        $previousUrl = $this->getSession()->getCurrentUrl();
+        $this->iAmOnAdminPage($url);
         $this->assertResponseStatus(500);
         $this->visit($previousUrl);
     }
