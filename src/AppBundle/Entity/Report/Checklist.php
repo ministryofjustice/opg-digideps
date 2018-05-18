@@ -185,23 +185,20 @@ class Checklist
     private $finalDecision;
 
     /**
-     * @var string
+     * @var CheclistInformation[]
      *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
+     * @JMS\Groups({"checklist-information"})
      */
-    private $furtherInformationReceived;
+    private $checklistInformation;
 
-    public function __construct(ReportInterface $report, $data = [])
+    /**
+     * Checklist constructor.
+     *
+     * @param ReportInterface $report
+     */
+    public function __construct(ReportInterface $report)
     {
         $this->setReport($report);
-
-        foreach ($data as $k => $v) {
-            if (property_exists($this, $k)) {
-                $setter = 'set' . ucFirst($k);
-                $this->$setter($v);
-            }
-        }
     }
 
     /**
@@ -583,23 +580,20 @@ class Checklist
     }
 
     /**
-     * @return string
+     * @return ArrayCollection
      */
-    public function getFurtherInformationReceived()
+    public function getChecklistInformation()
     {
-        return $this->furtherInformationReceived;
+        return $this->checklistInformation;
     }
 
     /**
-     * @param string $furtherInformationReceived
-     * @return $this
+     * @param ArrayCollection $checklistInformation
      */
-    public function setFurtherInformationReceived($furtherInformationReceived)
+    public function setChecklistInformation($checklistInformation)
     {
-        $this->furtherInformationReceived = $furtherInformationReceived;
-        return $this;
+        $this->checklistInformation = $checklistInformation;
     }
-
 }
 
 
