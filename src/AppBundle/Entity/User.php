@@ -42,6 +42,7 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN          => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
+        self::ROLE_CASE_MANAGER   => 'Case Manager',
         // pa
         self::ROLE_PA_NAMED       => 'Public Authority (named)',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',

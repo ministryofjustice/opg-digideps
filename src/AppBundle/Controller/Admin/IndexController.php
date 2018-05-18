@@ -66,35 +66,38 @@ class IndexController extends AbstractController
         // only admins can add other admins
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
+            $availableRoles[EntityDir\User::ROLE_CASE_MANAGER] = 'Case manager';
         }
 
-        $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User(), [ 'options' => [ 'roleChoices'        => $availableRoles, 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
-                                                  ]
-                                   ]
-                                 );
+        $form = $this->createForm(FormDir\Admin\AddUserType::class,
+            new EntityDir\User(), [
+                'options' => [
+                    'roleChoices' => $availableRoles,
+                    'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
+                ]
+            ]
+        );
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                // add user
-                try {
-                    if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
-                        throw new \RuntimeException('Cannot add admin from non-admin user');
-                    }
-                    $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
-
-                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
-
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'An activation email has been sent to the user.'
-                    );
-
-                    return $this->redirect($this->generateUrl('admin_homepage'));
-                } catch (RestClientException $e) {
-                    $form->get('email')->addError(new FormError($e->getData()['message']));
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // add user
+            try {
+                if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
+                    throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+                $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
+
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'An activation email has been sent to the user.'
+                );
+
+                return $this->redirect($this->generateUrl('admin_homepage'));
+            } catch (RestClientException $e) {
+                $form->get('email')->addError(new FormError($e->getData()['message']));
             }
         }
 
@@ -138,6 +141,7 @@ class IndexController extends AbstractController
         $form = $this->createForm(FormDir\Admin\AddUserType::class, $user, ['options' => [
             'roleChoices'        => [
                 EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
+                EntityDir\User::ROLE_CASE_MANAGER   => 'Case manager',
                 EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                 EntityDir\User::ROLE_AD         => 'Assisted Digital',
                 EntityDir\User::ROLE_PA_NAMED   => 'Public Authority (named)',
