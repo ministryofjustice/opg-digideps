@@ -19,6 +19,11 @@ checklistPage:
     listItem3: Include changes made to CASREC details (or referrals to the MDU)
     listItem4: |
       Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
+  furtherInfo:
+    heading: Further information
+    para: |
+      You must complete this section if we have received requested correspondence following a lodging
+      (incompletes and casework).
 
   form:
     save:
@@ -73,6 +78,5 @@ checklistPage:
     finalDecision:
       label: Final Decision?
     furtherInformationReceived:
-      label: Further Information received: (Document all your decisions made and why).
-
+      label: Further Information received
 
