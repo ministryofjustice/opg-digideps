@@ -23,14 +23,20 @@ Feature: admin / case manager
 
   Scenario: CM user can access self-user functionalities and client search
     Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # client search
+    # assert client search and client page return 200
     When I should be on "/admin/client/search"
     Then the response status code should be 200
     When I click on "client-detail-test1024"
     Then the response status code should be 200
-    # user details accessible
-    When I go to "/user/details"
+    # assert user and password edit work
+    When I click on "user-account, profile-show, profile-edit, save"
+    Then I should see the "alert-message" region
+    When I click on "user-account, password-edit"
     Then the response status code should be 200
-    # admin homepage not accessible
+    # assert other admin homepages are not accessible
     But The admin URL "/admin" should not be accessible
+    But The admin URL "/admin/casrec-upload" should not be accessible
+    But The admin URL "/admin/documents/list" should not be accessible
+    But The admin URL "/admin/settings/service-notification" should not be accessible
+    But The admin URL "/ad" should not be accessible
 
