@@ -36,7 +36,7 @@ class Checklist
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
+     * @JMS\Type("boolean")
      */
     private $contactDetailsUptoDate;
 
@@ -44,7 +44,7 @@ class Checklist
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
+     * @JMS\Type("boolean")
      */
     private $deputyFullNameAccurateinCasrec;
 
@@ -188,13 +188,24 @@ class Checklist
      * @var CheclistInformation[]
      *
      * @JMS\Groups({"checklist-information"})
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ChecklistInformation>")
      */
     private $checklistInformation;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"checklist-information"})
+     * @JMS\Type("string")
+     */
+    private $furtherInformationReceived;
 
     /**
      * Checklist constructor.
      *
      * @param ReportInterface $report
+     *
      */
     public function __construct(ReportInterface $report)
     {
@@ -593,6 +604,22 @@ class Checklist
     public function setChecklistInformation($checklistInformation)
     {
         $this->checklistInformation = $checklistInformation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFurtherInformationReceived()
+    {
+        return $this->furtherInformationReceived;
+    }
+
+    /**
+     * @param string $furtherInformation
+     */
+    public function setFurtherInformationReceived($furtherInformationReceived)
+    {
+        $this->furtherInformationReceived = $furtherInformationReceived;
     }
 }
 

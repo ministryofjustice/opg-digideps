@@ -320,7 +320,6 @@ class Report implements ReportInterface
     /**
      * @var Checklist
      *
-     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("AppBundle\Entity\Report\Checklist")
      **/
     private $checklist;
@@ -1140,5 +1139,6 @@ class Report implements ReportInterface
     public function setChecklist($checklist)
     {
         $this->checklist = $checklist;
+        return $this;
     }
 }

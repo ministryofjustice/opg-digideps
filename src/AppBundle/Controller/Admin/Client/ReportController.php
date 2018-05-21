@@ -81,31 +81,40 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport($id, ['report-checklist']);
+        $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'user']);
+        //\Doctrine\Common\Util\Debug::dump($report,2);exit;
 
         // if (!$report->getSubmitted()) {
         //     throw new DisplayableException('Cannot manage active report');
         // }
 
         $checklist = $report->getChecklist();
-        $checklist = empty($checlist) ? new Checklist($report) : $checklist;
+        $checklist = empty($checklist) ? new Checklist($report) : $checklist;
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
 
         // edit client form
         if ($form->isValid()) {
 
-            $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
-                'report-checklist'
-            ]);
-            $request->getSession()->getFlashBag()->add('notice', 'Report checklist updated');
+            if (!empty($checklist->getId())) {
+                $this->getRestClient()->put ('report/' . $report->getId() . '/checked', $checklist, [
+                    'report-checklist', 'checklist-information'
+                ]);
+                $request->getSession()->getFlashBag()->add('notice', 'Report checklist updated');
+            } else {
+                $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
+                    'report-checklist', 'checklist-information'
+                ]);
+                $request->getSession()->getFlashBag()->add('notice', 'Report checklist created');
+            }
 
-            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]));
         }
 
         return [
             'report'   => $report,
-            'form'     => $form->createView()
+            'form'     => $form->createView(),
+            'checklist' => $checklist
         ];
     }
 }

@@ -234,21 +234,20 @@
             </tr>
         </thead>
         <tbody>
+        {% if checklist.checklistInformation is not empty %}
+            {% for info in checklist.checklistInformation %}
+
             <tr>
-                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
-                <td>Samantha Hodgson, Lay Deputy Team</td>
-                <td class="numeric no-wrap align--top">10 May 2018</td>
+                <td>{{ info.information }}</td>
+                <td>{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
+                <td class="numeric no-wrap align--top">{{ info.createdOn | date("j F Y H:i") }}</td>
             </tr>
+            {% endfor %}
+        {% else %}
             <tr>
-                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
-                <td>Samantha Hodgson, Lay Deputy Team</td>
-                <td class="numeric no-wrap align--top">10 May 2018</td>
+                <td colspan="3">No information received.</td>
             </tr>
-            <tr>
-                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
-                <td>Samantha Hodgson, Lay Deputy Team</td>
-                <td class="numeric no-wrap align--top">10 May 2018</td>
-            </tr>
+        {% endif %}
         </tbody>
     </table>
 
