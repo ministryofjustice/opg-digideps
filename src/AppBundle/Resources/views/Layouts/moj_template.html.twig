@@ -145,12 +145,12 @@
           <div class="footer-meta-inner">
             <h2 class="visually-hidden">Support links</h2>
             <ul>
+              {% block footerSupportLinks %}{% endblock %}
+
               <li>
                 Built by
                   <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian">the Office of the Public Guardian</a>
               </li>
-
-              {% block footerSupportLinks %}{% endblock %}
             </ul>
 
             <div class="open-government-licence">
