@@ -13,6 +13,7 @@ use AppBundle\Service\DataImporter\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ class IndexController extends AbstractController
 {
     /**
      * @Route("/", name="admin_homepage")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function indexAction(Request $request)
@@ -55,6 +57,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function addUserAction(Request $request)
@@ -108,6 +111,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET", "POST"})
      * @Template
      *
@@ -205,6 +209,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"POST"})
      *
      * @param Request $request
@@ -231,6 +236,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET"})
      * @Template()
      *
@@ -253,6 +259,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET"})
      * @Template()
      *
@@ -269,6 +276,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-upload", name="casrec_upload")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function uploadUsersAction(Request $request)
@@ -344,6 +352,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function upgradeMldAction(Request $request)
@@ -394,6 +403,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function uploadOrgUsersAction(Request $request)
@@ -472,8 +482,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function passwordForgottenAction(Request $request, $email)
+    public function sendUserActivationLinkAction(Request $request, $email)
     {
         try {
             /* @var $user EntityDir\User */
