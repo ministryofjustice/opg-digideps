@@ -10,7 +10,7 @@ Feature: Report balance
         # check balance mismatch difference
         When I click on "edit-balance"
         Then I should see the "balance-bad" region
-        And I should see "£191.11" in the "unaccounted-for" region
+        And I should see "£193.11" in the "unaccounted-for" region
         # fix balance (adding closing bank account)
         And I save the application status into "balance-before-adding-explanation"
         And I click on "breadcrumbs-report-overview, edit-bank_accounts"
@@ -18,7 +18,7 @@ Feature: Report balance
         And I submit the step
         And I submit the step
         And the step with the following values CAN be submitted:
-            | account_closingBalance | 43.89 |
+            | account_closingBalance | 41.89 |
         And I click on "breadcrumbs-report-overview"
         # assert balance is now good
         Then I should see the "report-ready-banner" region

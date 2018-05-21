@@ -17,15 +17,15 @@ Feature: Report money 102
       | account_description |  |       |
       | account_amount      |  | [ERR] |
     And the step with the following values CANNOT be submitted:
-      | account_description |  | 0   |
+      | account_description |  | 0     |
       | account_amount      |  | [ERR] |
     And the step with the following values CANNOT be submitted:
-      | account_description |  | 0   |
+      | account_description |             | 0     |
       | account_amount      | 10000000.01 | [ERR] |
     And the "#error-summary" element should contain "10,000,000"
     And the step with the following values CAN be submitted:
       | account_description | pension received |
-      | account_amount      | 12345.67         |
+      | account_amount      | 12343.67         |
     # add another: yes
     And I choose "yes" when asked for adding another record
     # add transaction n.2
@@ -40,23 +40,23 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else |
     And the step with the following values CAN be submitted:
-      | account_description | money found on the road |
-      | account_amount      | 50                      |
-      | account_bankAccountId | 1                      |
+      | account_description   | money found on the road |
+      | account_amount        | 50                      |
+      | account_bankAccountId | 1                       |
     # add another: no
     And I choose "no" when asked for adding another record
     # check record in summary page
     And each text should be present in the corresponding region:
       | State Pension           | transaction-pension-received        |
       | pension received        | transaction-pension-received        |
-      | £12,345.67              | transaction-pension-received        |
+      | £12,343.67              | transaction-pension-received        |
       | State Pension           | transaction-delete-me               |
       | delete me               | transaction-delete-me               |
       | £1                      | transaction-delete-me               |
       | Anything else           | transaction-money-found-on-the-road |
       | money found on the road | transaction-money-found-on-the-road |
       | £50.00                  | transaction-money-found-on-the-road |
-      | £12,346.67              | pensions-total                      |
+      | £12,344.67              | pensions-total                      |
     # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
     Then I should not see the "transaction-delete-me" region
@@ -67,16 +67,16 @@ Feature: Report money 102
     # edit transaction n.3
     When I click on "edit" in the "transaction-money-found-on-the-road" region
     Then the following fields should have the corresponding values:
-      | account_description | money found on the road |
-      | account_amount      | 50.00                      |
-      | account_bankAccountId | 1                         |
+      | account_description   | money found on the road |
+      | account_amount        | 50.00                   |
+      | account_bankAccountId | 1                       |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
-      | account_amount      | 51                      |
+      | account_amount      | 51                           |
     And each text should be present in the corresponding region:
-      | Anything else           | transaction-some-money-found-on-the-road |
+      | Anything else                | transaction-some-money-found-on-the-road |
       | Some money found on the road | transaction-some-money-found-on-the-road |
-      | £51.00 | transaction-some-money-found-on-the-road |
+      | £51.00                       | transaction-some-money-found-on-the-road |
 
   @deputy
   Scenario: money out
@@ -97,7 +97,7 @@ Feature: Report money 102
       | account_amount      |  | [ERR] |
     And the step with the following values CAN be submitted:
       | account_description | january bill |
-      | account_amount      | 12345.68     |
+      | account_amount      | 12343.68     |
       # add another: yes
     And I choose "yes" when asked for adding another record
       # add transaction n.2
@@ -113,23 +113,23 @@ Feature: Report money 102
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else-paid-out |
     And the step with the following values CAN be submitted:
-      | account_description | money found on the road |
-      | account_amount      | 50                      |
-      | account_bankAccountId | 1                      |
+      | account_description   | money found on the road |
+      | account_amount        | 50                      |
+      | account_bankAccountId | 1                       |
       # add another: no
     And I choose "no" when asked for adding another record
       # check record in summary page
     And each text should be present in the corresponding region:
       | Broadband               | transaction-january-bill            |
       | january bill            | transaction-january-bill            |
-      | £12,345.68              | transaction-january-bill            |
+      | £12,343.68              | transaction-january-bill            |
       | Broadband               | transaction-delete-me               |
       | delete me               | transaction-delete-me               |
       | £1                      | transaction-delete-me               |
       | Anything else           | transaction-money-found-on-the-road |
       | money found on the road | transaction-money-found-on-the-road |
       | £50.00                  | transaction-money-found-on-the-road |
-      | £12,346.68              | household-bills-total               |
+      | £12,344.68              | household-bills-total               |
       # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
     Then I should not see the "transaction-delete-me" region
@@ -141,9 +141,9 @@ Feature: Report money 102
     When I click on "edit" in the "transaction-money-found-on-the-road" region
     And I should see an "select#account_bankAccountId" element
     Then the following fields should have the corresponding values:
-      | account_description | money found on the road |
-      | account_amount      | 50.00                   |
-      | account_bankAccountId | 1                      |
+      | account_description   | money found on the road |
+      | account_amount        | 50.00                   |
+      | account_bankAccountId | 1                       |
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                           |
@@ -153,14 +153,25 @@ Feature: Report money 102
       | £51.00                       | transaction-some-money-found-on-the-road |
 
   @deputy
+  Scenario: Add a 3rd transaction associate to the 3rd bank account
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "report-start, edit-money_out, add"
+    And the step with the following values CAN be submitted:
+      | account_category_5 | food |
+    And the step with the following values CAN be submitted:
+      | account_description   | coffee |
+      | account_amount        | 2              |
+      # 3rd bank account has ID=4. update if that feature is changed
+      | account_bankAccountId | 4                |
+      # add another: yes
+    And I choose "no" when asked for adding another record
+    And each text should be present in the corresponding region:
+      | 03ta | transaction-coffee |
+
+
+  @deputy
   Scenario: Assert balance status is "not matching"
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     And I should see the "balance-state-not-matching" region
-
-
-
-
-
-
 
