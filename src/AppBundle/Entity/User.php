@@ -1025,13 +1025,21 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @return bool true if user role is LAY
+     */
+    public function isLayDeputy()
+    {
+        return $this->roleName === self::ROLE_LAY_DEPUTY;
+    }
+
+    /**
      * Is User a Deputy Either PA or Lay?
      *
      * @return bool true if user role is LAY or PA
      */
     public function isDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyOrg();
+        return $this->isLayDeputy() || $this->isDeputyOrg();
     }
 
     /**

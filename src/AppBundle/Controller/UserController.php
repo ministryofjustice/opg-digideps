@@ -158,6 +158,11 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
+            if ($user->isLayDeputy()) {
+                return $this->redirectToRoute('client_add');
+            }
+
+            // all other users (Admins, PA, PROF => go back to homepage)
             return $this->redirect($this->get('redirector_service')->getHomepageRedirect());
 
 //
