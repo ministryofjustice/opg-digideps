@@ -384,12 +384,12 @@ class Report implements ReportInterface
      */
     private $unsubmittedSectionsList;
 
-    /**
+   /**
      * @var Checklist
      *
-     * @JMS\Groups({"report-checklist"})
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist")
-     * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE")
+     * @JMS\Groups({"report"})
+     * @JMS\Type("AppBundle\Entity\Report\Checklist")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
 
@@ -468,6 +468,8 @@ class Report implements ReportInterface
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
         $this->profServicefees = new ArrayCollection();
+        $this->checklist = null;
+
     }
 
     /**

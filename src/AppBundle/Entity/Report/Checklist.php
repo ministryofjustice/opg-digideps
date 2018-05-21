@@ -28,8 +28,8 @@ class Checklist
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Report")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report")
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="checklist")
+     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      * @JMS\Groups({"checklist-report"})
      */
     private $report;
@@ -39,7 +39,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="reportingPeriodAccurate", type="string", length=3, nullable=false)
+     * @ORM\Column(name="reportingPeriodAccurate", type="string", length=3, nullable=true)
      */
     private $reportingPeriodAccurate;
 
@@ -47,8 +47,7 @@ class Checklist
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="contactDetailsUptoDate", type="string", length=3, nullable=false)
+     * @ORM\Column(name="contactDetailsUptoDate", type="string", length=3, nullable=true)
      */
     private $contactDetailsUptoDate;
 
@@ -57,7 +56,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="deputyFullNameAccurateinCasrec", type="string", length=3, nullable=false)
+     * @ORM\Column(name="deputyFullNameAccurateinCasrec", type="string", length=3, nullable=true)
      */
     private $deputyFullNameAccurateinCasrec;
 
@@ -66,7 +65,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="decisionsSatisfactory", type="string", length=3, nullable=false)
+     * @ORM\Column(name="decisionsSatisfactory", type="string", length=3, nullable=true)
      */
     private $decisionsSatisfactory;
 
@@ -75,7 +74,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="consultationsSatisfactory", type="string", length=3, nullable=false)
+     * @ORM\Column(name="consultationsSatisfactory", type="string", length=3, nullable=true)
      */
     private $consultationsSatisfactory;
 
@@ -84,7 +83,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="careArrangements", type="string", length=3, nullable=false)
+     * @ORM\Column(name="careArrangements", type="string", length=3, nullable=true)
      */
     private $careArrangements;
 
@@ -93,7 +92,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="assetsDeclaredAndManaged", type="string", length=3, nullable=false)
+     * @ORM\Column(name="assetsDeclaredAndManaged", type="string", length=3, nullable=true)
      */
     private $assetsDeclaredAndManaged;
 
@@ -102,7 +101,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="debtsManaged", type="string", length=3, nullable=false)
+     * @ORM\Column(name="debtsManaged", type="string", length=3, nullable=true)
      */
     private $debtsManaged;
 
@@ -111,7 +110,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="openClosingBalancesMatch", type="string", length=3, nullable=false)
+     * @ORM\Column(name="openClosingBalancesMatch", type="string", length=3, nullable=true)
      */
     private $openClosingBalancesMatch;
 
@@ -120,7 +119,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="accountsBalance", type="string", length=3, nullable=false)
+     * @ORM\Column(name="accountsBalance", type="string", length=3, nullable=true)
      */
     private $accountsBalance;
 
@@ -129,7 +128,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="moneyMovementsAcceptable", type="string", length=3, nullable=false)
+     * @ORM\Column(name="moneyMovementsAcceptable", type="string", length=3, nullable=true)
      */
     private $moneyMovementsAcceptable;
 
@@ -138,7 +137,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="bondAdequate", type="string", length=3, nullable=false)
+     * @ORM\Column(name="bondAdequate", type="string", length=3, nullable=true)
      */
     private $bondAdequate;
 
@@ -147,7 +146,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="bondOrderMatchCasrec", type="string", length=3, nullable=false)
+     * @ORM\Column(name="bondOrderMatchCasrec", type="string", length=3, nullable=true)
      */
     private $bondOrderMatchCasrec;
 
@@ -156,7 +155,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="futureSignificantFinancialDecisions", type="string", length=3, nullable=false)
+     * @ORM\Column(name="futureSignificantFinancialDecisions", type="string", length=3, nullable=true)
      */
     private $futureSignificantFinancialDecisions;
 
@@ -165,7 +164,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="hasDeputyRaisedConcerns", type="string", length=3, nullable=false)
+     * @ORM\Column(name="hasDeputyRaisedConcerns", type="string", length=3, nullable=true)
      */
     private $hasDeputyRaisedConcerns;
 
@@ -174,7 +173,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="caseWorkerSatisified", type="string", length=3, nullable=false)
+     * @ORM\Column(name="caseWorkerSatisified", type="string", length=3, nullable=true)
      */
     private $caseWorkerSatisified;
 
@@ -183,7 +182,7 @@ class Checklist
      *
      * @JMS\Type("string")
      * @JMS\Groups({"gifts"})
-     * @ORM\Column(name="decision", type="text", nullable=false)
+     * @ORM\Column(name="decision", type="text", nullable=true)
      */
     private $decision;
 
@@ -192,7 +191,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="caseManagerName", type="string", length=255, nullable=false)
+     * @ORM\Column(name="caseManagerName", type="string", length=255, nullable=true)
      */
     private $caseManagerName;
 
@@ -201,7 +200,7 @@ class Checklist
      *
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(name="lodgingSummary", type="text", nullable=false)
+     * @ORM\Column(name="lodgingSummary", type="text", nullable=true)
      */
     private $lodgingSummary;
 
@@ -210,16 +209,24 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="finalDecision", type="string", length=30, nullable=false)
+     * @ORM\Column(name="finalDecision", type="string", length=30, nullable=true)
      */
     private $finalDecision;
 
     /**
+     * @var Checlist[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ChecklistInformation>")
+     * @JMS\Groups({"checklist-information"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"createdOn"="DESC"})
+     */
+    private $checklistInformation;
+
+    /**
      * @var string
      *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(name="furtherInformationReceived", type="text", nullable=false)
+     * @JMS\Groups({"checklist-information"})
      */
     private $furtherInformationReceived;
 
@@ -627,6 +634,22 @@ class Checklist
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getChecklistInformation()
+    {
+        return $this->checklistInformation;
+    }
+
+    /**
+     * @param ArrayCollection $checklistInformation
+     */
+    public function setChecklistInformation($checklistInformation)
+    {
+        $this->checklistInformation = $checklistInformation;
+    }
+
+    /**
      * @return string
      */
     public function getFurtherInformationReceived()
@@ -635,15 +658,12 @@ class Checklist
     }
 
     /**
-     * @param string $furtherInformationReceived
-     * @return $this
+     * @param string $furtherInformation
      */
     public function setFurtherInformationReceived($furtherInformationReceived)
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
-        return $this;
     }
-
 }
 
 
