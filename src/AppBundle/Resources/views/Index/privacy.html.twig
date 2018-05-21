@@ -1,0 +1,134 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "common" %}
+
+{% block htmlTitle %}Privacy notice | GOV.UK{% endblock %}
+{% block pageTitle %}Privacy notice{% endblock %}
+
+{% block linkBack %}
+    {% if backlink %}
+        <a href="{{ backlink }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+
+<div class="text">
+  <p class="lede">This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the Complete the deputy report service.</p>
+  <p>This notice also explains how we store this data, what we do with it, how you can get a copy of the data we have about you, and how you can complain if you think we’ve done something wrong.</p>
+  <p>You should read this privacy notice alongside OPG’s:</p>
+
+  <ul class="list list-bullet">
+    <li><a href="#">deputy supervision privacy notice</a>, which explains how we use and protect your data once you’ve submitted your deputy report</li>
+    <li><a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" target="_blank">personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information</li>
+  </ul>
+</div>
+
+<h2 class="heading-medium">Who manages the Complete the deputy report service</h2>
+
+<div class="text">
+  <p>This service is managed by OPG, which is an executive agency sponsored by the Ministry of Justice (MoJ).</p>
+  <p>OPG is the data controller for the personal data we store. <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" target="_blank">OPG’s personal information charter</a> explains how we process personal data.</p>
+  <p>You can find more information about using the Complete the deputy report in the <a href="{{path('terms')}}">terms and conditions</a> and our <a href="https://www.gov.uk/help/cookies" target="_blank">cookies policy</a>.</p>
+</div>
+
+<h2 class="heading-medium">Why we collect personal data and how we use it</h2>
+
+<div class="text">
+  <p>We collect personal data so that you can complete your deputy report online and submit it to OPG. You can find out more about what data we collect and how we use it in the <a href="#">deputy supervision privacy notice</a>.</p>
+  <p>If you contact us to let us know you're experiencing a technical problem with your deputy report service account, we may use the personal data you’ve entered to help us identify the cause of the problem.</p>
+
+  <h3 class="heading-small">Site usage data</h3>
+
+  <p>OPG collects site usage information from this service. This allows us to see how the service is being used so we can improve it. This information does not contain any personal data and is stored separately from the information you enter when using this service.</p>
+  <p>Find out more about <a href="https://www.gov.uk/help/cookies" target="_blank">cookies and site usage data</a>.</p>
+</div>
+
+<h2 class="heading-medium">How we store data</h2>
+
+<div class="text">
+  <p>All data collected by this service is stored within the European Economic Area (EEA). However, due to the global nature of the internet, the data sent to and from the database may transit through countries outside of the EEA. Data is not stored in a non-EEA country.</p>
+  <p>It may sometimes be necessary to transfer personal information overseas. Any transfers made will fully comply with all aspects of data protection law.</p>
+
+  <h3 class="heading-small">Who has access to data in the service?</h3>
+
+  <p>Our hosting provider (Amazon Web Services) and MoJ staff are responsible for supporting the service and have access to the secure database.</p>
+  <p>Information you enter into the service is not sent to OPG, but is stored in a secure database. OPG will only see the information when you submit your report.</p>
+  <p>If you contact us to let us know you're experiencing a technical problem with your account, we may give authorised members of OPG staff temporary access to your data so they can investigate the problem. Once the investigation is complete, these members of staff will no longer be able to access your data.</p>
+  <p>All staff who have access to the database have MoJ security clearance.</p>
+
+  <h3 class="heading-small">Change or delete information you’ve provided</h3>
+
+  <p>Before you submit your report to OPG, you can change or delete the information you’ve provided.  Once you’ve submitted your report to OPG, you cannot make any further changes to it online.</p>
+  <p>If you want to change or delete information after you’ve submitted your report, please <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian" target="_blank">contact OPG</a>.</p>
+
+  <h3 class="heading-small">Delete your account</h3>
+
+  <p>If you would like to delete your account, and all information in it, please <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian" target="_blank">contact OPG</a>.</p>
+  <p>If you delete your account, OPG will still hold the information in any reports you have previously submitted. You can find out more about how we store and use this data in <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" target="_blank">OPG’s personal information charter</a>.</p>
+</div>
+
+<h2 class="heading-medium">Sharing personal data</h2>
+
+<div class="text">
+  <p>We will only share the information you give when the law says we can.</p>
+  <p>We never share your information with other organisations for marketing, market research or commercial purposes.</p>
+  <p>We may share your contact details with GOV.UK Notify. Notify is a secure government service that allows us to message you about your deputyship via text, email or post, quickly and cost effectively.</p>
+  <p>Neither Notify nor its SMS, email and post providers will use your personal information for direct marketing. <a href="https://www.notifications.service.gov.uk/features/security" target="_blank">Find out more about security and data protection on Notify</a>.</p>
+</div>
+
+<h2 class="heading-medium">Access your personal information</h2>
+
+<div class="text">
+  <p>You can find out what personal data we we hold about you in the service by making a subject access request.</p>
+  <p>
+    <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter" target="_blank">Find out more about subject access requests</a>.
+  </p>
+</div>
+
+<h2 class="heading-medium">Getting more information</h2>
+
+<div class="text">
+  <p>You can get more details on:</p>
+
+  <ul class="list list-bullet">
+    <li>agreements we have with other organisations for sharing information</li>
+    <li>when we can pass on personal information without telling you, for example, to help with the prevention or detection of crime or to produce anonymised statistics</li>
+    <li>instructions we give to staff on how to collect, use or delete your personal data</li>
+    <li>how we check that the information we hold is accurate and up-to- date</li>
+    <li>how to make a complaint</li>
+  </ul>
+
+  <p>For more information, please contact:</p>
+
+  <div class="panel panel-border">
+    <p>
+        MoJ Data Protection Officer<br/>
+        Post point 10.38<br/>
+        102 Petty France<br/>
+        London<br/>
+        SW1H 9AJ
+    </p>
+  </div>
+</div>
+
+<h2 class="heading-medium">Making a complaint</h2>
+
+<div class="text">
+  <p>When we ask for personal data, we will keep to the law. If you think that your information has not been handled correctly, you can contact the Information Commissioner for independent advice about data protection at the address below:</p>
+
+  <div class="panel panel-border">
+    <p>
+        Information Commissioner's Office<br/>
+        Wycliffe House<br/>
+        Water Lane<br/>
+        Wilmslow<br/>
+        Cheshire<br/>
+        SK9 5AF<br/><br/>
+        0303 123 1113<br/>
+        <a href="http://www.ico.org.uk" target="_blank">www.ico.org.uk</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

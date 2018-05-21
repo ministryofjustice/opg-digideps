@@ -64,16 +64,16 @@ security:
 
         passwordManaging:
             pattern:  ^/password-managing*
-            security: false   
-            
+            security: false
+
         userManaging:
             pattern:  ^/user/(password-reset|activate|agree-terms-use)/*
-            security: false 
-        
+            security: false
+
         behatControllers:
             pattern:  ^/behat
             security: false
-            
+
         manageController:
             pattern:  ^/manage/*
             security: false
@@ -121,6 +121,7 @@ security:
         - { path: ^/feedback, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/elements, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
