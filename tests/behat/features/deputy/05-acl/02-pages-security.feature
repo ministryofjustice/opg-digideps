@@ -32,7 +32,7 @@ Feature: deputy / acl / security on pages
     # behat-user can access report n.2
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I save the application status into "deputy-acl-before"
-    Then the following pages should return the following status:
+    Then the following "client" pages should return the following status:
       | /report/1/overview                     | 200 |
       # decisions
       | /report/1/decisions                    | 200 |
@@ -59,7 +59,7 @@ Feature: deputy / acl / security on pages
     # reload the status (as some URLs calls might have deleted data)
     And I load the application status from "deputy-acl-before"
     When I go to "/report/2/overview"
-    Then the following pages should return the following status:
+    Then the following "client" pages should return the following status:
       | /report/2/overview                     | 200 |
       | /report/1/overview                     | 500 |
       # decisions

@@ -23,7 +23,7 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInToAdminAsWithPassword($email, $password)
     {
-        $this->iAmOnAdminPage('/logout');
+        $this->visitAdminPath('/logout');
 
         $this->iAmAtAdminLogin();
         $this->fillField('login_email', $email);
@@ -38,7 +38,7 @@ trait AuthenticationTrait
      */
     public function iAmAtAdminLogin()
     {
-        $this->iAmOnAdminPage('/login');
+        $this->visitAdminPath('/login');
     }
 
     /**
@@ -58,7 +58,7 @@ trait AuthenticationTrait
     public function theAdminUrlShouldNotBeAccessible($url)
     {
         $previousUrl = $this->getSession()->getCurrentUrl();
-        $this->iAmOnAdminPage($url);
+        $this->visitAdminPath($url);
         $this->assertResponseStatus(500);
         $this->visit($previousUrl);
     }
@@ -83,17 +83,16 @@ trait AuthenticationTrait
     }
 
     /**
-     * @Then the following pages should return the following status:
+     * @Then the following :area pages should return the following status:
      */
-    public function theFollowingPagesShouldReturnTheFollowingStatus(TableNode $table)
+    public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table)
     {
         foreach ($table->getRowsHash() as $url => $expectedReturnCode) {
-            $this->visitPath($url);
-           //$actual = $this->getSession()->getStatusCode();
-
-           //if (intval($expectedReturnCode) !== intval($actual)) {
-           //    throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
-          //}
+            $area =='admin' ? $this->visitAdminPath($url): $this->visitPath($url);
+            $actual = $this->getSession()->getStatusCode();
+            if (intval($expectedReturnCode) !== intval($actual)) {
+               throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
+            }
         }
     }
 }

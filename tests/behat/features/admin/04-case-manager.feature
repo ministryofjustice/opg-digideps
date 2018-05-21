@@ -15,8 +15,8 @@ Feature: admin / case manager
     When I activate the user with password "Abcd1234" - no T&C expected
       # user details page
     Then the following fields should have the corresponding values:
-      | user_details_firstname | Casero |
-      | user_details_lastname  | Managera   |
+      | user_details_firstname | Casero   |
+      | user_details_lastname  | Managera |
     And I press "user_details_save"
     Then I should be on "/admin/client/search"
 
@@ -34,9 +34,11 @@ Feature: admin / case manager
     When I click on "user-account, password-edit"
     Then the response status code should be 200
     # assert other admin homepages are not accessible
-    But The admin URL "/admin" should not be accessible
-    But The admin URL "/admin/casrec-upload" should not be accessible
-    But The admin URL "/admin/documents/list" should not be accessible
-    But The admin URL "/admin/settings/service-notification" should not be accessible
-    But The admin URL "/ad" should not be accessible
+    Then the following "admin" pages should return the following status:
+      | /admin                               | 403 |
+      | /admin/casrec-upload                 | 403 |
+      | /admin/documents/lis                 | 403 |
+      | /admin/settings/service-notification | 403 |
+      | /ad                                  | 403 |
+
 
