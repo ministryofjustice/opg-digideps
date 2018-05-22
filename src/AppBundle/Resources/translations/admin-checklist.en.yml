@@ -30,6 +30,8 @@ checklistPage:
       label: Save progress
     submitAndDownload:
       label: Submit checklist and download PDF
+    saveFurtherInformation:
+      label: Save further information
     reportingPeriodAccurate:
       label: Is the reporting period accurate?
     contactDetailsUptoDate:

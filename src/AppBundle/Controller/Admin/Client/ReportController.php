@@ -109,7 +109,13 @@ class ReportController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Report checklist created');
             }
 
-            return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]));
+            if ($buttonClicked->getName() == 'saveFurtherInformation') {
+                return $this->redirect(
+                    $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInfomation'
+                );
+            } else {
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]));
+            }
         }
 
         return [

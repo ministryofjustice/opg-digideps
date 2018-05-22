@@ -221,7 +221,7 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
+    <h3 class="heading-medium" id="furtherInfomation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
 
     <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
 
@@ -255,6 +255,8 @@
         {{ form_input(form.furtherInformationReceived, 'checklistPage.form.furtherInformationReceived', {
             'formGroupClass': 'explanation',
         }) }}
+        {{ form_submit(form.saveFurtherInformation,'checklistPage.form.saveFurtherInformation') }}
+
     </div>
 
     {{ form_submit(form.save,'checklistPage.form.save') }}

@@ -148,7 +148,7 @@ class ReportChecklistType extends AbstractType
             ->add('furtherInformationReceived', 'textarea', [
                 'label' => 'Further Information received: (Document all your decisions made and why).'
             ])
-
+        ->add('saveFurtherInformation', 'submit')
         ->add('save', 'submit')
         ->add('submitAndDownload', 'submit');
     }
