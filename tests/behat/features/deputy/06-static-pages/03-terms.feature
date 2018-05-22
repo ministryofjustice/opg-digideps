@@ -17,4 +17,3 @@ Feature: Terms and conditions
         And I go to "/login"
         And I go to "/terms"
         Then the "Back" link url should contain "/login"
-
