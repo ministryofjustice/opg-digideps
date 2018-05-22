@@ -37,7 +37,7 @@ Feature: admin / case manager
     Then the following "admin" pages should return the following status:
       | /admin                               | 403 |
       | /admin/casrec-upload                 | 403 |
-      | /admin/documents/lis                 | 403 |
+      | /admin/documents/list                | 403 |
       | /admin/settings/service-notification | 403 |
       | /ad                                  | 403 |
 
