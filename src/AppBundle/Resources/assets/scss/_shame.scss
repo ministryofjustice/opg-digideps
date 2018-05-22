@@ -11,12 +11,23 @@
         border-bottom: 1px solid $border-colour;
     }
 
-    .form-group {
+    .form-group-outer {
         float: left;
         width: 57%;
         margin-bottom: 0;
         padding: $gutter-half $gutter-half $gutter-half 0;
         border-right: 1px solid $border-colour;
+
+        .form-group {
+            margin-bottom: 0;
+        }
+    }
+
+    .form-group {
+
+        &.form-group-error {
+            padding: 0 0 0 15px;
+        }
     }
 
     .form-group-meta {
