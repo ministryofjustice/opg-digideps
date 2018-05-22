@@ -8,7 +8,7 @@ trait SiteNavigationTrait
      * @Given I am on admin page :path
      * @Given I go to admin page :path
      */
-    public function iAmOnAdminPage($path)
+    public function visitAdminPath($path)
     {
         $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl . $path);

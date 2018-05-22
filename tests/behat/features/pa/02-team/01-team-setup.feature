@@ -55,6 +55,7 @@ Feature: PA team setup
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard and I see the same clients
+    And the URL should match "/org"
     And I should see the "client-01000010" region
     # check I see all the users
     When I click on "org-settings, user-accounts"

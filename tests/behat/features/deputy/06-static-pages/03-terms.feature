@@ -1,5 +1,9 @@
 Feature: Terms and Conditions
-    
+
+    @deputy
+    Scenario: init data
+        Given I load the application status from "report-submit-pre"
+
     @deputy
     Scenario: The footer provides a link to terms and conditions in the login page
         Given I go to "/logout"

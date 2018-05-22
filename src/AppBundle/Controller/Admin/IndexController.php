@@ -13,6 +13,7 @@ use AppBundle\Service\DataImporter\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ class IndexController extends AbstractController
 {
     /**
      * @Route("/", name="admin_homepage")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function indexAction(Request $request)
@@ -55,6 +57,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/user-add", name="admin_add_user")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function addUserAction(Request $request)
@@ -66,35 +69,38 @@ class IndexController extends AbstractController
         // only admins can add other admins
         if ($this->isGranted(EntityDir\User::ROLE_ADMIN)) {
             $availableRoles[EntityDir\User::ROLE_ADMIN] = 'OPG Admin';
+            $availableRoles[EntityDir\User::ROLE_CASE_MANAGER] = 'Case manager';
         }
 
-        $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User(), [ 'options' => [ 'roleChoices'        => $availableRoles, 'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
-                                                  ]
-                                   ]
-                                 );
+        $form = $this->createForm(FormDir\Admin\AddUserType::class,
+            new EntityDir\User(), [
+                'options' => [
+                    'roleChoices' => $availableRoles,
+                    'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
+                ]
+            ]
+        );
 
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                // add user
-                try {
-                    if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
-                        throw new \RuntimeException('Cannot add admin from non-admin user');
-                    }
-                    $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
-
-                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
-
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'An activation email has been sent to the user.'
-                    );
-
-                    return $this->redirect($this->generateUrl('admin_homepage'));
-                } catch (RestClientException $e) {
-                    $form->get('email')->addError(new FormError($e->getData()['message']));
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // add user
+            try {
+                if (!$this->isGranted(EntityDir\User::ROLE_ADMIN) && $form->getData()->getRoleName() == EntityDir\User::ROLE_ADMIN) {
+                    throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
+                $user = $this->getRestClient()->post('user', $form->getData(), ['admin_add_user'], 'User');
+
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'An activation email has been sent to the user.'
+                );
+
+                return $this->redirect($this->generateUrl('admin_homepage'));
+            } catch (RestClientException $e) {
+                $form->get('email')->addError(new FormError($e->getData()['message']));
             }
         }
 
@@ -105,6 +111,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-user", name="admin_editUser")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET", "POST"})
      * @Template
      *
@@ -138,6 +145,7 @@ class IndexController extends AbstractController
         $form = $this->createForm(FormDir\Admin\AddUserType::class, $user, ['options' => [
             'roleChoices'        => [
                 EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
+                EntityDir\User::ROLE_CASE_MANAGER   => 'Case manager',
                 EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
                 EntityDir\User::ROLE_AD         => 'Assisted Digital',
                 EntityDir\User::ROLE_PA_NAMED   => 'Public Authority (named)',
@@ -201,6 +209,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/edit-ndr/{id}", name="admin_editNdr")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"POST"})
      *
      * @param Request $request
@@ -227,6 +236,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET"})
      * @Template()
      *
@@ -249,6 +259,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="admin_delete")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"GET"})
      * @Template()
      *
@@ -265,6 +276,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-upload", name="casrec_upload")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function uploadUsersAction(Request $request)
@@ -340,6 +352,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/casrec-mld-upgrade", name="casrec_mld_upgrade")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function upgradeMldAction(Request $request)
@@ -390,6 +403,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/org-csv-upload", name="admin_org_upload")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function uploadOrgUsersAction(Request $request)
@@ -468,8 +482,9 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/send-activation-link/{email}", name="admin_send_activation_link")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      **/
-    public function passwordForgottenAction(Request $request, $email)
+    public function sendUserActivationLinkAction(Request $request, $email)
     {
         try {
             /* @var $user EntityDir\User */

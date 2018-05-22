@@ -94,6 +94,8 @@ class Redirector
 
         if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
+        } if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+            return $this->router->generate('admin_client_search');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');
         } elseif ($user->isDeputyOrg()) {
@@ -106,6 +108,7 @@ class Redirector
     }
 
     /**
+     * //TODO refactor remove. seeem overcomplicated
      * @param  EntityDir\User $user
      * @param  string         $currentRoute
      * @return bool|string
@@ -118,7 +121,7 @@ class Redirector
         }
 
         //none of these corrections apply to admin
-        if (EntityDir\User::ROLE_ADMIN != $user->getRoleName()) {
+        if (!in_array($user->getRoleName(), [EntityDir\User::ROLE_ADMIN, EntityDir\User::ROLE_CASE_MANAGER])) {
             if ($user->getIsCoDeputy()) {
                 // already verified - shouldn't be on verification page
                 if ('codep_verification' == $currentRoute && $user->getCoDeputyClientConfirmed()) {
@@ -210,9 +213,11 @@ class Redirector
     {
         if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)
-            ) {
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
+            }
+            if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+                return $this->router->generate('admin_client_search');
             }
             if ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
                 return $this->router->generate('ad_homepage');
@@ -221,7 +226,8 @@ class Redirector
             return $this->router->generate('login');
         }
 
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_PA)) {
+        // PROF and PA redirect to org homepage
+        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ORG)) {
             return $this->router->generate('org_dashboard');
         }
 
