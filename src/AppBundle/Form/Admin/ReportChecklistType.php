@@ -10,6 +10,9 @@ use Symfony\Component\Validator\Constraints as Constraints;
 
 class ReportChecklistType extends AbstractType
 {
+    const SAVE_ACTION = 'submitAndDownload';
+    const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
             $builder
@@ -146,7 +149,8 @@ class ReportChecklistType extends AbstractType
                 'label' => 'Further Information received: (Document all your decisions made and why).'
             ])
 
-        ->add('save', 'submit');
+        ->add('save', 'submit')
+        ->add('submitAndDownload', 'submit');
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -155,7 +159,10 @@ class ReportChecklistType extends AbstractType
             'translation_domain' => 'admin-checklist',
             'name'               => 'checklist',
             'validation_groups'  => function (FormInterface $form) {
-                $ret = ['checklist'];
+                $ret = [];
+                if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
+                    $ret[] = 'submit-checklist';
+                }
 
                 return $ret;
             },

@@ -92,9 +92,10 @@ class ReportController extends AbstractController
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
+        $buttonClicked = $form->getClickedButton();
 
         // edit client form
-        if ($form->isValid()) {
+        if ($form->isValid($buttonClicked)) {
 
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put ('report/' . $report->getId() . '/checked', $checklist, [

@@ -27,7 +27,9 @@ checklistPage:
 
   form:
     save:
-      label: Submit checklist
+      label: Save progress
+    submitAndDownload:
+      label: Submit checklist and download PDF
     reportingPeriodAccurate:
       label: Is the reporting period accurate?
     contactDetailsUptoDate:

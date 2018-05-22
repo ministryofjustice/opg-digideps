@@ -635,6 +635,26 @@ adminSetting:
   content.notBlank: Please enter a message
   enabled.notBlank:  Please select either 'Yes' or 'No'
 
+checklist:
+  contactDetailsUptoDate.notBlank: Confirm that you've checked the contact details are correct
+  reportingPeriodAccurate.notBlank: Is the reporting period correct? Please select 'Yes' or 'No'
+  deputyFullNameAccurateinCasrec.notBlank: Confirm that you've checked the deputy details on CASREC are correct
+  decisionsSatisfactory.notBlank:
+  consultationsSatisfactory.notBlank: Has the deputy provided satisfactory responses about the people they've consulted? Please select 'Yes' or 'No'
+  assetsDeclaredAndManaged.notBlank: Are you satisfied that the deputy has accurately declared all the client’s assets and that the assets are being appropriately managed? Please select 'Yes','No' or 'Not applicable'
+  debtsManaged.notBlank: Please choose a final decision
+  openClosingBalancesMatch.notBlank: Does the opening balances(s) match last year's closing balance? Please select 'Yes','No' or 'Not applicable'
+  accountsBalance.notBlank: Do the accounts balance and match bank statements, where provided? Please select 'Yes','No' or 'Not applicable'
+  moneyMovementsAcceptable.notBlank: Are you satisfied with the deputy's responses in the money in and money out sections? Please select 'Yes','No' or 'Not applicable'
+  bondAdequate.notBlank: Is the bond adequate protection for the client's assets? Please select 'Yes','No' or 'Not applicable'
+  bondOrderMatchCasrec.notBlank: Does the bond amount on CASREC match that on the order? Please select 'Yes','No' or 'Not applicable'
+  futureSignificantFinancialDecisions.notBlank: Are there any significant financial decision(s) in the next reporting period? Please select 'Yes','No' or 'Not applicable'
+  hasDeputyRaisedConcerns.notBlank: Does the deputy raise any concerns about their deputyship? Please select 'Yes','No' or 'Not applicable'
+  caseWorkerSatisified.notBlank: Are you satisfied with the deputy’s declaration? Please select 'Yes','No' or 'Not applicable'
+  decision.notBlank: Please enter a decision
+  caseManagerName.notBlank: Please enter the Band D case manager's name
+  finalDecision.notBlank: Please select your final decision
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 
