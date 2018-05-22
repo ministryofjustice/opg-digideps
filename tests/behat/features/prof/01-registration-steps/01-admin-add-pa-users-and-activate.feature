@@ -45,7 +45,7 @@ Feature: Add PROF users and activate PROF user (journey)
       | user_details_phoneMain  | 10000000001 |
     And I press "user_details_save"
     Then the form should be valid
-    And I should be on "/org"
+    And the URL should match "/org"
     # check I'm in the dashboard
     And I should see the "client-01000010" region
 

@@ -165,20 +165,6 @@ class UserController extends AbstractController
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
             return $this->redirect($this->get('redirector_service')->getHomepageRedirect());
-
-//
-//            return $this->redirect($this->generateUrl([
-//                EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
-//                EntityDir\User::ROLE_CASE_MANAGER   => 'admin_homepage',
-//                EntityDir\User::ROLE_AD             => 'ad_homepage',
-//                EntityDir\User::ROLE_PA_NAMED       => 'org_dashboard',
-//                EntityDir\User::ROLE_PA_ADMIN       => 'org_dashboard',
-//                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'org_dashboard',
-//                EntityDir\User::ROLE_PROF_NAMED       => 'org_dashboard',
-//                EntityDir\User::ROLE_PROF_ADMIN       => 'org_dashboard',
-//                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'org_dashboard',
-//                EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
-//            ][$user->getRoleName()]));
         }
 
         return [
