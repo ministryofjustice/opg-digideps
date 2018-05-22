@@ -54,7 +54,7 @@ class ReportController extends RestController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_CASE_MANAGER')")
      *
      * @param int $id
      *
@@ -68,7 +68,7 @@ class ReportController extends RestController
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         /* @var $report Report */
-        if (!$this->isGranted(EntityDir\User::ROLE_ADMIN)) {
+        if (!$this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 
@@ -332,7 +332,7 @@ class ReportController extends RestController
     /**
      * @Route("/{id}/unsubmit", requirements={"id":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function unsubmit(Request $request, $id)
     {

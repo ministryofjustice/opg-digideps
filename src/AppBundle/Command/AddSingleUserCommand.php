@@ -91,16 +91,14 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->setAddressCountry('GB')
         ;
 
-        if (isset($data['deputyPostcode'])) {
+        if (!empty($data['deputyPostcode'])) {
             $user->setAddressPostcode($data['deputyPostcode']);
         }
 
-        if (isset($data['roleId']) && !empty($data['roleId'])) { //deprecated
-            $user->setRoleName(User::roleIdToName($data['roleId']));
-        } elseif (isset($data['roleName']) && !empty($data['roleName'])) {
+        if (!empty($data['roleName'])) {
             $user->setRoleName($data['roleName']);
         } else {
-            $output->write('roleId or roleName must be defined');
+            $output->write('roleName must be defined for the user');
             return;
         }
 
@@ -115,10 +113,10 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $em->persist($user);
 
         /**
-         * Deputy:
+         * Deputy user::
          * Add CASREC entry + Client
          */
-        if ($data['roleName'] != User::ROLE_ADMIN) {
+        if (!in_array($data['roleName'], [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_CASE_MANAGER])) {
             $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
             $em->persist($casRecEntity);
 

@@ -107,7 +107,7 @@ security:
 
     # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
     role_hierarchy:
-        ROLE_ADMIN:           ROLE_DOCUMENT_MANAGE
+        ROLE_ADMIN:           [ ROLE_DOCUMENT_MANAGE, ROLE_CASE_MANAGER ]
 
         ROLE_LAY_DEPUTY:      ROLE_DEPUTY
         ROLE_ORG:             ROLE_DEPUTY

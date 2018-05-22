@@ -20,7 +20,6 @@ parameters:
             firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
             lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
             password: {{ getv (printf "/fixtures/%s/password" .) }}
-            roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
             {{ if exists (printf "/fixtures/%s/rolename" . ) }}roleName: {{ getv (printf "/fixtures/%s/rolename" .) }}{{ end }}
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
             ndrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
