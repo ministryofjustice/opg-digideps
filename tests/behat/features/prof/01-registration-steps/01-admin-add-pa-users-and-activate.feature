@@ -37,19 +37,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the following fields should have the corresponding values:
       | user_details_firstname | DEP1     |
       | user_details_lastname  | SURNAME1 |
-    # check errors
-    When I fill in the following:
-      | user_details_firstname  |  |
-      | user_details_lastname   |  |
-      | user_details_jobTitle   |  |
-      | user_details_phoneMain  |  |
-    And I press "user_details_save"
-    Then the following fields should have an error:
-      | user_details_firstname |
-      | user_details_lastname  |
-      | user_details_jobTitle  |
-      | user_details_phoneMain |
-    # correct
+    # fill form. Validation is skipepd as already tested in PA scenarios (same page)
     When I fill in the following:
       | user_details_firstname  | John Named           |
       | user_details_lastname   | Green      |

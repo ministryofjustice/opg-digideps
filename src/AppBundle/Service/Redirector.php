@@ -226,7 +226,8 @@ class Redirector
             return $this->router->generate('login');
         }
 
-        if ($this->authChecker->isGranted(EntityDir\User::ROLE_PA)) {
+        // PROF and PA redirect to org homepage
+        if ($this->authChecker->isGranted(EntityDir\User::ROLE_ORG)) {
             return $this->router->generate('org_dashboard');
         }
 
