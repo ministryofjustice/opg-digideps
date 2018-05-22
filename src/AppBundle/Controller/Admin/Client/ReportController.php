@@ -114,7 +114,7 @@ class ReportController extends AbstractController
                     $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInfomation'
                 );
             } else {
-                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]));
+                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#' );
             }
         }
 
