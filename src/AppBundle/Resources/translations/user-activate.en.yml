@@ -19,6 +19,6 @@ password:
 password_confirm:
     label: Confirm password
 terms_conditions:
-    label: I have read and understood the <a href="%link%" target="_blank">terms and conditions</a>
+    label: I have read and understood the <a href="%link%" target="_blank">terms of use</a>
 submit:
     label: Submit
