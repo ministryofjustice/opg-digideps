@@ -267,13 +267,15 @@
         </thead>
         <tbody>
         {% if checklist.checklistInformation is not empty %}
+            {% set counter = 1 %}
             {% for info in checklist.checklistInformation %}
 
             <tr>
-                <td>{{ info.information }}</td>
-                <td class="align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
-                <td class="numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
+                <td class="behat-region-information-{{ counter }}">{{ info.information }}</td>
+                <td class="behat-region-information-created-by-{{ counter }} align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
+                <td class="behat-region-created-on-{{ counter }} numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
             </tr>
+                {% set counter = counter + 1 %}
             {% endfor %}
         {% else %}
             <tr>
