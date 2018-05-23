@@ -1,0 +1,9 @@
+// ==========================================================================
+// META DATA
+// Last updated info at bottom of privacy notice
+
+.meta-data {
+  @include core-16;
+  color: $secondary-text-colour;
+  margin-top: em(60);
+}
