@@ -54,7 +54,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'user@mail.com-WRONG',
                 'password' => 'password-WRONG',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'assertCode' => 498,
             'assertResponseCode' => 498,
         ]);
@@ -76,7 +76,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'admin@example.org',
                 'password' => 'Abcd1234',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'assertCode' => 403,
             'assertResponseCode' => 403,
         ]);
@@ -90,7 +90,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testFailWrongAuthToken()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         $this->assertTrue(strlen($authToken) > 5, "Token $authToken not valid");
 
@@ -112,7 +112,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginSuccess()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -148,8 +148,8 @@ class AuthControllerTest extends AbstractTestController
         $this->resetAttempts('email' . 'deputy@example.org');
         $this->resetAttempts('email' . 'admin@example.org');
 
-        $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
+        $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
+        $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', API_TOKEN_ADMIN);
 
         // assert deputy can access
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -183,7 +183,7 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginTimeout()
     {
-        $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $authToken = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         // manually expire token in REDIS
         self::$frameworkBundleClient->getContainer()->get('snc_redis.default')->expire($authToken, 0);
@@ -217,7 +217,7 @@ class AuthControllerTest extends AbstractTestController
                     'email' => 'deputy@example.org',
                     'password' => 'password-WRONG',
                 ],
-                'ClientSecret' => '123abc-deputy',
+                'ClientSecret' => API_TOKEN_DEPUTY,
                 'assertCode' => $expectedReturnCode,
                 'assertResponseCode' => $expectedReturnCode,
             ]);
@@ -230,7 +230,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'deputy@example.org',
                 'password' => 'Abcd1234',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
             'assertResponseCode' => 200,
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
@@ -250,7 +250,7 @@ class AuthControllerTest extends AbstractTestController
                     'email' => 'deputy@example.org',
                     'password' => 'password-WRONG',
                 ],
-                'ClientSecret' => '123abc-deputy',
+                'ClientSecret' => API_TOKEN_DEPUTY,
                 'assertCode' => $expectedReturnCode,
                 'assertResponseCode' => $expectedReturnCode,
             ]);
@@ -263,7 +263,7 @@ class AuthControllerTest extends AbstractTestController
                     'email' => 'deputy@example.org',
                     'password' => 'Abcd1234',
                 ],
-                'ClientSecret' => '123abc-deputy',
+                'ClientSecret' => API_TOKEN_DEPUTY,
                 'assertCode' => 423,
                 'assertResponseCode' => 423,
         ])['data'];

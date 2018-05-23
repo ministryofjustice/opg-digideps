@@ -111,7 +111,7 @@ class DocumentControllerTest extends AbstractTestController
         self::fixtures()->remove($document)->flush();
         $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-admin',
+            'ClientSecret' => API_TOKEN_ADMIN,
         ]);
     }
 
@@ -135,12 +135,12 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustFail' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
         $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-admin',
+            'ClientSecret' => API_TOKEN_ADMIN,
         ])['data'];
 
         $this->assertCount(2, $records);
@@ -160,17 +160,17 @@ class DocumentControllerTest extends AbstractTestController
         // hard delete document1
         $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
             'mustFail' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
         $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-admin',
+            'ClientSecret' => API_TOKEN_ADMIN,
         ]);
 
         // assert one got deleted
         $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-admin',
+            'ClientSecret' => API_TOKEN_ADMIN,
         ])['data'];
 
         $this->assertCount(1, $records);
@@ -185,7 +185,7 @@ class DocumentControllerTest extends AbstractTestController
     {
         $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $existingDoocId, [
             'mustFail' => true,
-            'ClientSecret' => '123abc-admin',
+            'ClientSecret' => API_TOKEN_ADMIN,
         ]);
 
         $this->repo->clear();

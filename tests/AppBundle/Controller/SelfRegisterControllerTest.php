@@ -79,14 +79,14 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'Tolley',
                 'email' => 'behat-missingdata@gov.uk',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
     }
 
     /** @test */
     public function dontSaveUnvalidUserToDB()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -99,7 +99,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => '',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
         $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
@@ -126,7 +126,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
 
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -140,7 +140,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
         $id = $responseArray['data']['id'];
@@ -166,7 +166,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function userNotFoundinCasRec()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -180,7 +180,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cl',
                 'case_number' => '12345600',
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
         $this->assertContains('no matching record in casrec', $responseArray['message']);
@@ -192,7 +192,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForDuplicate()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $token = $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -209,7 +209,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678', // already taken !
             ],
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
     }
 }
