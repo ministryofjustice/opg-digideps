@@ -25,6 +25,13 @@ previous: Previous
 manage: Manage
 checklist: Checklist
 
+# Section headings
+
+moneyOut: Money out
+moneyIn: Money in
+deputyExpenses: Deputy expenses
+gifts: Gifts
+
 # Report headings
 annualDeputyReport: Annual deputy report
 currentDeputyReport: Current deputy report
@@ -55,6 +62,10 @@ reports: Reports
 period: Period
 submissionDate: Submission date
 unsubmissionDate: Unsubmission date
+bankName: Bank or building society name
+typeOfAccount: Type of account
+sortCode: Sort code
+accountNumber: Account number
 
 # Statuses
 notCreated: Not created

@@ -118,36 +118,36 @@
         {% if alertType == 'notice' %}
             <div class="alert-notice panel panel-border-narrow">
                 <span class="icon icon-notification"></span>
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="alert-success panel panel-border-narrow">
                 <span class="icon icon-tick"></span>
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="alert-error panel panel-border-narrow">
                 <span class="icon icon-cross"></span>
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="alert-info panel panel-border-narrow">
                 <span class="icon icon-information"></span>
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% elseif alertType == 'important' %}
             <div class="alert-important panel panel-border-narrow">
                 <span class="icon icon-important-small"></span>
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% else %}
             <div class="alert panel panel-border-narrow">
-                <div class="behat-alert-message alert-message"><p>{{ message | raw }}</p></div>
+                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
             </div>
         {% endif %}
     {% else %}
         <div class="alert panel panel-border-narrow">
-            <div class="behat-alert-message alert-message">
+            <div class="behat-region-alert-message alert-message">
                 <p>{{ message | raw }}</p>
             </div>
         </div>
@@ -183,7 +183,7 @@
             {% endif %}
             {% if report.type != 'ndr' %}
                 {% if report.hasSection('balance') %}
-                    {% if section in ['gifts','deputyExpenses','moneyIn','moneyOut'] %}
+                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut'] %}
                         <li>
                             <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
                         </li>

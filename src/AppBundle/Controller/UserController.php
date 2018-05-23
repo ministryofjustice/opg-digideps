@@ -158,17 +158,13 @@ class UserController extends AbstractController
         if ($form->isValid()) {
             $this->getRestClient()->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
-            return $this->redirect($this->generateUrl([
-                EntityDir\User::ROLE_ADMIN          => 'admin_homepage',
-                EntityDir\User::ROLE_AD             => 'ad_homepage',
-                EntityDir\User::ROLE_PA_NAMED       => 'org_dashboard',
-                EntityDir\User::ROLE_PA_ADMIN       => 'org_dashboard',
-                EntityDir\User::ROLE_PA_TEAM_MEMBER => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_NAMED       => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_ADMIN       => 'org_dashboard',
-                EntityDir\User::ROLE_PROF_TEAM_MEMBER => 'org_dashboard',
-                EntityDir\User::ROLE_LAY_DEPUTY     => 'client_add',
-            ][$user->getRoleName()]));
+            // lay deputies are redirected to adding a client (Step.3)
+            if ($user->isLayDeputy()) {
+                return $this->redirectToRoute('client_add');
+            }
+
+            // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
+            return $this->redirect($this->get('redirector_service')->getHomepageRedirect());
         }
 
         return [
@@ -335,6 +331,7 @@ class UserController extends AbstractController
         switch ($user->getRoleName()) {
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
+            case EntityDir\User::ROLE_CASE_MANAGER:
                 return [new FormDir\User\UserDetailsBasicType($user), ['user_details_basic']];
 
             case EntityDir\User::ROLE_LAY_DEPUTY:

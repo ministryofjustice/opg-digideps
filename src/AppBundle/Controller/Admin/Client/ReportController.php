@@ -9,6 +9,7 @@ use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,7 +19,8 @@ class ReportController extends AbstractController
 {
     /**
      * @Route("manage", name="admin_report_manage")
-     *
+     * //TODO define Security group (AD to remove?)
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
      * @param Request $request
      * @param $id
      *

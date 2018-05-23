@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,6 +17,7 @@ class StatsController extends AbstractController
 {
     /**
      * @Route("", name="admin_stats")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function statsAction(Request $request)
@@ -25,6 +27,7 @@ class StatsController extends AbstractController
 
     /**
      * @Route("/dd-stats.csv", name="admin_stats_csv")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function statsCsvAction(Request $request)

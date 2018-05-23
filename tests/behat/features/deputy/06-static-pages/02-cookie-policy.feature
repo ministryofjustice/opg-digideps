@@ -1,5 +1,9 @@
 Feature: Cookie Policy
-    
+
+    @deputy
+    Scenario: init data
+        Given I load the application status from "report-submit-pre"
+
     @deputy
     Scenario: I see a link in the bottom footer of the service on every page
         Given I go to "/login"

@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,6 +18,7 @@ class AdController extends AbstractController
 {
     /**
      * @Route("/", name="ad_homepage")
+     * @Security("has_role('ROLE_AD')")
      * @Template
      */
     public function indexAction(Request $request)
@@ -71,6 +73,7 @@ class AdController extends AbstractController
 
     /**
      * @Route("/view-user", name="ad_view_user")
+     * @Security("has_role('ROLE_AD')")
      * @Method({"GET", "POST"})
      * @Template
      *
@@ -104,7 +107,7 @@ class AdController extends AbstractController
 
     /**
      * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
-     *
+     * @Security("has_role('ROLE_AD')")
      * @param Request $request
      */
     public function adLoginAsDeputyAction(Request $request, $deputyId)

@@ -18,6 +18,7 @@ class User implements AdvancedUserInterface
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
     const ROLE_AD = 'ROLE_AD';
+    const ROLE_CASE_MANAGER = 'ROLE_CASE_MANAGER';
 
     const ROLE_PA = 'ROLE_PA';
     const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
@@ -41,6 +42,7 @@ class User implements AdvancedUserInterface
         self::ROLE_ADMIN          => 'OPG Admin',
         self::ROLE_LAY_DEPUTY     => 'Lay Deputy',
         self::ROLE_AD             => 'Assisted Digital',
+        self::ROLE_CASE_MANAGER   => 'Case Manager',
         // pa
         self::ROLE_PA_NAMED       => 'Public Authority (named)',
         self::ROLE_PA_ADMIN       => 'Public Authority admin',
@@ -1023,13 +1025,21 @@ class User implements AdvancedUserInterface
     }
 
     /**
+     * @return bool true if user role is LAY
+     */
+    public function isLayDeputy()
+    {
+        return $this->roleName === self::ROLE_LAY_DEPUTY;
+    }
+
+    /**
      * Is User a Deputy Either PA or Lay?
      *
      * @return bool true if user role is LAY or PA
      */
     public function isDeputy()
     {
-        return $this->roleName === self::ROLE_LAY_DEPUTY || $this->isDeputyOrg();
+        return $this->isLayDeputy() || $this->isDeputyOrg();
     }
 
     /**

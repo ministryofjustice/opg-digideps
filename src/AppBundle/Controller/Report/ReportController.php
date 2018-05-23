@@ -11,6 +11,7 @@ use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -65,6 +66,7 @@ class ReportController extends AbstractController
      * List of reports.
      *
      * @Route("/lay", name="lay_home")
+     * //TODO we should add Security("has_role('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
      * @Template()
      */
     public function indexAction(Request $request)

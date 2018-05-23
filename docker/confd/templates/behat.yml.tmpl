@@ -82,8 +82,7 @@ default:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
               goutte:
                   guzzle_parameters:
-                      defaults:
-                          verify: false
+                    verify: false
               files_path: %paths.base%/fixtures/
           {{ if exists "/frontend/nonadmin/host" }}
               base_url: {{ getv "/frontend/nonadmin/host" }}
@@ -199,8 +198,7 @@ headless:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte:
                 guzzle_parameters:
-                    defaults:
-                      verify: false
+                    verify: false
             files_path: %paths.base%/fixtures/
         {{ if exists "/frontend/nonadmin/host" }}
             base_url: {{ getv "/frontend/nonadmin/host" }}

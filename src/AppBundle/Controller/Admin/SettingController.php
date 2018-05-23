@@ -3,9 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form as FormDir;
@@ -17,6 +17,7 @@ class SettingController extends AbstractController
 {
     /**
      * @Route("/service-notification", name="admin_setting_service_notifications")
+     * @Security("has_role('ROLE_ADMIN')")
      * @Template
      */
     public function serviceNotificationAction(Request $request)

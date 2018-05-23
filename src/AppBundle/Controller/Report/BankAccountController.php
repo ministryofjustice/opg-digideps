@@ -196,13 +196,28 @@ class BankAccountController extends AbstractController
      * @param int $reportId
      * @param int $accountId
      *
-     * @return RedirectResponse
+     * @Template()
      */
-    public function deleteAction(Request $request, $reportId, $accountId)
+    public function deleteConfirmAction(Request $request, $reportId, $accountId)
     {
+        $translator = $this->get('translator');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
 
-        try {
+        $dependentRecords = $this->getRestClient()->get("/account/{$accountId}/dependent-records", 'array');
+        $bankAccount = $report->getBankAccountById($accountId);
+
+        // if money transfer are added, always go to summary page with the error displayed
+        if ($dependentRecords['moneyTransfers'] > 0) {
+            $translatedMessage = $translator->trans("deletePage.transferPresentError", [], 'report-bank-accounts');
+            $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+
+            return $this->redirect($summaryPageUrl);
+        }
+
+
+        // delete the bank acount if the confirm button is pushed, or there are no payments. Then go back to summary page
+        if ($request->get('confirm') || $dependentRecords['transactionsCount'] == 0) {
             if ($report->getBankAccountById($accountId)) {
                 $this->getRestClient()->delete("/account/{$accountId}");
             }
@@ -211,32 +226,18 @@ class BankAccountController extends AbstractController
                 'notice',
                 'Bank account deleted'
             );
-        } catch (RestClientException $e) {
 
-            // Business Rule is converted to RestClientException with code 409
-            if (isset($e->getData()['data']['sectionErrors']) && $e->getCode() == 409) {
-
-                /** @var Translator $translator */
-                $translator = $this->get('translator');
-
-                $errors = $e->getData()['data']['sectionErrors'];
-                foreach ($errors as $section => $errorCount) {
-                    if ($errorCount) {
-                        $section = ucfirst($section);
-                        $translatedMessage = $translator->trans("report.bankAccount.deleteWith{$section}", ['errorCount' => $errorCount], 'report-bank-accounts');
-                        $request->getSession()->getFlashBag()->add('error', $translatedMessage);
-                    }
-                }
-
-            } else {
-                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
-                throw $e;
-            }
-        } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add('error', 'Account could not be deleted.');
+            return $this->redirect($summaryPageUrl);
         }
 
-        return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
+        // show confirmation page
+        return [
+            'report' => $report,
+            'accountId' => $accountId,
+            'account' => $bankAccount,
+            'dp' => $dependentRecords,
+            'backLink' => $summaryPageUrl
+        ];
     }
 
     /**
