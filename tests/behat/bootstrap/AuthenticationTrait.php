@@ -23,8 +23,8 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInToAdminAsWithPassword($email, $password)
     {
-        $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . '/logout');
+        $this->visitAdminPath('/logout');
+
         $this->iAmAtAdminLogin();
         $this->fillField('login_email', $email);
         $this->fillField('login_password', $password);
@@ -33,12 +33,12 @@ trait AuthenticationTrait
     }
 
     /**
+     * @deprecated Use  I am on admin page "/login" instead
      * @Given I am on admin login page
      */
     public function iAmAtAdminLogin()
     {
-        $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl . '/login');
+        $this->visitAdminPath('/login');
     }
 
     /**
@@ -48,6 +48,17 @@ trait AuthenticationTrait
     {
         $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($url);
+        $this->assertResponseStatus(500);
+        $this->visit($previousUrl);
+    }
+
+    /**
+     * @Then the admin URL :url should not be accessible
+     */
+    public function theAdminUrlShouldNotBeAccessible($url)
+    {
+        $previousUrl = $this->getSession()->getCurrentUrl();
+        $this->visitAdminPath($url);
         $this->assertResponseStatus(500);
         $this->visit($previousUrl);
     }
@@ -72,17 +83,16 @@ trait AuthenticationTrait
     }
 
     /**
-     * @Then the following pages should return the following status:
+     * @Then the following :area pages should return the following status:
      */
-    public function theFollowingPagesShouldReturnTheFollowingStatus(TableNode $table)
+    public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table)
     {
         foreach ($table->getRowsHash() as $url => $expectedReturnCode) {
-            $this->visitPath($url);
-           //$actual = $this->getSession()->getStatusCode();
-
-           //if (intval($expectedReturnCode) !== intval($actual)) {
-           //    throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
-          //}
+            $area =='admin' ? $this->visitAdminPath($url): $this->visitPath($url);
+            $actual = $this->getSession()->getStatusCode();
+            if (intval($expectedReturnCode) !== intval($actual)) {
+               throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
+            }
         }
     }
 }

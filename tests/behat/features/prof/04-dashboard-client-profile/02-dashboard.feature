@@ -17,7 +17,7 @@ Feature: PROF dashboard
     Then I should not see the "client" region
     # check navigation links
     When I click on "org-dashboard" in the navbar region
-    Then I should be on "/org/"
+    Then the URL should match "/org"
 
   Scenario: PROF links in header
     Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"

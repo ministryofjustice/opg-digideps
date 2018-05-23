@@ -12,7 +12,8 @@ trait UserTrait
     private static $roleStringToRoleName = [
         'admin' => User::ROLE_ADMIN,
         'lay deputy' => User::ROLE_LAY_DEPUTY,
-        'ad' => User::ROLE_AD
+        'ad' => User::ROLE_AD,
+        'case manager' => User::ROLE_CASE_MANAGER,
     ];
 
     /**

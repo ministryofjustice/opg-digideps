@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\MultiDocumentZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,6 +21,7 @@ class ReportSubmissionController extends AbstractController
 
     /**
      * @Route("/list", name="admin_documents")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function indexAction(Request $request)

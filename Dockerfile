@@ -3,8 +3,9 @@ FROM registry.service.opg.digital/opguk/digi-deps-frontend-base:nightly
 WORKDIR /app
 USER app
 ENV  HOME /app
+COPY composer.json /app/
+COPY composer.lock /app/
 RUN  composer install --prefer-dist --no-interaction --no-scripts
-RUN  composer dump-autoload --optimize
 COPY package.json /app/
 RUN  npm -g set progress=false
 RUN  npm install
@@ -20,6 +21,7 @@ RUN chmod 0744 /etc/cron.d/digideps
 USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
+RUN  composer dump-autoload --optimize
 RUN  NODE_ENV=production gulp
 
 # remove parameters.yml (will be regenerated at startup time from docker)

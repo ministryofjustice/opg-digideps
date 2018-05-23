@@ -6,16 +6,19 @@ use AppBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/admin/ajax")
+ *
  */
 class AjaxController extends AbstractController
 {
     /**
      * @Route("/casrec-truncate", name="casrec_truncate_ajax")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function truncateUsersAjaxAction(Request $request)
@@ -33,6 +36,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/casrec-add", name="casrec_add_ajax")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
     public function uploadUsersAjaxAction(Request $request)
@@ -57,6 +61,7 @@ class AjaxController extends AbstractController
 
     /**
      * @Route("/org-chunk-add", name="org_add_ajax")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Method({"POST"})
      * @Template
      */
