@@ -113,7 +113,7 @@ class ReportController extends AbstractController
 
             if ($buttonClicked->getName() == 'saveFurtherInformation') {
                 return $this->redirect(
-                    $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInfomation'
+                    $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInformation'
                 );
             } else {
                 return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#' );

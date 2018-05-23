@@ -81,7 +81,7 @@
                         <td class="change-answer width-tenth">
                             {% if report.submitted %}
                                 <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
-                                   class="action-link behat-link-manage">{{ 'checklist' | trans({}, 'common') }}</a>
+                                   class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
                                 <br />
                                 <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
                                    class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>

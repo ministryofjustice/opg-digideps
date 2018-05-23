@@ -288,16 +288,18 @@
             'formGroupClass': 'explanation',
         }) }}
         {{ form_submit(form.saveFurtherInformation,'checklistPage.form.saveFurtherInformation', {
-            'buttonClass': 'button-secondary'
+            'buttonClass': 'button-secondary behat-link-save-further-information'
         }) }}
     </div>
 
     <div class="form-section">
         {{ form_submit(form.save,'checklistPage.form.save', {
-            'buttonClass': 'button-secondary push-half--right'
+            'buttonClass': 'button-secondary push-half--right behat-link-save-progress'
         }) }}
 
-        {{ form_submit(form.submitAndDownload,'checklistPage.form.submitAndDownload') }}
+        {{ form_submit(form.submitAndDownload,'checklistPage.form.submitAndDownload', {
+            'buttonClass': 'behat-link-submit-and-download'
+        }) }}
 
         <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
     </div>
