@@ -188,27 +188,13 @@ class AccountControllerTest extends AbstractTestController
         // assert user cannot delete another users' account
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
 
-        // assert user cannot delete an account with associated transactions
-        $this->assertJsonRequest('DELETE', $url3, [
-            'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'assertResponseCode' => 409
-        ]);
-
-        $this->assertFalse(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
-
-        // clear expense
-        $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
-        $this->assertJsonRequest('DELETE', $url, [
-            'mustSucceed' => true,
-            'AuthToken'   => self::$tokenDeputy,
-        ]);
-
-        // delete should now succeed
+        // delete an account with associated transactions
         $this->assertJsonRequest('DELETE', $url3, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ]);
+
+        $this->assertNotInstanceOf(BankAccount::class, self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
 
         self::fixtures()->clear();
 
