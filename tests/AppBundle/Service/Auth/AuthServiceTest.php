@@ -14,15 +14,15 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     private $authService;
 
     private $clientSecrets = [
-        '123abc-deputy' => [
+        'layDeputySecret' => [
             'permissions' => ['ROLE_LAY_DEPUTY'],
         ],
-        '123abc-admin' => [
+        'adminSecret' => [
             'permissions' => ['ROLE_ADMIN'],
         ],
-        '123abc-deputyNoPermissions' => [
+        'layDeputySecretNoPermissions' => [
         ],
-        '123abc-deputyWrongFormat' => 'IShouldBeAnArray',
+        'layDeputySecretWrongFormat' => 'IShouldBeAnArray',
     ];
 
     public function setUp()
@@ -57,9 +57,9 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     public function isSecretValidProvider()
     {
         return [
-            ['123abc-deputy', true],
-            [' 123abc-deputy ', false],
-            ['123ABC-deputy ', false],
+            ['layDeputySecret', true],
+            ['layDeputySecret ', false],
+            ['LAYDEPUTYSECRET-deputy ', false],
             ['123', false],
             [null, false],
             [0, false],
@@ -134,19 +134,19 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     public function isSecretValidForUserProvider()
     {
         return [
-            ['123abc-deputy', 'ROLE_LAY_DEPUTY', true],
-            ['123abc-deputy', 'ROLE_LAY_DEPUTY_INHERITED', true],
-            ['123abc-deputy', 'ROLE_ADMIN', false],
-            ['123abc-deputy', 'OTHER_ROLE', false],
-            ['123abc-deputy', null, false],
-            ['123abc-admin', 'ROLE_LAY_DEPUTY', false],
-            ['123abc-admin', 'ROLE_ADMIN', true],
-            ['123abc-admin', 'OTHER_ROLE', false],
-            ['123abc-admin', null, false],
-            ['123abc-deputyNoPermissions', '', false],
-            ['123abc-deputyNoPermissions', null, false],
-            ['123abc-deputyNoPermissions', false, false],
-            ['123abc-deputyWrongFormat', '', false],
+            ['layDeputySecret', 'ROLE_LAY_DEPUTY', true],
+            ['layDeputySecret', 'ROLE_LAY_DEPUTY_INHERITED', true],
+            ['layDeputySecret', 'ROLE_ADMIN', false],
+            ['layDeputySecret', 'OTHER_ROLE', false],
+            ['layDeputySecret', null, false],
+            ['adminSecret', 'ROLE_LAY_DEPUTY', false],
+            ['adminSecret', 'ROLE_ADMIN', true],
+            ['adminSecret', 'OTHER_ROLE', false],
+            ['adminSecret', null, false],
+            ['layDeputySecretNoPermissions', '', false],
+            ['layDeputySecretNoPermissions', null, false],
+            ['layDeputySecretNoPermissions', false, false],
+            ['layDeputySecretWrongFormat', '', false],
             [null, null, false],
         ];
     }

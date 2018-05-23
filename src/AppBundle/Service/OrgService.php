@@ -209,7 +209,7 @@ class OrgService
 
     /**
      * @param array          $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
-     * @param EntityDir\User $userOrgNamed
+     * @param EntityDir\User $userOrgNamed the user the client should belong to
      *
      * @return EntityDir\Client
      */
@@ -283,8 +283,8 @@ class OrgService
 
     /**
      * @param array $csvRow keys: Last Report Day, Typeofrep, }
-     * @param EntityDir\Client $client
-     * @param EntityDir\User $user
+     * @param EntityDir\Client $client the client the report should belong to
+     * @param EntityDir\User $user the user (needed for determine the report type, dependendent on user role)
      * @return EntityDir\Report\Report
      * @throws \Doctrine\ORM\OptimisticLockException
      */

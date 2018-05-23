@@ -225,7 +225,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $this->login('deputy@example.org', 'Abcd1234ne', '123abc-deputy');
+        $this->login('deputy@example.org', 'Abcd1234ne', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -245,7 +245,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $this->login('deputy@example.org', 'Abcd1234pa', '123abc-deputy');
+        $this->login('deputy@example.org', 'Abcd1234pa', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -397,7 +397,7 @@ class UserControllerTest extends AbstractTestController
     {
         $this->assertJsonRequest('PUT', '/user/recreate-token/WRONGUSER@example.org/' . $urlPart, [
             'mustFail' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
     }
 
@@ -409,17 +409,17 @@ class UserControllerTest extends AbstractTestController
     public static function recreateTokenProviderForRole()
     {
         return [
-            ['activate', '123abc-admin', 'admin@example.org', true],
-            ['activate', '123abc-admin', 'deputy@example.org', true],
+            ['activate', API_TOKEN_ADMIN, 'admin@example.org', true],
+            ['activate', API_TOKEN_ADMIN, 'deputy@example.org', true],
 
-            ['activate', '123abc-deputy', 'deputy@example.org', true],
-            ['activate', '123abc-deputy', 'admin@example.org', false],
+            ['activate', API_TOKEN_DEPUTY, 'deputy@example.org', true],
+            ['activate', API_TOKEN_DEPUTY, 'admin@example.org', false],
 
-            ['pass-reset', '123abc-admin', 'deputy@example.org', true],
-            ['pass-reset', '123abc-admin', 'admin@example.org', true],
+            ['pass-reset', API_TOKEN_ADMIN, 'deputy@example.org', true],
+            ['pass-reset', API_TOKEN_ADMIN, 'admin@example.org', true],
 
-            ['pass-reset', '123abc-deputy', 'deputy@example.org', true],
-            ['pass-reset', '123abc-deputy', 'admin@example.org', false],
+            ['pass-reset', API_TOKEN_DEPUTY, 'deputy@example.org', true],
+            ['pass-reset', API_TOKEN_DEPUTY, 'admin@example.org', false],
         ];
     }
 
@@ -462,7 +462,7 @@ class UserControllerTest extends AbstractTestController
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
         // refresh deputy from db and chack token has been reset
@@ -492,7 +492,7 @@ class UserControllerTest extends AbstractTestController
 
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
     }
@@ -517,7 +517,7 @@ class UserControllerTest extends AbstractTestController
 
         $data = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => API_TOKEN_DEPUTY,
         ])['data'];
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');

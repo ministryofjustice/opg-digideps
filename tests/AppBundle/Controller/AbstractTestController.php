@@ -182,7 +182,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsDeputy()
     {
-        return $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        return $this->login('deputy@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -190,7 +190,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPa()
     {
-        return $this->login('pa@example.org', 'Abcd1234', '123abc-deputy');
+        return $this->login('pa@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -198,7 +198,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaAdmin()
     {
-        return $this->login('pa_admin@example.org', 'Abcd1234', '123abc-deputy');
+        return $this->login('pa_admin@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -206,7 +206,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsPaTeamMember()
     {
-        return $this->login('pa_team_member@example.org', 'Abcd1234', '123abc-deputy');
+        return $this->login('pa_team_member@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -214,7 +214,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsProf()
     {
-        return $this->login('prof@example.org', 'Abcd1234', '123abc-deputy');
+        return $this->login('prof@example.org', 'Abcd1234', API_TOKEN_DEPUTY);
     }
 
     /**
@@ -222,7 +222,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     protected function loginAsAdmin()
     {
-        return $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
+        return $this->login('admin@example.org', 'Abcd1234', API_TOKEN_ADMIN);
     }
 
     protected function tearDown()
