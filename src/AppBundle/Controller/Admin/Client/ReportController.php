@@ -173,8 +173,9 @@ class ReportController extends AbstractController
         ];
     }
 
+
     /**
-     * @Route("/admin/report/checklist-{reportId}.pdf", name="admin_checklist_pdf")
+     * @Route("checklist-{reportId}.pdf", name="admin_checklist_pdf")
      */
     public function checklistPDFViewAction($reportId)
     {
@@ -182,18 +183,19 @@ class ReportController extends AbstractController
         $pdfBinary = $this->get('report_submission_service')->getChecklistPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
-        $response->headers->set('Content-Type', 'application/pdf');
-
-        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
-            $report->getEndDate()->format('Y'),
-            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
-            $report->getClient()->getCaseNumber()
-        );
-
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
-
-        // Send headers before outputting anything
-        $response->sendHeaders();
+        // TO UNCOMMENT VVV
+//        $response->headers->set('Content-Type', 'application/pdf');
+//
+//        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
+//            $report->getEndDate()->format('Y'),
+//            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+//            $report->getClient()->getCaseNumber()
+//        );
+//
+//        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+//
+//        // Send headers before outputting anything
+//        $response->sendHeaders();
 
         return $response;
     }

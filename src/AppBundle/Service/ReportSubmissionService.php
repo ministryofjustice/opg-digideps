@@ -141,7 +141,7 @@ class ReportSubmissionService
             'report' => $report,
             'checklist' => $report->getChecklist()
         ]);
-
+        return $html; // TO REMOVE
         return $this->wkhtmltopdf->getPdfFromHtml($html);
     }
 
