@@ -1,7 +1,7 @@
 checklistPage:
   htmlTitle: Administration - Report checklist
   pageTitle: Admin
-  supportTitle: Checklist
+  supportTitle: Lodging checklist
   heading:
     info: Deputy and client information
     decisions: Decisions made over the reporting period
