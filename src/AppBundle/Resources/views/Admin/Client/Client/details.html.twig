@@ -14,6 +14,15 @@
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
+{# Breadcrumbs #}
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
+        </ol>
+    </div>
+{% endblock %}
+
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}

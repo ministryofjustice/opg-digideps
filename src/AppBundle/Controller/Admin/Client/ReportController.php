@@ -145,7 +145,7 @@ class ReportController extends AbstractController
                 $this->getRestClient()->put ('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
-                $request->getSession()->getFlashBag()->add('notice', 'Report checklist updated');
+                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist updated');
             } else {
                 $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
