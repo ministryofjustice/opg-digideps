@@ -174,22 +174,6 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     */
-    private $decision;
-
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     */
-    private $caseManagerName;
-
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-checklist"})
      */
     private $lodgingSummary;
