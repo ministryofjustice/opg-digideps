@@ -1,0 +1,130 @@
+{% set client = report.client %}
+{% set assets = report.assets %}
+{% set debts = report.debts %}
+{% set contacts = report.getContacts %}
+{% set decisions = report.getDecisions %}
+{% set isEmailAttachment = true %}
+{% set team = app.user.teams | first %}
+{% set transfers = report.getMoneyTransfers %}
+{% set mentalCapacity = report.getMentalCapacity %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
+
+{# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
+{% set submittedBy = report.submittedBy | default(app.user) %}
+
+<style type="text/css" media="screen, print">
+    {% include 'AppBundle:Css:formatted-report.css.twig' %}
+</style>
+
+<div id="wrapper">
+    <div class="formatted-report">
+
+        <div id="report-header">Office of the Public Guardian</div>
+        <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
+
+        {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
+
+        {# Show the summary (key info) when a flag is set from the controller (only submit time for OPG),
+           and when the money/balance information are present (only 102 reports ATM) #}
+        {% if showSummary | default(false) and report.hasSection('balance')  %}
+            {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
+        {% endif %}
+
+        {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
+        {% if report.mentalCapacity is not null %}
+            {% include 'AppBundle:Report/Formatted:_mental-capacity.html.twig' with {
+            'mentalCapacity': report.mentalCapacity
+            } %}
+        {% endif %}
+        {% include 'AppBundle:Report/Formatted:_contacts.html.twig' %}
+        {% if report.visitsCare is not null %}
+            {% include 'AppBundle:Report/Formatted:_visits_care.html.twig' with {
+            'visitsCare': report.visitsCare
+            } %}
+        {% endif %}
+        {% if report.hasSection('lifestyle') %}
+            {% include 'AppBundle:Report/Formatted:_lifestyle.html.twig' with {
+                'lifestyle': report.lifestyle
+            } %}
+        {% endif %}
+
+        {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
+        {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
+
+        {% if report.hasSection('moneyIn') %}
+            <div class="section break-before" id="accounts-section">
+                {% if (report.bankAccounts | length) > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
+                    {% if report.totalsMatch %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
+                    {% else %}
+                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
+                            'showReason': true
+                        } %}
+                    {% endif %}
+
+                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
+                    {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
+                {% endif %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
+            </div>
+        {% endif %}
+
+        {% if report.hasSection('moneyInShort') %}
+            <div class="section" id="accounts-section">
+                {% if report.bankAccounts | length > 0 %}
+                    <h2 class="section-heading">Accounts</h2>
+                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
+                {% endif %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
+                'title': 'Money in',
+                'categories': report.moneyShortCategoriesInPresent,
+                'transactions': report.moneyTransactionsShortIn,
+                'transactionsExist': report.moneyTransactionsShortInExist,
+                'transactionsTitle': 'Items of income over £1,000',
+                'existQuestion' : 'Have there been any items of income over £1,000? ',
+                'totalText': 'Money in total (items over £1,000)'
+                } %}
+                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
+                'title': 'Money out',
+                'categories': report.moneyShortCategoriesOutPresent,
+                'transactions': report.moneyTransactionsShortOut,
+                'transactionsExist': report.moneyTransactionsShortOutExist,
+                'transactionsTitle': 'Expenses over £1,000',
+                'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
+                'totalText': 'Money out total (items over £1,000)'
+                } %}
+            </div>
+        {% endif %}
+
+        {% if report.hasSection('paDeputyExpenses') %}
+            {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
+        {% endif %}
+        {% if report.hasSection('deputyExpenses') %}
+            {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
+        {% endif %}
+
+        {% if report.hasSection('profCurrentFees') %}
+            {% include 'AppBundle:Report/Formatted:_prof_current_fees.html.twig' %}
+        {% endif %}
+
+        {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
+
+        {% if report.hasSection('balance') %}
+            {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
+        {% endif %}
+
+        {% if report.hasSection('actions') %}
+            {% include 'AppBundle:Report/Formatted:_action.html.twig' %}
+        {% endif %}
+
+        {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
+            'title': 'Is there anything you’d like to tell us that hasn’t been covered elsewhere in your report?',
+        } %}
+
+        <div class="section" id="declaration">
+            {% include 'AppBundle:Report/Formatted:_submission_declaration.html.twig' %}
+        </div>
+    </div>
+</div>

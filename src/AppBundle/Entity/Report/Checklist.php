@@ -174,7 +174,6 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.decision.notBlank", groups={"submit-checklist"})
      */
     private $decision;
 
@@ -183,7 +182,6 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.caseManagerName.notBlank", groups={"submit-checklist"})
      */
     private $caseManagerName;
 

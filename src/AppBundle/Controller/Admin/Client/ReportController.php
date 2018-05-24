@@ -11,12 +11,56 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
  */
 class ReportController extends AbstractController
 {
+    /**
+     * JMS groups used for report preview and PDF
+     *
+     * @var array
+     */
+    private static $reportGroupsAll = [
+        'report',
+        'client',
+        'account',
+        'expenses',
+        'fee',
+        'gifts',
+        'action',
+        'action-more-info',
+        'asset',
+        'debt',
+        'debt-management',
+        'fee',
+        'balance',
+        'client',
+        'contact',
+        'debts',
+        'decision',
+        'visits-care',
+        'lifestyle',
+        'mental-capacity',
+        'money-transfer',
+        'transaction',
+        'transactionsIn',
+        'transactionsOut',
+        'moneyShortCategoriesIn',
+        'moneyShortCategoriesOut',
+        'moneyTransactionsShortIn',
+        'moneyTransactionsShortOut',
+        'status',
+        'report-submitted-by',
+        'wish-to-provide-documentation',
+        'report-documents',
+        'balance-state',
+        'documents',
+        'report-prof-service-fees',
+        'prof-service-fees'
+    ];
+
     /**
      * @Route("manage", name="admin_report_manage")
      * //TODO define Security group (AD to remove?)
@@ -84,7 +128,6 @@ class ReportController extends AbstractController
     public function checklistAction(Request $request, $id)
     {
         $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'user']);
-        //\Doctrine\Common\Util\Debug::dump($report,2);exit;
 
         // if (!$report->getSubmitted()) {
         //     throw new DisplayableException('Cannot manage active report');
@@ -96,7 +139,6 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
-        // edit client form
         if ($form->isValid($buttonClicked)) {
 
             if (!empty($checklist->getId())) {
@@ -116,7 +158,11 @@ class ReportController extends AbstractController
                     $this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#furtherInformation'
                 );
             } else {
-                return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#' );
+                if ($buttonClicked->getName() == 'submitAndDownload') {
+                    return $this->checklistPDFViewAction($report->getId());
+                } else {
+                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#' );
+                }
             }
         }
 
@@ -125,5 +171,30 @@ class ReportController extends AbstractController
             'form'     => $form->createView(),
             'checklist' => $checklist
         ];
+    }
+
+    /**
+     * @Route("/admin/report/checklist-{reportId}.pdf", name="admin_checklist_pdf")
+     */
+    public function checklistPDFViewAction($reportId)
+    {
+        $report = $this->getReport($reportId, ['client', 'report', 'report-checklist', 'checklist-information', 'user']);
+        $pdfBinary = $this->get('report_submission_service')->getChecklistPdfBinaryContent($report);
+
+        $response = new Response($pdfBinary);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        $attachmentName = sprintf('DigiChecklist-%s_%s_%s.pdf',
+            $report->getEndDate()->format('Y'),
+            $report->getSubmitDate() ? $report->getSubmitDate()->format('Y-m-d') : 'n-a-', //some old reports have no submission date
+            $report->getClient()->getCaseNumber()
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+
+        return $response;
     }
 }
