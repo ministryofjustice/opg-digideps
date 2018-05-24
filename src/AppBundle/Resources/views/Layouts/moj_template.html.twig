@@ -64,7 +64,7 @@
             {% if gaCustomUrl is defined %}
                 ga('send', 'pageview', '{{gaCustomUrl}}');
             {% else %}
-                ga('send', 'pageview');
+                ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});
             {% endif %}
         </script>
        {% endif %}
