@@ -15,139 +15,99 @@ class ReportChecklistType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+            $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
             $builder
             ->add('id', 'hidden')
             ->add('reportingPeriodAccurate', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
-            ->add('contactDetailsUptoDate', 'checkbox', [
-                'label' => 'Are all contact details correct and up to date? (and updated on CASREC in full, where applicable)',
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
-            ])
-            ->add('deputyFullNameAccurateinCasrec', 'checkbox', [
-                'label' => 'Are the deputies full name(s) on CASREC accurate? ',
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
-            ])
+            ->add('contactDetailsUptoDate', 'checkbox', [])
+            ->add('deputyFullNameAccurateinCasrec', 'checkbox', [])
 
             // Decisions
             ->add('decisionsSatisfactory', 'choice', [
-                'label' => 'Decisions: Have satisfactory responses been provided by the deputy?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // People Consulted
             ->add('consultationsSatisfactory', 'choice', [
-                'label' => 'People consulted: Have satisfactory responses been provided by the deputy?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Visits and Care
             ->add('careArrangements', 'choice', [
-                'label' => 'Visits and care consultations: Have satisfactory responses been provided by the deputy?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer Yes or No', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Client Assets and Debt
             ->add('assetsDeclaredAndManaged', 'choice', [
-                'label' => 'Are you satisfied the deputy has accurately declared all of the client’s assets AND are they being appropriately managed?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             ->add('debtsManaged', 'choice', [
-                'label' => 'If the client has any debt, are you satisfied that the debt is appropriate and/or is it being managed by the deputy in an appropriate manner?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
-
 
             // Money In
             ->add('openClosingBalancesMatch', 'choice', [
-                'label' => 'Account balance: Does the opening balance(s) match last year’s closing balance?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             ->add('accountsBalance', 'choice', [
-                'label' => 'Account balance: Does the account summary balance (and match bank statements where provided)  (up to £250 leeway for lay deputies)?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             ->add('moneyMovementsAcceptable', 'choice', [
-                'label' => 'Are you satisfied that the ‘money in’ and ‘money out’ entries (including transfers), along with any comments, are: acceptable, appear reasonable and inline with the terms of the court order?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Bonds
             ->add('bondAdequate', 'choice', [
-                'label' => 'Bonds:  Is the bond adequate protection for the client’s assets? If ‘NO’, refer to the Security Bonds Discrepancy Resolution Job Card.',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             ->add('bondOrderMatchCasrec', 'choice', [
-                'label' => 'Bonds: And/or does the bond amount on CASREC match the order? If ‘NO’, refer to the Security Bonds Discrepancy Resolution Job Card.',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Next reporting period
-
             ->add('futureSignificantFinancialDecisions', 'choice', [
-                'label' => 'Are there significant financial decision(s) in the next reporting period?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             ->add('hasDeputyRaisedConcerns', 'choice', [
-                'label' => 'Does the deputy raise any concerns about their deputyship?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Deputy declaration
             ->add('caseWorkerSatisified', 'choice', [
-                'label' => 'Are you satisfied with the deputy’s declaration?',
                 'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
 
             // Lodging summary
-            ->add('lodgingSummary', 'textarea', [
-                'label' => 'Lodging Summary (This section must be completed)'
-            ])
+            ->add('lodgingSummary', 'textarea', [])
 
             // Final decision
             ->add('finalDecision', 'choice', [
-                'label' => 'Final Decision?',
                 'choices' => [
-                    'for-review' => 'I am referring the case for a staff review or gifting review',
-                    'incomplete' => 'The report is incomplete',
-                    'further-casework-required' => 'I have lodged and acknowledged the report but issues require further case work',
-                    'satisfied' => 'I am satisfied with the deputy’s report, no further action is required and I have sent an acknowledgment to the deputy(s)'
+                    'for-review' => $finalDecisionTransPrefix . 'forReview',
+                    'incomplete' => $finalDecisionTransPrefix . 'incomplete',
+                    'further-casework-required' => $finalDecisionTransPrefix . 'furtherCaseworkRequired',
+                    'satisfied' => $finalDecisionTransPrefix . 'satisfied'
                 ],
-                'expanded' => true,
-                'constraints' => [new Constraints\NotBlank(['message' => 'Please answer this question', 'groups' => ['report-checklist']])],
+                'expanded' => true
             ])
             // Further information received
-            ->add('furtherInformationReceived', 'textarea', [
-                'label' => 'Further Information received: (Document all your decisions made and why).'
-            ])
+            ->add('furtherInformationReceived', 'textarea', [])
         ->add('saveFurtherInformation', 'submit')
         ->add('save', 'submit')
         ->add('submitAndDownload', 'submit');

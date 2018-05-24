@@ -80,7 +80,15 @@ checklistPage:
     lodgingSummary:
       label: Reason for final decision
     finalDecision:
-      label: Final Decision?
+      label: Final decision?
+      options:
+        forReview: I am referring the case for a staff review or gifting review
+        incomplete: The report is incomplete
+        furtherCaseworkRequired: |
+          I have lodged and acknowledged the report but issues require further case work
+        satisfied: |
+          I am satisfied with the deputy’s report, no further action is required and I have
+          sent an acknowledgment to the deputy(s)
     furtherInformationReceived:
-      label: Further Information received
+      label: Further information received
 
