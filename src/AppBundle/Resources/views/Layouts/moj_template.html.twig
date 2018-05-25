@@ -65,6 +65,10 @@
                 ga('send', 'pageview', '{{gaCustomUrl}}');
             {% else %}
                 ga('send', 'pageview');
+                {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
+                {#{% if app.request is defined and app.request %}#}
+                  {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
+                {#{% endif %}#}
             {% endif %}
         </script>
        {% endif %}
