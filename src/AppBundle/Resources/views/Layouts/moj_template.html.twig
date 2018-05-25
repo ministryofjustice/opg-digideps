@@ -64,7 +64,12 @@
             {% if gaCustomUrl is defined %}
                 ga('send', 'pageview', '{{gaCustomUrl}}');
             {% else %}
-                ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});
+                {% if app.request is defined and app.request %}
+                  {# DDPB-2142. Don't sent query string to GA #}
+                  ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});
+                {% else %}
+                  ga('send', 'pageview');
+                {% endif %}
             {% endif %}
         </script>
        {% endif %}
