@@ -10,6 +10,8 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
 
+{% set page = 'checklistPage' %}
+
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
@@ -21,7 +23,26 @@
     <div class="formatted-report">
 
         <div id="report-header">Office of the Public Guardian</div>
-        <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
+        <h1 class="push--bottom">Lodging checklist</h1>
+
+        <h2 class="section-heading">{{ (page ~ '.heading.info') | trans({}, 'admin-checklist') }}</h2>
+
+        <h3 class="label question bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
+
+        <table class="checkboxes labelvalue inline">
+            <tbody>
+                <tr>
+                    <td class="checkbox value">&nbsp;</td>
+                    <td class="label">Yes</td>
+                    <td class="checkbox value">&nbsp;</td>
+                    <td class="label">No</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {{ dump(checklist) }}
+
+
 
         {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
 
