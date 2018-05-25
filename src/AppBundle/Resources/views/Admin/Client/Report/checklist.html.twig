@@ -253,7 +253,7 @@
             {% for info in checklist.checklistInformation %}
 
             <tr>
-                <td class="behat-region-information-{{ counter }}">{{ info.information }}</td>
+                <td class="behat-region-information-{{ counter }}">{{ info.information | nl2br }}</td>
                 <td class="behat-region-information-created-by-{{ counter }} align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
                 <td class="behat-region-created-on-{{ counter }} numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
             </tr>
