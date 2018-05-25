@@ -114,7 +114,7 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
 
 
-  @deputy
+  @deputy @shaun
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -175,3 +175,4 @@ Feature: Admin report checklist
       | report_checklist_caseWorkerSatisified_2    | na |
       | report_checklist_finalDecision_0    | for-review |
       | report_checklist_lodgingSummary    | I am not satisfied |
+
