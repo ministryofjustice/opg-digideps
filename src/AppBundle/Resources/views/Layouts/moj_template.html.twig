@@ -64,12 +64,11 @@
             {% if gaCustomUrl is defined %}
                 ga('send', 'pageview', '{{gaCustomUrl}}');
             {% else %}
-                {% if app.request is defined and app.request %}
-                  {# DDPB-2142. Don't sent query string to GA #}
-                  ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});
-                {% else %}
-                  ga('send', 'pageview');
-                {% endif %}
+                ga('send', 'pageview');
+                {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
+                {#{% if app.request is defined and app.request %}#}
+                  {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
+                {#{% endif %}#}
             {% endif %}
         </script>
        {% endif %}
