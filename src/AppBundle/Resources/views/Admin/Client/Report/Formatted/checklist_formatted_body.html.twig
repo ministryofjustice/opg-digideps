@@ -1,19 +1,4 @@
-{% set client = report.client %}
-{% set assets = report.assets %}
-{% set debts = report.debts %}
-{% set contacts = report.getContacts %}
-{% set decisions = report.getDecisions %}
-{% set isEmailAttachment = true %}
-{% set team = app.user.teams | first %}
-{% set transfers = report.getMoneyTransfers %}
-{% set mentalCapacity = report.getMentalCapacity %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
-
 {% set page = 'checklistPage' %}
-
-{# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
-{% set submittedBy = report.submittedBy | default(app.user) %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.css.twig' %}
@@ -25,127 +10,320 @@
         <div id="report-header">Office of the Public Guardian</div>
         <h1 class="push--bottom">Lodging checklist</h1>
 
-        <h2 class="section-heading">{{ (page ~ '.heading.info') | trans({}, 'admin-checklist') }}</h2>
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.info') | trans({}, 'admin-checklist') }}</h2>
 
-        <h3 class="label question bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
 
-        <table class="checkboxes labelvalue inline">
-            <tbody>
-                <tr>
-                    <td class="checkbox value">&nbsp;</td>
-                    <td class="label">Yes</td>
-                    <td class="checkbox value">&nbsp;</td>
-                    <td class="label">No</td>
-                </tr>
-            </tbody>
-        </table>
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.reportingPeriodAccurate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.reportingPeriodAccurate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-        {{ dump(checklist) }}
+            <h3 class="label question bold">{{ (page ~ '.form.contactDetailsUptoDate.label') | trans({}, 'admin-checklist') }}</h3>
 
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.contactDetailsUptoDate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.contactDetailsUptoDate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
+            <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateinCasrec.label') | trans({}, 'admin-checklist') }}</h3>
 
-        {% include 'AppBundle:Report/Formatted:_client_information.html.twig' %}
-
-        {# Show the summary (key info) when a flag is set from the controller (only submit time for OPG),
-           and when the money/balance information are present (only 102 reports ATM) #}
-        {% if showSummary | default(false) and report.hasSection('balance')  %}
-            {% include 'AppBundle:Report/Formatted:_report_summary.html.twig' %}
-        {% endif %}
-
-        {% include 'AppBundle:Report/Formatted:_decisions.html.twig' %}
-        {% if report.mentalCapacity is not null %}
-            {% include 'AppBundle:Report/Formatted:_mental-capacity.html.twig' with {
-            'mentalCapacity': report.mentalCapacity
-            } %}
-        {% endif %}
-        {% include 'AppBundle:Report/Formatted:_contacts.html.twig' %}
-        {% if report.visitsCare is not null %}
-            {% include 'AppBundle:Report/Formatted:_visits_care.html.twig' with {
-            'visitsCare': report.visitsCare
-            } %}
-        {% endif %}
-        {% if report.hasSection('lifestyle') %}
-            {% include 'AppBundle:Report/Formatted:_lifestyle.html.twig' with {
-                'lifestyle': report.lifestyle
-            } %}
-        {% endif %}
-
-        {% include 'AppBundle:Report/Formatted:_assets.html.twig' %}
-        {% include 'AppBundle:Report/Formatted:_debts.html.twig' %}
-
-        {% if report.hasSection('moneyIn') %}
-            <div class="section break-before" id="accounts-section">
-                {% if (report.bankAccounts | length) > 0 %}
-                    <h2 class="section-heading">Accounts</h2>
-                    {% if report.totalsMatch %}
-                        {% include 'AppBundle:Report/Formatted:Accounts/_good.html.twig' %}
-                    {% else %}
-                        {% include 'AppBundle:Report/Formatted:Accounts/_bad.html.twig' with {
-                            'showReason': true
-                        } %}
-                    {% endif %}
-
-                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
-                    {% include 'AppBundle:Report/Formatted:Accounts/_transfers.html.twig' %}
-                {% endif %}
-                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out.html.twig' %}
-            </div>
-        {% endif %}
-
-        {% if report.hasSection('moneyInShort') %}
-            <div class="section" id="accounts-section">
-                {% if report.bankAccounts | length > 0 %}
-                    <h2 class="section-heading">Accounts</h2>
-                    {% include 'AppBundle:Report/Formatted:Accounts/_summary.html.twig' %}
-                {% endif %}
-                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
-                'title': 'Money in',
-                'categories': report.moneyShortCategoriesInPresent,
-                'transactions': report.moneyTransactionsShortIn,
-                'transactionsExist': report.moneyTransactionsShortInExist,
-                'transactionsTitle': 'Items of income over £1,000',
-                'existQuestion' : 'Have there been any items of income over £1,000? ',
-                'totalText': 'Money in total (items over £1,000)'
-                } %}
-                {% include 'AppBundle:Report/Formatted:Accounts/_money_in_out_short.html.twig' with {
-                'title': 'Money out',
-                'categories': report.moneyShortCategoriesOutPresent,
-                'transactions': report.moneyTransactionsShortOut,
-                'transactionsExist': report.moneyTransactionsShortOutExist,
-                'transactionsTitle': 'Expenses over £1,000',
-                'existQuestion' : 'Have there been any one-off items of expense over £1,000? ',
-                'totalText': 'Money out total (items over £1,000)'
-                } %}
-            </div>
-        {% endif %}
-
-        {% if report.hasSection('paDeputyExpenses') %}
-            {% include 'AppBundle:Report/Formatted:_pa_fee_expenses.html.twig' %}
-        {% endif %}
-        {% if report.hasSection('deputyExpenses') %}
-            {% include 'AppBundle:Report/Formatted:_expenses.html.twig' %}
-        {% endif %}
-
-        {% if report.hasSection('profCurrentFees') %}
-            {% include 'AppBundle:Report/Formatted:_prof_current_fees.html.twig' %}
-        {% endif %}
-
-        {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
-
-        {% if report.hasSection('balance') %}
-            {% include 'AppBundle:Report/Formatted:Accounts/_final_summary.html.twig' %}
-        {% endif %}
-
-        {% if report.hasSection('actions') %}
-            {% include 'AppBundle:Report/Formatted:_action.html.twig' %}
-        {% endif %}
-
-        {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
-            'title': 'Is there anything you’d like to tell us that hasn’t been covered elsewhere in your report?',
-        } %}
-
-        <div class="section" id="declaration">
-            {% include 'AppBundle:Report/Formatted:_submission_declaration.html.twig' %}
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.deputyFullNameAccurateinCasrec == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.deputyFullNameAccurateinCasrec == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.decisions') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.decisionsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.decisionsSatisfactory == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.decisionsSatisfactory == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.contacts') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.consultationsSatisfactory.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.consultationsSatisfactory == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.consultationsSatisfactory == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.visitsAndCare') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.careArrangements.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.careArrangements == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.careArrangements == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.assetsAndDebts') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.assetsDeclaredAndManaged.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.assetsDeclaredAndManaged == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.assetsDeclaredAndManaged == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.assetsDeclaredAndManaged == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.debtsManaged.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.debtsManaged == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.debtsManaged == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.debtsManaged == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.money') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.openClosingBalancesMatch.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.openClosingBalancesMatch == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.openClosingBalancesMatch == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.openClosingBalancesMatch == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.accountsBalance.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.accountsBalance == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.accountsBalance == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.accountsBalance == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.moneyMovementsAcceptable.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.moneyMovementsAcceptable == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.moneyMovementsAcceptable == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.moneyMovementsAcceptable == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.bonds') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.bondAdequate.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.bondAdequate == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.bondAdequate == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.bondAdequate == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.bondOrderMatchCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.bondOrderMatchCasrec == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.bondOrderMatchCasrec == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.bondOrderMatchCasrec == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.nextPeriod') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.futureSignificantFinancialDecisions.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.futureSignificantFinancialDecisions == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.futureSignificantFinancialDecisions == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.futureSignificantFinancialDecisions == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 class="label question bold">{{ (page ~ '.form.hasDeputyRaisedConcerns.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.hasDeputyRaisedConcerns == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.hasDeputyRaisedConcerns == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.hasDeputyRaisedConcerns == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.heading.declaration') | trans({}, 'admin-checklist') }}</h2>
+
+            <h3 class="label question bold">{{ (page ~ '.form.caseWorkerSatisified.label') | trans({}, 'admin-checklist') }}</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.caseWorkerSatisified == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.caseWorkerSatisified == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.caseWorkerSatisified == 'na' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'notApplicable' | trans({}, 'common' ) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.lodgingSummary.heading') | trans({}, 'admin-checklist') }}</h2>
+
+            <div class="labelvalue push-half--top">
+                <h3 class="label question bold">{{ (page ~ '.form.finalDecision.label') | trans({}, 'admin-checklist') }}</h3>
+                <table class="checkboxes labelvalue">
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.finalDecision == 'for-review' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.forReview') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.finalDecision == 'incomplete' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.incomplete') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.finalDecision == 'further-casework-required' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.furtherCaseworkRequired') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="clean-cell">
+                            <span class="checkbox value">
+                                {% if checklist.finalDecision == 'satisfied' %}X{% else %}&nbsp;{% endif %}
+                            </span>
+                        </td>
+                        <td class="label soft-half--bottom">{{ (page ~ '.form.finalDecision.options.satisfied') | trans({}, 'admin-checklist') }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="labelvalue push-half--top">
+                <h3 class="label question bold">{{ (page ~ '.form.lodgingSummary.label') | trans({}, 'admin-checklist') }}</h3>
+                <div class="value">{{ checklist.lodgingSummary }}</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-heading">{{ (page ~ '.furtherInfo.heading') | trans({}, 'admin-checklist') }}</h2>
+        </div>
+
     </div>
 </div>

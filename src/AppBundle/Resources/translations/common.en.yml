@@ -66,6 +66,7 @@ bankName: Bank or building society name
 typeOfAccount: Type of account
 sortCode: Sort code
 accountNumber: Account number
+notApplicable: Not applicable
 
 # Statuses
 notCreated: Not created
