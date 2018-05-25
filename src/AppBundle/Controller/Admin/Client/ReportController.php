@@ -184,7 +184,7 @@ class ReportController extends AbstractController
      */
     public function checklistPDFViewAction($reportId)
     {
-        $report = $this->getReport($reportId, ['client', 'report', 'report-checklist', 'checklist-information', 'user']);
+        $report = $this->getReport($reportId, array_merge(self::$reportGroupsAll, ['client', 'report', 'report-checklist', 'checklist-information', 'user']));
         $pdfBinary = $this->get('report_submission_service')->getChecklistPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
