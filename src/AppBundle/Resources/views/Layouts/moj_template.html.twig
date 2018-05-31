@@ -96,7 +96,7 @@
 
 
     <header role="banner" id="global-header" class="with-proposition {% block headerClass %}{% endblock %}">
-      <div class="header-wrapper">
+      <div class="header-wrapper {% if env == 'admin' %}wider{% endif %}">
         <div class="header-global">
           <div class="header-logo">
             <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
@@ -123,7 +123,7 @@
     {% block afterHeader %}{% endblock %}
 
 
-    <div id="global-header-bar">
+    <div id="global-header-bar" class="{% if env == 'admin' %}wider{% endif %}">
       <div class="inner-block">
         <div class="header-bar"></div>
       </div>
@@ -135,14 +135,14 @@
 
     <div id="wrapper" class="group">
       <a name="content"></a>
-      <main id="content" role="main">
+      <main id="content" role="main" class="{% if env == 'admin' %}wider{% endif %}">
        {% block content %}{% endblock %}
    </main>
     </div>
 
     <footer class="group js-footer" id="footer">
 
-      <div class="footer-wrapper">
+      <div class="footer-wrapper {% if env == 'admin' %}wider{% endif %}">
        {% block footerTop %}{% endblock %}
 
         <div class="footer-meta">

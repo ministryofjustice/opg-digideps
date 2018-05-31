@@ -7,3 +7,51 @@
 #content {
 	position: relative;
 }
+
+// Wider layout
+
+$wider: 1200px;
+
+@include media(desktop) {
+    #global-header {
+        .header-wrapper {
+            &.wider {
+                max-width: $wider + 30px;
+            }
+        }
+
+        &.with-proposition {
+            .header-wrapper {
+                &.wider {
+                    .header-global {
+                        width: 25%;
+                    }
+
+                    .header-proposition {
+                        width: 75%;
+                    }
+                }
+            }
+        }
+    }
+
+    #global-header-bar {
+        &.wider {
+            max-width: $wider;
+        }
+    }
+
+    #content {
+        &.wider {
+            max-width: $wider;
+        }
+    }
+
+    #footer {
+        .footer-wrapper {
+            &.wider {
+                max-width: $wider;
+            }
+        }
+    }
+}
