@@ -216,6 +216,16 @@ class IndexController extends AbstractController
     }
 
     /**
+     * @Route("/privacy", name="privacy")
+     */
+    public function privacyAction(Request $request)
+    {
+        return $this->render('AppBundle:Index:privacy.html.twig', [
+            'backlink' => $this->getRefererUrlSafe($request, ['privacy'])
+        ]);
+    }
+
+    /**
      * @Route("/logout", name="logout")
      * @Template
      */
