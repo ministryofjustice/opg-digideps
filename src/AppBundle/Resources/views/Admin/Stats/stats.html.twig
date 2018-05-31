@@ -17,9 +17,12 @@
 
     <h1 class="heading-medium">{{ (page ~ '.heading') | trans }}</h1>
 
-    <p>{{ (page ~ '.limitedTo100') | trans }}</p>
-    <p>
-        {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'regenerate': 0 })}) | raw }}
-    </p>
+    <div class="text">
+        <p>{{ (page ~ '.limitedTo100') | trans }}</p>
+        <p>
+            {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'regenerate': 0 })}) | raw }}
+        </p>
+    </div>
+
 
 {% endblock %}
