@@ -145,13 +145,16 @@ class DebtController extends AbstractController
      */
     public function summaryAction(Request $request, $ndrId)
     {
+        $fromPage = $request->get('from');
         $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        if ($ndr->getStatusService()->getDebtsState()['state'] == NdrStatusService::STATE_NOT_STARTED) {
+        if ($ndr->getStatusService()->getDebtsState()['state'] == NdrStatusService::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('ndr_debts', ['ndrId' => $ndrId]);
         }
 
         return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'ndr' => $ndr,
+            'status' => $ndr->getStatusService()
         ];
     }
 }

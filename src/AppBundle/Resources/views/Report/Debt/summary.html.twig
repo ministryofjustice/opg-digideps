@@ -26,6 +26,15 @@
             {# Check answers text #}
             <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
             <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.debtsState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.debtsState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
         </div>
         <div class="column-third">
             {{ macros.relatedSections(report, 'debts') }}

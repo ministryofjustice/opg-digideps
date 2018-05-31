@@ -247,16 +247,19 @@ class DecisionController extends AbstractController
      *
      * @return array
      */
-    public function summaryAction($reportId)
+    public function summaryAction(Request $request, $reportId)
     {
+        $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->getStatus()->getDecisionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDecisionsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
         return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
+            'status' => $report->getStatus()
         ];
     }
 
