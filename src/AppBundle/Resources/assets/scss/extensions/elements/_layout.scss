@@ -35,23 +35,28 @@ $wider: 1200px;
         }
     }
 
-    #global-header-bar {
-        &.wider {
-            max-width: $wider;
-        }
-    }
-
-    #content {
-        &.wider {
-            max-width: $wider;
-        }
-    }
-
     #footer {
         .footer-wrapper {
             &.wider {
                 max-width: $wider;
             }
+        }
+    }
+}
+
+#global-header-bar,
+#content {
+    &.wider {
+        @include media(desktop) {
+            max-width: $wider;
+        }
+
+        @include media($min-width: 1020px) {
+            margin: 0 $gutter;
+        }
+
+        @include media($min-width: 1260px) {
+            margin: 0 auto;
         }
     }
 }
