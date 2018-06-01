@@ -7,11 +7,11 @@
 {% set transOptions = {} %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.pageTitle') | trans }}</span>
 {% endblock %}
 
 {# Breadcrumbs #}
@@ -44,7 +44,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.info') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.info') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel">
         <div class="form-group-meta"></div>
@@ -74,7 +74,7 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.decisions') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.decisions') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel last">
         <div class="form-group-meta"></div>
@@ -86,7 +86,7 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.contacts') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.contacts') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel last">
         <div class="form-group-meta"></div>
@@ -98,7 +98,7 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel last">
         <div class="form-group-meta"></div>
@@ -107,10 +107,54 @@
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's responses</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Do you live with John?</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Does John get care that is paid for?</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>How is the care funded?</td>
+                                <td>All John's care is paid for by someone else (for example, by the local authority or NHS)</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Who is doing the caring?</td>
+                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Does John have a care plan?</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>When was the care plan last reviewed?</td>
+                                <td>December 2008</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel">
         <div class="form-group-meta"></div>
@@ -131,9 +175,9 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.money') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel">
+    <div class="form-section underline form-section--meta-cancel">
         <div class="form-group-meta"></div>
         <div class="form-group-outer">
             {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
@@ -142,13 +186,118 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel">
+    <div class="form-section underline form-section--meta-cancel">
         <div class="form-group-meta"></div>
         <div class="form-group-outer">
             {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View accounts balance summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <h3 class="heading-medium">Balance after incoming and outgoing payments</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Section</th>
+                                <th class="numeric">In</th>
+                                <th class="numeric">Out</th>
+                                <th class="numeric">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- SOME STARTED -->
+                            <tr>
+                                <td class="width-half">Accounts opening balance (4 March 2011)</td>
+                                <td colspan="2"></td>
+                                <td class="numeric">£300.00</td>
+                            </tr>
+                            <tr>
+                                <td>Deputy expenses</td>
+                                <td></td>
+                                <td class="numeric">£100.00</td>
+                                <td class="numeric">£200.00</td>
+                            </tr>
+                            <tr>
+                                <td>Gifts</td>
+                                <td></td>
+                                <td class="numeric">£100.00</td>
+                                <td class="numeric">£100.00</td>
+                            </tr>
+                            <tr>
+                                <td>Money in</td>
+                                <td class="numeric">£100.00</td>
+                                <td></td>
+                                <td class="numeric">£200.00</td>
+                            </tr>
+                            <tr>
+                                <td>Money out</td>
+                                <td></td>
+                                <td class="numeric">£100.00</td>
+                                <td class="numeric">£100.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr id="calculated_balance_foot">
+                                <td colspan="3"><span class="bold">Report closing balance after incoming and outgoing payments</span></td>
+                                <td class="numeric bold"><span class="bold" id="calculated_balance_foot_value">£100.00</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <h3 class="heading-medium">Balance differences</h3>
+                    <table class="push--ends" id="calculated_balance_table">
+                        <thead class="visually-hidden">
+                            <tr>
+                                <th>Section</th>
+                                <th colspan="2"></th>
+                                <th class="numeric">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="width-half">Accounts closing balance (3 March 2012)</td>
+                                <td colspan="2"></td>
+                                <td class="numeric">£850.00</td>
+                            </tr>
+                            <tr>
+                                <td>Report closing balance (see above)</td>
+                                <td colspan="2"></td>
+                                <td class="numeric">£100.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><span class="bold">Difference</span></td>
+                                <td class="numeric bold"><span class="bold">£750.00</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <h3 class="heading-medium">Explanation</h3>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Explanation</td>
+                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.<br>Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
+
     </div>
 
     <div class="form-section form-section--meta-cancel last">
@@ -161,7 +310,7 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.bonds') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.bonds') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel">
         <div class="form-group-meta"></div>
@@ -182,15 +331,43 @@
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel">
+    <div class="form-section underline form-section--meta-cancel">
         <div class="form-group-meta"></div>
         <div class="form-group-outer">
             {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (page ~ '.form.futureSignificantFinancialDecisions'), {
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's response</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Do you expect to make any significant financial decisions on John's behalf in the next 12 months?</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision-details">
+                                <td>Please give us details about your decisions</td>
+                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.<br>Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
     <div class="form-section form-section--meta-cancel last">
@@ -200,10 +377,34 @@
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's response</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Do you have any concerns about your deputyship?</td>
+                                <td>No</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.declaration') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.declaration') | trans }}</h3>
 
     <div class="form-section form-section--meta-cancel last">
         <div class="form-group-meta"></div>
@@ -212,10 +413,42 @@
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's declaration</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Declaration</td>
+                                <td>I am the only deputy</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Declaration time</td>
+                                <td>14:00 23/05/2018</td>
+                            </tr>
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>Deputy name</td>
+                                <td>David Spencer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
 
-    <h3 class="heading-medium">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
+    <h3 class="heading-medium underline">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
 
     <ul class="list list-bullet text">
         <li>{{ (page ~ '.lodgingSummary.listItem1') | trans }}</li>
@@ -235,7 +468,7 @@
     </div>
 
 
-    <h3 class="heading-medium" id="furtherInfomation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
+    <h3 class="heading-medium underline" id="furtherInfomation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
 
     <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
 
