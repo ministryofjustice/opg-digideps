@@ -26,9 +26,6 @@ class Version182 extends AbstractMigration
         $this->addSql('ALTER TABLE checklist ADD CONSTRAINT FK_5C696D2F4BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE checklist_information ADD CONSTRAINT FK_3FB5A813B16D08A7 FOREIGN KEY (checklist_id) REFERENCES checklist (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE checklist_information ADD CONSTRAINT FK_3FB5A813DE12AB56 FOREIGN KEY (created_by) REFERENCES dd_user (id) ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE report ADD checklist_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784B16D08A7 FOREIGN KEY (checklist_id) REFERENCES checklist (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_C42F7784B16D08A7 ON report (checklist_id)');
     }
 
     /**
@@ -41,10 +38,7 @@ class Version182 extends AbstractMigration
 
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE checklist_information DROP CONSTRAINT FK_3FB5A813B16D08A7');
-        $this->addSql('ALTER TABLE report DROP CONSTRAINT FK_C42F7784B16D08A7');
         $this->addSql('DROP TABLE checklist');
         $this->addSql('DROP TABLE checklist_information');
-        $this->addSql('DROP INDEX UNIQ_C42F7784B16D08A7');
-        $this->addSql('ALTER TABLE report DROP checklist_id');
     }
 }
