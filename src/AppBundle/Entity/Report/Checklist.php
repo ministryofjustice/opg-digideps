@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -39,7 +40,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="reportingPeriodAccurate", type="string", length=3, nullable=true)
+     * @ORM\Column(name="reporting_period_accurate", type="string", length=3, nullable=true)
      */
     private $reportingPeriodAccurate;
 
@@ -47,7 +48,7 @@ class Checklist
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(name="contactDetailsUptoDate", type="string", length=3, nullable=true)
+     * @ORM\Column(name="contact_details_upto_date", type="string", length=3, nullable=true)
      */
     private $contactDetailsUptoDate;
 
@@ -56,16 +57,16 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="deputyFullNameAccurateinCasrec", type="string", length=3, nullable=true)
+     * @ORM\Column(name="deputy_full_name_accurate_in_casrec", type="string", length=3, nullable=true)
      */
-    private $deputyFullNameAccurateinCasrec;
+    private $deputyFullNameAccurateInCasrec;
 
     /**
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="decisionsSatisfactory", type="string", length=3, nullable=true)
+     * @ORM\Column(name="decisions_satisfactory", type="string", length=3, nullable=true)
      */
     private $decisionsSatisfactory;
 
@@ -74,7 +75,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="consultationsSatisfactory", type="string", length=3, nullable=true)
+     * @ORM\Column(name="consultations_satisfactory", type="string", length=3, nullable=true)
      */
     private $consultationsSatisfactory;
 
@@ -83,7 +84,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="careArrangements", type="string", length=3, nullable=true)
+     * @ORM\Column(name="care_arrangements", type="string", length=3, nullable=true)
      */
     private $careArrangements;
 
@@ -92,7 +93,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="assetsDeclaredAndManaged", type="string", length=3, nullable=true)
+     * @ORM\Column(name="assets_declared_and_managed", type="string", length=3, nullable=true)
      */
     private $assetsDeclaredAndManaged;
 
@@ -101,7 +102,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="debtsManaged", type="string", length=3, nullable=true)
+     * @ORM\Column(name="debts_managed", type="string", length=3, nullable=true)
      */
     private $debtsManaged;
 
@@ -110,7 +111,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="openClosingBalancesMatch", type="string", length=3, nullable=true)
+     * @ORM\Column(name="open_closing_balances_match", type="string", length=3, nullable=true)
      */
     private $openClosingBalancesMatch;
 
@@ -119,7 +120,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="accountsBalance", type="string", length=3, nullable=true)
+     * @ORM\Column(name="accounts_balance", type="string", length=3, nullable=true)
      */
     private $accountsBalance;
 
@@ -128,7 +129,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="moneyMovementsAcceptable", type="string", length=3, nullable=true)
+     * @ORM\Column(name="money_movements_acceptable", type="string", length=3, nullable=true)
      */
     private $moneyMovementsAcceptable;
 
@@ -137,7 +138,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="bondAdequate", type="string", length=3, nullable=true)
+     * @ORM\Column(name="bond_adequate", type="string", length=3, nullable=true)
      */
     private $bondAdequate;
 
@@ -146,7 +147,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="bondOrderMatchCasrec", type="string", length=3, nullable=true)
+     * @ORM\Column(name="bond_order_match_casrec", type="string", length=3, nullable=true)
      */
     private $bondOrderMatchCasrec;
 
@@ -155,7 +156,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="futureSignificantFinancialDecisions", type="string", length=3, nullable=true)
+     * @ORM\Column(name="future_significant_financial_decisions", type="string", length=3, nullable=true)
      */
     private $futureSignificantFinancialDecisions;
 
@@ -164,7 +165,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="hasDeputyRaisedConcerns", type="string", length=3, nullable=true)
+     * @ORM\Column(name="has_deputy_raised_concerns", type="string", length=3, nullable=true)
      */
     private $hasDeputyRaisedConcerns;
 
@@ -173,7 +174,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="caseWorkerSatisified", type="string", length=3, nullable=true)
+     * @ORM\Column(name="case_worker_satisified", type="string", length=3, nullable=true)
      */
     private $caseWorkerSatisified;
 
@@ -181,26 +182,8 @@ class Checklist
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"gifts"})
-     * @ORM\Column(name="decision", type="text", nullable=true)
-     */
-    private $decision;
-
-    /**
-     * @var string
-     *
      * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="caseManagerName", type="string", length=255, nullable=true)
-     */
-    private $caseManagerName;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     * @ORM\Column(name="lodgingSummary", type="text", nullable=true)
+     * @ORM\Column(name="lodging_summary", type="text", nullable=true)
      */
     private $lodgingSummary;
 
@@ -209,7 +192,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="finalDecision", type="string", length=30, nullable=true)
+     * @ORM\Column(name="final_decision", type="string", length=30, nullable=true)
      */
     private $finalDecision;
 
@@ -230,10 +213,37 @@ class Checklist
      */
     private $furtherInformationReceived;
 
+    /**
+     * Submitted by
+     *
+     * @var \AppBundle\Entity\User
+     *
+     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"report-checklist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     */
+    protected $submittedBy;
+
+    /**
+     * Submitted on
+     *
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"report-checklist"})
+     * @ORM\Column(type="datetime", name="submitted_on", nullable=true)
+     */
+    protected $submittedOn;
+
+    /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist"})
+     */
+    private $buttonClicked;
+
     public function __construct(ReportInterface $report)
     {
         $this->setReport($report);
-
     }
 
     /**
@@ -323,7 +333,7 @@ class Checklist
      */
     public function setDeputyFullNameAccurateinCasrec($deputyFullNameAccurateinCasrec)
     {
-        $this->deputyFullNameAccurateinCasrec = $deputyFullNameAccurateinCasrec;
+        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateinCasrec;
         return $this;
     }
 
@@ -663,6 +673,63 @@ class Checklist
     public function setFurtherInformationReceived($furtherInformationReceived)
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
+    }
+
+    /**
+     * @return \AppBundle\Entity\User
+     */
+    public function getSubmittedBy()
+    {
+        return $this->submittedBy;
+    }
+
+    /**
+     * @param \AppBundle\Entity\User $submittedBy
+     *
+     * @return $this
+     */
+    public function setSubmittedBy(User $submittedBy)
+    {
+        $this->submittedBy = $submittedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getSubmittedOn()
+    {
+        return $this->submittedOn;
+    }
+
+    /**
+     * @param \DateTime $submittedOn
+     * @return $this
+     */
+    public function setSubmittedOn($submittedOn)
+    {
+        $this->submittedOn = $submittedOn;
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getButtonClicked()
+    {
+        return $this->buttonClicked;
+    }
+
+    /**
+     * @param string $buttonClicked
+     * @return $this
+     */
+    public function setButtonClicked($buttonClicked)
+    {
+        $this->buttonClicked = $buttonClicked;
+        return $this;
     }
 }
 

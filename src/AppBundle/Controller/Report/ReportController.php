@@ -469,6 +469,7 @@ class ReportController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
+
         $checklist = new EntityDir\Report\Checklist($report);
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'reporting_period_accurate' => 'setReportingPeriodAccurate',
@@ -497,6 +498,12 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
+        if ($checklistData['button_clicked'] == 'submitAndDownload')
+        {
+            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedOn(new \DateTime());
+        }
+
         $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];
@@ -520,7 +527,7 @@ class ReportController extends RestController
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'reporting_period_accurate' => 'setReportingPeriodAccurate',
             'contact_details_upto_date' => 'setContactDetailsUptoDate',
-            'deputy_full_name_accuratein_casrec' => 'setDeputyFullNameAccurateinCasrec',
+            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateInCasrec',
             'decisions_satisfactory' => 'setDecisionsSatisfactory',
             'consultations_satisfactory' => 'setConsultationsSatisfactory',
             'care_arrangements' => 'setCareArrangements',
@@ -535,13 +542,20 @@ class ReportController extends RestController
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
             'lodging_summary' => 'setLodgingSummary',
-            'final_decision' => 'setFinalDecision'
+            'final_decision' => 'setFinalDecision',
+            'button_clicked' => 'setButtonClicked'
         ]);
 
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($this->getUser());
             $this->getEntityManager()->persist($info);
+        }
+
+        if ($checklistData['button_clicked'] == 'submitAndDownload')
+        {
+            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedOn(new \DateTime());
         }
 
         $this->persistAndFlush($checklist);
