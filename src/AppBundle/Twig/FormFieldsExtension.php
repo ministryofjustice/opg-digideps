@@ -274,27 +274,17 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @param mixed  $element
-     * @param string $elementName
-     * @param array  $vars
-     * @param int    $transIndex
+     * @param string $elementName used to pick the translation by appending ".label"
+     * @param array  $vars [buttonClass => additional class. "disabled" supported]
      */
-    public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSubmit($element, $elementName, array $vars = [])
     {
-        //lets get the translation for class and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
-
-        //sort out labelText translation
-        $labelText = isset($vars['labelText']) ? $vars['labelText'] : $this->translator->trans($translationKey . '.label', [], $domain);
-        $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass'] : null;
-
-        //generate input field html using variables supplied
-        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig',
-            [
-                'labelText' => $labelText,
-                'element' => $element,
-                'buttonClass' => $buttonClass,
-            ]);
+        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig', [
+            // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
+            'label' => isset($vars['labelText']) ? $vars['labelText'] : ($elementName . '.label'),
+            'element' => $element,
+            'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
+        ]);
 
         echo $html;
     }
