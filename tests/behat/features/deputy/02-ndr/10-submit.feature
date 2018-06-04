@@ -75,7 +75,7 @@ Feature: ndr / report submit
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
-            | NdrRep.*.zip | regexpName+sizeAtLeast | 40000 |
+            | NdrRep.*.zip | regexpName+sizeAtLeast | 38000 |
         # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
         Then I check "cb1"
