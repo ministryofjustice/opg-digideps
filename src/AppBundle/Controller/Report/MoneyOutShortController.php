@@ -219,7 +219,7 @@ class MoneyOutShortController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getMoneyOutShortState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getMoneyOutShortState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
         }
 
@@ -227,6 +227,7 @@ class MoneyOutShortController extends AbstractController
         return [
             'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
+            'status' => $report->getStatus()
         ];
     }
 
