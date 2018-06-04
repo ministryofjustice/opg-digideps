@@ -462,7 +462,7 @@ class ReportController extends RestController
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
      * @Method({"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function insertChecklist(Request $request, $report_id)
     {
@@ -509,7 +509,7 @@ class ReportController extends RestController
      *
      * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function updateChecklist(Request $request, $report_id)
     {
