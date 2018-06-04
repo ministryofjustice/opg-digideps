@@ -487,8 +487,6 @@ class ReportController extends RestController
             'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
-            'decision' => 'setDecision',
-            'case_manager_name' => 'setCaseManagerName',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision'
         ]);
@@ -516,6 +514,8 @@ class ReportController extends RestController
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
 
         $checklistData = $this->deserializeBodyContent($request);
+
+        /** @var EntityDir\Report\Checklist $checklist */
         $checklist = $report->getChecklist();
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'reporting_period_accurate' => 'setReportingPeriodAccurate',
@@ -534,8 +534,6 @@ class ReportController extends RestController
             'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
-            'decision' => 'setDecision',
-            'case_manager_name' => 'setCaseManagerName',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision'
         ]);
