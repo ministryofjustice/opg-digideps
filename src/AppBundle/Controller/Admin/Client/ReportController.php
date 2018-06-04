@@ -117,7 +117,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("checklist", name="admin_report_checklist")
-     *
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      * @param Request $request
      * @param $id
      *
@@ -129,9 +129,9 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'user']);
 
-        // if (!$report->getSubmitted()) {
-        //     throw new DisplayableException('Cannot manage active report');
-        // }
+        if (!$report->getSubmitted()) {
+            throw new DisplayableException('Cannot manage active report');
+        }
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
