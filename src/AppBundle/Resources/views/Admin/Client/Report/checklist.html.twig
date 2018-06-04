@@ -19,11 +19,7 @@
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
-            {#
-                TODO - link to the client details
-                {{ path('admin_client_details', {'id' : client.id}) }}
-            #}
-            <li><a href="#">Client details</a></li>
+            <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">Client details</a></li>
         </ol>
     </div>
 {% endblock %}
