@@ -2,7 +2,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Admin submits empty checklist for the report
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -71,7 +71,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Admin saves further information on checklist
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -116,7 +116,7 @@ Feature: Admin report checklist
 
   @deputy @shaun
   Scenario: Admin completes checklist
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
