@@ -10,6 +10,7 @@ use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 /**
@@ -138,7 +139,9 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
-
+        if ($buttonClicked instanceof SubmitButton) {
+            $checklist->setButtonClicked($buttonClicked->getName());
+        }
         if ($form->isValid($buttonClicked)) {
 
             if (!empty($checklist->getId())) {

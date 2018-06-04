@@ -50,7 +50,7 @@ class Checklist
      * @JMS\Type("boolean")
      * @Assert\NotBlank(message="checklist.deputyFullNameAccurateinCasrec.notBlank", groups={"submit-checklist"})
      */
-    private $deputyFullNameAccurateinCasrec;
+    private $deputyFullNameAccurateInCasrec;
 
     /**
      * @var string
@@ -205,6 +205,32 @@ class Checklist
     private $furtherInformationReceived;
 
     /**
+     * Submitted by
+     *
+     * @JMS\Type("AppBundle\Entity\User")
+     * @var \AppBundle\Entity\User
+     *
+     */
+    protected $submittedBy;
+
+    /**
+     * Submitted on
+     *
+     * @JMS\Type("DateTime")
+     *
+     * @var \DateTime
+     *
+     */
+    protected $submittedOn;
+
+    /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-checklist"})
+     */
+    protected $buttonClicked;
+
+    /**
      * Checklist constructor.
      *
      * @param ReportInterface $report
@@ -272,18 +298,18 @@ class Checklist
     /**
      * @return string
      */
-    public function getDeputyFullNameAccurateinCasrec()
+    public function getDeputyFullNameAccurateInCasrec()
     {
-        return $this->deputyFullNameAccurateinCasrec;
+        return $this->deputyFullNameAccurateInCasrec;
     }
 
     /**
-     * @param string $deputyFullNameAccurateinCasrec
+     * @param string $deputyFullNameAccurateInCasrec
      * @return $this
      */
-    public function setDeputyFullNameAccurateinCasrec($deputyFullNameAccurateinCasrec)
+    public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
     {
-        $this->deputyFullNameAccurateinCasrec = $deputyFullNameAccurateinCasrec;
+        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateInCasrec;
         return $this;
     }
 
@@ -623,6 +649,60 @@ class Checklist
     public function setFurtherInformationReceived($furtherInformationReceived)
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
+    }
+
+    /**
+     * @return \AppBundle\Entity\User
+     */
+    public function getSubmittedBy()
+    {
+        return $this->submittedBy;
+    }
+
+    /**
+     * @param \AppBundle\Entity\User $submittedBy
+     * @return $this
+     */
+    public function setSubmittedBy($submittedBy)
+    {
+        $this->submittedBy = $submittedBy;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getSubmittedOn()
+    {
+        return $this->submittedOn;
+    }
+
+    /**
+     * @param \DateTime $submittedOn
+     * @return $this
+     */
+    public function setSubmittedOn($submittedOn)
+    {
+        $this->submittedOn = $submittedOn;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getButtonClicked()
+    {
+        return $this->buttonClicked;
+    }
+
+    /**
+     * @param string $buttonClicked
+     * @return $this
+     */
+    public function setButtonClicked($buttonClicked)
+    {
+        $this->buttonClicked = $buttonClicked;
+        return $this;
     }
 }
 
