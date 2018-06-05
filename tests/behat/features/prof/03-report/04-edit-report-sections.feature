@@ -110,7 +110,6 @@ Feature: PROF user edits 102-5 report sections
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
-    And I should not see an "select#account_bankAccountId" element
     And the step with the following values CAN be submitted:
       | account_description | pension received |
       | account_amount      | 50.00         |
@@ -123,10 +122,9 @@ Feature: PROF user edits 102-5 report sections
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
-      | account_category_0 | broadband |
-    And I should not see an "select#account_bankAccountId" element
+      | account_category_26 | deputy-fees-and-expenses |
     And the step with the following values CAN be submitted:
-      | account_description | january bill |
+      | account_description | prof general fees |
       | account_amount      | 50.00     |
       # add another: no
     And I choose "no" when asked for adding another record

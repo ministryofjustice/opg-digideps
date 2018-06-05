@@ -13,9 +13,29 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class MoneyTransactionType extends AbstractType
 {
+    /**
+     * @var string
+     */
+    private $userRole;
+
+    /**
+     * @var  string
+     */
     private $clientFirstName;
+
+    /**
+     * @var integer
+     */
     private $step;
+
+    /**
+     * @var string in/out
+     */
     private $type;
+
+    /**
+     * @var string
+     */
     private $selectedCategory;
 
     /**
@@ -28,8 +48,13 @@ class MoneyTransactionType extends AbstractType
         $ret = [];
 
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
-            if ($type == $this->type) {
+            $categoryId = $cat[0];
+            $type = $cat[3];
+            // filter by user roles (if specified), matching with `$this->userRole` passed as an option
+            $allowedRoles = isset($cat[4]) ? $cat[4] : null;
+            $isCategoryAllowedForThisRole = $allowedRoles === null || in_array($this->userRole, $allowedRoles);
+            // filter by
+            if ($type == $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = null;
             }
         }
@@ -57,6 +82,7 @@ class MoneyTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->userRole = $options['userRole'];
         $this->step = (int)$options['step'];
         $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
@@ -124,7 +150,7 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-            ->setRequired(['user', 'report', 'step', 'type', 'translator', 'clientFirstName'])
+            ->setRequired(['user', 'report', 'step', 'type', 'translator', 'clientFirstName', 'userRole'])
             ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 }
