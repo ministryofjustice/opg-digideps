@@ -706,10 +706,10 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
-                'save' => '', // Save further information
+                'buttonClicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
-                'deputy_full_name_accuratein_casrec' => 1,
+                'deputy_full_name_accurate_in_casrec' => 1,
                 'decisions_satisfactory' => 'yes',
                 'consultations_satisfactory' => 'yes',
                 'care_arrangements' => 'yes',
@@ -763,6 +763,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
+                'button_clicked' => 'save_further_information',
                 'save_further_information' => '', // Save further information
                 'further_information_received' => 'Some more info',
                 'reporting_period_accurate' => 'yes',

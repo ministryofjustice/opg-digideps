@@ -474,7 +474,7 @@ class ReportController extends RestController
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'reporting_period_accurate' => 'setReportingPeriodAccurate',
             'contact_details_upto_date' => 'setContactDetailsUptoDate',
-            'deputy_full_name_accuratein_casrec' => 'setDeputyFullNameAccurateinCasrec',
+            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateinCasrec',
             'decisions_satisfactory' => 'setDecisionsSatisfactory',
             'consultations_satisfactory' => 'setConsultationsSatisfactory',
             'care_arrangements' => 'setCareArrangements',

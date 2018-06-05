@@ -322,18 +322,18 @@ class Checklist
     /**
      * @return string
      */
-    public function getDeputyFullNameAccurateinCasrec()
+    public function getDeputyFullNameAccurateInCasrec()
     {
-        return $this->deputyFullNameAccurateinCasrec;
+        return $this->deputyFullNameAccurateInCasrec;
     }
 
     /**
-     * @param string $deputyFullNameAccurateinCasrec
+     * @param string $deputyFullNameAccurateInCasrec
      * @return $this
      */
-    public function setDeputyFullNameAccurateinCasrec($deputyFullNameAccurateinCasrec)
+    public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
     {
-        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateinCasrec;
+        $this->deputyFullNameAccurateInCasrec = $deputyFullNameAccurateInCasrec;
         return $this;
     }
 
