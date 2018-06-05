@@ -370,6 +370,7 @@ class FormFieldsExtension extends \Twig_Extension
             $labelText = $vars['labelText'];
         } else {
             $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+            // label is translated directly here
             $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
         }
 
