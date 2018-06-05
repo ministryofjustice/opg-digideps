@@ -128,7 +128,7 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'user']);
+        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report', 'report-checklist', 'checklist-information', 'user']));
 
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
