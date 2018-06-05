@@ -21,7 +21,7 @@
         {% endif %}
     </span>
 
-    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}">
         {% if subSection == 'balance' %}
             {{ 'view' | trans({}, 'common') | capitalize }}
         {% else %}
