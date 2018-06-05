@@ -365,9 +365,13 @@ class FormFieldsExtension extends \Twig_Extension
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
 
-        //sort out labelText translation
-        $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
-        $labelText = isset($vars['labelText']) ? $vars['labelText'] : $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+        // deprecated. Do not use labelText if possible. translation should happen in the view
+        if (isset($vars['labelText']) && $vars['labelText']) {
+            $labelText = $vars['labelText'];
+        } else {
+            $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+            $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+        }
 
         //inputPrefix
         $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
