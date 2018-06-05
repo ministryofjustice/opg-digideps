@@ -362,7 +362,7 @@ class FormFieldsExtension extends \Twig_Extension
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
             $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
-            $hintListArray = ($hintListTextTrans != $translationKey . '.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
+            $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
 
         //sort out labelText translation
@@ -377,8 +377,11 @@ class FormFieldsExtension extends \Twig_Extension
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass'] : '';
 
         //Text to insert to the left of an input, e.g. * * * * for account
-        $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
-        $preInputText = ($preInputTextTrans != $translationKey . '.preInput') ? $preInputTextTrans : null;
+        $preInputText = null;
+        if (!empty($vars['hasPreInput'])) {
+            $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
+            $preInputText = $preInputTextTrans;
+        }
 
         return [
             'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
