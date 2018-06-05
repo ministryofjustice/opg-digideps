@@ -36,7 +36,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', 'choice', [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['yes' => 'form.doYouLiveWithClient.yes', 'no' => 'form.doYouLiveWithClient.no'],
                 'expanded' => true,
             ]);
             $builder->add('howOftenDoYouContactClient', 'textarea');
