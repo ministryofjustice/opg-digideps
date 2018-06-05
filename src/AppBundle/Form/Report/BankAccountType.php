@@ -25,7 +25,9 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('accountType', 'choice', [
-                'choices'     => BankAccount::$types,
+                'choices'     => array_map(function($key){
+                    return 'form.accountType.choices.' . $key;
+                }, BankAccount::$types),
                 'expanded'    => true,
                 'empty_value' => 'Please select',
             ]);
