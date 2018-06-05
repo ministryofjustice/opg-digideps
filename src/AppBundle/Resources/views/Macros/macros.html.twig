@@ -93,7 +93,8 @@
 
 {% macro saveAndContinueButton(button) %}
     {{ form_submit(button, '', {
-        'labelText': 'saveAndContinue' | trans({}, 'common'),
+        'labelText': 'saveAndContinue',
+        'labelTranslationDomain': 'common',
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}

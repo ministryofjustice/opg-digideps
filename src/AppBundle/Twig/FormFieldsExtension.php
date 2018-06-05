@@ -279,12 +279,20 @@ class FormFieldsExtension extends \Twig_Extension
      */
     public function renderFormSubmit($element, $elementName, array $vars = [])
     {
-        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig', [
+        $options = [
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
-            'label' => isset($vars['labelText']) ? $vars['labelText'] : ($elementName . '.label'),
+            'label' => $elementName . '.label',
             'element' => $element,
+            'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
             'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
-        ]);
+        ];
+
+        // deprecated. only kept in order not to break forms that use it
+        if (isset($vars['labelText'])) {
+            $options['label'] = $vars['labelText'];
+        }
+
+        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig', $options);
 
         echo $html;
     }
