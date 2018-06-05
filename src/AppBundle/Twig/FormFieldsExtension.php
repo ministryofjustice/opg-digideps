@@ -359,8 +359,11 @@ class FormFieldsExtension extends \Twig_Extension
         }
 
         //sort hintList text translation
-        $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
-        $hintListEntriesText = ($hintListTextTrans != $translationKey . '.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
+        $hintListArray = null;
+        if (!empty($vars['hasHintList'])) {
+            $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
+            $hintListArray = ($hintListTextTrans != $translationKey . '.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
+        }
 
         //sort out labelText translation
         $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
@@ -381,7 +384,7 @@ class FormFieldsExtension extends \Twig_Extension
             'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
             'labelText' => $labelText,
             'hintText' => $hintText,
-            'hintListArray' => $hintListEntriesText,
+            'hintListArray' => $hintListArray,
             'element' => $element,
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
