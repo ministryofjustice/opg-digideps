@@ -23,7 +23,7 @@ class ReportChecklistType extends AbstractType
                 'expanded' => true
             ])
             ->add('contactDetailsUptoDate', 'checkbox', [])
-            ->add('deputyFullNameAccurateinCasrec', 'checkbox', [])
+            ->add('deputyFullNameAccurateInCasrec', 'checkbox', [])
 
             // Decisions
             ->add('decisionsSatisfactory', 'choice', [

@@ -151,13 +151,16 @@ class DebtController extends AbstractController
      */
     public function summaryAction(Request $request, $reportId)
     {
+        $fromPage = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getDebtsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+        if ($report->getStatus()->getDebtsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
 
         return [
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
+            'status' => $report->getStatus()
         ];
     }
 

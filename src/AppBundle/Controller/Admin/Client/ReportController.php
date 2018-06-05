@@ -10,6 +10,7 @@ use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 /**
@@ -117,7 +118,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("checklist", name="admin_report_checklist")
-     *
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_CASE_MANAGER')")
      * @param Request $request
      * @param $id
      *
@@ -129,28 +130,30 @@ class ReportController extends AbstractController
     {
         $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'user']);
 
-        // if (!$report->getSubmitted()) {
-        //     throw new DisplayableException('Cannot manage active report');
-        // }
+        if (!$report->getSubmitted()) {
+            throw new DisplayableException('Cannot manage active report');
+        }
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
-
+        if ($buttonClicked instanceof SubmitButton) {
+            $checklist->setButtonClicked($buttonClicked->getName());
+        }
         if ($form->isValid($buttonClicked)) {
 
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put ('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
-                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist updated');
+                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
             } else {
                 $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
-                $request->getSession()->getFlashBag()->add('notice', 'Report checklist created');
+                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
             }
 
             if ($buttonClicked->getName() == 'saveFurtherInformation') {
