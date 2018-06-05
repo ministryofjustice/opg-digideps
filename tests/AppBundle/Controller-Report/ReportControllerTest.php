@@ -706,7 +706,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
-                'buttonClicked' => 'save', // Save further information
+                'button_clicked' => 'save', // Save further information
                 'reporting_period_accurate' => 'yes',
                 'contact_details_upto_date' => 1,
                 'deputy_full_name_accurate_in_casrec' => 1,
@@ -763,7 +763,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
-                'button_clicked' => 'save_further_information',
+                'button_clicked' => 'saveFurtherInformation',
                 'save_further_information' => '', // Save further information
                 'further_information_received' => 'Some more info',
                 'reporting_period_accurate' => 'yes',
@@ -831,12 +831,12 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->getReportById($reportId);
 
         // assert submit fails due to missing fields
-        $checklistId = $this->assertJsonRequest('PUT', $url, [
+        $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
-                'save_and_download' => '', // Complete and download PDF
+                'button_clicked' => 'saveAndDownload',
             ]
         ]);
 
@@ -849,7 +849,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenCaseManager,
             'data'        => [
                 'id'    => $report->getChecklist()->getId(),
-                'save_and_download' => '', // Complete and download PDF
+                'button_clicked' => 'saveAndDownload',
                 'lodging_summary' => 'All complete',
                 'final_decision' => 'for-review'
             ],
