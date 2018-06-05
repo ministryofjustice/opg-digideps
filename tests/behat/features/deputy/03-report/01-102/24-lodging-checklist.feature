@@ -1,8 +1,8 @@
 Feature: Admin report checklist
 
-  @deputy
+  @deputy @shaun
   Scenario: Admin submits empty checklist for the report
-    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -25,7 +25,7 @@ Feature: Admin report checklist
       | report_checklist_reportingPeriodAccurate_0        |
       | report_checklist_reportingPeriodAccurate_1        |
       | report_checklist_contactDetailsUptoDate        |
-      | report_checklist_deputyFullNameAccurateinCasrec        |
+      | report_checklist_deputyFullNameAccurateInCasrec        |
       | report_checklist_decisionsSatisfactory_0        |
       | report_checklist_decisionsSatisfactory_1        |
       | report_checklist_consultationsSatisfactory_0        |
@@ -69,9 +69,9 @@ Feature: Admin report checklist
       | report_checklist_lodgingSummary         |
     And the URL should match "/admin/report/\d+/checklist"
 
-  @deputy
+  @deputy @shaun
   Scenario: Admin saves further information on checklist
-    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -99,7 +99,7 @@ Feature: Admin report checklist
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
       | Some more info 1        | information-1 |
-      | Admin User, OPG Admin   | information-created-by-1 |
+      | Case Manager1, Case Manager   | information-created-by-1 |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -107,16 +107,16 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
-      | Some more info 2        | information-1 |
-      | Admin User, OPG Admin   | information-created-by-1 |
-      | Some more info 1        | information-2 |
-      | Admin User, OPG Admin   | information-created-by-2 |
+      | Some more info 2              | information-1 |
+      | Case Manager1, Case Manager   | information-created-by-1 |
+      | Some more info 1              | information-2 |
+      | Case Manager1, Case Manager   | information-created-by-2 |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
   @deputy @shaun
   Scenario: Admin completes checklist
-    Given I am logged in to admin as "behat-cm@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -136,7 +136,7 @@ Feature: Admin report checklist
     # Begin scenario
     And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
-    And I fill in "report_checklist_deputyFullNameAccurateinCasrec" with "1"
+    And I fill in "report_checklist_deputyFullNameAccurateInCasrec" with "1"
     And I fill in "report_checklist_decisionsSatisfactory_1" with "no"
     And I fill in "report_checklist_consultationsSatisfactory_0" with "yes"
     And I fill in "report_checklist_careArrangements_1" with "no"
@@ -159,7 +159,7 @@ Feature: Admin report checklist
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0   | yes   |
       | report_checklist_contactDetailsUptoDate | 1  |
-      | report_checklist_deputyFullNameAccurateinCasrec  | 1 |
+      | report_checklist_deputyFullNameAccurateInCasrec  | 1 |
       | report_checklist_decisionsSatisfactory_1     | no   |
       | report_checklist_consultationsSatisfactory_0   | yes   |
       | report_checklist_careArrangements_1    | no |
