@@ -25,7 +25,7 @@ class ComponentsExtension extends \Twig_Extension
 
     /**
      * ComponentsExtension constructor.
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface       $translator
      * @param ReportSectionsLinkService $reportSectionsLinkService
      */
     public function __construct(TranslatorInterface $translator, ReportSectionsLinkService $reportSectionsLinkService)
@@ -33,7 +33,6 @@ class ComponentsExtension extends \Twig_Extension
         $this->translator = $translator;
         $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
-
 
     public function initRuntime(\Twig_Environment $environment)
     {

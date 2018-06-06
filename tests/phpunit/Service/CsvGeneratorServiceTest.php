@@ -65,7 +65,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
 
         $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
         $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12\-34\-56\)/', $csvString));
-
     }
 
     /**
@@ -94,7 +93,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $this->mockReport->shouldReceive('getMoneyTransactionsIn')->andReturn(
             $this->generateMockTransactions(MoneyTransaction::class, $numMoneyIn)
         );
-
     }
 
     /**
@@ -107,7 +105,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     private function generateMockTransactions($class, $qty)
     {
         $mocks = [];
-        for($i=0; $i < $qty; $i++) {
+        for ($i=0; $i < $qty; $i++) {
             array_push($mocks, $this->generateMockTransactionEntity($class, $i));
         }
         return $mocks;
@@ -125,7 +123,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mock = new $class();
         $mock->setAmount(10.00);
         //$mock->setIsJointAccount(true);
-        switch($class) {
+        switch ($class) {
             case Gift::class:
                 $mock->setExplanation('explanation for gift ' . $counter);
                 break;
@@ -146,7 +144,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mock->setBankAccount($bankAccount);
 
         return $mock;
-
     }
 
     /**

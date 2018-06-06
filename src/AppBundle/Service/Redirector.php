@@ -94,7 +94,8 @@ class Redirector
 
         if ($this->authChecker->isGranted(EntityDir\User::ROLE_ADMIN)) {
             return $this->router->generate('admin_homepage');
-        } if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+        }
+        if ($this->authChecker->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
             return $this->router->generate('admin_client_search');
         } elseif ($this->authChecker->isGranted(EntityDir\User::ROLE_AD)) {
             return $this->router->generate('ad_homepage');

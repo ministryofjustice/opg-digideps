@@ -35,11 +35,11 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->log('info', "Beginning Document cleanup from S3");
+        $this->log('info', 'Beginning Document cleanup from S3');
 
         // skip if launched from FRONTEND container
         if (!$input->getOption('skip-admin-check') && $this->getContainer()->getParameter('env') !== 'admin') {
-            $this->log('error', "This command can only be executed from admin container");
+            $this->log('error', 'This command can only be executed from admin container');
             $output->writeln('This command can only be executed from admin container');
             return 1;
         }
@@ -47,7 +47,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         // manual lock release and exit
         if ($input->getOption('release-lock')) {
             $this->releaseLock();
-            $this->log('info', "Lock released. You can now relaunch.");
+            $this->log('info', 'Lock released. You can now relaunch.');
             $output->writeln('Lock released. You can now relaunch.');
             return 0;
         }
@@ -55,7 +55,7 @@ class DocumentCleanupCommand extends \Symfony\Bundle\FrameworkBundle\Command\Con
         // exit if locked
         // $this->getContainer()->getParameter('kernel.debug')
         if (!$this->acquireLock($output)) {
-            $this->log('error', "Locked. try later or launch with unlock flag.");
+            $this->log('error', 'Locked. try later or launch with unlock flag.');
             $output->writeln('Locked. try later or launch with unlock flag.');
             return 1;
         }

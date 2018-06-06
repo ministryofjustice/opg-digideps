@@ -4,17 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
-use AppBundle\Entity\User;
-use AppBundle\Model\Email;
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\FileUploader;
-use AppBundle\Service\Mailer\MailFactory;
-use AppBundle\Service\Mailer\MailSender;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Routing\RouterInterface;
 
 class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
@@ -23,7 +13,6 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
      * @var ReportSectionsLinkService
      */
     protected $sut;
-
 
     /**
      * Set up the mockservies
@@ -59,7 +48,6 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
 
         $actual = $this->sut->getSectionParams($this->report, 'documents', +1);
         $this->assertEquals([], $actual);
-
     }
 
     public function testgetSectionParamsOrg()
@@ -69,7 +57,6 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
         $actual = $this->sut->getSectionParams($this->report, 'profCurrentFees', +1);
         $this->assertEquals('gifts', $actual['section']);
     }
-
 
     public function tearDown()
     {

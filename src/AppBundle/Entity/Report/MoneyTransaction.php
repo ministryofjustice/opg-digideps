@@ -258,7 +258,7 @@ class MoneyTransaction
     /**
      * Checks category is valid
      *
-     * @param string $category
+     * @param  string $category
      * @return bool
      */
     public static function isValidCategory($category = '')

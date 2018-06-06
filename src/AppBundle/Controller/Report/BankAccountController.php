@@ -4,12 +4,10 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StepRedirector;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class BankAccountController extends AbstractController
@@ -210,7 +208,7 @@ class BankAccountController extends AbstractController
 
         // if money transfer are added, always go to summary page with the error displayed
         if ($dependentRecords['moneyTransfers'] > 0) {
-            $translatedMessage = $translator->trans("deletePage.transferPresentError", [], 'report-bank-accounts');
+            $translatedMessage = $translator->trans('deletePage.transferPresentError', [], 'report-bank-accounts');
             $request->getSession()->getFlashBag()->add('error', $translatedMessage);
 
             return $this->redirect($summaryPageUrl);

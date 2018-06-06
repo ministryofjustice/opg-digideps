@@ -353,13 +353,12 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isLayReport()
     {
         return strpos($this->type, '-6') === false && strpos($this->type, '-5') === false;
     }
-
 
     /**
      * @param  string $type
@@ -1069,7 +1068,6 @@ class Report implements ReportInterface
 
         return $attachmentName;
     }
-
 
     /**
      * @return array

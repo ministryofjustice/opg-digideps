@@ -57,7 +57,7 @@ class MoneyTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->step = (int)$options['step'];
+        $this->step = (int) $options['step'];
         $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
         $this->translator = $options['translator'];

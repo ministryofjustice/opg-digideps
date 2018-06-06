@@ -57,7 +57,7 @@ class TeamController extends AbstractController
         if ($form->isSubmitted()
             && $this->getUser()->isProfNamedOrAdmin()
             && ($email = $form->getData()->getEmail())
-            && ($userInfo = $this->getRestClient()->get("user/get-team-names-by-email/" . $email, 'User'))
+            && ($userInfo = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User'))
             && count($userInfo->getTeamNames()) > 0
         ) {
             if ($userInfo->isDeputyPa()) {
