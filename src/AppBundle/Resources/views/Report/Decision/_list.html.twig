@@ -3,16 +3,10 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 <table class="check-your-answers columns-2 push-double--bottom">
-    <thead>
-    <tr>
-        <th>{{ 'question' | trans({}, 'common') }}</th>
-        <th>{{ 'answer' | trans({}, 'common') }}</th>
-        <th>
-            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </th>
-    </tr>
-    </thead>
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
     {# mental capacity #}
     <tr class="behat-region-mental-capacity">

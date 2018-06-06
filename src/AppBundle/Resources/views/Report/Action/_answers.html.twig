@@ -3,6 +3,8 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>

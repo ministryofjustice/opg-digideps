@@ -6,6 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {# Page Titles #}
 {% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
@@ -43,15 +45,7 @@
 
     {# Questions and answers table #}
     <table class="check-your-answers columns-2 push-double--bottom">
-        <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-        </thead>
+        {{ macros.summaryTableHeaderQA(hideEditLink) }}
         <tbody>
             <tr class="behat-region-has-debts">
                 <td>
@@ -106,15 +100,7 @@
         </table>
 
         <table class="check-your-answers columns-2 push--top">
-            <thead>
-                <tr>
-                    <th>{{ 'question' | trans({}, 'common') }}</th>
-                    <th>{{ 'answer' | trans({}, 'common') }}</th>
-                    <th>
-                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
-                </tr>
-            </thead>
+            {{ macros.summaryTableHeaderQA(hideEditLink) }}
             <tbody>
                 {% set debtOther = report.getDebtById('other') %}
                 {% if debtOther.moreDetails %}

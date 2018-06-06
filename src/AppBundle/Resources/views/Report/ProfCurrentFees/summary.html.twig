@@ -6,6 +6,8 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'summaryPage' %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {# Page Titles #}
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -38,15 +40,7 @@
     {# only show the initial question if it's set to "no" #}
     {#{% if report.currentProfPaymentsReceived == 'no' %}#}
         <table class="check-your-answers columns-2 push-double--bottom">
-            <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-            </thead>
+            {{ macros.summaryTableHeaderQA(hideEditLink) }}
             <tbody>
             <tr class="behat-region-has-fees">
                 <td>
