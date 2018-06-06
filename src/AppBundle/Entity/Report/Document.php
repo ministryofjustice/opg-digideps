@@ -244,7 +244,6 @@ class Document
         return $this;
     }
 
-
     /**
      * Is document for OPG admin eyes only
      *
@@ -252,11 +251,12 @@ class Document
      */
     public function isAdminDocument()
     {
-        return ($this->isReportPdf() || $this->isTransactionDocument());
+        return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
     /**
      * Is document a list of transaction document (admin only)
+     *
      * @return bool|int
      */
     private function isTransactionDocument()

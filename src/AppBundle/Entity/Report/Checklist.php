@@ -256,6 +256,7 @@ class Checklist
 
     /**
      * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -274,6 +275,7 @@ class Checklist
 
     /**
      * @param ReportInterface $report
+     *
      * @return $this
      */
     public function setReport(ReportInterface $report)
@@ -293,6 +295,7 @@ class Checklist
 
     /**
      * @param string $reportingPeriodAccurate
+     *
      * @return $this
      */
     public function setReportingPeriodAccurate($reportingPeriodAccurate)
@@ -311,6 +314,7 @@ class Checklist
 
     /**
      * @param string $contactDetailsUptoDate
+     *
      * @return $this
      */
     public function setContactDetailsUptoDate($contactDetailsUptoDate)
@@ -329,6 +333,7 @@ class Checklist
 
     /**
      * @param string $deputyFullNameAccurateInCasrec
+     *
      * @return $this
      */
     public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
@@ -347,6 +352,7 @@ class Checklist
 
     /**
      * @param string $decisionsSatisfactory
+     *
      * @return $this
      */
     public function setDecisionsSatisfactory($decisionsSatisfactory)
@@ -365,6 +371,7 @@ class Checklist
 
     /**
      * @param string $consultationsSatisfactory
+     *
      * @return $this
      */
     public function setConsultationsSatisfactory($consultationsSatisfactory)
@@ -383,6 +390,7 @@ class Checklist
 
     /**
      * @param string $careArrangements
+     *
      * @return $this
      */
     public function setCareArrangements($careArrangements)
@@ -401,6 +409,7 @@ class Checklist
 
     /**
      * @param string $assetsDeclaredAndManaged
+     *
      * @return $this
      */
     public function setAssetsDeclaredAndManaged($assetsDeclaredAndManaged)
@@ -419,6 +428,7 @@ class Checklist
 
     /**
      * @param string $debtsManaged
+     *
      * @return $this
      */
     public function setDebtsManaged($debtsManaged)
@@ -437,6 +447,7 @@ class Checklist
 
     /**
      * @param string $openClosingBalancesMatch
+     *
      * @return $this
      */
     public function setOpenClosingBalancesMatch($openClosingBalancesMatch)
@@ -455,6 +466,7 @@ class Checklist
 
     /**
      * @param string $accountsBalance
+     *
      * @return $this
      */
     public function setAccountsBalance($accountsBalance)
@@ -473,6 +485,7 @@ class Checklist
 
     /**
      * @param string $moneyMovementsAcceptable
+     *
      * @return $this
      */
     public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
@@ -491,6 +504,7 @@ class Checklist
 
     /**
      * @param string $bondAdequate
+     *
      * @return $this
      */
     public function setBondAdequate($bondAdequate)
@@ -509,6 +523,7 @@ class Checklist
 
     /**
      * @param string $bondOrderMatchCasrec
+     *
      * @return $this
      */
     public function setBondOrderMatchCasrec($bondOrderMatchCasrec)
@@ -527,6 +542,7 @@ class Checklist
 
     /**
      * @param string $futureSignificantFinancialDecisions
+     *
      * @return $this
      */
     public function setFutureSignificantFinancialDecisions($futureSignificantFinancialDecisions)
@@ -545,6 +561,7 @@ class Checklist
 
     /**
      * @param string $hasDeputyRaisedConcerns
+     *
      * @return $this
      */
     public function setHasDeputyRaisedConcerns($hasDeputyRaisedConcerns)
@@ -563,6 +580,7 @@ class Checklist
 
     /**
      * @param string $caseWorkerSatisified
+     *
      * @return $this
      */
     public function setCaseWorkerSatisified($caseWorkerSatisified)
@@ -581,6 +599,7 @@ class Checklist
 
     /**
      * @param string $decision
+     *
      * @return $this
      */
     public function setDecision($decision)
@@ -599,6 +618,7 @@ class Checklist
 
     /**
      * @param string $caseManagerName
+     *
      * @return $this
      */
     public function setCaseManagerName($caseManagerName)
@@ -617,6 +637,7 @@ class Checklist
 
     /**
      * @param string $lodgingSummary
+     *
      * @return $this
      */
     public function setLodgingSummary($lodgingSummary)
@@ -635,6 +656,7 @@ class Checklist
 
     /**
      * @param string $finalDecision
+     *
      * @return $this
      */
     public function setFinalDecision($finalDecision)
@@ -705,6 +727,7 @@ class Checklist
 
     /**
      * @param \DateTime $submittedOn
+     *
      * @return $this
      */
     public function setSubmittedOn($submittedOn)
@@ -724,6 +747,7 @@ class Checklist
 
     /**
      * @param string $buttonClicked
+     *
      * @return $this
      */
     public function setButtonClicked($buttonClicked)
@@ -732,7 +756,3 @@ class Checklist
         return $this;
     }
 }
-
-
-
-

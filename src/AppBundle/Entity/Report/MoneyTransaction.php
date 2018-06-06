@@ -167,6 +167,7 @@ class MoneyTransaction implements MoneyTransactionInterface
     /**
      * Used to serve migrations and recover data in case of errors
      * Remove when DDPB-1852 is fully released
+     *
      * @var string
      *
      *

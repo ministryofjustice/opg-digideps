@@ -3,10 +3,8 @@
 namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
-use AppBundle\Entity\Report\Report as Report;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception\BusinessRulesException;
-use AppBundle\Exception\UnauthorisedException;
+use AppBundle\Entity\Report\Report as Report;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -90,11 +88,11 @@ class AccountController extends RestController
 
         $report = $account->getReport();
 
-        $transferFilter = function($transfer) use ($account) {
+        $transferFilter = function ($transfer) use ($account) {
             return $transfer->getFrom() === $account || $transfer->getTo() === $account;
         };
 
-        $paymentsFilter = function($expense) use ($account) {
+        $paymentsFilter = function ($expense) use ($account) {
             return $expense->getBankAccount() === $account;
         };
 
@@ -183,5 +181,4 @@ class AccountController extends RestController
             $account->setIsJointAccount($data['is_joint_account']);
         }
     }
-
 }

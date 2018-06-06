@@ -24,7 +24,6 @@ class SettingController extends RestController
         $this->setJmsSerialiserGroups(['setting']);
 
         return $setting ?: [];
-
     }
 
     /**
@@ -52,5 +51,4 @@ class SettingController extends RestController
 
         return $setting->getId();
     }
-
 }

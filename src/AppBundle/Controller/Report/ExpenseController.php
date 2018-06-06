@@ -121,6 +121,5 @@ class ExpenseController extends RestController
                 $expense->setBankAccount($bankAccount);
             }
         }
-
     }
 }

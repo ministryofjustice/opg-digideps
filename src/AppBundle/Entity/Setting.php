@@ -42,9 +42,10 @@ class Setting
 
     /**
      * Setting constructor.
+     *
      * @param string $id
      * @param string $content
-     * @param bool $enabled
+     * @param bool   $enabled
      */
     public function __construct($id, $content, $enabled)
     {
@@ -79,6 +80,7 @@ class Setting
 
     /**
      * @param string $id
+     *
      * @return Setting
      */
     public function setId($id)
@@ -90,6 +92,7 @@ class Setting
 
     /**
      * @param string $content
+     *
      * @return Setting
      */
     public function setContent($content)
@@ -101,6 +104,7 @@ class Setting
 
     /**
      * @param bool $enabled
+     *
      * @return Setting
      */
     public function setEnabled($enabled)
@@ -109,8 +113,4 @@ class Setting
 
         return $this;
     }
-
-
-
-
 }

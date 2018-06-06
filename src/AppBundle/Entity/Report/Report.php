@@ -6,7 +6,6 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
-use AppBundle\Entity\Report\Checklist;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -384,7 +383,7 @@ class Report implements ReportInterface
      */
     private $unsubmittedSectionsList;
 
-   /**
+    /**
      * @var Checklist
      *
      * @JMS\Groups({"report"})
@@ -469,7 +468,6 @@ class Report implements ReportInterface
         $this->currentProfPaymentsReceived = null;
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
-
     }
 
     /**
@@ -1135,6 +1133,7 @@ class Report implements ReportInterface
     /**
      * Returns a list of deputy only documents. Those that should be visible to deputies only.
      * Excludes Report PDF and transactions PDF
+     *
      * @return Document[]
      */
     public function getDeputyDocuments()

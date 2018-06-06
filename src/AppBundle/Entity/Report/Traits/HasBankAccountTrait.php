@@ -28,6 +28,7 @@ trait HasBankAccountTrait
 
     /**
      * @param $bankAccount
+     *
      * @return $this Report
      */
     public function setBankAccount($bankAccount)

@@ -2,7 +2,6 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\pa;
 use AppBundle\Service\CsvUploader;
 use Fixtures;
 use Tests\AppBundle\Service\OrgServiceTest;

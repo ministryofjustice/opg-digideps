@@ -66,7 +66,6 @@ class UserService
         $this->em->flush();
     }
 
-
     /**
      * Update a user. Checks that the email is not in use then persists the entity
      *
@@ -86,7 +85,6 @@ class UserService
 
         $this->em->flush($userToEdit);
     }
-
 
     /**
      * @param $email
