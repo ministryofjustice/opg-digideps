@@ -1,0 +1,290 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'checklistPage' %}
+{% set transOptions = {} %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
+            <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">Client details</a></li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">
+        {{ 'client' | trans({}, 'common') }}:
+        <span class="bold">{{ report.client.fullName }}</span>
+    </p>
+    <p>
+        {{ 'courtOrderNumber' | trans({}, 'common') }}:
+        <span class="bold">{{ report.client.caseNumber }}</span>
+    </p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.info') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
+                'fieldSetClass': 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel">
+       <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
+                'labelClass': 'text'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
+                'labelClass': 'text'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.decisions') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.contacts') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.consultationsSatisfactory, (page ~ '.form.consultationsSatisfactory'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.careArrangements, (page ~ '.form.careArrangements'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.money') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.bonds') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (page ~ '.form.futureSignificantFinancialDecisions'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.heading.declaration') | trans }}</h3>
+
+    <div class="form-section form-section--meta-cancel last">
+        <div class="form-group-meta"></div>
+        <div class="form-group-outer">
+            {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
+                'fieldSetClass' : 'inline'
+            }) }}
+        </div>
+    </div>
+
+
+    <h3 class="heading-medium">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
+
+    <ul class="list list-bullet text">
+        <li>{{ (page ~ '.lodgingSummary.listItem1') | trans }}</li>
+        <li>{{ (page ~ '.lodgingSummary.listItem2') | trans }}</li>
+        <li>{{ (page ~ '.lodgingSummary.listItem3') | trans }}</li>
+        <li>{{ (page ~ '.lodgingSummary.listItem4') | trans }}</li>
+    </ul>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
+            'legendClass': 'bold'
+        }) }}
+    </div>
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.lodgingSummary, 'checklistPage.form.lodgingSummary') }}
+    </div>
+
+
+    <h3 class="heading-medium" id="furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
+
+    <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
+
+    <table class="push--bottom">
+        <thead>
+            <tr>
+                <th>Information provided</th>
+                <th class="width-fifth">Saved by</th>
+                <th class="numeric">Date saved</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if checklist.checklistInformation is not empty %}
+            {% set counter = 1 %}
+            {% for info in checklist.checklistInformation %}
+
+            <tr>
+                <td class="behat-region-information-{{ counter }}">{{ info.information | nl2br }}</td>
+                <td class="behat-region-information-created-by-{{ counter }} align--top">{{ info.createdBy.fullname }}, {{ info.createdBy.roleFullName }}</td>
+                <td class="behat-region-created-on-{{ counter }} numeric no-wrap align--top">{{ info.createdOn | date("j F Y") }}</td>
+            </tr>
+                {% set counter = counter + 1 %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="3">No information received.</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="form-section push-double--bottom">
+        {{ form_input(form.furtherInformationReceived, 'checklistPage.form.furtherInformationReceived', {
+            'formGroupClass': 'explanation',
+        }) }}
+        {{ form_submit(form.saveFurtherInformation,'checklistPage.form.saveFurtherInformation', {
+            'buttonClass': 'button-secondary behat-link-save-further-information'
+        }) }}
+    </div>
+
+    <div class="form-section">
+        {{ form_submit(form.save,'checklistPage.form.save', {
+            'buttonClass': 'button-secondary push-half--right behat-link-save-progress'
+        }) }}
+
+        {{ form_submit(form.submitAndDownload,'checklistPage.form.submitAndDownload', {
+            'buttonClass': 'behat-link-submit-and-download'
+        }) }}
+
+        <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+    </div>
+
+
+    {{ form_end(form) }}
+
+{% endblock %}

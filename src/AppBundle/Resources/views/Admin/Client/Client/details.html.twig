@@ -14,6 +14,15 @@
     <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
+{# Breadcrumbs #}
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
+        </ol>
+    </div>
+{% endblock %}
+
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
@@ -80,6 +89,9 @@
                     {% if enableManageLink %}
                         <td class="change-answer width-tenth">
                             {% if report.submitted %}
+                                <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
+                                   class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                                <br />
                                 <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
                                    class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
                             {% endif %}

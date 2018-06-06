@@ -318,6 +318,13 @@ class Report implements ReportInterface
     private $availableSections;
 
     /**
+     * @var Checklist
+     *
+     * @JMS\Type("AppBundle\Entity\Report\Checklist")
+     **/
+    private $checklist;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1118,4 +1125,20 @@ class Report implements ReportInterface
             );
     }
 
+    /**
+     * @return Checklist
+     */
+    public function getChecklist()
+    {
+        return $this->checklist;
+    }
+
+    /**
+     * @param Checklist $checklist
+     */
+    public function setChecklist($checklist)
+    {
+        $this->checklist = $checklist;
+        return $this;
+    }
 }
