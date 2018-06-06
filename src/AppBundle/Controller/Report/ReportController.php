@@ -64,6 +64,7 @@ class ReportController extends RestController
     {
         $groups = $request->query->has('groups')
             ? (array) $request->query->get('groups') : ['report'];
+
         $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
@@ -454,5 +455,99 @@ class ReportController extends RestController
 
         //response to pass back
         return ['reportId' => $currentReport->getId()];
+    }
+
+    /**
+     * Add a checklist for the report
+     *
+     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
+     * @Method({"POST"})
+     * @Security("has_role('ROLE_CASE_MANAGER')")
+     */
+    public function insertChecklist(Request $request, $report_id)
+    {
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+
+        $checklistData = $this->deserializeBodyContent($request);
+
+        $checklist = new EntityDir\Report\Checklist($report);
+        $checklist = $this->populateChecklistEntity($checklist, $checklistData);
+        
+        if (!empty($checklistData['further_information_received'])) {
+            $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
+            $info->setCreatedBy($this->getUser());
+            $this->getEntityManager()->persist($info);
+        }
+
+        if ($checklistData['button_clicked'] == 'submitAndDownload')
+        {
+            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedOn(new \DateTime());
+        }
+
+        $this->persistAndFlush($checklist);
+
+        return ['checklist' => $checklist->getId()];
+    }
+
+    /**
+     * Update a checklist for the report
+     *
+     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_CASE_MANAGER')")
+     */
+    public function updateChecklist(Request $request, $report_id)
+    {
+        $report = $this->findEntityBy(EntityDir\Report\Report::class, $report_id, 'Report not found');
+
+        $checklistData = $this->deserializeBodyContent($request);
+
+        /** @var EntityDir\Report\Checklist $checklist */
+        $checklist = $report->getChecklist();
+
+        $checklist = $this->populateChecklistEntity($checklist, $checklistData);
+
+        if (!empty($checklistData['further_information_received'])) {
+            $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
+            $info->setCreatedBy($this->getUser());
+            $this->getEntityManager()->persist($info);
+        }
+
+        if ($checklistData['button_clicked'] == 'submitAndDownload')
+        {
+            $checklist->setSubmittedBy(($this->getUser()));
+            $checklist->setSubmittedOn(new \DateTime());
+        }
+
+        $this->persistAndFlush($checklist);
+
+        return ['checklist' => $checklist->getId()];
+    }
+
+    private function populateChecklistEntity($checklist, $checklistData) {
+        $this->hydrateEntityWithArrayData($checklist, $checklistData, [
+            'reporting_period_accurate' => 'setReportingPeriodAccurate',
+            'contact_details_upto_date' => 'setContactDetailsUptoDate',
+            'deputy_full_name_accurate_in_casrec' => 'setDeputyFullNameAccurateInCasrec',
+            'decisions_satisfactory' => 'setDecisionsSatisfactory',
+            'consultations_satisfactory' => 'setConsultationsSatisfactory',
+            'care_arrangements' => 'setCareArrangements',
+            'assets_declared_and_managed' => 'setAssetsDeclaredAndManaged',
+            'debts_managed' => 'setDebtsManaged',
+            'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
+            'accounts_balance' => 'setAccountsBalance',
+            'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
+            'bond_adequate' => 'setBondAdequate',
+            'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
+            'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
+            'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
+            'case_worker_satisified' => 'setCaseWorkerSatisified',
+            'lodging_summary' => 'setLodgingSummary',
+            'final_decision' => 'setFinalDecision',
+            'button_clicked' => 'setButtonClicked'
+        ]);
+
+        return $checklist;
     }
 }

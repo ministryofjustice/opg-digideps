@@ -117,3 +117,15 @@ parameters:
             clientSurname:
             typeOfReport:
             corref:
+
+        casemanager@example.org:
+            firstname: test
+            lastname: casemanager
+            roleName: ROLE_CASE_MANAGER
+            password: Abcd1234
+            deputyNo:
+            deputyPostcode:
+            caseNumber:
+            clientSurname:
+            typeOfReport:
+            corref:
