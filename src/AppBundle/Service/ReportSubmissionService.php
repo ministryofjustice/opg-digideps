@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
@@ -123,6 +124,23 @@ class ReportSubmissionService
             'showSummary' => $showSummary
         ]);
 
+        return $this->wkhtmltopdf->getPdfFromHtml($html);
+    }
+
+    /**
+     * @to-do move this into a checklist or pdf service
+     * Generate the HTML of the report and convert to PDF
+     *
+     * @param  Report $report
+     * @param  bool                    $showSummary
+     * @return string                  binary PDF content
+     */
+    public function getChecklistPdfBinaryContent(ReportInterface $report)
+    {
+        $html = $this->templating->render('AppBundle:Admin/Client/Report/Formatted:checklist_formatted_body.html.twig', [
+            'report' => $report,
+            'checklist' => $report->getChecklist()
+        ]);
         return $this->wkhtmltopdf->getPdfFromHtml($html);
     }
 
