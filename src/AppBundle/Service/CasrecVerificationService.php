@@ -39,8 +39,11 @@ class CasrecVerificationService
      */
     public function validate($caseNumber, $clientSurname, $deputySurname, $deputyPostcode)
     {
-        $crMatches = $this->casRecRepo->findBy([ 'caseNumber'     => $this->normaliseCaseNumber($caseNumber), 'clientLastname' => $this->normaliseSurname($clientSurname), 'deputySurname'  => $this->normaliseSurname($deputySurname)
-                                                ]);
+        $crMatches = $this->casRecRepo->findBy([
+            'caseNumber'     => $this->normaliseCaseNumber($caseNumber),
+            'clientLastname' => $this->normaliseSurname($clientSurname),
+            'deputySurname'  => $this->normaliseSurname($deputySurname)
+        ]);
 
         $this->lastMatchedCasrecUsers = $this->applyPostcodeFilter($crMatches, $deputyPostcode);
 
