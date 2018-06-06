@@ -1,5 +1,7 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 
@@ -111,85 +113,10 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-
                     {# Questions and answers table #}
-                    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
-
-                    <table class="check-your-answers columns-2 push--bottom">
-                        <thead>
-                            <tr>
-                                <th>{{ 'question' | trans({}, 'common') }}</th>
-                                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                                <th>
-                                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {# step 1 #}
-                            <tr>
-                                <td>
-                                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions, 'report-visits-care') }}
-                                </td>
-                                <td>
-                                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
-                                </td>
-                            </tr>
-                            {% if report.visitsCare.doYouLiveWithClient == 'no' %}
-                                <tr>
-                                    <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions, 'report-visits-care') }}</td>
-                                    <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
-                                </tr>
-                            {% endif %}
-                            {# step 2 #}
-                            <tr>
-                                <td>
-                                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions, 'report-visits-care') }}
-                                </td>
-                                <td>
-                                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
-                                </td>
-                            </tr>
-                            {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
-                                <tr>
-                                    <td>
-                                        {{ 'form.howIsCareFunded.label' | trans(transOptions, 'report-visits-care') }}
-                                    </td>
-                                    <td>
-                                        {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions, 'report-visits-care') }}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                            {# step 3 #}
-                            <tr>
-                                <td>
-                                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions, 'report-visits-care') }}
-                                </td>
-                                <td>
-                                    {{ report.visitsCare.whoIsDoingTheCaring | nl2br }}
-                                </td>
-                            </tr>
-                            {# step 4 #}
-                            <tr>
-                                <td>
-                                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions, 'report-visits-care') }}
-                                </td>
-                                <td>
-                                    {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
-                                </td>
-                            </tr>
-                            {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
-                                <tr>
-                                    <td>
-                                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions, 'report-visits-care') }}
-                                    </td>
-                                    <td>
-                                        {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
+                    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
                 </div>
             </div>
         </details>
@@ -389,24 +316,10 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-                    <table class="check-your-answers columns-2 push--bottom">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Do you expect to make any significant financial decisions on John's behalf in the next 12 months?</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr class="behat-region-expect-financial-decision-details">
-                                <td>Please give us details about your decisions</td>
-                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.<br>Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Action:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
                 </div>
             </div>
         </details>
