@@ -22,10 +22,12 @@ class ReportControllerTest extends AbstractTestController
     private static $tokenPaAdmin = null;
     private static $tokenPaTeamMember = null;
     private static $casRec1;
+    private static $tokenCaseManager = null;
 
     // pa
     private static $pa1;
     private static $pa2Admin;
+    private static $caseManager;
     private static $pa3TeamMember;
     private static $pa1Client1;
     private static $pa1Client1Report1;
@@ -104,6 +106,7 @@ class ReportControllerTest extends AbstractTestController
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenCaseManager = $this->loginAsCaseManager();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenPaAdmin = $this->loginAsPaAdmin();
@@ -691,5 +694,209 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenPa);
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaAdmin);
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaTeamMember);
+    }
+
+    public function testAddChecklistWithSaveProgress()
+    {
+        $reportId = self::$report1->getId();
+        $url = '/report/' . $reportId . '/checked';
+
+        // add new report checklist
+        $checklistId = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenCaseManager,
+            'data'        => [
+                'button_clicked' => 'save', // Save further information
+                'reporting_period_accurate' => 'yes',
+                'contact_details_upto_date' => 1,
+                'deputy_full_name_accurate_in_casrec' => 1,
+                'decisions_satisfactory' => 'yes',
+                'consultations_satisfactory' => 'yes',
+                'care_arrangements' => 'yes',
+                'assets_declared_and_managed' => 'na',
+                'debts_managed' => 'yes',
+                'open_closing_balances_match' => 'yes',
+                'accounts_balance' => 'yes',
+                'money_movements_acceptable' => 'yes',
+                'bond_adequate' => 'yes',
+                'bond_order_match_casrec' => 'yes',
+                'future_significant_financial_decisions' => 'yes',
+                'has_deputy_raised_concerns' => 'no',
+                'case_worker_satisified' => 'yes',
+            ],
+        ])['data']['checklist'];
+
+        // assert creation
+        /* @var $report \AppBundle\Entity\Report\Report */
+        $report = self::fixtures()->getReportById($reportId);
+        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        $checklist = $report->getChecklist();
+        $this->assertEquals($checklistId, $checklist->getId());
+        $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
+        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
+        $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
+        $this->assertEquals('yes', $checklist->getCareArrangements());
+        $this->assertEquals('na', $checklist->getAssetsDeclaredAndManaged());
+        $this->assertEquals('yes', $checklist->getDebtsManaged());
+        $this->assertEquals('yes', $checklist->getOpenClosingBalancesMatch());
+        $this->assertEquals('yes', $checklist->getAccountsBalance());
+        $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
+        $this->assertEquals('yes', $checklist->getBondAdequate());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+
+    }
+
+    public function testAddChecklistWithFurtherInformation()
+    {
+        $reportId = self::$report1->getId();
+        $url = '/report/' . $reportId . '/checked';
+        $report = self::fixtures()->getReportById($reportId);
+
+        // add new report checklist
+        $checklistId = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenCaseManager,
+            'data'        => [
+                'id'    => $report->getChecklist()->getId(),
+                'button_clicked' => 'saveFurtherInformation',
+                'save_further_information' => '', // Save further information
+                'further_information_received' => 'Some more info',
+                'reporting_period_accurate' => 'yes',
+                'contact_details_upto_date' => 1,
+                'deputy_full_name_accuratein_casrec' => 1,
+                'decisions_satisfactory' => 'yes',
+                'consultations_satisfactory' => 'yes',
+                'care_arrangements' => 'yes',
+                'assets_declared_and_managed' => 'na',
+                'debts_managed' => 'yes',
+                'open_closing_balances_match' => 'yes',
+                'accounts_balance' => 'yes',
+                'money_movements_acceptable' => 'yes',
+                'bond_adequate' => 'yes',
+                'bond_order_match_casrec' => 'yes',
+                'future_significant_financial_decisions' => 'yes',
+                'has_deputy_raised_concerns' => 'no',
+                'case_worker_satisified' => 'yes',
+            ],
+        ])['data']['checklist'];
+
+        // assert creation
+        /* @var $report \AppBundle\Entity\Report\Report */
+        $report = self::fixtures()->getReportById($reportId);
+        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        $checklist = $report->getChecklist();
+        $this->assertEquals($checklistId, $checklist->getId());
+        $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
+        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
+        $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
+        $this->assertEquals('yes', $checklist->getCareArrangements());
+        $this->assertEquals('na', $checklist->getAssetsDeclaredAndManaged());
+        $this->assertEquals('yes', $checklist->getDebtsManaged());
+        $this->assertEquals('yes', $checklist->getOpenClosingBalancesMatch());
+        $this->assertEquals('yes', $checklist->getAccountsBalance());
+        $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
+        $this->assertEquals('yes', $checklist->getBondAdequate());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+
+        // assert checklist information created
+        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        $checklistInfo = $checklist->getChecklistInformation();
+        $this->assertCount(1, $checklistInfo);
+
+        // assert checklist information saved correctly
+        $checklistInfo = $checklistInfo[0];
+        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation **/
+        $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
+        $this->assertNotEmpty($checklistInfo->getId());
+        $this->assertNotEmpty($checklistInfo->getCreatedBy());
+        $this->assertNotEmpty($checklistInfo->getCreatedOn());
+        $this->assertEquals('Some more info', $checklistInfo->getInformation());
+
+    }
+
+    public function testUpdateAndCompleteChecklist()
+    {
+        $reportId = self::$report1->getId();
+        $url = '/report/' . $reportId . '/checked';
+        $report = self::fixtures()->getReportById($reportId);
+
+        // assert submit fails due to missing fields
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => false,
+            'AuthToken'   => self::$tokenCaseManager,
+            'data'        => [
+                'id'    => $report->getChecklist()->getId(),
+                'button_clicked' => 'saveAndDownload',
+            ]
+        ]);
+
+        // clear cache between updates
+        self::fixtures()->clear();
+
+        // update report checklist with missing fields
+        $checklistId = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenCaseManager,
+            'data'        => [
+                'id'    => $report->getChecklist()->getId(),
+                'button_clicked' => 'saveAndDownload',
+                'lodging_summary' => 'All complete',
+                'final_decision' => 'for-review'
+            ],
+        ])['data']['checklist'];
+
+        // assert creation
+        /* @var $report \AppBundle\Entity\Report\Report */
+        $report = self::fixtures()->getReportById($reportId);
+        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        $checklist = $report->getChecklist();
+
+        $this->assertEquals($checklistId, $checklist->getId());
+        $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
+        $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
+        $this->assertEquals('1', $checklist->getDeputyFullNameAccurateinCasrec());
+        $this->assertEquals('yes', $checklist->getDecisionsSatisfactory());
+        $this->assertEquals('yes', $checklist->getConsultationsSatisfactory());
+        $this->assertEquals('yes', $checklist->getCareArrangements());
+        $this->assertEquals('na', $checklist->getAssetsDeclaredAndManaged());
+        $this->assertEquals('yes', $checklist->getDebtsManaged());
+        $this->assertEquals('yes', $checklist->getOpenClosingBalancesMatch());
+        $this->assertEquals('yes', $checklist->getAccountsBalance());
+        $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
+        $this->assertEquals('yes', $checklist->getBondAdequate());
+        $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
+        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+        $this->assertEquals('All complete', $checklist->getLodgingSummary());
+        $this->assertEquals('for-review', $checklist->getFinalDecision());
+
+        // assert checklist information created
+        /* @var $checklist \AppBundle\Entity\Report\Checklist */
+        $checklist = $report->getChecklist();
+        $checklistInfo = $checklist->getChecklistInformation();
+        $this->assertCount(1, $checklistInfo);
+
+        // assert checklist information saved correctly
+        $checklistInfo = $checklistInfo[0];
+        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation **/
+        $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
+        $this->assertNotEmpty($checklistInfo->getId());
+        $this->assertNotEmpty($checklistInfo->getCreatedBy());
+        $this->assertNotEmpty($checklistInfo->getCreatedOn());
+        $this->assertEquals('Some more info', $checklistInfo->getInformation());
+
+        self::fixtures()->clear();
+
     }
 }

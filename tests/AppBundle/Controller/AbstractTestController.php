@@ -225,6 +225,14 @@ abstract class AbstractTestController extends WebTestCase
         return $this->login('admin@example.org', 'Abcd1234', API_TOKEN_ADMIN);
     }
 
+    /**
+     * @return string token
+     */
+    protected function loginAsCaseManager()
+    {
+        return $this->login('casemanager@example.org', 'Abcd1234', API_TOKEN_ADMIN);
+    }
+
     protected function tearDown()
     {
         parent::tearDown();
