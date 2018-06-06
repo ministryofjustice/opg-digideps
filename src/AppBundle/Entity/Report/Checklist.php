@@ -2,9 +2,8 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
-use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -250,7 +249,7 @@ class Checklist
     }
 
     /**
-     * @param int $id
+     * @param  int   $id
      * @return $this
      */
     public function setId($id)
@@ -268,7 +267,7 @@ class Checklist
     }
 
     /**
-     * @param string $reportingPeriodAccurate
+     * @param  string $reportingPeriodAccurate
      * @return $this
      */
     public function setReportingPeriodAccurate($reportingPeriodAccurate)
@@ -286,7 +285,7 @@ class Checklist
     }
 
     /**
-     * @param string $contactDetailsUptoDate
+     * @param  string $contactDetailsUptoDate
      * @return $this
      */
     public function setContactDetailsUptoDate($contactDetailsUptoDate)
@@ -304,7 +303,7 @@ class Checklist
     }
 
     /**
-     * @param string $deputyFullNameAccurateInCasrec
+     * @param  string $deputyFullNameAccurateInCasrec
      * @return $this
      */
     public function setDeputyFullNameAccurateInCasrec($deputyFullNameAccurateInCasrec)
@@ -322,7 +321,7 @@ class Checklist
     }
 
     /**
-     * @param string $decisionsSatisfactory
+     * @param  string $decisionsSatisfactory
      * @return $this
      */
     public function setDecisionsSatisfactory($decisionsSatisfactory)
@@ -340,7 +339,7 @@ class Checklist
     }
 
     /**
-     * @param string $consultationsSatisfactory
+     * @param  string $consultationsSatisfactory
      * @return $this
      */
     public function setConsultationsSatisfactory($consultationsSatisfactory)
@@ -358,7 +357,7 @@ class Checklist
     }
 
     /**
-     * @param string $careArrangements
+     * @param  string $careArrangements
      * @return $this
      */
     public function setCareArrangements($careArrangements)
@@ -376,7 +375,7 @@ class Checklist
     }
 
     /**
-     * @param string $assetsDeclaredAndManaged
+     * @param  string $assetsDeclaredAndManaged
      * @return $this
      */
     public function setAssetsDeclaredAndManaged($assetsDeclaredAndManaged)
@@ -394,7 +393,7 @@ class Checklist
     }
 
     /**
-     * @param string $debtsManaged
+     * @param  string $debtsManaged
      * @return $this
      */
     public function setDebtsManaged($debtsManaged)
@@ -412,7 +411,7 @@ class Checklist
     }
 
     /**
-     * @param string $openClosingBalancesMatch
+     * @param  string $openClosingBalancesMatch
      * @return $this
      */
     public function setOpenClosingBalancesMatch($openClosingBalancesMatch)
@@ -430,7 +429,7 @@ class Checklist
     }
 
     /**
-     * @param string $accountsBalance
+     * @param  string $accountsBalance
      * @return $this
      */
     public function setAccountsBalance($accountsBalance)
@@ -448,7 +447,7 @@ class Checklist
     }
 
     /**
-     * @param string $moneyMovementsAcceptable
+     * @param  string $moneyMovementsAcceptable
      * @return $this
      */
     public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
@@ -466,7 +465,7 @@ class Checklist
     }
 
     /**
-     * @param string $bondAdequate
+     * @param  string $bondAdequate
      * @return $this
      */
     public function setBondAdequate($bondAdequate)
@@ -484,7 +483,7 @@ class Checklist
     }
 
     /**
-     * @param string $bondOrderMatchCasrec
+     * @param  string $bondOrderMatchCasrec
      * @return $this
      */
     public function setBondOrderMatchCasrec($bondOrderMatchCasrec)
@@ -502,7 +501,7 @@ class Checklist
     }
 
     /**
-     * @param string $futureSignificantFinancialDecisions
+     * @param  string $futureSignificantFinancialDecisions
      * @return $this
      */
     public function setFutureSignificantFinancialDecisions($futureSignificantFinancialDecisions)
@@ -520,7 +519,7 @@ class Checklist
     }
 
     /**
-     * @param string $hasDeputyRaisedConcerns
+     * @param  string $hasDeputyRaisedConcerns
      * @return $this
      */
     public function setHasDeputyRaisedConcerns($hasDeputyRaisedConcerns)
@@ -538,7 +537,7 @@ class Checklist
     }
 
     /**
-     * @param string $caseWorkerSatisified
+     * @param  string $caseWorkerSatisified
      * @return $this
      */
     public function setCaseWorkerSatisified($caseWorkerSatisified)
@@ -556,7 +555,7 @@ class Checklist
     }
 
     /**
-     * @param string $decision
+     * @param  string $decision
      * @return $this
      */
     public function setDecision($decision)
@@ -574,7 +573,7 @@ class Checklist
     }
 
     /**
-     * @param string $caseManagerName
+     * @param  string $caseManagerName
      * @return $this
      */
     public function setCaseManagerName($caseManagerName)
@@ -592,7 +591,7 @@ class Checklist
     }
 
     /**
-     * @param string $lodgingSummary
+     * @param  string $lodgingSummary
      * @return $this
      */
     public function setLodgingSummary($lodgingSummary)
@@ -610,7 +609,7 @@ class Checklist
     }
 
     /**
-     * @param string $finalDecision
+     * @param  string $finalDecision
      * @return $this
      */
     public function setFinalDecision($finalDecision)
@@ -660,7 +659,7 @@ class Checklist
     }
 
     /**
-     * @param \AppBundle\Entity\User $submittedBy
+     * @param  \AppBundle\Entity\User $submittedBy
      * @return $this
      */
     public function setSubmittedBy($submittedBy)
@@ -678,7 +677,7 @@ class Checklist
     }
 
     /**
-     * @param \DateTime $submittedOn
+     * @param  \DateTime $submittedOn
      * @return $this
      */
     public function setSubmittedOn($submittedOn)
@@ -696,7 +695,7 @@ class Checklist
     }
 
     /**
-     * @param string $buttonClicked
+     * @param  string $buttonClicked
      * @return $this
      */
     public function setButtonClicked($buttonClicked)
@@ -705,7 +704,3 @@ class Checklist
         return $this;
     }
 }
-
-
-
-

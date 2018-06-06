@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Expense;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
@@ -13,7 +12,6 @@ class DeputyExpenseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder
             ->add('explanation', 'text', [
                 'required' => true,

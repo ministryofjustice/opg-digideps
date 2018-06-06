@@ -7,7 +7,6 @@ use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use AppBundle\Entity\Report\BankAccount;
 
 class GiftType extends AbstractType
 {
@@ -23,16 +22,16 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-            $reportType = $options['report']->getType();
+        $reportType = $options['report']->getType();
 
-            if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
-                $builder->add('bankAccountId', 'choice', [
+        if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
+            $builder->add('bankAccountId', 'choice', [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select'
                 ]);
-            }
+        }
 
-           $builder ->add('save', 'submit');
+        $builder ->add('save', 'submit');
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -43,7 +42,6 @@ class GiftType extends AbstractType
             'translation_domain' => 'report-gifts',
         ])
         ->setRequired(['user', 'report']);
-
     }
 
     public function getName()

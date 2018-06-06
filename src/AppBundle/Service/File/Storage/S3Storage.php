@@ -120,7 +120,8 @@ class S3Storage implements StorageInterface
      * @param $newTagset
      * @throws \Exception
      */
-    public function appendTagset($key, $newTagset) {
+    public function appendTagset($key, $newTagset)
+    {
         $this->log('info', "Appending Purge tag for $key to S3");
         if (empty($key)) {
             throw new \Exception('Invalid Reference Key: ' . $key . ' when appending tag');
@@ -153,7 +154,6 @@ class S3Storage implements StorageInterface
             ],
         ]);
         $this->log('info', "Tagset Updated for $key ");
-
     }
 
     /**
