@@ -4,7 +4,8 @@
 {% trans_default_domain translationDomain %}
 
 {% set page = 'checklistPage' %}
-{% set transOptions = {} %}
+{% set checklistPage = true %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
@@ -110,38 +111,83 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
+
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' %}
+
                     <table class="check-your-answers columns-2 push--bottom">
                         <thead>
                             <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
+                                <th>{{ 'question' | trans({}, 'common') }}</th>
+                                <th>{{ 'answer' | trans({}, 'common') }}</th>
+                                <th>
+                                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Do you live with John?</td>
-                                <td>Yes</td>
+                            {# step 1 #}
+                            <tr>
+                                <td>
+                                    {{ 'form.doYouLiveWithClient.label' | trans(transOptions, 'report-visits-care') }}
+                                </td>
+                                <td>
+                                    {{ report.visitsCare.doYouLiveWithClient | capitalize }}
+                                </td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Does John get care that is paid for?</td>
-                                <td>Yes</td>
+                            {% if report.visitsCare.doYouLiveWithClient == 'no' %}
+                                <tr>
+                                    <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions, 'report-visits-care') }}</td>
+                                    <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                            {# step 2 #}
+                            <tr>
+                                <td>
+                                    {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions, 'report-visits-care') }}
+                                </td>
+                                <td>
+                                    {{ report.visitsCare.doesClientReceivePaidCare | capitalize }}
+                                </td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>How is the care funded?</td>
-                                <td>All John's care is paid for by someone else (for example, by the local authority or NHS)</td>
+                            {% if report.visitsCare.doesClientReceivePaidCare == 'yes' %}
+                                <tr>
+                                    <td>
+                                        {{ 'form.howIsCareFunded.label' | trans(transOptions, 'report-visits-care') }}
+                                    </td>
+                                    <td>
+                                        {{ ('form.howIsCareFunded.choices.' ~ report.visitsCare.howIsCareFunded) | trans(transOptions, 'report-visits-care') }}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                            {# step 3 #}
+                            <tr>
+                                <td>
+                                    {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions, 'report-visits-care') }}
+                                </td>
+                                <td>
+                                    {{ report.visitsCare.whoIsDoingTheCaring | nl2br }}
+                                </td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Who is doing the caring?</td>
-                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.</td>
+                            {# step 4 #}
+                            <tr>
+                                <td>
+                                    {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions, 'report-visits-care') }}
+                                </td>
+                                <td>
+                                    {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
+                                </td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Does John have a care plan?</td>
-                                <td>Yes</td>
-                            </tr>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>When was the care plan last reviewed?</td>
-                                <td>December 2008</td>
-                            </tr>
+                            {% if report.visitsCare.doesClientHaveACarePlan == 'yes' %}
+                                <tr>
+                                    <td>
+                                        {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions, 'report-visits-care') }}
+                                    </td>
+                                    <td>
+                                        {{ report.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>

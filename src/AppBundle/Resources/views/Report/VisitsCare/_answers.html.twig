@@ -7,9 +7,11 @@
         <tr>
             <th>{{ 'question' | trans({}, 'common') }}</th>
             <th>{{ 'answer' | trans({}, 'common') }}</th>
+            {% if checklistPage|default(false) != true %}
             <th>
                 <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
             </th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -32,17 +34,21 @@
                     {{ report.visitsCare.doYouLiveWithClient | capitalize }}
                 </td>
             {% endif %}
-            <td class="change-answer">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if checklistPage|default(false) != true %}
+                <td class="change-answer">
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
         {% if report.visitsCare.doYouLiveWithClient == 'no' %}
             <tr class="behat-region-how-often-contact-client">
                 <td>{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</td>
                 <td>{{ report.visitsCare.howOftenDoYouContactClient | nl2br }}</td>
-                <td class="change-answer">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if checklistPage|default(false) != true %}
+                    <td class="change-answer">
+                        <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endif %}
 
