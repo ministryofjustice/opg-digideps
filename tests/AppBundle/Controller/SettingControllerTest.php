@@ -2,9 +2,7 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\Note;
 use AppBundle\Entity\Setting;
-use Symfony\Bridge\Doctrine\Tests\Fixtures\User;
 use Fixtures;
 
 class SettingControllerTest extends AbstractTestController
@@ -16,7 +14,6 @@ class SettingControllerTest extends AbstractTestController
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-
     }
 
     /**
@@ -72,12 +69,11 @@ class SettingControllerTest extends AbstractTestController
         $this->assertEquals(true, $data['enabled']);
     }
 
-
     public function testupdate()
     {
         $id = 'service-notification';
         $url = '/setting/' . $id;
-        $settingContent = 'snc1'.implode(range(1,1000),' ');
+        $settingContent = 'snc1' . implode(range(1, 1000), ' ');
         Fixtures::deleteReportsData(['setting']);
 
         // assert Auth
@@ -113,7 +109,5 @@ class SettingControllerTest extends AbstractTestController
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals('snc2', $setting->getContent());
         $this->assertEquals(false, $setting->isEnabled());
-
     }
-
 }

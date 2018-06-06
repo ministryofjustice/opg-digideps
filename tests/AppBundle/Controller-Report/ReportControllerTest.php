@@ -748,7 +748,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
-
     }
 
     public function testAddChecklistWithFurtherInformation()
@@ -815,13 +814,12 @@ class ReportControllerTest extends AbstractTestController
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation **/
+        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
         $this->assertNotEmpty($checklistInfo->getCreatedOn());
         $this->assertEquals('Some more info', $checklistInfo->getInformation());
-
     }
 
     public function testUpdateAndCompleteChecklist()
@@ -889,7 +887,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation **/
+        /** @var $checklistInfo \AppBundle\Entity\Report\ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
@@ -897,6 +895,5 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('Some more info', $checklistInfo->getInformation());
 
         self::fixtures()->clear();
-
     }
 }

@@ -2,8 +2,6 @@
 
 namespace AppBundle\Entity\Repository;
 
-use AppBundle\Entity\User;
-
 /**
  * UserRepository.
  *
@@ -12,5 +10,4 @@ use AppBundle\Entity\User;
  */
 class UserRepository extends AbstractEntityRepository
 {
-
 }

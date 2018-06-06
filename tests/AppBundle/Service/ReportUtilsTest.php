@@ -6,7 +6,6 @@ use AppBundle\Service\ReportUtils;
 
 class ReportUtilsTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * Data providor for reporting periods, end date and expected start date
      *
@@ -57,7 +56,6 @@ class ReportUtilsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedStartDate, $startDate->format('Y-m-d'));
     }
-
 
     public static function parseDateProvider()
     {

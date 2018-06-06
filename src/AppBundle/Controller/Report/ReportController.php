@@ -472,15 +472,14 @@ class ReportController extends RestController
 
         $checklist = new EntityDir\Report\Checklist($report);
         $checklist = $this->populateChecklistEntity($checklist, $checklistData);
-        
+
         if (!empty($checklistData['further_information_received'])) {
             $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($this->getUser());
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload')
-        {
+        if ($checklistData['button_clicked'] == 'submitAndDownload') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -514,8 +513,7 @@ class ReportController extends RestController
             $this->getEntityManager()->persist($info);
         }
 
-        if ($checklistData['button_clicked'] == 'submitAndDownload')
-        {
+        if ($checklistData['button_clicked'] == 'submitAndDownload') {
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -525,7 +523,8 @@ class ReportController extends RestController
         return ['checklist' => $checklist->getId()];
     }
 
-    private function populateChecklistEntity($checklist, $checklistData) {
+    private function populateChecklistEntity($checklist, $checklistData)
+    {
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'reporting_period_accurate' => 'setReportingPeriodAccurate',
             'contact_details_upto_date' => 'setContactDetailsUptoDate',

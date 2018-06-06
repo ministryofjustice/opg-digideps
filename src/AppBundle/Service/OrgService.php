@@ -206,9 +206,8 @@ class OrgService
         return $user;
     }
 
-
     /**
-     * @param array          $row keys: Case, caseNumber, Forename, Surname, Client Adrs1...
+     * @param array          $row          keys: Case, caseNumber, Forename, Surname, Client Adrs1...
      * @param EntityDir\User $userOrgNamed the user the client should belong to
      *
      * @return EntityDir\Client
@@ -270,7 +269,7 @@ class OrgService
         // (duplicates are auto-skipped)
         foreach ($userOrgNamed->getTeams() as $team) {
             foreach ($team->getMembers() as $member) {
-//                if ($member->getId() != $userOrgNamed->getId()) {
+                //                if ($member->getId() != $userOrgNamed->getId()) {
                     $member->addClient($client);
 //                }
             }
@@ -282,11 +281,13 @@ class OrgService
     }
 
     /**
-     * @param array $csvRow keys: Last Report Day, Typeofrep, }
+     * @param array            $csvRow keys: Last Report Day, Typeofrep, }
      * @param EntityDir\Client $client the client the report should belong to
-     * @param EntityDir\User $user the user (needed for determine the report type, dependendent on user role)
-     * @return EntityDir\Report\Report
+     * @param EntityDir\User   $user   the user (needed for determine the report type, dependendent on user role)
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @return EntityDir\Report\Report
      */
     private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client, EntityDir\User $user)
     {
@@ -322,13 +323,14 @@ class OrgService
         return $report;
     }
 
-
     /**
      * @param EntityDir\User $userCreator
      * @param $id
-     * @return EntityDir\User|null|object
      *
      * @throws AccessDeniedException if user not part of the team the creator user belongs to
+     *
+     * @return EntityDir\User|null|object
+     *
      */
     public function getMemberById(EntityDir\User $userCreator, $id)
     {
@@ -354,7 +356,7 @@ class OrgService
     public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
         // add to creator's teams
-        foreach($loggedInUser->getTeams() as $team) {
+        foreach ($loggedInUser->getTeams() as $team) {
             $userToAdd->addTeam($team);
         }
 
@@ -364,19 +366,19 @@ class OrgService
         }
     }
 
-
     /**
      * Delete $user from all the teams $loggedInUser belongs to
      * Also removes the user, if doesn't belong to any team any longer
      *
      * @param EntityDir\User $loggedInUser
      * @param EntityDir\User $user
+     *
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function removeUserFromTeamsOf(EntityDir\User $loggedInUser, EntityDir\User $user)
     {
         // remove user from teams the logged-user (operation performer) belongs to
-        foreach($loggedInUser->getTeams() as $team) {
+        foreach ($loggedInUser->getTeams() as $team) {
             $user->getTeams()->removeElement($team);
         }
 
@@ -393,9 +395,6 @@ class OrgService
 
         $this->em->flush();
     }
-
-
-
 
     /**
      * @param $message

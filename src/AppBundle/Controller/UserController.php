@@ -151,7 +151,6 @@ class UserController extends RestController
         return $this->getOneByFilter($request, 'user_id', $id);
     }
 
-
     /**
      * @Route("/get-one-by/{what}/{filter}", requirements={
      *   "what" = "(user_id|email|case_number)"
@@ -387,8 +386,9 @@ class UserController extends RestController
     /**
      * call setters on User when $data contains values.
      * //TODO move to service
+     *
      * @param EntityDir\User $user
-     * @param array $data
+     * @param array          $data
      */
     private function populateUser(EntityDir\User $user, array $data)
     {
@@ -440,7 +440,7 @@ class UserController extends RestController
      * //TODO code seem to need a cleanup/refactor
      *
      * @param EntityDir\User $user
-     * @param array $data
+     * @param array          $data
      */
     private function updateTeamAddresses(EntityDir\User $user, array $data)
     {

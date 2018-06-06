@@ -349,8 +349,8 @@ class CasRec
      * 104: when corref == hw and typeofRep empty (104 CURRENTLY DISABLED)
      * 103: all the other cases;
      *
-     * @param string $typeOfRep e.g. opg103
-     * @param string $corref e.g. l3, l3g
+     * @param string $typeOfRep    e.g. opg103
+     * @param string $corref       e.g. l3, l3g
      * @param string $userRoleName e.g. ROLE_PA_NAMED
      *
      * @return string Report::TYPE_*

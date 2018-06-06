@@ -38,7 +38,6 @@ class TeamController extends RestController
             ->getMemberById($this->getUser(), $id);
     }
 
-
     /**
      * Add the user (retrieved by Id) to the teams the current user belongs to
      *
@@ -57,7 +56,6 @@ class TeamController extends RestController
 
         return ['id' => $user->getId()];
     }
-
 
     /**
      * Delete Org team membership, and also the user if belonging to no teams
@@ -87,5 +85,4 @@ class TeamController extends RestController
     {
         return $this->get('org_service');
     }
-
 }

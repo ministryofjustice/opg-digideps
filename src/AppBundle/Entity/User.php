@@ -552,7 +552,6 @@ class User implements UserInterface
         return $this->teams;
     }
 
-
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("team_names")
@@ -563,7 +562,7 @@ class User implements UserInterface
     public function getTeamNames()
     {
         $ret = [];
-        foreach($this->getTeams() as $team) {
+        foreach ($this->getTeams() as $team) {
             $ret[$team->getId()] = $team->getTeamName();
         }
 
@@ -580,8 +579,8 @@ class User implements UserInterface
     public function getMembersInAllTeams()
     {
         $ret = [];
-        foreach($this->getTeams() as $team) { /* @var $team Team */
-            foreach($team->getMembers() as $member) {
+        foreach ($this->getTeams() as $team) { /* @var $team Team */
+            foreach ($team->getMembers() as $member) {
                 $ret[$member->getId()] = $member;
             }
         }
@@ -1187,7 +1186,6 @@ class User implements UserInterface
     {
         return $this->isPaAdministrator() || $this->isProfAdministrator();
     }
-
 
     /**
      * Is PA Team member?

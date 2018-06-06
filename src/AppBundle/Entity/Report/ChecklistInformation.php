@@ -3,13 +3,12 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Traits\CreationAudit;
-use AppBundle\Entity\ReportInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * Checklist.
+ *
  * @ORM\Table(name="checklist_information",
  *     indexes={
  *     @ORM\Index(name="ix_checklist_information_checklist_id", columns={"checklist_id"}),
@@ -55,7 +54,6 @@ class ChecklistInformation
      */
     private $information;
 
-
     public function __construct(Checklist $checklist, $information)
     {
         $this->setChecklist($checklist);
@@ -72,6 +70,7 @@ class ChecklistInformation
 
     /**
      * @param int $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -112,7 +111,3 @@ class ChecklistInformation
         $this->information = $information;
     }
 }
-
-
-
-
