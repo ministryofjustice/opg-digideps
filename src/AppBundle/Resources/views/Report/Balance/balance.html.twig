@@ -11,7 +11,6 @@
 } %}
 
 {% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
-{% set showBalanceCalculations = report.status.bankAccountsState['state'] != 'not-started' %}
 
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}

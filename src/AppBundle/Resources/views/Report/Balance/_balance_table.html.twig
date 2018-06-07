@@ -1,5 +1,6 @@
 {% set translationDomain = "report-balance" %}
 {% trans_default_domain translationDomain %}
+{% set showBalanceCalculations = report.status.bankAccountsState['state'] != 'not-started' %}
 
 {% set transOptions = {
     '%client%': report.client.firstname | e,
