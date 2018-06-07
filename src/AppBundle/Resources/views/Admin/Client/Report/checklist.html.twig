@@ -43,11 +43,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
-
+    {# Deputy and client information #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.info') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
                 'fieldSetClass': 'inline'
@@ -55,8 +54,7 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel">
-       <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
                 'labelClass': 'text'
@@ -64,8 +62,7 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
                 'labelClass': 'text'
@@ -73,11 +70,10 @@
         </div>
     </div>
 
-
+    {# Decisions made over the reporting period #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.decisions') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
                 'fieldSetClass' : 'inline'
@@ -85,11 +81,10 @@
         </div>
     </div>
 
-
+    {# People consulted #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.contacts') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.consultationsSatisfactory, (page ~ '.form.consultationsSatisfactory'), {
                 'fieldSetClass' : 'inline'
@@ -97,14 +92,14 @@
         </div>
     </div>
 
-
+    {# Contact with client, care arrangements and care plan #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.careArrangements, (page ~ '.form.careArrangements'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -123,11 +118,10 @@
         </details>
     </div>
 
-
+    {# Assets and debts #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
                 'fieldSetClass' : 'inline'
@@ -135,11 +129,11 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
 
@@ -156,15 +150,12 @@
                 </div>
             </div>
         </details>
-
-
     </div>
 
-
+    {# Money in and money out #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
-    <div class="form-section underline form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
                 'fieldSetClass' : 'inline'
@@ -172,11 +163,11 @@
         </div>
     </div>
 
-    <div class="form-section underline form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
 
@@ -211,23 +202,21 @@
                 </div>
             </div>
         </details>
-
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
     </div>
 
-
+    {# Bonds #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.bonds') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
                 'fieldSetClass' : 'inline'
@@ -235,23 +224,23 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
     </div>
 
-
+    {# Next reporting period #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
 
-    <div class="form-section underline form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (page ~ '.form.futureSignificantFinancialDecisions'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -286,11 +275,11 @@
         </details>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
 
@@ -325,14 +314,14 @@
         </details>
     </div>
 
-
+    {# Declaration #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.declaration') | trans }}</h3>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -368,7 +357,7 @@
         </details>
     </div>
 
-
+    {# Lodging summary #}
     <h3 class="heading-medium underline">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
 
     <ul class="list list-bullet text">
@@ -388,7 +377,7 @@
         {{ form_input(form.lodgingSummary, 'checklistPage.form.lodgingSummary') }}
     </div>
 
-
+    {# Further information #}
     <h3 class="heading-medium underline" id="furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
 
     <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
