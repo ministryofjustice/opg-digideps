@@ -98,7 +98,11 @@
             <div class="full-width push-half--top">
                 <dl class="labelvalue">
                     <dt class="label">Email (optional)</dt>
-                    <dd class="value">{{deputy.email}}</dd>
+                    {% if deputy.isDeputyOrg and paTeam %} 
+                        <dd class="value">{{paTeam.getTeamNamedDeputy.email}}</dd>
+                    {% else %}
+                        <dd class="value">{{deputy.email}}</dd>
+                    {% endif %}
                 </dl>
             </div>
         {% endif %}
@@ -106,7 +110,11 @@
         <div class="full-width push-half--top">
             <dl class="labelvalue">
                 <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
-                <dd class="value">{{deputy.email}}</dd>
+                {% if deputy.isDeputyOrg and paTeam %} 
+                    <dd class="value">{{paTeam.getTeamNamedDeputy.email}}</dd>
+                {% else %}
+                    <dd class="value">{{deputy.email}}</dd>
+                {% endif %}
             </dl>
         </div>
     {% endif %}
