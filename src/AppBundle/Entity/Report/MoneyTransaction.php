@@ -36,7 +36,7 @@ class MoneyTransaction
      * @JMS\Exclude
      */
     public static $categories = [
-        // category | hasMoreDetails | order | group | type (in/out) / allowed users
+        // category | hasMoreDetails | order | group | type (in/out) | allowed users (optional)
 
         // Money In
         ['salary-or-wages', false, 'salary-or-wages', 'in'],
