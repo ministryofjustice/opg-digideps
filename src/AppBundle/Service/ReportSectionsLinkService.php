@@ -13,7 +13,6 @@ class ReportSectionsLinkService
      */
     protected $router;
 
-
     /**
      * ReportSectionsLinkService constructor.
      * @param RouterInterface $router
@@ -24,7 +23,7 @@ class ReportSectionsLinkService
     }
 
     /**
-     * @param ReportInterface $report
+     * @param  ReportInterface $report
      * @return array
      */
     private function getOptions(ReportInterface $report)
@@ -109,14 +108,14 @@ class ReportSectionsLinkService
     /**
      * @param ReportInterface $report
      * @param $sectionId
-     * @param int $offset
+     * @param  int   $offset
      * @return array empty if it's the last or first section
      */
     public function getSectionParams(ReportInterface $report, $sectionId, $offset = 0)
     {
         $config = $this->getOptions($report);
 
-        foreach($config as $index => $currentSectionParams) {
+        foreach ($config as $index => $currentSectionParams) {
             if ($currentSectionParams['section'] == $sectionId) {
                 return isset($config[$index + $offset]) ? $config[$index + $offset] : [];
             }
@@ -124,5 +123,4 @@ class ReportSectionsLinkService
 
         return [];
     }
-
 }

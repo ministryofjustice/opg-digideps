@@ -1088,11 +1088,9 @@ class User implements AdvancedUserInterface
     {
         if ($this->isDeputyProf()) {
             return '-PROF';
-        }
-        else if ($this->isDeputyPA()) {
+        } elseif ($this->isDeputyPA()) {
             return '-PA';
-        }
-        else {
+        } else {
             return '';
         }
     }
@@ -1106,7 +1104,7 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * @param array $teamNames
+     * @param  array $teamNames
      * @return User
      */
     public function setTeamNames($teamNames)
@@ -1114,6 +1112,4 @@ class User implements AdvancedUserInterface
         $this->teamNames = $teamNames;
         return $this;
     }
-
-
 }

@@ -213,7 +213,7 @@ class Document
      */
     public function isAdminDocument()
     {
-        return ($this->isReportPdf() || $this->isTransactionDocument());
+        return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
     /**

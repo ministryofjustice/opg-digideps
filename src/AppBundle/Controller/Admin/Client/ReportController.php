@@ -8,11 +8,12 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @Route("/admin/report/{id}/", requirements={"id":"\d+"})
  */
@@ -143,9 +144,8 @@ class ReportController extends AbstractController
             $checklist->setButtonClicked($buttonClicked->getName());
         }
         if ($form->isValid($buttonClicked)) {
-
             if (!empty($checklist->getId())) {
-                $this->getRestClient()->put ('report/' . $report->getId() . '/checked', $checklist, [
+                $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
                 $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
@@ -164,7 +164,7 @@ class ReportController extends AbstractController
                 if ($buttonClicked->getName() == 'submitAndDownload') {
                     return $this->checklistPDFViewAction($report->getId());
                 } else {
-                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#' );
+                    return $this->redirect($this->generateUrl('admin_report_checklist', ['id'=>$report->getId()]) . '#');
                 }
             }
         }
@@ -175,7 +175,6 @@ class ReportController extends AbstractController
             'checklist' => $checklist
         ];
     }
-
 
     /**
      * Generate and return Checklist as Response object
