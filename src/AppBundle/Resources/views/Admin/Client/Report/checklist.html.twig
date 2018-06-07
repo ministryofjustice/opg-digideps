@@ -192,7 +192,7 @@
                         <table class="check-your-answers columns-2 push--bottom">
                             {{ macros.summaryTableHeaderQA(true) }}
                             <tbody>
-                                <tr class="behat-region-expect-financial-decision">
+                                <tr>
                                     <td>Reason for accounts not balancing</td>
                                     <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
                                 </tr>
@@ -254,7 +254,7 @@
                         {{ macros.summaryTableHeaderQA(true) }}
                         <tbody>
                             {# step 1 #}
-                            <tr class="behat-region-expect-financial-decision">
+                            <tr>
                                 <td>
                                     {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
                                 </td>
@@ -263,7 +263,7 @@
                                 </td>
                             </tr>
                             {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
-                                <tr class="behat-region-expect-financial-decision-details">
+                                <tr>
                                     <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}</td>
                                     <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
                                 </tr>
@@ -293,7 +293,7 @@
                         {{ macros.summaryTableHeaderQA(true) }}
                         <tbody>
                             {# step 2 #}
-                            <tr class="behat-region-have-concerns">
+                            <tr>
                                 <td>
                                     {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
                                 </td>
@@ -302,7 +302,7 @@
                                 </td>
                             </tr>
                             {% if report.action.doYouHaveConcerns == 'yes' %}
-                                <tr class="behat-region-have-concerns-details">
+                                <tr>
                                     <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
                                     <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
                                 </tr>
