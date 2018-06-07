@@ -2,9 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Report\Report;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -48,7 +45,7 @@ class Setting
     }
 
     /**
-     * @param string $id
+     * @param  string  $id
      * @return Setting
      */
     public function setId($id)
@@ -67,7 +64,7 @@ class Setting
     }
 
     /**
-     * @param string $content
+     * @param  string  $content
      * @return Setting
      */
     public function setContent($content)
@@ -86,7 +83,7 @@ class Setting
     }
 
     /**
-     * @param bool $enabled
+     * @param  bool    $enabled
      * @return Setting
      */
     public function setEnabled($enabled)
@@ -95,5 +92,4 @@ class Setting
 
         return $this;
     }
-
 }

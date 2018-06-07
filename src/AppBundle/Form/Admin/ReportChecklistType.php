@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 class ReportChecklistType extends AbstractType
 {
@@ -15,8 +14,8 @@ class ReportChecklistType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-            $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
-            $builder
+        $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
+        $builder
             ->add('id', 'hidden')
             ->add('reportingPeriodAccurate', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],

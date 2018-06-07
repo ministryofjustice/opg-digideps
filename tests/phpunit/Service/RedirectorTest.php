@@ -132,6 +132,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             [User::ROLE_PROF_TEAM_MEMBER, 'lay_home', true, true, false, false, true, false, false],
         ];
     }
+
     /**
      * @dataProvider getCorrectRouteIfDifferentProvider
      * @param $userRole
@@ -148,7 +149,6 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $hasAddress,
         $expectedRoute)
     {
-
         $this->user->setRoleName($userRole);
 
         $this->user->shouldReceive('isNdrEnabled')->andReturn($isNdrEnabled);

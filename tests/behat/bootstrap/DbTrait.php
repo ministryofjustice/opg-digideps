@@ -100,7 +100,6 @@ trait DbTrait
         exec($command);
     }
 
-
     /**
      * @Then I delete the :setting app setting
      */
