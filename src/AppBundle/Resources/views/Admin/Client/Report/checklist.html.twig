@@ -187,102 +187,27 @@
             <div class="panel panel-border-narrow">
                 <div>
                     {# Balance table #}
-                    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' %}
+                    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
 
-                    {# <h3 class="heading-medium">Balance after incoming and outgoing payments</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Section</th>
-                                <th class="numeric">In</th>
-                                <th class="numeric">Out</th>
-                                <th class="numeric">Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- SOME STARTED -->
-                            <tr>
-                                <td class="width-half">Accounts opening balance (4 March 2011)</td>
-                                <td colspan="2"></td>
-                                <td class="numeric">£300.00</td>
-                            </tr>
-                            <tr>
-                                <td>Deputy expenses</td>
-                                <td></td>
-                                <td class="numeric">£100.00</td>
-                                <td class="numeric">£200.00</td>
-                            </tr>
-                            <tr>
-                                <td>Gifts</td>
-                                <td></td>
-                                <td class="numeric">£100.00</td>
-                                <td class="numeric">£100.00</td>
-                            </tr>
-                            <tr>
-                                <td>Money in</td>
-                                <td class="numeric">£100.00</td>
-                                <td></td>
-                                <td class="numeric">£200.00</td>
-                            </tr>
-                            <tr>
-                                <td>Money out</td>
-                                <td></td>
-                                <td class="numeric">£100.00</td>
-                                <td class="numeric">£100.00</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr id="calculated_balance_foot">
-                                <td colspan="3"><span class="bold">Report closing balance after incoming and outgoing payments</span></td>
-                                <td class="numeric bold"><span class="bold" id="calculated_balance_foot_value">£100.00</span></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    {# Difference table #}
+                    {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
 
-                    <h3 class="heading-medium">Balance differences</h3>
-                    <table class="push--ends" id="calculated_balance_table">
-                        <thead class="visually-hidden">
-                            <tr>
-                                <th>Section</th>
-                                <th colspan="2"></th>
-                                <th class="numeric">Balance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="width-half">Accounts closing balance (3 March 2012)</td>
-                                <td colspan="2"></td>
-                                <td class="numeric">£850.00</td>
-                            </tr>
-                            <tr>
-                                <td>Report closing balance (see above)</td>
-                                <td colspan="2"></td>
-                                <td class="numeric">£100.00</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3"><span class="bold">Difference</span></td>
-                                <td class="numeric bold"><span class="bold">£750.00</span></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-
-                    <h3 class="heading-medium">Explanation</h3>
-                    <table class="check-your-answers columns-2 push--bottom">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Explanation</td>
-                                <td>Nobis at eos odit. In totam cupiditate corrupti aut reprehenderit ea repudiandae. Aut enim assumenda molestiae.<br>Quia facere ut commodi expedita reprehenderit quaerat totam. Nisi dolor asperiores consequatur minus. A ipsa nam sit iste in assumenda qui assumenda. Quia dolores facere dolores. Ad voluptates voluptas at aut.</td>
-                            </tr>
-                        </tbody>
-                    </table> #}
+                    {% if not report.totalsMatch %}
+                        <h3 class="heading-medium">Explanation</h3>
+                        <table class="check-your-answers columns-2 push--bottom">
+                            {{ macros.summaryTableHeaderQA(true) }}
+                            <tbody>
+                                <tr class="behat-region-expect-financial-decision">
+                                    <td>Reason for accounts not balancing</td>
+                                    <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
                 </div>
             </div>
         </details>
@@ -434,7 +359,7 @@
                             </tr>
                             <tr>
                                 <td>Deputy name</td>
-                                <td>{# submittedBy.fullname #}</td>
+                                <td>{{ report.submittedBy.fullname }}</td>
                             </tr>
                         </tbody>
                     </table>
