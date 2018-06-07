@@ -83,7 +83,8 @@ class MoneyOutController extends AbstractController
             'step' => $step,
             'type'             => 'out',
             'selectedCategory' => $transaction->getCategory(),
-            'userRole' => $this->getUser()->getRoleName(),
+//            'userRole' => $this->getUser()->getRoleName(),
+            'authChecker' => $this->get('security.authorization_checker'),
             'report' => $report
             ]
         );

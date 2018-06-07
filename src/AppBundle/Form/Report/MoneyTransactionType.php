@@ -2,21 +2,18 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MoneyTransactionType extends AbstractType
 {
     /**
-     * @var  string
+     * @var AuthorizationCheckerInterface
      */
-    private $userRole;
+    private $authorizationChecker;
 
     /**
      * @var integer
@@ -43,9 +40,9 @@ class MoneyTransactionType extends AbstractType
         foreach (MoneyTransaction::$categories as $cat) {
             $categoryId = $cat[0];
             $type = $cat[3];
-            // filter by user roles (if specified), matching with `$this->userRole` passed as an option
+            // filter by user roles (if specified)
             $allowedRoles = isset($cat[4]) ? $cat[4] : null;
-            $isCategoryAllowedForThisRole = $allowedRoles === null || in_array($this->userRole, $allowedRoles);
+            $isCategoryAllowedForThisRole = $allowedRoles === null || $this->authorizationChecker->isGranted($allowedRoles);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = null;
@@ -71,7 +68,7 @@ class MoneyTransactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->userRole = $options['userRole'];
+        $this->authorizationChecker = $options['authChecker'];
         $this->step = (int) $options['step'];
         $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
@@ -137,6 +134,8 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-        ->setRequired(['report', 'step', 'type', 'userRole']);
+        ->setRequired(['report', 'step', 'type', 'authChecker'])
+        ->setAllowedTypes('authChecker', AuthorizationCheckerInterface::class);
+        ;
     }
 }
