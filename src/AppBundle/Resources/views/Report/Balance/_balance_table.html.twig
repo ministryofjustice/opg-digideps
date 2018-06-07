@@ -26,7 +26,7 @@
         {% set partialBalance = 0 %}
 
         {# BANK ACCOUNTS #}
-        {% set started = reportStatus.bankAccountsState['state'] != 'not-started' %}
+        {% set started = report.status.bankAccountsState['state'] != 'not-started' %}
         <tr>
             <td class="width-half">
                 {{ 'balanceTable.accountsOpeningBalance' | trans }}
@@ -54,7 +54,7 @@
 
         {% if report.hasSection('deputyExpenses') %}
             {# DEPUTY EXPENSES (LAY) #}
-            {% set started = reportStatus.expensesState['state'] != 'not-started'%}
+            {% set started = report.status.expensesState['state'] != 'not-started'%}
             <tr>
                 <td>{{ 'balanceTable.deputyExpenses' | trans }}</td>
                 <td></td>
@@ -83,7 +83,7 @@
 
         {% if report.hasSection('paDeputyExpenses') %}
             {# FEES/EXPENSES (PA) #}
-            {% set started = reportStatus.paFeesExpensesState['state'] != 'not-started' %}
+            {% set started = report.status.paFeesExpensesState['state'] != 'not-started' %}
             {% set feesAndExpensesTotal = report.feesTotal + report.expensesTotal %}
             <tr>
                 <td>{{ 'balanceTable.paDeputyExpenses' | trans }}</td>
@@ -112,7 +112,7 @@
         {% endif %}
 
         {# GIFTS #}
-        {% set started = reportStatus.giftsState['state'] != 'not-started' %}
+        {% set started = report.status.giftsState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.gifts' | trans }}</td>
             <td></td>
@@ -139,7 +139,7 @@
         </tr>
 
         {# MONEY IN #}
-        {% set started = reportStatus.moneyInState['state'] != 'not-started' %}
+        {% set started = report.status.moneyInState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.moneyIn' | trans }}</td>
             <td class="numeric">
@@ -166,7 +166,7 @@
         </tr>
 
         {# MONEY OUT #}
-        {% set started = reportStatus.moneyOutState['state'] != 'not-started' %}
+        {% set started = report.status.moneyOutState['state'] != 'not-started' %}
         <tr>
             <td>{{ 'balanceTable.moneyOut' | trans }}</td>
             <td></td>
