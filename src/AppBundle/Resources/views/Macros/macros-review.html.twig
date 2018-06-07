@@ -15,7 +15,7 @@
     <div id="deputy-details-subsection" class="half-width first">
         <h3>Deputy details</h3>
 
-        {% if deputy.isDeputyOrg and paTeam %} 
+        {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
             <dl class="labelvalue">
 
                 <dt class="label">First names</dt>
@@ -98,7 +98,7 @@
             <div class="full-width push-half--top">
                 <dl class="labelvalue">
                     <dt class="label">Email (optional)</dt>
-                    {% if deputy.isDeputyOrg and paTeam %} 
+                    {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
                         <dd class="value behat-region-deputy-email">{{paTeam.getTeamNamedDeputy.email}}</dd>
                     {% else %}
                         <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
@@ -110,7 +110,7 @@
         <div class="full-width push-half--top">
             <dl class="labelvalue">
                 <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
-                {% if deputy.isDeputyOrg and paTeam %} 
+                {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
                     <dd class="value behat-region-deputy-email">{{paTeam.getTeamNamedDeputy.email}}</dd>
                 {% else %}
                     <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
