@@ -8,6 +8,7 @@
 {% set page = 'checklistPage' %}
 {% set checklistPage = true %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
@@ -335,10 +336,26 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-                    {# Questions and answers table #}
-                    {% include 'AppBundle:Report/Action:_answers.html.twig' with {
-                        hideEditLink: true
-                    } %}
+                    <table class="check-your-answers columns-2 push--bottom">
+                        {{ macros.summaryTableHeaderQA(true) }}
+                        <tbody>
+                            {# step 1 #}
+                            <tr class="behat-region-expect-financial-decision">
+                                <td>
+                                    {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                                </td>
+                                <td>
+                                    {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+                                </td>
+                            </tr>
+                            {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+                                <tr class="behat-region-expect-financial-decision-details">
+                                    <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}</td>
+                                    <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </details>
@@ -358,7 +375,26 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-                    <p>What's here?</p>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        {{ macros.summaryTableHeaderQA(true) }}
+                        <tbody>
+                            {# step 2 #}
+                            <tr class="behat-region-have-concerns">
+                                <td>
+                                    {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+                                </td>
+                                <td>
+                                    {{ report.action.doYouHaveConcerns | capitalize }}
+                                </td>
+                            </tr>
+                            {% if report.action.doYouHaveConcerns == 'yes' %}
+                                <tr class="behat-region-have-concerns-details">
+                                    <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
+                                    <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </details>
