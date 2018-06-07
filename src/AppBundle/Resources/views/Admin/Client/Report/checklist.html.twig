@@ -141,6 +141,22 @@
                 'fieldSetClass' : 'inline'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View debts summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Debt:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+
+
     </div>
 
 
@@ -339,20 +355,7 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-                    <table class="check-your-answers columns-2 push--bottom">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="behat-region-expect-financial-decision">
-                                <td>Do you have any concerns about your deputyship?</td>
-                                <td>No</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <p>What's here?</p>
                 </div>
             </div>
         </details>
@@ -376,24 +379,23 @@
             <div class="panel panel-border-narrow">
                 <div>
                     <table class="check-your-answers columns-2 push--bottom">
-                        <thead>
-                            <tr>
-                                <th>Question</th>
-                                <th>Answer</th>
-                            </tr>
-                        </thead>
+                        {{ macros.summaryTableHeaderQA(true) }}
                         <tbody>
-                            <tr class="behat-region-expect-financial-decision">
+                            <tr>
                                 <td>Declaration</td>
-                                <td>I am the only deputy</td>
+                                <td>{{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}</td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
+                            {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                                <td>Reason</td>
+                                <td>{{ report.agreedBehalfDeputyExplanation | nl2br }}</td>
+                            {% endif %}
+                            <tr>
                                 <td>Declaration time</td>
-                                <td>14:00 23/05/2018</td>
+                                <td>{{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}</td>
                             </tr>
-                            <tr class="behat-region-expect-financial-decision">
+                            <tr>
                                 <td>Deputy name</td>
-                                <td>David Spencer</td>
+                                <td>{# submittedBy.fullname #}</td>
                             </tr>
                         </tbody>
                     </table>
