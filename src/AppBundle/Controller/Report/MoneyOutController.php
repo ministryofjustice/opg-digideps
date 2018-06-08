@@ -82,10 +82,9 @@ class MoneyOutController extends AbstractController
         $form = $this->createForm(FormDir\Report\MoneyTransactionType::class, $transaction, [
             'step' => $step,
             'type'             => 'out',
-            'translator'       => $this->get('translator'),
-            'clientFirstName'  => $report->getClient()->getFirstname(),
             'selectedCategory' => $transaction->getCategory(),
-            'user' => $this->getUser(),
+//            'userRole' => $this->getUser()->getRoleName(),
+            'authChecker' => $this->get('security.authorization_checker'),
             'report' => $report
             ]
         );
