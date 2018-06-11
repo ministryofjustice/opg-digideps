@@ -7,6 +7,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -125,8 +126,17 @@ class SettingsController extends AbstractController
                     : 'user_show';
             }
 
-            $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
-            return $this->redirectToRoute($redirectRoute);
+            try {
+                $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
+
+                return $this->redirectToRoute($redirectRoute);
+            } catch (\Exception $e) {
+                $translator = $this->get('translator');
+                if ($e->getCode() == 422 && $form->get('email')) {
+                    $form->get('email')->addError(new FormError($translator->trans('user.email.alreadyUsed', [], 'validators')));
+                }
+            }
+
         }
 
         return [
