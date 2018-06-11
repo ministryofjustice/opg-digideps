@@ -36,6 +36,29 @@
         {{ 'courtOrderNumber' | trans({}, 'common') }}:
         <span class="bold">{{ report.client.caseNumber }}</span>
     </p>
+    <p class="flush--bottom behat-region-last-saved-by">
+        {{ 'lastSavedBy' | trans({}, 'common') }}:
+        {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
+            <span class="bold">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
+        {% else %}
+            <span class="bold">-</span>
+        {% endif %}
+    </p>
+    <p>
+        {{ 'lastSavedOn' | trans({}, 'common') }}:
+        <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : '-' }}</span>
+    </p>
+
+    {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
+        <p class="flush--bottom behat-region-last-submitted-by">
+            {{ 'lastSubmittedBy' | trans({}, 'common') }}:
+            <span class="bold">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
+        </p>
+        <p>
+            {{ 'lastSubmittedOn' | trans({}, 'common') }}:
+            <span class="bold">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
+        </p>
+    {% endif %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 

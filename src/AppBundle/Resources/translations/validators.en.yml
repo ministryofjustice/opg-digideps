@@ -672,7 +672,7 @@ checklist:
   finalDecision:
     notBlank: Please choose an option
   lodgingSummary:
-    notBlank: Please give us a reason for the final decision
+    notBlank: Please enter all your decisions
 
 #       COMMON ELEMENTS
 # ====================================================================================================
