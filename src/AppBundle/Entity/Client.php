@@ -792,4 +792,24 @@ class Client
     {
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
+
+    /**
+     * Get Named deputy for this client.
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("\AppBundle\Entity\User")
+     * @JMS\SerializedName("named-deputy")
+     * @JMS\Groups({"client-named-deputy"})
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getNamedDeputy()
+    {
+        /** @var \AppBundle\Entity\User $user */
+        foreach ($this->getUsers() as $user) {
+            if ($user->isOrgNamedDeputy()) {
+                return $user;
+            }
+        }
+    }
 }
