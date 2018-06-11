@@ -15,7 +15,8 @@ trait ModifyAudit
      * Last modified by
      *
      * @var \AppBundle\Entity\User
-     *
+     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"last-modified"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
      * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -26,6 +27,8 @@ trait ModifyAudit
      *
      * @var \DateTime
      *
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"last-modified"})
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
