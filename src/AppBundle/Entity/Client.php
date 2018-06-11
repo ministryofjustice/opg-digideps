@@ -797,15 +797,15 @@ class Client
      * Get Named deputy for this client.
      *
      * @JMS\VirtualProperty
-     * @JMS\Type("\AppBundle\Entity\User")
-     * @JMS\SerializedName("named-deputy")
+     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\SerializedName("client-named-deputy")
      * @JMS\Groups({"client-named-deputy"})
      *
      * @return \AppBundle\Entity\User
      */
     public function getNamedDeputy()
     {
-        /** @var \AppBundle\Entity\User $user */
+        /** @var AppBundle\Entity\User $user */
         foreach ($this->getUsers() as $user) {
             if ($user->isOrgNamedDeputy()) {
                 return $user;
