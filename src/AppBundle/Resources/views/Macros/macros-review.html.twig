@@ -15,14 +15,14 @@
     <div id="deputy-details-subsection" class="half-width first">
         <h3>Deputy details</h3>
 
-        {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
+        {% if deputy.isDeputyOrg and client and client.getNamedDeputy is not empty %} 
             <dl class="labelvalue">
 
                 <dt class="label">First names</dt>
-                <dd class="value behat-region-deputy-firstname">{{paTeam.getTeamNamedDeputy.firstname}}</dd>
+                <dd class="value behat-region-deputy-firstname">{{client.getNamedDeputy.firstname}}</dd>
 
                 <dt class="label">Last name</dt>
-                <dd class="value behat-region-deputy-lastname">{{paTeam.getTeamNamedDeputy.lastname}}</dd>
+                <dd class="value behat-region-deputy-lastname">{{client.getNamedDeputy.lastname}}</dd>
 
                 <dt class="label">{{ 'address' | trans({}, 'common' ) }}</dt>
                 <dd class="value address-value behat-region-deputy-address">
@@ -35,9 +35,9 @@
 
                 <dt class="label">Telephone number</dt>
                 <dd class="value behat-region-deputy-phone">
-                    {{paTeam.getTeamNamedDeputy.phoneMain}}
-                    {% if (paTeam.getTeamNamedDeputy.phoneAlternative is defined) %}
-                        <br />{{paTeam.getTeamNamedDeputy.phoneAlternative}}
+                    {{client.getNamedDeputy.phoneMain}}
+                    {% if (client.getNamedDeputy.phoneAlternative is defined) %}
+                        <br />{{client.getNamedDeputy.phoneAlternative}}
                     {% endif %}
                 </dd>
             </dl>
@@ -98,8 +98,8 @@
             <div class="full-width push-half--top">
                 <dl class="labelvalue">
                     <dt class="label">Email (optional)</dt>
-                    {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
-                        <dd class="value behat-region-deputy-email">{{paTeam.getTeamNamedDeputy.email}}</dd>
+                    {% if deputy.isDeputyOrg and client and client.getNamedDeputy is not empty %} 
+                        <dd class="value behat-region-deputy-email">{{client.getNamedDeputy.email}}</dd>
                     {% else %}
                         <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
                     {% endif %}
@@ -110,8 +110,8 @@
         <div class="full-width push-half--top">
             <dl class="labelvalue">
                 <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
-                {% if deputy.isDeputyOrg and paTeam and paTeam.getTeamNamedDeputy is not empty %} 
-                    <dd class="value behat-region-deputy-email">{{paTeam.getTeamNamedDeputy.email}}</dd>
+                {% if deputy.isDeputyOrg and client and client.getNamedDeputy is not empty %} 
+                    <dd class="value behat-region-deputy-email">{{client.getNamedDeputy.email}}</dd>
                 {% else %}
                     <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
                 {% endif %}
