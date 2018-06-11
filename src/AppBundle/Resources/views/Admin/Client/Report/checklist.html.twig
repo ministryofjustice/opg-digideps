@@ -36,6 +36,14 @@
         {{ 'courtOrderNumber' | trans({}, 'common') }}:
         <span class="bold">{{ report.client.caseNumber }}</span>
     </p>
+    <p class="flush--bottom">
+        {{ 'lastSavedBy' | trans({}, 'common') }}:
+        <span class="bold">{{ checklist.lastModifiedBy.fullName }}</span>
+    </p>
+    <p>
+        {{ 'lastSavedOn' | trans({}, 'common') }}:
+        <span class="bold">{{ checklist.lastModifiedOn | date("j F Y H:i") }}</span>
+    </p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 

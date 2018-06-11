@@ -6,6 +6,7 @@ use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Traits\ModifyAudit;
 
 /**
  * Checklist.
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Checklist
 {
     use HasReportTrait;
+    use ModifyAudit;
 
     /**
      * @var int

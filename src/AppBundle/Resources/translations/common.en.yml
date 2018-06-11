@@ -67,7 +67,8 @@ typeOfAccount: Type of account
 sortCode: Sort code
 accountNumber: Account number
 notApplicable: Not applicable
-
+lastSavedOn: Last saved on
+lastSavedBy: Last saved by
 # Statuses
 notCreated: Not created
 notFinished: Not finished
