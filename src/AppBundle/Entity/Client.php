@@ -48,7 +48,7 @@ class Client
 
     /**
      * @JMS\Type("AppBundle\Entity\User")
-     * @JMS\Groups({"client-named-deputy"})
+     *
      * @var User
      */
     private $namedDeputy;
