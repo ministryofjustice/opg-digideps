@@ -8,11 +8,15 @@ use Behat\Mink\Element\NodeElement;
 trait FormTrait
 {
     /**
+     * Assert the page returs HTTP 200
+     * and contains the ".form-group.form-group-error" or the "#error-summary-heading" elements
+     *
      * @Then the form should be invalid
      */
     public function theFormShouldBeInvalid()
     {
-        //$this->assertResponseStatus(200);
+        $this->assertResponseStatus(200);
+
         if (!$this->getSession()->getPage()->has('css', '.form-group.form-group-error')
             && !$this->getSession()->getPage()->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('No errors found');
@@ -20,12 +24,16 @@ trait FormTrait
     }
 
     /**
+     * Assert the page returs HTTP 200
+     * and does NOT contain the ".form-group.form-group-error" nor the "#error-summary-heading" elements
+     *
      * @Then the form should be valid
      */
     public function theFormShouldBeValid()
     {
-        $page = $this->getSession()->getPage();
         $this->assertResponseStatus(200);
+
+        $page = $this->getSession()->getPage();
 
         if ($page->has('css', '.form-group.form-group-error') ||
             $page->has('css', '#error-summary-heading')) {

@@ -87,10 +87,9 @@ class MoneyInController extends AbstractController
             [
                 'step' => $step,
                 'type'             => 'in',
-                'translator'       => $this->get('translator'),
-                'clientFirstName'  => $report->getClient()->getFirstname(),
                 'selectedCategory' => $transaction->getCategory(),
-                'user' => $this->getUser(),
+//                'userRole' => $this->getUser()->getRoleName(),
+                'authChecker' => $this->get('security.authorization_checker'),
                 'report' => $report
             ]
         );

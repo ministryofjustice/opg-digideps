@@ -171,3 +171,13 @@ Feature: PA settings
     Then the form should be valid
     And I should see "Password edited"
     And I should be on "/org/settings"
+
+  Scenario: Named PA logs in and changes email to an existing one (expected error)
+    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd2345"
+    When I click on "org-settings, profile-show, profile-edit"
+    When I fill in the following:
+      | profile_email       | behat-pa2@publicguardian.gsi.gov.uk  |
+    And I press "profile_save"
+    Then the following fields should have an error:
+      | profile_email  |
+
