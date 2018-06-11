@@ -59,7 +59,7 @@ class ReportController extends AbstractController
         'balance-state',
         'documents',
         'report-prof-service-fees',
-        'prof-service-fees'
+        'prof-service-fees',
     ];
 
     /**

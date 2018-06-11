@@ -256,19 +256,4 @@ class Team
     {
         $this->addressCountry = $addressCountry;
     }
-
-    /**
-     * Obtain the named deputy from a team
-     *
-     * @return User
-     */
-    public function getTeamNamedDeputy()
-    {
-        /** @var User $member */
-        foreach ($this->members as $member) {
-            if ($member->isOrgNamedDeputy()) {
-                return $member;
-            }
-        }
-    }
 }
