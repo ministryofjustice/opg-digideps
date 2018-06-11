@@ -1,6 +1,6 @@
 Feature: Admin report checklist
 
-  @deputy @shaun
+  @deputy
   Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -71,7 +71,7 @@ Feature: Admin report checklist
       | report_checklist_lodgingSummary         |
     And the URL should match "/admin/report/\d+/checklist"
 
-  @deputy @shaun
+  @deputy
   Scenario: Case manager saves further information on checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -119,7 +119,7 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
 
 
-  @deputy @shaun
+  @deputy
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -186,7 +186,7 @@ Feature: Admin report checklist
       | report_checklist_lodgingSummary    | I am not satisfied |
     Then I click on "submit-and-download"
 
-  @deputy @shaun
+  @deputy
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
