@@ -69,6 +69,8 @@ accountNumber: Account number
 notApplicable: Not applicable
 lastSavedOn: Last saved on
 lastSavedBy: Last saved by
+lastSubmittedOn: Last submitted on
+lastSubmittedBy: Last submitted by
 # Statuses
 notCreated: Not created
 notFinished: Not finished
