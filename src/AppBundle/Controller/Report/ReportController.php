@@ -483,6 +483,7 @@ class ReportController extends RestController
             $checklist->setSubmittedBy(($this->getUser()));
             $checklist->setSubmittedOn(new \DateTime());
         }
+        $checklist->setLastModifiedBy($this->getUser());
 
         $this->persistAndFlush($checklist);
 
@@ -518,6 +519,7 @@ class ReportController extends RestController
             $checklist->setSubmittedOn(new \DateTime());
         }
 
+        $checklist->setLastModifiedBy($this->getUser());
         $this->persistAndFlush($checklist);
 
         return ['checklist' => $checklist->getId()];

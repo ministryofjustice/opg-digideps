@@ -6,6 +6,7 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Entity\Traits\ModifyAudit;
 
 /**
  * Checklist.
@@ -15,6 +16,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Checklist
 {
+    use ModifyAudit;
+
     /**
      * @var int
      *
