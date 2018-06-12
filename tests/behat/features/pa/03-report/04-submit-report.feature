@@ -12,7 +12,6 @@ Feature: Report submit (client 01000014)
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
 
-        @shaun
     Scenario: 102 report submission
         Given emails are sent from "deputy" area
         And I reset the email log
@@ -40,7 +39,7 @@ Feature: Report submit (client 01000014)
         Then the URL should match "/org"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
-        And the last email should have been sent to "behat-pa1@publicguardian.gsi.gov.uk"
+        And the last email should have been sent to "behat-pa1-team-member@publicguardian.gsi.gov.uk"
 
     Scenario: 102 assert submitted report displays correctly in client profile page
         Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
