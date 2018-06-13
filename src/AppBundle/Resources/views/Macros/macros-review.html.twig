@@ -13,10 +13,10 @@
 {% macro deputyClientInfo(ndr,deputy,client,paTeam,adLoggedAsDeputy) %}
 <div class="box">
     <div id="deputy-details-subsection" class="half-width first">
-        <h3>Deputy details</h3>
+        <h3 class="left">Deputy details</h3>
 
         {% if deputy.isDeputyOrg and client and client.getNamedDeputy is not empty %} 
-            <dl class="labelvalue">
+            <dl class="labelvalue cl">
 
                 <dt class="label">First names</dt>
                 <dd class="value behat-region-deputy-firstname">{{client.getNamedDeputy.firstname}}</dd>
@@ -44,7 +44,7 @@
 
         {% else %} 
 
-            <dl class="labelvalue">
+            <dl class="labelvalue cl">
 
                 <dt class="label">First names</dt>
                 <dd class="value behat-region-deputy-firstname">{{deputy.firstname}}</dd>
@@ -69,7 +69,7 @@
                     {% endif %}
                 </dd>
             </dl>
-             {% endif %}
+ {% endif %}
     </div>
     <div id="client-details-subsection" class="half-width">
         <h3>Client details</h3>
