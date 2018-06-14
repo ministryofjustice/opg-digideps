@@ -11,14 +11,6 @@ services:
             tags:
                 - { name: form.type}
 
-    app.form.type.feedback:
-        class: AppBundle\Form\FeedbackType
-        calls:
-            - [ setTranslator, ["@translator"] ]
-            - [ setTokenStorage, ["@security.token_storage"] ]
-        tags:
-            - { name: form.type, alias: feedback }
-
     app.form.type.feedback_report:
         class: AppBundle\Form\FeedbackReportType
         calls:
