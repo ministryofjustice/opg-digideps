@@ -11,10 +11,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
- * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
- * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
- * @Assert\Callback(methods={"unsubmittedSectionAtLeastOnce"}, groups={"unsubmitted_sections"})
+ * @Assert\Callback(callback={"isValidEndDate", "isValidDateRange"})
+ * @Assert\Callback(callback={"debtsValid"}, groups={"debts"})
+ * @Assert\Callback(callback={"feesValid"}, groups={"fees"})
+ * @Assert\Callback(callback={"unsubmittedSectionAtLeastOnce"}, groups={"unsubmitted_sections"})
  */
 class Report implements ReportInterface
 {
