@@ -4,13 +4,13 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Casrec as CasRecEntity;
+use AppBundle\Entity\Report\Report as ReportEntity;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\Asset as AssetEntity;
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\Report;
 
-use AppBundle\Entity\Report\Report as ReportEntity;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use MockeryStub as m;
@@ -74,7 +74,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
             ->with(['caseNumber' => $client->getCaseNumber()])
             ->andReturn(null); // can be tested separately, currently partially covered by CASREC class
 
-        $this->sut = new ReportService($this->repos[ReportEntity::class], $this->repos[CasRecEntity::class], $this->em);
+        $this->sut = new ReportService($this->em);
     }
 
     public function testSubmitInvalid()
