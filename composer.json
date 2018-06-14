@@ -14,6 +14,7 @@
         "symfony/swiftmailer-bundle": "2.3.*",
         "symfony/monolog-bundle": "2.8.*",
         "sensio/framework-extra-bundle": "3.*",
+        "sensio/distribution-bundle": "4.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "guzzlehttp/guzzle": "~5.0",
         "jms/serializer-bundle": "0.13.*",
