@@ -13,6 +13,7 @@ use AppBundle\Entity\Report\Report;
 
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use MockeryStub as m;
 
 class ReportServiceTest extends \PHPUnit_Framework_TestCase
@@ -54,7 +55,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
 
         // mock em
         $this->repos[ReportEntity::class] = m::mock(EntityDir\Repository\ReportRepository::class);
-        $this->repos[CasRecEntity::class] = m::mock(EntityDir\Repository\CasRecRepository::class);
+        $this->repos[CasRecEntity::class] = m::mock(EntityRepository::class);
         $this->repos[AssetEntity::class] = m::mock();
         $this->repos[BankAccountEntity::class] = m::mock();
 
