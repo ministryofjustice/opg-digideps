@@ -42,10 +42,16 @@ class Client
 
     /**
      * @JMS\Type("array<AppBundle\Entity\User>")
-     *
      * @var User[]
      */
     private $users;
+
+    /**
+     * @JMS\Type("AppBundle\Entity\User")
+     *
+     * @var User
+     */
+    private $namedDeputy;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Report>")
@@ -209,6 +215,22 @@ class Client
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @return User
+     */
+    public function getNamedDeputy()
+    {
+        return $this->namedDeputy;
+    }
+
+    /**
+     * @param User $namedDeputy
+     */
+    public function setNamedDeputy($namedDeputy)
+    {
+        $this->namedDeputy = $namedDeputy;
     }
 
     /**

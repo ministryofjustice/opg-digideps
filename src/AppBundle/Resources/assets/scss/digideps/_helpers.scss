@@ -102,6 +102,10 @@
 .right { float: right !important; }
 .left { float: left !important; }
 
+// Clear floats
+.cl { clear: left; }
+.cr { clear: right; }
+
 // Negating borders
 .no-border {
     border: none;
