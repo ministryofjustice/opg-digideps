@@ -1,7 +1,7 @@
 Feature: Admin report checklist
 
-  @deputy @shaun
-  Scenario: Admin submits empty checklist for the report
+  @deputy
+  Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
@@ -20,6 +20,8 @@ Feature: Admin report checklist
     # Begin scenario
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+      | - | last-saved-by |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
@@ -69,8 +71,8 @@ Feature: Admin report checklist
       | report_checklist_lodgingSummary         |
     And the URL should match "/admin/report/\d+/checklist"
 
-  @deputy @shaun
-  Scenario: Admin saves further information on checklist
+  @deputy
+  Scenario: Case manager saves further information on checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
@@ -88,6 +90,8 @@ Feature: Admin report checklist
     Then the URL should match "/admin/client/\d+/details"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+      | - | last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
     When I click on "save-further-information"
@@ -98,6 +102,7 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived | |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
+      | Case Manager1, Case Manager | last-saved-by |
       | Some more info 1        | information-1 |
       | Case Manager1, Case Manager   | information-created-by-1 |
     Then the URL should match "/admin/report/\d+/checklist"
@@ -114,9 +119,9 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
 
 
-  @deputy @shaun
+  @deputy
   Scenario: Admin completes checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
@@ -133,6 +138,8 @@ Feature: Admin report checklist
     Then the URL should match "/admin/client/\d+/details"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+    | Case Manager1, Case Manager | last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
@@ -155,6 +162,8 @@ Feature: Admin report checklist
     Then I click on "save-progress"
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+      | Admin User, OPG Admin | last-saved-by |
     # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0   | yes   |
@@ -175,4 +184,27 @@ Feature: Admin report checklist
       | report_checklist_caseWorkerSatisified_2    | na |
       | report_checklist_finalDecision_0    | for-review |
       | report_checklist_lodgingSummary    | I am not satisfied |
+    Then I click on "submit-and-download"
 
+  @deputy
+  Scenario: Admin marked as submitted
+    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    # Navigate to checklist via search
+    And I click on "admin-client-search"
+    Then each text should be present in the corresponding region:
+      | 8 clients | client-search-count |
+    Then each text should be present in the corresponding region:
+      | Cly Hent | client-behat001 |
+    When I fill in the following:
+      | search_clients_q | hent |
+    And I click on "search_clients_search"
+    Then I should see the "client-row" region exactly "1" times
+    And each text should be present in the corresponding region:
+      | Cly Hent | client-behat001 |
+    And I click on "client-details" in the "client-behat001" region
+    Then the URL should match "/admin/client/\d+/details"
+    And I click on "checklist" in the "report-2016" region
+    Then the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+      | Admin User, OPG Admin | last-saved-by |
+      | Admin User, OPG Admin | last-submitted-by |

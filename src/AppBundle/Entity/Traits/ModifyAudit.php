@@ -13,6 +13,8 @@ trait ModifyAudit
     /**
      * Last modified by
      *
+     * @JMS\Groups({"last-modified"})
+     * @JMS\Type("AppBundle\Entity\User")
      * @var \AppBundle\Entity\User
      *
      */
@@ -21,6 +23,8 @@ trait ModifyAudit
     /**
      * Last modified on
      *
+     * @JMS\Groups({"last-modified"})
+     * @JMS\Type("DateTime")
      * @var \DateTime
      *
      */

@@ -102,6 +102,10 @@
 .right { float: right !important; }
 .left { float: left !important; }
 
+// Clear floats
+.cl { clear: left; }
+.cr { clear: right; }
+
 // Simple 1px border
 .border-bottom {
     border-bottom: 1px solid $border-colour;
@@ -110,6 +114,7 @@
 .border-top {
     border-top: 1px solid $border-colour;
 }
+
 
 // Negating borders
 .no-border {
