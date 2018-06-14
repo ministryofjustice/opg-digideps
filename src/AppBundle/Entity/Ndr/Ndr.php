@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(callback={"debtsValid"}, groups={"debts"})
+ * @Assert\Callback(callback="debtsValid", groups={"debts"})
  */
 class Ndr implements ReportInterface
 {

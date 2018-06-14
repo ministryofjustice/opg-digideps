@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(callback={"isValidForReport"}, groups={"document"})
+ * @Assert\Callback(callback="isValidForReport", groups={"document"})
  */
 class Document
 {

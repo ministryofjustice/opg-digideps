@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(callback={"moreDetailsValidate"}, groups={"ndr-state-benefits"})
+ * @Assert\Callback(callback="moreDetailsValidate", groups={"ndr-state-benefits"})
  */
 class StateBenefit
 {
