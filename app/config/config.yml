@@ -50,14 +50,6 @@ twig:
             - 'AppBundle:Form:fields.html.twig'
 
 
-# Assetic Configuration
-assetic:
-    debug:          "%kernel.debug%"
-    use_controller: false
-    bundles:        [ ]
-    filters:
-        cssrewrite: ~
-
 # Swiftmailer Configuration
 swiftmailer:
     transport: smtp
