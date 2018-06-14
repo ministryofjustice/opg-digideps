@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Admin;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,11 +16,11 @@ class UnsubmitReportType extends AbstractType
     {
         $dueDateChoiceTransPrefix = 'reportManage.form.dueDateChoice.choices.';
         $builder
-            ->add('id', 'hidden')
-            ->add('unsubmittedSection', 'collection', [
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'type' => new UnsubmittedSectionType(),
             ])
-            ->add('dueDateChoice', 'choice', [
+            ->add('dueDateChoice', FormTypes\ChoiceType::class, [
                 'choices'     => [
                     'keep'  => $dueDateChoiceTransPrefix . 'keep',
                     3       => $dueDateChoiceTransPrefix . '3weeks',
@@ -35,7 +35,7 @@ class UnsubmitReportType extends AbstractType
                     new Constraints\NotBlank(['message' => 'report.dueDateChoice.notBlank', 'groups' => ['change_due_date']])
                 ],
             ])
-            ->add('dueDateCustom', 'date', [
+            ->add('dueDateCustom', FormTypes\DateType::class, [
                 'widget'      => 'text',
                 'input'       => 'datetime',
                 'format'      => 'yyyy-MM-dd',
@@ -47,7 +47,7 @@ class UnsubmitReportType extends AbstractType
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
                 ],
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\Ndr;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,39 +17,39 @@ class ActionType extends AbstractType
         $this->step = (int) $options['step'];
 
         $builder
-            ->add('id', 'hidden');
+            ->add('id', FormTypes\HiddenType::class);
 
         if ($this->step === 1) {
             $builder
-                ->add('actionGiveGiftsToClient', 'choice', [
+                ->add('actionGiveGiftsToClient', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ])
-                ->add('actionGiveGiftsToClientDetails', 'textarea');
+                ->add('actionGiveGiftsToClientDetails', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 2) {
-            $builder->add('actionPropertyMaintenance', 'choice', [
+            $builder->add('actionPropertyMaintenance', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 3) {
-            $builder->add('actionPropertySellingRent', 'choice', [
+            $builder->add('actionPropertySellingRent', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 4) {
-            $builder->add('actionPropertyBuy', 'choice', [
+            $builder->add('actionPropertyBuy', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function getBlockPrefix()

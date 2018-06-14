@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -18,12 +18,12 @@ class YesNoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add($options['field'], 'choice', [
+            ->add($options['field'], FormTypes\ChoiceType::class, [
                 'choices'     => $options['choices'],
                 'expanded'    => true,
                 'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'", 'groups'=>'yesno_type_custom'])],
             ])
-            ->add('save', 'submit', ['label' => 'save.label']);
+            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

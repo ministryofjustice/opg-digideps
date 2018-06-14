@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\StateBenefit;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -14,15 +14,15 @@ class StateBenefitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                 ->add('typeId', 'hidden')
-                 ->add('present', 'checkbox');
+                 ->add('typeId', FormTypes\HiddenType::class)
+                 ->add('present', FormTypes\CheckboxType::class);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $record = $event->getData();
             $form = $event->getForm();
 
             if ($record->getHasMoreDetails()) {
-                $form->add('moreDetails', 'textarea');
+                $form->add('moreDetails', FormTypes\TextareaType::class);
             }
         });
     }

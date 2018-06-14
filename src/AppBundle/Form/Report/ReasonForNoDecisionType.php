@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Constraints;
@@ -12,8 +12,8 @@ class ReasonForNoDecisionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('reasonForNoDecisions', 'textarea', ['constraints' => [new Constraints\NotBlank(['message' => 'decision.no-decision-reason.notBlank'])]])
-            ->add('save', 'submit');
+            ->add('reasonForNoDecisions', FormTypes\TextareaType::class, ['constraints' => [new Constraints\NotBlank(['message' => 'decision.no-decision-reason.notBlank'])]])
+            ->add('save', FormTypes\SubmitType::class);
 
         //if (array_key_exists ( 'action' , $options )) {
            $builder->setAction($options['action']);

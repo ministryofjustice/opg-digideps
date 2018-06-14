@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\Ndr;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,14 +34,14 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 1) {
             $builder
-                ->add('id', 'hidden')
-                ->add('stateBenefits', 'collection', [
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('stateBenefits', FormTypes\CollectionType::class, [
                     'type' => new StateBenefitType(),
                 ]);
         }
 
         if ($this->step === 2) {
-            $builder->add('receiveStatePension', 'choice', [
+            $builder->add('receiveStatePension', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
@@ -49,29 +49,29 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 3) {
             $builder
-                ->add('receiveOtherIncome', 'choice', [
+                ->add('receiveOtherIncome', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ])
-                ->add('receiveOtherIncomeDetails', 'textarea');
+                ->add('receiveOtherIncomeDetails', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 4) {
-            $builder->add('expectCompensationDamages', 'choice', [
+            $builder->add('expectCompensationDamages', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ])
-                ->add('expectCompensationDamagesDetails', 'textarea');
+                ->add('expectCompensationDamagesDetails', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 5) {
-            $builder->add('oneOff', 'collection', [
+            $builder->add('oneOff', FormTypes\CollectionType::class, [
                 'type' => new OneOffType(),
             ]);
         }
 
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

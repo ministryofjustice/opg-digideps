@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Report;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,12 +13,12 @@ class DocumentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('wishToProvideDocumentation', 'choice', [
+            ->add('wishToProvideDocumentation', FormTypes\ChoiceType::class, [
             'choices'  => ['yes' => 'Yes', 'no' => 'No'],
             'expanded' => true,
         ]);
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,11 +12,11 @@ class ProfServiceFeeExistType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('currentProfPaymentsReceived', 'choice', [
+            ->add('currentProfPaymentsReceived', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ])
-            ->add('save', 'submit', ['label' => 'save.label']);
+            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
     public function configureOptions(OptionsResolver $resolver)

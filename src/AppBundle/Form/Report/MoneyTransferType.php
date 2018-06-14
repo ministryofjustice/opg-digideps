@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,15 +24,15 @@ class MoneyTransferType extends AbstractType
 
         if ($this->step == 1) {
             $builder
-                ->add('accountFromId', 'choice', [
+                ->add('accountFromId', FormTypes\ChoiceType::class, [
                         'choices' => $banks, 'empty_value' => 'Please select',]
-                )->add('accountToId', 'choice', [
+                )->add('accountToId', FormTypes\ChoiceType::class, [
                         'choices' => $banks, 'empty_value' => 'Please select',]
                 );
         }
         if ($this->step == 2) {
             $builder
-                ->add('amount', 'number', [
+                ->add('amount', FormTypes\NumberType::class, [
                     'precision' => 2,
                     'grouping' => true,
                     'error_bubbling' => false,
@@ -41,7 +41,7 @@ class MoneyTransferType extends AbstractType
         }
 
         $builder
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

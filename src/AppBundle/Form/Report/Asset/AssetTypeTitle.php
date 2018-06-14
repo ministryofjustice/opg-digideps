@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report\Asset;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -53,10 +53,10 @@ class AssetTypeTitle extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'choice', [
+        $builder->add('title', FormTypes\ChoiceType::class, [
                 'choices' => $this->getTitleChoices(),
                 'expanded' => true])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

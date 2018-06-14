@@ -4,7 +4,7 @@ namespace AppBundle\Form\Org;
 
 use AppBundle\Entity\Note as NoteEntity;
 use Common\Form\Elements\InputFilters\Text;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,7 +30,7 @@ class NoteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'hidden')
+            ->add('id', FormTypes\HiddenType::class)
             ->add(
                 'category',
                 ChoiceType::class,
@@ -41,9 +41,9 @@ class NoteType extends AbstractType
                     'empty_value' => 'Please select',
                 ]
             )
-            ->add('title', 'text', ['required' => true])
-            ->add('content', 'textarea')
-            ->add('save', 'submit');
+            ->add('title', FormTypes\TextType::class, ['required' => true])
+            ->add('content', FormTypes\TextareaType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     /**

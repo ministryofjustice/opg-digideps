@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Settings;
 
 use AppBundle\Entity\User;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,23 +19,23 @@ class ProfileType extends AbstractType
         $loggedInUser = $builder->getData();
 
         $builder
-            ->add('firstname', 'text', ['required' => true])
-            ->add('lastname', 'text', ['required' => true])
-            ->add('address1', 'text')
-            ->add('address2', 'text')
-            ->add('address3', 'text')
-            ->add('addressPostcode', 'text')
-            ->add('addressCountry', 'country', ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
-            ->add('phoneMain', 'text', ['required' => true])
-            ->add('phoneAlternative', 'text')
-            ->add('email', 'text', ['required' => true]);
+            ->add('firstname', FormTypes\TextType::class, ['required' => true])
+            ->add('lastname', FormTypes\TextType::class, ['required' => true])
+            ->add('address1', FormTypes\TextType::class)
+            ->add('address2', FormTypes\TextType::class)
+            ->add('address3', FormTypes\TextType::class)
+            ->add('addressPostcode', FormTypes\TextType::class)
+            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
+            ->add('phoneMain', FormTypes\TextType::class, ['required' => true])
+            ->add('phoneAlternative', FormTypes\TextType::class)
+            ->add('email', FormTypes\TextType::class, ['required' => true]);
 
         if ($loggedInUser->isDeputyOrg()) {
-            $builder->add('jobTitle', 'text', ['required' => true]);
+            $builder->add('jobTitle', FormTypes\TextType::class, ['required' => true]);
         }
 
         if ($loggedInUser->isOrgAdministrator()) {
-            $builder->add('removeAdmin', 'choice', [
+            $builder->add('removeAdmin', FormTypes\ChoiceType::class, [
                     'choices' => ['remove-admin' => 'Give up administrator rights'],
                     'expanded' => true,
                     'multiple' => true,
@@ -44,7 +44,7 @@ class ProfileType extends AbstractType
                 ]);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

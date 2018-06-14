@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Admin;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,13 +20,13 @@ class AddUserType extends AbstractType
             $roleNameOptions['disabled'] = 'disabled';
         }
 
-        $builder->add('email', 'text')
-            ->add('firstname', 'text')
-            ->add('lastname', 'text')
-            ->add('addressPostcode', 'text')
-            ->add('roleName', 'choice', $roleNameOptions)
-            ->add('ndrEnabled', 'checkbox')
-            ->add('save', 'submit');
+        $builder->add('email', FormTypes\TextType::class)
+            ->add('firstname', FormTypes\TextType::class)
+            ->add('lastname', FormTypes\TextType::class)
+            ->add('addressPostcode', FormTypes\TextType::class)
+            ->add('roleName', FormTypes\ChoiceType::class, $roleNameOptions)
+            ->add('ndrEnabled', FormTypes\CheckboxType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

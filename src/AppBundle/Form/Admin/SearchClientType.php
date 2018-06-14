@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Admin;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -10,8 +10,8 @@ class SearchClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('q', 'text')
-            ->add('search', 'submit');
+        $builder->add('q', FormTypes\TextType::class)
+            ->add('search', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

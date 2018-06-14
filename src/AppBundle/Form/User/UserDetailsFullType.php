@@ -11,17 +11,17 @@ class UserDetailsFullType extends UserDetailsBasicType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('address1', 'text')
-        ->add('address2', 'text')
-        ->add('address3', 'text')
-        ->add('addressPostcode', 'text')
-        ->add('addressCountry', 'country', [
+        $builder->add('address1', FormTypes\TextType::class)
+        ->add('address2', FormTypes\TextType::class)
+        ->add('address3', FormTypes\TextType::class)
+        ->add('addressPostcode', FormTypes\TextType::class)
+        ->add('addressCountry', FormTypes\CountryType::class, [
             'preferred_choices' => ['', 'GB'],
             'empty_value' => 'Please select ...',
         ])
-        ->add('phoneMain', 'text')
-        ->add('phoneAlternative', 'text')
-        ->add('email', 'text');
+        ->add('phoneMain', FormTypes\TextType::class)
+        ->add('phoneAlternative', FormTypes\TextType::class)
+        ->add('email', FormTypes\TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

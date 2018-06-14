@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Ad;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,18 +11,18 @@ class AddUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstname', 'text')
-            ->add('lastname', 'text')
-            ->add('roleName', 'choice', [
+            ->add('firstname', FormTypes\TextType::class)
+            ->add('lastname', FormTypes\TextType::class)
+            ->add('roleName', FormTypes\ChoiceType::class, [
                     'empty_value' => null,
                     'choices'     => $options['roleChoices'],
                     'data'        => $options['roleNameSetTo'],
                 ]
             )
-            ->add('ndrEnabled', 'checkbox', [
+            ->add('ndrEnabled', FormTypes\CheckboxType::class, [
                 'data'     => true,
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

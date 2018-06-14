@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -12,12 +12,12 @@ class MentalAssessment extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('mentalAssessmentDate', 'date', ['widget' => 'text',
+        $builder->add('mentalAssessmentDate', FormTypes\DateType::class, ['widget' => 'text',
             'input' => 'datetime',
             'format' => 'dd-MM-yyyy',
             'invalid_message' => 'Enter a valid date',
         ])
-            ->add('save', 'submit')
+            ->add('save', FormTypes\SubmitType::class)
         ;
 
         $builder

@@ -4,7 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\MentalCapacity;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +13,7 @@ class MentalCapacityType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('hasCapacityChanged', 'choice', [
+        $builder->add('hasCapacityChanged', FormTypes\ChoiceType::class, [
                     // keep in sync with API model constants
                     'choices' => [
                         MentalCapacity::CAPACITY_CHANGED => 'Changed',
@@ -21,8 +21,8 @@ class MentalCapacityType extends AbstractType
                     ],
                     'expanded' => true,
                 ])
-                ->add('hasCapacityChangedDetails', 'textarea')
-                ->add('save', 'submit')
+                ->add('hasCapacityChangedDetails', FormTypes\TextareaType::class)
+                ->add('save', FormTypes\SubmitType::class)
         ;
     }
 

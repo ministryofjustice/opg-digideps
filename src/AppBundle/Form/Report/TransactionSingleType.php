@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\MoneyTransaction;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -14,9 +14,9 @@ class TransactionSingleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                 ->add('id', 'hidden')
-                 ->add('type', 'hidden')
-                 ->add('amounts', 'collection', [
+                 ->add('id', FormTypes\HiddenType::class)
+                 ->add('type', FormTypes\HiddenType::class)
+                 ->add('amounts', FormTypes\CollectionType::class, [
                       'entry_type' => 'number',
                       'allow_add' => true, //allow new fields added with JS
                       'entry_options' => [
@@ -32,7 +32,7 @@ class TransactionSingleType extends AbstractType
             $form = $event->getForm();
 
             if ($transaction->getHasMoreDetails()) {
-                $form->add('moreDetails', 'textarea');
+                $form->add('moreDetails', FormTypes\TextareaType::class);
             }
         });
     }

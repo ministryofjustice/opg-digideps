@@ -3,7 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Document;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +16,7 @@ class DocumentUploadType extends AbstractType
             ->add('file', FileType::class, [
                 'required' => false
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

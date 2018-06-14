@@ -11,8 +11,8 @@ class UserDetailsPaType extends UserDetailsBasicType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('jobTitle', 'text')
-            ->add('phoneMain', 'text');
+        $builder->add('jobTitle', FormTypes\TextType::class)
+            ->add('phoneMain', FormTypes\TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
