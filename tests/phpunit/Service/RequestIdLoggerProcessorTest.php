@@ -3,8 +3,10 @@
 namespace AppBundle\Service;
 
 use Mockery as m;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,23 +19,24 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
+        $this->container = m::mock(Container::class);
+        $this->reqStack = m::mock(RequestStack::class);
+        $this->request = m::mock(Request::class);
 
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
 
-    public function testProcessRecordScopeInactive()
+    public function testProcessRecordNoReqStack()
     {
-        $this->container->shouldReceive('isScopeActive')->with('request')->andReturn(false);
+        $this->container->shouldReceive('request_stack')->andReturn(false);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
     public function testProcessRecordHasNoRequest()
     {
-        $this->container
-            ->shouldReceive('isScopeActive')->with('request')->andReturn(true)
-            ->shouldReceive('has')->with('request')->andReturn(false);
+        $this->reqStack = $this->container->shouldReceive('getCurrentRequest')->andReturn(false);
+        $this->container->shouldReceive('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
@@ -43,10 +46,8 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->headers = new ParameterBag();
 
-        $this->container
-            ->shouldReceive('isScopeActive')->with('request')->andReturn(true)
-            ->shouldReceive('has')->with('request')->andReturn(true)
-            ->shouldReceive('get')->with('request')->andReturn($request);
+        $this->reqStack = $this->container->shouldReceive('getCurrentRequest')->andReturn($request);
+        $this->container->shouldReceive('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
@@ -57,10 +58,8 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
         $request->headers = new ParameterBag();
         $request->headers->set('x-request-id', 'THIS_IS_THE_REQUEST_ID');
 
-        $this->container
-            ->shouldReceive('isScopeActive')->with('request')->andReturn(true)
-            ->shouldReceive('has')->with('request')->andReturn(true)
-            ->shouldReceive('get')->with('request')->andReturn($request);
+        $this->reqStack = $this->container->shouldReceive('getCurrentRequest')->andReturn($request);
+        $this->container->shouldReceive('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record + ['extra' => ['request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
     }
