@@ -182,18 +182,6 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function progressBarRegistrationTest()
-    {
-        $user = m::mock(User::class);
-        $user->shouldReceive('getRoleName')->andReturn('ROLE_ADMIN');
-        $f = $this->object->getFunctions()['progress_bar_registration']->getCallable();
-
-        $this->markTestIncomplete('need to mock environemnt to test');
-    }
-
-    /**
-     * @test
-     */
     public function class_name()
     {
         $f = $this->object->getFilters()['class_name']->getCallable();
