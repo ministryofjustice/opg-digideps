@@ -6,6 +6,7 @@ use AppBundle\Entity\User;
 use AppBundle\Exception as AppException;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
+use AppBundle\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
@@ -334,8 +335,9 @@ class RestClient
         }
 
         // forward X-Request-Id to the API calls
-        if ($this->container->isScopeActive('request') && ($request = $this->container->get('request')) && $request->headers->has('x-request-id')) {
-            $options['headers']['X-Request-ID'] = $request->headers->get('x-request-id');
+        $reqId = RequestIdLoggerProcessor::getRequestIdFromContainer($this->container);
+        if ($reqId) {
+            $options['headers']['X-Request-ID'] = $reqId;
         }
 
         $start = microtime(true);
