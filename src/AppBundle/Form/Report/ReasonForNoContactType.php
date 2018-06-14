@@ -25,7 +25,7 @@ class ReasonForNoContactType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'reason_for_no_contact';
     }

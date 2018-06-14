@@ -67,7 +67,7 @@ class AssetTypeTitle extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'asset_title';
     }

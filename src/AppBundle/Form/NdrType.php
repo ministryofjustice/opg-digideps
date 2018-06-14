@@ -17,7 +17,7 @@ class NdrType extends AbstractType
             ->add('save', 'submit', ['label' => 'Update']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr';
     }

@@ -21,7 +21,7 @@ class SortCodeType extends AbstractType
         return 'form';
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sort_code';
     }

@@ -21,7 +21,7 @@ class UploadCsvType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin_upload';
     }

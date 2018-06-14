@@ -22,7 +22,7 @@ class PasswordForgottenType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'password_forgotten';
     }

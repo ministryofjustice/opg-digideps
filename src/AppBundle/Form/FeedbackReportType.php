@@ -30,7 +30,7 @@ class FeedbackReportType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'feedback_report';
     }

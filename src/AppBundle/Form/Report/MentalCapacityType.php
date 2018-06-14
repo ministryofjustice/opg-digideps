@@ -43,7 +43,7 @@ class MentalCapacityType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'mental_capacity';
     }

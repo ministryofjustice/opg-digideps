@@ -44,7 +44,7 @@ class GiftType extends AbstractType
         ->setRequired(['user', 'report']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'gifts_single';
     }

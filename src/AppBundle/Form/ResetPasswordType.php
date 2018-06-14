@@ -27,7 +27,7 @@ class ResetPasswordType extends AbstractType
         ->setRequired(['passwordMismatchMessage']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'reset_password';
     }

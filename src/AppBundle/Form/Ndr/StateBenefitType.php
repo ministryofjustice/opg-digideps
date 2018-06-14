@@ -36,7 +36,7 @@ class StateBenefitType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'state_benefit';
     }

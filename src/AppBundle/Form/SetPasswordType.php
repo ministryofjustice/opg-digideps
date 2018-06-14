@@ -33,7 +33,7 @@ class SetPasswordType extends AbstractType
         ->setRequired(['passwordMismatchMessage']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'set_password';
     }

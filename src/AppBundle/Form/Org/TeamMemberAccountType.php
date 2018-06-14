@@ -63,7 +63,7 @@ class TeamMemberAccountType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'team_member_account';
     }

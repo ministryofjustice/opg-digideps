@@ -25,7 +25,7 @@ class MoneyShortCategoryType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'category';
     }

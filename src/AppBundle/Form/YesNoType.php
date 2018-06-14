@@ -34,7 +34,7 @@ class YesNoType extends AbstractType
                  ->setAllowedTypes('translation_domain', 'string');
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'yes_no';
     }

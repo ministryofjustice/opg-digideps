@@ -52,7 +52,7 @@ class ActionType extends AbstractType
         $builder->add('save', 'submit');
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'actions';
     }

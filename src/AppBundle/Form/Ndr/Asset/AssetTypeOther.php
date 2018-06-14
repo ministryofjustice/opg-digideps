@@ -35,7 +35,7 @@ class AssetTypeOther extends AbstractType
             ->add('save', 'submit');
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr_asset';
     }

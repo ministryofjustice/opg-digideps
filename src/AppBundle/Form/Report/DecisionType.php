@@ -29,7 +29,7 @@ class DecisionType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'decision';
     }

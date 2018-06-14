@@ -49,7 +49,7 @@ class ReportDeclarationType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'report_declaration';
     }

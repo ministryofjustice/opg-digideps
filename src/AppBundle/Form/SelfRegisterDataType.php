@@ -31,7 +31,7 @@ class SelfRegisterDataType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'self_registration';
     }

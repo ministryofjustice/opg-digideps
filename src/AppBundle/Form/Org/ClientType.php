@@ -46,7 +46,7 @@ class ClientType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'org_client_edit';
     }

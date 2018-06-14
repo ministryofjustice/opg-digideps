@@ -103,7 +103,7 @@ class IncomeBenefitType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'income_benefits';
     }

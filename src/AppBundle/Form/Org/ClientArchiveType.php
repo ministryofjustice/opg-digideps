@@ -31,7 +31,7 @@ class ClientArchiveType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'org_client_archive';
     }

@@ -130,7 +130,7 @@ class VisitsCareType extends AbstractType
         ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'visits_care';
     }

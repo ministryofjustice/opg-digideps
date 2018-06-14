@@ -28,7 +28,7 @@ class DocumentUploadType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'report_document_upload';
     }

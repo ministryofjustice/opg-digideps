@@ -37,7 +37,7 @@ class SearchType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin';
     }

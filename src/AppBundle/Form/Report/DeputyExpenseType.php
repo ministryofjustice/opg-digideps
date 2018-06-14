@@ -44,7 +44,7 @@ class DeputyExpenseType extends AbstractType
         ])->setRequired(['user', 'report']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'expenses_single';
     }

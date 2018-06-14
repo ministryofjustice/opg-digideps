@@ -138,7 +138,7 @@ class AssetTypeProperty extends AbstractType
         };
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'asset';
     }

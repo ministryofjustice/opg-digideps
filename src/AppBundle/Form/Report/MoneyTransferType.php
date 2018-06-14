@@ -70,7 +70,7 @@ class MoneyTransferType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'money_transfers_type';
     }

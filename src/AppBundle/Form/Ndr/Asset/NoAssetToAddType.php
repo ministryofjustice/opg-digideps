@@ -24,7 +24,7 @@ class NoAssetToAddType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr_no_assets_add';
     }

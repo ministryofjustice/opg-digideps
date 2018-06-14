@@ -31,7 +31,7 @@ class MoneyShortType extends AbstractType
                  ->setRequired(['field']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'money_short';
     }

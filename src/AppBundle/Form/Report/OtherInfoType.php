@@ -40,7 +40,7 @@ class OtherInfoType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'more_info';
     }

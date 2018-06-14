@@ -22,7 +22,7 @@ class SearchClientType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'search_clients';
     }

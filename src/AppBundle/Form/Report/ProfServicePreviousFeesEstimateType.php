@@ -30,7 +30,7 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'prof_service_fees';
     }

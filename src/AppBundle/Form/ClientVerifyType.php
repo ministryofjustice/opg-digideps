@@ -23,7 +23,7 @@ class ClientVerifyType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'clientVerify';
     }

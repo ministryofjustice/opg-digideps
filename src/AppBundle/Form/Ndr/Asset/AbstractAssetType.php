@@ -40,7 +40,7 @@ abstract class AbstractAssetType extends AbstractType
 
     abstract protected function addFields($builder, $options);
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oasset';
     }

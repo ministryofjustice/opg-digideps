@@ -23,7 +23,7 @@ class ReasonForBalanceType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'balance';
     }

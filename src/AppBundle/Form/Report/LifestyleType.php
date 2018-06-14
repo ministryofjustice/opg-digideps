@@ -62,7 +62,7 @@ class LifestyleType extends AbstractType
         ->setRequired(['step']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'lifestyle';
     }

@@ -46,7 +46,7 @@ class TransactionSingleType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'transaction_single';
     }

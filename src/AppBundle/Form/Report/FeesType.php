@@ -30,7 +30,7 @@ class FeesType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'fee';
     }

@@ -25,7 +25,7 @@ class AdLoginAsUserType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'login_as_user';
     }

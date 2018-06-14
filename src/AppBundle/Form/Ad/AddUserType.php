@@ -34,7 +34,7 @@ class AddUserType extends AbstractType
             ->setRequired(['roleChoices', 'roleNameSetTo']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ad';
     }

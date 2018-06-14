@@ -120,7 +120,7 @@ class ProfServiceFeeType extends AbstractType
         };
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'prof_service_fee_type';
     }

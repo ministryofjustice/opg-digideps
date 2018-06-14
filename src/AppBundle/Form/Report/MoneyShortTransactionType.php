@@ -36,7 +36,7 @@ class MoneyShortTransactionType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'money_short_transaction';
     }

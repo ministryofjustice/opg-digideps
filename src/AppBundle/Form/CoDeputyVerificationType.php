@@ -36,7 +36,7 @@ class CoDeputyVerificationType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'co_deputy';
     }

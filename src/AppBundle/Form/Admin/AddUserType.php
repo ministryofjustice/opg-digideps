@@ -38,7 +38,7 @@ class AddUserType extends AbstractType
         ->setRequired(['options']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin';
     }

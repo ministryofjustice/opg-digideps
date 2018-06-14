@@ -14,7 +14,7 @@ class AssetTypeTitle extends \AppBundle\Form\Report\Asset\AssetTypeTitle
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr_asset_title';
     }

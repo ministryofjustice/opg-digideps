@@ -55,7 +55,7 @@ class DebtSingleType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'debt_single';
     }

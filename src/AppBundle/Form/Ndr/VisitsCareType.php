@@ -144,7 +144,7 @@ class VisitsCareType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'visits_care';
     }

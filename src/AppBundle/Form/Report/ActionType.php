@@ -77,7 +77,7 @@ class ActionType extends AbstractType
         ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'action';
     }
