@@ -21,20 +21,19 @@ summaryPage:
 form:
   doYouLiveWithClient:
     label: Do you live with %client%?
-    hint: ""
-    yes: Yes
-    no: No
+    hint: ''
   howOftenDoYouContactClient:
     label: |
       Please tell us how often you have contact with %client% and how you make sure others are looking
       after %client%'s needs when you're not able to.
     labelShort: Please tell us how often you have contact with %client%.
-    hint: ""
+    hint: ''
   doesClientReceivePaidCare:
     label: Does %client% get care that is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
   howIsCareFunded:
     label: How is the care funded?
+    hint: ''
     choices:
       client_pays_for_all: %client% pays for all the care
       client_gets_financial_help: %client% gets some financial help (for example, from the local authority or NHS)

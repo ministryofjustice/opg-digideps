@@ -237,15 +237,12 @@ class FormFieldsExtension extends \Twig_Extension
             }
         }
 
-        $legendTextTransJS = $this->translator->trans($translationKey . '.legendjs', $legendParams, $domain);
-        $legendTextJS = ($legendTextTransJS != $translationKey . '.legendjs') ? $legendTextTransJS : null;
-
-        $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', ['legendText' => $legendText,
-                                                                                                'legendTextJS' => $legendTextJS,
-                                                                                                'hintText' => $hintText,
-                                                                                                'element' => $element,
-                                                                                                'showDay' => $showDay,
-                                                                                                'legendTextRaw' => !empty($vars['legendRaw']), ]);
+        $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [
+            'legendText' => $legendText,
+            'hintText' => $hintText,
+            'element' => $element,
+            'showDay' => $showDay,
+            'legendTextRaw' => !empty($vars['legendRaw']), ]);
         echo $html;
     }
 
