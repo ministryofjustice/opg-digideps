@@ -24,7 +24,7 @@ services:
         calls:
             - [ setTranslator, ["@translator"] ]
         tags:
-            - { name: form.type, alias: feedback_report }
+            - { name: form.type }
 
     app.form.validator.email_same_domain:
         class: AppBundle\Validator\Constraints\EmailSameDomainValidator

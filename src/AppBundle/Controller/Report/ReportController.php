@@ -285,7 +285,7 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
-        $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
+        $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
 
         $form->handleRequest($request);
 
