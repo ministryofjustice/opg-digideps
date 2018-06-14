@@ -2,5 +2,5 @@
 cd /app
 echo "Migrating db (with redis-based lock mechanism)"
 set -e
-/sbin/setuser app php app/console doctrine:migrations:status-check 
+/sbin/setuser app php app/console doctrine:migrations:status-check
 /sbin/setuser app php app/console doctrine:migrations:migrate-lock --no-interaction --verbose

@@ -19,7 +19,7 @@ class AuthService
     /**
      * @param Container $container
      */
-    public function __construct(Container $container)
+    public function __construct($encoderFactory, $logger, Container $container)
     {
         $this->clientSecrets = $container->getParameter('client_secrets');
         if (!is_array($this->clientSecrets) || empty($this->clientSecrets)) {
@@ -27,8 +27,8 @@ class AuthService
         }
         $this->container = $container;
         $this->userRepo = $container->get('em')->getRepository('AppBundle\Entity\User');
-        $this->logger = $container->get('logger');
-        $this->securityEncoderFactory = $container->get('security.encoder_factory');
+        $this->logger = $logger;
+        $this->securityEncoderFactory = $encoderFactory;
     }
 
     /**

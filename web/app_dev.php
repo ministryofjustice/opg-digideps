@@ -22,7 +22,7 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 //$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
 $loader = $loader = require __DIR__.'/../vendor/autoload.php';
 // debug not enabled, otherwise conflicting for REST error handler
-Debug::enable();
+//Debug::enable();
 
 require_once __DIR__ . '/../app/AppKernel.php';
 
