@@ -19,12 +19,12 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-    {{ form_checkbox_group(form.giftsExist, 'existPage.form.giftsExist', {
-        'fieldSetClass' : 'inline',
-        'labelParameters': transOptions,
-        'legendClass' : 'form-label-bold text',
-        'formGroupClass': 'flush--bottom'
-    }) }}
+        {{ form_checkbox_group(form.giftsExist, 'existPage.form.giftsExist', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
     </div>
 
     {{ macros.saveAndContinueButton(form.save) }}

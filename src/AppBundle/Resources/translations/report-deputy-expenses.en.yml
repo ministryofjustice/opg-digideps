@@ -78,5 +78,6 @@ form:
     label: Add another expense
   bankAccount:
     label: Which bank account was this paid from? (optional)
+    hint: ''
   save:
       label: Save expense

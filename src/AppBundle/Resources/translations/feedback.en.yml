@@ -1,5 +1,8 @@
-satisfactionLevel.legend: Overall, how did you feel about the process of completing your deputy report online?
-send.label: Send feedback
+satisfactionLevel:
+  legend: Overall, how did you feel about the process of completing your deputy report online?
+  hint: ''
+send:
+  label: Send feedback
 
 satisfactionLevelsChoices: |
     Very satisfied

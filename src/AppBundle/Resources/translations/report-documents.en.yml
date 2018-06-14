@@ -5,6 +5,7 @@ form:
   submitButton: Upload file and attach document
   file:
     label: Attach a file
+    hint: ''
   errors:
     fileSize: "Your uploaded file exceeded the maximum size of 15M"
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
