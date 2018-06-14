@@ -247,7 +247,7 @@ class Report implements ReportInterface
      * @var bool
      * @JMS\Type("boolean")
      *
-     * @Assert\True(message="report.agree", groups={"declare"} )
+     * @Assert\IsTrue(message="report.agree", groups={"declare"} )
      */
     private $agree;
 
@@ -687,7 +687,7 @@ class Report implements ReportInterface
      * Return true when the report is Due (today's date => report end date).
      *
      * @return bool
-     * @Assert\True(message="report.submissionExceptions.due", groups={"due"})
+     * @Assert\IsTrue(message="report.submissionExceptions.due", groups={"due"})
      */
     public function isDue()
     {
