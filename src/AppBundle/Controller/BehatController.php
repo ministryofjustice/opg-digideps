@@ -35,9 +35,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/email-get-last")
      * @Method({"GET"})
      */
-    public function getLastEmailAction()
+    public function getLastEmailAction(Request $request)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         echo $this->get('mail_sender')->getMockedEmailsRaw();
         die; //TODO check if works with response
@@ -47,9 +47,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/email-reset")
      * @Method({"GET"})
      */
-    public function emailResetAction()
+    public function emailResetAction(Request $request)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         $this->get('mail_sender')->resetMockedEmails();
         return new Response('Email reset successfully');
@@ -85,9 +85,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/logs/{action}")
      * @Template()
      */
-    public function behatLogsResetAction($action)
+    public function behatLogsResetAction(Request $request, $action)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         $logPath = $this->getParameter('log_path');
 
