@@ -8,23 +8,24 @@ use Monolog\Logger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class BehatController extends AbstractController
 {
-    private function securityChecks()
+    private function securityChecks(Request $request)
     {
         if (!$this->container->getParameter('behat_controller_enabled')) {
             return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
         }
 
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
-        $secret = $this->getRequest()->get('secret');
+        $secret = $request->get('secret');
 
         if ($secret !== $expectedSecretParam) {
 
             // log access
-            $this->get('logger')->error($this->getRequest()->getPathInfo() . ": $expectedSecretParam secret expected. 404 will be returned.");
+            $this->get('logger')->error($request->getPathInfo() . ": $expectedSecretParam secret expected. 404 will be returned.");
 
             throw $this->createNotFoundException('Not found');
         }

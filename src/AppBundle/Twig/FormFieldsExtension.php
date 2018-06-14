@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class FormFieldsExtension extends \Twig_Extension
+class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_InitRuntimeInterface
 {
     /**
      * @var TranslatorInterface
