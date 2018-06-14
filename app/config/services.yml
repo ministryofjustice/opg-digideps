@@ -1,7 +1,7 @@
 services:
     kernel.listener.responseConverter:
         class: AppBundle\EventListener\RestInputOuputFormatter
-        arguments: [ "@serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
+        arguments: [ "@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      

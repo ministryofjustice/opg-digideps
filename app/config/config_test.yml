@@ -8,9 +8,6 @@ framework:
     profiler:
         collect: false
 
-swiftmailer:
-    disable_delivery: true
-
 doctrine:
     dbal:
         dbname:   digideps_unit_test
