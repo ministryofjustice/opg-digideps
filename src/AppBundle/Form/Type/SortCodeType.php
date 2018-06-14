@@ -3,7 +3,8 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Form\DataTransformer\ArrayToStringTransformer;
-use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class SortCodeType extends AbstractType

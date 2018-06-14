@@ -3,7 +3,8 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\MoneyTransaction;
-use Symfony\Component\Form\AbstractType; use Symfony\Component\Form\Extension\Core\Type as FormTypes;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -16,7 +17,7 @@ class MoneyTransactionType extends AbstractType
     private $authorizationChecker;
 
     /**
-     * @var integer
+     * @var int
      */
     private $step;
 
