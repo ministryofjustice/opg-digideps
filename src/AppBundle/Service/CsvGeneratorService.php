@@ -27,7 +27,7 @@ class CsvGeneratorService
     /**
      * CsvGeneratorService constructor.
      * @param TranslatorInterface $translator
-     * @param LoggerInterface $logger
+     * @param LoggerInterface     $logger
      */
     public function __construct(TranslatorInterface $translator, LoggerInterface $logger)
     {
@@ -48,7 +48,7 @@ class CsvGeneratorService
 
         // initialize temporary fp
         $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
-        if($this->fd === FALSE) {
+        if ($this->fd === false) {
             $this->logger->error('Failed to open Temporary file');
             die('Failed to open temporary file');
         }
@@ -89,20 +89,19 @@ class CsvGeneratorService
     {
         // @todo remove following feedback on whether an account summary is required
         $summaryFields = [
-            [" "],
-            [" "],
-            ["ACCOUNT SUMMARY"],
-            [$bankAccount->getBank() . "   -   " . ucfirst($bankAccount->getAccountType()) ." account" ],
-            ["**** " . $bankAccount->getAccountNumber() . "      (" . $bankAccount->getSortCode(). ")"],
-            [$bankAccount->getIsJointAccount() ? "JOINT ACCOUNT" : ""],
-            [" "],
-            [" "],
+            [' '],
+            [' '],
+            ['ACCOUNT SUMMARY'],
+            [$bankAccount->getBank() . '   -   ' . ucfirst($bankAccount->getAccountType()) . ' account' ],
+            ['**** ' . $bankAccount->getAccountNumber() . '      (' . $bankAccount->getSortCode() . ')'],
+            [$bankAccount->getIsJointAccount() ? 'JOINT ACCOUNT' : ''],
+            [' '],
+            [' '],
 
 
         ];
 
-        foreach($summaryFields as $line)
-        {
+        foreach ($summaryFields as $line) {
             fputcsv($this->fd, $line);
         }
     }
@@ -112,7 +111,7 @@ class CsvGeneratorService
      */
     private function generateCsvHeaders()
     {
-        $headers = ['Type', 'Category' ,'Amount', 'Bank name', 'Account details', 'Description'];
+        $headers = ['Type', 'Category','Amount', 'Bank name', 'Account details', 'Description'];
         fputcsv($this->fd, $headers);
     }
 
@@ -124,17 +123,17 @@ class CsvGeneratorService
      */
     private function generateTransactionRows($transactions, $type)
     {
-        foreach($transactions as $t) {
+        foreach ($transactions as $t) {
             /** @var $t \AppBundle\Entity\Report\MoneyTransaction */
             fputcsv(
                 $this->fd, [
-                    ucFirst($type),
+                    ucfirst($type),
                     (property_exists($t, 'category') ?
                         $this->translator->trans(
-                            'form.category.entries.' . $t->getCategory().'.label', [], 'report-money-transaction') : ''),
+                            'form.category.entries.' . $t->getCategory() . '.label', [], 'report-money-transaction') : ''),
                     $t->getAmount(),
-                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : ""),
-                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ""),
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : ''),
+                    (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ''),
                     $this->generateDescription($t)
                 ]
             );

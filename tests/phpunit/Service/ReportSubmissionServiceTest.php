@@ -133,7 +133,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         )->andReturn($newYearReportId);
 
         $this->mockRestClient->shouldReceive('get')->with(
-            'report/' . $newYearReportId ,
+            'report/' . $newYearReportId,
             'Report\\Report'
         )->andReturn($newYearReport);
 
@@ -155,7 +155,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut->submit($this->mockReport, $mockUser);
     }
 
-
     public function testSubsequentSubmitAllDeputies()
     {
         $reportId = 99;
@@ -174,7 +173,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut->submit($this->mockReport, $mockUser);
     }
 
-
     public function testFirstTimeSubmitForNonDeputyOrg()
     {
         $reportId = 99;
@@ -190,7 +188,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         )->andReturn($newYearReportId);
 
         $this->mockRestClient->shouldReceive('get')->with(
-            'report/' . $newYearReportId ,
+            'report/' . $newYearReportId,
             'Report\\Report'
         )->andReturn($newYearReport);
 

@@ -4,7 +4,6 @@ namespace AppBundle\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SettingType extends AbstractType
@@ -35,5 +34,4 @@ class SettingType extends AbstractType
             ]
         );
     }
-
 }

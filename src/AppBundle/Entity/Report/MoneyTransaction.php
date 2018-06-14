@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Traits\HasBankAccountTrait;
+use AppBundle\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,7 +36,7 @@ class MoneyTransaction
      * @JMS\Exclude
      */
     public static $categories = [
-        // category | hasMoreDetails | order | group | type (in/out)
+        // category | hasMoreDetails | order | group | type (in/out) | allowed users (optional)
 
         // Money In
         ['salary-or-wages', false, 'salary-or-wages', 'in'],
@@ -102,6 +103,7 @@ class MoneyTransaction
         ['deputy-security-bond', false, 'fees', 'out'],
         ['opg-fees', false, 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, 'fees', 'out'],
+        ['deputy-fees-and-expenses', true, 'fees', 'out', [User::ROLE_PROF]],
 
         ['investment-bonds-purchased', true, 'major-purchases', 'out'],
         ['investment-account-purchased', true, 'major-purchases', 'out'],
@@ -258,7 +260,7 @@ class MoneyTransaction
     /**
      * Checks category is valid
      *
-     * @param string $category
+     * @param  string $category
      * @return bool
      */
     public static function isValidCategory($category = '')

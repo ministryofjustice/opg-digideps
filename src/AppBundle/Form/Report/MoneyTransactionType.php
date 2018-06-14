@@ -2,34 +2,49 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\MoneyTransaction;
-use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MoneyTransactionType extends AbstractType
 {
-    private $clientFirstName;
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorizationChecker;
+
+    /**
+     * @var integer
+     */
     private $step;
+
+    /**
+     * @var string in/out
+     */
     private $type;
+
+    /**
+     * @var string
+     */
     private $selectedCategory;
 
     /**
-     * @var TranslatorInterface
+     * @return array where keys are the categoriesID. e.g. [broadband=>null, fees=>null]
      */
-    private $translator;
-
     private function getCategories()
     {
         $ret = [];
 
         foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
-            if ($type == $this->type) {
+            $categoryId = $cat[0];
+            $type = $cat[3];
+            // filter by user roles (if specified)
+            $allowedRoles = isset($cat[4]) ? $cat[4] : null;
+            $isCategoryAllowedForThisRole = $allowedRoles === null || $this->authorizationChecker->isGranted($allowedRoles);
+            // filter by
+            if ($type === $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = null;
             }
         }
@@ -42,26 +57,21 @@ class MoneyTransactionType extends AbstractType
      */
     private function isDescriptionMandatory()
     {
-        foreach (MoneyTransaction::$categories as $cat) {
-            list($categoryId, $hasDetails, $groupId, $type) = $cat;
+        foreach (MoneyTransaction::$categories as $row) {
+            $categoryId = $row[0];
+            $hasDetails = $row[1];
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
         }
     }
 
-    private function translate($key)
-    {
-        return $this->translator->trans($key, ['%client%' => $this->clientFirstName], 'report-money-transaction');
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->step = (int)$options['step'];
+        $this->authorizationChecker = $options['authChecker'];
+        $this->step = (int) $options['step'];
         $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
-        $this->translator = $options['translator'];
-        $this->clientFirstName = $options['clientFirstName'];
 
         $builder->add('id', 'hidden');
 
@@ -109,7 +119,7 @@ class MoneyTransactionType extends AbstractType
             'selectedCategory'          => null,
             'translation_domain'        => 'report-money-transaction',
             'choice_translation_domain' => 'report-money-transaction',
-            'validation_groups'         => function (FormInterface $form) {
+            'validation_groups'         => function () {
                 $validationGroups = [];
                 if ($this->step === 1) {
                     $validationGroups[] = 'transaction-category';
@@ -124,7 +134,8 @@ class MoneyTransactionType extends AbstractType
                 return $validationGroups;
             },
         ])
-            ->setRequired(['user', 'report', 'step', 'type', 'translator', 'clientFirstName'])
-            ->setAllowedTypes('translator', TranslatorInterface::class);
+        ->setRequired(['report', 'step', 'type', 'authChecker'])
+        ->setAllowedTypes('authChecker', AuthorizationCheckerInterface::class);
+        ;
     }
 }

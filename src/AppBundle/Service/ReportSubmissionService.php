@@ -2,14 +2,12 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
-use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Psr\Log\LoggerInterface;
@@ -60,7 +58,7 @@ class ReportSubmissionService
 
     /**
      * ReportSubmissionService constructor.
-     * @param Container $container
+     * @param  Container  $container
      * @throws \Exception
      */
     public function __construct(Container $container)
@@ -113,8 +111,8 @@ class ReportSubmissionService
      * Generate the HTML of the report and convert to PDF
      *
      * @param  Report $report
-     * @param  bool                    $showSummary
-     * @return string                  binary PDF content
+     * @param  bool   $showSummary
+     * @return string binary PDF content
      */
     public function getPdfBinaryContent(ReportInterface $report, $showSummary = false)
     {
@@ -127,8 +125,25 @@ class ReportSubmissionService
     }
 
     /**
+     * @to-do move this into a checklist or pdf service
+     * Generate the HTML of the report and convert to PDF
+     *
+     * @param  Report $report
+     * @param  bool   $showSummary
+     * @return string binary PDF content
+     */
+    public function getChecklistPdfBinaryContent(ReportInterface $report)
+    {
+        $html = $this->templating->render('AppBundle:Admin/Client/Report/Formatted:checklist_formatted_body.html.twig', [
+            'report' => $report,
+            'checklist' => $report->getChecklist()
+        ]);
+        return $this->wkhtmltopdf->getPdfFromHtml($html);
+    }
+
+    /**
      * @param Report $report
-     * @param User $user
+     * @param User   $user
      */
     public function submit(ReportInterface $report, User $user)
     {

@@ -1,0 +1,94 @@
+checklistPage:
+  htmlTitle: Administration - Report checklist
+  pageTitle: Admin
+  supportTitle: Lodging checklist
+  heading:
+    info: Deputy and client information
+    decisions: Decisions made over the reporting period
+    contacts: People consulted
+    visitsAndCare: Contact with client, care arrangements and care plan
+    assetsAndDebts: Assets and debts
+    money: Money in and money out
+    bonds: Bonds
+    nextPeriod: Next reporting period
+    declaration: Declaration
+  lodgingSummary:
+    heading: Lodging summary
+    listItem1: Document any concerns
+    listItem2: Explain the decisions you've made and any further action taken
+    listItem3: Include changes made to CASREC details (or referrals to the MDU)
+    listItem4: |
+      Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
+  furtherInfo:
+    heading: Further information
+    para: |
+      You must complete this section if we have received requested correspondence following a lodging
+      (incompletes and casework).
+
+  form:
+    save:
+      label: Save progress
+    submitAndDownload:
+      label: Submit checklist and download PDF
+    saveFurtherInformation:
+      label: Save further information
+    reportingPeriodAccurate:
+      label: Is the reporting period accurate?
+    contactDetailsUptoDate:
+      label: Contact details are correct and up to date
+    deputyFullNameAccurateinCasrec:
+      label: Deputy details on CASREC are correct and up to date (updated where applicable)
+    decisionsSatisfactory:
+      label: Have satisfactory responses been provided by the deputy?
+    consultationsSatisfactory:
+      label: Have satisfactory responses been provided by the deputy?
+    careArrangements:
+      label: Have satisfactory responses been provided by the deputy?
+    assetsDeclaredAndManaged:
+      label: |
+        Are you satisfied that the deputy has accurately declared all the client's assets and that
+        the assets are being appropriately managed?
+    debtsManaged:
+      label: |
+        If the client has any debt, are you satisfied that the debt is appropriate and/or is it
+        being managed by the deputy in an appropriate manner?
+    openClosingBalancesMatch:
+      label: Does the opening balances(s) match last year's closing balance?
+    accountsBalance:
+      label: |
+        Do the accounts balance and match bank statements, where provided? Allow up to £250
+        leeway for lay deputies.
+    moneyMovementsAcceptable:
+      label: |
+        Are you satisfied that the money in and money out entries (including transfers), along
+        with any comments, are acceptable, appear reasonable, and are inline with the terms of
+        the court order?
+    bondAdequate:
+      label: |
+        Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
+        Bonds Discrepancy Resolution Job Card.
+    bondOrderMatchCasrec:
+      label: |
+        Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
+        Bonds Discrepancy Resolution Job Card.
+    futureSignificantFinancialDecisions:
+      label: Are there any significant financial decision(s) in the next reporting period?
+    hasDeputyRaisedConcerns:
+      label: Does the deputy raise any concerns about their deputyship?
+    caseWorkerSatisified:
+      label: Are you satisfied with the deputy's declaration?
+    lodgingSummary:
+      label: Reason for final decision
+    finalDecision:
+      label: Final decision?
+      options:
+        forReview: I am referring the case for a staff review or gifting review
+        incomplete: The report is incomplete
+        furtherCaseworkRequired: |
+          I have lodged and acknowledged the report but issues require further case work
+        satisfied: |
+          I am satisfied with the deputy’s report, no further action is required and I have
+          sent an acknowledgment to the deputy(s)
+    furtherInformationReceived:
+      label: Further information received
+
