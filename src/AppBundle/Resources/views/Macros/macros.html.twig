@@ -183,7 +183,7 @@
             {% endif %}
             {% if report.type != 'ndr' %}
                 {% if report.hasSection('balance') %}
-                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut'] %}
+                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts'] %}
                         <li>
                             <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
                         </li>
