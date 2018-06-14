@@ -43,15 +43,13 @@ class RequestIdLoggerProcessor
      */
     public function processRecord(array $record)
     {
-        if (!$this->container->isScopeActive('request')
-            || !$this->container->has('request')
-            || !($request = $this->container->get('request'))
-            || !$request->headers->has('x-request-id')
+        if (
+            ($rq = $this->container->get('request_stack'))
+            && ($request = $rq->getCurrentRequest())
+            && ($reqId = $request->headers->has('x-request-id'))
         ) {
-            return $record;
-        }
-
-        $record['extra']['request_id'] = $request->headers->get('x-request-id');
+            $record['extra']['request_id'] = $reqId;
+       }
 
         return $record;
     }
