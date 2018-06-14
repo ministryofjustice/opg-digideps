@@ -9,7 +9,6 @@ use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Repository\CasRecRepository;
 use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\Collection;
@@ -27,12 +26,10 @@ class ReportService
     private $casRecRepository;
 
     public function __construct(
-        ReportRepository $reportRepository,
-        CasRecRepository $casRecRepository,
         EntityManager $em
     ) {
-        $this->reportRepository = $reportRepository;
-        $this->casRecRepository = $casRecRepository;
+        $this->reportRepository = $em->getRepository(Report::class);
+        $this->casRecRepository = $em->getRepository(CasRec::class);
         $this->_em = $em;
         $this->assetRepository = $em->getRepository(AssetEntity::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);

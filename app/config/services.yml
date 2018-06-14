@@ -2,6 +2,7 @@ services:
     kernel.listener.responseConverter:
         class: AppBundle\EventListener\RestInputOuputFormatter
         arguments: [ "@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
+        public: true
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
@@ -40,48 +41,20 @@ services:
     casrec_service:
         class: AppBundle\Service\CasrecService
         arguments: [ "@em", "@logger", "@opg_digideps.report_service", "@validator" ]
+        public: true
 
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService
         arguments:
-          - "@opg_digideps.report_repository"
-          - "@opg_digideps.casrec_repository"
           - "@em"
-
-    opg_digideps.report_repository:
-        class: AppBundle\Entity\Repository\ReportRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
-        arguments:
-         - AppBundle\Entity\Report\Report
-
-    opg_digideps.casrec_repository:
-        class: AppBundle\Entity\Repository\CasRecRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
-        arguments:
-         - AppBundle\Entity\CasRec
-
-    opg_digideps.user_repository:
-        class: AppBundle\Entity\Repository\UserRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
-        arguments:
-         - AppBundle\Entity\User
-
-    opg_digideps.team_repository:
-        class: AppBundle\Entity\Repository\TeamRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
-        arguments:
-         - AppBundle\Entity\Team
+        public: true
 
     gedmo.listener.softdeleteable:
       class: Gedmo\SoftDeleteable\SoftDeleteableListener
       tags:
         - { name: doctrine.event_subscriber, connection: default }
       calls:
-        - [ setAnnotationReader, [" @annotation_reader" ] ]
+        - [ setAnnotationReader, [ "@annotation_reader" ] ]
 
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
