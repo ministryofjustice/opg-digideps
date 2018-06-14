@@ -5,14 +5,10 @@ namespace AppBundle\Twig;
 use AppBundle\Entity\User;
 use AppBundle\Service\ReportSectionsLinkService;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 
 class ComponentsExtension extends \Twig_Extension
 {
-    /**
-     * @var \Twig_Environment
-     */
-    private $environment;
-
     /**
      * @var TranslatorInterface
      */
@@ -34,21 +30,14 @@ class ComponentsExtension extends \Twig_Extension
         $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
 
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        parent::initRuntime($environment);
-        $this->environment = $environment;
-    }
-
     public function getFunctions()
     {
         return [
-            'progress_bar_registration' => new \Twig_Function_Method($this, 'progressBarRegistration'),
-            'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
-            'section_link_params' => new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
+            new \Twig_SimpleFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction( 'accordionLinks', [$this, 'renderAccordionLinks']),
+            new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),
-
         ];
     }
 
@@ -190,7 +179,7 @@ class ComponentsExtension extends \Twig_Extension
      * @param string $barName
      * @param int    $activeStepNumber
      */
-    public function progressBarRegistration(User $user, $selectedStepId)
+    public function progressBarRegistration(Twig_Environment $env, User $user, $selectedStepId)
     {
         if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_CASE_MANAGER])) {
             $availableStepIds = ['password', 'user_details'];
@@ -213,7 +202,7 @@ class ComponentsExtension extends \Twig_Extension
             ];
         }
 
-        echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
+        echo $env->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
             'progressSteps' => $progressSteps,
         ]);
     }

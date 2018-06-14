@@ -5,18 +5,14 @@ namespace AppBundle\Twig;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig_Environment;
 
-class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_InitRuntimeInterface
+class FormFieldsExtension extends \Twig_Extension
 {
     /**
      * @var TranslatorInterface
      */
     private $translator;
-
-    /**
-     * @var \Twig_Environment
-     */
-    private $environment;
 
     /**
      * @param TranslatorInterface $translator
@@ -26,23 +22,17 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         $this->translator = $translator;
     }
 
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        parent::initRuntime($environment);
-        $this->environment = $environment;
-    }
-
     public function getFunctions()
     {
         return [
-            'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
-            'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
-            'form_errors_list' => new \Twig_Function_Method($this, 'renderFormErrorsList'),
-            'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
-            'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
-            'form_sort_code' => new \Twig_Function_Method($this, 'renderFormSortCode'),
-            'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
-            'form_checkbox' => new \Twig_Function_Method($this, 'renderCheckboxInput'),
+            new \Twig_SimpleFunction( 'form_input', [$this, 'renderFormInput'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_submit', [$this, 'renderFormSubmit'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_errors_list', [$this, 'renderFormErrorsList'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_select', [$this, 'renderFormDropDown'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction(  'form_known_date', [$this, 'renderFormKnownDate'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_sort_code', [$this, 'renderFormSortCode'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_checkbox_group', [$this, 'renderCheckboxGroup'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction( 'form_checkbox', [$this, 'renderCheckboxInput'], ['needs_environment' => true]),
         ];
     }
 
@@ -55,10 +45,10 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderFormInput($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormInput(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
         //generate input field html using variables supplied
-        echo $this->environment->render(
+        echo $env->render(
             'AppBundle:Components/Form:_input.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
@@ -72,9 +62,9 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderCheckboxInput($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderCheckboxInput(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
-        echo $this->environment->render(
+        echo $env->render(
             'AppBundle:Components/Form:_checkbox.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
@@ -85,7 +75,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      *
      * //TODO consider refactor using getFormComponentTwigVariables
      */
-    public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroup(Twig_Environment $env, FormView $element, $elementName, $vars, $transIndex = null)
     {
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -120,7 +110,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         }
 
          //generate input field html using variables supplied
-        echo $this->environment->render('AppBundle:Components/Form:_checkboxgroup.html.twig', [
+        echo $env->render('AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass'] : null,
             'legendText' => $legendText,
@@ -138,7 +128,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      * @DEPRECATED
      *
      */
-    public function renderCheckboxGroupNew(FormView $element, $elementName, $vars, $transIndex = null)
+    public function renderCheckboxGroupNew(Twig_Environment $env, FormView $element, $elementName, $vars, $transIndex = null)
     {
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -173,7 +163,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         }
 
         //generate input field html using variables supplied
-        echo $this->environment->render('AppBundle:Components/Form:_checkboxgroup_new.html.twig', [
+        echo $env->render('AppBundle:Components/Form:_checkboxgroup_new.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
             'legendText' => $legendText,
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
@@ -193,16 +183,16 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      * @param int    $transIndex
      * @param array  $vars
      */
-    public function renderFormDropDown($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormDropDown(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
         //generate input field html using variables supplied
-        echo $this->environment->render(
+        echo $env->render(
             'AppBundle:Components/Form:_select.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
 
-    public function renderFormKnownDate($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormKnownDate(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -240,7 +230,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         $legendTextTransJS = $this->translator->trans($translationKey . '.legendjs', $legendParams, $domain);
         $legendTextJS = ($legendTextTransJS != $translationKey . '.legendjs') ? $legendTextTransJS : null;
 
-        $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', ['legendText' => $legendText,
+        $html = $env->render('AppBundle:Components/Form:_known-date.html.twig', ['legendText' => $legendText,
                                                                                                 'legendTextJS' => $legendTextJS,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element,
@@ -249,7 +239,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         echo $html;
     }
 
-    public function renderFormSortCode($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSortCode(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -265,7 +255,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
 
         $legendText = ($legendTextTrans != $translationKey . '.legend') ? $legendTextTrans : null;
 
-        $html = $this->environment->render('AppBundle:Components/Form:_sort-code.html.twig', ['legendText' => $legendText,
+        $html = $env->render('AppBundle:Components/Form:_sort-code.html.twig', ['legendText' => $legendText,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element,
                                                                                               ]);
@@ -278,7 +268,7 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
      * @param array  $vars
      * @param int    $transIndex
      */
-    public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSubmit(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
@@ -289,12 +279,31 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass'] : null;
 
         //generate input field html using variables supplied
-        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig',
+        $html = $env->render('AppBundle:Components/Form:_button.html.twig',
             [
                 'labelText' => $labelText,
                 'element' => $element,
                 'buttonClass' => $buttonClass,
             ]);
+
+        echo $html;
+    }
+
+
+    /**
+     * get form errors list and render them inside Components/Alerts:error_summary.html.twig
+     * Usage: {{ form_errors_list(form) }}.
+     *
+     * @param FormView $form
+     */
+    public function renderFormErrorsList(Twig_Environment $env, FormView $form)
+    {
+        $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
+
+        $html = $env->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
+            'formErrorMessages' => $formErrorMessages,
+            'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
+        ]);
 
         echo $html;
     }
@@ -321,23 +330,6 @@ class FormFieldsExtension extends \Twig_Extension implements \Twig_Extension_Ini
         return $ret;
     }
 
-    /**
-     * get form errors list and render them inside Components/Alerts:error_summary.html.twig
-     * Usage: {{ form_errors_list(form) }}.
-     *
-     * @param FormView $form
-     */
-    public function renderFormErrorsList(FormView $form)
-    {
-        $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
-
-        $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
-            'formErrorMessages' => $formErrorMessages,
-            'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
-        ]);
-
-        echo $html;
-    }
 
     /**
      * @param \Symfony\Component\Form\FormView $element
