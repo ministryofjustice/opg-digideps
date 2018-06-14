@@ -9,20 +9,20 @@ services:
         public: false
     user_provider:
         class: AppBundle\Service\Auth\UserProvider
-        arguments: [ @em, @snc_redis.default, @logger, { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
+        arguments: [ "@em", "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
     authService:
         class: AppBundle\Service\Auth\AuthService
-        arguments: [ @service_container ]
+        arguments: [ "@service_container" ]
     attemptsInTimeChecker:
         class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
-        arguments: [ @snc_redis.default ]
+        arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
     attemptsIncrementalWaitingChecker:
         class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
-        arguments: [ @snc_redis.default ]
+        arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["ac_exception"] ]
             # after 10 attempts, freeze for 30 minutes
