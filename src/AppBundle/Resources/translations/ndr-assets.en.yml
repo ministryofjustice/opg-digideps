@@ -32,7 +32,7 @@ typePage:
 addPage:
   htmlTitle: "New deputy report - Assets | GOV.UK"
   supportTitle: Assets
-  pageTitle: Add an asset: %assetTitle%
+  pageTitle: "Add an asset: %assetTitle%"
 
 editPage:
   htmlTitle: "New deputy report - Assets | GOV.UK"

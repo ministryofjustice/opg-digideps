@@ -53,16 +53,16 @@ afterISubmit:
 relatedLinks:
   heading: "Deputies: make decisions for someone who lacks capacity"
   link01Text: "Deputy guidance: how to carry out your duties"
-  link01Src: https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties
+  link01Src: "https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties"
   link02Text: "Deputy fees: remission or exemption"
-  link02Src: https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption
+  link02Src: "https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption"
   link03Text: "Deputy guidance: dealing with banks"
-  link03Src: https://www.gov.uk/government/publications/deputy-and-attorney-guidance-dealing-with-banks
+  link03Src: "https://www.gov.uk/government/publications/deputy-and-attorney-guidance-dealing-with-banks"
   link04Text: "Giving gifts: a guide for deputies"
-  link04Src: https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys
+  link04Src: "https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys"
   link05Text: Mental Capacity Act Code of Practice
-  link05Src: https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf
+  link05Src: "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf"
   link06Text: Contact OPG
-  link06Src: https://www.gov.uk/government/organisations/office-of-the-public-guardian
+  link06Src: "https://www.gov.uk/government/organisations/office-of-the-public-guardian"
 
 signin: Sign in
