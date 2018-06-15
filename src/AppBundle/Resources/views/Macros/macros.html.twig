@@ -183,7 +183,7 @@
             {% endif %}
             {% if report.type != 'ndr' %}
                 {% if report.hasSection('balance') %}
-                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut'] %}
+                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts'] %}
                         <li>
                             <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
                         </li>
@@ -192,4 +192,19 @@
             {% endif %}
         </ul>
     </aside>
+{% endmacro %}
+
+{# Question/Answer table header for summary pages #}
+{% macro summaryTableHeaderQA(hideEditLink) %}
+    <thead>
+        <tr>
+            <th>{{ 'question' | trans({}, 'common') }}</th>
+            <th>{{ 'answer' | trans({}, 'common') }}</th>
+            {% if not hideEditLink %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
 {% endmacro %}

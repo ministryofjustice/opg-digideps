@@ -7,6 +7,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
@@ -30,15 +32,7 @@
     </div>
 
     <table class="check-your-answers columns-2 push-double--bottom">
-        <thead>
-        <tr>
-            <th>{{ 'question' | trans({}, 'common') }}</th>
-            <th>{{ 'answer' | trans({}, 'common') }}</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
-        </tr>
-        </thead>
+        {{ macros.summaryTableHeaderQA(hideEditLink) }}
         <tbody>
         <tr class="behat-region-provided-documentation">
             <td>

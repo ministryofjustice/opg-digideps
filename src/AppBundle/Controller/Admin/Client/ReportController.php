@@ -60,7 +60,8 @@ class ReportController extends AbstractController
         'balance-state',
         'documents',
         'report-prof-service-fees',
-        'prof-service-fees'
+        'prof-service-fees',
+        'client-named-deputy'
     ];
 
     /**
@@ -129,7 +130,8 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport($id, ['report', 'report-checklist', 'checklist-information', 'last-modified', 'user']);
+
+        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report', 'report-checklist', 'checklist-information', 'last-modified', 'user']));
 
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
