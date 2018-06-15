@@ -109,6 +109,9 @@ helpline: 0115 934 2700
 helplinePA: 0115 934 2817
 helplineProf: 0115 934 2819
 
+# Validation and errors
+summaryHeading: There are some problems on this page
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
