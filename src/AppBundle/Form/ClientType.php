@@ -40,7 +40,7 @@ class ClientType extends AbstractType
                 ->add('county', FormTypes\TextType::class)
                 ->add('country', FormTypes\CountryType::class, [
                       'preferred_choices' => ['GB'],
-                      'empty_value' => 'country.defaultOption',
+                      'placeholder' => 'country.defaultOption',
                 ])
                 ->add('phone', FormTypes\TextType::class)
                 ->add('id', FormTypes\HiddenType::class)

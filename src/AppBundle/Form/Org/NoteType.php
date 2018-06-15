@@ -38,7 +38,7 @@ class NoteType extends AbstractType
                     'choices' => self::getCategories(),
                     'expanded' => false,
                     'required' => false,
-                    'empty_value' => 'Please select',
+                    'placeholder' => 'Please select',
                 ]
             )
             ->add('title', FormTypes\TextType::class, ['required' => true])

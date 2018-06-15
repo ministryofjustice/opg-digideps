@@ -29,7 +29,7 @@ class BankAccountType extends AbstractType
             $builder->add('accountType', FormTypes\ChoiceType::class, [
                 'choices' => BankAccount::$types,
                 'expanded' => true,
-                'empty_value' => 'Please select',
+                'placeholder' => 'Please select',
             ]);
         }
 

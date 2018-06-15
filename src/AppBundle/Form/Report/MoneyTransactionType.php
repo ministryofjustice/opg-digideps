@@ -100,7 +100,7 @@ class MoneyTransactionType extends AbstractType
             if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
-                    'empty_value' => 'Please select',
+                    'placeholder' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
                 ]);
             }

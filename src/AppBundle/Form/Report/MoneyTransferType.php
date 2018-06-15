@@ -26,9 +26,9 @@ class MoneyTransferType extends AbstractType
         if ($this->step == 1) {
             $builder
                 ->add('accountFromId', FormTypes\ChoiceType::class, [
-                        'choices' => $banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select',]
                 )->add('accountToId', FormTypes\ChoiceType::class, [
-                        'choices' => $banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select',]
                 );
         }
         if ($this->step == 2) {

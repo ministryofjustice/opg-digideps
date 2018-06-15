@@ -13,7 +13,7 @@ class AddUserType extends AbstractType
     {
         $roleNameOptions = [
             'choices'     => $options['options']['roleChoices'],
-            'empty_value' => $options['options']['roleNameEmptyValue'],
+            'placeholder' => $options['options']['roleNameEmptyValue'],
         ];
 
         if (!empty($options['options']['roleNameSetTo'])) {
