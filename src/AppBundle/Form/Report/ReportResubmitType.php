@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -15,11 +16,11 @@ class ReportResubmitType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('id', 'hidden')
-                ->add('agree', 'checkbox', [
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('agree', FormTypes\CheckboxType::class, [
                      'constraints' => new NotBlank(['message' => 'report.reSubmission.agree.notBlank']),
                  ])
-                ->add('save', 'submit');
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -29,7 +30,7 @@ class ReportResubmitType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'report_resubmit';
     }

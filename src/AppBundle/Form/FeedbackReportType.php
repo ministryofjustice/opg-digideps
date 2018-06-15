@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,12 +16,12 @@ class FeedbackReportType extends AbstractType
         $satisfactionLevel = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
 
         $builder
-                 ->add('satisfactionLevel', 'choice', [
+                 ->add('satisfactionLevel', FormTypes\ChoiceType::class, [
                     'choices' => array_combine($satisfactionLevel, $satisfactionLevel),
                     'expanded' => true,
                     'multiple' => false,
                   ])
-                   ->add('save', 'submit');
+                   ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -30,7 +31,7 @@ class FeedbackReportType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'feedback_report';
     }

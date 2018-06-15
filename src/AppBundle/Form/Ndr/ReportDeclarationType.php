@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Ndr;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,11 +14,11 @@ class ReportDeclarationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('id', 'hidden')
-                ->add('agree', 'checkbox', [
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('agree', FormTypes\CheckboxType::class, [
                      'constraints' => new NotBlank(['message' => 'report-declaration.agree.notBlank']),
                  ])
-                 ->add('agreedBehalfDeputy', 'choice', [
+                 ->add('agreedBehalfDeputy', FormTypes\ChoiceType::class, [
                     'choices' => [
                         // api models contains those keys too. Change them accordingly if needed
                         'only_deputy' => 'agreedBehalfDeputy.only_deputy',
@@ -28,8 +29,8 @@ class ReportDeclarationType extends AbstractType
                     'translation_domain' => 'report-declaration',
                     'expanded' => true,
                 ])
-                ->add('agreedBehalfDeputyExplanation', 'textarea')
-                ->add('save', 'submit');
+                ->add('agreedBehalfDeputyExplanation', FormTypes\TextareaType::class)
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -49,7 +50,7 @@ class ReportDeclarationType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr_declaration';
     }

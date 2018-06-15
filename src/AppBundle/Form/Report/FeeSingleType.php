@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Fee;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,8 +16,8 @@ class FeeSingleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('feeTypeId', 'hidden')
-            ->add('amount', 'number', [
+            ->add('feeTypeId', FormTypes\HiddenType::class)
+            ->add('amount', FormTypes\NumberType::class, [
                 'precision' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
@@ -30,7 +31,7 @@ class FeeSingleType extends AbstractType
             $form = $event->getForm();
 
             if ($fee->getHasMoreDetails()) {
-                $form->add('moreDetails', 'textarea', [
+                $form->add('moreDetails', FormTypes\TextareaType::class, [
                 ]);
             }
         });
@@ -55,7 +56,7 @@ class FeeSingleType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'fee_single';
     }

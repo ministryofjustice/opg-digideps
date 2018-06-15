@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -19,31 +20,31 @@ class ClientType extends AbstractType
         }
 
         if ($this->isClientValidated()) {
-            $builder->add('firstname', 'text', ['attr'=> ['readonly' => 'readonly']])
-                ->add('lastname', 'text', ['attr'=> ['readonly' => 'readonly']])
-                ->add('caseNumber', 'text', ['attr'=> ['readonly' => 'readonly']]);
+            $builder->add('firstname', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']])
+                ->add('lastname', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']])
+                ->add('caseNumber', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']]);
         } else {
-            $builder->add('firstname', 'text')
-                ->add('lastname', 'text')
-                ->add('caseNumber', 'text');
+            $builder->add('firstname', FormTypes\TextType::class)
+                ->add('lastname', FormTypes\TextType::class)
+                ->add('caseNumber', FormTypes\TextType::class);
         }
-        $builder->add('courtDate', 'date', [
+        $builder->add('courtDate', FormTypes\DateType::class, [
             'widget' => 'text',
             'input' => 'datetime',
             'format' => 'yyyy-MM-dd',
             'invalid_message' => 'client.courtDate.message',
         ])
-                ->add('address', 'text')
-                ->add('address2', 'text')
-                ->add('postcode', 'text')
-                ->add('county', 'text')
-                ->add('country', 'country', [
+                ->add('address', FormTypes\TextType::class)
+                ->add('address2', FormTypes\TextType::class)
+                ->add('postcode', FormTypes\TextType::class)
+                ->add('county', FormTypes\TextType::class)
+                ->add('country', FormTypes\CountryType::class, [
                       'preferred_choices' => ['GB'],
                       'empty_value' => 'country.defaultOption',
                 ])
-                ->add('phone', 'text')
-                ->add('id', 'hidden')
-                ->add('save', 'submit');
+                ->add('phone', FormTypes\TextType::class)
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('save', FormTypes\SubmitType::class);
 
         // strip tags to prevent XSS as the name is often displayed around mixed with translation with the twig "raw" filter
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -63,7 +64,7 @@ class ClientType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'client';
     }

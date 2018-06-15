@@ -4,6 +4,7 @@ namespace AppBundle\Form\Admin;
 
 use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,8 +12,8 @@ class SearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('q', 'text')
-            ->add('role_name', 'choice', [
+        $builder->add('q', FormTypes\TextType::class)
+            ->add('role_name', FormTypes\ChoiceType::class, [
                 'choices' => [
                     ''                    => 'ALL ROLES',
                     User::ROLE_ADMIN      => 'OPG Admin',
@@ -25,8 +26,8 @@ class SearchType extends AbstractType
                     User::ROLE_PROF_NAMED => 'Professional Deputies (named)',
                 ],
             ])
-            ->add('ndr_enabled', 'checkbox')
-            ->add('search', 'submit');
+            ->add('ndr_enabled', FormTypes\CheckboxType::class)
+            ->add('search', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -37,7 +38,7 @@ class SearchType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin';
     }

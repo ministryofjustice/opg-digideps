@@ -15,9 +15,6 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 
-assetic:
-    use_controller: false
-    
 twig:
     cache:  false
 security:
@@ -28,7 +25,7 @@ security:
 services:
     mail_sender:
         class: AppBundle\Service\Mailer\MailSenderMock
-        arguments: [ @service_container ]
+        arguments: ["@service_container" ]
     mailer.transport.smtp.default:
         class: AppBundle\Service\Mailer\Transport\TransportMock
     mailer.transport.smtp.secure:

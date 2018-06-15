@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Ndr\Asset;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -33,14 +34,14 @@ abstract class AbstractAssetType extends AbstractType
         $this->addFields($builder, $options);
 
         $builder
-                ->add('title', 'hidden')
-                ->add('id', 'hidden')
-                ->add('save', 'submit');
+                ->add('title', FormTypes\HiddenType::class)
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     abstract protected function addFields($builder, $options);
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'oasset';
     }

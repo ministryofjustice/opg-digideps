@@ -4,6 +4,7 @@ namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\Expense;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,16 +13,16 @@ class DeputyExpenseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('explanation', 'text', [
+            ->add('explanation', FormTypes\TextType::class, [
                 'required' => true,
             ])
-            ->add('amount', 'number', [
+            ->add('amount', FormTypes\NumberType::class, [
                 'precision' => 2,
                 'grouping' => true,
                 //'error_bubbling' => true,  // keep (and show) the error (Default behaviour). if true, error is los
                 'invalid_message' => 'ndr.expenses.singleExpense.notNumeric',
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -33,7 +34,7 @@ class DeputyExpenseType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'expenses_single';
     }

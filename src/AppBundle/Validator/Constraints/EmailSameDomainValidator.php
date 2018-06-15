@@ -25,7 +25,7 @@ class EmailSameDomainValidator extends ConstraintValidator
         $targetDomain = $this->getDomain($email);
 
         if (!empty($targetDomain) && $targetDomain !== $creatorDomain) {
-            $this->context->addViolationAt('email', $constraint->message, ['creatorDomain' => $creatorDomain]);
+            $this->context->buildViolation($constraint->message, ['creatorDomain' => $creatorDomain])->atPath('email')->addViolation();
         }
     }
 

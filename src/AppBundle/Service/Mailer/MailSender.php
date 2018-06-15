@@ -79,7 +79,7 @@ class MailSender
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
-        $errors = $this->validator->validate($email, $groups);
+        $errors = $this->validator->validate($email, null, $groups);
         if (count($errors) > 0) {
             $errorsString = (string) $errors;
             throw new \RuntimeException($errorsString);

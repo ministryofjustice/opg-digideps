@@ -431,41 +431,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responseData, $this->object->delete($endpointUrl));
     }
 
-    public function testXRequestIdForwarded()
-    {
-        $responseArray = ['success' => true, 'data' => 1];
-        $responseJson = json_encode($responseArray);
-
-        $this->serialiser
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray) //extractDataArray()
-        ;
-
-        $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
-
-        $this->endpointResponse
-            ->shouldReceive('getBody')->andReturn($responseJson);
-
-        $request = new \Symfony\Component\HttpFoundation\Request();
-        $request->headers->set('x-request-id', 'XRI');
-
-        $this->container->shouldReceive('get')->with('request')->andReturn($request);
-        $this->container->shouldReceive('isScopeActive')->andReturn(true);
-
-        $this->logger->shouldReceive('error')->andReturnUsing(function ($e) {
-            echo $e;
-        });
-
-        $this->client->shouldReceive('get')->with('/', [
-                'headers' => [
-                    'AuthToken' => $this->sessionToken,
-                    'X-Request-ID' => 'XRI',
-
-            ],
-            ])->andReturn($this->endpointResponse);
-
-        $this->object->get('/', 'array');
-    }
 
     public function testGetHistory()
     {
@@ -478,9 +443,8 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
             ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
             ->shouldReceive('get')->with('logger')->andReturn($this->logger)
-            ->shouldReceive('get')->with('request')->andReturn(null)
+            ->shouldReceive('get')->with('request_stack')->andReturn(null)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
-            ->shouldReceive('isScopeActive')->andReturn(true)
             ->getMock();
 
         $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');

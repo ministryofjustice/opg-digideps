@@ -55,7 +55,7 @@ class MailSenderMock extends MailSender
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
         //validate change password object
-        $errors = $this->validator->validate($email, $groups);
+        $errors = $this->validator->validate($email, null, $groups);
 
         if (count($errors) > 0) {
             $errorsString = (string) $errors;

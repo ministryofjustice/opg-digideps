@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Action;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,20 +32,20 @@ class ActionType extends AbstractType
 
         if ($this->step === 1) {
             $builder
-                ->add('doYouExpectFinancialDecisions', 'choice', [
+                ->add('doYouExpectFinancialDecisions', FormTypes\ChoiceType::class, [
                 'choices'  => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ])->add('doYouExpectFinancialDecisionsDetails', 'textarea');
+            ])->add('doYouExpectFinancialDecisionsDetails', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 2) {
-            $builder->add('doYouHaveConcerns', 'choice', [
+            $builder->add('doYouHaveConcerns', FormTypes\ChoiceType::class, [
                 'choices'  => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-            ])->add('doYouHaveConcernsDetails', 'textarea');
+            ])->add('doYouHaveConcernsDetails', FormTypes\TextareaType::class);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -77,7 +78,7 @@ class ActionType extends AbstractType
         ->setAllowedTypes('translator', TranslatorInterface::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'action';
     }

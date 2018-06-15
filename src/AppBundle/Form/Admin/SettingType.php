@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,13 +12,13 @@ class SettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'hidden')
-            ->add('content', 'textarea')
-            ->add('enabled', 'choice', [
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('content', FormTypes\TextareaType::class)
+            ->add('enabled', FormTypes\ChoiceType::class, [
                 'choices' => [true => 'Yes', false => 'No'],
                 'expanded' => true,
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     /**

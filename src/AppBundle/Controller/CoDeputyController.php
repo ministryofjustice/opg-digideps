@@ -34,7 +34,7 @@ class CoDeputyController extends AbstractController
             $client = new EntityDir\Client();
             $client->setLastName($form['clientLastname']->getData());
             $client->setCaseNumber($form['clientCaseNumber']->getData());
-            $errors = $this->get('validator')->validate($client, ['verify-codeputy']);
+            $errors = $this->get('validator')->validate($client, null, ['verify-codeputy']);
             foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
                 $form->get('client' . ucfirst($clientProperty))->addError(new FormError($error->getMessage()));

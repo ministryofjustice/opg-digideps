@@ -4,7 +4,7 @@ namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\UnsubmittedSection;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportUnsubmittedSections
 {
@@ -83,9 +83,9 @@ trait ReportUnsubmittedSections
     {
         if (empty($this->getUnsubmittedSectionsIds())) {
             // add error to all the sections
-            $context->addViolationAt('unsubmittedSection[0].present', 'report.unsubmissionSections.atLeastOnce');
+            $context->buildViolation('report.unsubmissionSections.atLeastOnce')->atPath('unsubmittedSection[0].present')->addViolation();
             for ($i = 1, $count = count($this->getUnsubmittedSection()); $i < $count; $i++) {
-                $context->addViolationAt("unsubmittedSection[$i].present", '');
+                $context->buildViolation('')->atPath("unsubmittedSection[$i].present")->addViolation();
             }
         }
     }

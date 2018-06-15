@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\MoneyTransaction;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -16,7 +17,7 @@ class MoneyTransactionType extends AbstractType
     private $authorizationChecker;
 
     /**
-     * @var integer
+     * @var int
      */
     private $step;
 
@@ -73,21 +74,21 @@ class MoneyTransactionType extends AbstractType
         $this->type = $options['type'];
         $this->selectedCategory = $options['selectedCategory'];
 
-        $builder->add('id', 'hidden');
+        $builder->add('id', FormTypes\HiddenType::class);
 
         if ($this->step === 1) {
-            $builder->add('category', 'choice', [
+            $builder->add('category', FormTypes\ChoiceType::class, [
                 'choices'  => $this->getCategories(),
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 2) {
-            $builder->add('description', 'textarea', [
+            $builder->add('description', FormTypes\TextareaType::class, [
                 'required' => $this->isDescriptionMandatory(),
             ]);
 
-            $builder->add('amount', 'number', [
+            $builder->add('amount', FormTypes\NumberType::class, [
                 'precision'       => 2,
                 'grouping'        => true,
                 'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
@@ -97,7 +98,7 @@ class MoneyTransactionType extends AbstractType
             $reportType = $options['report']->getType();
 
             if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
-                $builder->add('bankAccountId', 'choice', [
+                $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'empty_value' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
@@ -105,10 +106,10 @@ class MoneyTransactionType extends AbstractType
             }
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'account';
     }

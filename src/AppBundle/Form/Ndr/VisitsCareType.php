@@ -4,6 +4,7 @@ namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\VisitsCare;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -35,20 +36,20 @@ class VisitsCareType extends AbstractType
         $this->clientFirstName = $options['clientFirstName'];
 
         if ($this->step === 1) {
-            $builder->add('doYouLiveWithClient', 'choice', [
+            $builder->add('doYouLiveWithClient', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
-            $builder->add('howOftenDoYouContactClient', 'textarea');
+            $builder->add('howOftenDoYouContactClient', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 2) {
-            $builder->add('doesClientReceivePaidCare', 'choice', [
+            $builder->add('doesClientReceivePaidCare', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
 
-            $builder->add('howIsCareFunded', 'choice', [
+            $builder->add('howIsCareFunded', FormTypes\ChoiceType::class, [
                 'choices' => [
                     'client_pays_for_all' => $this->translate('form.howIsCareFunded.choices.client_pays_for_all'),
                     'client_gets_financial_help' => $this->translate('form.howIsCareFunded.choices.client_gets_financial_help'),
@@ -59,16 +60,16 @@ class VisitsCareType extends AbstractType
         }
 
         if ($this->step === 3) {
-            $builder->add('whoIsDoingTheCaring', 'textarea');
+            $builder->add('whoIsDoingTheCaring', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 4) {
-            $builder->add('doesClientHaveACarePlan', 'choice', [
+            $builder->add('doesClientHaveACarePlan', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
 
-            $builder->add('whenWasCarePlanLastReviewed', 'date', ['widget' => 'text',
+            $builder->add('whenWasCarePlanLastReviewed', FormTypes\DateType::class, ['widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
                 'invalid_message' => 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage',
@@ -77,14 +78,14 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 5) {
             $builder
-                ->add('planMoveNewResidence', 'choice', [
+                ->add('planMoveNewResidence', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ])
-                ->add('planMoveNewResidenceDetails', 'textarea');
+                ->add('planMoveNewResidenceDetails', FormTypes\TextareaType::class);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
 
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -144,7 +145,7 @@ class VisitsCareType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'visits_care';
     }

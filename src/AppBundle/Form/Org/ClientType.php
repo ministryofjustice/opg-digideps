@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Org;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -18,24 +19,20 @@ class ClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('dateOfBirth', 'date', ['widget' => 'text',
+                ->add('dateOfBirth', FormTypes\DateType::class, ['widget' => 'text',
                         'input' => 'datetime',
                         'format' => 'dd-MM-yyyy',
                         'invalid_message' => 'Enter a valid date',
                 ])
-                ->add('email', 'email')
-                ->add('address', 'text')
-                ->add('address2', 'text')
-                ->add('postcode', 'text')
+                ->add('email', FormTypes\EmailType::class)
+                ->add('address', FormTypes\TextType::class)
+                ->add('address2', FormTypes\TextType::class)
+                ->add('postcode', FormTypes\TextType::class)
 
-                ->add('county', 'text')
-//                ->add('country', 'country', [
-//                      'preferred_choices' => ['GB'],
-//                      'empty_value' => 'country.defaultOption',
-//                ])
-                ->add('phone', 'text')
-                ->add('id', 'hidden')
-                ->add('save', 'submit');
+                ->add('county', FormTypes\TextType::class)
+                ->add('phone', FormTypes\TextType::class)
+                ->add('id', FormTypes\HiddenType::class)
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -46,7 +43,7 @@ class ClientType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'org_client_edit';
     }

@@ -4,10 +4,10 @@ namespace AppBundle\Entity\Ndr;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"ndr-state-benefits"})
+ * @Assert\Callback(callback="moreDetailsValidate", groups={"ndr-state-benefits"})
  */
 class StateBenefit
 {
@@ -135,7 +135,7 @@ class StateBenefit
         $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
 
         if ($isPresent && !$hasMoreDetails) {
-            $context->addViolationAt('moreDetails', 'ndr.incomeBenefit.moreDetails.notBlank');
+            $context->buildViolation('ndr.incomeBenefit.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
         }
     }
 }

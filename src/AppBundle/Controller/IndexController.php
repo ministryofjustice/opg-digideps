@@ -34,10 +34,8 @@ class IndexController extends AbstractController
      * @Route("login", name="login")
      * @Template()
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
-        $request = $this->getRequest();
-
         $form = $this->createForm(FormDir\LoginType::class, null, [
             'action' => $this->generateUrl('login'),
         ]);
@@ -91,7 +89,7 @@ class IndexController extends AbstractController
         }
 
         // different page version for timeout and manual logout
-        $session = $this->getRequest()->getSession();
+        $session = $request->getSession();
 
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
@@ -147,9 +145,8 @@ class IndexController extends AbstractController
     /**
      * @Route("error-503", name="error-503")
      */
-    public function error503()
+    public function error503(Request $request)
     {
-        $request = $this->getRequest();
         $vars = [];
         $vars['request'] = $request;
 

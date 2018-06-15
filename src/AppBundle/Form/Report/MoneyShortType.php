@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,13 +16,13 @@ class MoneyShortType extends AbstractType
         $this->field = $options['field'];
 
         $builder
-            ->add('id', 'hidden')
-            ->add($this->field, 'collection', [
+            ->add('id', FormTypes\HiddenType::class)
+            ->add($this->field, FormTypes\CollectionType::class, [
                 'type' => new MoneyShortCategoryType(),
             ])
         ;
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -31,7 +32,7 @@ class MoneyShortType extends AbstractType
                  ->setRequired(['field']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'money_short';
     }
