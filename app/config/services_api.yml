@@ -3,15 +3,15 @@ services:
         class: GuzzleHttp\Client
         arguments:
           $config:
-            base_url: "%api_base_url%"
-            defaults:
-                # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
-                version: "1.0"
-                headers:
-                    Content-Type: application/json
-                verify: false
-                timeout: 20
-                allow_redirects: false
+            base_uri: "%api_base_url%"
+            verify: false
+            # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
+            version: "1.0"
+            headers:
+                Content-Type: application/json
+            verify: false
+            timeout: 20
+            allow_redirects: false
 
     rest_client:
         class:  AppBundle\Service\Client\RestClient

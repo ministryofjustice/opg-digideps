@@ -33,7 +33,6 @@ class BalanceTest extends WebTestCase
     public function setUp()
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
-        $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
         $this->container = $this->frameworkBundleClient->getContainer();
@@ -254,7 +253,6 @@ class BalanceTest extends WebTestCase
     public function tearDown()
     {
         m::close();
-        $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
     }
 
