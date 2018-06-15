@@ -24,7 +24,7 @@ class ChangePasswordType extends AbstractType
                 ])
                 ->add('plain_password', FormTypes\RepeatedType::class, [
                     'mapped' => false,
-                    'type' => 'password',
+                    'type' => FormTypes\PasswordType::class,
                     'invalid_message' => 'user.password.new.doesntMatch',
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'user.password.new.notBlank', 'groups' => [self::VALIDATION_GROUP]]),
