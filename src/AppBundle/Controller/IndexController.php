@@ -82,7 +82,6 @@ class IndexController extends AbstractController
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
 
-            $request = $this->get('request');
             $event = new InteractiveLoginEvent($request, $token);
             $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
