@@ -59,7 +59,8 @@ class ReportController extends AbstractController
         'balance-state',
         'documents',
         'report-prof-service-fees',
-        'prof-service-fees'
+        'prof-service-fees',
+        'client-named-deputy'
     ];
 
     /**
@@ -285,7 +286,7 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('report.submissionExceptions.submitted', [], 'validators'));
         }
 
-        $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
+        $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
 
         $form->handleRequest($request);
 

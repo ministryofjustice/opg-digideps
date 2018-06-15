@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,11 +12,11 @@ class ResetPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('password', 'repeated', [
+                ->add('password', FormTypes\RepeatedType::class, [
                     'type' => 'password',
                     'invalid_message' => $options['passwordMismatchMessage']
                 ])
-                ->add('save', 'submit');
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -27,7 +28,7 @@ class ResetPasswordType extends AbstractType
         ->setRequired(['passwordMismatchMessage']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'reset_password';
     }

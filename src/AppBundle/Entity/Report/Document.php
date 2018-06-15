@@ -7,10 +7,10 @@ use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidForReport"}, groups={"document"})
+ * @Assert\Callback(callback="isValidForReport", groups={"document"})
  */
 class Document
 {
@@ -37,17 +37,17 @@ class Document
         $fileOriginalName = $this->getFile()->getClientOriginalName();
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
-            $context->addViolationAt('file', 'document.file.errors.maxMessage');
+            $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
             return;
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
-            $context->addViolationAt('file', 'document.file.errors.alreadyPresent');
+            $context->buildViolation('document.file.errors.alreadyPresent')->atPath('file')->addViolation();
             return;
         }
 
         if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
-            $context->addViolationAt('file', 'document.file.errors.maxDocumentsPerReport');
+            $context->buildViolation('document.file.errors.maxDocumentsPerReport')->atPath('file')->addViolation();
             return;
         }
     }

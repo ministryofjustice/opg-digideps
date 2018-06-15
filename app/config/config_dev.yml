@@ -12,9 +12,6 @@ web_profiler:
     toolbar: true
     intercept_redirects: false
 
-assetic:
-    use_controller: true
-
 services:
     data_collector.apiCollectorss:
         class: AppBundle\Service\ApiCollector

@@ -241,9 +241,10 @@ class BalanceTest extends WebTestCase
     {
         $form = $this->container->get('form.factory')->create(ReasonForBalanceType::class, $report);
 
+        $report->shouldReceive('getStatus')->andReturn($status);
+
         $html = $this->templating->render('AppBundle:Report/Balance:balance.html.twig', [
             'report' => $report,
-            'reportStatus' => $status,
             'form' => $form->createView(),
         ]);
 

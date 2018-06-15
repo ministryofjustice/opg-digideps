@@ -33,7 +33,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 'count' => 1,
                 '__toString' => 'violationsAsString',
         ]);
-        $this->validator->shouldReceive('validate')->once()->with($this->email, ['text'])->andReturn($violations);
+        $this->validator->shouldReceive('validate')->once()->with($this->email, null, ['text'])->andReturn($violations);
 
         try {
             $this->mailSender->send($this->email, ['text']);
@@ -98,39 +98,5 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->assertEquals('c', $message->getChildren()[1]->getBody());
         $this->assertEquals('f', $message->getChildren()[1]->getFilename());
         $this->assertEquals('application/octect', $message->getChildren()[1]->getContentType());
-    }
-
-    public function testSendRedisMock()
-    {
-        $this->markTestSkipped('');
-        $transportMock = new Transport\TransportMock();
-        $mockMailer = new \Swift_Mailer($transportMock);
-        $this->mailSender->addSwiftMailer('default', $mockMailer);
-
-        $this->email = m::stub('AppBundle\Model\Email', [
-            'getToEmail' => 'behat-t@example.org',
-            'getToName' => 'tn',
-            'getFromEmail' => 'f@example.org',
-            'getFromName' => 'fn',
-            'getSubject' => 's',
-            'getBodyText' => 'bt',
-            'getBodyHtml' => 'bh',
-            'getAttachments' => [
-                m::stub('AppBundle\Model\EmailAttachment', [
-                    'getContent' => 'c',
-                    'getFilename' => 'f',
-                    'getContentType' => 'application/octect',
-                ]),
-            ],
-        ]);
-
-        $this->validator->shouldReceive('validate')->andReturn([]);
-
-        $this->mailSender->send($this->email, ['text'], 'default');
-
-        $this->assertEquals(['behat-t@example.org' => 'tn'], $emailJson['to']);
-
-        // assert sent message
-        $this->assertCount(0, $transportMock->getSentMessages());
     }
 }

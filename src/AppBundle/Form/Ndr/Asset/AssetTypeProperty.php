@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Ndr\Asset;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -18,23 +19,23 @@ class AssetTypeProperty extends AbstractType
         $this->step = (int) $options['step'];
         if ($this->step === 1) {
             $builder
-                ->add('address', 'text')
-                ->add('address2', 'text')
-                ->add('postcode', 'text')
-                ->add('county', 'text');
+                ->add('address', FormTypes\TextType::class)
+                ->add('address2', FormTypes\TextType::class)
+                ->add('postcode', FormTypes\TextType::class)
+                ->add('county', FormTypes\TextType::class);
         }
 
         if ($this->step === 2) {
             $builder
-                ->add('occupants', 'textarea');
+                ->add('occupants', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 3) {
-            $builder->add('owned', 'choice', [
+            $builder->add('owned', FormTypes\ChoiceType::class, [
                 'choices' => ['fully' => 'Fully-owned', 'partly' => 'Part-owned'],
                 'expanded' => true,
             ])
-                ->add('ownedPercentage', 'number', [
+                ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
                     'precision' => 0,
                     'max_length' => 2,
@@ -43,11 +44,11 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
         if ($this->step === 4) {
-            $builder->add('hasMortgage', 'choice', [
+            $builder->add('hasMortgage', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ])
-                ->add('mortgageOutstandingAmount', 'number', [
+                ->add('mortgageOutstandingAmount', FormTypes\NumberType::class, [
                     'grouping' => true,
                     'precision' => 2,
                     'invalid_message' => 'ndr.asset.property.mortgageOutstandingAmount.type',
@@ -55,7 +56,7 @@ class AssetTypeProperty extends AbstractType
         }
 
         if ($this->step === 5) {
-            $builder->add('value', 'number', [
+            $builder->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
                 'precision' => 2,
                 'invalid_message' => 'ndr.asset.property.value.type',
@@ -64,7 +65,7 @@ class AssetTypeProperty extends AbstractType
 
         if ($this->step === 6) {
             $builder
-                ->add('isSubjectToEquityRelease', 'choice', [
+                ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ]);
@@ -72,7 +73,7 @@ class AssetTypeProperty extends AbstractType
 
         if ($this->step === 7) {
             $builder
-                ->add('hasCharges', 'choice', [
+                ->add('hasCharges', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ]);
@@ -80,17 +81,17 @@ class AssetTypeProperty extends AbstractType
 
         if ($this->step === 8) {
             $builder
-                ->add('isRentedOut', 'choice', [
+                ->add('isRentedOut', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
                 ])
-                ->add('rentAgreementEndDate', 'date', [
+                ->add('rentAgreementEndDate', FormTypes\DateType::class, [
                     'widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
                 ])
-                ->add('rentIncomeMonth', 'number', [
+                ->add('rentIncomeMonth', FormTypes\NumberType::class, [
                     'grouping' => true,
                     'precision' => 2,
                     'invalid_message' => 'ndr.asset.property.rentIncomeMonth.type',
@@ -109,9 +110,9 @@ class AssetTypeProperty extends AbstractType
         }
 
         $builder
-            ->add('title', 'hidden')
-            ->add('id', 'hidden')
-            ->add('save', 'submit');
+            ->add('title', FormTypes\HiddenType::class)
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     protected function getValidationGroups()
@@ -137,7 +138,7 @@ class AssetTypeProperty extends AbstractType
         };
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'ndr_asset';
     }

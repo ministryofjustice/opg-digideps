@@ -1,17 +1,21 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 
 {% set page = 'checklistPage' %}
-{% set transOptions = {} %}
+{% set checklistPage = true %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.pageTitle') | trans }}</span>
 {% endblock %}
 
 {# Breadcrumbs #}
@@ -62,11 +66,10 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
+    {# Deputy and client information #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.info') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.info') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
                 'fieldSetClass': 'inline'
@@ -74,8 +77,7 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel">
-       <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
                 'labelClass': 'text'
@@ -83,8 +85,7 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
                 'labelClass': 'text'
@@ -92,11 +93,10 @@
         </div>
     </div>
 
+    {# Decisions made over the reporting period #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.decisions') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.decisions') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
                 'fieldSetClass' : 'inline'
@@ -104,11 +104,10 @@
         </div>
     </div>
 
+    {# People consulted #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.contacts') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.contacts') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.consultationsSatisfactory, (page ~ '.form.consultationsSatisfactory'), {
                 'fieldSetClass' : 'inline'
@@ -116,23 +115,36 @@
         </div>
     </div>
 
+    {# Contact with client, care arrangements and care plan #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.visitsAndCare') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.careArrangements, (page ~ '.form.careArrangements'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's responses</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/VisitsCare:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
+    {# Assets and debts #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
                 'fieldSetClass' : 'inline'
@@ -140,20 +152,33 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View debts summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Debt:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
+    {# Money in and money out #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.money') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
                 'fieldSetClass' : 'inline'
@@ -161,29 +186,60 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View accounts balance summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Balance table #}
+                    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
+
+                    {# Difference table #}
+                    {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
+
+                    {% if not report.totalsMatch %}
+                        <h3 class="heading-medium">Explanation</h3>
+                        <table class="check-your-answers columns-2 push--bottom">
+                            {{ macros.summaryTableHeaderQA(true) }}
+                            <tbody>
+                                <tr>
+                                    <td>Reason for accounts not balancing</td>
+                                    <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </details>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
     </div>
 
+    {# Bonds #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.bonds') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.bonds') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
                 'fieldSetClass' : 'inline'
@@ -191,50 +247,141 @@
         </div>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
     </div>
 
+    {# Next reporting period #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel">
-        <div class="form-group-meta"></div>
+    <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (page ~ '.form.futureSignificantFinancialDecisions'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's response</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        {{ macros.summaryTableHeaderQA(true) }}
+                        <tbody>
+                            {# step 1 #}
+                            <tr>
+                                <td>
+                                    {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                                </td>
+                                <td>
+                                    {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+                                </td>
+                            </tr>
+                            {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+                                <tr>
+                                    <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}</td>
+                                    <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'border-top soft--top push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's response</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        {{ macros.summaryTableHeaderQA(true) }}
+                        <tbody>
+                            {# step 2 #}
+                            <tr>
+                                <td>
+                                    {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+                                </td>
+                                <td>
+                                    {{ report.action.doYouHaveConcerns | capitalize }}
+                                </td>
+                            </tr>
+                            {% if report.action.doYouHaveConcerns == 'yes' %}
+                                <tr>
+                                    <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
+                                    <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
+    {# Declaration #}
+    <h3 class="heading-medium underline">{{ (page ~ '.heading.declaration') | trans }}</h3>
 
-    <h3 class="heading-medium">{{ (page ~ '.heading.declaration') | trans }}</h3>
-
-    <div class="form-section form-section--meta-cancel last">
-        <div class="form-group-meta"></div>
+    <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View deputy's declaration</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers columns-2 push--bottom">
+                        {{ macros.summaryTableHeaderQA(true) }}
+                        <tbody>
+                            <tr>
+                                <td>Declaration</td>
+                                <td>{{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}</td>
+                            </tr>
+                            {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                                <td>Reason</td>
+                                <td>{{ report.agreedBehalfDeputyExplanation | nl2br }}</td>
+                            {% endif %}
+                            <tr>
+                                <td>Declaration time</td>
+                                <td>{{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}</td>
+                            </tr>
+                            <tr>
+                                <td>Deputy name</td>
+                                <td>{{ report.submittedBy.fullname }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
     </div>
 
-
-    <h3 class="heading-medium">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
+    {# Lodging summary #}
+    <h3 class="heading-medium underline">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
 
     <ul class="list list-bullet text">
         <li>{{ (page ~ '.lodgingSummary.listItem1') | trans }}</li>
@@ -253,8 +400,8 @@
         {{ form_input(form.lodgingSummary, 'checklistPage.form.lodgingSummary') }}
     </div>
 
-
-    <h3 class="heading-medium" id="furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
+    {# Further information #}
+    <h3 class="heading-medium underline" id="furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
 
     <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
 

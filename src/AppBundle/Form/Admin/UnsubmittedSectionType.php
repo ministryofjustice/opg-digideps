@@ -4,6 +4,7 @@ namespace AppBundle\Form\Admin;
 
 use AppBundle\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,8 +13,8 @@ class UnsubmittedSectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                 ->add('id', 'hidden')
-                ->add('present', 'checkbox')
+                 ->add('id', FormTypes\HiddenType::class)
+                ->add('present', FormTypes\CheckboxType::class)
         ;
     }
 
@@ -24,7 +25,7 @@ class UnsubmittedSectionType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'unsubmitted_section';
     }

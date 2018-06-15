@@ -58,7 +58,6 @@ class BalanceController extends AbstractController
 
         return [
             'report' => $report,
-            'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $this->generateUrl('report_overview', ['reportId'=>$report->getId()])
         ];

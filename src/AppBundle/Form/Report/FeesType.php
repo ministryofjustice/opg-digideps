@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,12 +13,12 @@ class FeesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'hidden')
-            ->add('fees', 'collection', [
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('fees', FormTypes\CollectionType::class, [
                 'type' => new FeeSingleType(),
                 'cascade_validation' => true,
             ])
-            ->add('save', 'submit');
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -30,7 +31,7 @@ class FeesType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'fee';
     }

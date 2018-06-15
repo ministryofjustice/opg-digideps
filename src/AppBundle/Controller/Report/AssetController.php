@@ -85,7 +85,7 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm('asset_title', new EntityDir\Report\AssetOther(), [
+        $form = $this->createForm(FormDir\Report\Asset\AssetTypeTitle::class, new EntityDir\Report\AssetOther(), [
         ]);
         $form->handleRequest($request);
 

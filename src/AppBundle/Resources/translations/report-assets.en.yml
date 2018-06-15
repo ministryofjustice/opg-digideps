@@ -31,7 +31,7 @@ typePage:
 addPage:
   htmlTitle: "Deputy report - Assets | GOV.UK"
   supportTitle: Assets
-  pageTitle: Add an asset: %assetTitle%
+  pageTitle: "Add an asset: %assetTitle%"
 
 editPage:
   htmlTitle: "Deputy report - Assets | GOV.UK"

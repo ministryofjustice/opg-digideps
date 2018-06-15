@@ -8,13 +8,14 @@ use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
- * @Assert\Callback(methods={"debtsValid"}, groups={"debts"})
- * @Assert\Callback(methods={"feesValid"}, groups={"fees"})
- * @Assert\Callback(methods={"unsubmittedSectionAtLeastOnce"}, groups={"unsubmitted_sections"})
+ * @Assert\Callback(callback="isValidEndDate")
+ * @Assert\Callback(callback="isValidDateRange")
+ * @Assert\Callback(callback="debtsValid", groups={"debts"})
+ * @Assert\Callback(callback="feesValid", groups={"fees"})
+ * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
 class Report implements ReportInterface
 {
@@ -247,7 +248,7 @@ class Report implements ReportInterface
      * @var bool
      * @JMS\Type("boolean")
      *
-     * @Assert\True(message="report.agree", groups={"declare"} )
+     * @Assert\IsTrue(message="report.agree", groups={"declare"} )
      */
     private $agree;
 
@@ -659,7 +660,9 @@ class Report implements ReportInterface
     public function isValidEndDate(ExecutionContextInterface $context)
     {
         if ($this->startDate > $this->endDate) {
-            $context->addViolationAt('endDate', 'report.endDate.beforeStart');
+            $context
+                ->buildViolation('report.endDate.beforeStart')
+                ->atPath('endDate')->addViolation();
         }
     }
 
@@ -673,13 +676,17 @@ class Report implements ReportInterface
         if (!empty($this->endDate) && !empty($this->startDate)) {
             $dateInterval = $this->startDate->diff($this->endDate);
         } else {
-            $context->addViolationAt('endDate', 'report.endDate.invalidMessage');
+            $context
+                ->buildViolation('report.endDate.invalidMessage')
+                ->atPath('endDate')->addViolation();
 
             return;
         }
 
         if ($dateInterval->days > 366) {
-            $context->addViolationAt('endDate', 'report.endDate.greaterThan12Months');
+            $context
+                ->buildViolation('report.endDate.greaterThan12Months')
+                ->atPath('endDate')->addViolation();
         }
     }
 
@@ -687,7 +694,7 @@ class Report implements ReportInterface
      * Return true when the report is Due (today's date => report end date).
      *
      * @return bool
-     * @Assert\True(message="report.submissionExceptions.due", groups={"due"})
+     * @Assert\IsTrue(message="report.submissionExceptions.due", groups={"due"})
      */
     public function isDue()
     {

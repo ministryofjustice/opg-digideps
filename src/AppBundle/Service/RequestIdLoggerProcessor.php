@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * RequestIdLoggerProcessor.
@@ -43,16 +44,24 @@ class RequestIdLoggerProcessor
      */
     public function processRecord(array $record)
     {
-        if (!$this->container->isScopeActive('request')
-            || !$this->container->has('request')
-            || !($request = $this->container->get('request'))
-            || !$request->headers->has('x-request-id')
-        ) {
-            return $record;
-        }
+        $reqId = self::getRequestIdFromContainer($this->container);
 
-        $record['extra']['request_id'] = $request->headers->get('x-request-id');
+        if ($reqId) {
+            $record['extra']['request_id'] = $reqId;
+        }
 
         return $record;
     }
+
+    public static function getRequestIdFromContainer(ContainerInterface $container)
+    {
+        if (($rq = $container->get('request_stack'))
+            && ($request = $rq->getCurrentRequest())
+            && ($request->headers->has('x-request-id'))) {
+            return $request->headers->get('x-request-id');
+        }
+
+        return null;
+    }
+
 }

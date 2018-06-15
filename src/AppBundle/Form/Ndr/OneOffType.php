@@ -4,6 +4,7 @@ namespace AppBundle\Form\Ndr;
 
 use AppBundle\Entity\Ndr\OneOff;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,8 +13,8 @@ class OneOffType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                 ->add('typeId', 'hidden')
-                 ->add('present', 'checkbox');
+                 ->add('typeId', FormTypes\HiddenType::class)
+                 ->add('present', FormTypes\CheckboxType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -25,7 +26,7 @@ class OneOffType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'one_off';
     }

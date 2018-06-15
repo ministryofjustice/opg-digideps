@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\BankAccount;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,10 +23,10 @@ class BankAccountType extends AbstractType
     {
         $this->step = (int) $options['step'];
 
-        $builder->add('id', 'hidden');
+        $builder->add('id', FormTypes\HiddenType::class);
 
         if ($this->step === 1) {
-            $builder->add('accountType', 'choice', [
+            $builder->add('accountType',  FormTypes\ChoiceType::class, [
                 'choices'     => array_map(function($key){
                     return 'form.accountType.choices.' . $key;
                 }, BankAccount::$types),
@@ -35,10 +36,10 @@ class BankAccountType extends AbstractType
         }
 
         if ($this->step === 2) {
-            $builder->add('bank', 'text', [
+            $builder->add('bank', FormTypes\TextType::class, [
                 'required' => false,
             ]);
-            $builder->add('accountNumber', 'text', ['max_length' => 4]);
+            $builder->add('accountNumber', FormTypes\TextType::class, ['max_length' => 4]);
             $builder->add('sortCode', new SortCodeType(), [
                 'error_bubbling' => false,
                 'required' => false,
@@ -52,14 +53,14 @@ class BankAccountType extends AbstractType
                     'groups' => ['sortcode'],
                 ]),
             ]);
-            $builder->add('isJointAccount', 'choice', [
+            $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
                 'choices'  => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 3) {
-            $builder->add('balanceOnCourtOrderDate', 'number', [
+            $builder->add('balanceOnCourtOrderDate', FormTypes\NumberType::class, [
                 'precision' => 2,
                 'grouping' => true,
                 'invalid_message' => 'ndr.account.balanceOnCourtOrderDate.type',
@@ -67,10 +68,10 @@ class BankAccountType extends AbstractType
             ]);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'account';
     }

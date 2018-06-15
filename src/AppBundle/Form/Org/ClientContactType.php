@@ -3,8 +3,8 @@
 namespace AppBundle\Form\Org;
 
 use AppBundle\Entity as EntityDir;
-use Common\Form\Elements\InputFilters\Text;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -29,21 +29,21 @@ class ClientContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'hidden')
-            ->add('firstName', 'text', ['required' => true])
-            ->add('lastName', 'text', ['required' => true])
-            ->add('jobTitle', 'text')
-            ->add('phone', 'text', ['required' => true])
-            ->add('email', 'text', ['required' => true])
-            ->add('orgName', 'text')
-            ->add('address1', 'text')
-            ->add('address2', 'text')
-            ->add('address3', 'text')
-            ->add('addressPostcode', 'text')
-            ->add('addressCountry', 'country', ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('firstName', FormTypes\TextType::class, ['required' => true])
+            ->add('lastName', FormTypes\TextType::class, ['required' => true])
+            ->add('jobTitle', FormTypes\TextType::class)
+            ->add('phone', FormTypes\TextType::class, ['required' => true])
+            ->add('email', FormTypes\TextType::class, ['required' => true])
+            ->add('orgName', FormTypes\TextType::class)
+            ->add('address1', FormTypes\TextType::class)
+            ->add('address2', FormTypes\TextType::class)
+            ->add('address3', FormTypes\TextType::class)
+            ->add('addressPostcode', FormTypes\TextType::class)
+            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
             ;
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     /**

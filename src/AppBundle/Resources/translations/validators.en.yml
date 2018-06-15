@@ -22,7 +22,7 @@ user:
     minLength: The last name must be at least {{ limit }} letters long
     maxLength: The last name can't be longer than {{ limit }} letters
   password:
-      notBlank: You can't leave this blank: please enter a password
+      notBlank: "You can't leave this blank: please enter a password"
       minLength: The password must have at least {{ limit }} letters
       maxLength: The password can't be longer than {{ limit }} letters
       noLowerCaseChars: The password must have at least one lowercase letter
@@ -75,7 +75,7 @@ client:
         exactMessage1:  The case number should be 8 characters long.
         exactMessage2:  Check the last 8 characters of your case reference number and try again
     courtDate:
-        message: Enter a valid date in this format: DD/MM/YYYY
+        message: "Enter a valid date in this format: DD/MM/YYYY"
         notBlank: Enter the date of your court order
         lessThan: Court Date cannot be in the future
     address:
@@ -98,15 +98,15 @@ client:
 report:
     startDate:
         notBlank: Enter the date when your reporting period starts
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+        invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
     endDate:
         notBlank: Enter the date when your reporting period ends
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-        beforeStart: Check the end date: it can't be before the start date
-        greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
+        invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
+        beforeStart: "Check the end date: it can't be before the start date"
+        greaterThan12Months: "Check the end date: your reporting period can't be more than 12 months"
     dueDate:
         notBlank: Enter the new due date
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+        invalidMessage: "Enter a valid date in this format: DD/MM/YYYY"
         notInThePast: Due date cannot be in the past
     dueDateChoice:
         notBlank:  Select an option
@@ -407,7 +407,7 @@ visitsCare:
         notBlank: Tell us who is providing the client's care
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
-        invalidMessage: Enter the date in this format: DD/MM/YYYY
+        invalidMessage: "Enter the date in this format: DD/MM/YYYY"
     doesClientHaveACarePlan:
         notBlank: Please select either 'Yes' or 'No'
 
@@ -457,7 +457,7 @@ profServiceFee:
         type: 1The amount received must be in numbers
     paymentReceivedDate:
         notBlank: Please enter date payment was received
-        invalidMessage: Enter the date in this format: DD/MM/YYYY
+        invalidMessage: "Enter the date in this format: DD/MM/YYYY"
         notInTheFuture: Payment date cannot be in the future
     estimates:
         previousProfFeesEstimateGiven:
@@ -495,7 +495,7 @@ ndr:
           notBlank: Give us more information about who is caring for the client
       whenWasCarePlanLastReviewed:
           notBlank: Enter the last review date of the client's care plan
-          invalidMessage: Enter a valid date in this format: MM/YYYY
+          invalidMessage: "Enter a valid date in this format: MM/YYYY"
       doesClientHaveACarePlan:
           notBlank: Please select either 'Yes' or 'No'
   account:
@@ -548,7 +548,7 @@ ndr:
           length: This description is too short, please give us more information
       date:
           notBlank: Enter the date the asset was valued
-          date: Enter a valid date in this format: DD/MM/YYYY
+          date: "Enter a valid date in this format: DD/MM/YYYY"
       no_assets:
           notBlank: Tell us if the client has no assets to add
       property:
@@ -682,8 +682,8 @@ common:
     notBlank: Please select either 'Yes' or 'No'
   summaryHeading: There are some problems on this page
   genericPhone:
-    minLength: Check the phone number: it must have at least {{ limit }} numbers
-    maxLength: Check the phone number: it can't be more than {{ limit }} numbers long
+    minLength: "Check the phone number: it must have at least {{ limit }} numbers"
+    maxLength: "Check the phone number: it can't be more than {{ limit }} numbers long"
 sendEmail:
     toEmail:
         notBlank: Please supply recipient's email (toEmail)

@@ -9,7 +9,7 @@ trait ReportAgreeTrait
 {
     /** @var bool
      * @JMS\Type("boolean")
-     * @Assert\True(message="ndr.agree", groups={"declare"} )
+     * @Assert\IsTrue(message="ndr.agree", groups={"declare"} )
      */
     private $agree;
 

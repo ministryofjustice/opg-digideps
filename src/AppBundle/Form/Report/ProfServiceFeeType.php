@@ -5,6 +5,7 @@ namespace AppBundle\Form\Report;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\ProfServiceFee;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,50 +41,50 @@ class ProfServiceFeeType extends AbstractType
     {
         $this->step = (int) $options['step'];
 
-        $builder->add('id', 'hidden');
-        $builder->add('feeTypeId', 'hidden');
+        $builder->add('id', FormTypes\HiddenType::class);
+        $builder->add('feeTypeId', FormTypes\HiddenType::class);
 
         if ($this->step == 1) {
-            $builder->add('serviceTypeId', 'choice', [
+            $builder->add('serviceTypeId', FormTypes\ChoiceType::class, [
                 'choices' =>  $this->getServiceFeeTypes(),
                 'expanded' => true,
             ]);
         }
 
         if ($this->step == 2) {
-            $builder->add('serviceTypeId', 'hidden');
-            $builder->add('assessedOrFixed', 'choice', [
+            $builder->add('serviceTypeId', FormTypes\HiddenType::class);
+            $builder->add('assessedOrFixed', FormTypes\ChoiceType::class, [
                     'choices' => [ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs'],
                     'expanded' => true,
                 ])
-                ->add('amountCharged', 'number', [
+                ->add('amountCharged', FormTypes\NumberType::class, [
                     'precision' => 2,
                     'empty_data' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountCharged.type'
                 ])
-                ->add('paymentReceived', 'choice', [
+                ->add('paymentReceived', FormTypes\ChoiceType::class, [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true,
 
                 ])
-                ->add('amountReceived', 'number', [
+                ->add('amountReceived', FormTypes\NumberType::class, [
                     'precision' => 2,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountReceived.type'
                 ])
-                ->add('paymentReceivedDate', 'date', ['widget' => 'text',
+                ->add('paymentReceivedDate', FormTypes\DateType::class, ['widget' => 'text',
                     'empty_data' => null,
                     'input' => 'datetime',
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);
 
-            $builder->add('saveAndAddAnother', 'submit');
+            $builder->add('saveAndAddAnother', FormTypes\SubmitType::class);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -120,7 +121,7 @@ class ProfServiceFeeType extends AbstractType
         };
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'prof_service_fee_type';
     }

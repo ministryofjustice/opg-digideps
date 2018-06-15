@@ -39,7 +39,7 @@ summaryPage:
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society accounts,
     savings accounts and ISAs.
-  totalBalance: Total balance on %endDate%: £%amount%
+  totalBalance: "Total balance on %endDate%: £%amount%"
 
 deletePage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"

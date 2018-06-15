@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Lifestyle;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,20 +21,20 @@ class LifestyleType extends AbstractType
         $this->step = (int) $options['step'];
 
         if ($this->step === 1) {
-            $builder->add('careAppointments', 'textarea', []);
+            $builder->add('careAppointments', FormTypes\TextareaType::class, []);
         }
 
         if ($this->step === 2) {
-            $builder->add('doesClientUndertakeSocialActivities', 'choice', [
+            $builder->add('doesClientUndertakeSocialActivities', FormTypes\ChoiceType::class, [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                  'expanded' => true,
             ]);
 
-            $builder->add('activityDetailsYes', 'textarea', []);
-            $builder->add('activityDetailsNo', 'textarea', []);
+            $builder->add('activityDetailsYes', FormTypes\TextareaType::class, []);
+            $builder->add('activityDetailsNo', FormTypes\TextareaType::class, []);
         }
 
-        $builder->add('save', 'submit');
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -62,7 +63,7 @@ class LifestyleType extends AbstractType
         ->setRequired(['step']);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'lifestyle';
     }

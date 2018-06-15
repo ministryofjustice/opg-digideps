@@ -102,6 +102,20 @@
 .right { float: right !important; }
 .left { float: left !important; }
 
+// Clear floats
+.cl { clear: left; }
+.cr { clear: right; }
+
+// Simple 1px border
+.border-bottom {
+    border-bottom: 1px solid $border-colour;
+}
+
+.border-top {
+    border-top: 1px solid $border-colour;
+}
+
+
 // Negating borders
 .no-border {
     border: none;
@@ -121,7 +135,6 @@
 
 // Handling long words and URLs
 // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
-
 .dont-break-out {
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -129,6 +142,7 @@
     word-break: break-word;
 }
 
+// Table cells alignment
 .align--top {
     vertical-align: top;
 }

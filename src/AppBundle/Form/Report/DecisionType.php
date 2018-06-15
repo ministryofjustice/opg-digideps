@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Decision;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,14 +12,14 @@ class DecisionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder/*->add('title', 'text')*/
-        ->add('description', 'textarea')
-            ->add('clientInvolvedBoolean', 'choice', [
+        $builder/*->add('title', FormTypes\TextType::class)*/
+        ->add('description', FormTypes\TextareaType::class)
+            ->add('clientInvolvedBoolean', FormTypes\ChoiceType::class, [
                 'choices' => [1 => 'Yes', 0 => 'No'],
                 'expanded' => true,
             ])
-            ->add('clientInvolvedDetails', 'textarea')
-            ->add('save', 'submit');
+            ->add('clientInvolvedDetails', FormTypes\TextareaType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -29,7 +30,7 @@ class DecisionType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'decision';
     }

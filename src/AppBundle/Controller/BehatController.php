@@ -8,23 +8,24 @@ use Monolog\Logger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class BehatController extends AbstractController
 {
-    private function securityChecks()
+    private function securityChecks(Request $request)
     {
         if (!$this->container->getParameter('behat_controller_enabled')) {
             return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
         }
 
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
-        $secret = $this->getRequest()->get('secret');
+        $secret = $request->get('secret');
 
         if ($secret !== $expectedSecretParam) {
 
             // log access
-            $this->get('logger')->error($this->getRequest()->getPathInfo() . ": $expectedSecretParam secret expected. 404 will be returned.");
+            $this->get('logger')->error($request->getPathInfo() . ": $expectedSecretParam secret expected. 404 will be returned.");
 
             throw $this->createNotFoundException('Not found');
         }
@@ -34,9 +35,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/email-get-last")
      * @Method({"GET"})
      */
-    public function getLastEmailAction()
+    public function getLastEmailAction(Request $request)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         echo $this->get('mail_sender')->getMockedEmailsRaw();
         die; //TODO check if works with response
@@ -46,9 +47,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/email-reset")
      * @Method({"GET"})
      */
-    public function emailResetAction()
+    public function emailResetAction(Request $request)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         $this->get('mail_sender')->resetMockedEmails();
         return new Response('Email reset successfully');
@@ -84,9 +85,9 @@ class BehatController extends AbstractController
      * @Route("/behat/{secret}/logs/{action}")
      * @Template()
      */
-    public function behatLogsResetAction($action)
+    public function behatLogsResetAction(Request $request, $action)
     {
-        $this->securityChecks();
+        $this->securityChecks($request);
 
         $logPath = $this->getParameter('log_path');
 

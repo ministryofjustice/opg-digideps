@@ -4,6 +4,7 @@ namespace AppBundle\Form\Report\Debt;
 
 use AppBundle\Entity\Report\Debt;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,8 +16,8 @@ class DebtSingleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('debtTypeId', 'hidden')
-            ->add('amount', 'number', [
+            ->add('debtTypeId', FormTypes\HiddenType::class)
+            ->add('amount', FormTypes\NumberType::class, [
                 'precision' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
@@ -30,7 +31,7 @@ class DebtSingleType extends AbstractType
             $form = $event->getForm();
 
             if ($debt->getHasMoreDetails()) {
-                $form->add('moreDetails', 'textarea', [
+                $form->add('moreDetails', FormTypes\TextareaType::class, [
                 ]);
             }
         });
@@ -55,7 +56,7 @@ class DebtSingleType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'debt_single';
     }

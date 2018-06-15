@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\User;
 
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -11,8 +12,8 @@ class UserDetailsPaType extends UserDetailsBasicType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('jobTitle', 'text')
-            ->add('phoneMain', 'text');
+        $builder->add('jobTitle', FormTypes\TextType::class)
+            ->add('phoneMain', FormTypes\TextType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
