@@ -65,10 +65,10 @@ existPage:
   form:
     hasDecisions:
       label: Have you made any significant decisions for %client% during this reporting period?
-      hint: ''
+      hint: ""
     reasonForNoDecisions:
       label: Please give us an explanation
-      hint: ''
+      hint: ""
 
 addAnotherPage:
   htmlTitle: "Deputy report - add decision | GOV.UK"
@@ -111,15 +111,15 @@ form:
   description:
     heading: Description
     label: What was the significant decision? Why did you make it at the time?
-    hint: ''
+    hint: ""
   clientInvolvedBoolean:
     heading: %client%'s involvement
     label: Did you involve %client% in this decision?
-    hint: ''
+    hint: ""
     defaultOption: Please select...
   clientInvolvedDetails:
     label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
-    hint: ''
+    hint: ""
   save:
     label: Save and continue
 

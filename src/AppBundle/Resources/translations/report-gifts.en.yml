@@ -33,7 +33,7 @@ existPage:
   form:
     giftsExist:
       label: Have you given any gifts to other people on %client%'s behalf during this reporting period?
-      hint: ''
+      hint: ""
     save:
       label: Save and continue
 
@@ -78,12 +78,12 @@ form:
       for client's immediate family. I spent around £10 on each gift"
   amount:
     label: Amount
-    hint: ''
+    hint: ""
   addAnother:
     label: Add another gift
   bankAccount:
     label: Which bank account was the gift bought from? (optional)
-    hint: ''
+    hint: ""
   save:
       label: Save gift
 

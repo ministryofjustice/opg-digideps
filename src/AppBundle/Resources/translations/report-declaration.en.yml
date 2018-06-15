@@ -9,16 +9,16 @@ page:
   goBackLink: "Go back to make changes to the report"
 agree:
   label: "I agree to this statement"
-  hint: ''
+  hint: ""
 agreedBehalfDeputy:
   label: "Are you agreeing on behalf of all deputies?"
-  hint: ''
+  hint: ""
   only_deputy: "I am the only deputy"
   more_deputies_behalf: "There is more than one deputy, and I'm signing on everyone's behalf"
   more_deputies_not_behalf: "There is more than one deputy, but I'm not signing on everyone's behalf"
 agreedBehalfDeputyExplanation:
   label: "Tell us why."
-  hint: ''
+  hint: ""
 save:
   label: "Submit report"
 status: Status

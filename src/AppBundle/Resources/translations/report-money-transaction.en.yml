@@ -140,15 +140,15 @@ form:
       moneyout-other: Other
   amount:
       label: Amount
-      hint: ''
+      hint: ""
   description:
     mandatory:
       label: Description
-      hint: ''
+      hint: ""
     optional:
       label: Description (optional)
   bankAccount:
-    hint: ''
+    hint: ""
     moneyIn:
       label: Which bank account was this paid into? (optional)
     moneyOut:

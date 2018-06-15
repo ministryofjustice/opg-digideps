@@ -35,7 +35,7 @@ form:
     label: Save
   actionMoreInfo:
     label: Is there anything you'd like to tell us that hasn't been covered elsewhere in your report?
-    hint: ''
+    hint: ""
   actionMoreInfoDetails:
     label: Please give us details of any further information, concerns or questions you may have about your deputyship
-    hint: ''
+    hint: ""

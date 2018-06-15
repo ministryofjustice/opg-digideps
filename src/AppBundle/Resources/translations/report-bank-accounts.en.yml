@@ -53,7 +53,7 @@ deletePage:
 form:
   accountType:
       label: What type of account is it?
-      hint: ''
+      hint: ""
       choices:
         current: Current account
         savings: Savings account
@@ -64,21 +64,21 @@ form:
         other_no_sortcode: Other type of account without sort code
   bank:
     label: Bank or building society name
-    hint: ''
+    hint: ""
   meta:
     label: Additional information (optional)
   accountNumber:
     label: Last 4 digits of the account number
-    hint: ''
+    hint: ""
     preInput: "* * * *"
   sortCode:
     legend: Sort code
-    hint: ''
+    hint: ""
   openingBalance:
     label: How much was in the account on %startDate%?
   closingBalance:
     label: How much was in the account on %endDate%?
-    hint: ''
+    hint: ""
   isJointAccount:
     label: Is this a joint account?
     hint: |
@@ -86,7 +86,7 @@ form:
       a joint account is owned by both account holders.
   isClosed:
       label: You currently have £0 in this account on %endDate%. Have you closed this account?
-      hint: ''
+      hint: ""
   save:
     label: Save and continue
   cancel:
