@@ -126,8 +126,11 @@ class RestClient
     {
         $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-        // store auth token
-        $this->tokenStorage->set($user->getId(), $response->getHeader(self::HEADER_AUTH_TOKEN));
+        //        // store auth token
+
+        $tokenVal =  $response->getHeader(self::HEADER_AUTH_TOKEN);
+        $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
+        $this->tokenStorage->set($user->getId(), $tokenVal);
 
         return $user;
     }
@@ -274,7 +277,7 @@ class RestClient
      *
      * @throws \InvalidArgumentException
      *
-     * @return array
+     * @return array|GuzzleHttp\Psr7\Response
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {

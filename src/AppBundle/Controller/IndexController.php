@@ -67,6 +67,7 @@ class IndexController extends AbstractController
                         'form' => $form->createView(),
                     ] + $vars);
             }
+
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
             $this->get('security.token_storage')->setToken($token);
