@@ -1,16 +1,10 @@
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 <table class="check-your-answers columns-2 push-double--bottom">
-    <thead>
-        <tr>
-            <th>{{ 'question' | trans({}, 'common') }}</th>
-            <th>{{ 'answer' | trans({}, 'common') }}</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
-        </tr>
-    </thead>
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
         <tr class="behat-region-has-contacts">
             <td>

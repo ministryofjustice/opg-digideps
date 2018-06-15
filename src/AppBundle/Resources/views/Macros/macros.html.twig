@@ -193,3 +193,18 @@
         </ul>
     </aside>
 {% endmacro %}
+
+{# Question/Answer table header for summary pages #}
+{% macro summaryTableHeaderQA(hideEditLink) %}
+    <thead>
+        <tr>
+            <th>{{ 'question' | trans({}, 'common') }}</th>
+            <th>{{ 'answer' | trans({}, 'common') }}</th>
+            {% if not hideEditLink %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
+{% endmacro %}
