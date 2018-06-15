@@ -19,7 +19,7 @@
     {% else %}
         <label for="{{ element.vars.id }}"
            class="form-label text{{ labelClass | default('') }}">
-           {{ element.vars.label }}
+           {{ labelText }}
         </label>
       {#{{ form_label(element, labelText, {'label_attr': {'class': 'form-label text ' ~ labelClass | default('') }}) }}#}
     {% endif %}
