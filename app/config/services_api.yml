@@ -2,7 +2,7 @@ services:
     guzzle_json_http_client:
         class: GuzzleHttp\Client
         arguments:
-          config:
+          $config:
             base_url: "%api_base_url%"
             defaults:
                 # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding

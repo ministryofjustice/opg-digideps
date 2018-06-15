@@ -9,15 +9,19 @@ imports:
     - { resource: services_file_upload.yml }
 
 services:
+
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
     redirector_service:
         class: AppBundle\Service\Redirector
         arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
 
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator
-        arguments:  
-           url: "http://wkhtmltopdf:80"
-           timeoutSeconds: 30
+        arguments: [ "http://wkhtmltopdf:80", 30]
 
     step_redirector:
       class: AppBundle\Service\StepRedirector
