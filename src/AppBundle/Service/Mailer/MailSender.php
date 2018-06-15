@@ -9,7 +9,7 @@ use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_Mime_Message;
-use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MailSender
 {

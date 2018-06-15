@@ -14,7 +14,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     public function setup()
     {
-        $this->validator = m::mock('Symfony\Component\Validator\ValidatorInterface');
+        $this->validator = m::mock('Symfony\Component\Validator\Validator\ValidatorInterface');
         $this->logger = m::mock('Psr\Log\LoggerInterface');
         $this->email = m::mock('AppBundle\Model\Email');
         $this->redis = m::mock('Predis\Client');
