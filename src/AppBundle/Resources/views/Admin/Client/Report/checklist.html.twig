@@ -79,6 +79,14 @@
 
     <div class="form-section push-half--bottom">
         <div class="form-group-outer">
+            {{ form_checkbox_group(form.reportingPeriodAcceptable, (page ~ '.form.reportingPeriodAcceptable'), {
+                'fieldSetClass': 'inline'
+            }) }}
+        </div>
+    </div>
+
+    <div class="form-section push-half--bottom">
+        <div class="form-group-outer">
             {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
                 'labelClass': 'text'
             }) }}

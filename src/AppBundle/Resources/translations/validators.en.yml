@@ -639,6 +639,8 @@ adminSetting:
 checklist:
   reportingPeriodAccurate:
     notBlank: Please select 'Yes' or 'No'
+  reportingPeriodAcceptable:
+    notBlank: Please select 'Yes' or 'No'
   contactDetailsUptoDate:
     notBlank: Confirm that you've checked the contact details are correct
   deputyFullNameAccurateinCasrec:
