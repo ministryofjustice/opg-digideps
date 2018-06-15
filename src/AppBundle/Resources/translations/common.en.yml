@@ -26,7 +26,6 @@ manage: Manage
 checklist: Checklist
 
 # Section headings
-
 moneyOut: Money out
 moneyIn: Money in
 deputyExpenses: Deputy expenses
@@ -71,6 +70,7 @@ lastSavedOn: Last saved on
 lastSavedBy: Last saved by
 lastSubmittedOn: Last submitted on
 lastSubmittedBy: Last submitted by
+
 # Statuses
 notCreated: Not created
 notFinished: Not finished
@@ -111,6 +111,7 @@ helplineProf: 0115 934 2819
 
 # Validation and errors
 summaryHeading: There are some problems on this page
+pleaseAnswer: Please answer this question
 
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
