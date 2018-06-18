@@ -37,7 +37,7 @@ class BankAccountType extends AbstractType
             $builder->add('bank', FormTypes\TextType::class, [
                 'required' => false,
             ]);
-            $builder->add('accountNumber', FormTypes\TextType::class, ['max_length' => 4]);
+            $builder->add('accountNumber', FormTypes\TextType::class, ['attr'=> ['maxlength' => 4]]);
             $builder->add('sortCode', new SortCodeType(), [
                 'error_bubbling' => false,
                 'required' => false,
