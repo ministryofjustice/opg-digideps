@@ -16,10 +16,10 @@ class MentalCapacityType extends AbstractType
     {
         $builder->add('hasCapacityChanged', FormTypes\ChoiceType::class, [
                     // keep in sync with API model constants
-                    'choices' => array_flip([
+                    'choices' => [
                         'mentalCapacity.form.hasCapacityChanged.choices.changed' => MentalCapacity::CAPACITY_CHANGED,
                         'mentalCapacity.form.hasCapacityChanged.choices.stayedSame' => MentalCapacity::CAPACITY_STAYED_SAME,
-                    ]),
+                    ],
                     'expanded' => true,
                 ])
                 ->add('hasCapacityChangedDetails', FormTypes\TextareaType::class)
