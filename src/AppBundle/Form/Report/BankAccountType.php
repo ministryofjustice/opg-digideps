@@ -53,12 +53,12 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 3) {
             $builder->add('openingBalance', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'invalid_message' => 'account.openingBalance.type',
             ]);
             $builder->add('closingBalance', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'invalid_message' => 'account.closingBalance.type',
                 'required'        => false,

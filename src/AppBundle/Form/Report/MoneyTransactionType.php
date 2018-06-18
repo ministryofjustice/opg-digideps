@@ -89,7 +89,7 @@ class MoneyTransactionType extends AbstractType
             ]);
 
             $builder->add('amount', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',

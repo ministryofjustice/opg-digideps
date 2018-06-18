@@ -18,7 +18,7 @@ class GiftType extends AbstractType
                 'required' => true,
             ])
             ->add('amount', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping' => true,
                 'invalid_message' => 'gifts.amount.type',
             ]);

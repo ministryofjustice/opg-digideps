@@ -22,7 +22,7 @@ class TransactionSingleType extends AbstractType
                       'allow_add' => true, //allow new fields added with JS
                       'entry_options' => [
                          'error_bubbling' => false,
-                         'precision' => 2,
+                         'scale' => 2,
                          'grouping' => true,
                          'invalid_message' => 'account.moneyInOut.amount.notNumeric',
                       ],

@@ -38,7 +38,7 @@ class AssetTypeProperty extends AbstractType
             ])
                 ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
-                    'precision' => 0,
+                    'scale' => 0,
                     'max_length' => 2,
                     'pattern' => '[0-9]',
                     'invalid_message' => 'asset.property.ownedPercentage.type',
@@ -51,7 +51,7 @@ class AssetTypeProperty extends AbstractType
             ])
                 ->add('mortgageOutstandingAmount', FormTypes\NumberType::class, [
                     'grouping' => true,
-                    'precision' => 2,
+                    'scale' => 2,
                     'invalid_message' => 'asset.property.mortgageOutstandingAmount.type',
                 ]);
         }
@@ -59,7 +59,7 @@ class AssetTypeProperty extends AbstractType
         if ($this->step === 5) {
             $builder->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
-                'precision' => 2,
+                'scale' => 2,
                 'invalid_message' => 'asset.property.value.type',
             ]);
         }
@@ -94,7 +94,7 @@ class AssetTypeProperty extends AbstractType
                 ])
                 ->add('rentIncomeMonth', FormTypes\NumberType::class, [
                     'grouping' => true,
-                    'precision' => 2,
+                    'scale' => 2,
                     'invalid_message' => 'asset.property.rentIncomeMonth.type',
                 ]);
 

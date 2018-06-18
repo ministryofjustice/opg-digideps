@@ -54,7 +54,7 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 3) {
             $builder->add('balanceOnCourtOrderDate', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping' => true,
                 'invalid_message' => 'ndr.account.balanceOnCourtOrderDate.type',
 

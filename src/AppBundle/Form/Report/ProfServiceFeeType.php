@@ -58,7 +58,7 @@ class ProfServiceFeeType extends AbstractType
                     'expanded' => true,
                 ])
                 ->add('amountCharged', FormTypes\NumberType::class, [
-                    'precision' => 2,
+                    'scale' => 2,
                     'placeholder' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
@@ -70,7 +70,7 @@ class ProfServiceFeeType extends AbstractType
 
                 ])
                 ->add('amountReceived', FormTypes\NumberType::class, [
-                    'precision' => 2,
+                    'scale' => 2,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountReceived.type'
