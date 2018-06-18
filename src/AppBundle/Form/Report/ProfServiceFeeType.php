@@ -17,21 +17,11 @@ class ProfServiceFeeType extends AbstractType
      */
     private $step;
 
-    /**
-     * @var array
-     */
-    protected $serviceTypeIds;
-
-    public function __construct(array $serviceTypeIds)
-    {
-        $this->serviceTypeIds = $serviceTypeIds;
-    }
-
     private function getServiceFeeTypes()
     {
         $ret = [];
 
-        foreach ($this->serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
+        foreach (ProfServiceFee::$serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
             $ret[$serviceTypeId] = 'addTypePage.form.serviceType.' . $serviceTypeId;
         }
         return array_unique($ret);
