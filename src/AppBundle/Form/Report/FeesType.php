@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class FeesType extends AbstractType
 {
@@ -16,7 +17,7 @@ class FeesType extends AbstractType
             ->add('id', FormTypes\HiddenType::class)
             ->add('fees', FormTypes\CollectionType::class, [
                 'type' => new FeeSingleType(),
-                'cascade_validation' => true,
+                'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
@@ -26,7 +27,7 @@ class FeesType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Report::class,
             'validation_groups' => ['fees'],
-            'cascade_validation' => true,
+            'constraints' => new Valid(),
             'translation_domain' => 'report-pa-fee-expense',
         ]);
     }

@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class DebtsType extends AbstractType
 {
@@ -16,7 +17,7 @@ class DebtsType extends AbstractType
             ->add('id', FormTypes\HiddenType::class)
             ->add('debts', FormTypes\CollectionType::class, [
                 'type' => new DebtSingleType(),
-                'cascade_validation' => true,
+                'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
@@ -26,7 +27,7 @@ class DebtsType extends AbstractType
         $resolver->setDefaults([
             'data_class'         => Ndr::class,
             'validation_groups'  => ['debts'],
-            'cascade_validation' => true,
+            'constraints' => new Valid(),
             'translation_domain' => 'ndr-debts',
         ]);
     }

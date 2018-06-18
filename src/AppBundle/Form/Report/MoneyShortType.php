@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class MoneyShortType extends AbstractType
 {
@@ -27,9 +28,12 @@ class MoneyShortType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([ 'translation_domain' => 'report-money-short', 'cascade_validation' => true, 'validation_groups'  => ['xxx']
-                               ])
-                 ->setRequired(['field']);
+        $resolver->setDefaults([
+            'translation_domain' => 'report-money-short',
+            'constraints' => new Valid(),
+            'validation_groups'  => ['xxx']
+        ])
+         ->setRequired(['field']);
     }
 
     public function getBlockPrefix()

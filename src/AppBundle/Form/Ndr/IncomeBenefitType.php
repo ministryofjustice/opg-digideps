@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class IncomeBenefitType extends AbstractType
 {
@@ -79,7 +80,7 @@ class IncomeBenefitType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'ndr-income-benefits',
-            'cascade_validation' => true,
+            'constraints' => new Valid(),
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 /* @var $data Ndr */
