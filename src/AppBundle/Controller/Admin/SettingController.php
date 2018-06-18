@@ -24,7 +24,7 @@ class SettingController extends AbstractController
         $endpoint = 'setting/service-notification';
         $setting = $this->getRestClient()->get($endpoint, 'Setting');
         $form = $this->createForm(
-            new FormDir\Admin\SettingType(),
+            FormDir\Admin\SettingType::class,
             $setting
         );
 
