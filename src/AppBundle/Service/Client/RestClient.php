@@ -81,6 +81,11 @@ class RestClient
     private $userId;
 
     /**
+     * @var set at the class level for the next request
+     */
+    private $timeout = null;
+
+    /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
     const HEADER_AUTH_TOKEN = 'AuthToken';
@@ -343,6 +348,10 @@ class RestClient
             $options['headers']['X-Request-ID'] = $reqId;
         }
 
+        if ($this->timeout) {
+            $options['timeout'] = $this->timeout;
+        }
+
         $start = microtime(true);
         try {
             $response = $this->client->$method($url, $options);
@@ -492,12 +501,13 @@ class RestClient
         return $this->history;
     }
 
+
     /**
      * @param int $timeout in seconds
      */
     public function setTimeout($timeout)
     {
-        $this->client->setDefaultOption('timeout', $timeout);
+        $this->timeout = $timeout;
 
         return $this;
     }
