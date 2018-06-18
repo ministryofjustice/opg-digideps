@@ -72,12 +72,20 @@
     <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-                'fieldSetClass': 'inline'
+                'fieldSetClass': 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
+        </div>
+
+        <div class="panel panel-border-narrow push--bottom">
+            <div>
+                <p class="flush--bottom"><strong class="bold">Expected:</strong> 12 May 2017 to 11 May 2018</p>
+                <p><strong class="bold">Submitted:</strong> 12 May 2017 to 11 May 2018</p>
+            </div>
         </div>
     </div>
 
-    <div class="form-section push-half--bottom">
+    <div class="form-section push-half--bottom hidden">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.reportingPeriodAcceptable, (page ~ '.form.reportingPeriodAcceptable'), {
                 'fieldSetClass': 'inline'
@@ -86,18 +94,59 @@
     </div>
 
     <div class="form-section push-half--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
-                'labelClass': 'text'
+                'labelClass': 'text',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View contact details</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <table class="text">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="bold">First names</th>
+                            <td>John</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">Last name</th>
+                            <td>Darwin</td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row" class="bold">Address</th>
+                            <td>
+                                <p>
+                                    Chadro Postal<br>
+                                    Victoria road<br>
+                                    SG7 3EO<br>
+                                    United Kingdom
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">Telephone</th>
+                            <td>022222222222222</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
     </div>
 
     <div class="form-section push-half--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
-                'labelClass': 'text'
+                'labelClass': 'text',
+                'formGroupClass': 'flush--bottom'
             }) }}
+        </div>
+
+        <div class="panel panel-border-narrow push-half--top">
+            <p><strong class="bold">Deputy's full name:</strong> Adam Banners</p>
         </div>
     </div>
 
@@ -161,10 +210,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -195,10 +244,10 @@
     </div>
 
     <div class="form-section push--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -236,10 +285,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
     </div>
@@ -256,10 +305,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
     </div>
@@ -307,10 +356,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
