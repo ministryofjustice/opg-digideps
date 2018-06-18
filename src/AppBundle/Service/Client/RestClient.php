@@ -205,9 +205,18 @@ class RestClient
      */
     public function get($endpoint, $expectedResponseType, $jmsGroups = [], $optionsOverride = [])
     {
+
         $options = [];
         if ($jmsGroups) {
             $options['query']['groups'] = $jmsGroups;
+        }
+
+        // guzzle 6 does not append query groups and params in the string.
+        //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
+        if (!empty(parse_url($endpoint)['query'])) {
+            parse_str( parse_url($endpoint)['query'], $additionalQs );
+            $options['query'] = isset($options['query']) ? $options['query'] : [];
+            $options['query'] += $additionalQs;
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
