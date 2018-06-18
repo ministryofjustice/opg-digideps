@@ -50,11 +50,11 @@ class VisitsCareType extends AbstractType
             ]);
 
             $builder->add('howIsCareFunded', FormTypes\ChoiceType::class, [
-                'choices' => [
+                'choices' => array_flip([
                     'client_pays_for_all' => $this->translate('form.howIsCareFunded.choices.client_pays_for_all'),
                     'client_gets_financial_help' => $this->translate('form.howIsCareFunded.choices.client_gets_financial_help'),
                     'all_care_is_paid_by_someone_else' => $this->translate('form.howIsCareFunded.choices.all_care_is_paid_by_someone_else'),
-                ],
+                ]),
                 'expanded' => true,
             ]);
         }
