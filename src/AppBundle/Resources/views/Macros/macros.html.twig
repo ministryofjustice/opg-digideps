@@ -177,8 +177,7 @@
             </li>
             {% if (section_link_params(report, section, +1)) %}
                 <li>
-                    <a href="{{ section_link_params(report, section, +1).link }}">Next section:
-                        {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
+                    <a href="{{ section_link_params(report, section, +1).link }}">Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
                 </li>
             {% endif %}
             {% if report.type != 'ndr' %}
