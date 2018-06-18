@@ -19,7 +19,7 @@ class MoneyShortType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add($this->field, FormTypes\CollectionType::class, [
-                'type' => new MoneyShortCategoryType(),
+                'entry_type' => MoneyShortCategoryType::class,
             ])
         ;
 

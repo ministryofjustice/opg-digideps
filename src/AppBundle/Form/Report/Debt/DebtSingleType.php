@@ -31,8 +31,7 @@ class DebtSingleType extends AbstractType
             $form = $event->getForm();
 
             if ($debt->getHasMoreDetails()) {
-                $form->add('moreDetails', FormTypes\TextareaType::class, [
-                ]);
+                $form->add('moreDetails', FormTypes\TextareaType::class, []);
             }
         });
     }

@@ -16,7 +16,7 @@ class FeesType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('fees', FormTypes\CollectionType::class, [
-                'type' => new FeeSingleType(),
+                'entry_type' => FeeSingleType::class,
                 'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);

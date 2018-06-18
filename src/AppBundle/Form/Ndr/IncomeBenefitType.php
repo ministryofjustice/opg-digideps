@@ -38,7 +38,7 @@ class IncomeBenefitType extends AbstractType
             $builder
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('stateBenefits', FormTypes\CollectionType::class, [
-                    'type' => new StateBenefitType(),
+                    'entry_type' => StateBenefitType::class,
                 ]);
         }
 
@@ -68,7 +68,7 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 5) {
             $builder->add('oneOff', FormTypes\CollectionType::class, [
-                'type' => new OneOffType(),
+                'entry_type' => OneOffType::class,
             ]);
         }
 

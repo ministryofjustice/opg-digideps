@@ -16,7 +16,7 @@ class DebtsType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('debts', FormTypes\CollectionType::class, [
-                'type' => new DebtSingleType(),
+                'entry_type' => DebtSingleType::class,
                 'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class);

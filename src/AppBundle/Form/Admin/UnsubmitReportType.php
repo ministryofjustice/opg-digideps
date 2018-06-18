@@ -19,7 +19,7 @@ class UnsubmitReportType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
-                'type' => new UnsubmittedSectionType(),
+                'entry_type' => UnsubmittedSectionType::class,
             ])
             ->add('dueDateChoice', FormTypes\ChoiceType::class, [
                 'choices'     => array_flip([
