@@ -10,18 +10,23 @@ moreThanOneDescription: |
   All the information you enter is saved so you can show your report to the other deputies before you send it to OPG.
 firstname:
     label: "Your first name"
+    hint: ""
 lastname:
     label: "Your last name"
+    hint: ""
 email:
     first:
       label: "Your email"
+      hint: ""
       existingError: |
         This email address has already been registered. Please <a href="%login%">sign in</a> or <a href="%passwordForgotten%">reset your password</a>.
       invalid: Enter a valid email address
     second:
       label: "Confirm your email"
+      hint: ""
 postcode:
     label: "Your post code"
+    hint: ""
     matchingError: |
       You haven't entered a post code we recognise. Do you live in the UK?
       If you have a UK post code, please enter it.
@@ -29,8 +34,10 @@ postcode:
       we have a correct record of your details.
 clientFirstname:
     label: "Client's first names"
+    hint: ""
 clientLastname:
     label: "Client's last name"
+    hint: ""
 caseNumber:
     label: "Case number"
     hint: This is 8 characters long and usually starts with a 1 or 9

@@ -40,7 +40,7 @@
             {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
         </div>
     {% endif %}
-    {{ form_submit(form.save,'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save, 'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
     {% if action is defined %}
         {% if action == 'edit' %}

@@ -28,7 +28,6 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.actionMoreInfo.label' | trans(transOptions),
                     'items': [
                         {'dataTarget': 'more-info-textarea' }
                     ]
@@ -36,7 +35,6 @@
 
                 <div id="more-info-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
-                        'labelClass': 'required',
                         'labelParameters': transOptions
                     }) }}
                 </div>
