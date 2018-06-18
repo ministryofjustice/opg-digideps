@@ -35,7 +35,7 @@ class NoteType extends AbstractType
                 'category',
                 ChoiceType::class,
                 [
-                    'choices' => self::getCategories(),
+                    'choices' =>array_flip(self::getCategories()),
                     'expanded' => false,
                     'required' => false,
                     'placeholder' => 'Please select',

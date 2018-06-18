@@ -16,7 +16,7 @@ class AddUserType extends AbstractType
             ->add('lastname', FormTypes\TextType::class)
             ->add('roleName', FormTypes\ChoiceType::class, [
                     'placeholder' => null,
-                    'choices'     => $options['roleChoices'],
+                    'choices'     => array_flip($options['roleChoices']),
                     'data'        => $options['roleNameSetTo'],
                 ]
             )

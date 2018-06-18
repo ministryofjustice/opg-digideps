@@ -37,7 +37,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
             $builder->add('howOftenDoYouContactClient', FormTypes\TextareaType::class);
@@ -45,7 +45,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 2) {
             $builder->add('doesClientReceivePaidCare', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
 
@@ -65,7 +65,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 4) {
             $builder->add('doesClientHaveACarePlan', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
 
@@ -79,7 +79,7 @@ class VisitsCareType extends AbstractType
         if ($this->step === 5) {
             $builder
                 ->add('planMoveNewResidence', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ])
                 ->add('planMoveNewResidenceDetails', FormTypes\TextareaType::class);

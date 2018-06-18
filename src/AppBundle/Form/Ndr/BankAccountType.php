@@ -27,7 +27,7 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('accountType', FormTypes\ChoiceType::class, [
-                'choices' => BankAccount::$types,
+                'choices' => array_flip(BankAccount::$types),
                 'expanded' => true,
                 'placeholder' => 'Please select',
             ]);
@@ -52,7 +52,7 @@ class BankAccountType extends AbstractType
                 ]),
             ]);
             $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
-                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }

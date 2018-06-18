@@ -46,7 +46,7 @@ class ProfServiceFeeType extends AbstractType
 
         if ($this->step == 1) {
             $builder->add('serviceTypeId', FormTypes\ChoiceType::class, [
-                'choices' =>  $this->getServiceFeeTypes(),
+                'choices' =>  array_flip($this->getServiceFeeTypes()),
                 'expanded' => true,
             ]);
         }
@@ -54,7 +54,7 @@ class ProfServiceFeeType extends AbstractType
         if ($this->step == 2) {
             $builder->add('serviceTypeId', FormTypes\HiddenType::class);
             $builder->add('assessedOrFixed', FormTypes\ChoiceType::class, [
-                    'choices' => [ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs'],
+                    'choices' => array_flip([ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs']),
                     'expanded' => true,
                 ])
                 ->add('amountCharged', FormTypes\NumberType::class, [
@@ -65,7 +65,7 @@ class ProfServiceFeeType extends AbstractType
                     'invalid_message' => 'profServiceFee.amountCharged.type'
                 ])
                 ->add('paymentReceived', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
 
                 ])

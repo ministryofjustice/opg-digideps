@@ -34,14 +34,14 @@ class TeamMemberAccountType extends AbstractType
             if ($loggedInUser->isProfAdministrator() || $loggedInUser->isProfNamedDeputy()) {
                 // PROF ROLES
                 $builder->add('roleName', FormTypes\ChoiceType::class, [
-                    'choices' => [User::ROLE_PROF_ADMIN => 'Yes', User::ROLE_PROF_TEAM_MEMBER => 'No'],
+                    'choices' => array_flip([User::ROLE_PROF_ADMIN => 'Yes', User::ROLE_PROF_TEAM_MEMBER => 'No']),
                     'expanded' => true,
                     'required' => true
                 ]);
             } elseif ($loggedInUser->isPaAdministrator() || $loggedInUser->isPaNamedDeputy()) {
                 // PA ROLES
                 $builder->add('roleName', FormTypes\ChoiceType::class, [
-                    'choices' => [User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No'],
+                    'choices' => array_flip([User::ROLE_PA_ADMIN => 'Yes', User::ROLE_PA_TEAM_MEMBER => 'No']),
                     'expanded' => true,
                     'required' => true
                 ]);

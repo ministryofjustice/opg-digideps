@@ -35,7 +35,7 @@ class AdController extends AbstractController
         $users = $this->getRestClient()->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         // form add
-        $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [ 'roleChoices'        => [EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy'],
+        $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [ 'roleChoices'        => array_flip([EntityDir\User::ROLE_LAY_DEPUTY=>'Lay deputy']),
                                      'roleNameSetTo'      => EntityDir\User::ROLE_LAY_DEPUTY,
                                    ]);
 

@@ -43,7 +43,7 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 2) {
             $builder->add('receiveStatePension', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
@@ -51,7 +51,7 @@ class IncomeBenefitType extends AbstractType
         if ($this->step === 3) {
             $builder
                 ->add('receiveOtherIncome', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ])
                 ->add('receiveOtherIncomeDetails', FormTypes\TextareaType::class);
@@ -59,7 +59,7 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 4) {
             $builder->add('expectCompensationDamages', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])
                 ->add('expectCompensationDamagesDetails', FormTypes\TextareaType::class);

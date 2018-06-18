@@ -15,7 +15,7 @@ class SettingType extends AbstractType
             ->add('id', FormTypes\HiddenType::class)
             ->add('content', FormTypes\TextareaType::class)
             ->add('enabled', FormTypes\ChoiceType::class, [
-                'choices' => [true => 'Yes', false => 'No'],
+                'choices' => ['Yes' => true, 'No' => false],
                 'expanded' => true,
             ])
             ->add('save', FormTypes\SubmitType::class);

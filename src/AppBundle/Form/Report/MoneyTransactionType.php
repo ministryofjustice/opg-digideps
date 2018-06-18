@@ -32,7 +32,7 @@ class MoneyTransactionType extends AbstractType
     private $selectedCategory;
 
     /**
-     * @return array where keys are the categoriesID. e.g. [broadband=>null, fees=>null]
+     * @return array where keys and values are the categoriesID. e.g. [broadband=>null, fees=>null]
      */
     private function getCategories()
     {
@@ -46,7 +46,7 @@ class MoneyTransactionType extends AbstractType
             $isCategoryAllowedForThisRole = $allowedRoles === null || $this->authorizationChecker->isGranted($allowedRoles);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
-                $ret[$categoryId] = null;
+                $ret[$categoryId] = $categoryId;
             }
         }
 

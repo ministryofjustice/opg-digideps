@@ -28,7 +28,7 @@ class DeputyExpenseType extends AbstractType
 
         if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
-                'choices' => $options['report']->getBankAccountOptions(),
+                'choices' => array_flip($options['report']->getBankAccountOptions()),
                 'placeholder' => 'Please select'
             ]);
         }

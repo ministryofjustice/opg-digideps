@@ -37,7 +37,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
             $builder->add('howOftenDoYouContactClient', FormTypes\TextareaType::class);
@@ -45,16 +45,16 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 2) {
             $builder->add('doesClientReceivePaidCare', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
 
             $builder->add('howIsCareFunded', FormTypes\ChoiceType::class, [
-                'choices' => [
+                'choices' => array_flip([
                     'client_pays_for_all' => $this->translate('form.howIsCareFunded.choices.client_pays_for_all'),
                     'client_gets_financial_help' => $this->translate('form.howIsCareFunded.choices.client_gets_financial_help'),
                     'all_care_is_paid_by_someone_else' => $this->translate('form.howIsCareFunded.choices.all_care_is_paid_by_someone_else'),
-                ],
+                ]),
                 'expanded' => true,
             ]);
         }
@@ -65,7 +65,7 @@ class VisitsCareType extends AbstractType
 
         if ($this->step === 4) {
             $builder->add('doesClientHaveACarePlan', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
 
