@@ -4,7 +4,6 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,15 +39,11 @@ class BankAccountType extends AbstractType
             $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
                 'required'       => false,
-                'constraints'    => new Chain([
-                    'constraints' => [
-                        new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
-                        new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
-                        new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
-                    ],
-                    'stopOnError' => true,
-                    'groups'      => ['bank-account-sortcode'],
-                ]),
+                'constraints'    => [
+                    new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
+                    new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
+                    new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
+                ],
             ]);
             $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
                 'choices'  => ['Yes' => 'yes', 'No' => 'no'],
