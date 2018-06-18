@@ -99,10 +99,10 @@ class ReportChecklistType extends AbstractType
             // Final decision
             ->add('finalDecision', FormTypes\ChoiceType::class, [
                 'choices' => [
-                    'for-review' => $finalDecisionTransPrefix . 'forReview',
-                    'incomplete' => $finalDecisionTransPrefix . 'incomplete',
-                    'further-casework-required' => $finalDecisionTransPrefix . 'furtherCaseworkRequired',
-                    'satisfied' => $finalDecisionTransPrefix . 'satisfied'
+                    $finalDecisionTransPrefix . 'forReview' => 'for-review',
+                    $finalDecisionTransPrefix . 'incomplete' =>  'incomplete',
+                    $finalDecisionTransPrefix . 'furtherCaseworkRequired' => 'further-casework-required',
+                    $finalDecisionTransPrefix . 'satisfied' => 'satisfied'
                 ],
                 'expanded' => true
             ])
