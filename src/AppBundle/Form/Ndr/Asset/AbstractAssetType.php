@@ -14,21 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 abstract class AbstractAssetType extends AbstractType
 {
-    /**
-     * @param string $type
-     *
-     * @return AbstractAssetType instance
-     */
-    public static function factory($type)
-    {
-        switch (strtolower($type)) {
-            case 'property':
-                return new AssetTypeProperty();
-            default:
-                return new AssetTypeOther();
-        }
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addFields($builder, $options);
