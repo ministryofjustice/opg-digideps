@@ -88,7 +88,6 @@ class MoneyInController extends AbstractController
                 'step' => $step,
                 'type'             => 'in',
                 'selectedCategory' => $transaction->getCategory(),
-//                'userRole' => $this->getUser()->getRoleName(),
                 'authChecker' => $this->get('security.authorization_checker'),
                 'report' => $report
             ]
