@@ -17,16 +17,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class NoteType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -35,7 +25,7 @@ class NoteType extends AbstractType
                 'category',
                 ChoiceType::class,
                 [
-                    'choices' =>array_flip(self::getCategories()),
+                    'choices' => self::getCategoriesChoices(),
                     'expanded' => false,
                     'required' => false,
                     'placeholder' => 'Please select',
@@ -67,25 +57,14 @@ class NoteType extends AbstractType
      *
      * @return array
      */
-    private function getCategories()
+    private function getCategoriesChoices()
     {
         $ret = [];
 
         foreach (NoteEntity::$categories as $categoryId => $cagtegoryTrqnslationKey) {
-            $ret[$categoryId] = $this->translate('form.category.entries.' . $cagtegoryTrqnslationKey);
+            $ret['form.category.entries.' . $cagtegoryTrqnslationKey] = $categoryId;
         }
 
         return $ret;
-    }
-
-    /**
-     * Wrapper call to translator
-     *
-     * @param $key
-     * @return string
-     */
-    private function translate($key)
-    {
-        return $this->translator->trans($key, [], 'report-note');
     }
 }
