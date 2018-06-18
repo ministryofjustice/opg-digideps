@@ -1,6 +1,6 @@
 <?php
 
-require 'app/bootstrap.php.cache';
+require 'vendor/autoload.php';
 
 require __DIR__ . '/Fixtures.php';
 require __DIR__ . '/MockeryStub.php';

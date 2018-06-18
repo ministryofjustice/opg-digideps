@@ -29,7 +29,7 @@ class SelfRegisterController extends RestController
         $this->populateSelfReg($selfRegisterData, $data);
 
         $validator = $this->get('validator');
-        $errors = $validator->validate($selfRegisterData, 'self_registration');
+        $errors = $validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
             throw new \RuntimeException('Invalid registration data: ' . $errors);

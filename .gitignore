@@ -22,3 +22,8 @@ junit.xml
 nbproject
 vendor/*
 web/elb_healthcheck.html
+web/config.php
+META
+var/
+.bash_history
+.composer/

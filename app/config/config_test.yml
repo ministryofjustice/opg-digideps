@@ -8,9 +8,6 @@ framework:
     profiler:
         collect: false
 
-swiftmailer:
-    disable_delivery: true
-
 doctrine:
     dbal:
         dbname:   digideps_unit_test
@@ -18,14 +15,14 @@ doctrine:
 services:
     attemptsInTimeChecker:
         class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
-        arguments: [ @snc_redis.default ]
+        arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
     attemptsIncrementalWaitingChecker:
         class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
-        arguments: [ @snc_redis.default ]
+        arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_exception"] ]
             # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail

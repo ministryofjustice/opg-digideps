@@ -111,7 +111,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
-        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
+//        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
         $casRec = new CasRec([
             'Case' => '12345678',

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit
+        convertErrorsToExceptions="false"
+        convertNoticesToExceptions="false"
+        convertWarningsToExceptions="false"
         stopOnFailure="true"
         backupGlobals="false"
         colors="true"

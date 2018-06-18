@@ -3,16 +3,15 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Casrec as CasRecEntity;
-use AppBundle\Entity\Report\Asset;
-use AppBundle\Entity\Report\Asset as AssetEntity;
-use AppBundle\Entity\Report\BankAccount;
-use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
-use AppBundle\Entity\Report\Report;
 
-use AppBundle\Entity\Report\Report as ReportEntity;
+use AppBundle\Entity\CasRec;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\Asset;
+use AppBundle\Entity\Report\BankAccount;
+
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use MockeryStub as m;
 
 class ReportServiceTest extends \PHPUnit_Framework_TestCase
@@ -32,8 +31,6 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected $sut;
 
-    private $repos;
-
     public function setUp()
     {
         $this->user = new EntityDir\User();
@@ -42,7 +39,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $client->setCaseNumber('12345678');
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
         $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
-        $this->report = new Report($client, ReportEntity::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
+        $this->report = new Report($client, Report::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
             ->addAsset($this->asset1)
@@ -53,28 +50,35 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->report->addDocument($this->document1);
 
         // mock em
-        $this->repos[ReportEntity::class] = m::mock(EntityDir\Repository\ReportRepository::class);
-        $this->repos[CasRecEntity::class] = m::mock(EntityDir\Repository\CasRecRepository::class);
-        $this->repos[AssetEntity::class] = m::mock();
-        $this->repos[BankAccountEntity::class] = m::mock();
+        $this->reportRepo = m::mock(EntityDir\Repository\ReportRepository::class);
+        $this->casrecRepo = m::mock(EntityRepository::class);
+        $this->assetRepo = m::mock();
+        $this->bankAccount = m::mock();
 
         $this->em = m::mock(EntityManager::class);
-        $this->em->shouldReceive('getRepository')
-            ->with(ReportEntity::class)
-            ->andReturn($this->repos[ReportEntity::class]);
-        $this->em->shouldReceive('getRepository')
-            ->with(CasRecEntity::class)->andReturn($this->repos[CasRecEntity::class]);
-        $this->em->shouldReceive('getRepository')
-            ->with(AssetEntity::class)->andReturn($this->repos[AssetEntity::class]);
-        $this->em->shouldReceive('getRepository')
-            ->with(BankAccountEntity::class)
-            ->andReturn($this->repos[BankAccountEntity::class]);
 
-        $this->repos[CasRecEntity::class]->shouldReceive('findOneBy')
-            ->with(['caseNumber' => $client->getCaseNumber()])
-            ->andReturn(null); // can be tested separately, currently partially covered by CASREC class
+        $this->em->shouldReceive('getRepository')->andReturnUsing(function($arg) use ($client) {
+            switch($arg) {
+                case CasRec::class:
+                    return  m::mock(EntityRepository::class)->shouldReceive('findOneBy')
+                        ->with(['caseNumber' => $client->getCaseNumber()])
+                        ->andReturn(null)
+                        ->getMock();
 
-        $this->sut = new ReportService($this->repos[ReportEntity::class], $this->repos[CasRecEntity::class], $this->em);
+                case Report::class:
+                    return m::mock(EntityDir\Repository\ReportRepository::class);
+
+                case Asset::class:
+                    return m::mock(EntityRepository::class);
+
+                case BankAccount::class:
+                    return m::mock(BankAccount::class);
+                default:
+                    throw new \Exception("getRepository($arg) not mocked");
+            }
+        });
+
+        $this->sut = new ReportService($this->em);
     }
 
     public function testSubmitInvalid()

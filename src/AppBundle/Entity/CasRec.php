@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CasRecRepository")
+ * @ORM\Entity()
  */
 class CasRec
 {

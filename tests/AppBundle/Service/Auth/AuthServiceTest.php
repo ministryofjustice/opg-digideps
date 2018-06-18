@@ -35,11 +35,9 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
                 'getParameter(client_secrets)' => $this->clientSecrets,
                 'getParameter(security.role_hierarchy.roles)' => ['ROLE_LAY_DEPUTY_INHERITED'=>['ROLE_LAY_DEPUTY']],
                 'get(em)->getRepository(AppBundle\Entity\User)' => $this->userRepo,
-                'get(logger)' => $this->logger,
-                'get(security.encoder_factory)' => $this->encoderFactory,
         ]);
 
-        $this->authService = new AuthService($this->container);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container);
     }
 
     /**
@@ -51,7 +49,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
                 'getParameter(client_secrets)' => [],
         ]);
 
-        $this->authService = new AuthService($container);
+        $this->authService = new AuthService($this->encoderFactory, $this->logger, $container);
     }
 
     public function isSecretValidProvider()
