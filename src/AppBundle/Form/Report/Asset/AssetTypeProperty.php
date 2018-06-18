@@ -39,8 +39,7 @@ class AssetTypeProperty extends AbstractType
                 ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
                     'scale' => 0,
-                    'max_length' => 2,
-                    'pattern' => '[0-9]',
+                    'attr' => ['maxlength'=>2],
                     'invalid_message' => 'asset.property.ownedPercentage.type',
                 ]);
         }
