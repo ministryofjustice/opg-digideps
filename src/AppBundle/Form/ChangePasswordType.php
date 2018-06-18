@@ -38,11 +38,6 @@ class ChangePasswordType extends AbstractType
                 ->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getParent()
-    {
-        return 'form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
