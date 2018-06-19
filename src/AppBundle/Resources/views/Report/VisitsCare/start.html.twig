@@ -20,4 +20,10 @@
 
     <a href="{{ path('visits_care_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'visitsCare',
+    } %}
+
 {% endblock %}
