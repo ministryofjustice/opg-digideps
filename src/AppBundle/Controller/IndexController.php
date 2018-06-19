@@ -113,6 +113,9 @@ class IndexController extends AbstractController
             'loggedOutFrom' => null,
         ]);
 
+//        if failing on feature branch, just render a page that does a JS redirect.
+//        behat should open the page later and test you don't get redirected
+
         return $this->redirectToRoute('user_details');
     }
 
