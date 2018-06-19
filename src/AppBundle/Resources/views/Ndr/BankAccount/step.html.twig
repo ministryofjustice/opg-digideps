@@ -41,7 +41,8 @@
         {% endif %}
 
         {{ form_input(form.accountNumber, 'form.accountNumber', {
-            'inputClass' : 'account-number'
+            'inputClass' : 'account-number',
+            'hasPreInput': true
         }) }}
 
         {% if account.requiresSortCode %}

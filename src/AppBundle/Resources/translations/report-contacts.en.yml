@@ -19,6 +19,7 @@ existPage:
         updates on %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
     reasonForNoContacts:
       label: Please explain why you didn't need anyone to help you
+      hint: ""
     save:
       label: Save and continue
 
@@ -55,28 +56,28 @@ summaryPage:
 form:
   contactName:
       label: Contact name
-      hint: ''
+      hint: ""
   relationship:
       label: Their relationship to %client%
-      hint: ''
+      hint: ""
   explanation:
       label: Why did you ask this person to help you?
-      hint: ''
+      hint: ""
   address:
       label: Address (optional)
-      hint: ''
+      hint: ""
   address2:
       label: ' '
-      hint: ''
+      hint: ""
   county:
       label: ' '
-      hint: ''
+      hint: ""
   postcode:
       label: Postcode (optional)
-      hint: ''
+      hint: ""
   country:
       label: Country (optional)
-      hint: ''
+      hint: ""
       defaultOption: Please select ...
   save:
       label: Save and continue

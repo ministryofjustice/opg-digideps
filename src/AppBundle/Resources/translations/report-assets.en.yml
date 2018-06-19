@@ -58,6 +58,7 @@ summaryPage:
   pageTitle: Assets
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
+  property: Property
   addButton: Add an asset
   edit: Edit
 
@@ -65,6 +66,7 @@ form:
   titleSave.label: Save and continue
   title:
     label: What sort of asset is it?
+    hint: ""
     legend: What type of asset is it?
     choices:
       # ordering is configured in app/config.yml
@@ -95,36 +97,48 @@ form:
   property:
     address:
       label: Address line 1
+      hint: ""
     address2:
       label: Address line 2
+      hint: ""
     county:
       label: County
+      hint: ""
     postcode:
       label: "Postcode"
+      hint: ""
     occupants:
       label: "Who lives at this property?"
+      hint: ""
     owned:
       label: Is the property fully or part-owned by %client%?
+      hint: ""
     ownedPercentage:
       label: What is %client%'s share of the property?
+      hint: ""
     isSubjectToEquityRelease:
       label: Is this property subject to an equity release scheme?
+      hint: ""
     value:
       label: What is the value of property?
       hint: This can be an estimate.
     hasMortgage:
       label: Is there a mortgage on the property?
+      hint: ""
     mortgageOutstandingAmount:
       label: How much is left to pay?
+      hint: ""
     hasCharges:
       label: Are there any other charges on the property?
       hint: For example, from the local authority to recover care fees
     isRentedOut:
       label: Is the property rented out (either partly or fully)?
+      hint: ""
     rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: For example, 12 2015
     rentIncomeMonth:
       label: What is the rental income each month?
+      hint: ""
   save:
       label: Save and continue

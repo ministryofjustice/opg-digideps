@@ -14,6 +14,7 @@ existPage:
   form:
     noTransfersToAdd:
       label: Have you made any money transfers between %client%'s accounts in this reporting period?
+      hint: ""
     save:
       label: Save and continue
 
@@ -51,7 +52,10 @@ errorPage:
 form:
   accountFrom:
     label: Which account did you transfer money from?
+    hint: ""
   accountTo:
     label: Which account did you transfer money to?
+    hint: ""
   amount:
     label: How much money was transferred?
+    hint: ""

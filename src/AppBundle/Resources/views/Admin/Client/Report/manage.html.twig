@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    {{ form_submit(form.save,'reportManage.form.unsubmit') }}
+    {{ form_submit(form.save, 'reportManage.form.unsubmit') }}
 
     <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 

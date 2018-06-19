@@ -7,7 +7,7 @@
 
     <div class="grid-row push--ends behat-region-property-{{ asset.postcode | behat_namify }}">
         <div class="column-half">
-            <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
+            <h3 class="heading-medium flush--ends">{{ ('summaryPage.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
             {% if not hideEditLink  %}

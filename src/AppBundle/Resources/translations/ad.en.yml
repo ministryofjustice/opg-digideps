@@ -1,16 +1,16 @@
 addUserForm:
   email:
     label: Email
-    hint: ''
+    hint: ""
   firstname:
     label: First name
-    hint: ''
+    hint: ""
   lastname:
     label: Last name
-    hint: ''
+    hint: ""
   roleName:
     label: Role
-    hint: ''
+    hint: ""
     defaultOption: Please select ...
   ndrEnabled:
     label: Enable NDR for this user

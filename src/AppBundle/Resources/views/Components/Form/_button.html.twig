@@ -1,13 +1,14 @@
+{# rendered by FormFieldExtension::renderFormSubmit() #}
 {% set buttonClass = buttonClass | default('') %}
-{% if 'disabled' in buttonClass %}
-    {{ form_widget(element, {
-    'label': labelText ,
+
+{% set options = {
+    'label': label ,
     'attr': {'class': 'button ' ~ buttonClass },
-    'disabled': true
-    }) }}
-{% else %}
-    {{ form_widget(element, {
-    'label': labelText ,
-    'attr': {'class': 'button ' ~ buttonClass }
-    }) }}
+    'disabled': 'disabled' in buttonClass
+} %}
+
+{% if translationDomain is defined and translationDomain %}
+    {% set options = options | merge({'translation_domain': translationDomain}) %}
 {% endif %}
+
+{{ form_widget(element, options) }}
