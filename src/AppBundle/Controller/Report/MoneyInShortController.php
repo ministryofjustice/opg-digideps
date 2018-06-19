@@ -68,8 +68,7 @@ class MoneyInShortController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId]),
-            'skipLink' => $fromSummaryPage ? null : $this->generateUrl('money_in_short_exist', ['reportId'=>$reportId]),
+            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId])
         ];
     }
 
