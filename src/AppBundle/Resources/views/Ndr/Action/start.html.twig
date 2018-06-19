@@ -37,4 +37,10 @@
 
     <a href="{{ path('ndr_actions_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'actions',
+    } %}
+
 {% endblock %}

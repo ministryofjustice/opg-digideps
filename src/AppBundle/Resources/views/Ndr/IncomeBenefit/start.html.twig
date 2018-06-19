@@ -27,10 +27,14 @@
                 <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions, translationDomain)|raw }}</p>
             </div>
         </details>
-		
 	</div>
 
-
     <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'incomeBenefits',
+    } %}
 
 {% endblock %}

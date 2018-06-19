@@ -291,22 +291,6 @@
         </li>
     </ul>
 
-    {# KEEP THIS until incomplete report has merged and not further changes are required#}
-    {#{% if report.unSubmitDate %}#}
-        {#{{ macros.notification('important', 'unsubmittedConfirm.notification' | trans) }}#}
-
-        {#{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}#}
-
-        {#{{ form_checkbox(form.agree, 'unsubmittedConfirm.form.agree', { 'labelClass': 'required' }) }}#}
-
-        {#<div class="form-group push-half--top">#}
-            {#{{ form_submit(form.save,'unsubmittedConfirm.form.save') }}#}
-        {#</div>#}
-
-        {#{{ form_end(form) }}#}
-
-    {#{% endif %}#}
-
     {% if not report.isDue %}
 
         <div class="push--top">

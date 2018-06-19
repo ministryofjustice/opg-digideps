@@ -14,13 +14,13 @@ class BankAccount
      * Keep in sync with api.
      */
     public static $types = [
-        'current' => 'Current account',
-        'savings' => 'Savings account',
-        'isa' => 'ISA',
-        'postoffice' => 'Post Office account',
-        'cfo' => 'Court Funds Office account',
-        'other' => 'Other type of account',
-        'other_no_sortcode' => 'Other type of account without sort code',
+        'current',
+        'savings',
+        'isa',
+        'postoffice',
+        'cfo',
+        'other',
+        'other_no_sortcode',
     ];
 
     private static $typesNotRequiringSortCode = [

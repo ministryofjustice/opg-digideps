@@ -26,7 +26,7 @@
     {{ form_select(form.roleName,'addUserForm.roleName') }}
     {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
 
-    {{ form_submit(form.save,'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save, 'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 
     <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
 

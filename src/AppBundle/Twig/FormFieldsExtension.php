@@ -227,15 +227,12 @@ class FormFieldsExtension extends \Twig_Extension
             }
         }
 
-        $legendTextTransJS = $this->translator->trans($translationKey . '.legendjs', $legendParams, $domain);
-        $legendTextJS = ($legendTextTransJS != $translationKey . '.legendjs') ? $legendTextTransJS : null;
-
-        $html = $env->render('AppBundle:Components/Form:_known-date.html.twig', ['legendText' => $legendText,
-                                                                                                'legendTextJS' => $legendTextJS,
-                                                                                                'hintText' => $hintText,
-                                                                                                'element' => $element,
-                                                                                                'showDay' => $showDay,
-                                                                                                'legendTextRaw' => !empty($vars['legendRaw']), ]);
+        $html = $env->render('AppBundle:Components/Form:_known-date.html.twig', [
+            'legendText' => $legendText,
+            'hintText' => $hintText,
+            'element' => $element,
+            'showDay' => $showDay,
+            'legendTextRaw' => !empty($vars['legendRaw']), ]);
         echo $html;
     }
 
@@ -264,27 +261,25 @@ class FormFieldsExtension extends \Twig_Extension
 
     /**
      * @param mixed  $element
-     * @param string $elementName
-     * @param array  $vars
-     * @param int    $transIndex
+     * @param string $elementName used to pick the translation by appending ".label"
+     * @param array  $vars [buttonClass => additional class. "disabled" supported]
      */
-    public function renderFormSubmit(Twig_Environment $env, $element, $elementName, array $vars = [], $transIndex = null)
+    public function renderFormSubmit(Twig_Environment $env, $element, $elementName, array $vars = [])
     {
-        //lets get the translation for class and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
+        $options = [
+            // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
+            'label' => $elementName . '.label',
+            'element' => $element,
+            'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
+            'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
+        ];
 
-        //sort out labelText translation
-        $labelText = isset($vars['labelText']) ? $vars['labelText'] : $this->translator->trans($translationKey . '.label', [], $domain);
-        $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass'] : null;
+        // deprecated. only kept in order not to break forms that use it
+        if (isset($vars['labelText'])) {
+            $options['label'] = $vars['labelText'];
+        }
 
-        //generate input field html using variables supplied
-        $html = $env->render('AppBundle:Components/Form:_button.html.twig',
-            [
-                'labelText' => $labelText,
-                'element' => $element,
-                'buttonClass' => $buttonClass,
-            ]);
+        $html = $env->render('AppBundle:Components/Form:_button.html.twig', $options);
 
         echo $html;
     }
@@ -353,12 +348,20 @@ class FormFieldsExtension extends \Twig_Extension
         }
 
         //sort hintList text translation
-        $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
-        $hintListEntriesText = ($hintListTextTrans != $translationKey . '.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
+        $hintListArray = null;
+        if (!empty($vars['hasHintList'])) {
+            $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', [], $domain);
+            $hintListArray = array_filter(explode("\n", $hintListTextTrans));
+        }
 
-        //sort out labelText translation
-        $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
-        $labelText = isset($vars['labelText']) ? $vars['labelText'] : $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+        // deprecated. Do not use labelText if possible. translation should happen in the view
+        if (isset($vars['labelText']) && $vars['labelText']) {
+            $labelText = $vars['labelText'];
+        } else {
+            $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+            // label is translated directly here
+            $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+        }
 
         //inputPrefix
         $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
@@ -368,14 +371,17 @@ class FormFieldsExtension extends \Twig_Extension
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass'] : '';
 
         //Text to insert to the left of an input, e.g. * * * * for account
-        $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
-        $preInputText = ($preInputTextTrans != $translationKey . '.preInput') ? $preInputTextTrans : null;
+        $preInputText = null;
+        if (!empty($vars['hasPreInput'])) {
+            $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
+            $preInputText = $preInputTextTrans;
+        }
 
         return [
             'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
             'labelText' => $labelText,
             'hintText' => $hintText,
-            'hintListArray' => $hintListEntriesText,
+            'hintListArray' => $hintListArray,
             'element' => $element,
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,

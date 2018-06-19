@@ -28,7 +28,6 @@
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
                     'legendClass' : 'form-label-bold',
-                    'legendText' : 'form.actionMoreInfo.label' | trans(transOptions),
                     'items': [
                         {'dataTarget': 'more-info-textarea' }
                     ]
@@ -36,19 +35,13 @@
 
                 <div id="more-info-textarea" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
-                        'labelClass': 'required',
                         'labelParameters': transOptions
                     }) }}
                 </div>
             </div>
         </div>
 
-
     {{ macros.saveAndContinueButton(form.save) }}
-
-    {% if skipLink %}
-        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
-    {% endif %}
 
     {{ form_end(form) }}
 

@@ -31,6 +31,7 @@ existPage:
   form:
     paidForAnything:
       label: Have you claimed any deputy expenses during this reporting period?
+      hint: ""
     save:
       label: Save and continue
 
@@ -69,11 +70,14 @@ summaryPage:
 form:
   explanation:
     label: Description of expense
+    hint: ""
   amount:
     label: Amount
+    hint: ""
   addAnother:
     label: Add another expense
   bankAccount:
     label: Which bank account was this paid from? (optional)
+    hint: ""
   save:
       label: Save expense
