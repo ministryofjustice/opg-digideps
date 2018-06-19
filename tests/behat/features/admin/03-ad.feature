@@ -41,11 +41,11 @@ Feature: admin / AD
     Then the response status code should be 200
     And I click on "back"
     # login as AD user ad check page loads OK
-    # TEMP: THE FOLLOWING should be fixed and re-enabled
     When I click on "login-as"
-#    Then the response status code should be 200
-#    And the URL should match "user/details"
-#    And I should be in the "deputy" area
+    Then the response status code should be 200
+    When I go to "/"
+    Then the URL should match "user/details"
+    And I should be in the "deputy" area
 
   @ad
   Scenario: Login on behalf of a newly created (not activated) Lay deputy
@@ -57,9 +57,9 @@ Feature: admin / AD
     And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
     # login on behalf
     And I click on "login-as"
-  # TEMP: THE FOLLOWING should be fixed and re-enabled
-    #Then the response status code should be 200
-    #And the URL should match "user/details"
-    #And I should be in the "deputy" area
+    Then the response status code should be 200
+    When I go to "/"
+    Then the URL should match "user/details"
+    And I should be in the "deputy" area
 
 
