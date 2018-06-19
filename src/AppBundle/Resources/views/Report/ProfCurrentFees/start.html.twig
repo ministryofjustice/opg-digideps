@@ -25,4 +25,10 @@
 
     <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'profCurrentFees',
+    } %}
+
 {% endblock %}

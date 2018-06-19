@@ -20,4 +20,10 @@
 
     <a href="{{ path('ndr_visits_care_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'visitsCare',
+    } %}
+
 {% endblock %}

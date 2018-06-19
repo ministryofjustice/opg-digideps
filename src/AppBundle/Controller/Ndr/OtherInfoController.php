@@ -73,8 +73,7 @@ class OtherInfoController extends AbstractController
             'ndr'       => $ndr,
             'step'         => $step,
             'form'         => $form->createView(),
-            'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => $stepRedirector->getSkipLink(),
+            'backLink'     => $stepRedirector->getBackLink()
         ];
     }
 
