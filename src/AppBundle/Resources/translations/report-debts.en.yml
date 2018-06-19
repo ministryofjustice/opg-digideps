@@ -43,13 +43,13 @@ form:
       hint: Don't include fees charged against %client%'s property, that is, fees that will be paid off when the property is sold
     credit-cards:
       label: Credit cards
-      hint: ''
+      hint: ""
     loans:
       label: Loans
-      hint: ''
+      hint: ""
     other:
       label: Other
-      hint: ''
+      hint: ""
       moreInformations: Please tell us more about this debt
       moreInfoHint: For example, what this debt is for and who it's owed to
     clientHasDebts:
