@@ -794,6 +794,8 @@ class Client
     }
 
     /**
+     * Generates the expected Report Start date based on the Court date
+     *
      * @var DateTime
      *
      * @JMS\VirtualProperty
@@ -813,6 +815,8 @@ class Client
     }
 
     /**
+     * Generates the expected Report End date based on the Court date
+     *
      * @var DateTime
      *
      * @JMS\VirtualProperty
