@@ -18,6 +18,20 @@ class BankAccountType extends AbstractType
 {
     private $step;
 
+    /**
+     * @return array
+     */
+    private static function getBankAccountChoices()
+    {
+        $ret = [];
+        foreach(BankAccount::$types as $key){
+            //TODO invert on symfony 3
+            $ret[$key] = 'form.accountType.choices.' . $key;
+        }
+
+        return $ret;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->step = (int) $options['step'];
@@ -26,9 +40,7 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 1) {
             $builder->add('accountType', FormTypes\ChoiceType::class, [
-                'choices'     => array_map(function($key){
-                    return 'form.accountType.choices.' . $key;
-                }, BankAccount::$types),
+                'choices'     => self::getBankAccountChoices(),
                 'expanded'    => true,
                 'empty_value' => 'Please select',
             ]);
