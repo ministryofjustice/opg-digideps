@@ -80,7 +80,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getHeader')->with('AuthToken')->andReturn($this->sessionToken)
+            ->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken])
             ->shouldReceive('getBody')->andReturn($userJson)
         ;
 
