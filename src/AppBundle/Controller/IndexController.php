@@ -130,9 +130,13 @@ class IndexController extends AbstractController
         $session->set('_adFirstname', $adFirstname);
         $session->set('_adLastname', $adLastname);
 
-        $url = $this->get('redirector_service')->getHomepageRedirect();
+        // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
+        $session->migrate();
 
-        return $this->redirect($url);
+        $event = new InteractiveLoginEvent($request, $clientToken);
+        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
+        return $this->redirectToRoute('user_details');
     }
 
     /**
