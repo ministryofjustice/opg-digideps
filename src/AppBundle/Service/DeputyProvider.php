@@ -31,7 +31,7 @@ class DeputyProvider implements UserProviderInterface
     /**
      * Login passing params to RestClient::login().
      *
-     * @param array $credentials
+     * @param array $credentials see RestClient::login()
      *
      * @return User
      */

@@ -116,17 +116,19 @@ class IndexController extends AbstractController
 //        if failing on feature branch, just render a page that does a JS redirect.
 //        behat should open the page later and test you don't get redirected
 
-        return $this->redirectToRoute('user_details');
+        $url = $this->generateUrl('user_details');
+
+        return new Response("<a href='$url'>continue</a>");
     }
 
     /**
-     * @param array $data
+     * @param array $credentials see RestClient::login()
      * @param Request $request
-     * @param $sessionVars
+     * @param array $sessionVars
      */
-    private function logUserIn($data, Request $request, $sessionVars)
+    private function logUserIn($credentials, Request $request, array $sessionVars)
     {
-        $user = $this->get('deputy_provider')->login($data);
+        $user = $this->get('deputy_provider')->login($credentials);
         // manually set session token into security context (manual login)
         $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
         $this->get('security.token_storage')->setToken($token);
