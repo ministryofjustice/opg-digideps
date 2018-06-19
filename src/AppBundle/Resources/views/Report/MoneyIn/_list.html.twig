@@ -7,11 +7,13 @@
         <h2 class="heading-medium flush--ends">Income you've already told us about</h2>
     </div>
     <div class="column-half text--right">
-        <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}"
-            class="bold-small move-quarter--up action-link behat-link-add">
-            <span class="icon icon-plus"></span>
-            Add item of income
-        </a>
+        {% if not hideEditLink  %}
+            <a href="{{ path('money_in_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}"
+                class="bold-small move-quarter--up action-link behat-link-add">
+                <span class="icon icon-plus"></span>
+                Add item of income
+            </a>
+        {% endif %}
     </div>
 </div>
 
@@ -28,9 +30,11 @@
                 <th>Bank account</th>
             {% endif %}
             <th class="numeric">Amount</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
+            {% if not hideEditLink  %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -44,11 +48,13 @@
                 </td>
             {% endif %}
             <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('money_in_step', {'reportId': report.id, 'step': 2, 'transactionId': t.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                <a class="behat-link-delete push-half--left action-link" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('money_in_step', {'reportId': report.id, 'step': 2, 'transactionId': t.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a class="behat-link-delete push-half--left action-link" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
     {% endfor %}
         <tr class="no-border">
@@ -61,7 +67,9 @@
             <td class="text--right">
                 <span class="bold-small behat-region-{{ groupId | behat_namify }}-total">£{{ groupData.amountTotal | money_format }}</span>
             </td>
-            <td></td>
+            {% if not hideEditLink  %}
+                <td></td>
+            {% endif %}
         </tr>
     </tbody>
 </table>
@@ -77,6 +85,8 @@
         <td class="numeric-small width-eighth">
             <span class="heading-medium">£{{ report.moneyInTotal | money_format }}</span>
         </td>
-        <td class="width-sixth"></td>
+        {% if not hideEditLink  %}
+            <td class="width-sixth"></td>
+        {% endif %}
     </tr>
 </table>
