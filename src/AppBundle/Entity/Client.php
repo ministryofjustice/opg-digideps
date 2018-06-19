@@ -792,4 +792,36 @@ class Client
 
         return null;
     }
+
+    /**
+     * @var DateTime
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"client"})
+     * @JMS\Type("DateTime")
+     * @return DateTime
+     */
+    public function getExpectedReportStartDate()
+    {
+        /** @var \DateTime $courtDate */
+        $courtDate = $this->getCourtDate();
+        $courtDate->setDate(date('Y'), $courtDate->format('m'), $courtDate->format('d'));
+        if ($courtDate > date('now')) {
+            $courtDate->modify('-1 year');
+        }
+        return $this->courtDate;
+    }
+
+    /**
+     * @var DateTime
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"client"})
+     * @JMS\Type("DateTime")
+     * @return DateTime
+     */
+    public function getExpectedReportEndDate()
+    {
+        return $this->getExpectedReportStartDate()->modify('+1year');
+    }
 }

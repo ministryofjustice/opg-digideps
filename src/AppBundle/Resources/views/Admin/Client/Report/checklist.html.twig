@@ -31,7 +31,6 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
     <p class="flush--bottom">
         {{ 'client' | trans({}, 'common') }}:
         <span class="bold">{{ report.client.fullName }}</span>
@@ -79,7 +78,7 @@
 
         <div class="panel panel-border-narrow push--bottom">
             <div>
-                <p class="flush--bottom"><strong class="bold">Expected:</strong> 12 May 2017 to 11 May 2018</p>
+                <p class="flush--bottom"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
                 <p><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
             </div>
         </div>
