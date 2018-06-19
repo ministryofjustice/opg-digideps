@@ -80,7 +80,7 @@
         <div class="panel panel-border-narrow push--bottom">
             <div>
                 <p class="flush--bottom"><strong class="bold">Expected:</strong> 12 May 2017 to 11 May 2018</p>
-                <p><strong class="bold">Submitted:</strong> 12 May 2017 to 11 May 2018</p>
+                <p><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
             </div>
         </div>
     </div>
@@ -110,26 +110,37 @@
                     <tbody>
                         <tr>
                             <th scope="row" class="bold">First names</th>
-                            <td>John</td>
+                            <td>{{ report.client.firstName }}</td>
                         </tr>
                         <tr>
                             <th scope="row" class="bold">Last name</th>
-                            <td>Darwin</td>
+                            <td>{{ report.client.lastName }}</td>
                         </tr>
                         <tr valign="top">
                             <th scope="row" class="bold">Address</th>
                             <td>
                                 <p>
-                                    Chadro Postal<br>
-                                    Victoria road<br>
-                                    SG7 3EO<br>
-                                    United Kingdom
+                                    {% if report.client.address is not empty %}
+                                        {{ report.client.address }}<br/>
+                                    {% endif %}
+                                    {% if report.client.address2 is not empty %}
+                                        {{ report.client.address2 }}<br/>
+                                    {% endif %}
+                                    {% if report.client.county is not empty %}
+                                        {{ report.client.county }}<br/>
+                                    {% endif %}
+                                    {% if report.client.postcode is not empty %}
+                                        {{ report.client.postcode }}<br/>
+                                    {% endif %}
+                                    {% if report.client.country is not empty %}
+                                        {{ report.client.country | country_name }}
+                                    {% endif %}
                                 </p>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="bold">Telephone</th>
-                            <td>022222222222222</td>
+                            <td>{{ report.client.phone }}</td>
                         </tr>
                     </tbody>
                 </table>
