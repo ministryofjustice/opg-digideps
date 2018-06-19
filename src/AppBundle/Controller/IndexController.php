@@ -45,10 +45,13 @@ class IndexController extends AbstractController
         ];
 
         if ($form->isValid()) {
-            $data = $form->getData();
-
             try {
-                $user = $this->get('deputy_provider')->login($data);
+                $this->logUserIn($form->getData(), $request, [
+                    '_adId' => null,
+                    '_adFirstname' =>  null,
+                    '_adLastname' => null,
+                    'loggedOutFrom' => null,
+                ]);
             } catch (\Exception $e) {
                 $error = $e->getMessage();
 
@@ -68,24 +71,6 @@ class IndexController extends AbstractController
                     ] + $vars);
             }
 
-            // manually set session token into security context (manual login)
-            $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-
-            $session = $request->getSession();
-            $session->set('_security_secured_area', serialize($token));
-            $session->set('_adId', null);
-            $session->set('_adFirstname', null);
-            $session->set('_adLastname', null);
-            $session->set('loggedOutFrom', null);
-
-            // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
-            $session->migrate();
-
-            $event = new InteractiveLoginEvent($request, $token);
-            $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
-
-            $session->set('lastLoggedIn', $user->getLastLoggedIn());
         }
 
         // different page version for timeout and manual logout
@@ -117,26 +102,45 @@ class IndexController extends AbstractController
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
-        $user = $this->getRestClient()->loadUserByToken($userToken); /* @var $user EntityDir\User*/
+        // logout first
+//        $this->get('security.token_storage')->setToken(null);
+//        $request->getSession()->invalidate();
 
-        $this->get('deputy_provider')->login(['token' => $userToken]);
+        $this->logUserIn(['token' => $userToken], $request, [
+            '_adId' => $adId,
+            '_adFirstname' =>  $adFirstname,
+            '_adLastname' => $adLastname,
+            'loggedOutFrom' => null,
+        ]);
 
-        $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
+        return $this->redirectToRoute('user_details');
+    }
 
-        $session = $this->get('session');
-        $session->set('_security_secured_area', serialize($clientToken));
-        $session->set('_adId', $adId);
-        $session->set('_adFirstname', $adFirstname);
-        $session->set('_adLastname', $adLastname);
+    /**
+     * @param array $data
+     * @param Request $request
+     * @param $sessionVars
+     */
+    private function logUserIn($data, Request $request, $sessionVars)
+    {
+        $user = $this->get('deputy_provider')->login($data);
+        // manually set session token into security context (manual login)
+        $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+        $this->get('security.token_storage')->setToken($token);
+
+        $session = $request->getSession();
+        $session->set('_security_secured_area', serialize($token));
+        foreach($sessionVars as $k=>$v) {
+            $session->set($k, $v);
+        }
 
         // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
         $session->migrate();
 
-        $event = new InteractiveLoginEvent($request, $clientToken);
+        $event = new InteractiveLoginEvent($request, $token);
         $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
-        return $this->redirectToRoute('user_details');
+        $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }
 
     /**
