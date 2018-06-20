@@ -826,6 +826,6 @@ class Client
      */
     public function getExpectedReportEndDate()
     {
-        return $this->getExpectedReportStartDate()->modify('+1year');
+        return $this->getExpectedReportStartDate()->modify('+1year -1day');
     }
 }

@@ -78,6 +78,7 @@
 
         <div class="panel panel-border-narrow push--bottom">
             <div>
+                <p class="flush--bottom"><strong class="bold">Court order date:</strong> {{ report.client.courtDate | date("j M Y") }}</p>
                 <p class="flush--bottom"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
                 <p><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
             </div>
