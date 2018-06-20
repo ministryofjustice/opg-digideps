@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use Mockery as m;
+use org\bovigo\vfs\vfsStream;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,9 +28,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $currentYear = date('Y');
         return [
-            [null, false],
-            [false, false],
-            ['rubbish', false],
             [new \DateTime('2000-01-01'), new \DateTime($currentYear . '-01-01')],
             [new \DateTime('2000-12-31'), new \DateTime(($currentYear -1) . '-12-31')],
         ];
@@ -56,14 +54,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testGetExpectedStartDate($courtDate, $expected)
     {
         $this->client->setCourtDate($courtDate);
-        $actual = false;
-        if ($expected instanceof \DateTime) {
-            $expected = $expected->format('d/m/Y');
-            $actual = $this->client->getExpectedReportStartDate()->format('d/m/Y');
-        }
         $this->assertEquals(
-            $expected,
-            $actual
+            $expected->format('d/m/Y'),
+            $this->client->getExpectedReportStartDate()->format('d/m/Y')
         );
     }
 
@@ -74,14 +67,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testGetExpectedEndDate($courtDate, $expected)
     {
         $this->client->setCourtDate($courtDate);
-        $actual = false;
-        if ($expected instanceof \DateTime) {
-            $expected = $expected->format('d/m/Y');
-            $actual = $this->client->getExpectedReportEndDate()->format('d/m/Y');
-        }
         $this->assertEquals(
-            $expected,
-            $actual
+            $expected->format('d/m/Y'),
+            $this->client->getExpectedReportEndDate()->format('d/m/Y')
         );
     }
 

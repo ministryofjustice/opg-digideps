@@ -805,9 +805,6 @@ class Client
      */
     public function getExpectedReportStartDate()
     {
-        if (!$this->getCourtDate() instanceof \DateTime) {
-            return false;
-        }
         // create new datetime object. Do not alter object courtDate property.
         /** @var \DateTime $courtDate */
         $courtDate = new \DateTime();
@@ -832,9 +829,6 @@ class Client
      */
     public function getExpectedReportEndDate()
     {
-        if (!$this->getCourtDate() instanceof \DateTime) {
-            return false;
-        }
         return $this->getExpectedReportStartDate()->modify('+1year -1day');
     }
 }
