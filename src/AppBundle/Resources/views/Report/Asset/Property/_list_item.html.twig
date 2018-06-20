@@ -2,8 +2,6 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% set hideEditLink = hideEditLink | default(false) %}
-
 {% for asset in assetsInGroup.items %}
 {# @var asset \AppBundle\Entity\Report\AssetProperty #}
 
@@ -12,7 +10,9 @@
             <h3 class="heading-medium flush--ends">{{ ('summaryPage.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
-            <a class="behat-link-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+            {% if not hideEditLink  %}
+                <a class="behat-link-delete push-half--left bold-small action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+            {% endif %}
         </div>
     </div>
 
@@ -24,39 +24,47 @@
         <tr class="behat-region-property-{{ asset.postcode | behat_namify }}-address">
             <td>{{ 'address' | trans({}, 'common' ) }}</td>
             <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
 
         {# Who lives at this property? #}
         <tr>
             <td>{{ 'form.property.occupants.label' | trans(transOptions) }}</td>
             <td>{{ asset.occupants | nl2br }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 2}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 2}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
 
         {#  fully/partly owned + percentage #}
         <tr>
             <td>{{ 'form.property.owned.label' | trans(transOptions) }}</td>
             <td>{{ asset.owned | capitalize }} owned</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
         {% if asset.owned == 'partly' %}
             <tr>
                 <td>{{ 'form.property.ownedPercentage.label' | trans(transOptions) }}</td>
                 <td>{{ asset.ownedPercentage }}%</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer soft-half--left hard--right width-sixth">
+                        <a class="behat-link-edit action-link"
+                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endif %}
 
@@ -64,19 +72,23 @@
         <tr>
             <td>{{ 'form.property.hasMortgage.label' | trans(transOptions) }}</td>
             <td>{{ asset.hasMortgage | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
         {% if asset.hasMortgage == 'yes' %}
             <tr>
                 <td>{{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}</td>
                 <td>£{{ asset.mortgageOutstandingAmount | money_format }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer soft-half--left hard--right width-sixth">
+                        <a class="behat-link-edit action-link"
+                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endif %}
 
@@ -84,57 +96,69 @@
         <tr>
             <td>{{ 'form.property.value.label' | trans(transOptions) }}</td>
             <td>£{{ asset.value | money_format }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 5}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 5}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
 
         {# equity release scheme #}
         <tr>
             <td>{{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}</td>
             <td>{{ asset.isSubjectToEquityRelease | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 6}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 6}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
 
         {# other charges  #}
         <tr>
             <td>{{ 'form.property.hasCharges.label' | trans(transOptions) }}</td>
             <td>{{ asset.hasCharges | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 7}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 7}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
 
         {# rented out + rent agreement date + income month #}
         <tr>
             <td>{{ 'form.property.isRentedOut.label' | trans(transOptions) }}</td>
             <td>{{ asset.isRentedOut | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
         </tr>
         {% if asset.isRentedOut =='yes' %}
             <tr>
                 <td>{{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}</td>
                 <td>{{ asset.rentAgreementEndDate | date("m/Y") }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer soft-half--left hard--right width-sixth">
+                        <a class="behat-link-edit action-link"
+                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+            {% endif %}
             </tr>
             <tr>
                 <td>{{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}</td>
                 <td>£{{ asset.rentIncomeMonth | money_format }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer soft-half--left hard--right width-sixth">
+                        <a class="behat-link-edit action-link"
+                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endif %}
 

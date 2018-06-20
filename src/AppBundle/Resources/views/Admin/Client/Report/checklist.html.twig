@@ -99,9 +99,24 @@
     <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View decisions summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Decision:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
     {# People consulted #}
@@ -110,9 +125,24 @@
     <div class="form-section">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.consultationsSatisfactory, (page ~ '.form.consultationsSatisfactory'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View contacts summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Contact:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
     {# Contact with client, care arrangements and care plan #}
@@ -147,9 +177,24 @@
     <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View assets summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Asset:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
     <div class="form-section">
@@ -175,15 +220,58 @@
         </details>
     </div>
 
-    {# Money in and money out #}
+    {# Money transfers, Money in and money out #}
     <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
     <div class="form-section push--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
-                'fieldSetClass' : 'inline'
+                'fieldSetClass' : 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details>
+            <summary>
+                <span class="summary">View money transfers summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+
+        <details>
+            <summary>
+                <span class="summary">View money out summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View money in summary</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
     </div>
 
     <div class="form-section push--bottom">
