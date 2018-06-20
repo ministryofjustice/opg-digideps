@@ -805,13 +805,15 @@ class Client
      */
     public function getExpectedReportStartDate()
     {
+        // create new datetime object. Do not alter object courtDate property.
         /** @var \DateTime $courtDate */
-        $courtDate = $this->getCourtDate();
-        $courtDate->setDate(date('Y'), $courtDate->format('m'), $courtDate->format('d'));
-        if ($courtDate > date('now')) {
+        $courtDate = new \DateTime();
+        $courtDate->setDate(date('Y'), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+        if ($courtDate->getTimestamp() > time()) {
             $courtDate->modify('-1 year');
         }
-        return $this->courtDate;
+
+        return $courtDate;
     }
 
     /**

@@ -33,18 +33,18 @@
 {% block pageContent %}
     <p class="flush--bottom">
         {{ 'client' | trans({}, 'common') }}:
-        <span class="bold">{{ report.client.fullName }}</span>
+        <span class="bold behat-region-fullName">{{ report.client.fullName }}</span>
     </p>
     <p>
         {{ 'courtOrderNumber' | trans({}, 'common') }}:
-        <span class="bold">{{ report.client.caseNumber }}</span>
+        <span class="bold behat-region-case-number">{{ report.client.caseNumber }}</span>
     </p>
     <p class="flush--bottom behat-region-last-saved-by">
         {{ 'lastSavedBy' | trans({}, 'common') }}:
         {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
-            <span class="bold">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
+            <span class="bold behat-region-last-modified-by">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
         {% else %}
-            <span class="bold">-</span>
+            <span class="bold behat-region-last-modified-by">-</span>
         {% endif %}
     </p>
     <p>
@@ -55,11 +55,11 @@
     {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
         <p class="flush--bottom behat-region-last-submitted-by">
             {{ 'lastSubmittedBy' | trans({}, 'common') }}:
-            <span class="bold">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
+            <span class="bold behat-region-last-modified-by">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
         </p>
         <p>
             {{ 'lastSubmittedOn' | trans({}, 'common') }}:
-            <span class="bold">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
+            <span class="bold behat-region-last-modified-by">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
         </p>
     {% endif %}
 
@@ -78,9 +78,9 @@
 
         <div class="panel panel-border-narrow push--bottom">
             <div>
-                <p class="flush--bottom"><strong class="bold">Court order date:</strong> {{ report.client.courtDate | date("j M Y") }}</p>
-                <p class="flush--bottom"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
-                <p><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
+                <p class="flush--bottom behat-region-court-date"><strong class="bold">Court order date:</strong> {{ report.client.courtDate | date("j M Y") }}</p>
+                <p class="flush--bottom behat-region-expected-date"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
+                <p class="behat-region-submitted-date"><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
             </div>
         </div>
     </div>
@@ -110,11 +110,11 @@
                     <tbody>
                         <tr>
                             <th scope="row" class="bold">First names</th>
-                            <td>{{ report.client.firstName }}</td>
+                            <td class="behat-region-checklist-client-firstname">{{ report.client.firstName }}</td>
                         </tr>
                         <tr>
                             <th scope="row" class="bold">Last name</th>
-                            <td>{{ report.client.lastName }}</td>
+                            <td class="behat-region-checklist-client-lastname">{{ report.client.lastName }}</td>
                         </tr>
                         <tr valign="top">
                             <th scope="row" class="bold">Address</th>

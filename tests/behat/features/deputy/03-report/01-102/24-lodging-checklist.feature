@@ -22,6 +22,11 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | - | last-saved-by |
+      | - | last-modified-by |
+      | 1 Jan 2016 | court-date |
+      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
+      | Cly | checklist-client-firstname |
+      | Hent | checklist-client-lastname |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
