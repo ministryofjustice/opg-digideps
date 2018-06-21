@@ -22,10 +22,6 @@ class ReportChecklistType extends AbstractType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true
             ])
-            ->add('reportingPeriodAcceptable', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
-                'expanded' => true
-            ])
             ->add('contactDetailsUptoDate', FormTypes\CheckboxType::class, [])
             ->add('deputyFullNameAccurateInCasrec', FormTypes\CheckboxType::class, [])
 
