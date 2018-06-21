@@ -126,11 +126,6 @@ class ReportChecklistType extends AbstractType
                 $ret = [];
                 if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
                     $ret[] = 'submit-checklist';
-                    $checklist = $form->getData();
-
-                    if ($checklist->getReportingPeriodAccurate() == 'no') {
-                        $ret[] = 'report-period-acceptable';
-                    }
                 }
 
                 return $ret;

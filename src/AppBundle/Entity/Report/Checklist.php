@@ -39,15 +39,6 @@ class Checklist
      * @var string
      *
      * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.reportingPeriodAcceptable.notBlank", groups={"report-period-acceptable"})
-     */
-    private $reportingPeriodAcceptable;
-
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
      * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-checklist"})
      */
@@ -285,22 +276,6 @@ class Checklist
     {
         $this->reportingPeriodAccurate = $reportingPeriodAccurate;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReportingPeriodAcceptable()
-    {
-        return $this->reportingPeriodAcceptable;
-    }
-
-    /**
-     * @param string $reportingPeriodAcceptable
-     */
-    public function setReportingPeriodAcceptable($reportingPeriodAcceptable)
-    {
-        $this->reportingPeriodAcceptable = $reportingPeriodAcceptable;
     }
 
     /**
