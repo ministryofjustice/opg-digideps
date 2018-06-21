@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\Ndr\VisitsCare;
 
 class NdrStatusService
 {
@@ -21,18 +22,20 @@ class NdrStatusService
     /** @return string */
     public function getVisitsCareState()
     {
+        /** @var VisitsCare $visitsCare */
         $visitsCare = $this->ndr->getVisitsCare();
         $answers = [
             $visitsCare->getDoYouLiveWithClient(),
             $visitsCare->getDoesClientHaveACarePlan(),
             $visitsCare->getWhoIsDoingTheCaring(),
-            $visitsCare->getDoesClientHaveACarePlan()
+            $visitsCare->getDoesClientHaveACarePlan(),
+            $visitsCare->getPlanMoveNewResidence()
         ];
 
         switch (count(array_filter($answers))) {
             case 0:
                 return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case 4:
+            case 5:
                 return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
             default:
                 return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
