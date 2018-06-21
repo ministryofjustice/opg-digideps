@@ -11,9 +11,9 @@
         <h1>Lodging checklist</h1>
 
         <p class="push--bottom">
-            <strong>{{ 'client' | trans({}, 'common' ) }}:</strong> first last<br/>
-            <strong>{{ 'caseNumber' | trans({}, 'common' ) }}:</strong> 3847638746<br/>
-            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong> 1 June 2016 to 31 May 2017<br/>
+            <strong>{{ 'client' | trans({}, 'common' ) }}:</strong> {{ report.client.fullName }}<br/>
+            <strong>{{ 'caseNumber' | trans({}, 'common' ) }}:</strong> {{ report.client.caseNumber }}<br/>
+            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong>    {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}<br/>
         </p>
 
         <div class="section">
@@ -356,8 +356,8 @@
         </div>
 
          <p>
-            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> first last<br/>
-            <strong>{{ 'submissionDate' | trans({}, 'common' ) }}:</strong> 23 June 2016<br/>
+            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}<br/>
+            <strong>{{ 'submissionDate' | trans({}, 'common' ) }}:</strong> {{ checklist.submittedOn | date("j F Y") }}<br/>
         </p>
 
     </div>
