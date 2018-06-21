@@ -13,7 +13,7 @@
         <p class="push--bottom">
             <strong>{{ 'client' | trans({}, 'common' ) }}:</strong> {{ report.client.fullName }}<br/>
             <strong>{{ 'caseNumber' | trans({}, 'common' ) }}:</strong> {{ report.client.caseNumber }}<br/>
-            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong>    {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}<br/>
+            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong> {{ report.startDate | date("j F Y") }} - {{ report.endDate | date("j F Y") }}<br/>
         </p>
 
         <div class="section">
@@ -356,7 +356,7 @@
         </div>
 
          <p>
-            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}<br/>
+            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> {{ checklist.submittedBy.fullName}} {% if checklist.submittedBy.roleFullName != 'Case Manager' %}({{ checklist.submittedBy.roleFullName }}){% endif %}<br/>
             <strong>{{ 'submissionDate' | trans({}, 'common' ) }}:</strong> {{ checklist.submittedOn | date("j F Y") }}<br/>
         </p>
 
