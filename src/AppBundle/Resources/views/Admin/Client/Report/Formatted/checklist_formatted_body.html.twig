@@ -8,10 +8,17 @@
     <div class="formatted-report">
 
         <div id="report-header">Office of the Public Guardian</div>
-        <h1 class="push--bottom">Lodging checklist</h1>
+        <h1>Lodging checklist</h1>
+
+        <p class="push--bottom">
+            <strong>{{ 'client' | trans({}, 'common' ) }}:</strong> first last<br/>
+            <strong>{{ 'caseNumber' | trans({}, 'common' ) }}:</strong> 3847638746<br/>
+            <strong>{{ 'reportingPeriod' | trans({}, 'common' ) }}:</strong> 1 June 2016 to 31 May 2017<br/>
+        </p>
 
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.info') | trans({}, 'admin-checklist') }}</h2>
+
 
             <h3 class="label question bold">{{ (page ~ '.form.reportingPeriodAccurate.label') | trans({}, 'admin-checklist') }}</h3>
 
@@ -347,6 +354,11 @@
                 </tbody>
             </table>
         </div>
+
+         <p>
+            <strong>{{ 'caseManager' | trans({}, 'common' ) }}:</strong> first last<br/>
+            <strong>{{ 'submissionDate' | trans({}, 'common' ) }}:</strong> 23 June 2016<br/>
+        </p>
 
     </div>
 </div>
