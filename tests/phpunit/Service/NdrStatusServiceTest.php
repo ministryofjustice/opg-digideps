@@ -29,6 +29,7 @@ class NdrStatusServiceTest extends \PHPUnit_Framework_TestCase
                     'getDoesClientHaveACarePlan' => null,
                     'getWhoIsDoingTheCaring' => null,
                     'getDoesClientHaveACarePlan' => null,
+                    'getPlanMoveNewResidence' => null
                 ]),
                 'getExpenses' => [],
                 'getPaidForAnything' => null,
@@ -62,18 +63,21 @@ class NdrStatusServiceTest extends \PHPUnit_Framework_TestCase
             'getDoesClientHaveACarePlan' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
+            'getPlanMoveNewResidence' => null
         ]);
         $incomplete = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientHaveACarePlan' => null,
             'getWhoIsDoingTheCaring' => null,
             'getDoesClientHaveACarePlan' => null,
+            'getPlanMoveNewResidence' => null
         ]);
         $done = m::mock(VisitsCare::class, [
             'getDoYouLiveWithClient' => 'yes',
             'getDoesClientHaveACarePlan' => 'yes',
             'getWhoIsDoingTheCaring' => 'xxx',
             'getDoesClientHaveACarePlan' => 'yes',
+            'getPlanMoveNewResidence' => 'no'
         ]);
 
         return [
