@@ -19,15 +19,12 @@ startPage:
     no longer need it to process your report.
 
 categoryPage:
-  backLink: Back
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageTitle: Money out
-
-
 
 existPage:
   moneyIn:
@@ -43,7 +40,6 @@ existPage:
       label: Have there been any one-off payments over £1,000?
     save:
       label: Save and continue
-
 
 addPage:
   moneyIn:
