@@ -4,10 +4,11 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'typePage' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'typePage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'typePage.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -15,14 +16,14 @@
 {% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'typePage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'typePage.pageSectionDescription1' | trans(transOptions) }}</p>
-        <p>{{ 'typePage.pageSectionDescription2' | trans(transOptions) }}</p>
+        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p>{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
