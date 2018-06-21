@@ -44,12 +44,12 @@
         {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
             <span class="bold behat-region-last-modified-by">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
         {% else %}
-            <span class="bold behat-region-last-modified-by">-</span>
+            <span class="bold behat-region-last-modified-by">Not saved yet</span>
         {% endif %}
     </p>
     <p>
         {{ 'lastSavedOn' | trans({}, 'common') }}:
-        <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : '-' }}</span>
+        <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}</span>
     </p>
 
     {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}

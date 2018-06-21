@@ -33,9 +33,7 @@ checklistPage:
     saveFurtherInformation:
       label: Save further information
     reportingPeriodAccurate:
-      label: Is the reporting period accurate?
-    reportingPeriodAcceptable:
-      label: Is the reporting period acceptable?
+      label: Is the reporting period correct or acceptable?
     contactDetailsUptoDate:
       label: Contact details are correct and up to date (updated where applicable)
     deputyFullNameAccurateinCasrec:
