@@ -28,14 +28,13 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doYouLiveWithClient.label' | trans(transOptions, translationDomain),
                     'items': [
-                    {},
-                    {'dataTarget': 'how-often-contact-client-wrapper' }
+                        {},
+                        {'dataTarget': 'how-often-contact-client-wrapper' }
                     ]
                 }) }}
 
                 <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
                     {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
-                        'labelClass': 'required',
                         'labelParameters': transOptions
                     }) }}
                 </div>
@@ -53,8 +52,8 @@
                     'legendClass' : 'form-label-bold',
                     'legendText' : 'form.doesClientReceivePaidCare.label' | trans(transOptions, translationDomain),
                     'items': [
-                    {'dataTarget': 'how-care-funded-wrapper' },
-                    {}
+                        {'dataTarget': 'how-care-funded-wrapper' },
+                        {}
                     ]
                 }) }}
 

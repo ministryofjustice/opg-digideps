@@ -40,6 +40,7 @@
         'categoryKey': 'form.stateBenefits',
         'elements': form.stateBenefits,
         } %}
+        {{ macros.saveAndContinueButton(form.save) }}
 
     {% endif %}
 
@@ -49,6 +50,12 @@
             'legendClass' : 'form-label',
             'legendText' : 'form.receiveStatePension.label' | trans(transOptions),
         }) }}
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
     {% endif %}
 
     {% if step == 3 %}
@@ -75,7 +82,12 @@
                 </div>
             </div>
         </div>
+        {{ macros.saveAndContinueButton(form.save) }}
 
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
     {% endif %}
 
 
@@ -101,6 +113,12 @@
                 </div>
             </div>
         </div>
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        {% if skipLink %}
+            <a href="{{ skipLink }}"
+               class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
+        {% endif %}
     {% endif %}
 
 
@@ -115,13 +133,8 @@
         'categoryKey': 'form.oneOff',
         'elements': form.oneOff,
         } %}
-    {% endif %}
+        {{ macros.saveAndContinueButton(form.save) }}
 
-    {{ macros.saveAndContinueButton(form.save) }}
-
-    {% if skipLink %}
-        <a href="{{ skipLink }}"
-           class="button-link behat-link-step-skip">{{ 'stepPage.skipLink' | trans({}, 'common') }}</a>
     {% endif %}
 
     {{ form_end(form) }}

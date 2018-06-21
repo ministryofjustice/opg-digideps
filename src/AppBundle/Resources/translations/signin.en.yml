@@ -21,6 +21,7 @@ signInForm:
       hint: We sent your registration link to this email address.
   password:
       label: Password
+      hint: ""
   signin:
       label: Sign in
       invalidMessage: You've entered an invalid email or password. Please try again.

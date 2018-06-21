@@ -93,7 +93,6 @@ class DocumentController extends AbstractController
             'step'         => $step,
             'form'         => $form->createView(),
             'backLink'     => $stepRedirector->getBackLink(),
-            'skipLink'     => '',
         ];
     }
 

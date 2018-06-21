@@ -22,4 +22,10 @@
 
     <a href="{{ path('ndr_debts_exist', { 'ndrId': ndr.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'debts',
+    } %}
+
 {% endblock %}

@@ -93,14 +93,16 @@
 
 {% macro saveAndContinueButton(button) %}
     {{ form_submit(button, '', {
-        'labelText': 'saveAndContinue' | trans({}, 'common'),
+        'labelText': 'saveAndContinue',
+        'labelTranslationDomain': 'common',
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}
 
 {% macro addAnotherSaveButton(button) %}
     {{ form_submit(button, '', {
-        'labelText': 'continue' | trans({}, 'common'),
+        'labelText': 'continue',
+        'labelTranslationDomain': 'common',
         'buttonClass': 'behat-link-save-and-continue',
     }) }}
 {% endmacro %}
@@ -177,8 +179,7 @@
             </li>
             {% if (section_link_params(report, section, +1)) %}
                 <li>
-                    <a href="{{ section_link_params(report, section, +1).link }}">Next section:
-                        {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
+                    <a href="{{ section_link_params(report, section, +1).link }}">Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
                 </li>
             {% endif %}
             {% if report.type != 'ndr' %}
