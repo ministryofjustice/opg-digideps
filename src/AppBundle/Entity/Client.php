@@ -798,8 +798,6 @@ class Client
      *
      * @var DateTime
      *
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"client"})
      * @JMS\Type("DateTime")
      * @return DateTime
      */
@@ -822,8 +820,6 @@ class Client
      *
      * @var DateTime
      *
-     * @JMS\VirtualProperty
-     * @JMS\Groups({"client"})
      * @JMS\Type("DateTime")
      * @return DateTime
      */
