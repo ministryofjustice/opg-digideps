@@ -347,6 +347,8 @@ class ReportControllerTest extends AbstractTestController
             'data'        => [
                 'un_submit_date'            => '2018-01-01',
                 'due_date'                  => '2019-01-01',
+                'start_date'                => '2019-02-01',
+                'end_date'                  => '2019-03-01',
                 'unsubmitted_sections_list' => 'decisions,contacts',
             ],
         ]);
@@ -360,6 +362,8 @@ class ReportControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('2018-01-01', $data['un_submit_date']);
         $this->assertEquals('2019-01-01', $data['due_date']);
+        $this->assertEquals('2019-02-01', $data['start_date']);
+        $this->assertEquals('2019-03-01', $data['end_date']);
         $this->assertEquals('decisions,contacts', $data['unsubmitted_sections_list']);
         $this->assertEquals(false, $data['submitted']);
         $this->assertNotNull($data['submit_date']);
