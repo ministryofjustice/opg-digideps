@@ -6,7 +6,6 @@
 {% trans_default_domain translationDomain %}
 
 {% set page = 'checklistPage' %}
-{% set checklistPage = true %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
@@ -544,7 +543,7 @@
     </div>
 
     <div class="form-section push--bottom">
-        {{ form_input(form.lodgingSummary, 'checklistPage.form.lodgingSummary') }}
+        {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary')) }}
     </div>
 
     {# Further information #}
@@ -581,26 +580,25 @@
     </table>
 
     <div class="form-section push-double--bottom">
-        {{ form_input(form.furtherInformationReceived, 'checklistPage.form.furtherInformationReceived', {
+        {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformationReceived'), {
             'formGroupClass': 'explanation',
         }) }}
-        {{ form_submit(form.saveFurtherInformation,'checklistPage.form.saveFurtherInformation', {
+        {{ form_submit(form.saveFurtherInformation, (page ~ '.form.saveFurtherInformation'), {
             'buttonClass': 'button-secondary behat-link-save-further-information'
         }) }}
     </div>
 
-    <div class="form-section">
-        {{ form_submit(form.save,'checklistPage.form.save', {
+    <div class="form-section push--bottom">
+        {{ form_submit(form.save, (page ~ '.form.save'), {
             'buttonClass': 'button-secondary push-half--right behat-link-save-progress'
         }) }}
 
-        {{ form_submit(form.submitAndDownload,'checklistPage.form.submitAndDownload', {
+        {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
             'buttonClass': 'behat-link-submit-and-download'
         }) }}
-
-        <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
     </div>
 
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}">{{ (page ~ '.backToClientDetails') | trans }}</a>
 
     {{ form_end(form) }}
 
