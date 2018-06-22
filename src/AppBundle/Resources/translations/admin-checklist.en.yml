@@ -24,6 +24,7 @@ checklistPage:
     para: |
       You must complete this section if we have received requested correspondence following a lodging
       (incompletes and casework).
+  backToClientDetails: Back to client details
 
   form:
     save:

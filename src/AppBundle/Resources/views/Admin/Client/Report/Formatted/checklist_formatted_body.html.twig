@@ -327,7 +327,7 @@
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.furtherInfo.heading') | trans({}, 'admin-checklist') }}</h2>
 
-            <table>
+            <table class="flush--top">
                 <thead>
                     <tr>
                         <th class="text--left">Information provided</th>
@@ -348,7 +348,9 @@
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td class="value" colspan="3">No information received.</td>
+                        <td class="value width-two-thirds">No information received.</td>
+                        <td class="value width-sixth"></td>
+                        <td class="value width-sixth"></td>
                     </tr>
                 {% endif %}
                 </tbody>
