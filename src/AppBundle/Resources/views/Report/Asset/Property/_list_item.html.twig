@@ -2,6 +2,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {% for asset in assetsInGroup.items %}
 
     <div class="grid-row push--ends behat-region-property-{{ asset.postcode | behat_namify }}">

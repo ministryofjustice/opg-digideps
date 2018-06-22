@@ -2,6 +2,8 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 <div class="grid-row push--top">
     <div class="column-half">
         <h2 class="heading-medium flush--ends">Income you've already told us about</h2>
