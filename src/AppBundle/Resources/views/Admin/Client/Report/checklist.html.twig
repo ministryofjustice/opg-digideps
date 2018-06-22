@@ -31,36 +31,35 @@
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
     <p class="flush--bottom">
         {{ 'client' | trans({}, 'common') }}:
-        <span class="bold">{{ report.client.fullName }}</span>
+        <span class="bold behat-region-fullName">{{ report.client.fullName }}</span>
     </p>
     <p>
         {{ 'courtOrderNumber' | trans({}, 'common') }}:
-        <span class="bold">{{ report.client.caseNumber }}</span>
+        <span class="bold behat-region-case-number">{{ report.client.caseNumber }}</span>
     </p>
     <p class="flush--bottom behat-region-last-saved-by">
         {{ 'lastSavedBy' | trans({}, 'common') }}:
         {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
-            <span class="bold">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
+            <span class="bold behat-region-last-modified-by">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
         {% else %}
-            <span class="bold">-</span>
+            <span class="bold behat-region-last-modified-by">Not saved yet</span>
         {% endif %}
     </p>
     <p>
         {{ 'lastSavedOn' | trans({}, 'common') }}:
-        <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : '-' }}</span>
+        <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}</span>
     </p>
 
     {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
         <p class="flush--bottom behat-region-last-submitted-by">
             {{ 'lastSubmittedBy' | trans({}, 'common') }}:
-            <span class="bold">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
+            <span class="bold behat-region-last-modified-by">{{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}</span>
         </p>
         <p>
             {{ 'lastSubmittedOn' | trans({}, 'common') }}:
-            <span class="bold">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
+            <span class="bold behat-region-last-modified-by">{{ (checklist.submittedOn) ? (checklist.submittedOn | date("j F Y H:i")) : '-' }}</span>
         </p>
     {% endif %}
 
@@ -72,24 +71,84 @@
     <div class="form-section push-half--bottom">
         <div class="form-group-outer">
             {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-                'fieldSetClass': 'inline'
+                'fieldSetClass': 'inline',
+                'formGroupClass': 'push-half--bottom'
             }) }}
+        </div>
+
+        <div class="panel panel-border-narrow push--bottom">
+            <div>
+                <p class="flush--bottom behat-region-court-date"><strong class="bold">Court order date:</strong> {{ report.client.courtDate | date("j M Y") }}</p>
+                <p class="flush--bottom behat-region-expected-date"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
+                <p class="behat-region-submitted-date"><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
+            </div>
         </div>
     </div>
 
     <div class="form-section push-half--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
-                'labelClass': 'text'
+                'labelClass': 'text',
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">View contact details</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <table class="text">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="bold">First names</th>
+                            <td class="behat-region-checklist-client-firstname">{{ report.client.firstName }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">Last name</th>
+                            <td class="behat-region-checklist-client-lastname">{{ report.client.lastName }}</td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row" class="bold">Address</th>
+                            <td>
+                                <p>
+                                    {% if report.client.address is not empty %}
+                                        {{ report.client.address }}<br/>
+                                    {% endif %}
+                                    {% if report.client.address2 is not empty %}
+                                        {{ report.client.address2 }}<br/>
+                                    {% endif %}
+                                    {% if report.client.county is not empty %}
+                                        {{ report.client.county }}<br/>
+                                    {% endif %}
+                                    {% if report.client.postcode is not empty %}
+                                        {{ report.client.postcode }}<br/>
+                                    {% endif %}
+                                    {% if report.client.country is not empty %}
+                                        {{ report.client.country | country_name }}
+                                    {% endif %}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">Telephone</th>
+                            <td>{{ report.client.phone }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </details>
     </div>
 
     <div class="form-section push-half--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
-                'labelClass': 'text'
+                'labelClass': 'text',
+                'formGroupClass': 'flush--bottom'
             }) }}
+        </div>
+        <div class="panel panel-border-narrow push-half--top">
+            <p><strong class="bold">Deputy's full name:</strong> {{ report.submittedBy.fullName }}</p>
         </div>
     </div>
 
@@ -198,10 +257,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -275,10 +334,10 @@
     </div>
 
     <div class="form-section push--bottom">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
@@ -316,10 +375,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
     </div>
@@ -336,10 +395,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
     </div>
@@ -387,10 +446,10 @@
     </div>
 
     <div class="form-section">
-        <div class="form-group-outer">
+        <div class="form-group-outer border-top soft--top">
             {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
                 'fieldSetClass' : 'inline',
-                'formGroupClass': 'border-top soft--top push-half--bottom'
+                'formGroupClass': 'push-half--bottom'
             }) }}
         </div>
 
