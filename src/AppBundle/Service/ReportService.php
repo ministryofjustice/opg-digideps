@@ -215,13 +215,15 @@ class ReportService
      * @param \DateTime $dueDate
      * @param $sectionList
      */
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, $sectionList)
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, $sectionList)
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
 
         $report->setUnSubmitDate($unsubmitDate);
         $report->setDueDate($dueDate);
+        $report->setStartDate($startDate);
+        $report->setEndDate($endDate);
 
         $report->setUnsubmittedSectionsList($sectionList);
 
