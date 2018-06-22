@@ -21,7 +21,12 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | - | last-saved-by |
+      | Not saved yet | last-saved-by |
+      | Not saved yet | last-modified-by |
+      | 1 Jan 2016 | court-date |
+      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
+      | Cly | checklist-client-firstname |
+      | Hent | checklist-client-lastname |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
@@ -91,7 +96,7 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | - | last-saved-by |
+      | Not saved yet | last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
     When I click on "save-further-information"
@@ -185,6 +190,7 @@ Feature: Admin report checklist
       | report_checklist_finalDecision_0    | for-review |
       | report_checklist_lodgingSummary    | I am not satisfied |
     Then I click on "submit-and-download"
+    And the form should be valid
 
   @deputy
   Scenario: Admin marked as submitted

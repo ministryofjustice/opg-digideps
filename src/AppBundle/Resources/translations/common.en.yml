@@ -51,6 +51,7 @@ out: Out
 balance: Balance
 actions: Actions
 caseNumber: Case number
+caseManager: Case manager
 client: Client
 courtOrderNo: Court order no.
 courtOrderNumber: Court order number
@@ -60,6 +61,7 @@ question: Question
 answer: Answer
 reports: Reports
 period: Period
+reportingPeriod: Reporting period
 submissionDate: Submission date
 unsubmissionDate: Unsubmission date
 bankName: Bank or building society name
