@@ -4,14 +4,15 @@
 
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'editPage' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'editPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'editPage.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'addPage.supportTitle' | trans }}</span>
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
 {% block linkBack %}

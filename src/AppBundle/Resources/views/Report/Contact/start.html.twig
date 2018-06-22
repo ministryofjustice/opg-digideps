@@ -4,10 +4,11 @@
 
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'startPage' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -15,10 +16,10 @@
 {% block pageContent %}
 
     <div class="text">
-        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
     </div>
 
-    <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+    <a href="{{ path('contacts_exist', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
 
     {# Pagination #}
     {% include 'AppBundle:Report:_nextprevious.html.twig' with {

@@ -1,6 +1,6 @@
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
-
+{% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
 <table class="check-your-answers columns-2 push-double--bottom">
@@ -36,13 +36,13 @@
 {% if report.contacts | length > 0 %}
     <div class="grid-row">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of contacts</h2>
+            <h2 class="heading-medium flush--ends">{{ (page ~ '.listOfContacts') | trans }}</h2>
         </div>
         <div class="column-half text--right">
             {% if not hideEditLink  %}
                 <a href="{{ path('contacts_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                     <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
+                    {{ (page ~ '.addButton') | trans }}
                 </a>
             {% endif %}
         </div>
@@ -53,9 +53,9 @@
     <table class="check-your-answers columns-3">
         <thead>
             <tr>
-                <th>Contact</th>
-                <th>Relationship</th>
-                <th>Reason for contact</th>
+                <th>{{ (page ~ '.contact') | trans }}</th>
+                <th>{{ (page ~ '.relationship') | trans }}</th>
+                <th>{{ (page ~ '.reasonForContact') | trans }}</th>
                 {% if not hideEditLink  %}
                     <th>
                         <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>

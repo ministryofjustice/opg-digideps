@@ -132,7 +132,7 @@
                         <td>{{ ndr.debtManagement | nl2br }}</td>
                     {% else %}
                         <td><span class="error">{{ 'managementPage.form.debtManagement.label' | trans }}</span></td>
-                        <td> <span class="error-message">Please answer this question</span></td>
+                        <td> <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span></td>
                     {% endif %}
                     <td class="change-answer">
                         <a href="{{ path('ndr_debts_management', {'ndrId': ndr.id, 'from': 'summary'}) }}" class="behat-link-edit-debt-management action-link">{{ 'edit' | trans({}, 'common' ) }}</a>

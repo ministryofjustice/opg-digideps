@@ -1,15 +1,14 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-
+{% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {% for asset in assetsInGroup.items %}
-{# @var asset \AppBundle\Entity\Report\AssetProperty #}
 
     <div class="grid-row push--ends behat-region-property-{{ asset.postcode | behat_namify }}">
         <div class="column-half">
-            <h3 class="heading-medium flush--ends">{{ ('summaryPage.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</h3>
+            <h3 class="heading-medium flush--ends">{{ (page ~ '.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</h3>
         </div>
         <div class="column-half text--right">
             {% if not hideEditLink  %}

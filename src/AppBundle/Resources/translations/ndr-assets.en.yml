@@ -27,7 +27,6 @@ typePage:
     some details about it. You can go back and add more assets
     if you need to.
   formstartButton: Save and continue
-  backLink: Back
 
 addPage:
   htmlTitle: "New deputy report - Assets | GOV.UK"
@@ -60,7 +59,6 @@ summaryPage:
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
-  edit: Edit
 
 form:
   titleSave.label: Save and continue

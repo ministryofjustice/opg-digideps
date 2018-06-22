@@ -54,7 +54,6 @@ summaryPage:
     In this section we ask you to tell us about things you paid for on %client%'s behalf before your
     court order.
   addButton: Add a deputy expense
-  edit: Edit
 
 form:
   explanation:

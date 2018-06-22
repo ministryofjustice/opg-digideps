@@ -52,6 +52,10 @@ summaryPage:
   addButton: Add a contact
   weAskAbout: |
     In this section we ask you about the people who helped you make significant decisions as a deputy.
+  listOfContacts: List of contacts
+  contact: Contact
+  relationship: Relationship
+  reasonForContact: Reason for contact
 
 form:
   contactName:

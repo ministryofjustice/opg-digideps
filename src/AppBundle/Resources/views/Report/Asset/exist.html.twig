@@ -4,10 +4,11 @@
 
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'existPage' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'existPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'existPage.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -19,7 +20,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        {{ form_checkbox_group(form.noAssetToAdd, 'existPage.form.noAssetToAdd', {
+        {{ form_checkbox_group(form.noAssetToAdd, (page ~ '.form.noAssetToAdd'), {
             'fieldSetClass' : 'inline',
             'labelParameters': transOptions,
             'legendClass' : 'form-label-bold text',
