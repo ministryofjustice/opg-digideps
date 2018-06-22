@@ -792,4 +792,39 @@ class Client
 
         return null;
     }
+
+    /**
+     * Generates the expected Report Start date based on the Court date
+     *
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime")
+     * @return DateTime
+     */
+    public function getExpectedReportStartDate()
+    {
+        // create new datetime object. Do not alter object courtDate property.
+        /** @var \DateTime $courtDate */
+        $courtDate = new \DateTime();
+
+        $courtDate->setDate(date('Y'), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+        if ($courtDate->getTimestamp() > time()) {
+            $courtDate->modify('-1 year');
+        }
+
+        return $courtDate;
+    }
+
+    /**
+     * Generates the expected Report End date based on the Court date
+     *
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime")
+     * @return DateTime
+     */
+    public function getExpectedReportEndDate()
+    {
+        return $this->getExpectedReportStartDate()->modify('+1year -1day');
+    }
 }
