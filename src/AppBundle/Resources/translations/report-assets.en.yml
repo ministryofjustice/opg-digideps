@@ -58,8 +58,10 @@ summaryPage:
   pageTitle: Assets
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
+  listOfAssets: List of assets
   property: Property
   addButton: Add an asset
+  totalValueOfAssets: Total value of assets
 
 form:
   titleSave.label: Save and continue

@@ -1,11 +1,14 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
 <h3 class="heading-medium">{{ groupId | trans }}</h3>
 
 <table class="check-your-answers behat-region-list-accounts">
     <thead>
     <tr>
-        <th>Description of asset</th>
-        <th class="numeric">Valuation date</th>
-        <th class="numeric">Value</th>
+        <th>{{ 'form.description.label' | trans }}</th>
+        <th class="numeric">{{ 'form.valuationDate.label' | trans }}</th>
+        <th class="numeric">{{ 'form.value.label' | trans }}</th>
         {% if not hideEditLink  %}
             <th>
                 <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
@@ -36,7 +39,7 @@
     {% endfor %}
         <tr class="no-border">
             <td>
-                <span class="bold-small">Total amount</span>
+                <span class="bold-small">{{ 'totalAmount' | trans({}, 'common' ) }}</span>
             </td>
             <td></td>
             <td class="text--right">
