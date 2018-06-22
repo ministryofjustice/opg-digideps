@@ -11,6 +11,8 @@
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
 } %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.moneyIn.pageTitle' | trans(transOptions) }}{% endblock %}
