@@ -30,7 +30,7 @@
             {% endif %}
         </td>
         <td class="change-answer">
-            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     {% set stateBenefitsOther = ndr.getStateBenefitOther() %}
@@ -43,7 +43,7 @@
                 {{ stateBenefitsOther.moreDetails | nl2br }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
     {% endif %}
@@ -84,7 +84,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 2, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 2, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     <tr class="behat-region-receive-other-regular-income">
@@ -106,7 +106,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     {% if ndr.receiveOtherIncome == 'yes' %}
@@ -118,7 +118,7 @@
                 {{ ndr.receiveOtherIncomeDetails | nl2br }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
     {% endif %}
@@ -156,7 +156,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     {% if ndr.expectCompensationDamages == 'yes' %}
@@ -168,7 +168,7 @@
                 {{ ndr.expectCompensationDamagesDetails | nl2br }}
             </td>
             <td class="change-answer">
-                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
     {% endif %}
@@ -202,7 +202,7 @@
             {% endif %}
         </td>
         <td class="change-answer">
-            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 5, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 5, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     </tbody>

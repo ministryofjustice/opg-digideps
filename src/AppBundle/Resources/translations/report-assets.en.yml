@@ -60,7 +60,6 @@ summaryPage:
   weAskAbout: In this section, we ask you about %client%'s assets, including property, vehicles, valuables or investments.
   property: Property
   addButton: Add an asset
-  edit: Edit
 
 form:
   titleSave.label: Save and continue

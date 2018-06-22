@@ -21,7 +21,7 @@
                 {{ ndr.noAssetToAdd ? 'No' : 'Yes' }}
             </td>
             <td class="change-answer">
-                <a href="{{ url('ndr_assets_exist', { 'ndrId': ndr.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ url('ndr_assets_exist', { 'ndrId': ndr.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
     </tbody>

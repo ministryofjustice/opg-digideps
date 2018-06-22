@@ -98,7 +98,6 @@ addAnotherPage:
 
 
 summaryPage:
-  edit: Edit
   moneyIn:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in

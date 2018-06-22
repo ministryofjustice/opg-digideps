@@ -30,7 +30,7 @@
             </td>
         {% endif %}
         <td class="change-answer">
-            <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+            <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
         </td>
     </tr>
     {% if report.reasonForNoFees %}
@@ -38,7 +38,7 @@
             <td>Reason for not having charged the client any fees for your services during the reporting period</td>
             <td>{{ report.reasonForNoFees | nl2br }}</td>
             <td class="change-answer">
-                <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
     {% endif %}
@@ -67,7 +67,7 @@
             {% endif %}
             <td class="change-answer">
                 <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-                   class="behat-link-edit">{{ 'summaryPage.edit'| trans }}</a>
+                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
             </td>
         </tr>
 
