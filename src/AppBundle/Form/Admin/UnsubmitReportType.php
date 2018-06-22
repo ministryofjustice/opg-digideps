@@ -21,6 +21,17 @@ class UnsubmitReportType extends AbstractType
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'type' => new UnsubmittedSectionType(),
             ])
+            ->add('startDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'report.startDate.invalidMessage', ])
+
+            ->add('endDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'report.endDate.invalidMessage',
+            ])
+
             ->add('dueDateChoice', FormTypes\ChoiceType::class, [
                 'choices'     => [
                     'keep'  => $dueDateChoiceTransPrefix . 'keep',
