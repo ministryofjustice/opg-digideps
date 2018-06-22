@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
-
+{% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
 <table class="check-your-answers columns-2 push-double--bottom">
@@ -84,9 +84,9 @@
     <tr class="behat-region-has-decisions">
         {% if not report.hasDecisions %}
             <td>
-                    <span class="error">
-                        {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
-                    </span>
+                <span class="error">
+                    {{ 'existPage.form.hasDecisions.label' | trans(transOptions) }}
+                </span>
             </td>
             <td>
                 <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
@@ -124,14 +124,14 @@
 {% if report.decisions | length > 0 %}
     <div class="grid-row">
         <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of significant decisions</h2>
+            <h2 class="heading-medium flush--ends">{{ (page ~ '.listOfDecisions') | trans }}</h2>
         </div>
         <div class="column-half text--right">
             {% if not hideEditLink  %}
                 <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}"
                    class="bold-small move-quarter--up action-link behat-link-add">
                     <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
+                    {{ (page ~ '.addButton') | trans }}
                 </a>
             {% endif %}
         </div>
@@ -142,9 +142,9 @@
     <table class="check-your-answers columns-3">
         <thead>
         <tr>
-            <th>{{ 'summaryPage.decisionTableColumnHeading1' | trans(transOptions) }}</th>
-            <th>{{ 'summaryPage.decisionTableColumnHeading2' | trans(transOptions) }}</th>
-            <th>{{ 'summaryPage.decisionTableColumnHeading3' | trans(transOptions) }}</th>
+            <th>{{ (page ~ '.decisionTableColumnHeading1') | trans(transOptions) }}</th>
+            <th>{{ (page ~ '.decisionTableColumnHeading2') | trans(transOptions) }}</th>
+            <th>{{ (page ~ '.decisionTableColumnHeading3') | trans(transOptions) }}</th>
             {% if not hideEditLink  %}
                 <th>
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>

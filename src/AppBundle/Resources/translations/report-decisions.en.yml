@@ -99,6 +99,7 @@ summaryPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageTitle: Decisions
   addButton: Add significant decision
+  listOfDecisions: List of significant decisions
   decisionTableColumnHeading1: Decision description
   decisionTableColumnHeading2: Was %client% involved?
   decisionTableColumnHeading3: If not, explain why; if yes, provide detail

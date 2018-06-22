@@ -4,12 +4,13 @@
 
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'summaryPage' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
 {# Page Titles #}
-{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'summaryPage.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
@@ -19,7 +20,7 @@
     <div class="grid-row">
         <div class="column-two-thirds">
             {# Introduction text #}
-            <p class="text">{{ 'summaryPage.weAskAbout' | trans(transOptions) }}</p>
+            <p class="text">{{ (page ~ '.weAskAbout') | trans(transOptions) }}</p>
 
             {# Check answers text #}
             <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>

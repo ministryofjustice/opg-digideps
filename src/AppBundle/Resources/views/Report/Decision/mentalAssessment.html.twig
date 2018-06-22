@@ -4,10 +4,11 @@
 
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'mentalCapacity' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
-{% block htmlTitle %}{{ 'mentalCapacity.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'mentalCapacity.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -18,7 +19,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {{ form_known_date(form.mentalAssessmentDate, 'mentalCapacity.form.mentalAssessmentDate', {
+    {{ form_known_date(form.mentalAssessmentDate, (page ~ '.form.mentalAssessmentDate'), {
         'showDay': 'false',
         'legendParameters': transOptions,
     }) }}

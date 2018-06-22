@@ -4,11 +4,12 @@
 
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
+{% set page = 'mentalCapacity' %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
-{% block htmlTitle %}{{ 'mentalCapacity.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'mentalCapacity.pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
 {% block linkBack %}
@@ -21,18 +22,18 @@
 
     <div class="form-section push--bottom">
         <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}form-group-error{% endif %}">
-            {{ form_checkbox_group(form.hasCapacityChanged, 'mentalCapacity.form.hasCapacityChanged', {
+            {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
                 'useFormGroup': false,
                 'fieldSetClass' : 'inline',
                 'legendClass' : 'form-label-bold',
-                'legendText' : ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
+                'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
                 'items': [{'dataTarget': 'has-capacity-changed-details'}]
             }) }}
             <div id="has-capacity-changed-details" class="panel panel-border-narrow js-hidden">
-                {{ form_input(form.hasCapacityChangedDetails, 'mentalCapacity.form.hasCapacityChangedDetails', {
+                {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
                     'labelClass': 'required',
                     'labelParameters': transOptions,
-                    'hintText' : 'mentalCapacity.form.hasCapacityChangedDetails.hint' | trans(transOptions, translationDomain),
+                    'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
                     'labelRaw': true
                 }) }}
             </div>
