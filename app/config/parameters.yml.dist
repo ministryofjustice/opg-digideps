@@ -17,7 +17,6 @@ parameters:
     session_popup_show_after: 3600
     session_cookie_secure: false
 
-    use_redis: true
     session_prefix: application_session
     ga: null
     opg_docker_tag: 0.0.0
