@@ -4,10 +4,10 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\SimplePreAuthenticatorInterface;
 
 /**
  * Authenticator that reads "AuthToken" token in request

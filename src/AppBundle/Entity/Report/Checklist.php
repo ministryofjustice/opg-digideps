@@ -3,10 +3,10 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Traits\ModifyAudit;
 use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Entity\Traits\ModifyAudit;
 
 /**
  * Checklist.

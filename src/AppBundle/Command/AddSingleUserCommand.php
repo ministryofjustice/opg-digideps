@@ -104,7 +104,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
-        $violations = $this->getContainer()->get('validator')->validate($user, null,'admin_add_user'); /* @var $violations ConstraintViolationList */
+        $violations = $this->getContainer()->get('validator')->validate($user, null, 'admin_add_user'); /* @var $violations ConstraintViolationList */
         if ($violations->count()) {
             $output->writeln("error: $violations");
 

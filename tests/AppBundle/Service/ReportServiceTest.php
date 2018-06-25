@@ -5,9 +5,9 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 
 use AppBundle\Entity\CasRec;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Report;
 
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
@@ -57,8 +57,8 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->em = m::mock(EntityManager::class);
 
-        $this->em->shouldReceive('getRepository')->andReturnUsing(function($arg) use ($client) {
-            switch($arg) {
+        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
+            switch ($arg) {
                 case CasRec::class:
                     return  m::mock(EntityRepository::class)->shouldReceive('findOneBy')
                         ->with(['caseNumber' => $client->getCaseNumber()])
