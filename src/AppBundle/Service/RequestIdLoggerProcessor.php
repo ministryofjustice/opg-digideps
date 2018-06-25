@@ -63,5 +63,4 @@ class RequestIdLoggerProcessor
 
         return null;
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -70,7 +69,6 @@ class IndexController extends AbstractController
                         'form' => $form->createView(),
                     ] + $vars);
             }
-
         }
 
         // different page version for timeout and manual logout
@@ -122,9 +120,9 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @param array $credentials see RestClient::login()
+     * @param array   $credentials see RestClient::login()
      * @param Request $request
-     * @param array $sessionVars
+     * @param array   $sessionVars
      */
     private function logUserIn($credentials, Request $request, array $sessionVars)
     {
@@ -135,7 +133,7 @@ class IndexController extends AbstractController
 
         $session = $request->getSession();
         $session->set('_security_secured_area', serialize($token));
-        foreach($sessionVars as $k=>$v) {
+        foreach ($sessionVars as $k=>$v) {
             $session->set($k, $v);
         }
 

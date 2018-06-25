@@ -25,14 +25,14 @@ class FormFieldsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction( 'form_input', [$this, 'renderFormInput'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_input', [$this, 'renderFormInput'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_submit', [$this, 'renderFormSubmit'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_errors_list', [$this, 'renderFormErrorsList'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_select', [$this, 'renderFormDropDown'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction(  'form_known_date', [$this, 'renderFormKnownDate'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_known_date', [$this, 'renderFormKnownDate'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_sort_code', [$this, 'renderFormSortCode'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_checkbox_group', [$this, 'renderCheckboxGroup'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction( 'form_checkbox', [$this, 'renderCheckboxInput'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_checkbox', [$this, 'renderCheckboxInput'], ['needs_environment' => true]),
         ];
     }
 
@@ -262,7 +262,7 @@ class FormFieldsExtension extends \Twig_Extension
     /**
      * @param mixed  $element
      * @param string $elementName used to pick the translation by appending ".label"
-     * @param array  $vars [buttonClass => additional class. "disabled" supported]
+     * @param array  $vars        [buttonClass => additional class. "disabled" supported]
      */
     public function renderFormSubmit(Twig_Environment $env, $element, $elementName, array $vars = [])
     {
@@ -283,7 +283,6 @@ class FormFieldsExtension extends \Twig_Extension
 
         echo $html;
     }
-
 
     /**
      * get form errors list and render them inside Components/Alerts:error_summary.html.twig
@@ -324,7 +323,6 @@ class FormFieldsExtension extends \Twig_Extension
 
         return $ret;
     }
-
 
     /**
      * @param \Symfony\Component\Form\FormView $element
