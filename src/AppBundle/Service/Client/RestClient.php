@@ -10,8 +10,8 @@ use AppBundle\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
-use Psr\Http\Message\ResponseInterface;
 use JMS\Serializer\SerializerInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -205,7 +205,6 @@ class RestClient
      */
     public function get($endpoint, $expectedResponseType, $jmsGroups = [], $optionsOverride = [])
     {
-
         $options = [];
         if ($jmsGroups) {
             $options['query']['groups'] = $jmsGroups;
@@ -214,7 +213,7 @@ class RestClient
         // guzzle 6 does not append query groups and params in the string.
         //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
         if (!empty(parse_url($endpoint)['query'])) {
-            parse_str( parse_url($endpoint)['query'], $additionalQs );
+            parse_str(parse_url($endpoint)['query'], $additionalQs);
             $options['query'] = isset($options['query']) ? $options['query'] : [];
             $options['query'] += $additionalQs;
         }
@@ -509,7 +508,6 @@ class RestClient
     {
         return $this->history;
     }
-
 
     /**
      * @param int $timeout in seconds

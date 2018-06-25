@@ -431,7 +431,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responseData, $this->object->delete($endpointUrl));
     }
 
-
     public function testGetHistory()
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
@@ -446,8 +445,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->with('request_stack')->andReturn(null)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
             ->getMock();
-
-       
 
         $object = new RestClient(
             $this->container,

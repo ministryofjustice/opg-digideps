@@ -139,7 +139,6 @@ class SettingsController extends AbstractController
                     $form->get('email')->addError(new FormError($translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }
-
         }
 
         return [
