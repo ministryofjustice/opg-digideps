@@ -7,8 +7,7 @@ use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Types\Pdf;
 use AppBundle\Service\File\Types\UploadableFileInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Post\PostFile;
+use GuzzleHttp\Psr7\Response as GuzzlePsr7Response;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
@@ -32,7 +31,10 @@ class ClamAVChecker implements FileCheckerInterface
     private $options;
 
     /**
-     * ClamAv constructor.
+     * ClamAVChecker constructor.
+     * @param ClientInterface $client
+     * @param LoggerInterface $logger
+     * @param array           $options
      */
     public function __construct(ClientInterface $client, LoggerInterface $logger, array $options = [])
     {
@@ -141,15 +143,16 @@ class ClamAVChecker implements FileCheckerInterface
     {
         $fullFilePath = $file->getUploadedFile()->getPathName();
 
-        $request = $this->client->createRequest('POST', $file->getScannerEndpoint());
-        $postBody = $request->getBody();
-        $postBody->addFile(
-            new PostFile('file', fopen($fullFilePath, 'r'))
-        );
+        $response = $this->client->request('POST', $file->getScannerEndpoint(), [
+            'multipart' => [
+               [
+                   'name'=> 'file',
+                   'contents' => fopen($fullFilePath, 'r'),
+               ]
+            ]
+        ]);
 
-        $response = $this->client->send($request);
-
-        if (!$response instanceof ResponseInterface) {
+        if (!$response instanceof GuzzlePsr7Response) {
             throw new \RuntimeException('ClamAV not available');
         }
         $result = json_decode($response->getBody()->getContents(), true);
