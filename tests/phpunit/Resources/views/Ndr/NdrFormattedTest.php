@@ -34,7 +34,6 @@ class NdrFormattedTest extends WebTestCase
     public function setUp()
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
-        $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
         $this->container = $this->frameworkBundleClient->getContainer();
@@ -132,7 +131,6 @@ class NdrFormattedTest extends WebTestCase
     public function tearDown()
     {
         m::close();
-        $this->container->leaveScope('request');
         unset($this->frameworkBundleClient);
     }
 }

@@ -23,7 +23,7 @@ class ActionType extends AbstractType
         if ($this->step === 1) {
             $builder
                 ->add('actionGiveGiftsToClient', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ])
                 ->add('actionGiveGiftsToClientDetails', FormTypes\TextareaType::class);
@@ -31,21 +31,21 @@ class ActionType extends AbstractType
 
         if ($this->step === 2) {
             $builder->add('actionPropertyMaintenance', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 3) {
             $builder->add('actionPropertySellingRent', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 4) {
             $builder->add('actionPropertyBuy', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }

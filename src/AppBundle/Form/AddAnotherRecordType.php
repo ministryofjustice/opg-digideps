@@ -14,7 +14,7 @@ class AddAnotherRecordType extends AbstractType
     {
         $builder
             ->add('addAnother', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'mapped' => false,
                 'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],

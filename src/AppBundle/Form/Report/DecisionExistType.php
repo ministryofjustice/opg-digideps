@@ -15,7 +15,7 @@ class DecisionExistType extends AbstractType
     {
         $builder
             ->add('hasDecisions', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'decision.noDecisionChoice.notBlank', 'groups' => ['decisions-exist']])],
             ])

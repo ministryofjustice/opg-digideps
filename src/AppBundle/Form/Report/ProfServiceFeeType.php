@@ -17,21 +17,11 @@ class ProfServiceFeeType extends AbstractType
      */
     private $step;
 
-    /**
-     * @var array
-     */
-    protected $serviceTypeIds;
-
-    public function __construct(array $serviceTypeIds)
-    {
-        $this->serviceTypeIds = $serviceTypeIds;
-    }
-
     private function getServiceFeeTypes()
     {
         $ret = [];
 
-        foreach ($this->serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
+        foreach (ProfServiceFee::$serviceTypeIds as $serviceTypeId => $hasMoreInfo) {
             $ret[$serviceTypeId] = 'addTypePage.form.serviceType.' . $serviceTypeId;
         }
         return array_unique($ret);
@@ -46,7 +36,7 @@ class ProfServiceFeeType extends AbstractType
 
         if ($this->step == 1) {
             $builder->add('serviceTypeId', FormTypes\ChoiceType::class, [
-                'choices' =>  $this->getServiceFeeTypes(),
+                'choices' =>  array_flip($this->getServiceFeeTypes()),
                 'expanded' => true,
             ]);
         }
@@ -54,29 +44,29 @@ class ProfServiceFeeType extends AbstractType
         if ($this->step == 2) {
             $builder->add('serviceTypeId', FormTypes\HiddenType::class);
             $builder->add('assessedOrFixed', FormTypes\ChoiceType::class, [
-                    'choices' => [ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs'],
+                    'choices' => array_flip([ProfServiceFee::TYPE_FIXED_FEE => 'Fixed costs', ProfServiceFee::TYPE_ASSESSED_FEE => 'Assessed costs']),
                     'expanded' => true,
                 ])
                 ->add('amountCharged', FormTypes\NumberType::class, [
-                    'precision' => 2,
-                    'empty_data' => null,
+                    'scale' => 2,
+                    'placeholder' => null,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountCharged.type'
                 ])
                 ->add('paymentReceived', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
 
                 ])
                 ->add('amountReceived', FormTypes\NumberType::class, [
-                    'precision' => 2,
+                    'scale' => 2,
                     'grouping' => true,
                     'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                     'invalid_message' => 'profServiceFee.amountReceived.type'
                 ])
                 ->add('paymentReceivedDate', FormTypes\DateType::class, ['widget' => 'text',
-                    'empty_data' => null,
+                    'placeholder' => null,
                     'input' => 'datetime',
                     'format' => 'yyyy-MM-dd',
                     'invalid_message' => 'profServiceFee.paymentReceivedDate.invalidMessage',]);

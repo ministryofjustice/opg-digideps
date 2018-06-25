@@ -20,6 +20,7 @@ framework:
     default_locale:  "%locale%"
     trusted_proxies: ~
     session:
+      handler_id: snc_redis.session.handler
       name: digideps
       # force session usage, no cookie (we want to logout when the browser closes)
       cookie_lifetime: 0
@@ -45,9 +46,8 @@ twig:
         feedbackUrl: "http://www.smartsurvey.co.uk/s/GOR7N/"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    form:
-        resources:
-            - 'AppBundle:Form:fields.html.twig'
+    form_themes:
+        - 'AppBundle:Form:fields.html.twig'
 
 
 # Swiftmailer Configuration
@@ -67,7 +67,6 @@ snc_redis:
     session:
         client: default
         prefix: %session_prefix%
-        use_as_default: %use_redis%
 
 parameters:
     # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
@@ -89,12 +88,7 @@ services:
     # Logtash formatter for Kibana
     logstash_formatter:
         class: Monolog\Formatter\LogstashFormatter
-        arguments:
-        - application.client
-        - null
-        - null
-        - ""
-        - 1
+        arguments: [ "application.client", null, null, "", 1 ]
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 

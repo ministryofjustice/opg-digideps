@@ -12,8 +12,8 @@ class AddUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $roleNameOptions = [
-            'choices'     => $options['options']['roleChoices'],
-            'empty_value' => $options['options']['roleNameEmptyValue'],
+            'choices'     => array_flip($options['options']['roleChoices']),
+            'placeholder' => $options['options']['roleNameEmptyValue'],
         ];
 
         if (!empty($options['options']['roleNameSetTo'])) {

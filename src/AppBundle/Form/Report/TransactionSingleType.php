@@ -18,11 +18,11 @@ class TransactionSingleType extends AbstractType
                  ->add('id', FormTypes\HiddenType::class)
                  ->add('type', FormTypes\HiddenType::class)
                  ->add('amounts', FormTypes\CollectionType::class, [
-                      'entry_type' => 'number',
+                      'entry_type' => FormTypes\NumberType::class,
                       'allow_add' => true, //allow new fields added with JS
                       'entry_options' => [
                          'error_bubbling' => false,
-                         'precision' => 2,
+                         'scale' => 2,
                          'grouping' => true,
                          'invalid_message' => 'account.moneyInOut.amount.notNumeric',
                       ],

@@ -13,7 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 // This check prevents access to debug front controllers that are deployed by accident to production servers.
 // Feel free to remove this, extend it, or make something more sophisticated.
 
-$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
+$loader = $loader = require __DIR__.'/../vendor/autoload.php';
+
+require_once __DIR__ . '/../app/AppKernel.php';
+
 Debug::enable();
 
 require_once __DIR__ . '/../app/AppKernel.php';

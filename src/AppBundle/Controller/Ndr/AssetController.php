@@ -45,9 +45,11 @@ class AssetController extends AbstractController
         if ($request->getMethod() == 'GET' && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
             $ndr->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(FormDir\YesNoType::class, $ndr, [ 'field'              => 'noAssetToAdd', 'translation_domain' => 'ndr-assets', 'choices'            => [0 => 'Yes', 1 => 'No']
-                                   ]
-                                 );
+        $form = $this->createForm(FormDir\YesNoType::class, $ndr, [
+            'field'              => 'noAssetToAdd',
+            'translation_domain' => 'ndr-assets',
+            'choices'            => ['Yes'=>0, 'No'=>1]
+        ]);
 
         $form->handleRequest($request);
 

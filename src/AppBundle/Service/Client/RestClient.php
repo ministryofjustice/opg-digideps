@@ -10,7 +10,7 @@ use AppBundle\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -81,6 +81,11 @@ class RestClient
     private $userId;
 
     /**
+     * @var set at the class level for the next request
+     */
+    private $timeout = null;
+
+    /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
     const HEADER_AUTH_TOKEN = 'AuthToken';
@@ -126,8 +131,11 @@ class RestClient
     {
         $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
-        // store auth token
-        $this->tokenStorage->set($user->getId(), $response->getHeader(self::HEADER_AUTH_TOKEN));
+        //        // store auth token
+
+        $tokenVal =  $response->getHeader(self::HEADER_AUTH_TOKEN);
+        $tokenVal = is_array($tokenVal) && !empty($tokenVal[0]) ? $tokenVal[0] : null;
+        $this->tokenStorage->set($user->getId(), $tokenVal);
 
         return $user;
     }
@@ -197,9 +205,18 @@ class RestClient
      */
     public function get($endpoint, $expectedResponseType, $jmsGroups = [], $optionsOverride = [])
     {
+
         $options = [];
         if ($jmsGroups) {
             $options['query']['groups'] = $jmsGroups;
+        }
+
+        // guzzle 6 does not append query groups and params in the string.
+        //TODO add $queryParams as a method param (Replace last if not used) and avoid using endpoing with query string
+        if (!empty(parse_url($endpoint)['query'])) {
+            parse_str( parse_url($endpoint)['query'], $additionalQs );
+            $options['query'] = isset($options['query']) ? $options['query'] : [];
+            $options['query'] += $additionalQs;
         }
 
         return $this->apiCall('get', $endpoint, null, $expectedResponseType, $optionsOverride + [
@@ -274,7 +291,7 @@ class RestClient
      *
      * @throws \InvalidArgumentException
      *
-     * @return array
+     * @return array|GuzzleHttp\Psr7\Response
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
@@ -338,6 +355,10 @@ class RestClient
         $reqId = RequestIdLoggerProcessor::getRequestIdFromContainer($this->container);
         if ($reqId) {
             $options['headers']['X-Request-ID'] = $reqId;
+        }
+
+        if ($this->timeout) {
+            $options['timeout'] = $this->timeout;
         }
 
         $start = microtime(true);
@@ -489,12 +510,13 @@ class RestClient
         return $this->history;
     }
 
+
     /**
      * @param int $timeout in seconds
      */
     public function setTimeout($timeout)
     {
-        $this->client->setDefaultOption('timeout', $timeout);
+        $this->timeout = $timeout;
 
         return $this;
     }

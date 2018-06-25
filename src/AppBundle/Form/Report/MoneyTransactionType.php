@@ -32,7 +32,7 @@ class MoneyTransactionType extends AbstractType
     private $selectedCategory;
 
     /**
-     * @return array where keys are the categoriesID. e.g. [broadband=>null, fees=>null]
+     * @return array where keys and values are the categoriesID. e.g. [broadband=>null, fees=>null]
      */
     private function getCategories()
     {
@@ -46,7 +46,7 @@ class MoneyTransactionType extends AbstractType
             $isCategoryAllowedForThisRole = $allowedRoles === null || $this->authorizationChecker->isGranted($allowedRoles);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
-                $ret[$categoryId] = null;
+                $ret[$categoryId] = $categoryId;
             }
         }
 
@@ -89,7 +89,7 @@ class MoneyTransactionType extends AbstractType
             ]);
 
             $builder->add('amount', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'error_bubbling'  => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'moneyTransaction.form.amount.type',
@@ -100,7 +100,7 @@ class MoneyTransactionType extends AbstractType
             if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
-                    'empty_value' => 'Please select',
+                    'placeholder' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label'
                 ]);
             }

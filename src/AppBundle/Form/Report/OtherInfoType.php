@@ -16,7 +16,7 @@ class OtherInfoType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('actionMoreInfo', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])
             ->add('actionMoreInfoDetails', FormTypes\TextareaType::class)

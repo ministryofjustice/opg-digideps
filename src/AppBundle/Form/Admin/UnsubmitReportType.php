@@ -19,16 +19,16 @@ class UnsubmitReportType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
-                'type' => new UnsubmittedSectionType(),
+                'entry_type' => UnsubmittedSectionType::class,
             ])
             ->add('dueDateChoice', FormTypes\ChoiceType::class, [
-                'choices'     => [
+                'choices'     => array_flip([
                     'keep'  => $dueDateChoiceTransPrefix . 'keep',
                     3       => $dueDateChoiceTransPrefix . '3weeks',
                     4       => $dueDateChoiceTransPrefix . '4weeks',
                     5       => $dueDateChoiceTransPrefix . '5weeks',
                     self::DUE_DATE_OPTION_CUSTOM => $dueDateChoiceTransPrefix . 'custom',
-                ],
+                ]),
                 'expanded'    => true,
                 'multiple'    => false,
                 'mapped'      => false,

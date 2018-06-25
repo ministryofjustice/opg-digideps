@@ -16,16 +16,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ClientContactType extends AbstractType
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -40,7 +30,7 @@ class ClientContactType extends AbstractType
             ->add('address2', FormTypes\TextType::class)
             ->add('address3', FormTypes\TextType::class)
             ->add('addressPostcode', FormTypes\TextType::class)
-            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
+            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'placeholder' => 'Please select ...',])
             ;
 
         $builder->add('save', FormTypes\SubmitType::class);

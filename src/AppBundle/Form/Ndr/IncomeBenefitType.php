@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class IncomeBenefitType extends AbstractType
 {
@@ -37,13 +38,14 @@ class IncomeBenefitType extends AbstractType
             $builder
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('stateBenefits', FormTypes\CollectionType::class, [
-                    'type' => new StateBenefitType(),
+                    'entry_type' => StateBenefitType::class,
+                    'constraints' => new Valid(),
                 ]);
         }
 
         if ($this->step === 2) {
             $builder->add('receiveStatePension', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
@@ -51,7 +53,7 @@ class IncomeBenefitType extends AbstractType
         if ($this->step === 3) {
             $builder
                 ->add('receiveOtherIncome', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ])
                 ->add('receiveOtherIncomeDetails', FormTypes\TextareaType::class);
@@ -59,7 +61,7 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 4) {
             $builder->add('expectCompensationDamages', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])
                 ->add('expectCompensationDamagesDetails', FormTypes\TextareaType::class);
@@ -67,7 +69,8 @@ class IncomeBenefitType extends AbstractType
 
         if ($this->step === 5) {
             $builder->add('oneOff', FormTypes\CollectionType::class, [
-                'type' => new OneOffType(),
+                'entry_type' => OneOffType::class,
+                'constraints' => new Valid(),
             ]);
         }
 
@@ -79,7 +82,7 @@ class IncomeBenefitType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'ndr-income-benefits',
-            'cascade_validation' => true,
+            'constraints' => new Valid(),
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 /* @var $data Ndr */

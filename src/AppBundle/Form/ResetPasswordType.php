@@ -13,7 +13,7 @@ class ResetPasswordType extends AbstractType
     {
         $builder
                 ->add('password', FormTypes\RepeatedType::class, [
-                    'type' => 'password',
+                    'type' => FormTypes\PasswordType::class,
                     'invalid_message' => $options['passwordMismatchMessage']
                 ])
                 ->add('save', FormTypes\SubmitType::class);

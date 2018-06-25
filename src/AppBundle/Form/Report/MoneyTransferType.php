@@ -19,22 +19,22 @@ class MoneyTransferType extends AbstractType
         $banks = [];
         foreach ($options['banks'] as $bank) {
             /* $var $bank \AppBundle\Entity\Report\BankAccount */
-            $banks[$bank->getId()] = $bank->getNameOneLine();
+            $banks[$bank->getNameOneLine()] = $bank->getId();
         }
 
 
         if ($this->step == 1) {
             $builder
                 ->add('accountFromId', FormTypes\ChoiceType::class, [
-                        'choices' => $banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select',]
                 )->add('accountToId', FormTypes\ChoiceType::class, [
-                        'choices' => $banks, 'empty_value' => 'Please select',]
+                        'choices' => $banks, 'placeholder' => 'Please select',]
                 );
         }
         if ($this->step == 2) {
             $builder
                 ->add('amount', FormTypes\NumberType::class, [
-                    'precision' => 2,
+                    'scale' => 2,
                     'grouping' => true,
                     'error_bubbling' => false,
                     'invalid_message' => 'transfer.amount.notNumeric',

@@ -19,7 +19,7 @@ class AssetTypeOther extends AbstractType
         $builder
             ->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
-                'precision' => 2,
+                'scale' => 2,
                 'invalid_message' => 'asset.value.type',
             ])
             ->add('description', FormTypes\TextareaType::class)

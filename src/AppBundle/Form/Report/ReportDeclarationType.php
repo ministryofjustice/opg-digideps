@@ -19,12 +19,12 @@ class ReportDeclarationType extends AbstractType
                      'constraints' => new NotBlank(['message' => 'report-declaration.agree.notBlank']),
                  ])
                  ->add('agreedBehalfDeputy', FormTypes\ChoiceType::class, [
-                    'choices' => [
+                    'choices' => array_flip([
                         // api models contains those keys too. Change them accordingly if needed
                         'only_deputy' => 'agreedBehalfDeputy.only_deputy',
                         'more_deputies_behalf' => 'agreedBehalfDeputy.more_deputies_behalf',
                         'more_deputies_not_behalf' => 'agreedBehalfDeputy.more_deputies_not_behalf',
-                    ],
+                    ]),
                     'choice_translation_domain' => 'report-declaration',
                     'translation_domain' => 'report-declaration',
                     'expanded' => true,

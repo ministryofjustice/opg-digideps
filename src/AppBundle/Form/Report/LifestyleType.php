@@ -26,7 +26,7 @@ class LifestyleType extends AbstractType
 
         if ($this->step === 2) {
             $builder->add('doesClientUndertakeSocialActivities', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                  'expanded' => true,
             ]);
 
