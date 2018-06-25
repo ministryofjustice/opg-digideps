@@ -34,7 +34,7 @@ class ClamAVChecker implements FileCheckerInterface
      * ClamAVChecker constructor.
      * @param ClientInterface $client
      * @param LoggerInterface $logger
-     * @param array $options
+     * @param array           $options
      */
     public function __construct(ClientInterface $client, LoggerInterface $logger, array $options = [])
     {
