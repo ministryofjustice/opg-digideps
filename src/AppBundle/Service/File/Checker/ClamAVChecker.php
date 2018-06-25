@@ -147,7 +147,7 @@ class ClamAVChecker implements FileCheckerInterface
             'multipart' => [
                [
                    'name'=> 'file',
-                    'contents' => fopen($fullFilePath, 'r'),
+                   'contents' => fopen($fullFilePath, 'r'),
                ]
             ]
         ]);
