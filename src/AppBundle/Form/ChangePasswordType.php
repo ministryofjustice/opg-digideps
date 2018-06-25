@@ -24,7 +24,7 @@ class ChangePasswordType extends AbstractType
                 ])
                 ->add('plain_password', FormTypes\RepeatedType::class, [
                     'mapped' => false,
-                    'type' => 'password',
+                    'type' => FormTypes\PasswordType::class,
                     'invalid_message' => 'user.password.new.doesntMatch',
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'user.password.new.notBlank', 'groups' => [self::VALIDATION_GROUP]]),
@@ -36,11 +36,6 @@ class ChangePasswordType extends AbstractType
                 ])
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('save', FormTypes\SubmitType::class);
-    }
-
-    public function getParent()
-    {
-        return 'form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

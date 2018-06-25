@@ -16,7 +16,7 @@ class SelfRegisterDataType extends AbstractType
             ->add('lastname', FormTypes\TextType::class)
             ->add('postcode', FormTypes\TextType::class)
             ->add('email', FormTypes\RepeatedType::class, [
-                'type' => 'email',
+                'type' => FormTypes\EmailType::class,
                 'invalid_message' => 'user.email.doesNotMatch',
             ])
             ->add('clientFirstname', FormTypes\TextType::class)

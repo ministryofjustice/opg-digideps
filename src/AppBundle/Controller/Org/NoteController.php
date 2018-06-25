@@ -36,7 +36,7 @@ class NoteController extends AbstractController
         $note = new EntityDir\Note($client);
 
         $form = $this->createForm(
-            new FormDir\Org\NoteType($this->get('translator')),
+            FormDir\Org\NoteType::class,
             $note
         );
 
@@ -71,7 +71,7 @@ class NoteController extends AbstractController
         $this->denyAccessUnlessGranted('edit-note', $note, 'Access denied');
 
         $form = $this->createForm(
-            new FormDir\Org\NoteType($this->get('translator')),
+            FormDir\Org\NoteType::class,
             $note
         );
 

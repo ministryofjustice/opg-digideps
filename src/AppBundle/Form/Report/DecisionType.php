@@ -15,7 +15,7 @@ class DecisionType extends AbstractType
         $builder/*->add('title', FormTypes\TextType::class)*/
         ->add('description', FormTypes\TextareaType::class)
             ->add('clientInvolvedBoolean', FormTypes\ChoiceType::class, [
-                'choices' => [1 => 'Yes', 0 => 'No'],
+                'choices' => array_flip([1 => 'Yes', 0 => 'No']),
                 'expanded' => true,
             ])
             ->add('clientInvolvedDetails', FormTypes\TextareaType::class)

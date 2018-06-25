@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportDebtsTrait
 {

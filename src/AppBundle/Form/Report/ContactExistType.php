@@ -15,7 +15,7 @@ class ContactExistType extends AbstractType
     {
         $builder
             ->add('hasContacts', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'contact.noContactsChoice.notBlank', 'groups' => ['contact-exist']])],
             ])

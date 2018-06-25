@@ -52,6 +52,9 @@ mentalCapacity:
       label-104: "Has %client%'s mental capacity to make health and welfare decisions changed?"
       label-4: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
       hint: ""
+      choices:
+        changed: Changed
+        stayedSame: Stayed the same
     hasCapacityChangedDetails:
         label: "Please tell us more."
         hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
@@ -99,7 +102,7 @@ summaryPage:
   htmlTitle: "Deputy report - decisions | GOV.UK"
   pageTitle: Decisions
   addButton: Add significant decision
-  edit: Edit
+  listOfDecisions: List of significant decisions
   decisionTableColumnHeading1: Decision description
   decisionTableColumnHeading2: Was %client% involved?
   decisionTableColumnHeading3: If not, explain why; if yes, provide detail

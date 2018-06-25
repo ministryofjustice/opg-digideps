@@ -14,7 +14,7 @@ class ProfServicePreviousFeesEstimateType extends AbstractType
     {
         $builder
             ->add('previousProfFeesEstimateGiven', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'fee.previousProfFeesEstimateGivenChoice.notBlank', 'groups' => ['current-prof-payments-received']])],
             ])

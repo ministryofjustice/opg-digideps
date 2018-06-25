@@ -18,7 +18,7 @@ class DeputyExpenseType extends AbstractType
                 'required' => true,
             ])
             ->add('amount', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping' => true,
                 //'error_bubbling' => true,  // keep (and show) the error (Default behaviour). if true, error is los
                 'invalid_message' => 'expenses.singleExpense.notNumeric',
@@ -29,7 +29,7 @@ class DeputyExpenseType extends AbstractType
         if (!empty($options['report']->getBankAccountOptions()) && (in_array($reportType, ['102', '102-4']))) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                 'choices' => $options['report']->getBankAccountOptions(),
-                'empty_value' => 'Please select'
+                'placeholder' => 'Please select'
             ]);
         }
 

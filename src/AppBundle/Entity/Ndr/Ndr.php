@@ -8,7 +8,7 @@ use AppBundle\Entity\ReportInterface;
 use AppBundle\Service\NdrStatusService;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @Assert\Callback(callback="debtsValid", groups={"debts"})

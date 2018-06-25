@@ -26,7 +26,7 @@ class ProfileType extends AbstractType
             ->add('address2', FormTypes\TextType::class)
             ->add('address3', FormTypes\TextType::class)
             ->add('addressPostcode', FormTypes\TextType::class)
-            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'empty_value' => 'Please select ...',])
+            ->add('addressCountry', FormTypes\CountryType::class, ['preferred_choices' => ['', 'GB'], 'placeholder' => 'Please select ...',])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => true])
             ->add('phoneAlternative', FormTypes\TextType::class)
             ->add('email', FormTypes\TextType::class, ['required' => true]);
@@ -37,7 +37,7 @@ class ProfileType extends AbstractType
 
         if ($loggedInUser->isOrgAdministrator()) {
             $builder->add('removeAdmin', FormTypes\ChoiceType::class, [
-                    'choices' => ['remove-admin' => 'Give up administrator rights'],
+                    'choices' => ['Give up administrator rights' => 'remove-admin'],
                     'expanded' => true,
                     'multiple' => true,
                     'required' => false,

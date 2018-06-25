@@ -18,7 +18,7 @@ class UserDetailsFullType extends UserDetailsBasicType
         ->add('addressPostcode', FormTypes\TextType::class)
         ->add('addressCountry', FormTypes\CountryType::class, [
             'preferred_choices' => ['', 'GB'],
-            'empty_value' => 'Please select ...',
+            'placeholder' => 'Please select ...',
         ])
         ->add('phoneMain', FormTypes\TextType::class)
         ->add('phoneAlternative', FormTypes\TextType::class)

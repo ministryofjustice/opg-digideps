@@ -14,7 +14,7 @@ class SearchType extends AbstractType
     {
         $builder->add('q', FormTypes\TextType::class)
             ->add('role_name', FormTypes\ChoiceType::class, [
-                'choices' => [
+                'choices' => array_flip([
                     ''                    => 'ALL ROLES',
                     User::ROLE_ADMIN      => 'OPG Admin',
                     User::ROLE_CASE_MANAGER => 'Case manager',
@@ -24,7 +24,7 @@ class SearchType extends AbstractType
                     User::ROLE_PA_NAMED   => 'Public Authority deputies (named) ',
                     'ROLE_PROF_%' => 'All Professional Deputies',
                     User::ROLE_PROF_NAMED => 'Professional Deputies (named)',
-                ],
+                ]),
             ])
             ->add('ndr_enabled', FormTypes\CheckboxType::class)
             ->add('search', FormTypes\SubmitType::class);

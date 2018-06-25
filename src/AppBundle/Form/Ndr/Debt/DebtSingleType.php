@@ -18,7 +18,7 @@ class DebtSingleType extends AbstractType
         $builder
             ->add('debtTypeId', FormTypes\HiddenType::class)
             ->add('amount', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
                 'invalid_message' => 'debt.amount.notNumeric',

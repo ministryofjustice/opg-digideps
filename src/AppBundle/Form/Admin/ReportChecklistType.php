@@ -19,7 +19,7 @@ class ReportChecklistType extends AbstractType
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('reportingPeriodAccurate', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
             ->add('contactDetailsUptoDate', FormTypes\CheckboxType::class, [])
@@ -27,69 +27,69 @@ class ReportChecklistType extends AbstractType
 
             // Decisions
             ->add('decisionsSatisfactory', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
 
             // People Consulted
             ->add('consultationsSatisfactory', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
 
             // Visits and Care
             ->add('careArrangements', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
 
             // Client Assets and Debt
             ->add('assetsDeclaredAndManaged', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
             ->add('debtsManaged', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
 
             // Money In
             ->add('openClosingBalancesMatch', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
             ->add('accountsBalance', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
             ->add('moneyMovementsAcceptable', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
 
             // Bonds
             ->add('bondAdequate', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
             ->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
 
             // Next reporting period
             ->add('futureSignificantFinancialDecisions', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
             ->add('hasDeputyRaisedConcerns', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
 
             // Deputy declaration
             ->add('caseWorkerSatisified', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No', 'na' => 'Not applicable'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
 
@@ -99,10 +99,10 @@ class ReportChecklistType extends AbstractType
             // Final decision
             ->add('finalDecision', FormTypes\ChoiceType::class, [
                 'choices' => [
-                    'for-review' => $finalDecisionTransPrefix . 'forReview',
-                    'incomplete' => $finalDecisionTransPrefix . 'incomplete',
-                    'further-casework-required' => $finalDecisionTransPrefix . 'furtherCaseworkRequired',
-                    'satisfied' => $finalDecisionTransPrefix . 'satisfied'
+                    $finalDecisionTransPrefix . 'forReview' => 'for-review',
+                    $finalDecisionTransPrefix . 'incomplete' =>  'incomplete',
+                    $finalDecisionTransPrefix . 'furtherCaseworkRequired' => 'further-casework-required',
+                    $finalDecisionTransPrefix . 'satisfied' => 'satisfied'
                 ],
                 'expanded' => true
             ])

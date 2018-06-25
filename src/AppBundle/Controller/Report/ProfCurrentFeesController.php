@@ -107,7 +107,7 @@ class ProfCurrentFeesController extends AbstractController
 
         // crete and handle form
         $form = $this->createForm(
-            new FormDir\Report\ProfServiceFeeType(EntityDir\Report\ProfServiceFee::$serviceTypeIds),
+            FormDir\Report\ProfServiceFeeType::class,
             $profServiceFee, ['step' => $step]
         );
 

@@ -48,7 +48,7 @@
             {% if account.closingBalance == null %}
                 <td class="numeric-small">
                     £-,-
-                    <span class="error-message">Please answer this question</span>
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 </td>
             {% else %}
                 <td class="numeric-small">

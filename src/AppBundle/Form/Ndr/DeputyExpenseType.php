@@ -17,7 +17,7 @@ class DeputyExpenseType extends AbstractType
                 'required' => true,
             ])
             ->add('amount', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping' => true,
                 //'error_bubbling' => true,  // keep (and show) the error (Default behaviour). if true, error is los
                 'invalid_message' => 'ndr.expenses.singleExpense.notNumeric',

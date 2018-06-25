@@ -11,6 +11,7 @@ continue: Continue
 reviewReport: Review report
 saveAndContinue: Save and continue
 saveAndAddAnother: Save and add another
+skipLink: Skip this question for now
 back: Back
 start: Start
 startNow: Start now
@@ -26,7 +27,6 @@ manage: Manage
 checklist: Checklist
 
 # Section headings
-
 moneyOut: Money out
 moneyIn: Money in
 deputyExpenses: Deputy expenses
@@ -73,6 +73,7 @@ lastSavedOn: Last saved on
 lastSavedBy: Last saved by
 lastSubmittedOn: Last submitted on
 lastSubmittedBy: Last submitted by
+totalAmount: Total amount
 
 # Statuses
 notCreated: Not created
@@ -112,6 +113,10 @@ helpline: 0115 934 2700
 helplinePA: 0115 934 2817
 helplineProf: 0115 934 2819
 
+# Validation and errors
+summaryHeading: There are some problems on this page
+pleaseAnswer: Please answer this question
+
 lastLoggedIn:
   lessThenAMinuteAgo:  less than a minute ago
   minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
@@ -131,9 +136,6 @@ registrationProgressBar:
         label: Create a report
     codep_verify:
         label: Enter your information
-
-stepPage:
-   skipLink: Skip this question for now
 
 # Summary page
 weHaveListed: We've listed your saved answers below.

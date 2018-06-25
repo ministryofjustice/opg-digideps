@@ -21,7 +21,7 @@ class ContactType extends AbstractType
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('country', FormTypes\CountryType::class, [
                       'preferred_choices' => ['GB'],
-                      'empty_value' => 'form.country.defaultOption',
+                      'placeholder' => 'form.country.defaultOption',
                 ])
                 ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }

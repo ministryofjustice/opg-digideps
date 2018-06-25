@@ -14,7 +14,7 @@ class ProfServiceFeeExistType extends AbstractType
     {
         $builder
             ->add('currentProfPaymentsReceived', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);

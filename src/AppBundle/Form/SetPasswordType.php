@@ -12,7 +12,9 @@ class SetPasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('password', FormTypes\RepeatedType::class, [ 'type'            => 'password', 'invalid_message' => $options['passwordMismatchMessage']
+        $builder->add('password', FormTypes\RepeatedType::class, [
+            'type'            => FormTypes\PasswordType::class,
+                'invalid_message' => $options['passwordMismatchMessage']
                        ]
                      );
         if (!empty($options['showTermsAndConditions'])) {

@@ -14,8 +14,6 @@ class ManageControllerTest extends AbstractControllerTestCase
             [true, true,  true,  true,  true,  200, 200, ['OK']], //all good
             [false, true, true,  true,  true, 200,  500, ['redis-error']],
             [true, false, true,  true,  true, 200,  500, ['api_errors']],
-            [true, true,  false, true,  true, 200,  500, ['sd-error']],
-            [true, true,  true,  false, true, 200,  500, ['ss-error']],
             [true, true,  true,  true,  false, 200, 500, ['wkhtmltopdf.isAlive']],
             [true, true,  true,  true,  false, 500, 500, ['returned HTTP']],
         ];
