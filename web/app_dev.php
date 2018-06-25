@@ -10,7 +10,7 @@ ini_set('display_errors', 'on');
 //umask(0000);
 
 //$loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
-$loader = $loader = require __DIR__.'/../vendor/autoload.php';
+$loader = $loader = require __DIR__ . '/../vendor/autoload.php';
 // debug not enabled, otherwise conflicting for REST error handler
 //Debug::enable();
 

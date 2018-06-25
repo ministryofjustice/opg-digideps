@@ -6,13 +6,13 @@ use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Psr\Log\LoggerInterface;
 
 class RestInputOuputFormatter
 {
