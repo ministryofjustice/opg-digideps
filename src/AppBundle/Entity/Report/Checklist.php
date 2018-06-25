@@ -4,9 +4,9 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\Traits\ModifyAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Entity\Traits\ModifyAudit;
 
 /**
  * Checklist.

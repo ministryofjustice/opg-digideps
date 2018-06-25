@@ -130,7 +130,6 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-
         $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report', 'report-checklist', 'checklist-information', 'last-modified', 'user']));
 
         if (!$report->getSubmitted()) {

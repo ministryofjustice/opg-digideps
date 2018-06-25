@@ -34,7 +34,7 @@ class ComponentsExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
-            new \Twig_SimpleFunction( 'accordionLinks', [$this, 'renderAccordionLinks']),
+            new \Twig_SimpleFunction('accordionLinks', [$this, 'renderAccordionLinks']),
             new \Twig_SimpleFunction('section_link_params', function ($report, $sectionId, $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),

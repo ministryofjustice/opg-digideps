@@ -4,7 +4,6 @@ namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Validator\Constraints\Chain;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,11 +23,9 @@ class BankAccountType extends AbstractType
     private static function getBankAccountChoices()
     {
         $ret = [];
-        foreach(BankAccount::$types as $key){
-            //TODO invert on symfony 3
-            $ret[$key] = 'form.accountType.choices.' . $key;
+        foreach (BankAccount::$types as $key) {
+            $ret['form.accountType.choices.' . $key] = $key;
         }
-
         return $ret;
     }
 
@@ -42,7 +39,7 @@ class BankAccountType extends AbstractType
             $builder->add('accountType', FormTypes\ChoiceType::class, [
                 'choices'     => self::getBankAccountChoices(),
                 'expanded'    => true,
-                'empty_value' => 'Please select',
+                'placeholder' => 'Please select',
             ]);
         }
 
@@ -50,34 +47,30 @@ class BankAccountType extends AbstractType
             $builder->add('bank', FormTypes\TextType::class, [
                 'required' => false,
             ]);
-            $builder->add('accountNumber', FormTypes\TextType::class, ['max_length' => 4]);
-            $builder->add('sortCode', new SortCodeType(), [
+            $builder->add('accountNumber', FormTypes\TextType::class, ['attr'=>['maxlength' => 4]]);
+            $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
                 'required'       => false,
-                'constraints'    => new Chain([
-                    'constraints' => [
-                        new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
-                        new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
-                        new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
-                    ],
-                    'stopOnError' => true,
-                    'groups'      => ['bank-account-sortcode'],
-                ]),
+                'constraints'    => [
+                    new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
+                    new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
+                    new Length(['min' => 6, 'max' => 6, 'exactMessage' => 'account.sortCode.length', 'groups' => ['bank-account-sortcode']]),
+                ],
             ]);
             $builder->add('isJointAccount', FormTypes\ChoiceType::class, [
-                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ]);
         }
 
         if ($this->step === 3) {
             $builder->add('openingBalance', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'invalid_message' => 'account.openingBalance.type',
             ]);
             $builder->add('closingBalance', FormTypes\NumberType::class, [
-                'precision'       => 2,
+                'scale'       => 2,
                 'grouping'        => true,
                 'invalid_message' => 'account.closingBalance.type',
                 'required'        => false,
@@ -86,9 +79,9 @@ class BankAccountType extends AbstractType
 
         if ($this->step === 4) {
             $builder->add('isClosed', FormTypes\ChoiceType::class, [
-                'choices'     => [true => 'Yes', false => 'No'],
+                'choices'     => array_flip([true => 'Yes', false => 'No']),
                 'expanded'    => true,
-                'empty_value' => 'Please select',
+                'placeholder' => 'Please select',
             ]);
         }
 

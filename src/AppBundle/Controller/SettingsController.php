@@ -42,7 +42,10 @@ class SettingsController extends AbstractController
     {
         $user = $this->getUserWithData();
 
-        $form = $this->createForm(FormDir\ChangePasswordType::class, $user, ['mapped' => false, 'error_bubbling' => true]);
+        $form = $this->createForm(FormDir\ChangePasswordType::class, $user, [
+            'mapped' => false,
+            'error_bubbling' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -136,7 +139,6 @@ class SettingsController extends AbstractController
                     $form->get('email')->addError(new FormError($translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }
-
         }
 
         return [

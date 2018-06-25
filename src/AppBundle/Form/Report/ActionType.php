@@ -33,14 +33,14 @@ class ActionType extends AbstractType
         if ($this->step === 1) {
             $builder
                 ->add('doYouExpectFinancialDecisions', FormTypes\ChoiceType::class, [
-                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])->add('doYouExpectFinancialDecisionsDetails', FormTypes\TextareaType::class);
         }
 
         if ($this->step === 2) {
             $builder->add('doYouHaveConcerns', FormTypes\ChoiceType::class, [
-                'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+                'choices'  => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])->add('doYouHaveConcernsDetails', FormTypes\TextareaType::class);
         }

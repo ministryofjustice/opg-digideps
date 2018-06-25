@@ -17,8 +17,8 @@ class MentalCapacityType extends AbstractType
         $builder->add('hasCapacityChanged', FormTypes\ChoiceType::class, [
                     // keep in sync with API model constants
                     'choices' => [
-                        MentalCapacity::CAPACITY_CHANGED => 'Changed',
-                        MentalCapacity::CAPACITY_STAYED_SAME => 'Stayed the same',
+                        'mentalCapacity.form.hasCapacityChanged.choices.changed' => MentalCapacity::CAPACITY_CHANGED,
+                        'mentalCapacity.form.hasCapacityChanged.choices.stayedSame' => MentalCapacity::CAPACITY_STAYED_SAME,
                     ],
                     'expanded' => true,
                 ])

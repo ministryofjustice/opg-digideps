@@ -51,7 +51,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $this->container->shouldIgnoreMissing();
 
-        $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
+        $this->endpointResponse = m::mock('Psr\Http\Message\ResponseInterface');
 
         $this->object = new RestClient(
             $this->container,
@@ -80,7 +80,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getHeader')->with('AuthToken')->andReturn($this->sessionToken)
+            ->shouldReceive('getHeader')->with('AuthToken')->andReturn([$this->sessionToken])
             ->shouldReceive('getBody')->andReturn($userJson)
         ;
 
@@ -431,7 +431,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($responseData, $this->object->delete($endpointUrl));
     }
 
-
     public function testGetHistory()
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
@@ -446,8 +445,6 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->with('request_stack')->andReturn(null)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
             ->getMock();
-
-        $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
 
         $object = new RestClient(
             $this->container,

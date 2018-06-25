@@ -17,7 +17,7 @@ class MoneyShortTransactionType extends AbstractType
                 'required' => true,
             ])
             ->add('amount', FormTypes\NumberType::class, [
-                'precision' => 2,
+                'scale' => 2,
                 'grouping'  => true,
             ])
             ->add('date', FormTypes\DateType::class, ['widget'          => 'text',

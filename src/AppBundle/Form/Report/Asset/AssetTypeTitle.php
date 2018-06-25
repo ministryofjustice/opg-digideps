@@ -33,7 +33,7 @@ class AssetTypeTitle extends AbstractType
     }
 
     /**
-     * @return array with choices for the "title" dropdown element
+     * @return array with choices for the "title" dropdown element. key and values
      */
     public function getTitleChoices()
     {

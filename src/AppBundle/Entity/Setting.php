@@ -29,7 +29,7 @@ class Setting
      * @var bool
      *
      * @JMS\Groups({"setting"})
-     * @Assert\NotBlank( message="adminSetting.enabled.notBlank", groups={"setting"} )
+     * @Assert\NotNull(message="adminSetting.enabled.notBlank", groups={"setting"} )
      *
      *
      * @JMS\Type("boolean")

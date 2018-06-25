@@ -29,10 +29,12 @@ class YesNoType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([ 'validation_groups'  => ['yesno_type_custom'], 'choices'            => ['yes' => 'Yes', 'no' => 'No']
-                               ])
-                 ->setRequired(['field'])
-                 ->setAllowedTypes('translation_domain', 'string');
+        $resolver->setDefaults([
+            'validation_groups'  => ['yesno_type_custom'],
+            'choices' => ['Yes' => 'yes', 'No' => 'no']
+         ])
+         ->setRequired(['field'])
+         ->setAllowedTypes('translation_domain', 'string');
     }
 
     public function getBlockPrefix()

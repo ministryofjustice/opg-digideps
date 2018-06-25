@@ -15,7 +15,7 @@ class DocumentType extends AbstractType
     {
         $builder
             ->add('wishToProvideDocumentation', FormTypes\ChoiceType::class, [
-            'choices'  => ['yes' => 'Yes', 'no' => 'No'],
+            'choices'  => ['Yes' => 'yes', 'No' => 'no'],
             'expanded' => true,
         ]);
 

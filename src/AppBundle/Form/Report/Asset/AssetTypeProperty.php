@@ -33,25 +33,24 @@ class AssetTypeProperty extends AbstractType
 
         if ($this->step === 3) {
             $builder->add('owned', FormTypes\ChoiceType::class, [
-                'choices' => ['fully' => 'Fully-owned', 'partly' => 'Part-owned'],
+                'choices' => array_flip(['fully' => 'Fully-owned', 'partly' => 'Part-owned']),
                 'expanded' => true,
             ])
                 ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
-                    'precision' => 0,
-                    'max_length' => 2,
-                    'pattern' => '[0-9]',
+                    'scale' => 0,
+                    'attr' => ['maxlength'=>2],
                     'invalid_message' => 'asset.property.ownedPercentage.type',
                 ]);
         }
         if ($this->step === 4) {
             $builder->add('hasMortgage', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
             ])
                 ->add('mortgageOutstandingAmount', FormTypes\NumberType::class, [
                     'grouping' => true,
-                    'precision' => 2,
+                    'scale' => 2,
                     'invalid_message' => 'asset.property.mortgageOutstandingAmount.type',
                 ]);
         }
@@ -59,7 +58,7 @@ class AssetTypeProperty extends AbstractType
         if ($this->step === 5) {
             $builder->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
-                'precision' => 2,
+                'scale' => 2,
                 'invalid_message' => 'asset.property.value.type',
             ]);
         }
@@ -67,7 +66,7 @@ class AssetTypeProperty extends AbstractType
         if ($this->step === 6) {
             $builder
                 ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ]);
         }
@@ -75,7 +74,7 @@ class AssetTypeProperty extends AbstractType
         if ($this->step === 7) {
             $builder
                 ->add('hasCharges', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ]);
         }
@@ -83,7 +82,7 @@ class AssetTypeProperty extends AbstractType
         if ($this->step === 8) {
             $builder
                 ->add('isRentedOut', FormTypes\ChoiceType::class, [
-                    'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ])
                 ->add('rentAgreementEndDate', FormTypes\DateType::class, [
@@ -94,7 +93,7 @@ class AssetTypeProperty extends AbstractType
                 ])
                 ->add('rentIncomeMonth', FormTypes\NumberType::class, [
                     'grouping' => true,
-                    'precision' => 2,
+                    'scale' => 2,
                     'invalid_message' => 'asset.property.rentIncomeMonth.type',
                 ]);
 

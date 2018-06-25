@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
 use Mockery as m;
-use org\bovigo\vfs\vfsStream;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -31,7 +30,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [new \DateTime('2000-01-01'), new \DateTime($currentYear . '-01-01')],
             [new \DateTime('2000-12-31'), new \DateTime(($currentYear -1) . '-12-31')],
         ];
-
     }
 
     /**
@@ -45,7 +43,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [new \DateTime('2000-01-01'), new \DateTime($currentYear . '-12-31')],
             [new \DateTime('2000-12-31'), new \DateTime($currentYear . '-12-30')],
         ];
-
     }
 
     /**
@@ -60,7 +57,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     /**
      * @dataProvider courtDateExpectedEndDateProvider
      */
@@ -72,7 +68,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             $this->client->getExpectedReportEndDate()->format('d/m/Y')
         );
     }
-
-
-
 }

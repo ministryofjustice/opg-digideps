@@ -323,7 +323,7 @@ class UserController extends AbstractController
     /**
      * @param EntityDir\User $user
      *
-     * @return array [FormType, array of JMS groups]
+     * @return array [string FormType, array of JMS groups]
      */
     private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user)
     {
@@ -332,21 +332,21 @@ class UserController extends AbstractController
             case EntityDir\User::ROLE_ADMIN:
             case EntityDir\User::ROLE_AD:
             case EntityDir\User::ROLE_CASE_MANAGER:
-                return [new FormDir\User\UserDetailsBasicType($user), ['user_details_basic']];
+                return [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']];
 
             case EntityDir\User::ROLE_LAY_DEPUTY:
-                return [new FormDir\User\UserDetailsFullType($user), ['user_details_full']];
+                return [FormDir\User\UserDetailsFullType::class, ['user_details_full']];
 
             case EntityDir\User::ROLE_PA_NAMED:
             case EntityDir\User::ROLE_PA_ADMIN:
             case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-                return [new FormDir\User\UserDetailsPaType($user), ['user_details_org']];
+                return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
 
             // prof reuses pa so far
             case EntityDir\User::ROLE_PROF_NAMED:
             case EntityDir\User::ROLE_PROF_ADMIN:
             case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
-                return [new FormDir\User\UserDetailsPaType($user), ['user_details_org']];
+                return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
         }
     }
 }

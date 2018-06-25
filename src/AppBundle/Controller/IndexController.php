@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -45,10 +44,13 @@ class IndexController extends AbstractController
         ];
 
         if ($form->isValid()) {
-            $data = $form->getData();
-
             try {
-                $user = $this->get('deputy_provider')->login($data);
+                $this->logUserIn($form->getData(), $request, [
+                    '_adId' => null,
+                    '_adFirstname' =>  null,
+                    '_adLastname' => null,
+                    'loggedOutFrom' => null,
+                ]);
             } catch (\Exception $e) {
                 $error = $e->getMessage();
 
@@ -67,25 +69,6 @@ class IndexController extends AbstractController
                         'form' => $form->createView(),
                     ] + $vars);
             }
-            // manually set session token into security context (manual login)
-            $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-            $this->get('security.token_storage')->setToken($token);
-
-            $session = $request->getSession();
-            $session->set('_security_secured_area', serialize($token));
-            $session->set('_adId', null);
-            $session->set('_adFirstname', null);
-            $session->set('_adLastname', null);
-            $session->set('loggedOutFrom', null);
-
-            // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
-            $session->migrate();
-
-            $request = $this->get('request');
-            $event = new InteractiveLoginEvent($request, $token);
-            $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
-
-            $session->set('lastLoggedIn', $user->getLastLoggedIn());
         }
 
         // different page version for timeout and manual logout
@@ -117,22 +100,50 @@ class IndexController extends AbstractController
      */
     public function adLoginAction(Request $request, $userToken, $adId, $adFirstname, $adLastname)
     {
-        $user = $this->getRestClient()->loadUserByToken($userToken); /* @var $user EntityDir\User*/
+        // logout first
+//        $this->get('security.token_storage')->setToken(null);
+//        $request->getSession()->invalidate();
 
-        $this->get('deputy_provider')->login(['token' => $userToken]);
+        $this->logUserIn(['token' => $userToken], $request, [
+            '_adId' => $adId,
+            '_adFirstname' =>  $adFirstname,
+            '_adLastname' => $adLastname,
+            'loggedOutFrom' => null,
+        ]);
 
-        $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
-        $this->get('security.token_storage')->setToken($clientToken); //now the user is logged in
+//        if failing on feature branch, just render a page that does a JS redirect.
+//        behat should open the page later and test you don't get redirected
 
-        $session = $this->get('session');
-        $session->set('_security_secured_area', serialize($clientToken));
-        $session->set('_adId', $adId);
-        $session->set('_adFirstname', $adFirstname);
-        $session->set('_adLastname', $adLastname);
+        $url = $this->generateUrl('user_details');
 
-        $url = $this->get('redirector_service')->getHomepageRedirect();
+        return new Response("<a href='$url'>continue</a>");
+    }
 
-        return $this->redirect($url);
+    /**
+     * @param array   $credentials see RestClient::login()
+     * @param Request $request
+     * @param array   $sessionVars
+     */
+    private function logUserIn($credentials, Request $request, array $sessionVars)
+    {
+        $user = $this->get('deputy_provider')->login($credentials);
+        // manually set session token into security context (manual login)
+        $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+        $this->get('security.token_storage')->setToken($token);
+
+        $session = $request->getSession();
+        $session->set('_security_secured_area', serialize($token));
+        foreach ($sessionVars as $k=>$v) {
+            $session->set($k, $v);
+        }
+
+        // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
+        $session->migrate();
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
+        $session->set('lastLoggedIn', $user->getLastLoggedIn());
     }
 
     /**

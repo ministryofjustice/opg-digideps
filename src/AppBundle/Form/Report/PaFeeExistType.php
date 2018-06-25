@@ -15,7 +15,7 @@ class PaFeeExistType extends AbstractType
     {
         $builder
             ->add('hasFees', FormTypes\ChoiceType::class, [
-                'choices' => ['yes' => 'Yes', 'no' => 'No'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'constraints' => [new NotBlank(['message' => 'fee.noFeesChoice.notBlank', 'groups' => ['fee-exist']])],
             ])
