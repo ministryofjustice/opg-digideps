@@ -104,7 +104,7 @@ class ReportController extends AbstractController
             }
 
             $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date'
+                'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date', 'startEndDates'
             ]);
             $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 

@@ -20,6 +20,12 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
+    {{ (page ~ '.form.startDate.label') | trans }}
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+    {{ (page ~ '.form.endDate.label') | trans }}
+    {{ form_known_date(form.endDate, 'endDate') }}
+
     <fieldset class="form-group">
         <legend>
             <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>

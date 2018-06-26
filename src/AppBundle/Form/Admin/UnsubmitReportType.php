@@ -21,6 +21,26 @@ class UnsubmitReportType extends AbstractType
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'entry_type' => UnsubmittedSectionType::class,
             ])
+            ->add('startDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'report.startDate.invalidMessage',
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'report.startDate.notBlank', 'groups' => ['startEndDates']]),
+                    new Constraints\Date(['message' => 'report.startDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                ]
+            ])
+
+            ->add('endDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'report.endDate.invalidMessage',
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'report.endDate.notBlank', 'groups' => ['startEndDates']]),
+                    new Constraints\Date(['message' => 'report.endDate.invalidMessage', 'groups' => ['startEndDates ']]),
+                ],
+            ])
+
             ->add('dueDateChoice', FormTypes\ChoiceType::class, [
                 'choices'     => array_flip([
                     'keep'  => $dueDateChoiceTransPrefix . 'keep',
@@ -57,7 +77,7 @@ class UnsubmitReportType extends AbstractType
             'translation_domain' => 'admin-clients',
             'name'               => 'report',
             'validation_groups'  => function (FormInterface $form) {
-                $ret = ['unsubmitted_sections', 'change_due_date'];
+                $ret = ['unsubmitted_sections', 'change_due_date', 'startEndDates'];
 
                 if ($form['dueDateChoice']->getData() == self::DUE_DATE_OPTION_CUSTOM) {
                     $ret[] = 'due_date_new';
