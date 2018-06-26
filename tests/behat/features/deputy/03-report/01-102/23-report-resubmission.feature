@@ -19,7 +19,7 @@ Feature: Admin unsubmit report (from client page)
     And I save the current URL as "admin-client-search-client-behat001"
 
   @deputy
-  Scenario: Admin unsubmits report and changes report due date
+  Scenario: Admin unsubmits report and changes report due date and reporting period
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-search-client-behat001"
     # reports page
@@ -35,14 +35,20 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_unsubmittedSection_0_present  | 1      |
       | unsubmit_report_unsubmittedSection_13_present | 1      |
       | unsubmit_report_dueDateChoice_4               | custom |
-      | unsubmit_report_dueDateCustom_day                   |        |
-      | unsubmit_report_dueDateCustom_month                 |        |
-      | unsubmit_report_dueDateCustom_year                  |        |
+      | unsubmit_report_dueDateCustom_day             |        |
+      | unsubmit_report_dueDateCustom_month           |        |
+      | unsubmit_report_dueDateCustom_year            |        |
+      | unsubmit_report_startDate_day                 |        |
+      | unsubmit_report_startDate_month               |        |
+      | unsubmit_report_startDate_year                |        |
     And I press "unsubmit_report_save"
     Then the following fields should have an error:
       | unsubmit_report_dueDateCustom_day   |
       | unsubmit_report_dueDateCustom_month |
       | unsubmit_report_dueDateCustom_year  |
+      | unsubmit_report_startDate_day       |
+      | unsubmit_report_startDate_month     |
+      | unsubmit_report_startDate_years      |
     # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
     When I fill in the following:
       | unsubmit_report_unsubmittedSection_0_present  | 1      |
@@ -51,6 +57,9 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_dueDateCustom_day                   | 30     |
       | unsubmit_report_dueDateCustom_month                 | 04     |
       | unsubmit_report_dueDateCustom_year                  | 2022   |
+      | unsubmit_report_startDate_day                 |  02      |
+      | unsubmit_report_startDate_month               |  03      |
+      | unsubmit_report_startDate_year                |  2022    |
     And I press "unsubmit_report_save"
     Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
