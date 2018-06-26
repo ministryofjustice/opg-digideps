@@ -41,6 +41,9 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_startDate_day                 |        |
       | unsubmit_report_startDate_month               |        |
       | unsubmit_report_startDate_year                |        |
+      | unsubmit_report_endDate_day                 |        |
+      | unsubmit_report_endDate_month               |        |
+      | unsubmit_report_endDate_year                |        |
     And I press "unsubmit_report_save"
     Then the following fields should have an error:
       | unsubmit_report_dueDateCustom_day   |
@@ -48,7 +51,10 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_dueDateCustom_year  |
       | unsubmit_report_startDate_day       |
       | unsubmit_report_startDate_month     |
-      | unsubmit_report_startDate_years      |
+      | unsubmit_report_startDate_year      |
+      | unsubmit_report_endDate_day       |
+      | unsubmit_report_endDate_month     |
+      | unsubmit_report_endDate_year      |
     # custom date: set to 30th of April 2022 (has to be in the future to skip the constraint)
     When I fill in the following:
       | unsubmit_report_unsubmittedSection_0_present  | 1      |
@@ -60,9 +66,12 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_startDate_day                 |  02      |
       | unsubmit_report_startDate_month               |  03      |
       | unsubmit_report_startDate_year                |  2022    |
+      | unsubmit_report_endDate_day                 |  03      |
+      | unsubmit_report_endDate_month               |  03      |
+      | unsubmit_report_endDate_year                |  2022    |
     And I press "unsubmit_report_save"
-    Then I should see "Unsubmitted" in the "report-2016-label" region
-    And I should see "30 April 2022" in the "report-2016-due-date" region
+    Then I should see "Unsubmitted" in the "report-2022-label" region
+    And I should see "30 April 2022" in the "report-2022-due-date" region
     When I click on "admin-documents"
     Then I should see the "report-submission" region exactly 2 times
 
