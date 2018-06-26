@@ -349,6 +349,8 @@ class ReportController extends RestController
             'un_submit_date'            => 'notEmpty',
             'due_date'                  => 'notEmpty',
             'unsubmitted_sections_list' => 'notEmpty',
+            'start_date'                => 'notEmpty',
+            'end_date'                  => 'notEmpty',
         ]);
 
         $rs = $this->get('opg_digideps.report_service'); /** @var $rs ReportService */
@@ -356,6 +358,8 @@ class ReportController extends RestController
             $report,
             new \DateTime($data['un_submit_date']),
             new \DateTime($data['due_date']),
+            new \DateTime($data['start_date']),
+            new \DateTime($data['end_date']),
             $data['unsubmitted_sections_list']
         );
 
