@@ -537,13 +537,13 @@
     </ul>
 
     <div class="form-section push--bottom">
-        {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
-            'legendClass': 'bold'
-        }) }}
+        {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary')) }}
     </div>
 
     <div class="form-section push--bottom">
-        {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary')) }}
+        {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
+            'legendClass': 'bold'
+        }) }}
     </div>
 
     {# Further information #}
