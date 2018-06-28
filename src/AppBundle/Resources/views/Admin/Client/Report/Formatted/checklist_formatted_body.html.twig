@@ -281,6 +281,11 @@
             <h2 class="section-heading">{{ (page ~ '.lodgingSummary.heading') | trans({}, 'admin-checklist') }}</h2>
 
             <div class="labelvalue push-half--top">
+                <h3 class="label question bold">{{ (page ~ '.form.lodgingSummary.label') | trans({}, 'admin-checklist') }}</h3>
+                <div class="value">{{ checklist.lodgingSummary | nl2br }}</div>
+            </div>
+
+            <div class="labelvalue push-half--top">
                 <h3 class="label question bold">{{ (page ~ '.form.finalDecision.label') | trans({}, 'admin-checklist') }}</h3>
                 <table class="checkboxes labelvalue">
                     <tr>
@@ -318,10 +323,6 @@
                 </table>
             </div>
 
-            <div class="labelvalue push-half--top">
-                <h3 class="label question bold">{{ (page ~ '.form.lodgingSummary.label') | trans({}, 'admin-checklist') }}</h3>
-                <div class="value">{{ checklist.lodgingSummary | nl2br }}</div>
-            </div>
         </div>
 
         <div class="section">
