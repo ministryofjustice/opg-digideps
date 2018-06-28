@@ -461,7 +461,7 @@
                     <table class="check-your-answers columns-2 push--bottom">
                         {{ macros.summaryTableHeaderQA(true) }}
                         <tbody>
-                            {# step 2 #}
+                            {# Concerns about deputyship? #}
                             <tr>
                                 <td>
                                     {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
@@ -474,6 +474,21 @@
                                 <tr>
                                     <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
                                     <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
+                                </tr>
+                            {% endif %}
+                            {# Any other concerns? #}
+                            <tr>
+                                <td>
+                                    {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
+                                </td>
+                                <td>
+                                    {{ report.actionMoreInfo | capitalize }}
+                                </td>
+                            </tr>
+                            {% if report.actionMoreInfo == 'yes' %}
+                                <tr>
+                                    <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}</td>
+                                    <td>{{ report.actionMoreInfoDetails | nl2br }}</td>
                                 </tr>
                             {% endif %}
                         </tbody>
