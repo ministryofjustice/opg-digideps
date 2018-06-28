@@ -53,6 +53,7 @@
             </thead>
             <tbody>
             {% for report in client.reportsSubmittedAtLeastOnce %}
+                {% set enableChecklistLink = report.type in ['102', '102-4'] %}
                 {# only show submitted and unsubmitted reports #}
                 {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
                 <tr class="{{ behatRegionPrefix }}">
@@ -89,9 +90,11 @@
                     {% if enableManageLink %}
                         <td class="change-answer width-tenth">
                             {% if report.submitted %}
-                                <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
-                                   class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
-                                <br />
+                                {% if enableChecklistLink %}
+                                    <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
+                                       class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                                    <br />
+                                {% endif %}
                                 <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
                                    class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
                             {% endif %}
