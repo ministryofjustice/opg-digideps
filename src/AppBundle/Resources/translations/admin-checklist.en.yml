@@ -79,7 +79,7 @@ checklistPage:
     caseWorkerSatisified:
       label: Are you satisfied with the deputy's declaration?
     lodgingSummary:
-      label: Case manager decisions?
+      label: Lodging summary concerns and decisions
     finalDecision:
       label: Final decision?
       options:
