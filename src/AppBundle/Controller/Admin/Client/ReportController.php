@@ -217,20 +217,4 @@ class ReportController extends AbstractController
 
         return $response;
     }
-
-    /**
-     * Get the previous report based on previous report data containing reportType and reportId
-     *
-     * @param $previousReportData
-     * @return Ndr|\AppBundle\Entity\Report\Report|bool
-     */
-    private function generatePreviousReport($previousReportData)
-    {
-        if ($previousReportData['reportType'] == Report::class) {
-            return $this->getReport($previousReportData['reportId'], ['report', 'account']);
-        } elseif ($previousReportData['reportType'] == Ndr::class) {
-            return $this->getNdr($previousReportData['reportId'], ['ndr', 'ndr-account']);
-        }
-        return false;
-    }
 }
