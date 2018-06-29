@@ -69,12 +69,12 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
-                    <table class="check-your-answers">
+                    <table>
                         <thead>
                             <th>{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
                             <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
                         </thead>
-                        <tbody class="behat-region-document-list">
+                        <tbody>
                             {% for document in report.deputydocuments %}
                                 <tr>
                                     <td>{{ document.fileName }}</td>
