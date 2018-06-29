@@ -62,6 +62,34 @@
         </p>
     {% endif %}
 
+    {% if report.deputydocuments %}
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">Attached documents</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    <table class="check-your-answers">
+                        <thead>
+                            <th>{{ 'summaryPage.filename' | trans({}, 'report-documents') }}</th>
+                            <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
+                        </thead>
+                        <tbody class="behat-region-document-list">
+                            {% for document in report.deputydocuments %}
+                                <tr>
+                                    <td>{{ document.fileName }}</td>
+                                    <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </details>
+    {% else %}
+        <p>No attached documents</p>
+    {% endif %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
     {# Deputy and client information #}
