@@ -1167,23 +1167,15 @@ class Report implements ReportInterface
      * @JMS\VirtualProperty
      * @JMS\SerializedName("previous_report_data")
      * @JMS\Groups({"previous-report-data"})
+     * @JMS\Type("array")
      *
      * @return array
      */
     public function getPreviousReportData()
     {
-        $previousReportData = [];
         $previousReport = $this->getPreviousReport();
 
-        $previousReportData['reportType'] = false;
-        $previousReportData['reportId'] = false;
-
-        if (!empty($previousReport)) {  
-            $previousReportData['reportType'] = get_class($previousReport);
-            $previousReportData['reportId'] = $previousReport->getId();
-        }
-
-        return $previousReportData;
+        return ['financial-summary' => $previousReport->getFinancialSummary()];
     }
 
     /**
@@ -1226,4 +1218,25 @@ class Report implements ReportInterface
         return false;
     }
 
+    /**
+     * Report financial summary, contains bank accounts and balance information
+     *
+     * @return array
+     */
+    public function getFinancialSummary() {
+
+        $accounts = [];
+        /** @var BankAccount $ba */
+        foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['bank'] = $ba->getBank();
+            $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
+            $accounts[$ba->getId()]['accountNumber'] = $ba->getAccountNumber();
+            $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
+            $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
+        }
+        return [
+            'accounts' => $accounts,
+            'closing_balance' => $this->getAccountsClosingBalanceTotal()
+        ];
+    }
 }

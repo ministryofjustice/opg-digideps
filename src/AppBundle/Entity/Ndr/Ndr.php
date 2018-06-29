@@ -484,4 +484,39 @@ class Ndr implements ReportInterface
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
         return $this;
     }
+
+    /**
+     * @return decimal
+     */
+    public function getBalanceOnCourtOrderDateTotal()
+    {
+        $ret = 0;
+        foreach ($this->getBankAccounts() as $account) {
+            $ret += $account->getBalanceOnCourtOrderDate();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * NDR financial summary, contains bank accounts and balance information
+     *
+     * @return array
+     */
+    public function getFinancialSummary() {
+
+        $accounts = [];
+        /** @var BankAccount $ba */
+        foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['bank'] = $ba->getBank();
+            $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
+            $accounts[$ba->getId()]['accountNumber'] = $ba->getAccountNumber();
+            $accounts[$ba->getId()]['openingBalance'] = $ba->getBalanceOnCourtOrderDate();
+            $accounts[$ba->getId()]['closingBalance'] = $ba->getBalanceOnCourtOrderDate();
+        }
+        return [
+            'accounts' => $accounts,
+            'balance_on_court_order_date' => $this->getBalanceOnCourtOrderDateTotal()
+        ];
+    }
 }
