@@ -3,7 +3,9 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Checklist;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
@@ -130,7 +132,17 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
-        $report = $this->getReport($id, array_merge(self::$reportGroupsAll, ['report', 'report-checklist', 'checklist-information', 'last-modified', 'user']));
+        $report = $this->getReport(
+            $id,
+            array_merge(
+                self::$reportGroupsAll,
+                [
+                    'report', 'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data'
+                ]
+            )
+        );
+
+        $previousReport = $this->generatePreviousReport($report->getPreviousReportData());
 
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
@@ -173,7 +185,8 @@ class ReportController extends AbstractController
         return [
             'report'   => $report,
             'form'     => $form->createView(),
-            'checklist' => $checklist
+            'checklist' => $checklist,
+            'previousReport' => $previousReport
         ];
     }
 
@@ -205,5 +218,21 @@ class ReportController extends AbstractController
         $response->sendHeaders();
 
         return $response;
+    }
+
+    /**
+     * Get the previous report based on previous report data containing reportType and reportId
+     *
+     * @param $previousReportData
+     * @return Ndr|\AppBundle\Entity\Report\Report|bool
+     */
+    private function generatePreviousReport($previousReportData)
+    {
+        if ($previousReportData['reportType'] == Report::class) {
+            return $this->getReport($previousReportData['reportId'], ['report', 'account']);
+        } elseif ($previousReportData['reportType'] == Ndr::class) {
+            return $this->getNdr($previousReportData['reportId'], ['ndr', 'ndr-account']);
+        }
+        return false;
     }
 }
