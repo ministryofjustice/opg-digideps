@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
@@ -1159,4 +1160,70 @@ class Report implements ReportInterface
     {
         $this->checklist = $checklist;
     }
+
+    /**
+     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("previous_report_data")
+     * @JMS\Groups({"previous-report-data"})
+     *
+     * @return array
+     */
+    public function getPreviousReportData()
+    {
+        $previousReportData = [];
+        $previousReport = $this->getPreviousReport();
+
+        $previousReportData['reportType'] = false;
+        $previousReportData['reportId'] = false;
+
+        if (!empty($previousReport)) {  
+            $previousReportData['reportType'] = get_class($previousReport);
+            $previousReportData['reportId'] = $previousReport->getId();
+        }
+
+        return $previousReportData;
+    }
+
+    /**
+     * Method to identify and return previous report.
+     *
+     * @return Ndr|Report|bool|mixed
+     */
+    private function getPreviousReport() {
+        $clientReportIds = $this->getClient()->getReportIds();
+
+        // ensure order is correct
+        usort($clientReportIds, function($a, $b)
+            {
+                return ($a < $b) ? -1 : 1;
+            }
+        );
+
+        // try previous reports
+        foreach ($clientReportIds as $reportId) {
+            if ($reportId == $this->getId()) {
+                // check for next report as being their previous
+                $previousReportId = next($clientReportIds);
+                if (!empty($previousReportId)) {
+                    return $this->getClient()->getReports()->filter(
+                        function ($report) use ($previousReportId) {
+                            return $previousReportId == $report->getId();
+                    });
+                }
+            }
+        }
+
+        // try NDR
+        /** @var Ndr $ndr */
+        $ndr = $this->getClient()->getNdr();
+
+        if (!empty($ndr)) {
+            return $ndr;
+        }
+
+        return false;
+    }
+
 }
