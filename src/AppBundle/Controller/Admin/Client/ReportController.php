@@ -142,8 +142,6 @@ class ReportController extends AbstractController
             )
         );
 
-        $previousReport = $this->generatePreviousReport($report->getPreviousReportData());
-
         if (!$report->getSubmitted()) {
             throw new DisplayableException('Cannot manage active report');
         }
@@ -186,7 +184,7 @@ class ReportController extends AbstractController
             'report'   => $report,
             'form'     => $form->createView(),
             'checklist' => $checklist,
-            'previousReport' => $previousReport
+            'previousReportData' => $report->getPreviousReportData()
         ];
     }
 
