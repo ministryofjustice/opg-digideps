@@ -1184,26 +1184,20 @@ class Report implements ReportInterface
      * @return Ndr|Report|bool|mixed
      */
     private function getPreviousReport() {
-        $clientReportIds = $this->getClient()->getReportIds();
+        $clientReports = $this->getClient()->getReports();
 
-        // ensure order is correct
-        usort($clientReportIds, function($a, $b)
-            {
-                return ($a < $b) ? -1 : 1;
-            }
-        );
+        // ensure order is correct most recent first
+        $iterator = $clientReports->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getId() > $b->getId()) ? -1 : 1;
+        });
+        $orderedClientReports = new ArrayCollection(iterator_to_array($iterator));
 
         // try previous reports
-        foreach ($clientReportIds as $reportId) {
-            if ($reportId == $this->getId()) {
-                // check for next report as being their previous
-                $previousReportId = next($clientReportIds);
-                if (!empty($previousReportId)) {
-                    return $this->getClient()->getReports()->filter(
-                        function ($report) use ($previousReportId) {
-                            return $previousReportId == $report->getId();
-                    });
-                }
+        foreach ($orderedClientReports as $clientReport) {
+            if ($clientReport->getId() < $this->getId()) {
+                // less than should imply their previous report
+                return $clientReport;
             }
         }
 
@@ -1224,7 +1218,6 @@ class Report implements ReportInterface
      * @return array
      */
     public function getFinancialSummary() {
-
         $accounts = [];
         /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
@@ -1234,6 +1227,7 @@ class Report implements ReportInterface
             $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
             $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
         }
+
         return [
             'accounts' => $accounts,
             'closing_balance' => $this->getAccountsClosingBalanceTotal()
