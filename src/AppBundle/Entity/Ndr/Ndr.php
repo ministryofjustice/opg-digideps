@@ -499,6 +499,21 @@ class Ndr implements ReportInterface
     }
 
     /**
+     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("previous_report_data")
+     * @JMS\Groups({"previous-report-data"})
+     * @JMS\Type("array")
+     *
+     * @return array
+     */
+    public function getPreviousReportData()
+    {
+        return false;
+    }
+
+    /**
      * NDR financial summary, contains bank accounts and balance information
      *
      * @return array
@@ -516,7 +531,7 @@ class Ndr implements ReportInterface
         }
         return [
             'accounts' => $accounts,
-            'balance_on_court_order_date' => $this->getBalanceOnCourtOrderDateTotal()
+            'closing-balance' => $this->getBalanceOnCourtOrderDateTotal()
         ];
     }
 }

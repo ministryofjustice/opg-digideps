@@ -1161,22 +1161,26 @@ class Report implements ReportInterface
         $this->checklist = $checklist;
     }
 
-    /**
-     * Previous report data. Just return id and type for second api call to allo new JMS groups
-     *
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("previous_report_data")
-     * @JMS\Groups({"previous-report-data"})
-     * @JMS\Type("array")
-     *
-     * @return array
-     */
-    public function getPreviousReportData()
-    {
-        $previousReport = $this->getPreviousReport();
+        /**
+         * Previous report data. Just return id and type for second api call to allo new JMS groups
+         *
+         * @JMS\VirtualProperty
+         * @JMS\SerializedName("previous_report_data")
+         * @JMS\Groups({"previous-report-data"})
+         * @JMS\Type("array")
+         *
+         * @return array
+         */
+        public function getPreviousReportData()
+        {
+            $previousReport = $this->getPreviousReport();
 
-        return ['financial-summary' => $previousReport->getFinancialSummary()];
-    }
+            if (empty($previousReport)) {
+                return false;
+            }
+
+            return ['financial-summary' => $previousReport->getFinancialSummary()];
+        }
 
     /**
      * Method to identify and return previous report.
@@ -1223,14 +1227,15 @@ class Report implements ReportInterface
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
             $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
-            $accounts[$ba->getId()]['accountNumber'] = $ba->getAccountNumber();
+            $accounts[$ba->getId()]['accountNumber']  = $ba->getAccountNumber();
+            $accounts[$ba->getId()]['sortCode']       = $ba->getSortCode();
             $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
             $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
         }
 
         return [
             'accounts' => $accounts,
-            'closing_balance' => $this->getAccountsClosingBalanceTotal()
+            'closing-balance' => $this->getAccountsClosingBalanceTotal()
         ];
     }
 }
