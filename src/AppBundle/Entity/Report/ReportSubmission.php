@@ -17,6 +17,7 @@ use JMS\Serializer\Annotation as JMS;
 class ReportSubmission
 {
     const REMOVE_FILES_WHEN_OLDER_THAN = '-30 days';
+    const STATS_FILE_PATH = '/tmp/dd-all-submissions-stats.csv';
 
     // createdBy is the user who submitted the report
     // createdOn = date where the report (or documents-only) get submitted

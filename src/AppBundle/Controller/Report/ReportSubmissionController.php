@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -135,5 +136,22 @@ class ReportSubmissionController extends RestController
         $this->getEntityManager()->flush();
 
         return true;
+    }
+
+    /**
+     * Return CSV file of all report submissions
+     *
+     * @Route("/all-report-submissions.csv")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function generateAllReportSubmissionsStatsCsv(Request $request)
+    {
+        // create CSV
+        $this->get('opg_digideps.report_service')->generateAllReportSubmissionsCsv(EntityDir\Report\ReportSubmission::STATS_FILE_PATH);
+
+        $response = new BinaryFileResponse(EntityDir\Report\ReportSubmission::STATS_FILE_PATH);
+
+        return $response;
     }
 }
