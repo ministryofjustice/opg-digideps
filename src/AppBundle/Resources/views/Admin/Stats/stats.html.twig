@@ -24,5 +24,13 @@
         </p>
     </div>
 
+    <h1 class="heading-medium">{{ (page ~ '.reportsHeading') | trans }}</h1>
+
+    <div class="text">
+        <p>{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
+        <p>
+            {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_report_submissions_csv')}) | raw }}
+        </p>
+    </div>
 
 {% endblock %}

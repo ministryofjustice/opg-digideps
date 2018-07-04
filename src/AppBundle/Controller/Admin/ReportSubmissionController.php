@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\File\MultiDocumentZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -172,5 +173,28 @@ class ReportSubmissionController extends AbstractController
             'orderBy'           => $request->get('orderBy', 'createdOn'),
             'order'             => $request->get('order', 'ASC')
         ];
+    }
+
+    /**
+     * @Route("/dd-report-submissions.csv", name="admin_report_submissions_csv")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template
+     */
+    public function reportSubmissionsCsvAction(Request $request)
+    {
+        try {
+            $rawCsv = (string) $this->getRestClient()->get("report-submission/all-report-submissions.csv", 'raw');
+        } catch (\Exception $e) {
+            throw new DisplayableException($e);
+        }
+        $response = new Response();
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'plain/text');
+        $response->headers->set('Content-type', 'application/octet-stream');
+        $response->headers->set('Content-Disposition', 'attachment; filename="dd-all-report-submissions-stats.' . date('Y-m-d') . '.csv";');
+        $response->sendHeaders();
+        $response->setContent($rawCsv);
+
+        return $response;
     }
 }
