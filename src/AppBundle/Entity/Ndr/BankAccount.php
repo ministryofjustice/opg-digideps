@@ -2,11 +2,12 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\Ndr\Traits\HasNdrTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     use HasNdrTrait;
 
@@ -270,6 +271,21 @@ class BankAccount
     public function setBalanceOnCourtOrderDate($balanceOnCourtOrderDate)
     {
         $this->balanceOnCourtOrderDate = $balanceOnCourtOrderDate;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getClosingBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return false
+     */
+    public function getIsClosed()
+    {
+        return false;
     }
 
     /**

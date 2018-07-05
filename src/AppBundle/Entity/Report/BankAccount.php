@@ -2,11 +2,12 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     use HasReportTrait;
 
