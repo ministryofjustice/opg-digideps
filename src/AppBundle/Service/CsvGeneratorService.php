@@ -115,9 +115,8 @@ class CsvGeneratorService
      */
     private function generateReportSubmissionsCsvLines($records)
     {
-
         $headers = [
-            'Id', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
+            'id', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
             'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date',
             'total_reports', 'active_reports'
         ];
@@ -196,8 +195,30 @@ class CsvGeneratorService
     {
         foreach ($records as $r) {
             /** @var $t \AppBundle\Entity\Report\ReportSubmission */
-            fputcsv(
-                $this->fd, [
+            if (!empty($r->getNdr())) {
+                $csvData = [
+                    $r->getId(),
+                    null,
+                    null,
+                    null,
+                    null,
+//                    $r->getCreatedBy()->getEmail(),
+//                    $r->getCreatedBy()->getFirstname(),
+//                    $r->getCreatedBy()->getLastname(),
+//                    $r->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
+                    $r->getNdr()->getDueDate()->format('d/m/Y'),
+                    $r->getNdr()->getSubmitDate()->format('d/m/Y'),
+                    null,
+//                    $r->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
+                    $r->getNdr()->getClient()->getFirstname(),
+                    $r->getNdr()->getClient()->getLastname(),
+                    $r->getNdr()->getClient()->getCaseNumber(),
+                    $r->getNdr()->getClient()->getCourtDate()->format('d/m/Y'),
+                    $r->getNdr()->getClient()->getTotalReportCount(),
+                    $r->getNdr()->getClient()->getActiveReportCount(),
+                ];
+            } else {
+                $csvData = [
                     $r->getId(),
                     $r->getCreatedBy()->getEmail(),
                     $r->getCreatedBy()->getFirstname(),
@@ -212,8 +233,10 @@ class CsvGeneratorService
                     $r->getReport()->getClient()->getCourtDate()->format('d/m/Y'),
                     $r->getReport()->getClient()->getTotalReportCount(),
                     $r->getReport()->getClient()->getActiveReportCount(),
-                ]
-            );
+                ];
+            }
+
+            fputcsv($this->fd, $csvData);
         }
     }
 
