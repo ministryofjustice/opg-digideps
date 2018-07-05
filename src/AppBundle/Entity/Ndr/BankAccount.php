@@ -115,6 +115,20 @@ class BankAccount
     private $isJointAccount;
 
     /**
+     * Get bank account name in one line. Comes from Virtual property.
+     *
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"bank-account"})
+     *
+     * @var string
+     */
+    private $nameOneLine;
+
+    /**
      * @return mixed
      */
     public static function getTypes()
@@ -289,4 +303,23 @@ class BankAccount
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return $this->nameOneLine;
+    }
+
+    /**
+     * @param string $nameOneLine
+     * @return $this
+     */
+    public function setNameOneLine($nameOneLine)
+    {
+        $this->nameOneLine = $nameOneLine;
+        return $this;
+    }
+
 }
