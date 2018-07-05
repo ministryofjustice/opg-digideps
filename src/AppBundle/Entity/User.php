@@ -105,7 +105,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-email"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)

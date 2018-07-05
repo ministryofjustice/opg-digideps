@@ -24,10 +24,11 @@ class ReportSubmissionController extends RestController
         'report-period',
         'client-name',
         'client-case-number',
+        'client-email',
         'user-name',
         'user-rolename',
         'user-teamname',
-        'documents'
+        'documents',
     ];
 
     /**
@@ -139,19 +140,43 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * Return CSV file of all report submissions
-     *
-     * @Route("/all-report-submissions.csv")
+     * @Route("/casrec_data", name="casrec_data")
      * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
-    public function generateAllReportSubmissionsStatsCsv(Request $request)
+    public function getCasrecData(Request $request)
     {
-        // create CSV
-        $this->get('opg_digideps.report_service')->generateAllReportSubmissionsCsv(EntityDir\Report\ReportSubmission::STATS_FILE_PATH);
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
-        $response = new BinaryFileResponse(EntityDir\Report\ReportSubmission::STATS_FILE_PATH);
+        $ret = $repo->findAllReportSubmissions(
+            $request->get('status'),
+            $request->get('q'),
+            $request->get('created_by_role'),
+            $request->get('offset', 0),
+            $request->get('limit', 100),
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
+        );
 
-        return $response;
+        $this->setJmsSerialiserGroups(
+            [
+                'report-submission',
+                'report-type',
+                'report-client',
+                'ndr-client',
+                'ndr',
+                'report',
+//                'report-period',
+                'client-name',
+                'client-case-number',
+                'client-court-date',
+                'client-email',
+                'user',
+                'total-report-count',
+                'active-report-count'
+            ]
+        );
+
+        return $ret;
     }
 }

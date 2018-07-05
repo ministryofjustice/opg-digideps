@@ -295,39 +295,4 @@ class ReportService
 
         return $ret;
     }
-
-    /**
-     * @param string $filePath
-     * @param int    $maxResults
-     *
-     * @return string
-     */
-    public function generateAllReportSubmissionsCsv($filePath)
-    {
-        $filePathTmp = $filePath . '.tmp';
-        $linesWritten = 0;
-
-        /* @var $it IterableResult */
-        // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/batch-processing.html
-        $it = $this->_em->createQuery('SELECT c FROM ' . ReportSubmission::class . ' c')->iterate();
-
-        $f = fopen($filePathTmp, 'w');
-        foreach ($it as $itRow) {
-            $row = $itRow[0]->toArray();
-            if ($it->key() === 0) { // write header (only for first row)
-                fputcsv($f, array_keys($row));
-            }
-            fputcsv($f, $row);
-            $linesWritten++;
-        }
-        fclose($f);
-
-        // replace file instantly
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-        rename($filePathTmp, $filePath);
-
-        return $linesWritten;
-    }
 }
