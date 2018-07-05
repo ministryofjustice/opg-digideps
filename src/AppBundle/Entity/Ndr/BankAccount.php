@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\BankAccountInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="odr_account")
  * @ORM\Entity()
  */
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     /**
      * Keep in sync with client.
@@ -269,7 +270,7 @@ class BankAccount
     /**
      * @return string
      */
-    public function     getAccountNumber()
+    public function getAccountNumber()
     {
         return $this->accountNumber;
     }
@@ -312,6 +313,28 @@ class BankAccount
     public function getBalanceOnCourtOrderDate()
     {
         return $this->balanceOnCourtOrderDate;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getOpeningBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getClosingBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return false
+     */
+    public function getIsClosed()
+    {
+        return false;
     }
 
     /**

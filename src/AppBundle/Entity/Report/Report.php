@@ -1228,10 +1228,10 @@ class Report implements ReportInterface
             $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
             $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
-            $accounts[$ba->getId()]['accountNumber']  = $ba->getAccountNumber();
-            $accounts[$ba->getId()]['sortCode']       = $ba->getSortCode();
             $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
             $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
+            $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
+            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
         }
 
         return [

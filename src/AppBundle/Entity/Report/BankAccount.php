@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\BankAccountInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="account")
  * @ORM\Entity()
  */
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     /**
      * Keep in sync with client.
