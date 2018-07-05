@@ -152,9 +152,9 @@ class ReportSubmissionRepository extends EntityRepository
 
         // to filter out multiple submissions, look at the rs.createdOn as being greater or equal to the original
         // report submission date
-        $qbSelect->andWhere('rs.createdOn >= r.submitDate');
-        $qbSelect->andWhere('r.submitted = true');
-        $qbSelect->andWhere('r.submitDate IS NOT NULL');
+        $qbSelect->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate');
+        $qbSelect->andWhere('r.submitted = true OR ndr.submitted = true');
+        $qbSelect->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL');
         $qbSelect
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset);
