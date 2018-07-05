@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/admin/documents")
+ * @Route("/admin")
  */
 class ReportSubmissionController extends AbstractController
 {
@@ -21,7 +21,7 @@ class ReportSubmissionController extends AbstractController
     const ACTION_ARCHIVE = 'archive';
 
     /**
-     * @Route("/list", name="admin_documents")
+     * @Route("/documents/list", name="admin_documents")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
@@ -176,7 +176,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * @Route("/dd-report-submissions.csv", name="admin_report_submissions_csv")
+     * @Route("/report-submissions/dd-report-submissions.csv", name="admin_report_submissions_csv")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
      */
