@@ -146,14 +146,19 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect->select('rs');
 
         // add date restriction
-        $today = new \DateTime('today midnight');
+        $today = new \DateTime('yesterday midnight');
         $qbSelect->andWhere('rs.createdOn >= :today')
             ->setParameter(':today', $today);
 
+        // to filter out multiple submissions, look at the rs.createdOn as being greater or equal to the original
+        // report submission date
+        $qbSelect->andWhere('rs.createdOn >= r.submitDate');
+        $qbSelect->andWhere('r.submitted = true');
+        $qbSelect->andWhere('r.submitDate IS NOT NULL');
         $qbSelect
             ->orderBy('rs.' . $orderBy, $order)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->setFirstResult($offset);
+            //->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
