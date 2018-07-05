@@ -149,6 +149,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"user"})
      *
      * @var \DateTime
      */

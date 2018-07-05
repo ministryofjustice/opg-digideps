@@ -63,6 +63,33 @@ class CsvGeneratorService
     }
 
     /**
+     * Generate all the report submissions as csv
+     *
+     * @param array $records
+     *
+     * @return string Csv content
+     */
+    public function generateReportSubmissionsCsv($records)
+    {
+        $this->logger->info('Generating Report submissions CSV : ');
+
+        // initialize temporary fp
+        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
+        if ($this->fd === false) {
+            $this->logger->error('Failed to open Temporary file');
+            die('Failed to open temporary file');
+        }
+
+        $this->generateReportSubmissionsCsvLines($records);
+
+        rewind($this->fd);
+        $csvContent = stream_get_contents($this->fd);
+        fclose($this->fd);
+
+        return $csvContent;
+    }
+
+    /**
      * Generates the lines of the CSV
      *
      * @param ReportInterface $report
@@ -71,13 +98,31 @@ class CsvGeneratorService
     {
         //foreach($report->getBankAccounts() as $bankAccount) {
         //$this->generateBankAccountSummary($bankAccount);
-        $this->generateCsvHeaders();
+        $headers = ['Type', 'Category','Amount', 'Bank name', 'Account details', 'Description'];
+        $this->generateCsvHeaders($headers);
         $this->generateTransactionRows($report->getGifts(), 'gift');
         $this->generateTransactionRows($report->getExpenses(), 'expense');
         $this->generateTransactionRows($report->getMoneyTransactionsOut(), 'money out');
         $this->generateTransactionRows($report->getMoneyTransactionsIn(), 'money in');
 
         //}
+    }
+
+    /**
+     * Generates the lines of the CSV
+     *
+     * @param ReportInterface $report
+     */
+    private function generateReportSubmissionsCsvLines($records)
+    {
+
+        $headers = [
+            'Id', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
+            'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date',
+            'total_reports', 'active_reports'
+        ];
+        $this->generateCsvHeaders($headers);
+        $this->generateReportSubmissionRows($records);
     }
 
     /**
@@ -109,10 +154,11 @@ class CsvGeneratorService
     /**
      * Generate CSV Headers
      */
-    private function generateCsvHeaders()
+    private function generateCsvHeaders($headers)
     {
-        $headers = ['Type', 'Category','Amount', 'Bank name', 'Account details', 'Description'];
-        fputcsv($this->fd, $headers);
+        if (!empty($headers)) {
+            fputcsv($this->fd, $headers);
+        }
     }
 
     /**
@@ -135,6 +181,37 @@ class CsvGeneratorService
                     (!empty($t->getBankAccount()) ? $t->getBankAccount()->getBank() : ''),
                     (!empty($t->getBankAccount()) ? $t->getBankAccount()->getDisplayName() : ''),
                     $this->generateDescription($t)
+                ]
+            );
+        }
+    }
+
+    /**
+     * Generates Report submission row
+     *
+     * @param $records
+     * @param $type
+     */
+    private function generateReportSubmissionRows($records)
+    {
+        foreach ($records as $r) {
+            /** @var $t \AppBundle\Entity\Report\ReportSubmission */
+            fputcsv(
+                $this->fd, [
+                    $r->getId(),
+                    $r->getCreatedBy()->getEmail(),
+                    $r->getCreatedBy()->getFirstname(),
+                    $r->getCreatedBy()->getLastname(),
+                    $r->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
+                    $r->getReport()->getDueDate()->format('d/m/Y'),
+                    $r->getReport()->getSubmitDate()->format('d/m/Y'),
+                    $r->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
+                    $r->getReport()->getClient()->getFirstname(),
+                    $r->getReport()->getClient()->getLastname(),
+                    $r->getReport()->getClient()->getCaseNumber(),
+                    $r->getReport()->getClient()->getCourtDate()->format('d/m/Y'),
+                    $r->getReport()->getClient()->getTotalReportCount(),
+                    $r->getReport()->getClient()->getActiveReportCount(),
                 ]
             );
         }

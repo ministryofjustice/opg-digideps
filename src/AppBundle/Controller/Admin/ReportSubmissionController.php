@@ -183,17 +183,32 @@ class ReportSubmissionController extends AbstractController
     public function reportSubmissionsCsvAction(Request $request)
     {
         try {
-            $rawCsv = (string) $this->getRestClient()->get("report-submission/all-report-submissions.csv", 'raw');
+
+            $currentFilters = self::getFiltersFromRequest($request);
+            $ret = $this->getRestClient()->get(
+                '/report-submission/casrec_data?' . http_build_query($currentFilters),
+                'array'
+                );
+
+            $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
+
         } catch (\Exception $e) {
             throw new DisplayableException($e);
         }
-        $response = new Response();
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'plain/text');
-        $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-all-report-submissions-stats.' . date('Y-m-d') . '.csv";');
+
+        $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($records);
+
+        $response = new Response($csvContent);
+        $response->headers->set('Content-Type', 'text/csv');
+
+        $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
+            date('Y-m-d')
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+
+        // Send headers before outputting anything
         $response->sendHeaders();
-        $response->setContent($rawCsv);
 
         return $response;
     }

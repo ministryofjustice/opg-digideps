@@ -83,7 +83,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "client-case-number"})
      *
      * @Assert\NotBlank( message="client.caseNumber.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
      * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1", groups={"lay-deputy-client", "verify-codeputy"})
@@ -96,7 +96,7 @@ class Client
     /**
      * @JMS\Accessor(setter="setCourtDateWithoutTime")
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"edit"})
+     * @JMS\Groups({"edit", "client-court-date"})
      *
      * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
      * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client"})
@@ -168,7 +168,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"pa-edit"})
+     * @JMS\Groups({"pa-edit", "client-email"})
      *
      * @Assert\Email( message="client.email.invalid", checkMX=false, checkHost=false, groups={"pa-client"})
      * @Assert\Length(max=60, maxMessage="client.email.maxLength", groups={"pa-client"})
@@ -202,6 +202,23 @@ class Client
      * @JMS\Groups({"clientcontacts"})
      */
     private $clientContacts;
+
+
+    /**
+     * @var integer
+     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"total-report-count"})
+     */
+    private $totalReportCount;
+
+    /**
+     * @var integer
+     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"active-report-count"})
+     */
+    private $activeReportCount;
 
     public function __construct()
     {
@@ -827,4 +844,38 @@ class Client
     {
         return $this->getExpectedReportStartDate()->modify('+1year -1day');
     }
+
+    /**
+     * @return int
+     */
+    public function getTotalReportCount()
+    {
+        return $this->totalReportCount;
+    }
+
+    /**
+     * @param int $totalReportCount
+     */
+    public function setTotalReportCount($totalReportCount)
+    {
+        $this->totalReportCount = $totalReportCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getActiveReportCount()
+    {
+        return $this->activeReportCount;
+    }
+
+    /**
+     * @param int $activeReportCount
+     */
+    public function setActiveReportCount($activeReportCount)
+    {
+        $this->activeReportCount = $activeReportCount;
+    }
+
+
 }
