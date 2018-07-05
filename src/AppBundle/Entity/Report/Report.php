@@ -1225,6 +1225,7 @@ class Report implements ReportInterface
         $accounts = [];
         /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
             $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
             $accounts[$ba->getId()]['accountNumber']  = $ba->getAccountNumber();

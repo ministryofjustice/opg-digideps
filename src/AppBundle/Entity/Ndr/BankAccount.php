@@ -269,7 +269,7 @@ class BankAccount
     /**
      * @return string
      */
-    public function getAccountNumber()
+    public function     getAccountNumber()
     {
         return $this->accountNumber;
     }
@@ -361,5 +361,20 @@ class BankAccount
         $this->isJointAccount = trim(strtolower($isJointAccount));
 
         return $this;
+    }
+
+    /**
+     * Get bank account name in one line
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     * Natwest - ISA (****4444)
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
+            . $this->getAccountTypeText()
+            . ' (****' . $this->getAccountNumber() . ')';
     }
 }
