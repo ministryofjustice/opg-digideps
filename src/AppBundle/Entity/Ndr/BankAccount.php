@@ -369,6 +369,11 @@ class BankAccount
      * e.g.
      * barclays - Current account (****1234)
      * Natwest - ISA (****4444)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("name_one_line")
+     * @JMS\Groups({"account"})
+     *
      * @return string
      */
     public function getNameOneLine()
