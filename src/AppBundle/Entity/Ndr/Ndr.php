@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Ndr implements ReportInterface
 {
+    const TYPE_NDR = 'ndr';
+
     use NdrTraits\IncomeBenefitTrait;
     use NdrTraits\ExpensesTrait;
     use NdrTraits\ActionTrait;
@@ -530,12 +532,24 @@ class Ndr implements ReportInterface
             $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
             $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
-            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();   
+            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
         }
         return [
             'accounts' => $accounts,
             'opening-balance-total' => $this->getBalanceOnCourtOrderDateTotal(),
             'closing-balance-total' => $this->getBalanceOnCourtOrderDateTotal()
+        ];
+    }
+
+    /**
+     * Report summary, contains basic information about a report. Called via report.previousReportData so as not to
+     * return everything.
+     *
+     * @return array
+     */
+    public function getReportSummary() {
+        return [
+            'type' => self::TYPE_NDR,
         ];
     }
 }

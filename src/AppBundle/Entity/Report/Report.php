@@ -1179,7 +1179,10 @@ class Report implements ReportInterface
                 return false;
             }
 
-            return ['financial-summary' => $previousReport->getFinancialSummary()];
+            return [
+                'report-summary' => $previousReport->getReportSummary(),
+                'financial-summary' => $previousReport->getFinancialSummary()
+            ];
         }
 
     /**
@@ -1241,6 +1244,18 @@ class Report implements ReportInterface
             'accounts' => $accounts,
             'opening-balance-total' => $openingBalanceTotal,
             'closing-balance-total' => $this->getAccountsClosingBalanceTotal()
+        ];
+    }
+
+    /**
+     * Report summary, contains basic information about a report. Called via report.previousReportData so as not to
+     * return everything.
+     *
+     * @return array
+     */
+    public function getReportSummary() {
+        return [
+            'type' => $this->getType(),
         ];
     }
 }
