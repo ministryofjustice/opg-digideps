@@ -193,50 +193,32 @@ class CsvGeneratorService
      */
     private function generateReportSubmissionRows($records)
     {
-        foreach ($records as $r) {
-            /** @var $t \AppBundle\Entity\Report\ReportSubmission */
-            if (!empty($r->getNdr())) {
-                $csvData = [
-                    $r->getId(),
-                    null,
-                    null,
-                    null,
-                    null,
-//                    $r->getCreatedBy()->getEmail(),
-//                    $r->getCreatedBy()->getFirstname(),
-//                    $r->getCreatedBy()->getLastname(),
-//                    $r->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
-                    $r->getNdr()->getDueDate()->format('d/m/Y'),
-                    $r->getNdr()->getSubmitDate()->format('d/m/Y'),
-                    null,
-//                    $r->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
-                    $r->getNdr()->getClient()->getFirstname(),
-                    $r->getNdr()->getClient()->getLastname(),
-                    $r->getNdr()->getClient()->getCaseNumber(),
-                    $r->getNdr()->getClient()->getCourtDate()->format('d/m/Y'),
-                    $r->getNdr()->getClient()->getTotalReportCount(),
-                    $r->getNdr()->getClient()->getActiveReportCount(),
-                ];
-            } else {
-                $csvData = [
-                    $r->getId(),
-                    $r->getCreatedBy()->getEmail(),
-                    $r->getCreatedBy()->getFirstname(),
-                    $r->getCreatedBy()->getLastname(),
-                    $r->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
-                    $r->getReport()->getDueDate()->format('d/m/Y'),
-                    $r->getReport()->getSubmitDate()->format('d/m/Y'),
-                    $r->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
-                    $r->getReport()->getClient()->getFirstname(),
-                    $r->getReport()->getClient()->getLastname(),
-                    $r->getReport()->getClient()->getCaseNumber(),
-                    $r->getReport()->getClient()->getCourtDate()->format('d/m/Y'),
-                    $r->getReport()->getClient()->getTotalReportCount(),
-                    $r->getReport()->getClient()->getActiveReportCount(),
-                ];
+        foreach ($records as $rs) {
+            /** @var $rs \AppBundle\Entity\Report\ReportSubmission */
+            if (!empty($rs->getReport())) {
+                $report = $rs->getReport();
+            } elseif (!empty($rs->getNdr())) {
+                $report = $rs->getNdr();
             }
 
-            fputcsv($this->fd, $csvData);
+            if (!empty($report)) {
+                fputcsv($this->fd, [
+                    $rs->getId(),
+                    $rs->getCreatedBy()->getEmail(),
+                    $rs->getCreatedBy()->getFirstname(),
+                    $rs->getCreatedBy()->getLastname(),
+                    $rs->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
+                    $report->getDueDate()->format('d/m/Y'),
+                    $report->getSubmitDate()->format('d/m/Y'),
+                    $rs->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
+                    $report->getClient()->getFirstname(),
+                    $report->getClient()->getLastname(),
+                    $report->getClient()->getCaseNumber(),
+                    $report->getClient()->getCourtDate()->format('d/m/Y'),
+                    $report->getClient()->getTotalReportCount(),
+                    $report->getClient()->getActiveReportCount(),
+                ]);
+            }
         }
     }
 
