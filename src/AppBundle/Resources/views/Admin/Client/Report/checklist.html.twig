@@ -320,7 +320,7 @@
                                         <span class="bold-small">Total amount</span>
                                     </td>
                                     <td class="text--right numeric-small">
-                                        <span class="bold-small">£????.??</span>
+                                        <span class="bold-small">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -352,7 +352,7 @@
                                     <span class="bold-small">Total amount</span>
                                 </td>
                                 <td class="text--right">
-                                    <span class="bold-small">£????.??</span>
+                                    <span class="bold-small">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -367,7 +367,8 @@
                                         <span class="heading-medium">Balance difference:</span>
                                     </td>
                                     <td class="numeric-small">
-                                        <span class="heading-medium">£??.??</span>
+                                        <span class="heading-medium">£
+                                            {{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}</span>
                                     </td>
                                 </tr>
                             </tbody>
