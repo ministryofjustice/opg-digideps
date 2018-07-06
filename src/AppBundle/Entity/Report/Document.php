@@ -25,7 +25,7 @@ class Document
      */
     public function isValidForReport(ExecutionContextInterface $context)
     {
-        if (empty($this->getFile()) || !($this->getFile() instanceof UploadedFile)) {
+        if (!($this->getFile() instanceof UploadedFile)) {
             return;
         }
 
