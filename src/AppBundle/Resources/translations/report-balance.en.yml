@@ -84,6 +84,7 @@ cantFind:
   para2: |
     You'll still be able to submit your report and we may be able to help you work out why
     the accounts don't balance.
+  reasonNotBalancing: Reason for accounts not balancing
 
 form:
   explanation:

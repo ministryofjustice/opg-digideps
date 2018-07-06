@@ -21,8 +21,8 @@
 {% block breadcrumbs %}
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
-            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
-            <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">Client details</a></li>
+            <li><a href="{{ path('admin_client_search') }}">{{ 'clients' | trans({}, 'common') }}</a></li>
+            <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">{{ 'clientDetails' | trans({}, 'common') }}</a></li>
         </ol>
     </div>
 {% endblock %}
@@ -43,7 +43,7 @@
         {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
             <span class="bold behat-region-last-modified-by">{{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}</span>
         {% else %}
-            <span class="bold behat-region-last-modified-by">Not saved yet</span>
+            <span class="bold behat-region-last-modified-by">{{ 'notSavedYet' | trans({}, 'common') }}</span>
         {% endif %}
     </p>
     <p>
@@ -77,9 +77,15 @@
 
         <div class="panel panel-border-narrow push--bottom">
             <div>
-                <p class="flush--bottom behat-region-court-date"><strong class="bold">Court order date:</strong> {{ report.client.courtDate | date("j M Y") }}</p>
-                <p class="flush--bottom behat-region-expected-date"><strong class="bold">Expected:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}</p>
-                <p class="behat-region-submitted-date"><strong class="bold">Submitted:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</p>
+                <p class="flush--bottom behat-region-court-date">
+                    <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
+                </p>
+                <p class="flush--bottom behat-region-expected-date">
+                    <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+                </p>
+                <p class="behat-region-submitted-date">
+                    <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
+                </p>
             </div>
         </div>
     </div>
@@ -94,21 +100,21 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View contact details</span>
+                <span class="summary">{{ (page ~ '.revealTitle.contactDetails') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <table class="text">
                     <tbody>
                         <tr>
-                            <th scope="row" class="bold">First names</th>
+                            <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
                             <td class="behat-region-checklist-client-firstname">{{ report.client.firstName }}</td>
                         </tr>
                         <tr>
-                            <th scope="row" class="bold">Last name</th>
+                            <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
                             <td class="behat-region-checklist-client-lastname">{{ report.client.lastName }}</td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row" class="bold">Address</th>
+                            <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
                             <td>
                                 <p>
                                     {% if report.client.address is not empty %}
@@ -130,7 +136,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th scope="row" class="bold">Telephone</th>
+                            <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
                             <td>{{ report.client.phone }}</td>
                         </tr>
                     </tbody>
@@ -147,7 +153,7 @@
             }) }}
         </div>
         <div class="panel panel-border-narrow push-half--top">
-            <p><strong class="bold">Deputy's full name:</strong> {{ report.submittedBy.fullName }}</p>
+            <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ report.submittedBy.fullName }}</p>
         </div>
     </div>
 
@@ -164,7 +170,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View decisions summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.decisionsSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -190,7 +196,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View contacts summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.contactsSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -216,7 +222,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View deputy's responses</span>
+                <span class="summary">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -242,7 +248,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View assets summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.assetsSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -265,7 +271,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View debts summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.debtsSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -291,26 +297,24 @@
 
         <details>
             <summary>
-                <span class="summary">View account balances</span>
+                <span class="summary">{{ (page ~ '.revealTitle.accountsBalances') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
 
-                    {# <p>{{ dump(report.previousReportData) }}</p> #}
-
                     {% if report.previousReportData['financial-summary']['accounts'] %}
 
                         <h3 class="heading-medium">
-                            Closing balances from previous report
+                            {{ (page ~ '.closingBalancesPrevReport') | trans }}
                             {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
-                                (NDR)
+                                ({{ report.previousReportData['report-summary']['type'] | upper }})
                             {% endif %}
                         </h3>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Account</th>
-                                    <th class="numeric">Amount</th>
+                                    <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                                    <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -321,7 +325,7 @@
                                     </tr>
                                 {% endfor %}
                                 <tr class="no-border">
-                                    <td class="bold">Total amount</td>
+                                    <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
                                     <td class="numeric-small">
                                         <span class="bold">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
                                     </td>
@@ -331,16 +335,16 @@
 
                     {% else %}
 
-                        <h3 class="heading-medium">No previous reports on record to show closing balance</h3>
+                        <h3 class="heading-medium">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
 
                     {% endif %}
 
-                    <h3 class="heading-medium">Opening balances</h3>
+                    <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th>Account</th>
-                                <th class="numeric">Amount</th>
+                                <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                                <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -351,7 +355,7 @@
                                 </tr>
                             {% endfor %}
                             <tr class="no-border">
-                                <td class="bold">Total amount</span></td>
+                                <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</span></td>
                                 <td class="numeric-small">
                                     <span class="bold">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
                                 </td>
@@ -365,7 +369,7 @@
                             <tbody>
                                 <tr class="no-border">
                                     <td class="text--right">
-                                        <span class="heading-medium">Balance difference:</span>
+                                        <span class="heading-medium">{{ (page ~ '.balanceDifference') | trans }}:</span>
                                     </td>
                                     <td class="numeric-small">
                                         <span class="heading-medium">£{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}</span>
@@ -390,7 +394,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View accounts balance summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -405,12 +409,12 @@
                     } %}
 
                     {% if not report.totalsMatch %}
-                        <h3 class="heading-medium">Explanation</h3>
+                        <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
                         <table class="check-your-answers columns-2 push--bottom">
                             {{ macros.summaryTableHeaderQA(true) }}
                             <tbody>
                                 <tr>
-                                    <td>Reason for accounts not balancing</td>
+                                    <td>{{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}</td>
                                     <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
                                 </tr>
                             </tbody>
@@ -431,7 +435,7 @@
 
         <details>
             <summary>
-                <span class="summary">View money transfers summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -445,7 +449,7 @@
 
         <details>
             <summary>
-                <span class="summary">View money in summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.moneyInSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -459,7 +463,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View money out summary</span>
+                <span class="summary">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -506,7 +510,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View deputy's response</span>
+                <span class="summary">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -545,7 +549,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View deputy's response</span>
+                <span class="summary">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -602,7 +606,7 @@
 
         <details class="push--bottom">
             <summary>
-                <span class="summary">View deputy's declaration</span>
+                <span class="summary">{{ (page ~ '.revealTitle.deputysDeclaration') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
@@ -610,19 +614,19 @@
                         {{ macros.summaryTableHeaderQA(true) }}
                         <tbody>
                             <tr>
-                                <td>Declaration</td>
+                                <td>{{ 'declaration' | trans({}, 'report-declaration') }}</td>
                                 <td>{{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}</td>
                             </tr>
                             {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
-                                <td>Reason</td>
+                                <td>{{ 'partAgreedReason' | trans({}, 'report-declaration') }}</td>
                                 <td>{{ report.agreedBehalfDeputyExplanation | nl2br }}</td>
                             {% endif %}
                             <tr>
-                                <td>Declaration time</td>
+                                <td>{{ 'declarationTime' | trans({}, 'report-declaration') }}</td>
                                 <td>{{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}</td>
                             </tr>
                             <tr>
-                                <td>Deputy name</td>
+                                <td>{{ 'deputyName' | trans({}, 'report-declaration') }}</td>
                                 <td>{{ report.submittedBy.fullname }}</td>
                             </tr>
                         </tbody>
@@ -660,9 +664,9 @@
     <table class="push--bottom">
         <thead>
             <tr>
-                <th>Information provided</th>
-                <th class="width-fifth">Saved by</th>
-                <th class="numeric">Date saved</th>
+                <th>{{ (page ~ '.furtherInfo.infoProvided') | trans }}</th>
+                <th class="width-fifth">{{ 'savedBy' | trans({}, 'common') }}</th>
+                <th class="numeric">{{ 'dateSaved' | trans({}, 'common') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -679,7 +683,7 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="3">No information received.</td>
+                <td colspan="3">{{ (page ~ '.furtherInfo.noInfoReceived') | trans }}</td>
             </tr>
         {% endif %}
         </tbody>
