@@ -524,11 +524,13 @@ class Ndr implements ReportInterface
 
         /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
             $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
-            $accounts[$ba->getId()]['accountNumber'] = $ba->getAccountNumber();
-            $accounts[$ba->getId()]['openingBalance'] = $ba->getBalanceOnCourtOrderDate();
-            $accounts[$ba->getId()]['closingBalance'] = $ba->getBalanceOnCourtOrderDate();
+            $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
+            $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
+            $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
+            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();   
         }
         return [
             'accounts' => $accounts,
