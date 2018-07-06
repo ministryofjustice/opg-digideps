@@ -1223,6 +1223,7 @@ class Report implements ReportInterface
      */
     public function getFinancialSummary() {
         $accounts = [];
+        $openingBalanceTotal = 0;
         /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
@@ -1232,11 +1233,14 @@ class Report implements ReportInterface
             $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
             $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
+
+            $openingBalanceTotal += $ba->getOpeningBalance();
         }
 
         return [
             'accounts' => $accounts,
-            'closing-balance' => $this->getAccountsClosingBalanceTotal()
+            'opening-balance-total' => $openingBalanceTotal,
+            'closing-balance-total' => $this->getAccountsClosingBalanceTotal()
         ];
     }
 }

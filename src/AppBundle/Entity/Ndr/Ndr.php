@@ -521,6 +521,7 @@ class Ndr implements ReportInterface
     public function getFinancialSummary() {
 
         $accounts = [];
+
         /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
@@ -531,7 +532,8 @@ class Ndr implements ReportInterface
         }
         return [
             'accounts' => $accounts,
-            'closing-balance' => $this->getBalanceOnCourtOrderDateTotal()
+            'opening-balance-total' => $this->getBalanceOnCourtOrderDateTotal(),
+            'closing-balance-total' => $this->getBalanceOnCourtOrderDateTotal()
         ];
     }
 }
