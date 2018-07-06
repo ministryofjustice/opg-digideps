@@ -145,10 +145,11 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect = clone $qb;
         $qbSelect->select('rs');
 
-        // add date restriction
-        $today = new \DateTime('yesterday midnight');
-        $qbSelect->andWhere('rs.createdOn >= :today')
-            ->setParameter(':today', $today);
+        // add date restriction depending on which day we have (to include weekend submissions on Monday)
+        $fromDate = $this->calculateFromDate();
+
+        $qbSelect->andWhere('rs.createdOn >= :fromDate')
+            ->setParameter(':fromDate', $fromDate);
 
         // to filter out multiple submissions, look at the rs.createdOn as being greater or equal to the original
         // report submission date
@@ -168,4 +169,20 @@ class ReportSubmissionRepository extends EntityRepository
         ];
     }
 
+    /**
+     * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
+     *
+     * @return \DateTime
+     */
+    private function calculateFromDate()
+    {
+        // default
+        $fromString = 'yesterday midnight';
+
+        if (date('N') == 1) {
+            $fromString = 'last Friday midnight';
+        }
+        $fromDate = new \DateTime($fromString);
+        return $fromDate;
+    }
 }
