@@ -300,7 +300,12 @@
 
                     {% if report.previousReportData['financial-summary']['accounts'] %}
 
-                        <h3 class="heading-medium">Closing balances from previous report</h3>
+                        <h3 class="heading-medium">
+                            Closing balances from previous report
+                            {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
+                                (NDR)
+                            {% endif %}
+                        </h3>
                         <table>
                             <thead>
                                 <tr>
@@ -316,11 +321,9 @@
                                     </tr>
                                 {% endfor %}
                                 <tr class="no-border">
-                                    <td>
-                                        <span class="bold-small">Total amount</span>
-                                    </td>
-                                    <td class="text--right numeric-small">
-                                        <span class="bold-small">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
+                                    <td class="bold">Total amount</td>
+                                    <td class="numeric-small">
+                                        <span class="bold">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -348,11 +351,9 @@
                                 </tr>
                             {% endfor %}
                             <tr class="no-border">
-                                <td>
-                                    <span class="bold-small">Total amount</span>
-                                </td>
-                                <td class="text--right">
-                                    <span class="bold-small">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                                <td class="bold">Total amount</span></td>
+                                <td class="numeric-small">
+                                    <span class="bold">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -367,8 +368,7 @@
                                         <span class="heading-medium">Balance difference:</span>
                                     </td>
                                     <td class="numeric-small">
-                                        <span class="heading-medium">£
-                                            {{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}</span>
+                                        <span class="heading-medium">£{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}</span>
                                     </td>
                                 </tr>
                             </tbody>
