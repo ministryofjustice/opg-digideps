@@ -195,9 +195,8 @@ class CsvGeneratorService
     {
         foreach ($records as $rs) {
             /** @var $rs \AppBundle\Entity\Report\ReportSubmission */
-            if (!empty($rs->getReport())) {
-                $report = $rs->getReport();
-            } elseif (!empty($rs->getNdr())) {
+            $report = $rs->getReport();
+            if (empty($report)) {
                 $report = $rs->getNdr();
             }
 
@@ -219,6 +218,8 @@ class CsvGeneratorService
                     $report->getClient()->getActiveReportCount(),
                 ]);
             }
+
+
         }
     }
 

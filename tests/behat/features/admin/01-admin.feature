@@ -44,7 +44,7 @@ Feature: admin / admin
     Then the response status code should be 200
 
   Scenario: Report submissions CSV link
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     When I go to admin page "/admin/report-submissions/dd-report-submissions.csv"
     And the response status code should be 200
     And the response should have the "Content-Type" header containing "text/csv"
