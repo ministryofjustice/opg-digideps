@@ -282,6 +282,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $mockReport1 = m::mock(Report::class)->makePartial();
         $mockReport1->shouldReceive('getId')->andReturn(9);
         $mockReport1->shouldReceive('getClient')->andReturn($mockClient);
+        $mockReport1->shouldReceive('getType')->andReturn('102');
         $mockReport1->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$bankAccount1, $bankAccount2]));
 
         $mockNdr1 = m::mock(Ndr::class)->makePartial();
@@ -298,16 +299,34 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         // assert report 1 contains NDR data
         $report1PreviousData = $mockReport1->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $report1PreviousData);
+        $this->assertArrayHasKey('report-summary', $report1PreviousData);
+        $this->assertEquals(
+            $report1PreviousData['report-summary']['type'],
+            'ndr'
+        );
         $this->assertCount(1, $report1PreviousData['financial-summary']['accounts']);
+        $this->assertArrayHasKey('opening-balance-total', $report1PreviousData['financial-summary']);
+        $this->assertArrayHasKey('closing-balance-total', $report1PreviousData['financial-summary']);
+        $this->assertEquals(
+            $report1PreviousData['financial-summary']['opening-balance-total'],
+            $report1PreviousData['financial-summary']['closing-balance-total']
+        );
+
         $this->assertEquals(
             'ndrBank1',
             $report1PreviousData['financial-summary']['accounts'][$ndrBankAccount1->getId()]['bank']
         );
-        $this->assertEquals($report1PreviousData['financial-summary']['closing-balance'], $ndrBankAccount1->getBalanceOnCourtOrderDate());
+        $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$ndrBankAccount1->getId()]);
+        $this->assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $ndrBankAccount1->getBalanceOnCourtOrderDate());
 
         // assert current report contains report1 data
         $currentReportPreviousData = $reportCurrent->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
+        $this->assertArrayHasKey('report-summary', $report1PreviousData);
+        $this->assertEquals(
+            $report1PreviousData['report-summary']['type'],
+            '102'
+        );
         $this->assertCount(2, $currentReportPreviousData['financial-summary']['accounts']);
         $this->assertEquals(
             'bank1',
@@ -317,8 +336,9 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             'bank2',
             $currentReportPreviousData['financial-summary']['accounts'][$bankAccount2->getId()]['bank']
         );
+        $this->assertArrayHasKey('nameOneLine', $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]);
         $this->assertEquals(
-            $currentReportPreviousData['financial-summary']['closing-balance'],
+            $currentReportPreviousData['financial-summary']['closing-balance-total'],
             ($bankAccount1->getClosingBalance() + $bankAccount2->getClosingBalance())
         );
 
