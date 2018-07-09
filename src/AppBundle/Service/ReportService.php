@@ -13,6 +13,7 @@ use AppBundle\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Internal\Hydration\IterableResult;
 
 class ReportService
 {

@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\Status;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -65,7 +66,7 @@ class Client
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "client-email"})
      *
      * @var string
      *
@@ -155,7 +156,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"client"})
+     * @JMS\Groups({"client", "client-court-date"})
      *
      * @var \Date
      *
@@ -813,5 +814,34 @@ class Client
         }
 
         return null;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("total_report_count")
+     * @JMS\Groups({"total-report-count"})
+     *
+     * @return integer
+     */
+    public function getTotalReportCount()
+    {
+        return count($this->getReports());
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("active_report_count")
+     * @JMS\Groups({"active-report-count"})"})
+     *
+     * @return integer
+     */
+    public function getActiveReportCount()
+    {
+        $reports = $this->getReports()->filter(function (Report $report) {
+            return !empty($report->getSubmitted());
+        });
+        return count($reports);
     }
 }

@@ -105,7 +105,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-email"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -206,6 +206,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"user"})
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
     private $deputyNo;

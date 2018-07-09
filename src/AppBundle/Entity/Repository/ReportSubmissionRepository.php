@@ -110,4 +110,76 @@ class ReportSubmissionRepository extends EntityRepository
 
         return $qb->getQuery()->getResult(); /* @var $records ReportSubmission[] */
     }
+
+    /**
+     * @param string $status        string new|archived
+     * @param string $q             serach string
+     * @param string $createdByRole see values in USER::ROLE_*
+     * @param int    $offset
+     * @param int    $limit
+     * @param string $orderBy       default createdOn
+     * @param string $order         default ASC
+     *
+     * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
+     */
+    public function findAllReportSubmissions(
+        $status,
+        $q,
+        $createdByRole,
+        $offset,
+        $limit,
+        $orderBy = 'createdOn',
+        $order = 'ASC'
+    ) {
+
+        // BASE QUERY BUILDER with filters (for both count and results)
+        $qb = $this->createQueryBuilder('rs');
+        $qb
+            ->leftJoin('rs.report', 'r')
+            ->leftJoin('rs.ndr', 'ndr')
+            ->leftJoin('rs.createdBy', 'cb')
+            ->leftJoin('r.client', 'c')
+        ;
+
+        // get results (base query + ordered + pagination + status filter)
+        $qbSelect = clone $qb;
+        $qbSelect->select('rs');
+
+        // add date restriction depending on which day we have (to include weekend submissions on Monday)
+        $fromDate = $this->determineCreationFromDate();
+
+        $qbSelect->andWhere('rs.createdOn >= :fromDate')
+            ->setParameter(':fromDate', $fromDate);
+
+        // to filter out multiple submissions, look at the rs.createdOn as being greater or equal to the original
+        // report submission date
+        $qbSelect->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate');
+        $qbSelect->andWhere('r.submitted = true OR ndr.submitted = true');
+        $qbSelect->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL');
+        $qbSelect
+            ->orderBy('rs.' . $orderBy, $order)
+            ->setFirstResult($offset);
+        $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
+
+        return [
+            'records'=>$records,
+        ];
+    }
+
+    /**
+     * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
+     *
+     * @return \DateTime
+     */
+    private function determineCreationFromDate()
+    {
+        // default
+        $fromString = 'yesterday midnight';
+
+        if (date('N') == 1) {
+            $fromString = 'last Friday midnight';
+        }
+        $fromDate = new \DateTime($fromString);
+        return $fromDate;
+    }
 }

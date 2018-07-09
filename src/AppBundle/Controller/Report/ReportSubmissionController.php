@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,10 +24,11 @@ class ReportSubmissionController extends RestController
         'report-period',
         'client-name',
         'client-case-number',
+        'client-email',
         'user-name',
         'user-rolename',
         'user-teamname',
-        'documents'
+        'documents',
     ];
 
     /**
@@ -135,5 +137,45 @@ class ReportSubmissionController extends RestController
         $this->getEntityManager()->flush();
 
         return true;
+    }
+
+    /**
+     * @Route("/casrec_data", name="casrec_data")
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
+     */
+    public function getCasrecData(Request $request)
+    {
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+
+        $ret = $repo->findAllReportSubmissions(
+            $request->get('status'),
+            $request->get('q'),
+            $request->get('created_by_role'),
+            $request->get('offset', 0),
+            $request->get('limit', 100),
+            $request->get('orderBy', 'createdOn'),
+            $request->get('order', 'ASC')
+        );
+
+        $this->setJmsSerialiserGroups(
+            [
+                'report-submission',
+                'report-type',
+                'report-client',
+                'ndr-client',
+                'ndr',
+                'report',
+                'client-name',
+                'client-case-number',
+                'client-court-date',
+                'client-email',
+                'user',
+                'total-report-count',
+                'active-report-count'
+            ]
+        );
+
+        return $ret;
     }
 }
