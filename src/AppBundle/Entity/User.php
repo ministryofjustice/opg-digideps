@@ -149,6 +149,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"user"})
      *
      * @var \DateTime
      */
@@ -251,6 +252,13 @@ class User implements AdvancedUserInterface
      * @var \DateTime
      */
     private $lastLoggedIn;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+         */
+    private $deputyNo;
 
     /**
      * @JMS\Type("boolean")
@@ -751,6 +759,24 @@ class User implements AdvancedUserInterface
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeputyNo()
+    {
+        return $this->deputyNo;
+    }
+
+    /**
+     * @param mixed $deputyNo
+     * @return $this
+     */
+    public function setDeputyNo($deputyNo)
+    {
+        $this->deputyNo = $deputyNo;
+        return $this;
     }
 
     /**
