@@ -254,6 +254,13 @@ class User implements AdvancedUserInterface
     private $lastLoggedIn;
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+         */
+    private $deputyNo;
+
+    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"admin_add_user", "ad_add_user"})
      *
@@ -752,6 +759,24 @@ class User implements AdvancedUserInterface
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeputyNo()
+    {
+        return $this->deputyNo;
+    }
+
+    /**
+     * @param mixed $deputyNo
+     * @return $this
+     */
+    public function setDeputyNo($deputyNo)
+    {
+        $this->deputyNo = $deputyNo;
+        return $this;
     }
 
     /**
