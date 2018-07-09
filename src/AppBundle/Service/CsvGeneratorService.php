@@ -46,12 +46,7 @@ class CsvGeneratorService
     {
         $this->logger->info('Generating Transaction CSV for Report: ' . $report->getId());
 
-        // initialize temporary fp
-        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
-        if ($this->fd === false) {
-            $this->logger->error('Failed to open Temporary file');
-            die('Failed to open temporary file');
-        }
+        $this->initialiseFilePointer();
 
         $this->generateTransactionsCsvLines($report);
 
@@ -73,12 +68,7 @@ class CsvGeneratorService
     {
         $this->logger->info('Generating Report submissions CSV : ');
 
-        // initialize temporary fp
-        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
-        if ($this->fd === false) {
-            $this->logger->error('Failed to open Temporary file');
-            die('Failed to open temporary file');
-        }
+        $this->initialiseFilePointer();
 
         $this->generateReportSubmissionsCsvLines($records);
 
@@ -87,6 +77,21 @@ class CsvGeneratorService
         fclose($this->fd);
 
         return $csvContent;
+    }
+
+    /**
+     * Initialise file pointer to php memory for CSV creation
+     *
+     * @throws \Exception
+     */
+    private function initialiseFilePointer()
+    {
+        // initialize temporary fp
+        $this->fd = fopen('php://temp/maxmemory:1048576', 'w');
+        if ($this->fd === false) {
+            $this->logger->error('Failed to open Temporary file');
+            throw new \Exception('Failed to open temporary file');
+        }
     }
 
     /**
