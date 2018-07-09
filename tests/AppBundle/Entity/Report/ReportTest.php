@@ -323,10 +323,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $currentReportPreviousData = $reportCurrent->getPreviousReportData();
         $this->assertArrayHasKey('financial-summary', $currentReportPreviousData);
         $this->assertArrayHasKey('report-summary', $report1PreviousData);
-        $this->assertEquals(
-            $report1PreviousData['report-summary']['type'],
-            '102'
-        );
+
         $this->assertCount(2, $currentReportPreviousData['financial-summary']['accounts']);
         $this->assertEquals(
             'bank1',
@@ -335,6 +332,10 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'bank2',
             $currentReportPreviousData['financial-summary']['accounts'][$bankAccount2->getId()]['bank']
+        );
+        $this->assertEquals(
+            $currentReportPreviousData['report-summary']['type'],
+            '102'
         );
         $this->assertArrayHasKey('nameOneLine', $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]);
         $this->assertEquals(
