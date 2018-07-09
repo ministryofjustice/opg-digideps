@@ -49,7 +49,7 @@ Feature: admin / admin
     And the response status code should be 200
     And the response should have the "Content-Type" header containing "text/csv"
     And the response should have the "Content-Disposition" header containing ".csv"
-    And the response should contain "id,email,name,lastname,registration_date,report_due_date,report_date_submitted"
+    And the response should contain "id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted"
 
   Scenario: change user password on admin area
     Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"

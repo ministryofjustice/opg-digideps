@@ -52,7 +52,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     {
         $csvString = $this->sut->generateReportSubmissionsCsv([]);
         $this->assertContains(
-            'id,email,name,lastname,registration_date,report_due_date,report_date_submitted,last_logged_in,client_name,client_lastname,client_casenumber,client_court_order_date,total_reports,active_reports',
+            'id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted,last_logged_in,client_name,client_lastname,client_casenumber,client_court_order_date,total_reports,active_reports',
             $csvString
         );
     }
@@ -87,11 +87,11 @@ class CsvGeneratorServiceTest extends MockeryTestCase
             ]
         );
         $this->assertContains(
-            '24,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
+            '24,102,12345678,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
             $csvString
         );
         $this->assertContains(
-            '25,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
+            '25,102,12345678,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
             $csvString
         );
     }
@@ -123,6 +123,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mockReport->shouldReceive('getMoneyTransactionsIn')->andReturn(
             $this->generateMockTransactions(MoneyTransaction::class, $numMoneyIn)
         );
+        $mockReport->shouldReceive('getType')->andReturn(102);
 
         $mockReport->shouldReceive('getClient')->andReturn(
             $this->generateMockClient(32)
@@ -148,6 +149,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $this->mockReport = m::mock(ReportInterface::class);
 
         $this->mockReport->shouldReceive('getId')->andReturn($ndrId);
+        $this->mockReport->shouldReceive('getType')->andReturn('ndr');
 
     }
 
@@ -261,6 +263,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mock->shouldReceive('getEmail')->andReturn('email+' . $counter . '@unittest.com');
         $mock->shouldReceive('getRegistrationDate')->andReturn(new \DateTime('4/5/2005'));
         $mock->shouldReceive('getLastLoggedIn')->andReturn(new \DateTime('2/3/2018'));
+        $mock->shouldReceive('getDeputyNo')->andReturn(12345678);
 
         return $mock;
     }

@@ -116,7 +116,7 @@ class CsvGeneratorService
     private function generateReportSubmissionsCsvLines($records)
     {
         $headers = [
-            'id', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
+            'id', 'report_type', 'deputy_no', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
             'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date',
             'total_reports', 'active_reports'
         ];
@@ -203,6 +203,8 @@ class CsvGeneratorService
             if (!empty($report)) {
                 fputcsv($this->fd, [
                     $rs->getId(),
+                    $report->getType(),
+                    $rs->getCreatedBy()->getDeputyNo(),
                     $rs->getCreatedBy()->getEmail(),
                     $rs->getCreatedBy()->getFirstname(),
                     $rs->getCreatedBy()->getLastname(),
