@@ -165,7 +165,7 @@
                         </tr>
                         <tr>
                             <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
-                            <td>{{ report.client.phone }}</td>
+                            <td class="behat-region-checklist-client-phone">{{ report.client.phone }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -363,7 +363,7 @@
 
                     {% else %}
 
-                        <h3 class="heading-medium">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
+                        <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
 
                     {% endif %}
 
@@ -385,7 +385,7 @@
                             <tr class="no-border">
                                 <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</span></td>
                                 <td class="numeric-small">
-                                    <span class="bold">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                                    <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
                                 </td>
                             </tr>
                         </tbody>

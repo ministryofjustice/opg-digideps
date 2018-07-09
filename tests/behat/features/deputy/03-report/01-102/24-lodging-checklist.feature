@@ -1,6 +1,6 @@
 Feature: Admin report checklist
 
-  @deputy
+  @deputy @shaun
   Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -27,6 +27,20 @@ Feature: Admin report checklist
       | 1 Jan 2018 to 31 Dec 2018 | expected-date |
       | Cly | checklist-client-firstname |
       | Hent | checklist-client-lastname |
+      | 0123456789 | checklist-client-phone        |
+      | dd1-changed | decision-1         |
+      | Andy Whites | contact-n2-aw2     |
+      | December 2015 | care-plan-last-reviewed |
+      | Yes           | has-assets              |
+      | Impressionist painting | asset-impressionist-painting |
+      | 13 gold house, mortimer road, westminster, SW11 6TF | property-sw11-6tf-address    |
+      | 163,010                                             | asset-total                  |
+      | £3.00                                               | debt-loans                   |
+      | 200 per month payment plan                          | debt-management-details      |
+      | No previous reports on record to show closing balance | checklist-no-previous-reports |
+      | £335.40                                                | checklist-accounts-opening-total |
+      | £243.39                                     | calculated-balance               |
+      | £193.11                                     | balance-difference               |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
