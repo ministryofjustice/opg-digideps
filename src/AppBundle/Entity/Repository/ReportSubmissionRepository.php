@@ -146,7 +146,7 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect->select('rs');
 
         // add date restriction depending on which day we have (to include weekend submissions on Monday)
-        $fromDate = $this->calculateFromDate();
+        $fromDate = $this->determineCreationFromDate();
 
         $qbSelect->andWhere('rs.createdOn >= :fromDate')
             ->setParameter(':fromDate', $fromDate);
@@ -159,10 +159,7 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset);
-            //->setMaxResults($limit);
-        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
-        $this->_em->getFilters()->enable('softdeleteable');
 
         return [
             'records'=>$records,
@@ -174,7 +171,7 @@ class ReportSubmissionRepository extends EntityRepository
      *
      * @return \DateTime
      */
-    private function calculateFromDate()
+    private function determineCreationFromDate()
     {
         // default
         $fromString = 'yesterday midnight';

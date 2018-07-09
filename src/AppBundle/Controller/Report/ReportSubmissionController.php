@@ -166,7 +166,6 @@ class ReportSubmissionController extends RestController
                 'ndr-client',
                 'ndr',
                 'report',
-//                'report-period',
                 'client-name',
                 'client-case-number',
                 'client-court-date',
