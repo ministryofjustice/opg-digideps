@@ -24,7 +24,29 @@ checklistPage:
     para: |
       You must complete this section if we have received requested correspondence following a lodging
       (incompletes and casework).
+    infoProvided: Information provided
+    noInfoReceived: No information received
   backToClientDetails: Back to client details
+  expected: Expected
+  submitted: Submitted
+  deputysFullName: Deputy's full name
+  closingBalancesPrevReport: Closing balances from previous report
+  closingBalancesPrevReportMissing: No previous reports on record to show closing balance
+  openingBalances: Opening balances
+  balanceDifference: Balance difference
+  revealTitle:
+    contactDetails: View contact details
+    decisionsSummary: View decisions summary
+    contactsSummary: View contacts summary
+    deputysResponses: View deputy's responses
+    assetsSummary: View assets summary
+    debtsSummary: View debts summary
+    accountsBalances: View accounts balances
+    accountsBalanceSummary: View accounts balance summary
+    moneyTransfersSummary: View money transfers summary
+    moneyInSummary: View money in summary
+    moneyOutSummary: View money out summary
+    deputysDeclaration: View deputy's declaration
 
   form:
     save:

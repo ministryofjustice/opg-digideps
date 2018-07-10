@@ -55,6 +55,7 @@ caseManager: Case manager
 client: Client
 courtOrderNo: Court order no.
 courtOrderNumber: Court order number
+courtOrderDate: Court order date
 reportDueDate: Report due date
 reportStatus: Report status
 question: Question
@@ -68,12 +69,18 @@ bankName: Bank or building society name
 typeOfAccount: Type of account
 sortCode: Sort code
 accountNumber: Account number
+bankAccount: Bank account
 notApplicable: Not applicable
+savedBy: Saved by
+dateSaved: Date saved
 lastSavedOn: Last saved on
 lastSavedBy: Last saved by
 lastSubmittedOn: Last submitted on
 lastSubmittedBy: Last submitted by
+amount: Amount
 totalAmount: Total amount
+firstNames: First names
+lastName: Last name
 
 # Statuses
 notCreated: Not created
@@ -84,6 +91,7 @@ notAvailable: Not available
 inProgress: In progress
 submitted: Submitted
 unsubmitted: Unsubmitted
+notSavedYet: Not saved yet
 
 # Breadcrumbs
 yourReports: Your reports
@@ -92,6 +100,8 @@ newDeputyReportOverview: New deputy report overview
 reviewReport: Review report
 dashboard: Dashboard
 clientProfile: Client profile
+clients: Clients
+clientDetails: Client details
 
 # Back links
 backToReportOverview: Back to report overview

@@ -2,11 +2,12 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     use HasReportTrait;
 
@@ -156,6 +157,20 @@ class BankAccount
      */
     private $meta;
 
+    /**
+     * Get bank account name in one line. Comes from Virtual property.
+     *
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"account"})
+     *
+     * @var string
+     */
+    private $nameOneLine;
+
     public function getId()
     {
         return $this->id;
@@ -178,21 +193,6 @@ class BankAccount
     public function getBank()
     {
         return $this->bank;
-    }
-
-    /**
-     * Get bank account name in one line
-     * <bank> - <type> (****<last 4 digits>)
-     * e.g.
-     * barclays - Current account (****1234)
-     * Natwest - ISA (****4444)
-     * @return string
-     */
-    public function getNameOneLine()
-    {
-        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
-             . $this->getAccountTypeText()
-             . ' (****' . $this->getAccountNumber() . ')';
     }
 
     public function setSortCode($sortCode)
@@ -378,6 +378,24 @@ class BankAccount
     }
 
     /**
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return $this->nameOneLine;
+    }
+
+    /**
+     * @param string $nameOneLine
+     * @return $this
+     */
+    public function setNameOneLine($nameOneLine)
+    {
+        $this->nameOneLine = $nameOneLine;
+        return $this;
+    }
+
+    /**
      * Format the account name for CSV.
      *
      * @return string
@@ -415,4 +433,6 @@ class BankAccount
         }
         return $this->getSortCode();
     }
+
+
 }

@@ -326,6 +326,13 @@ class Report implements ReportInterface
     private $checklist;
 
     /**
+     * @var array
+     *
+     * @JMS\Type("array")
+     **/
+    private $previousReportData;
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1140,10 +1147,31 @@ class Report implements ReportInterface
 
     /**
      * @param Checklist $checklist
+     * @return $this
      */
     public function setChecklist($checklist)
     {
         $this->checklist = $checklist;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getPreviousReportData()
+    {
+        return $this->previousReportData;
+    }
+
+    /**
+     * @param array $previousReportData
+     * @return $this
+     */
+    public function setPreviousReportData($previousReportData)
+    {
+        $this->previousReportData = $previousReportData;
+        return $this;
+    }
+
+
 }

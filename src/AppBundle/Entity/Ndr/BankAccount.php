@@ -2,11 +2,12 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\Ndr\Traits\HasNdrTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     use HasNdrTrait;
 
@@ -113,6 +114,20 @@ class BankAccount
      * @var string
      */
     private $isJointAccount;
+
+    /**
+     * Get bank account name in one line. Comes from Virtual property.
+     *
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"bank-account"})
+     *
+     * @var string
+     */
+    private $nameOneLine;
 
     /**
      * @return mixed
@@ -259,6 +274,21 @@ class BankAccount
     }
 
     /**
+     * @return decimal
+     */
+    public function getClosingBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return false
+     */
+    public function getIsClosed()
+    {
+        return false;
+    }
+
+    /**
      * Sort code required.
      *
      * @return string
@@ -289,4 +319,23 @@ class BankAccount
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return $this->nameOneLine;
+    }
+
+    /**
+     * @param string $nameOneLine
+     * @return $this
+     */
+    public function setNameOneLine($nameOneLine)
+    {
+        $this->nameOneLine = $nameOneLine;
+        return $this;
+    }
+
 }
