@@ -1,6 +1,6 @@
 Feature: Admin report checklist
 
-  @deputy @shaun
+  @deputy
   Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
