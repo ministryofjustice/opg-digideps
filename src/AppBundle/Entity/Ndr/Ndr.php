@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Ndr implements ReportInterface
 {
+    const TYPE_NDR = 'ndr';
+
     use NdrTraits\IncomeBenefitTrait;
     use NdrTraits\ExpensesTrait;
     use NdrTraits\ActionTrait;
@@ -483,5 +485,71 @@ class Ndr implements ReportInterface
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
         return $this;
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getBalanceOnCourtOrderDateTotal()
+    {
+        $ret = 0;
+        foreach ($this->getBankAccounts() as $account) {
+            $ret += $account->getBalanceOnCourtOrderDate();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Previous report data. Just return id and type for second api call to allo new JMS groups
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("previous_report_data")
+     * @JMS\Groups({"previous-report-data"})
+     * @JMS\Type("array")
+     *
+     * @return array
+     */
+    public function getPreviousReportData()
+    {
+        return false;
+    }
+
+    /**
+     * NDR financial summary, contains bank accounts and balance information
+     *
+     * @return array
+     */
+    public function getFinancialSummary() {
+
+        $accounts = [];
+
+        /** @var BankAccount $ba */
+        foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
+            $accounts[$ba->getId()]['bank'] = $ba->getBank();
+            $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
+            $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
+            $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
+            $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
+            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
+        }
+        return [
+            'accounts' => $accounts,
+            'opening-balance-total' => $this->getBalanceOnCourtOrderDateTotal(),
+            'closing-balance-total' => $this->getBalanceOnCourtOrderDateTotal()
+        ];
+    }
+
+    /**
+     * Report summary, contains basic information about a report. Called via report.previousReportData so as not to
+     * return everything.
+     *
+     * @return array
+     */
+    public function getReportSummary() {
+        return [
+            'type' => self::TYPE_NDR,
+        ];
     }
 }

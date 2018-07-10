@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
@@ -1158,5 +1159,103 @@ class Report implements ReportInterface
     public function setChecklist($checklist)
     {
         $this->checklist = $checklist;
+    }
+
+        /**
+         * Previous report data. Just return id and type for second api call to allo new JMS groups
+         *
+         * @JMS\VirtualProperty
+         * @JMS\SerializedName("previous_report_data")
+         * @JMS\Groups({"previous-report-data"})
+         * @JMS\Type("array")
+         *
+         * @return array
+         */
+        public function getPreviousReportData()
+        {
+            $previousReport = $this->getPreviousReport();
+
+            if (empty($previousReport)) {
+                return false;
+            }
+
+            return [
+                'report-summary' => $previousReport->getReportSummary(),
+                'financial-summary' => $previousReport->getFinancialSummary()
+            ];
+        }
+
+    /**
+     * Method to identify and return previous report.
+     *
+     * @return Ndr|Report|bool|mixed
+     */
+    private function getPreviousReport() {
+        $clientReports = $this->getClient()->getReports();
+
+        // ensure order is correct most recent first
+        $iterator = $clientReports->getIterator();
+        $iterator->uasort(function ($a, $b) {
+            return ($a->getId() > $b->getId()) ? -1 : 1;
+        });
+        $orderedClientReports = new ArrayCollection(iterator_to_array($iterator));
+
+        // try previous reports
+        foreach ($orderedClientReports as $clientReport) {
+            if ($clientReport->getId() < $this->getId()) {
+                // less than should imply their previous report
+                return $clientReport;
+            }
+        }
+
+        // try NDR
+        /** @var Ndr $ndr */
+        $ndr = $this->getClient()->getNdr();
+
+        if (!empty($ndr)) {
+            return $ndr;
+        }
+
+        return false;
+    }
+
+    /**
+     * Report financial summary, contains bank accounts and balance information
+     *
+     * @return array
+     */
+    public function getFinancialSummary() {
+        $accounts = [];
+        $openingBalanceTotal = 0;
+        /** @var BankAccount $ba */
+        foreach ($this->getBankAccounts() as $ba) {
+            $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
+            $accounts[$ba->getId()]['bank'] = $ba->getBank();
+            $accounts[$ba->getId()]['accountType'] = $ba->getAccountTypeText();
+            $accounts[$ba->getId()]['openingBalance'] = $ba->getOpeningBalance();
+            $accounts[$ba->getId()]['closingBalance'] = $ba->getClosingBalance();
+            $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
+            $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
+
+            $openingBalanceTotal += $ba->getOpeningBalance();
+        }
+
+        return [
+            'accounts' => $accounts,
+            'opening-balance-total' => $openingBalanceTotal,
+            'closing-balance-total' => $this->getAccountsClosingBalanceTotal()
+        ];
+    }
+
+    /**
+     * Report summary, contains basic information about a report. Called via report.previousReportData so as not to
+     * return everything.
+     *
+     * @return array
+     */
+    public function getReportSummary() {
+        return [
+            'type' => $this->getType(),
+        ];
     }
 }

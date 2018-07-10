@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\BankAccountInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -12,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="account")
  * @ORM\Entity()
  */
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     /**
      * Keep in sync with client.
@@ -476,5 +477,25 @@ class BankAccount
         $this->meta = $meta;
 
         return $this;
+    }
+
+    /**
+     * Get bank account name in one line
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     * Natwest - ISA (****4444)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("name_one_line")
+     * @JMS\Groups({"account"})
+     *
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
+            . $this->getAccountTypeText()
+            . ' (****' . $this->getAccountNumber() . ')';
     }
 }

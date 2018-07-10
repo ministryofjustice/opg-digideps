@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Ndr;
 
+use AppBundle\Entity\BankAccountInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="odr_account")
  * @ORM\Entity()
  */
-class BankAccount
+class BankAccount implements BankAccountInterface
 {
     /**
      * Keep in sync with client.
@@ -315,6 +316,28 @@ class BankAccount
     }
 
     /**
+     * @return decimal
+     */
+    public function getOpeningBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return decimal
+     */
+    public function getClosingBalance() {
+        return $this->getBalanceOnCourtOrderDate();
+    }
+
+    /**
+     * @return false
+     */
+    public function getIsClosed()
+    {
+        return false;
+    }
+
+    /**
      * @param decimal $balanceOnCourtOrderDate
      *
      * @return BankAccount
@@ -361,5 +384,25 @@ class BankAccount
         $this->isJointAccount = trim(strtolower($isJointAccount));
 
         return $this;
+    }
+
+    /**
+     * Get bank account name in one line
+     * <bank> - <type> (****<last 4 digits>)
+     * e.g.
+     * barclays - Current account (****1234)
+     * Natwest - ISA (****4444)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("name_one_line")
+     * @JMS\Groups({"account"})
+     *
+     * @return string
+     */
+    public function getNameOneLine()
+    {
+        return (!empty($this->getBank()) ? $this->getBank() . ' - '  : '')
+            . $this->getAccountTypeText()
+            . ' (****' . $this->getAccountNumber() . ')';
     }
 }
