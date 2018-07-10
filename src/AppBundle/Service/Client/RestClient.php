@@ -424,7 +424,6 @@ class RestClient
     {
         $fullClassName = (strpos($class, 'AppBundle') !== false)
                  ? $class : 'AppBundle\\Entity\\' . $class;
-
         return $this->serialiser->deserialize(json_encode($data), $fullClassName, 'json');
     }
 
