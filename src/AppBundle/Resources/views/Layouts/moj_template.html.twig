@@ -8,14 +8,9 @@
 
     <title>{% block htmlTitle %}Deputy report{% endblock %}</title>
 
-    <script>
-      (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
-    </script>
-
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
 
     <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/govuk-template.css'| assetUrl }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
-    <!--[if IE 7]><link href="{{ 'stylesheets/govuk-template-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 8]><link href="{{ 'stylesheets/govuk-template-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
 
     <!--[if IE 8]><link href="{{ 'stylesheets/fonts-ie8.css' | assetUrl }}" media="all" rel="stylesheet" /><![endif]-->
@@ -39,7 +34,6 @@
     {% endif %}
 
     <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/application.css'| assetUrl }}"  rel="stylesheet" type="text/css"><!--<![endif]-->
-    <!--[if IE 7]><link href="{{ 'stylesheets/application-ie7.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 8]><link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
 
     <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
@@ -118,8 +112,6 @@
     </header>
     <!--end header-->
 
-
-    <!--[if lte IE 6]><script>document.body.className = document.body.className.replace('js-enabled','');</script><![endif]-->
     {% block afterHeader %}{% endblock %}
 
 

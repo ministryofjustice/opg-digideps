@@ -26,10 +26,6 @@ ol.progress {
         margin: 16px 0 0;
     }
 
-    @include ie-lte(7) {
-        display: none;
-    }
-
     li {
         display: table-cell;
         min-width: 40px;
