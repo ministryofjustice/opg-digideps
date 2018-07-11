@@ -131,6 +131,9 @@
                 <span class="summary">{{ (page ~ '.revealTitle.contactDetails') | trans }}</span>
             </summary>
             <div class="panel panel-border-narrow">
+
+                {# CLIENT DETAILS #}
+                <h3 class="heading-medium">Client details</h3>
                 <table class="text">
                     <tbody>
                         <tr>
@@ -166,6 +169,48 @@
                         <tr>
                             <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
                             <td class="behat-region-checklist-client-phone">{{ report.client.phone }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {# DEPUTY DETAILS #}
+                <h3 class="heading-medium">Deputy details</h3>
+                <table class="text">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
+                            <td class="behat-region-checklist-client-firstname">placeholder</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
+                            <td class="behat-region-checklist-client-lastname">placeholder</td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
+                            <td>
+                                <p>
+                                    placeholder
+                                    {# {% if report.client.address is not empty %}
+                                        {{ report.client.address }}<br/>
+                                    {% endif %}
+                                    {% if report.client.address2 is not empty %}
+                                        {{ report.client.address2 }}<br/>
+                                    {% endif %}
+                                    {% if report.client.county is not empty %}
+                                        {{ report.client.county }}<br/>
+                                    {% endif %}
+                                    {% if report.client.postcode is not empty %}
+                                        {{ report.client.postcode }}<br/>
+                                    {% endif %}
+                                    {% if report.client.country is not empty %}
+                                        {{ report.client.country | country_name }}
+                                    {% endif %} #}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                            <td class="behat-region-checklist-client-phone">placeholder</td>
                         </tr>
                     </tbody>
                 </table>
