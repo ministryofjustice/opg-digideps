@@ -7,34 +7,34 @@
     @include box-sizing(border-box);
     @include inline-block();
 
+    margin: 20px 0 15px 0;
+    padding: 2px 5px 0 5px;
+    float: left;
+    border: 2px solid $grey-status;
+    border-radius: 5px;
     font-size: 13px;
     font-weight: 700;
     line-height: 1.42857;
-    text-transform: uppercase;
-    padding: 2px 5px 0 5px;
-    margin: 20px 0 15px 0;
-    float: left;
     text-align: center;
-    border-radius: 5px;
-    border: 2px solid $grey-status;
+    text-transform: uppercase;
 
     @include media(mobile) {
-        font-size: 11px;
-        float: right;
         margin: 10px 0 10px 0;
+        float: right;
+        font-size: 11px;
     }
 
     &-label {
-        float: none;
-        border-radius: 0;
-        border: 0;
-        padding: 5px 8px 3px 8px;
         margin: 0 0 19px 0;
+        padding: 5px 8px 3px 8px;
+        float: none;
+        border: 0;
+        border-radius: 0;
     }
 
     &-corner {
-        float: right;
         margin-top: 0;
+        float: right;
     }
 
     &-large {
@@ -55,16 +55,16 @@
     &.readyToSubmit,
     &.explained,
     &.submitted {
-        color: $green;
         border-color: $green;
+        color: $green;
     }
 
     &.incomplete,
     &.notFinished,
     &.not-matching,
     &.unsubmitted {
-        color: $orange;
         border-color: $orange;
+        color: $orange;
     }
 
     &.not-available {
@@ -73,8 +73,8 @@
     }
 
     &.admin {
-        color: $white;
         background-color: $fuschia;
+        color: $white;
     }
 
 }

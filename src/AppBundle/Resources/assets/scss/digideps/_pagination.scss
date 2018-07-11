@@ -14,8 +14,8 @@
     }
 
     li {
-        list-style: none;
         width: 49%;
+        list-style: none;
 
         @include media-down(mobile) {
             &.previous,
@@ -35,18 +35,18 @@
             }
 
             &:before {
-                background: transparent url("/images/arrow-sprite.png") no-repeat;
-                margin: -4px 0 0 0;
+                content: " ";
                 display: block;
                 width: 30px;
                 height: 38px;
-                content: " ";
+                margin: -4px 0 0 0;
+                background: transparent url("/images/arrow-sprite.png") no-repeat;
             }
 
             .pagination-label {
                 @include core-27($line-height: (33.75 / 27));
-                margin-bottom: .08em;
                 display: block;
+                margin-bottom: .08em;
             }
 
             .pagination-part-title {
@@ -62,9 +62,9 @@
 
 
                 &:before {
-                    background-position: -102px -11px;
                     margin-right: -32px;
                     float: right;
+                    background-position: -102px -11px;
                 }
             }
         }
@@ -77,9 +77,9 @@
                 padding-left: 3em;
 
                 &:before {
-                    background-position: -20px -11px;
                     margin-left: -32px;
                     float: left;
+                    background-position: -20px -11px;
                 }
             }
         }
@@ -124,7 +124,7 @@
     margin-bottom: 8px;
 
     @include media(tablet) {
-        float: right;
         margin-bottom: 0;
+        float: right;
     }
 }
