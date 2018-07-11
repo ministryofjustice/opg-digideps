@@ -3,17 +3,17 @@
 // Report overview sections - grey boxes and spacing
 
 .overview-section {
-    margin-top: 30px;
     display: block;
+    margin-top: 30px;
 
     @include media(mobile) {
         margin-top: 0;
     }
 
     > .heading {
-        background: $grey-3;
-        padding: 7px 10px 5px 10px;
         min-height: 19px;
+        padding: 7px 10px 5px 10px;
+        background: $grey-3;
     }
 
 }

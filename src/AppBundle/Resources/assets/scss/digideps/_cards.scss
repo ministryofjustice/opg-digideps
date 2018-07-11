@@ -3,11 +3,11 @@
 // The report card styling on the 'Your reports' page
 
 .card {
-    overflow: hidden;
-    box-sizing: border-box;
     position: relative;
+    box-sizing: border-box;
     min-height: 120px;
     padding: 15px;
+    overflow: hidden;
     border: 1px solid $border-colour;
 
     &.disabled {
@@ -17,8 +17,8 @@
     .card-actions {
         @include media(tablet) {
             position: absolute;
-            bottom: $gutter-half;
             right: $gutter-half;
+            bottom: $gutter-half;
         }
     }
 }

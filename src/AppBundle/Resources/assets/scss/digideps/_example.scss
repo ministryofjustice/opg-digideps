@@ -11,21 +11,16 @@
 .example {
     @extend %contain-floats;
     position: relative;
-    overflow: hidden;
-    border: 1px solid $grey-2;
     margin-top: $gutter-half;
     margin-bottom: $gutter-half;
+    padding: $gutter $gutter-half $gutter-half $gutter-half;
+    overflow: hidden;
+    border: 1px solid $grey-2;
 
-    padding-top: $gutter;
-    padding-right: $gutter-half;
-    padding-bottom: $gutter-half;
-    padding-left: $gutter-half;
+
 
     @include media(tablet) {
-        padding-top: $gutter * 1.5;
-        padding-right: $gutter;
-        padding-bottom: $gutter;
-        padding-left: $gutter;
+        padding: $gutter * 1.5 $gutter $gutter $gutter;
     }
 
     @include ie-lte(7) {
@@ -70,8 +65,8 @@
 
     // Blue text for heading sizes
     .highlight {
-        font-style: normal;
         color: $hm-government;
+        font-style: normal;
     }
 
 }
@@ -92,9 +87,9 @@
 
     p {
         display: inline-block;
-        font-size: 16px;
-        padding-left: 1em;
-        vertical-align: middle;
         margin-bottom: 0;
+        padding-left: 1em;
+        font-size: 16px;
+        vertical-align: middle;
     }
 }

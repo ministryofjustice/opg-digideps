@@ -7,11 +7,11 @@
 
 .search-label {
     position: absolute;
+    z-index: 1;
     top: 1px;
     color: $secondary-text-colour;
     line-height: 42px;
     text-indent: 10px;
-    z-index: 1;
 
     @include media(mobile) {
         line-height: 36px;
@@ -20,12 +20,12 @@
 
 .search-input {
     position: relative;
+    z-index: 3;
+    box-sizing: border-box;
     height: 39px;
     margin-bottom: 15px;
     background-color: transparent;
-    z-index: 3;
     -webkit-appearance: none;
-    box-sizing: border-box;
 
     @include media(tablet) {
         min-width: 390px;

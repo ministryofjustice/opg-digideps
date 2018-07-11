@@ -106,7 +106,8 @@ linters:
     enabled: false
 
   PropertySortOrder:
-    enabled: false
+    enabled: true
+    order: smacss
 
   PropertySpelling:
     enabled: false # avoid false positives on new CSS features

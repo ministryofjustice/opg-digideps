@@ -15,9 +15,9 @@ input[type=text]::-ms-clear {
 
     .pre-input-text {
         @include core-36(1.5);
-        float: left;
         height: 39px;
         padding-right: 10px;
+        float: left;
     }
 }
 
@@ -36,14 +36,14 @@ input[type=text]::-ms-clear {
     z-index: 1;
     width: 10px;
     margin: 2px 0 0 2px;
-    background: $grey-3;
     padding: 5px 9px 4px 8px;
     border: 0;
+    background: $grey-3;
 
     + input {
         position: relative;
-        padding-left: 2em;
         margin: 0;
+        padding-left: 2em;
         background: transparent;
     }
 
@@ -59,9 +59,9 @@ input[type=text]::-ms-clear {
 
     .form-label,
     .error-message {
-        float: left;
         width: 50%;
         padding-right: 20px;
+        float: left;
     }
 
     .panel {
@@ -75,8 +75,8 @@ input[type=text]::-ms-clear {
 
 .form-groups-inline {
     .form-group {
-        float: left;
         margin-right: 30px;
+        float: left;
 
         @include media(mobile) {
             width: 100% !important; // Overriding manual width classes
@@ -120,10 +120,10 @@ input[type=text]::-ms-clear {
             }
 
             &::after {
-                width: 11px;
-                height: 4px;
                 top: 8px;
                 left: 6px;
+                width: 11px;
+                height: 4px;
                 border-width: 0 0 3px 3px;
             }
         }
