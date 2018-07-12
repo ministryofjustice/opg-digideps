@@ -209,12 +209,17 @@
                         </tr>
                         <tr>
                             <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
-                            <td class="behat-region-checklist-deputy-phone">
-                                {{ report.submittedBy.phoneMain }}
-                                {% if (report.submittedBy.phoneAlternative is defined) %}
-                                    <br />{{report.submittedBy  .phoneAlternative}}
-                                {% endif %}
-                            </td>
+                            <td class="behat-region-checklist-deputy-phone">{{ report.submittedBy.phoneMain }}</td>
+                        </tr>
+                        {% if (report.submittedBy.phoneAlternative is defined) %}
+                            <tr>
+                                <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
+                                <td class="behat-region-checklist-deputy-phone">{{report.submittedBy.phoneAlternative}}</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            <th scope="row" class="bold">{{ 'email' | trans({}, 'common') }}</th>
+                            <td class="dont-break-out">{{ report.submittedBy.email }}</td>
                         </tr>
                     </tbody>
                 </table>
