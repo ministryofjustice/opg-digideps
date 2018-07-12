@@ -1,6 +1,6 @@
 Feature: Admin report checklist
 
-  @deputy
+  @deputy @shaun
   Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -41,10 +41,10 @@ Feature: Admin report checklist
       | £335.40   | checklist-accounts-opening-total |
       | £243.39   | calculated-balance               |
       | £193.11   | balance-difference               |
-      | John              | checklkist-deputy-firstname |
-      | Doe               | checklkist-deputy-firstname |
-      | 102 Petty France  | checklkist-deputy-address   |
-      | 020 3334 3555     | checklkist-deputy-phone     |
+      | John              | checklist-deputy-firstname |
+      | Doe               | checklist-deputy-lastname |
+      | 102 Petty France  | checklist-deputy-address   |
+      | 020 3334 3555     | checklist-deputy-phone     |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
