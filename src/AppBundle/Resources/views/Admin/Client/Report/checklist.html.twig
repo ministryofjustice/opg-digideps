@@ -179,38 +179,42 @@
                     <tbody>
                         <tr>
                             <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
-                            <td class="behat-region-checklist-client-firstname">placeholder</td>
+                            <td class="behat-region-checklist-deputy-firstname">{{ report.submittedBy.firstname }}</td>
                         </tr>
                         <tr>
                             <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
-                            <td class="behat-region-checklist-client-lastname">placeholder</td>
+                            <td class="behat-region-checklist-deputy-lastname">{{ report.submittedBy.lastname }}</td>
                         </tr>
                         <tr valign="top">
                             <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
                             <td>
                                 <p>
-                                    placeholder
-                                    {# {% if report.client.address is not empty %}
-                                        {{ report.client.address }}<br/>
+                                    {% if report.submittedBy.address1 is not empty %}
+                                        {{ report.submittedBy.address1 }}<br/>
                                     {% endif %}
-                                    {% if report.client.address2 is not empty %}
-                                        {{ report.client.address2 }}<br/>
+                                    {% if report.submittedBy.address2 is not empty %}
+                                        {{ report.submittedBy.address2 }}<br/>
                                     {% endif %}
-                                    {% if report.client.county is not empty %}
-                                        {{ report.client.county }}<br/>
+                                    {% if report.submittedBy.address3 is not empty %}
+                                        {{ report.submittedBy.address3 }}<br/>
                                     {% endif %}
-                                    {% if report.client.postcode is not empty %}
-                                        {{ report.client.postcode }}<br/>
+                                    {% if report.submittedBy.addressPostcode is not empty %}
+                                        {{ report.submittedBy.addressPostcode }}<br/>
                                     {% endif %}
-                                    {% if report.client.country is not empty %}
-                                        {{ report.client.country | country_name }}
-                                    {% endif %} #}
+                                    {% if report.submittedBy.addressCountry is not empty %}
+                                        {{ report.submittedBy.addressCountry | country_name }}
+                                    {% endif %}
                                 </p>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
-                            <td class="behat-region-checklist-client-phone">placeholder</td>
+                            <td class="behat-region-checklist-deputy-phone">
+                                {{ report.submittedBy.phoneMain }}
+                                {% if (report.submittedBy.phoneAlternative is defined) %}
+                                    <br />{{report.submittedBy  .phoneAlternative}}
+                                {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
