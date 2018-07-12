@@ -7,7 +7,9 @@
 
 {% block pageHeader %}
 
-    <p class="lede">{{ 'signedOut.para01' | trans }}</p>
+    {% if not isAdmin %}
+        <p class="lede">{{ 'signedOut.para01' | trans }}</p>
+    {% endif %}
 
     <p class="behat-region-manual-logout-message">{{ 'signedOut.para02' | trans }}</p>
 
