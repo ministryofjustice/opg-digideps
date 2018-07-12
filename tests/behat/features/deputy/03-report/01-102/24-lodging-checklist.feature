@@ -38,9 +38,13 @@ Feature: Admin report checklist
       | £3.00                                               | debt-loans                   |
       | 200 per month payment plan                          | debt-management-details      |
       | No previous reports on record to show closing balance | checklist-no-previous-reports |
-      | £335.40                                                | checklist-accounts-opening-total |
-      | £243.39                                     | calculated-balance               |
-      | £193.11                                     | balance-difference               |
+      | £335.40   | checklist-accounts-opening-total |
+      | £243.39   | calculated-balance               |
+      | £193.11   | balance-difference               |
+      | John              | checklkist-deputy-firstname |
+      | Doe               | checklkist-deputy-firstname |
+      | 102 Petty France  | checklkist-deputy-address   |
+      | 020 3334 3555     | checklkist-deputy-phone     |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
