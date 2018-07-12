@@ -821,15 +821,12 @@ class Client
     public function getExpectedReportStartDate()
     {
         // create new datetime object. Do not alter object courtDate property.
-        /** @var \DateTime $courtDate */
-        $courtDate = new \DateTime();
+        /** @var \DateTime $expectedReportStartDate */
+        $expectedReportStartDate = new \DateTime();
 
-        $courtDate->setDate(date('Y'), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
-        if ($courtDate->getTimestamp() > time()) {
-            $courtDate->modify('-1 year');
-        }
+        $expectedReportStartDate->setDate((date('Y') -1), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
 
-        return $courtDate;
+        return $expectedReportStartDate;
     }
 
     /**
@@ -842,7 +839,8 @@ class Client
      */
     public function getExpectedReportEndDate()
     {
-        return $this->getExpectedReportStartDate()->modify('+1year -1day');
+        $expectedReportEndDate = clone $this->getExpectedReportStartDate();
+        return $expectedReportEndDate->modify('+1year -1day');
     }
 
     /**
