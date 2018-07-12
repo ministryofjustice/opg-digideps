@@ -41,6 +41,10 @@ Feature: Admin report checklist
       | £335.40   | checklist-accounts-opening-total |
       | £243.39   | calculated-balance               |
       | £193.11   | balance-difference               |
+      | Cly               | checklist-client-firstname |
+      | Hent              | checklist-client-lastname |
+      | 1 South Parade    | checklist-client-address   |
+      | 0123456789        | checklist-client-phone     |
       | John              | checklist-deputy-firstname |
       | Doe               | checklist-deputy-lastname |
       | 102 Petty France  | checklist-deputy-address   |
