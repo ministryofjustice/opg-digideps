@@ -158,7 +158,7 @@ class Report implements ReportInterface
      */
     public function updateSectionStatus($section)
     {
-        $currentStatus = $this->getStatus() ?: [];
+        $currentStatus = $this->getStatus();
 
         $rs = new ReportStatusService($this);
         $currentStatus[$section] = $rs->getSectionState($section);
@@ -404,7 +404,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"report"})
      * @JMS\Type("array")
-     * @ORM\Column(name="status", type="json", nullable=true)
+     * @ORM\Column(name="status", type="text", nullable=true)
      */
     private $status;
 
@@ -989,15 +989,15 @@ class Report implements ReportInterface
      */
     public function getStatus()
     {
-        $this->status;
+        return $this->status ? json_decode($this->status, true) : [];
     }
 
     /**
      * @param array $status
      */
-    public function setStatus($status)
+    public function setStatus(array $status)
     {
-        $this->status = $status;
+        $this->status = json_encode($status);
     }
 
     /**

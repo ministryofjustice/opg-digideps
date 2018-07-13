@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
@@ -100,6 +101,9 @@ class AccountControllerTest extends AbstractTestController
         $url2 = '/report/' . self::$report2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
+        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
+        $this->assertArrayHasKey('state', $status);
+
         return $account->getId();
     }
 
@@ -170,6 +174,9 @@ class AccountControllerTest extends AbstractTestController
         // assert user cannot modify another users' account
         $url2 = '/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+
+        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
+        $this->assertArrayHasKey('state', $status);
     }
 
     /**
@@ -178,6 +185,9 @@ class AccountControllerTest extends AbstractTestController
     public function testaccountDelete()
     {
         $account1Id = self::$account1->getId();
+        $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId());
+        $report = $account->getReport();
+        $report->setStatus([]);
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
         $url3 = '/account/' . self::$account3->getId();
@@ -200,5 +210,8 @@ class AccountControllerTest extends AbstractTestController
 
         // assert bank account is removed
         $this->assertTrue(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
+
+        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
+        $this->assertArrayHasKey('state', $status);
     }
 }
