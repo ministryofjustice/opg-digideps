@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LifestyleController extends RestController
 {
+    private $sectionId = EntityDir\Report\Report::SECTION_LIFESTYLE;
+
     /**
      * @Route("/lifestyle")
      * @Method({"POST"})
@@ -32,6 +34,9 @@ class LifestyleController extends RestController
 
         $this->persistAndFlush($lifestyle);
 
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
+
         return ['id' => $lifestyle->getId()];
     }
 
@@ -43,12 +48,16 @@ class LifestyleController extends RestController
     public function updateAction(Request $request, $id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
+        $report = $lifestyle->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
 
         $this->getEntityManager()->flush($lifestyle);
+
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
 
         return ['id' => $lifestyle->getId()];
     }
@@ -97,10 +106,14 @@ class LifestyleController extends RestController
     public function deleteLifestyle($id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'VisitsCare not found');
+        $report = $lifestyle->getReport();
+
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $this->getEntityManager()->remove($lifestyle);
-        $this->getEntityManager()->flush($lifestyle);
+
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush();
 
         return [];
     }

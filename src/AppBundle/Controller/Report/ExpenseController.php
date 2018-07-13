@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
 {
+    private $sectionId = EntityDir\Report\Report::SECTION_DEPUTY_EXPENSES;
+
     /**
      * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
      * @Method({"GET"})
@@ -52,6 +54,8 @@ class ExpenseController extends RestController
         $report->setPaidForAnything('yes');
 
         $this->persistAndFlush($expense);
+
+        $report->updateSectionStatus($this->sectionId);
         $this->persistAndFlush($report);
 
         return ['id' => $expense->getId()];
@@ -76,6 +80,9 @@ class ExpenseController extends RestController
 
         $this->getEntityManager()->flush($expense);
 
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
+
         return ['id' => $expense->getId()];
     }
 
@@ -92,6 +99,8 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
         $this->getEntityManager()->remove($expense);
+
+        $report->updateSectionStatus($this->sectionId);
 
         $this->getEntityManager()->flush();
 

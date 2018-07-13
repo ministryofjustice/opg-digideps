@@ -55,6 +55,10 @@ class MoneyTransactionController extends RestController
 
         $this->persistAndFlush($t);
 
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+        $this->getEntityManager()->flush($report);
+
         return $t->getId();
     }
 
@@ -88,6 +92,9 @@ class MoneyTransactionController extends RestController
             }
         }
 
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+
         $this->getEntityManager()->flush();
 
         return $t->getId();
@@ -107,6 +114,11 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         $this->getEntityManager()->remove($t);
+
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+        $this->getEntityManager()->flush($report);
+
         $this->getEntityManager()->flush();
 
         return [];

@@ -631,8 +631,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('notStarted', $object->getStatus());
 
         // due, half complete
+        $dp = $this->decisionsProvider();
         $retPartial = ['getType' => Report::TYPE_102]
-            + array_pop($this->decisionsProvider())[0];
+            + array_pop($dp)[0];
         $report = $this->getReportMocked($retPartial);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);

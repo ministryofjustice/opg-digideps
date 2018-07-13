@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ContactControllerTest extends AbstractTestController
@@ -186,7 +187,8 @@ class ContactControllerTest extends AbstractTestController
         $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
-        // TODO assert other fields
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_CONTACTS));
     }
 
     public function testupsertContactPost()
@@ -238,5 +240,7 @@ class ContactControllerTest extends AbstractTestController
         ]);
 
         $this->assertTrue(null === self::fixtures()->getRepo('Report\Contact')->find(self::$contact1->getId()));
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_CONTACTS));
     }
 }

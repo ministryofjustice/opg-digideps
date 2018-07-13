@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
@@ -175,6 +176,8 @@ class VisitsCareControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_VISITS_CARE));
+
         $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Report\VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
@@ -238,6 +241,8 @@ class VisitsCareControllerTest extends AbstractTestController
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_VISITS_CARE));
 
         // assert account created with transactions
         $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \AppBundle\Entity\Report\VisitsCare */

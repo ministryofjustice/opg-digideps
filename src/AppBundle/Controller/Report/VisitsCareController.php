@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VisitsCareController extends RestController
 {
+    private $sectionId = EntityDir\Report\Report::SECTION_VISITS_CARES;
+
     /**
      * @Route("/visits-care")
      * @Method({"POST"})
@@ -32,6 +34,9 @@ class VisitsCareController extends RestController
 
         $this->persistAndFlush($visitsCare);
 
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
+
         return ['id' => $visitsCare->getId()];
     }
 
@@ -43,12 +48,16 @@ class VisitsCareController extends RestController
     public function updateAction(Request $request, $id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
+        $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $visitsCare);
 
         $this->getEntityManager()->flush($visitsCare);
+
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
 
         return ['id' => $visitsCare->getId()];
     }
@@ -97,10 +106,14 @@ class VisitsCareController extends RestController
     public function deleteVisitsCare($id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');
+        $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $this->getEntityManager()->remove($visitsCare);
         $this->getEntityManager()->flush($visitsCare);
+
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
 
         return [];
     }

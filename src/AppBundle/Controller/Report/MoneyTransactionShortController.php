@@ -31,6 +31,10 @@ class MoneyTransactionShortController extends RestController
         $this->fillData($t, $data);
 
         $this->getEntityManager()->persist($t);
+
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
+
         $this->getEntityManager()->flush();
 
         $this->persistAndFlush($t);
@@ -55,6 +59,9 @@ class MoneyTransactionShortController extends RestController
         $data = $this->deserializeBodyContent($request);
         $this->fillData($t, $data);
 
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
+
         $this->getEntityManager()->flush();
 
         return $t->getId();
@@ -73,6 +80,9 @@ class MoneyTransactionShortController extends RestController
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
         $this->getEntityManager()->remove($t);
+
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
+        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
 
         $this->getEntityManager()->flush();
 

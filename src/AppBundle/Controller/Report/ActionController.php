@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
-    private $sectionId = Report::SECTION_BANK_ACCOUNTS;
+    private $sectionId = EntityDir\Report\Report::SECTION_ACTIONS;
 
     /**
      * @Route("/report/{reportId}/action")

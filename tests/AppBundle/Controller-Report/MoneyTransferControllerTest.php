@@ -116,6 +116,8 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertTrue($data > 0);
         self::fixtures()->clear();
 
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
+
         // assert account created with transactions
         $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report\Report */
 
@@ -149,6 +151,9 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
+
+
         $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
         $this->assertEquals(124, $t->getAmount());
         $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
@@ -175,6 +180,8 @@ class MoneyTransferControllerTest extends AbstractTestController
         ]);
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
         $this->assertTrue(null === $t);

@@ -101,8 +101,7 @@ class AccountControllerTest extends AbstractTestController
         $url2 = '/report/' . self::$report2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
-        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
-        $this->assertArrayHasKey('state', $status);
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
 
         return $account->getId();
     }
@@ -175,8 +174,7 @@ class AccountControllerTest extends AbstractTestController
         $url2 = '/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
-        $this->assertArrayHasKey('state', $status);
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
     }
 
     /**
@@ -211,7 +209,6 @@ class AccountControllerTest extends AbstractTestController
         // assert bank account is removed
         $this->assertTrue(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
 
-        $status = self::fixtures()->getReportById(self::$report1->getId())->getStatus()[Report::SECTION_BANK_ACCOUNTS];
-        $this->assertArrayHasKey('state', $status);
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
     }
 }

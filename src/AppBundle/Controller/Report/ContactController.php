@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController
 {
+    private $sectionId = EntityDir\Report\Report::SECTION_CONTACTS;
+
     /**
      * @Route("/contact/{id}")
      * @Method({"GET"})
@@ -40,9 +42,12 @@ class ContactController extends RestController
     public function deleteContact($id)
     {
         $contact = $this->findEntityBy(EntityDir\Report\Contact::class, $id, 'Contact not found');
+        $report = $contact->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
         $this->getEntityManager()->remove($contact);
+
+        $report->updateSectionStatus($this->sectionId);
         $this->getEntityManager()->flush();
 
         return [];
@@ -99,6 +104,9 @@ class ContactController extends RestController
 
         // remove reason for no contacts
         $report->setReasonForNoContacts(null);
+
+        $report->updateSectionStatus($this->sectionId);
+
         $this->persistAndFlush($report);
 
         return ['id' => $contact->getId()];

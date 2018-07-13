@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
 {
+    private $sectionId = EntityDir\Report\Report::SECTION_DOCUMENTS;
+
     /**
      * @Route("/document/{reportType}/{reportId}", requirements={
      *     "reportId":"\d+",
@@ -21,8 +23,6 @@ class DocumentController extends RestController
      */
     public function add(Request $request, $reportType, $reportId)
     {
-
-
         /* @var $report Report */
         $report = $reportType === 'report' ?
             $this->findEntityBy(EntityDir\Report\Report::class, $reportId)
@@ -40,6 +40,9 @@ class DocumentController extends RestController
         $document->setStorageReference($data['storage_reference']);
         $document->setIsReportPdf($data['is_report_pdf']);
         $this->persistAndFlush($document);
+
+        $report->updateSectionStatus($this->sectionId);
+        $this->getEntityManager()->flush($report);
 
         return ['id' => $document->getId()];
     }
@@ -81,11 +84,14 @@ class DocumentController extends RestController
     {
         /** @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
+        $report = $document->getReport();
 
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
         $this->getEntityManager()->remove($document);
+
+        $report->updateSectionStatus($this->sectionId);
 
         $this->getEntityManager()->flush();
 

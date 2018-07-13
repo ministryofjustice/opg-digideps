@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
@@ -144,6 +145,8 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
         $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
     }
 
     public function testPostProperty()
@@ -227,5 +230,7 @@ class AssetControllerTest extends AbstractTestController
         ]);
 
         $this->assertTrue(null === self::fixtures()->getRepo('Report\Asset')->find(self::$asset1->getId()));
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
     }
 }

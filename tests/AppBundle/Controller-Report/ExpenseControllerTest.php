@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\Expense;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
@@ -147,6 +148,8 @@ class ExpenseControllerTest extends AbstractTestController
             ],
         ]);
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DEPUTY_EXPENSES));
 
         $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
         /* @var $expense \AppBundle\Entity\Report\Expense */

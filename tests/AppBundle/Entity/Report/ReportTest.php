@@ -212,11 +212,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
 
-    public function testStatus()
-    {
-        $status = $this->report->getStatus();
-        $this->assertInstanceOf(ReportStatusService::class, $status);
-    }
 
     public static function sectionsSettingsProvider()
     {
