@@ -493,6 +493,8 @@ class Report implements ReportInterface
         $this->currentProfPaymentsReceived = null;
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
+
+        $this->updateStatusAllSection();
     }
 
     /**
@@ -998,6 +1000,18 @@ class Report implements ReportInterface
     public function setStatus(array $status)
     {
         $this->status = json_encode($status);
+    }
+
+    public function updateStatusAllSection()
+    {
+        $rs = new ReportStatusService($this);
+
+        $status = [];
+        foreach( $this->getAvailableSections() as $sectionId) {
+            $status[$sectionId] = $rs->getSectionState($sectionId);
+        }
+
+        $this->setStatus($status);
     }
 
     /**
