@@ -214,7 +214,7 @@
                         {% if (report.submittedBy.phoneAlternative is defined) %}
                             <tr>
                                 <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
-                                <td class="behat-region-checklist-deputy-phone">{{report.submittedBy.phoneAlternative}}</td>
+                                <td>{{report.submittedBy.phoneAlternative}}</td>
                             </tr>
                         {% endif %}
                         <tr>
