@@ -99,11 +99,6 @@ class Report implements ReportInterface
 
     const SECTION_DOCUMENTS = 'documents';
 
-    // events used by updateReportStatus
-    const EVENT_ADD = 'add';
-    const EVENT_EDIT = 'edit';
-    const EVENT_REMOVE = 'remove';
-
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
      *
@@ -157,11 +152,18 @@ class Report implements ReportInterface
         ];
     }
 
-    public function updateReportStatus($section, $operation)
+    /**
+     * Update the section status of the given section using the ReportService
+     * @param $section
+     */
+    public function updateSectionStatus($section)
     {
-        //TODO use $section and $operation to optimise/avoid the calculation
-        // e.g.  readyToSubmit -> notFinished when transactions are added/removed
-        $this->statusCached = $this->getStatus()->getStatus();
+        $currentStatus = $this->getStatus() ?: [];
+
+        $rs = new ReportStatusService($this);
+        $currentStatus[$section] = $rs->getSectionState($section);
+
+        $this->setStatus($currentStatus);
     }
 
     /**
@@ -395,15 +397,16 @@ class Report implements ReportInterface
     private $unsubmittedSectionsList;
 
     /**
-     * Holds a copy of result of the getStatus()->getStatus(),
+     * Holds a copy of result of the ReportStatusService results
      * auto-updated at READ/WRITE operations
-     * @var string notStarted|notFinished|readyToSubmit
+     *
+     * @var array
      *
      * @JMS\Groups({"report"})
-     * @JMS\Type("string")
-     * @ORM\Column(name="status_cached", type="string", length=10, nullable=false)
+     * @JMS\Type("array")
+     * @ORM\Column(name="status", type="json", nullable=true)
      */
-    private $statusCached;
+    private $status;
 
     /**
      * @var Checklist
@@ -958,9 +961,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * Get sections status, using ReportStatusService built on this class.
-     *
-     * @JMS\VirtualProperty
+     * @JMS\Type("array")
      * @JMS\Groups({
      *     "status",
      *     "decision-status",
@@ -984,11 +985,19 @@ class Report implements ReportInterface
      *     "lifestyle-state",
      * })
      *
-     * @return ReportStatusService
+     * @return array
      */
     public function getStatus()
     {
-        return new ReportStatusService($this);
+        $this->status;
+    }
+
+    /**
+     * @param array $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     /**
@@ -1279,22 +1288,5 @@ class Report implements ReportInterface
             'type' => $this->getType(),
         ];
     }
-
-    /**
-     * @return string
-     */
-    public function getStatusCached()
-    {
-        return $this->statusCached;
-    }
-
-    /**
-     * @param string $statusCached
-     */
-    public function setStatusCached($statusCached)
-    {
-        $this->statusCached = $statusCached;
-    }
-
 
 }

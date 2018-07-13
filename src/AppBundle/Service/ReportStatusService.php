@@ -470,51 +470,55 @@ class ReportStatusService
         }) ?: [];
     }
 
-    private function getSectionState($section)
+    /**
+     * @param $section SECTION_*
+     * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
+     */
+    public function getSectionState($section)
     {
         switch ($section) {
             case Report::SECTION_DECISIONS:
-                return $this->getDecisionsState()['state'];
+                return $this->getDecisionsState();
             case Report::SECTION_CONTACTS:
-                return $this->getContactsState()['state'];
+                return $this->getContactsState();
             case Report::SECTION_VISITS_CARE:
-                return $this->getVisitsCareState()['state'];
+                return $this->getVisitsCareState();
             case Report::SECTION_LIFESTYLE:
-                return $this->getLifestyleState()['state'];
+                return $this->getLifestyleState();
             // money
             case Report::SECTION_BALANCE:
-                return $this->getBalanceState()['state'];
+                return $this->getBalanceState();
             case Report::SECTION_BANK_ACCOUNTS:
-                return $this->getBankAccountsState()['state'];
+                return $this->getBankAccountsState();
             case Report::SECTION_MONEY_TRANSFERS:
-                return $this->getMoneyTransferState()['state'];
+                return $this->getMoneyTransferState();
             case Report::SECTION_MONEY_IN:
-                return $this->getMoneyInState()['state'];
+                return $this->getMoneyInState();
             case Report::SECTION_MONEY_OUT:
-                return $this->getMoneyOutState()['state'];
+                return $this->getMoneyOutState();
             case Report::SECTION_MONEY_IN_SHORT:
-                return $this->getMoneyInShortState()['state'];
+                return $this->getMoneyInShortState();
             case Report::SECTION_MONEY_OUT_SHORT:
-                return $this->getMoneyOutShortState()['state'];
+                return $this->getMoneyOutShortState();
             case Report::SECTION_ASSETS:
-                return $this->getAssetsState()['state'];
+                return $this->getAssetsState();
             case Report::SECTION_DEBTS:
-                return $this->getDebtsState()['state'];
+                return $this->getDebtsState();
             case Report::SECTION_GIFTS:
-                return $this->getGiftsState()['state'];
+                return $this->getGiftsState();
             // end money
             case Report::SECTION_ACTIONS:
-                return $this->getActionsState()['state'];
+                return $this->getActionsState();
             case Report::SECTION_OTHER_INFO:
-                return $this->getOtherInfoState()['state'];
+                return $this->getOtherInfoState();
             case Report::SECTION_DEPUTY_EXPENSES:
-                return $this->getExpensesState()['state'];
+                return $this->getExpensesState();
             case Report::SECTION_PA_DEPUTY_EXPENSES:
-                return $this->getPaFeesExpensesState()['state'];
+                return $this->getPaFeesExpensesState();
             case Report::SECTION_PROF_CURRENT_FEES:
-                return $this->getProfCurrentFeesState()['state'];
+                return $this->getProfCurrentFeesState();
             case Report::SECTION_DOCUMENTS:
-                return $this->getDocumentsState()['state'];
+                return $this->getDocumentsState();
             default:
                 throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
         }
@@ -533,7 +537,7 @@ class ReportStatusService
     {
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            $ret[$sectionId] = $this->getSectionState($sectionId);
+            $ret[$sectionId] = $this->getSectionState($sectionId)['state'];
         }
 
         return $ret;

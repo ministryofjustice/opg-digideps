@@ -31,8 +31,10 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_ADD);
+        $report->updateSectionStatus(Report::SECTION_BANK_ACCOUNTS);
+
         $this->persistAndFlush($account);
+        $this->getEntityManager()->flush($report);
 
         return ['id' => $account->getId()];
     }
@@ -70,7 +72,8 @@ class AccountController extends RestController
         $this->fillAccountData($account, $data);
 
         $account->setLastEdit(new \DateTime());
-        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_EDIT);
+
+        $report->updateSectionStatus(Report::SECTION_BANK_ACCOUNTS);
 
         $this->getEntityManager()->flush();
 
@@ -135,7 +138,7 @@ class AccountController extends RestController
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_REMOVE);
+        $report->updateSectionStatus(Report::SECTION_BANK_ACCOUNTS);
 
         $this->getEntityManager()->remove($account);
 
