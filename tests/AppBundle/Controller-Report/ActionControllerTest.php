@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class ActionControllerTest extends AbstractTestController
@@ -104,5 +105,7 @@ class ActionControllerTest extends AbstractTestController
         $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('no', $action->getDoYouHaveConcerns());
         $this->assertEquals(null, $action->getDoYouHaveConcernsDetails());
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ACTIONS));
     }
 }

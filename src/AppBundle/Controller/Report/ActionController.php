@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
+    private $sectionId = Report::SECTION_BANK_ACCOUNTS;
+
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"PUT"})
@@ -30,7 +32,9 @@ class ActionController extends RestController
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
 
-        $this->getEntityManager()->flush($action);
+        $report->updateSectionStatus($this->sectionId);
+
+        $this->getEntityManager()->flush();
 
         return ['id' => $action->getId()];
     }
