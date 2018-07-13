@@ -99,6 +99,11 @@ class Report implements ReportInterface
 
     const SECTION_DOCUMENTS = 'documents';
 
+    // events used by updateReportStatus
+    const EVENT_ADD = 'add';
+    const EVENT_EDIT = 'edit';
+    const EVENT_REMOVE = 'remove';
+
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
      *
@@ -152,6 +157,13 @@ class Report implements ReportInterface
         ];
     }
 
+    public function updateReportStatus($section, $operation)
+    {
+        //TODO use $section and $operation to optimise/avoid the calculation
+        // e.g.  readyToSubmit -> notFinished when transactions are added/removed
+        $this->statusCached = $this->getStatus()->getStatus();
+    }
+
     /**
      * @var int
      *
@@ -165,8 +177,6 @@ class Report implements ReportInterface
     private $id;
 
     /**
-     * TODO: consider using Doctrine table inheritance on report.type
-     *
      * @var string TYPE_ constants
      *
      * @JMS\Groups({"report", "report-type"})
@@ -383,6 +393,17 @@ class Report implements ReportInterface
      * @JMS\Type("string")
      */
     private $unsubmittedSectionsList;
+
+    /**
+     * Holds a copy of result of the getStatus()->getStatus(),
+     * auto-updated at READ/WRITE operations
+     * @var string notStarted|notFinished|readyToSubmit
+     *
+     * @JMS\Groups({"report"})
+     * @JMS\Type("string")
+     * @ORM\Column(name="status_cached", type="string", length=10, nullable=false)
+     */
+    private $statusCached;
 
     /**
      * @var Checklist
@@ -1258,4 +1279,22 @@ class Report implements ReportInterface
             'type' => $this->getType(),
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function getStatusCached()
+    {
+        return $this->statusCached;
+    }
+
+    /**
+     * @param string $statusCached
+     */
+    public function setStatusCached($statusCached)
+    {
+        $this->statusCached = $statusCached;
+    }
+
+
 }

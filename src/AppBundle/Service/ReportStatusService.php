@@ -596,6 +596,10 @@ class ReportStatusService
     }
 
     /**
+     * Calculate status using report info
+     * Note: a cached/redundant value is hold in report.statusCached
+     * This should not be used from the client, as expensive to calculate each time
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\Groups({"status"})

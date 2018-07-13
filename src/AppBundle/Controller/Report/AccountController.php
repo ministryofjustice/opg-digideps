@@ -31,6 +31,7 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
+        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_ADD);
         $this->persistAndFlush($account);
 
         return ['id' => $account->getId()];
@@ -61,6 +62,7 @@ class AccountController extends RestController
     public function editAccountAction(Request $request, $id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
+        $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $data = $this->deserializeBodyContent($request);
@@ -68,6 +70,7 @@ class AccountController extends RestController
         $this->fillAccountData($account, $data);
 
         $account->setLastEdit(new \DateTime());
+        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_EDIT);
 
         $this->getEntityManager()->flush();
 
@@ -129,7 +132,10 @@ class AccountController extends RestController
     public function accountDelete($id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
-        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        $report = $account->getReport();
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $report->updateReportStatus(Report::SECTION_BANK_ACCOUNTS, Report::EVENT_REMOVE);
 
         $this->getEntityManager()->remove($account);
 
