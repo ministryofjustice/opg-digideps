@@ -257,7 +257,7 @@ class User implements AdvancedUserInterface
      * @var string
      *
      * @JMS\Type("string")
-         */
+     */
     private $deputyNo;
 
     /**

@@ -43,6 +43,7 @@ name: Name
 role: Role
 address: Address
 phone: Phone
+alternativePhone: Alternative phone
 email: Email
 dueDate: Due date
 section: Section
