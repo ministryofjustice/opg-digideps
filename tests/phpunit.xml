@@ -12,9 +12,7 @@
 >
     <testsuites>
         <testsuite name="src">
-            <directory>./AppBundle/Controller</directory>
-            <directory>./AppBundle/Entity</directory>
-            <directory>./AppBundle/Service</directory>
+            <directory>./AppBundle</directory>
         </testsuite>
     </testsuites>
     <php>
