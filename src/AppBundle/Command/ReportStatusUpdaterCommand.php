@@ -47,7 +47,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
                 ->getQuery()
                 ->getResult();
             if (empty($reports)) {
-                $output->writeln("Nothing to update");
+                $output->writeln("Done");
                 return 0;
             }
             foreach ($reports as $report) {
