@@ -461,6 +461,7 @@ class Report implements ReportInterface
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
 
+        $this->statusCached = null;
         $this->updateSectionsStatusCache($this->getAvailableSections());
     }
 

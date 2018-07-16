@@ -54,12 +54,13 @@ trait StatusTrait
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {
+        $currentStatus = $this->getStatusCached();
+
         foreach($sectionIds as $sectionId) {
-            $this->setStatusCached(
-                [$sectionId => $this->getStatus()->getSectionStateNotCached($sectionId)]
-                + $this->getStatusCached()
-            );
+            $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
         }
+
+        $this->setStatusCached($currentStatus);
     }
 
     /**

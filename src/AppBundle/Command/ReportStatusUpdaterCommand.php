@@ -37,6 +37,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
 
         $output->write("Updating report status for next $limit reports: ");
         for ($i = 0, $continue = true; $i < $limit && $continue; $i += $chunkSize) {
+            /* @var $reports Report[] */
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
                 ->select('r')
@@ -50,6 +51,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
                 return 0;
             }
             foreach ($reports as $report) {
+                $report->setStatusCached([]);
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
