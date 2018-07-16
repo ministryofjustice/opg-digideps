@@ -18,7 +18,7 @@ class ReportStatusService
     const STATE_DONE = 'done';
     const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
     const STATE_EXPLAINED = 'explained'; //only used for balance section
-
+    const ENABLE_SECTION_STATUS_DB_CACHE = true;
 
     /**
      * @JMS\Exclude
@@ -552,7 +552,7 @@ class ReportStatusService
         $statusCached = $this->report->getStatusCached();
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            if (isset($statusCached[$sectionId])) { //get cached value if exists
+            if (self::ENABLE_SECTION_STATUS_DB_CACHE && isset($statusCached[$sectionId])) { //get cached value if exists
                 $ret[$sectionId] = $statusCached[$sectionId];
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
