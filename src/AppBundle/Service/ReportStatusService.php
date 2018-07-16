@@ -465,9 +465,7 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
      *
      * @param boolean
      *
@@ -539,9 +537,7 @@ class ReportStatusService
     /**
      * Get section for the specific report type, along with the status
      *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
      *
      * @param boolean
      *
@@ -588,9 +584,7 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
      *
      * @return array
      */
@@ -627,7 +621,7 @@ class ReportStatusService
      *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "report-status"})
      *
      * @return string
      */

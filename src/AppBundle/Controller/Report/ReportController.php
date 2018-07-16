@@ -429,10 +429,7 @@ class ReportController extends RestController
         // apply offset and limit filters (has to be last)
         $records = array_slice($records, $offset, $limit);
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups')
-            : ['report', 'report-client', 'client', 'status'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->setJmsSerialiserGroups(['report', 'report-client', 'client', 'report-status']);
 
         return [
             'counts'  => $counts,

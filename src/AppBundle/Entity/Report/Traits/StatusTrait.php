@@ -65,6 +65,7 @@ trait StatusTrait
      * @JMS\VirtualProperty
      * @JMS\Groups({
      *     "status",
+     *     "report-status",
      *     "decision-status",
      *     "contact-status",
      *     "visits-care-state",
@@ -93,5 +94,13 @@ trait StatusTrait
         return new ReportStatusService($this);
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"status-only"})
+     */
+    public function getStatusOnly()
+    {
+        return $this->getStatus()->getStatus();
+    }
 
 }
