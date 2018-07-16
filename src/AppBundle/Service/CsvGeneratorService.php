@@ -240,6 +240,7 @@ class CsvGeneratorService
             array_push($data, null);
             array_push($data, null);
             array_push($data, null);
+            array_push($data, null);
         }
 
         array_push($data, $this->outputDate($reportOrNdr->getDueDate()));
