@@ -82,8 +82,8 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     {
         $csvString = $this->sut->generateReportSubmissionsCsv(
             [
-                $this->generateMockReportSubmission(24, 88),
-                $this->generateMockReportSubmission(25, 92)
+                $this->generateMockReportSubmission(24, 88, 33),
+                $this->generateMockReportSubmission(25, 92, 33)
             ]
         );
         $this->assertContains(
@@ -96,6 +96,26 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         );
     }
 
+    public function testGenerateSubmissionsCsvWithBadDataSubmissions()
+    {
+        $mockSubmission1 = $this->generateMockReportSubmission(24, 88, null, null, null);
+        $mockSubmission2 = $this->generateMockReportSubmission(25, 106, null, null, null);
+
+        $csvString = $this->sut->generateReportSubmissionsCsv(
+            [
+                $mockSubmission1,
+                $mockSubmission2
+            ]
+        );
+        $this->assertContains(
+            '24,102,,,,,,,,,Firstname32,Lastname32,32323232,08/11/2011,64,1',
+            $csvString
+        );
+        $this->assertContains(
+            '25,102,,,,,,,,,Firstname32,Lastname32,32323232,08/11/2011,64,1',
+            $csvString
+        );
+    }
 
     /**
      * Generates a mock Report with id and associated transactions
@@ -106,7 +126,8 @@ class CsvGeneratorServiceTest extends MockeryTestCase
      * @param $numMoneyOut
      * @param $numMoneyIn
      */
-    private function generateMockReport($reportId, $numGifts = 0, $numExpenses = 0, $numMoneyOut = 0, $numMoneyIn = 0)
+    private function generateMockReport($reportId, $numGifts = 0, $numExpenses = 0, $numMoneyOut = 0, $numMoneyIn = 0,
+                                        $dueDate = '2/5/2018', $submitDate = '4/28/2018')
     {
         $mockReport = m::mock(ReportInterface::class);
 
@@ -129,8 +150,17 @@ class CsvGeneratorServiceTest extends MockeryTestCase
             $this->generateMockClient(32)
         );
 
-        $mockReport->shouldReceive('getSubmitDate')->andReturn(new \DateTime('4/28/2018'));
-        $mockReport->shouldReceive('getDueDate')->andReturn(new \DateTime('2/5/2018'));
+        if (!empty($dueDate)) {
+            $mockReport->shouldReceive('getDueDate')->andReturn(new \DateTime($dueDate));
+        } else {
+            $mockReport->shouldReceive('getDueDate')->andReturnNull();
+        }
+
+        if (!empty($submitDate)) {
+            $mockReport->shouldReceive('getSubmitDate')->andReturn(new \DateTime($submitDate));
+        } else {
+            $mockReport->shouldReceive('getSubmitDate')->andReturnNull();
+        }
 
         return $mockReport;
     }
@@ -162,22 +192,27 @@ class CsvGeneratorServiceTest extends MockeryTestCase
      * @param $numMoneyOut
      * @param $numMoneyIn
      */
-    private function generateMockReportSubmission($reportSubmissionId, $reportId)
+    private function generateMockReportSubmission($reportSubmissionId, $reportId, $createdById = null,
+                                                  $dueDate = '2/5/2018', $submitDate = '4/28/2018')
     {
         $mockReportSubmission = m::mock(ReportSubmission::class);
 
         $mockReportSubmission->shouldReceive('getId')->andReturn($reportSubmissionId);
         $mockReportSubmission->shouldReceive('getReport')->andReturn(
-            $this->generateMockReport($reportId,0,0,0,0)
+            $this->generateMockReport($reportId,0,0,0,0, $dueDate, $submitDate)
         );
 
         $mockReportSubmission->shouldReceive('getNdr')->andReturn(
             $this->generateMockNdr($reportId    )
         );
 
-        $mockReportSubmission->shouldReceive('getCreatedBy')->andReturn(
-            $this->generateMockUser(33)
-        );
+        if (is_numeric($createdById)) {
+            $mockReportSubmission->shouldReceive('getCreatedBy')->andReturn(
+                $this->generateMockUser($createdById)
+            );
+        } else {
+            $mockReportSubmission->shouldReceive('getCreatedBy')->andReturnNull();
+        }
 
         return $mockReportSubmission;
     }

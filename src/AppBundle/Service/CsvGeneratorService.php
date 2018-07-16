@@ -3,7 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\BankAccount;
+use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Entity\User;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -206,28 +209,70 @@ class CsvGeneratorService
             }
 
             if (!empty($report)) {
-                fputcsv($this->fd, [
-                    $rs->getId(),
-                    $report->getType(),
-                    $rs->getCreatedBy()->getDeputyNo(),
-                    $rs->getCreatedBy()->getEmail(),
-                    $rs->getCreatedBy()->getFirstname(),
-                    $rs->getCreatedBy()->getLastname(),
-                    $rs->getCreatedBy()->getRegistrationDate()->format('d/m/Y'),
-                    $report->getDueDate()->format('d/m/Y'),
-                    $report->getSubmitDate()->format('d/m/Y'),
-                    $rs->getCreatedBy()->getLastLoggedIn()->format('d/m/Y'),
-                    $report->getClient()->getFirstname(),
-                    $report->getClient()->getLastname(),
-                    $report->getClient()->getCaseNumber(),
-                    $report->getClient()->getCourtDate()->format('d/m/Y'),
-                    $report->getClient()->getTotalReportCount(),
-                    $report->getClient()->getActiveReportCount(),
-                ]);
+                fputcsv($this->fd, $this->generateDataRow($rs, $report));
             }
-
-
         }
+    }
+
+    /**
+     * Takes an instance of ReportSubmission and ReportInterface and returns a summary of data relating to the
+     * report submission. Returned to generate and sanitize the data to ensure CSV generation does not fail.
+     *
+     * @param ReportSubmission $rs
+     * @param ReportInterface $reportOrNdr
+     * @return array
+     */
+    private function generateDataRow(ReportSubmission $rs, ReportInterface $reportOrNdr)
+    {
+        $data = [];
+        array_push($data, $rs->getId());
+        array_push($data, $reportOrNdr->getType());
+        $createdBy = $rs->getCreatedBy();
+
+        if ($createdBy instanceof User) {
+            array_push($data, $createdBy->getDeputyNo());
+            array_push($data, $createdBy->getEmail());
+            array_push($data, $createdBy->getFirstname());
+            array_push($data, $createdBy->getLastname());
+            array_push($data, $this->outputDate($rs->getCreatedBy()->getRegistrationDate()));
+        } else {
+            array_push($data, null);
+            array_push($data, null);
+            array_push($data, null);
+            array_push($data, null);
+            array_push($data, null);
+        }
+
+        array_push($data, $this->outputDate($reportOrNdr->getDueDate()));
+        array_push($data, $this->outputDate($reportOrNdr->getSubmitDate()));
+
+        if ($createdBy instanceof User) {
+            array_push($data, $this->outputDate($rs->getCreatedBy()->getLastLoggedIn()));
+        } else {
+            array_push($data, null);
+        }
+        array_push($data, $reportOrNdr->getClient()->getFirstname());
+        array_push($data, $reportOrNdr->getClient()->getLastname());
+        array_push($data, $reportOrNdr->getClient()->getCaseNumber());
+        array_push($data, $this->outputDate($reportOrNdr->getClient()->getCourtDate()));
+        array_push($data, $reportOrNdr->getClient()->getTotalReportCount());
+        array_push($data, $reportOrNdr->getClient()->getActiveReportCount());
+
+        return $data;
+    }
+    
+    /**
+     * Output a formatted string from a given \DateTime object if set.
+     *
+     * @param null|\DateTime $date
+     * @return null|string
+     */
+    private function outputDate($date)
+    {
+        if ($date instanceof \DateTime) {
+            return $date->format('d/m/Y');
+        }
+        return null;
     }
 
     /**
