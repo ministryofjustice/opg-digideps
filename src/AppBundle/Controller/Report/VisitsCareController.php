@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VisitsCareController extends RestController
 {
-    private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARES];
+    private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
 
     /**
      * @Route("/visits-care")
