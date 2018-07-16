@@ -553,7 +553,7 @@ class ReportStatusService
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
             if (self::ENABLE_SECTION_STATUS_DB_CACHE && isset($statusCached[$sectionId])) { //get cached value if exists
-                $ret[$sectionId] = $statusCached[$sectionId];
+                $ret[$sectionId] = $statusCached[$sectionId]['state'];
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
             }
