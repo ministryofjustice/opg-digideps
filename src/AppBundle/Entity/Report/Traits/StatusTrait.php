@@ -26,9 +26,7 @@ trait StatusTrait
     private $statusCached;
 
     /**
-     * @JMS\Groups({"report"})
-     * @JMS\Type("array")
-     * @JMS\VirtualProperty
+     * @JMS\Exclude
      *
      * @return array
      */
