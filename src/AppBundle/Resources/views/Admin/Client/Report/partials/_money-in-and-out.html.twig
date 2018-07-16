@@ -109,37 +109,41 @@
         }) }}
     </div>
 
-    <details class="push--bottom">
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
-        </summary>
-        <div class="panel panel-border-narrow">
-            <div>
-                {# Balance table #}
-                {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
-                    hideEditLink: true
-                } %}
+    {# Don't show Account Balance for 103 #}
+    {% if not report.type in ['103', '103-4'] %}
 
-                {# Difference table #}
-                {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
-                    hideEditLink: true
-                } %}
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Balance table #}
+                    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
 
-                {% if not report.totalsMatch %}
-                    <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
-                    <table class="check-your-answers columns-2 push--bottom">
-                        {{ macros.summaryTableHeaderQA(true) }}
-                        <tbody>
-                            <tr>
-                                <td>{{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}</td>
-                                <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                {% endif %}
+                    {# Difference table #}
+                    {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                        hideEditLink: true
+                    } %}
+
+                    {% if not report.totalsMatch %}
+                        <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
+                        <table class="check-your-answers columns-2 push--bottom">
+                            {{ macros.summaryTableHeaderQA(true) }}
+                            <tbody>
+                                <tr>
+                                    <td>{{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}</td>
+                                    <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </details>
+        </details>
+    {% endif %}
 </div>
 
 <div class="form-section">
@@ -150,19 +154,22 @@
         }) }}
     </div>
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
-        </summary>
-        <div class="panel panel-border-narrow">
-            <div>
-                {# Questions and answers table #}
-                {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
-                    hideEditLink: true
-                } %}
+    {# Don't show money transfers for 103 #}
+    {% if not report.type in ['103', '103-4'] %}
+        <details>
+            <summary>
+                <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/MoneyTransfer:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
             </div>
-        </div>
-    </details>
+        </details>
+    {% endif %}
 
     <details>
         <summary>
@@ -171,9 +178,15 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
-                    hideEditLink: true
-                } %}
+                {% if report.type in ['102', '102-4'] %}
+                    {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                {% elseif report.type in ['103', '103-4'] %}
+                    {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                {% endif %}
             </div>
         </div>
     </details>
@@ -185,9 +198,15 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
-                    hideEditLink: true
-                } %}
+                {% if report.type in ['102', '102-4'] %}
+                    {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                {% elseif report.type in ['103', '103-4'] %}
+                    {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                {% endif %}
             </div>
         </div>
     </details>
