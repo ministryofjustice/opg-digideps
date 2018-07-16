@@ -1,0 +1,28 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline">{{ (page ~ '.heading.decisions') | trans }}</h3>
+
+<div class="form-section">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.decisionsSatisfactory, (page ~ '.form.decisionsSatisfactory'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.decisionsSummary') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+                {# Questions and answers table #}
+                {% include 'AppBundle:Report/Decision:_list.html.twig' with {
+                    hideEditLink: true
+                } %}
+            </div>
+        </div>
+    </details>
+</div>
