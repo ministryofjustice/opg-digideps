@@ -94,10 +94,10 @@ class DecisionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
         $this->getEntityManager()->remove($decision);
-        $this->getEntityManager()->flush($decision);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+
+        $this->getEntityManager()->flush();
 
         return [];
     }
