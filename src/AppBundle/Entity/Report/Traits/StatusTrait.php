@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -54,8 +55,14 @@ trait StatusTrait
     {
         $currentStatus = $this->getStatusCached();
 
+        //TODO optimise and add those only when a financial section is affected
+        $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
+        $sectionIds[] = Report::SECTION_BALANCE;
+
         foreach($sectionIds as $sectionId) {
-            $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
+            if ($this->hasSection($sectionId)) {
+                $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
+            }
         }
 
         $this->setStatusCached($currentStatus);
