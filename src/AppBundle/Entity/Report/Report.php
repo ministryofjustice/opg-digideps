@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Service\ReportService;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,6 +34,7 @@ class Report implements ReportInterface
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
+    use ReportTraits\StatusTrait;
 
     /**
      * Reports with total amount of assets
@@ -150,20 +152,6 @@ class Report implements ReportInterface
             ] : [],
             self::SECTION_DOCUMENTS          => $allReports,
         ];
-    }
-
-    /**
-     * Update the section status of the given section using the ReportService
-     * @param $section
-     */
-    public function updateSectionStatus($section)
-    {
-        $currentStatus = $this->getStatus();
-
-        $rs = new ReportStatusService($this);
-        $currentStatus[$section] = $rs->getSectionState($section);
-
-        $this->setStatus($currentStatus);
     }
 
     /**
@@ -396,17 +384,6 @@ class Report implements ReportInterface
      */
     private $unsubmittedSectionsList;
 
-    /**
-     * Holds a copy of result of the ReportStatusService results
-     * auto-updated at READ/WRITE operations
-     *
-     * @var array
-     *
-     * @JMS\Groups({"report"})
-     * @JMS\Type("array")
-     * @ORM\Column(name="status", type="text", nullable=true)
-     */
-    private $status;
 
     /**
      * @var Checklist
@@ -416,16 +393,6 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
-
-    /**
-     * set Due date to +8 weeks after end date
-     */
-    public function updateDueDateBasedOnEndDate()
-    {
-        // due date set to 8 exactly weeks (56 days) after the start date
-        $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P56D'));
-    }
 
     /**
      * Report constructor.
@@ -494,7 +461,7 @@ class Report implements ReportInterface
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
 
-        $this->updateStatusAllSection();
+        $this->updateSectionsStatusCache($this->getAvailableSections());
     }
 
     /**
@@ -515,6 +482,17 @@ class Report implements ReportInterface
         $this->type = $type;
 
         return $this;
+    }
+
+
+    /**
+     * set Due date to +8 weeks after end date
+     */
+    public function updateDueDateBasedOnEndDate()
+    {
+        // due date set to 8 exactly weeks (56 days) after the start date
+        $this->dueDate = clone $this->endDate;
+        $this->dueDate->add(new \DateInterval('P56D'));
     }
 
     /**
@@ -960,58 +938,6 @@ class Report implements ReportInterface
     public function has106Flag()
     {
         return substr($this->type, -2) === '-6';
-    }
-
-    /**
-     * @JMS\Type("array")
-     * @JMS\Groups({
-     *     "status",
-     *     "decision-status",
-     *     "contact-status",
-     *     "visits-care-state",
-     *     "expenses-state",
-     *     "gifts-state",
-     *     "account-state",
-     *     "money-transfer-state",
-     *     "money-in-state",
-     *     "money-out-state",
-     *     "asset-state",
-     *     "debt-state",
-     *     "action-state",
-     *     "more-info-state",
-     *     "balance-state",
-     *     "money-in-short-state",
-     *     "money-out-short-state",
-     *     "fee-state",
-     *     "documents-state",
-     *     "lifestyle-state",
-     * })
-     *
-     * @return array
-     */
-    public function getStatus()
-    {
-        return $this->status ? json_decode($this->status, true) : [];
-    }
-
-    /**
-     * @param array $status
-     */
-    public function setStatus(array $status)
-    {
-        $this->status = json_encode($status);
-    }
-
-    public function updateStatusAllSection()
-    {
-        $rs = new ReportStatusService($this);
-
-        $status = [];
-        foreach( $this->getAvailableSections() as $sectionId) {
-            $status[$sectionId] = $rs->getSectionState($sectionId);
-        }
-
-        $this->setStatus($status);
     }
 
     /**

@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DecisionController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_DECISIONS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
 
     /**
      * @Route("/decision")
@@ -58,7 +58,7 @@ class DecisionController extends RestController
 
         $this->persistAndFlush($decision);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $decision->getId()];
@@ -96,7 +96,7 @@ class DecisionController extends RestController
         $this->getEntityManager()->remove($decision);
         $this->getEntityManager()->flush($decision);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return [];

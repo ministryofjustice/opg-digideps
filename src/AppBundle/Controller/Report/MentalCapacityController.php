@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MentalCapacityController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_DECISIONS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
 
     /**
      * @Route("/report/{reportId}/mental-capacity")
@@ -34,7 +34,7 @@ class MentalCapacityController extends RestController
 
         $this->getEntityManager()->flush($mc);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
 

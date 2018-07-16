@@ -379,7 +379,7 @@ class Fixtures
      */
     public function getReportFreshSectionStatus(EntityDir\Report\Report $report, $section)
     {
-        return $this->getReportById($report->getId())->getStatus()[$section];
+        return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
 
     /**

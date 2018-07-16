@@ -10,4 +10,6 @@ interface ReportInterface
     public function getClient();
 
     public function getFinancialSummary();
+
+    public function updateSectionsStatusCache(array $sectionIds);
 }

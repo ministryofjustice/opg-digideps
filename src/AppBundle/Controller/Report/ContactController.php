@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContactController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_CONTACTS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
 
     /**
      * @Route("/contact/{id}")
@@ -47,7 +47,7 @@ class ContactController extends RestController
 
         $this->getEntityManager()->remove($contact);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];
@@ -105,7 +105,7 @@ class ContactController extends RestController
         // remove reason for no contacts
         $report->setReasonForNoContacts(null);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->persistAndFlush($report);
 

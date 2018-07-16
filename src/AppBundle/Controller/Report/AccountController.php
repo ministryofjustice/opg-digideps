@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
 {
-    private $sectionId = Report::SECTION_BANK_ACCOUNTS;
+    private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
 
     /**
      * @Route("/report/{reportId}/account")
@@ -33,7 +33,7 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->persistAndFlush($account);
         $this->getEntityManager()->flush($report);
@@ -75,10 +75,9 @@ class AccountController extends RestController
 
         $account->setLastEdit(new \DateTime());
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
-        $this->getEntityManager()->flush($account);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         $this->setJmsSerialiserGroups(['account']);
 
@@ -141,7 +140,7 @@ class AccountController extends RestController
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->remove($account);
 

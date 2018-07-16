@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
 {
+    private $sectionIds = [
+        EntityDir\Report\Report::SECTION_MONEY_IN,
+        EntityDir\Report\Report::SECTION_MONEY_OUT
+    ];
+
     /**
      * @Route("/report/{reportId}/money-transaction")
      * @Method({"POST"})
@@ -55,8 +60,7 @@ class MoneyTransactionController extends RestController
 
         $this->persistAndFlush($t);
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return $t->getId();
@@ -92,8 +96,7 @@ class MoneyTransactionController extends RestController
             }
         }
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 
@@ -115,8 +118,7 @@ class MoneyTransactionController extends RestController
 
         $this->getEntityManager()->remove($t);
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         $this->getEntityManager()->flush();

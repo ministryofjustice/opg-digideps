@@ -269,7 +269,7 @@ class ReportService
     public function findDeleteableReports(Collection $reports)
     {
         $reportIdToStatus = [];
-        foreach ($reports as $ur) {
+        foreach ($reports as $ur) { /* @var $ur Report */
             $reportIdToStatus[$ur->getId()] = [
                 'status'=> $ur->getStatus()->getStatus(),
                 'start'=> $ur->getStartDate()->format('Y-m-d'),
@@ -279,8 +279,8 @@ class ReportService
         }
 
         $ret = [];
-        foreach ($reports as $report1) {
-            foreach ($reports as $report2) {
+        foreach ($reports as $report1) {  /* @var $report1 Report */
+            foreach ($reports as $report2) {  /* @var $report2 Report */
                 if ($report1->getId() === $report2->getId()) {
                     continue;
                 }

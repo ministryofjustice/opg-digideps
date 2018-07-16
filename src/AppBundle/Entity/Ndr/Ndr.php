@@ -552,4 +552,9 @@ class Ndr implements ReportInterface
             'type' => self::TYPE_NDR,
         ];
     }
+
+    public function updateSectionsStatusCache(array $sectionIds)
+    {
+        //cache not needed for NDR
+    }
 }

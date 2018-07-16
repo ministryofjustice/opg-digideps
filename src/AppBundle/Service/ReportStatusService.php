@@ -5,6 +5,12 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
+/**
+ * Statuses are cached into report.statusCached, and used when present
+ * The cached status are set from the endpoints on CRUD operations on sections
+ * Look at `ReportStatusUpdaterCommand` and its cron usage.
+ *
+ */
 class ReportStatusService
 {
     const STATE_NOT_STARTED = 'not-started';
@@ -256,6 +262,8 @@ class ReportStatusService
      * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *
+     * @param boolean $useCachedValuesIfAvailable
+     *
      * @return bool
      */
     public function isReadyToSubmit()
@@ -461,6 +469,8 @@ class ReportStatusService
      * @JMS\Type("array")
      * @JMS\Groups({"status"})
      *
+     * @param boolean
+     *
      * @return array
      */
     public function getRemainingSections()
@@ -471,10 +481,12 @@ class ReportStatusService
     }
 
     /**
+     * @JMS\Exclude
+     *
      * @param $section SECTION_*
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */
-    public function getSectionState($section)
+    public function getSectionStateNotCached($section)
     {
         switch ($section) {
             case Report::SECTION_DECISIONS:
@@ -531,13 +543,20 @@ class ReportStatusService
      * @JMS\Type("array")
      * @JMS\Groups({"status"})
      *
+     * @param boolean
+     *
      * @return array of section=>state
      */
     public function getSectionStatus()
     {
+        $statusCached = $this->report->getStatusCached();
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            $ret[$sectionId] = $this->getSectionState($sectionId)['state'];
+            if (isset($statusCached[$sectionId])) { //get cached value if exists
+                $ret[$sectionId] = $statusCached[$sectionId];
+            } else {
+                $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
+            }
         }
 
         return $ret;
@@ -578,7 +597,9 @@ class ReportStatusService
     public function getSubmitState()
     {
         return [
-            'state'      => $this->isReadyToSubmit() && $this->report->isDue() ? self::STATE_DONE : self::STATE_NOT_STARTED,
+            'state'  => $this->isReadyToSubmit() && $this->report->isDue()
+                ? self::STATE_DONE
+                : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
         ];
     }

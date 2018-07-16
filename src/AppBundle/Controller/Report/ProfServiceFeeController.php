@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProfServiceFeeController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
 
     /**
      *
@@ -33,7 +33,7 @@ class ProfServiceFeeController extends RestController
         $report->setCurrentProfPaymentsReceived('yes');
         $this->persistAndFlush($profServiceFee);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $profServiceFee->getId()];
@@ -56,7 +56,7 @@ class ProfServiceFeeController extends RestController
 
         $this->getEntityManager()->flush($profServiceFee);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $profServiceFee->getId()];
@@ -97,7 +97,7 @@ class ProfServiceFeeController extends RestController
 
         $this->getEntityManager()->remove($profServiceFee);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 

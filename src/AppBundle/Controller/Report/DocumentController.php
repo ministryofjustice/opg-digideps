@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_DOCUMENTS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_DOCUMENTS];
 
     /**
      * @Route("/document/{reportType}/{reportId}", requirements={
@@ -41,7 +41,7 @@ class DocumentController extends RestController
         $document->setIsReportPdf($data['is_report_pdf']);
         $this->persistAndFlush($document);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $document->getId()];
@@ -91,7 +91,7 @@ class DocumentController extends RestController
 
         $this->getEntityManager()->remove($document);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 

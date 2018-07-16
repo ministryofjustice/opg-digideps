@@ -154,7 +154,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
         // assert put
-        $data = $this->assertJsonRequest('PUT', $url, [
+        $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
@@ -165,7 +165,7 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId());
+        $account = self::fixtures()->clear()->getRepo('Report\BankAccount')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertTrue($account->getIsClosed());
         $this->assertEquals('yes', $account->getIsJointAccount());
@@ -183,9 +183,9 @@ class AccountControllerTest extends AbstractTestController
     public function testaccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId());
+        $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId()); /* @var $account BankAccount*/
         $report = $account->getReport();
-        $report->setStatus([]);
+        $report->setStatusCached([]);
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
         $url3 = '/account/' . self::$account3->getId();
@@ -202,12 +202,8 @@ class AccountControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertNotInstanceOf(BankAccount::class, self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
-
-        self::fixtures()->clear();
-
-        // assert bank account is removed
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\BankAccount')->find(self::$account3->getId()));
+        $freshAccount = self::fixtures()->clear()->getRepo('Report\BankAccount')->find(self::$account3->getId());
+        $this->assertNotInstanceOf(BankAccount::class, $freshAccount);
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
     }

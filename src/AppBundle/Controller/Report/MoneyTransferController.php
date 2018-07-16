@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_MONEY_TRANSFERS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
 
     /**
      * @Route("/report/{reportId}/money-transfers")
@@ -36,7 +36,7 @@ class MoneyTransferController extends RestController
 
         $this->persistAndFlush($transfer);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->persistAndFlush($report);
 
@@ -66,7 +66,7 @@ class MoneyTransferController extends RestController
 
         $this->persistAndFlush($transfer);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return $transfer->getId();
@@ -87,7 +87,7 @@ class MoneyTransferController extends RestController
 
         $this->getEntityManager()->remove($transfer);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

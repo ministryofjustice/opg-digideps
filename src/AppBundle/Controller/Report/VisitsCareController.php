@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VisitsCareController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_VISITS_CARES;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARES];
 
     /**
      * @Route("/visits-care")
@@ -34,7 +34,7 @@ class VisitsCareController extends RestController
 
         $this->persistAndFlush($visitsCare);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $visitsCare->getId()];
@@ -56,7 +56,7 @@ class VisitsCareController extends RestController
 
         $this->getEntityManager()->flush($visitsCare);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $visitsCare->getId()];
@@ -112,7 +112,7 @@ class VisitsCareController extends RestController
         $this->getEntityManager()->remove($visitsCare);
         $this->getEntityManager()->flush($visitsCare);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return [];

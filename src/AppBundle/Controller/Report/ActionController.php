@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ActionController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_ACTIONS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
 
     /**
      * @Route("/report/{reportId}/action")
@@ -32,7 +32,7 @@ class ActionController extends RestController
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 

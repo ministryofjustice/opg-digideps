@@ -202,7 +202,8 @@ class ExpenseControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\Expense')->find(self::$expense1->getId()));
+        $exp = self::fixtures()->clear()->getRepo('Report\Expense')->find(self::$expense1->getId());
+        $this->assertTrue(null === $exp);
     }
 
     /**

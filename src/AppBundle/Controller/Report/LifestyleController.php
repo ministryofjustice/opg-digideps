@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LifestyleController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_LIFESTYLE;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
 
     /**
      * @Route("/lifestyle")
@@ -34,7 +34,7 @@ class LifestyleController extends RestController
 
         $this->persistAndFlush($lifestyle);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $lifestyle->getId()];
@@ -56,7 +56,7 @@ class LifestyleController extends RestController
 
         $this->getEntityManager()->flush($lifestyle);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $lifestyle->getId()];
@@ -112,7 +112,7 @@ class LifestyleController extends RestController
 
         $this->getEntityManager()->remove($lifestyle);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

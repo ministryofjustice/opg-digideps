@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
-    private $sectionId = EntityDir\Report\Report::SECTION_ASSETS;
+    private $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
@@ -55,7 +55,7 @@ class AssetController extends RestController
 
         $this->persistAndFlush($asset);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $asset->getId()];
@@ -80,7 +80,7 @@ class AssetController extends RestController
 
         $this->getEntityManager()->flush($asset);
 
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush($report);
 
         return ['id' => $asset->getId()];
@@ -100,7 +100,7 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->getEntityManager()->remove($asset);
-        $report->updateSectionStatus($this->sectionId);
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

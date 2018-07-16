@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionShortController extends RestController
 {
+    private $sectionIds = [
+        EntityDir\Report\Report::SECTION_MONEY_IN_SHORT,
+        EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT
+    ];
+
     /**
      * @Route("/report/{reportId}/money-transaction-short")
      * @Method({"POST"})
@@ -32,8 +37,7 @@ class MoneyTransactionShortController extends RestController
 
         $this->getEntityManager()->persist($t);
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 
@@ -59,8 +63,7 @@ class MoneyTransactionShortController extends RestController
         $data = $this->deserializeBodyContent($request);
         $this->fillData($t, $data);
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 
@@ -81,8 +84,7 @@ class MoneyTransactionShortController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
         $this->getEntityManager()->remove($t);
 
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_IN_SHORT);
-        $report->updateSectionStatus(EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT);
+        $report->updateSectionsStatusCache($this->sectionIds);
 
         $this->getEntityManager()->flush();
 
