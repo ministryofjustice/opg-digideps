@@ -290,7 +290,7 @@ class ReportController extends RestController
                 );
             }
             $report->updateSectionsStatusCache([
-                Report::SECTION_ACTIONS,
+                Report::SECTION_OTHER_INFO,
             ]);
         }
 

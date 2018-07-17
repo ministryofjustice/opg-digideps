@@ -259,18 +259,13 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Type("array")
+     * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *
-     * @return array
+     * @return boolean
      */
     public function isReadyToSubmit()
     {
-        return [
-            'rs' => $this->getRemainingSections(),
-            'as' => $this->report->getAvailableSections()
-        ];
-
         return count($this->getRemainingSections()) === 0;
     }
 
