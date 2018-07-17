@@ -16,10 +16,13 @@
             {% if categories | length == 0 %}
                 None
             {% else %}
-                {# display categories comma separated #}
-                {% for c in categories %}
-                    {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
+                <ul class="list list-bullet flush--ends">
+                    {% for c in categories %}
+                        <li>
+                            {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </td>
         {% if not hideEditLink  %}
