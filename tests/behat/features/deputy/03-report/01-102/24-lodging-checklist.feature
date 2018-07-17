@@ -1,6 +1,6 @@
 Feature: Admin report checklist
 
-  @deputy @shaun
+  @deputy
   Scenario: Case manager submits empty checklist for the report
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -24,7 +24,7 @@ Feature: Admin report checklist
       | Not saved yet | last-saved-by |
       | Not saved yet | last-modified-by |
       | 1 Jan 2016 | court-date |
-      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
+      | 1 Jan 2017 to 31 Dec 2017 | expected-date |
       | Cly | checklist-client-firstname |
       | Hent | checklist-client-lastname |
       | 0123456789 | checklist-client-phone        |

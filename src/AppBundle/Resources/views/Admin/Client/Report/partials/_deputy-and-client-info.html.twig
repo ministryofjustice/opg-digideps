@@ -1,0 +1,149 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline">{{ (page ~ '.heading.info') | trans }}</h3>
+
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
+            'fieldSetClass': 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <div class="panel panel-border-narrow push--bottom">
+        <div>
+            <p class="flush--bottom behat-region-court-date">
+                <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
+            </p>
+            <p class="flush--bottom behat-region-expected-date">
+                <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+            </p>
+            <p class="behat-region-submitted-date">
+                <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
+            'labelClass': 'text',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.contactDetails') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+
+            {# CLIENT DETAILS #}
+            <h3 class="heading-medium">Client details</h3>
+            <table class="text">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-firstname">{{ report.client.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-lastname">{{ report.client.lastName }}</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-address">
+                            <p>
+                                {% if report.client.address is not empty %}
+                                    {{ report.client.address }}<br/>
+                                {% endif %}
+                                {% if report.client.address2 is not empty %}
+                                    {{ report.client.address2 }}<br/>
+                                {% endif %}
+                                {% if report.client.county is not empty %}
+                                    {{ report.client.county }}<br/>
+                                {% endif %}
+                                {% if report.client.postcode is not empty %}
+                                    {{ report.client.postcode }}<br/>
+                                {% endif %}
+                                {% if report.client.country is not empty %}
+                                    {{ report.client.country | country_name }}
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-phone">{{ report.client.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {# DEPUTY DETAILS #}
+            <h3 class="heading-medium">Deputy details</h3>
+            <table class="text">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-firstname">{{ report.submittedBy.firstname }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-lastname">{{ report.submittedBy.lastname }}</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-address">
+                            <p>
+                                {% if report.submittedBy.address1 is not empty %}
+                                    {{ report.submittedBy.address1 }}<br/>
+                                {% endif %}
+                                {% if report.submittedBy.address2 is not empty %}
+                                    {{ report.submittedBy.address2 }}<br/>
+                                {% endif %}
+                                {% if report.submittedBy.address3 is not empty %}
+                                    {{ report.submittedBy.address3 }}<br/>
+                                {% endif %}
+                                {% if report.submittedBy.addressPostcode is not empty %}
+                                    {{ report.submittedBy.addressPostcode }}<br/>
+                                {% endif %}
+                                {% if report.submittedBy.addressCountry is not empty %}
+                                    {{ report.submittedBy.addressCountry | country_name }}
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-phone">{{ report.submittedBy.phoneMain }}</td>
+                    </tr>
+                    {% if (report.submittedBy.phoneAlternative is defined) %}
+                        <tr>
+                            <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
+                            <td>{{report.submittedBy.phoneAlternative}}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th scope="row" class="bold">{{ 'email' | trans({}, 'common') }}</th>
+                        <td class="dont-break-out">{{ report.submittedBy.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+</div>
+
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
+            'labelClass': 'text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+    <div class="panel panel-border-narrow push-half--top">
+        <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ report.submittedBy.fullName }}</p>
+    </div>
+</div>
