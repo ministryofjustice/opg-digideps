@@ -27,9 +27,22 @@ class ReportStatusService
      */
     private $report;
 
+    private $useStatusCache = false;
+
     public function __construct(Report $report)
     {
         $this->report = $report;
+    }
+
+    /**
+     * @param $useStatusCache
+     * @return $this
+     */
+    public function setUseStatusCache($useStatusCache)
+    {
+        $this->useStatusCache = $useStatusCache;
+
+        return $this;
     }
 
     /**
@@ -544,12 +557,13 @@ class ReportStatusService
     public function getSectionStatus()
     {
         $statusCached = $this->report->getStatusCached();
+
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            if (self::ENABLE_SECTION_STATUS_DB_CACHE) { //get cached value if exists
+            if (self::ENABLE_SECTION_STATUS_DB_CACHE && $this->useStatusCache) { //get cached value if exists
                 $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
                     ? $statusCached[$sectionId]['state']
-                    : self::STATE_NOT_STARTED;
+                    : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
             }

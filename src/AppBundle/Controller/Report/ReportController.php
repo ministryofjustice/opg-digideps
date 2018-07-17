@@ -491,14 +491,14 @@ class ReportController extends RestController
                    'notFinished'   => 0,
                    'readyToSubmit' => 0];
         foreach ($records as $report) {
-            $counts[$report->getStatus()->getStatus()]++;
+            $counts[$report->getStatus()->setUseStatusCache(true)->getStatus()]++;
             $counts['total']++;
         }
 
         // status filters
         if ($status) {
-            $records = array_filter($records, function ($report) use ($status) {
-                return $report->getStatus()->getStatus() == $status;
+            $records = array_filter($records, function ($report) use ($status) { /* @var $report Report */
+                return $report->getStatus()->setUseStatusCache(true)->getStatus() == $status;
             });
         }
         // apply offset and limit filters (has to be last)

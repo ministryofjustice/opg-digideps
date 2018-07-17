@@ -462,10 +462,11 @@ class Report implements ReportInterface
         $this->checklist = null;
 
         // set sections as notStarted when a new report is created
-        $this->statusCached = [];
+        $statusCached = [];
         foreach($this->getAvailableSections() as $sectionId) {
-            $this->statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
+            $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
+        $this->setStatusCached($statusCached);
     }
 
     /**
