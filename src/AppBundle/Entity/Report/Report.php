@@ -461,7 +461,11 @@ class Report implements ReportInterface
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
 
-        $this->statusCached = null;
+        // set sections as notStarted when a new report is created
+        $this->statusCached = [];
+        foreach($this->getAvailableSections() as $sectionId) {
+            $this->statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
     }
 
     /**
