@@ -22,11 +22,13 @@
             {% if ndr.stateBenefitsPresent | length == 0 %}
                 None
             {% else %}
-                {# display state benefits choices comma separated #}
-                {% for sb in ndr.stateBenefitsPresent %}
-                    {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
-                    {% if not loop.last %}, {% endif %}
-                {% endfor %}
+                <ul class="list list-bullet flush--ends">
+                    {% for sb in ndr.stateBenefitsPresent %}
+                        <li>
+                            {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </td>
         <td class="change-answer">
@@ -195,10 +197,13 @@
             {% if ndr.getOneOffPresent | length == 0 %}
                 None
             {% else %}
-                {# display one Off choices comma separated #}
-                {% for sb in ndr.oneOffPresent %}
-                    {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
+                <ul class="list list-bullet flush--ends">
+                    {% for sb in ndr.oneOffPresent %}
+                        <li>
+                            {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </td>
         <td class="change-answer">

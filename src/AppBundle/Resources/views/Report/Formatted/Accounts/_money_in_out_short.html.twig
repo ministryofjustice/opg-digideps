@@ -8,10 +8,13 @@
                 {% if categories | length == 0 %}
                     None
                 {% else %}
-                    {# display categories comma separated #}
-                    {% for c in categories %}
-                        {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions, "report-money-short") }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
+                    <ul class="list list-bullet flush--ends">
+                        {% for c in categories %}
+                            <li>
+                                {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions, "report-money-short") }}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 {% endif %}
             </div>
         </div>
