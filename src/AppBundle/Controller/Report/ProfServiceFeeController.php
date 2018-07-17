@@ -34,7 +34,7 @@ class ProfServiceFeeController extends RestController
         $this->persistAndFlush($profServiceFee);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -53,11 +53,10 @@ class ProfServiceFeeController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $profServiceFee);
-
-        $this->getEntityManager()->flush($profServiceFee);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -96,9 +95,9 @@ class ProfServiceFeeController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         $this->getEntityManager()->remove($profServiceFee);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return [];

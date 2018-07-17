@@ -32,10 +32,11 @@ class VisitsCareController extends RestController
         $visitsCare->setReport($report);
         $this->updateInfo($data, $visitsCare);
 
-        $this->persistAndFlush($visitsCare);
+        $this->getEntityManager()->persist($visitsCare);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -53,11 +54,10 @@ class VisitsCareController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $visitsCare);
-
-        $this->getEntityManager()->flush($visitsCare);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -110,10 +110,10 @@ class VisitsCareController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $this->getEntityManager()->remove($visitsCare);
-        $this->getEntityManager()->flush($visitsCare);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return [];
     }

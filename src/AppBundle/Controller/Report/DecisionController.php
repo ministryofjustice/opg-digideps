@@ -56,10 +56,11 @@ class DecisionController extends RestController
             'client_involved_details' => 'setClientInvolvedDetails',
         ]);
 
-        $this->persistAndFlush($decision);
+        $this->getEntityManager()->persist($decision);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $decision->getId()];
     }
@@ -94,9 +95,9 @@ class DecisionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
         $this->getEntityManager()->remove($decision);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return [];

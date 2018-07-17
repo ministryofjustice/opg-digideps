@@ -77,11 +77,10 @@ class ExpenseController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
 
         $this->updateEntityWithData($report, $expense, $data);
-
-        $this->getEntityManager()->flush($expense);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $expense->getId()];
     }
@@ -99,9 +98,9 @@ class ExpenseController extends RestController
         $expense = $this->findEntityBy(EntityDir\Report\Expense::class, $expenseId);
         $this->denyAccessIfReportDoesNotBelongToUser($expense->getReport());
         $this->getEntityManager()->remove($expense);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return [];

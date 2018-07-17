@@ -539,15 +539,17 @@ class ReportStatusService
      *
      * @param boolean
      *
-     * @return array of section=>state
+     * @return array of section=>state e.g. [ decisions => notStarted ]
      */
     public function getSectionStatus()
     {
         $statusCached = $this->report->getStatusCached();
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            if (self::ENABLE_SECTION_STATUS_DB_CACHE && isset($statusCached[$sectionId])) { //get cached value if exists
-                $ret[$sectionId] = $statusCached[$sectionId]['state'];
+            if (self::ENABLE_SECTION_STATUS_DB_CACHE) { //get cached value if exists
+                $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
+                    ? $statusCached[$sectionId]['state']
+                    : self::STATE_NOT_STARTED;
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
             }

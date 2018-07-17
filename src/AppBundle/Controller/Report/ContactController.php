@@ -46,6 +46,7 @@ class ContactController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
 
         $this->getEntityManager()->remove($contact);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
@@ -106,8 +107,7 @@ class ContactController extends RestController
         $report->setReasonForNoContacts(null);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
-        $this->persistAndFlush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $contact->getId()];
     }

@@ -31,9 +31,9 @@ class ActionController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return ['id' => $action->getId()];

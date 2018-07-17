@@ -32,10 +32,11 @@ class LifestyleController extends RestController
         $lifestyle->setReport($report);
         $this->updateInfo($data, $lifestyle);
 
-        $this->persistAndFlush($lifestyle);
+        $this->getEntityManager()->persist($lifestyle);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -53,11 +54,10 @@ class LifestyleController extends RestController
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
-
-        $this->getEntityManager()->flush($lifestyle);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -111,6 +111,7 @@ class LifestyleController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $this->getEntityManager()->remove($lifestyle);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();

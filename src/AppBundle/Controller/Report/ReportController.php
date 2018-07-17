@@ -153,6 +153,7 @@ class ReportController extends RestController
                 }
             }
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS
             ]);
@@ -160,6 +161,7 @@ class ReportController extends RestController
 
         if (array_key_exists('debt_management', $data)) {
             $report->setDebtManagement($data['debt_management']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEBTS,
             ]);
@@ -188,6 +190,7 @@ class ReportController extends RestController
                         ->setMoreDetails(null);
                 }
             }
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
                 Report::SECTION_PA_DEPUTY_EXPENSES
@@ -201,6 +204,7 @@ class ReportController extends RestController
                 }
             }
             $report->setPaidForAnything($data['paid_for_anything']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DEPUTY_EXPENSES,
                 Report::SECTION_PA_DEPUTY_EXPENSES
@@ -214,6 +218,7 @@ class ReportController extends RestController
                 }
             }
             $report->setGiftsExist($data['gifts_exist']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_GIFTS,
             ]);
@@ -304,6 +309,7 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($e);
                 }
             }
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -319,6 +325,7 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($e);
                 }
             }
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -332,6 +339,7 @@ class ReportController extends RestController
                 }
             }
             $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -345,6 +353,7 @@ class ReportController extends RestController
                 }
             }
             $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,
                 Report::SECTION_MONEY_OUT_SHORT,
@@ -356,6 +365,7 @@ class ReportController extends RestController
                 || ('no' == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_DOCUMENTS,
             ]);
@@ -369,6 +379,7 @@ class ReportController extends RestController
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
             }
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_CURRENT_FEES,
             ]);
@@ -383,6 +394,7 @@ class ReportController extends RestController
                 $report->setProfFeesEstimateSccoReason(null);
             }
             $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
+            $this->getEntityManager()->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_PROF_CURRENT_FEES,
             ]);

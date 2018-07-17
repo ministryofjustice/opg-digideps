@@ -37,8 +37,7 @@ class MoneyTransferController extends RestController
         $this->persistAndFlush($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
-        $this->persistAndFlush($report);
+        $this->getEntityManager()->flush();
 
         $this->setJmsSerialiserGroups(['money-transfer']);
 
@@ -67,7 +66,7 @@ class MoneyTransferController extends RestController
         $this->persistAndFlush($transfer);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return $transfer->getId();
     }

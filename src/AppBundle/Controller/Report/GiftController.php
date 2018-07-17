@@ -56,7 +56,7 @@ class GiftController extends RestController
         $this->persistAndFlush($gift);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -86,10 +86,10 @@ class GiftController extends RestController
                 $gift->setBankAccount(null);
             }
         }
-        $this->getEntityManager()->flush($gift);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -107,6 +107,7 @@ class GiftController extends RestController
         $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
         $this->getEntityManager()->remove($gift);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();

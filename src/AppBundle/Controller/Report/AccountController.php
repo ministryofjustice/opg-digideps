@@ -33,10 +33,10 @@ class AccountController extends RestController
 
         $this->fillAccountData($account, $data);
 
-        $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->persistAndFlush($account);
-        $this->getEntityManager()->flush($report);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $account->getId()];
     }
@@ -74,9 +74,9 @@ class AccountController extends RestController
         $this->fillAccountData($account, $data);
 
         $account->setLastEdit(new \DateTime());
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         $this->setJmsSerialiserGroups(['account']);
@@ -139,11 +139,10 @@ class AccountController extends RestController
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
+        $this->getEntityManager()->remove($account);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
-        $this->getEntityManager()->remove($account);
-
         $this->getEntityManager()->flush();
 
         return [];

@@ -53,10 +53,11 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
 
-        $this->persistAndFlush($asset);
+        $this->getEntityManager()->persist($asset);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -77,11 +78,10 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
-
-        $this->getEntityManager()->flush($asset);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -100,6 +100,8 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->getEntityManager()->remove($asset);
+        $this->getEntityManager()->flush();
+
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 

@@ -42,7 +42,7 @@ class DocumentController extends RestController
         $this->persistAndFlush($document);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return ['id' => $document->getId()];
     }
@@ -90,9 +90,9 @@ class DocumentController extends RestController
         $this->denyAccessIfClientDoesNotBelongToUser($document->getReport()->getClient());
 
         $this->getEntityManager()->remove($document);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return [];
@@ -123,7 +123,7 @@ class DocumentController extends RestController
         }
 
         $this->getEntityManager()->remove($document);
-        $this->getEntityManager()->flush($document);
+        $this->getEntityManager()->flush();
 
         return $id;
     }

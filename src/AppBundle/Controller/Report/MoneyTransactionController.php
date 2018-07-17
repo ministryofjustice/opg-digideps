@@ -55,13 +55,10 @@ class MoneyTransactionController extends RestController
         }
 
         $t->setReport($report);
-        $this->getEntityManager()->persist($t);
-        $this->getEntityManager()->flush($t);
-
         $this->persistAndFlush($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
+        $this->getEntityManager()->flush();
 
         return $t->getId();
     }
@@ -95,9 +92,9 @@ class MoneyTransactionController extends RestController
                 $t->setBankAccount(null);
             }
         }
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-
         $this->getEntityManager()->flush();
 
         return $t->getId();
@@ -117,10 +114,9 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         $this->getEntityManager()->remove($t);
+        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
-        $this->getEntityManager()->flush($report);
-
         $this->getEntityManager()->flush();
 
         return [];
