@@ -462,7 +462,6 @@ class Report implements ReportInterface
         $this->checklist = null;
 
         $this->statusCached = null;
-        $this->updateSectionsStatusCache($this->getAvailableSections());
     }
 
     /**

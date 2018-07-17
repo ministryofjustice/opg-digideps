@@ -46,6 +46,7 @@ class ReportController extends RestController
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
+        $report->updateSectionsStatusCache($report->getAvailableSections());
         $this->persistAndFlush($report);
 
         return ['report' => $report->getId()];
