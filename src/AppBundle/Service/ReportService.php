@@ -109,6 +109,7 @@ class ReportService
             $this->_em->persist($newAccount);
         }
 
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
         $this->_em->persist($newReport);
 
         return $newReport;
