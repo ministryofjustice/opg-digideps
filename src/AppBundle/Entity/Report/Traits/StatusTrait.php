@@ -27,6 +27,8 @@ trait StatusTrait
     private $statusCached;
 
     /**
+     * Holds a copy of the [sectionId => [state=>, nOfRecords=>]
+     *
      * @JMS\Exclude
      *
      * @return array
