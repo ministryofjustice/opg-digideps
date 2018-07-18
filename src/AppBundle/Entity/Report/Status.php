@@ -96,13 +96,6 @@ class Status
      *
      * @var array
      */
-    private $submitState;
-
-    /**
-     * @JMS\Type("array")
-     *
-     * @var array
-     */
     private $assetsState;
 
     /**
@@ -132,20 +125,6 @@ class Status
      * @var array
      */
     private $otherInfoState;
-
-    /**
-     * @JMS\Type("array")
-     *
-     * @var array
-     */
-    private $remainingSections;
-
-    /**
-     * @JMS\Type("array")
-     *
-     * @var array
-     */
-    private $sectionStatus;
 
     /**
      * @JMS\Type("array")
@@ -437,37 +416,6 @@ class Status
         $this->otherInfoState = $otherInfoState;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRemainingSections()
-    {
-        return $this->remainingSections;
-    }
-
-    /**
-     * @param mixed $remainingSections
-     */
-    public function setRemainingSections($remainingSections)
-    {
-        $this->remainingSections = $remainingSections;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSectionStatus()
-    {
-        return $this->sectionStatus;
-    }
-
-    /**
-     * @param mixed $sectionStatus
-     */
-    public function setSectionStatus($sectionStatus)
-    {
-        $this->sectionStatus = $sectionStatus;
-    }
 
     /**
      * @return mixed
@@ -510,7 +458,6 @@ class Status
     }
 
     /**
-     * //TODO remove and clean up if not used
      * @return mixed
      */
     public function getIsReadyToSubmit()
@@ -540,25 +487,6 @@ class Status
     public function setStatus($status)
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSubmitState()
-    {
-        return $this->submitState;
-    }
-
-    /**
-     * @param  array  $submitState
-     * @return Status
-     */
-    public function setSubmitState($submitState)
-    {
-        $this->submitState = $submitState;
-
-        return $this;
     }
 
     /**
