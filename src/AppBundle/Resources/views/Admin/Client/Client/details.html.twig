@@ -2,9 +2,6 @@
 
 {% trans_default_domain "admin-clients" %}
 {% set page = 'clientDetails' %}
-{# DDPB-857: hide link, except for behat tests #}
-{#{% set enableManageLink = client.caseNumber == 'behat001' %}#}
-{% set enableManageLink = true %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -44,15 +41,18 @@
                 <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
                 <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
                 <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
-                {% if enableManageLink %}
-                    <th scope="col">
-                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
-                {% endif %}
+                <th scope="col">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
             </tr>
             </thead>
             <tbody>
             {% for report in client.reportsSubmittedAtLeastOnce %}
+                {% set enableManageLink = report.submitted %}
+                {% set enableChecklistLink = report.type in ['102', '102-4', '103', '103-4',
+                '102-6', '102-4-6', '103-6', '103-4-6']
+                %}
+
                 {# only show submitted and unsubmitted reports #}
                 {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
                 <tr class="{{ behatRegionPrefix }}">
@@ -86,19 +86,17 @@
 
                         <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
                     </td>
-                    {% if enableManageLink %}
-                        <td class="change-answer width-tenth">
-                            {% if report.type in ['102', '102-4', '103', '103-4'] %}
-                                <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
-                                   class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
-                                <br />
-                            {% endif %}
-                            {% if report.submitted %}
-                                <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
-                                   class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
-                            {% endif %}
-                        </td>
-                    {% endif %}
+                    <td class="change-answer width-tenth">
+                        {% if enableChecklistLink %}
+                            <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
+                               class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                            <br />
+                        {% endif %}
+                        {% if enableManageLink %}
+                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
+                               class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
