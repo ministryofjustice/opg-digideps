@@ -33,8 +33,7 @@ class IndexController extends AbstractController
 
         $ret = $this->getRestClient()->get(
             '/report/get-all?' . http_build_query($currentFilters),
-            'array',
-            ['report', 'report-client', 'client', 'status']
+            'array'
         );
         /* @var $clients EntityDir\Client[] */
         $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
