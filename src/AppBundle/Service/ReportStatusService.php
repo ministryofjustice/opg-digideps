@@ -18,7 +18,7 @@ class ReportStatusService
     const STATE_DONE = 'done';
     const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
     const STATE_EXPLAINED = 'explained'; //only used for balance section
-    const ENABLE_SECTION_STATUS_DB_CACHE = true;
+    const ENABLE_STATUS_CACHE = true;
 
     /**
      * @JMS\Exclude
@@ -560,7 +560,7 @@ class ReportStatusService
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            if (self::ENABLE_SECTION_STATUS_DB_CACHE && $this->useStatusCache) { //get cached value if exists
+            if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { //get cached value if exists
                 $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
                     ? $statusCached[$sectionId]['state']
                     : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
