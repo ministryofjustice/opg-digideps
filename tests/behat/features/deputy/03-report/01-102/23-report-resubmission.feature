@@ -1,6 +1,6 @@
 Feature: Admin unsubmit report (from client page)
 
-  @deputy
+  @deputy 
   Scenario: Admin client page + search
     Given I load the application status from "more-documents-added"
     And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -74,6 +74,10 @@ Feature: Admin unsubmit report (from client page)
     And I should see "30 April 2022" in the "report-2016-due-date" region
     When I click on "admin-documents"
     Then I should see the "report-submission" region exactly 2 times
+    And I go to the URL previously saved as "admin-client-search-client-behat001"
+    And I click on "checklist" in the "report-2016" region
+    And the response status code should be 200
+
 
   @deputy
   Scenario: Deputy resubmit report
