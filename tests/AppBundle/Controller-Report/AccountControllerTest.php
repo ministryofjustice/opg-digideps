@@ -174,7 +174,7 @@ class AccountControllerTest extends AbstractTestController
         $url2 = '/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
+        $this->assertEquals('incomplete', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS)['state']);
     }
 
     /**
@@ -205,6 +205,6 @@ class AccountControllerTest extends AbstractTestController
         $freshAccount = self::fixtures()->clear()->getRepo('Report\BankAccount')->find(self::$account3->getId());
         $this->assertNotInstanceOf(BankAccount::class, $freshAccount);
 
-        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS));
+        $this->assertEquals('incomplete', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS)['state']);
     }
 }
