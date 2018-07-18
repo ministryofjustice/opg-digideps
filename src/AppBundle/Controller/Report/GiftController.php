@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GiftController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_GIFTS];
+
     /**
      * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
      * @Method({"GET"})
@@ -52,7 +54,9 @@ class GiftController extends RestController
         $report->setGiftsExist('yes');
 
         $this->persistAndFlush($gift);
-        $this->persistAndFlush($report);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -82,7 +86,10 @@ class GiftController extends RestController
                 $gift->setBankAccount(null);
             }
         }
-        $this->getEntityManager()->flush($gift);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $gift->getId()];
     }
@@ -100,7 +107,9 @@ class GiftController extends RestController
         $gift = $this->findEntityBy(EntityDir\Report\Gift::class, $giftId);
         $this->denyAccessIfReportDoesNotBelongToUser($gift->getReport());
         $this->getEntityManager()->remove($gift);
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

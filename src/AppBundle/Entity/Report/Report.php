@@ -7,6 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Service\ReportService;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,6 +34,7 @@ class Report implements ReportInterface
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
+    use ReportTraits\StatusTrait;
 
     /**
      * Reports with total amount of assets
@@ -165,8 +167,6 @@ class Report implements ReportInterface
     private $id;
 
     /**
-     * TODO: consider using Doctrine table inheritance on report.type
-     *
      * @var string TYPE_ constants
      *
      * @JMS\Groups({"report", "report-type"})
@@ -384,6 +384,7 @@ class Report implements ReportInterface
      */
     private $unsubmittedSectionsList;
 
+
     /**
      * @var Checklist
      *
@@ -392,16 +393,6 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
-
-    /**
-     * set Due date to +8 weeks after end date
-     */
-    public function updateDueDateBasedOnEndDate()
-    {
-        // due date set to 8 exactly weeks (56 days) after the start date
-        $this->dueDate = clone $this->endDate;
-        $this->dueDate->add(new \DateInterval('P56D'));
-    }
 
     /**
      * Report constructor.
@@ -469,6 +460,13 @@ class Report implements ReportInterface
         $this->currentProfPaymentsReceived = null;
         $this->profServicefees = new ArrayCollection();
         $this->checklist = null;
+
+        // set sections as notStarted when a new report is created
+        $statusCached = [];
+        foreach($this->getAvailableSections() as $sectionId) {
+            $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
+        $this->setStatusCached($statusCached);
     }
 
     /**
@@ -489,6 +487,17 @@ class Report implements ReportInterface
         $this->type = $type;
 
         return $this;
+    }
+
+
+    /**
+     * set Due date to +8 weeks after end date
+     */
+    public function updateDueDateBasedOnEndDate()
+    {
+        // due date set to 8 exactly weeks (56 days) after the start date
+        $this->dueDate = clone $this->endDate;
+        $this->dueDate->add(new \DateInterval('P56D'));
     }
 
     /**
@@ -937,40 +946,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * Get sections status, using ReportStatusService built on this class.
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Groups({
-     *     "status",
-     *     "decision-status",
-     *     "contact-status",
-     *     "visits-care-state",
-     *     "expenses-state",
-     *     "gifts-state",
-     *     "account-state",
-     *     "money-transfer-state",
-     *     "money-in-state",
-     *     "money-out-state",
-     *     "asset-state",
-     *     "debt-state",
-     *     "action-state",
-     *     "more-info-state",
-     *     "balance-state",
-     *     "money-in-short-state",
-     *     "money-out-short-state",
-     *     "fee-state",
-     *     "documents-state",
-     *     "lifestyle-state",
-     * })
-     *
-     * @return ReportStatusService
-     */
-    public function getStatus()
-    {
-        return new ReportStatusService($this);
-    }
-
-    /**
      * @return ArrayCollection|Document[]
      */
     public function getDocuments()
@@ -1258,4 +1233,5 @@ class Report implements ReportInterface
             'type' => $this->getType(),
         ];
     }
+
 }

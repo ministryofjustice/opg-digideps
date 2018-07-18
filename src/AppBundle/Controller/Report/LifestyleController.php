@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class LifestyleController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
+
     /**
      * @Route("/lifestyle")
      * @Method({"POST"})
@@ -30,7 +32,11 @@ class LifestyleController extends RestController
         $lifestyle->setReport($report);
         $this->updateInfo($data, $lifestyle);
 
-        $this->persistAndFlush($lifestyle);
+        $this->getEntityManager()->persist($lifestyle);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -43,12 +49,15 @@ class LifestyleController extends RestController
     public function updateAction(Request $request, $id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id);
+        $report = $lifestyle->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
+        $this->getEntityManager()->flush();
 
-        $this->getEntityManager()->flush($lifestyle);
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $lifestyle->getId()];
     }
@@ -97,10 +106,15 @@ class LifestyleController extends RestController
     public function deleteLifestyle($id)
     {
         $lifestyle = $this->findEntityBy(EntityDir\Report\Lifestyle::class, $id, 'VisitsCare not found');
+        $report = $lifestyle->getReport();
+
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         $this->getEntityManager()->remove($lifestyle);
-        $this->getEntityManager()->flush($lifestyle);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return [];
     }

@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\MentalCapacity;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class MentalCapacityControllerTest extends AbstractTestController
@@ -81,6 +82,8 @@ class MentalCapacityControllerTest extends AbstractTestController
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
 
         $mc = self::fixtures()->getRepo('Report\MentalCapacity')->find($return['data']['id']); /* @var $mc \AppBundle\Entity\Report\MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());

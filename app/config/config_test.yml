@@ -15,6 +15,7 @@ doctrine:
 services:
     attemptsInTimeChecker:
         class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
+        public: true
         arguments: [ "@snc_redis.default" ]
         calls:
             - [ setRedisPrefix, ["test_ac_ret_code"] ]
@@ -23,6 +24,7 @@ services:
     attemptsIncrementalWaitingChecker:
         class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
         arguments: [ "@snc_redis.default" ]
+        public: true
         calls:
             - [ setRedisPrefix, ["test_ac_exception"] ]
             # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail

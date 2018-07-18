@@ -5,6 +5,12 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
+/**
+ * Statuses are cached into report.statusCached, and used when present
+ * The cached status are set from the endpoints on CRUD operations on sections
+ * Look at `ReportStatusUpdaterCommand` and its cron usage.
+ *
+ */
 class ReportStatusService
 {
     const STATE_NOT_STARTED = 'not-started';
@@ -12,7 +18,7 @@ class ReportStatusService
     const STATE_DONE = 'done';
     const STATE_NOT_MATCHING = 'not-matching'; //only used for balance section
     const STATE_EXPLAINED = 'explained'; //only used for balance section
-
+    const ENABLE_STATUS_CACHE = true;
 
     /**
      * @JMS\Exclude
@@ -21,9 +27,22 @@ class ReportStatusService
      */
     private $report;
 
+    private $useStatusCache = false;
+
     public function __construct(Report $report)
     {
         $this->report = $report;
+    }
+
+    /**
+     * @param $useStatusCache
+     * @return $this
+     */
+    public function setUseStatusCache($useStatusCache)
+    {
+        $this->useStatusCache = $useStatusCache;
+
+        return $this;
     }
 
     /**
@@ -256,7 +275,7 @@ class ReportStatusService
      * @JMS\Type("boolean")
      * @JMS\Groups({"status"})
      *
-     * @return bool
+     * @return boolean
      */
     public function isReadyToSubmit()
     {
@@ -457,9 +476,9 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
+     *
+     * @param boolean
      *
      * @return array
      */
@@ -470,51 +489,57 @@ class ReportStatusService
         }) ?: [];
     }
 
-    private function getSectionState($section)
+    /**
+     * @JMS\Exclude
+     *
+     * @param $section SECTION_*
+     * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
+     */
+    public function getSectionStateNotCached($section)
     {
         switch ($section) {
             case Report::SECTION_DECISIONS:
-                return $this->getDecisionsState()['state'];
+                return $this->getDecisionsState();
             case Report::SECTION_CONTACTS:
-                return $this->getContactsState()['state'];
+                return $this->getContactsState();
             case Report::SECTION_VISITS_CARE:
-                return $this->getVisitsCareState()['state'];
+                return $this->getVisitsCareState();
             case Report::SECTION_LIFESTYLE:
-                return $this->getLifestyleState()['state'];
+                return $this->getLifestyleState();
             // money
             case Report::SECTION_BALANCE:
-                return $this->getBalanceState()['state'];
+                return $this->getBalanceState();
             case Report::SECTION_BANK_ACCOUNTS:
-                return $this->getBankAccountsState()['state'];
+                return $this->getBankAccountsState();
             case Report::SECTION_MONEY_TRANSFERS:
-                return $this->getMoneyTransferState()['state'];
+                return $this->getMoneyTransferState();
             case Report::SECTION_MONEY_IN:
-                return $this->getMoneyInState()['state'];
+                return $this->getMoneyInState();
             case Report::SECTION_MONEY_OUT:
-                return $this->getMoneyOutState()['state'];
+                return $this->getMoneyOutState();
             case Report::SECTION_MONEY_IN_SHORT:
-                return $this->getMoneyInShortState()['state'];
+                return $this->getMoneyInShortState();
             case Report::SECTION_MONEY_OUT_SHORT:
-                return $this->getMoneyOutShortState()['state'];
+                return $this->getMoneyOutShortState();
             case Report::SECTION_ASSETS:
-                return $this->getAssetsState()['state'];
+                return $this->getAssetsState();
             case Report::SECTION_DEBTS:
-                return $this->getDebtsState()['state'];
+                return $this->getDebtsState();
             case Report::SECTION_GIFTS:
-                return $this->getGiftsState()['state'];
+                return $this->getGiftsState();
             // end money
             case Report::SECTION_ACTIONS:
-                return $this->getActionsState()['state'];
+                return $this->getActionsState();
             case Report::SECTION_OTHER_INFO:
-                return $this->getOtherInfoState()['state'];
+                return $this->getOtherInfoState();
             case Report::SECTION_DEPUTY_EXPENSES:
-                return $this->getExpensesState()['state'];
+                return $this->getExpensesState();
             case Report::SECTION_PA_DEPUTY_EXPENSES:
-                return $this->getPaFeesExpensesState()['state'];
+                return $this->getPaFeesExpensesState();
             case Report::SECTION_PROF_CURRENT_FEES:
-                return $this->getProfCurrentFeesState()['state'];
+                return $this->getProfCurrentFeesState();
             case Report::SECTION_DOCUMENTS:
-                return $this->getDocumentsState()['state'];
+                return $this->getDocumentsState();
             default:
                 throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
         }
@@ -523,17 +548,25 @@ class ReportStatusService
     /**
      * Get section for the specific report type, along with the status
      *
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
      *
-     * @return array of section=>state
+     * @param boolean
+     *
+     * @return array of section=>state e.g. [ decisions => notStarted ]
      */
     public function getSectionStatus()
     {
+        $statusCached = $this->report->getStatusCached();
+
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
-            $ret[$sectionId] = $this->getSectionState($sectionId);
+            if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { //get cached value if exists
+                $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
+                    ? $statusCached[$sectionId]['state']
+                    : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
+            } else {
+                $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
+            }
         }
 
         return $ret;
@@ -565,16 +598,16 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status"})
+     * @JMS\Exclude
      *
      * @return array
      */
     public function getSubmitState()
     {
         return [
-            'state'      => $this->isReadyToSubmit() && $this->report->isDue() ? self::STATE_DONE : self::STATE_NOT_STARTED,
+            'state'  => $this->isReadyToSubmit() && $this->report->isDue()
+                ? self::STATE_DONE
+                : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
         ];
     }
@@ -596,9 +629,13 @@ class ReportStatusService
     }
 
     /**
+     * Calculate status using report info
+     * Note: a cached/redundant value is hold in report.statusCached
+     * This should not be used from the client, as expensive to calculate each time
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
-     * @JMS\Groups({"status"})
+     * @JMS\Groups({"status", "report-status"})
      *
      * @return string
      */

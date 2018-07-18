@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DecisionController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
+
     /**
      * @Route("/decision")
      * @Method({"POST", "PUT"})
@@ -29,6 +31,7 @@ class DecisionController extends RestController
             ]);
             $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $data['id'], 'Decision with not found');
             $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
+            $report = $decision->getReport();
         } else {
             $this->validateArray($data, [
                 'report_id' => 'mustExist',
@@ -53,7 +56,11 @@ class DecisionController extends RestController
             'client_involved_details' => 'setClientInvolvedDetails',
         ]);
 
-        $this->persistAndFlush($decision);
+        $this->getEntityManager()->persist($decision);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $decision->getId()];
     }
@@ -84,10 +91,14 @@ class DecisionController extends RestController
     public function deleteDecision($id)
     {
         $decision = $this->findEntityBy(EntityDir\Report\Decision::class, $id, 'Decision with id:' . $id . ' not found');
+        $report = $decision->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
         $this->getEntityManager()->remove($decision);
-        $this->getEntityManager()->flush($decision);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return [];
     }

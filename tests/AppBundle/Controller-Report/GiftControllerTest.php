@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\Gift;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class GiftControllerTest extends AbstractTestController
@@ -130,6 +131,8 @@ class GiftControllerTest extends AbstractTestController
         $this->assertTrue($giftId > 0);
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_GIFTS));
 
         $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
         /* @var $gift \AppBundle\Entity\Report\Gift */

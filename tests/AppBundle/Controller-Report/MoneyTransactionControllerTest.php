@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller\Report;
 
 use AppBundle\Entity\Report\MoneyTransaction;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class MoneyTransactionControllerTest extends AbstractTestController
@@ -110,6 +111,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN));
+
         $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data); /* @var $t MoneyTransaction*/
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
@@ -140,6 +143,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
         ])['data'];
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN));
 
         $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data); /* @var $t MoneyTransaction*/
         $this->assertEquals(124.46, $t->getAmount());

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransferController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
+
     /**
      * @Route("/report/{reportId}/money-transfers")
      * @Method({"POST"})
@@ -33,7 +35,9 @@ class MoneyTransferController extends RestController
         $this->fillEntity($transfer, $data);
 
         $this->persistAndFlush($transfer);
-        $this->persistAndFlush($report);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         $this->setJmsSerialiserGroups(['money-transfer']);
 
@@ -61,6 +65,9 @@ class MoneyTransferController extends RestController
 
         $this->persistAndFlush($transfer);
 
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
+
         return $transfer->getId();
     }
 
@@ -78,6 +85,8 @@ class MoneyTransferController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
 
         $this->getEntityManager()->remove($transfer);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

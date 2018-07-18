@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class VisitsCareController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
+
     /**
      * @Route("/visits-care")
      * @Method({"POST"})
@@ -30,7 +32,11 @@ class VisitsCareController extends RestController
         $visitsCare->setReport($report);
         $this->updateInfo($data, $visitsCare);
 
-        $this->persistAndFlush($visitsCare);
+        $this->getEntityManager()->persist($visitsCare);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -43,12 +49,15 @@ class VisitsCareController extends RestController
     public function updateAction(Request $request, $id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id);
+        $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateInfo($data, $visitsCare);
+        $this->getEntityManager()->flush();
 
-        $this->getEntityManager()->flush($visitsCare);
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $visitsCare->getId()];
     }
@@ -97,10 +106,14 @@ class VisitsCareController extends RestController
     public function deleteVisitsCare($id)
     {
         $visitsCare = $this->findEntityBy(EntityDir\Report\VisitsCare::class, $id, 'VisitsCare not found');
+        $report = $visitsCare->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $this->getEntityManager()->remove($visitsCare);
-        $this->getEntityManager()->flush($visitsCare);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return [];
     }

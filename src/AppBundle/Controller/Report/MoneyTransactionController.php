@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionController extends RestController
 {
+    private $sectionIds = [
+        EntityDir\Report\Report::SECTION_MONEY_IN,
+        EntityDir\Report\Report::SECTION_MONEY_OUT
+    ];
+
     /**
      * @Route("/report/{reportId}/money-transaction")
      * @Method({"POST"})
@@ -50,10 +55,10 @@ class MoneyTransactionController extends RestController
         }
 
         $t->setReport($report);
-        $this->getEntityManager()->persist($t);
-        $this->getEntityManager()->flush($t);
-
         $this->persistAndFlush($t);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return $t->getId();
     }
@@ -87,7 +92,9 @@ class MoneyTransactionController extends RestController
                 $t->setBankAccount(null);
             }
         }
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return $t->getId();
@@ -107,6 +114,9 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         $this->getEntityManager()->remove($t);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

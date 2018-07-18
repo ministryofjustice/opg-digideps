@@ -268,16 +268,13 @@ class ReportControllerTest extends AbstractTestController
                      'other_info_state',
                      'expenses_state',
                      'gifts_state',
-                     'submit_state',
                  ] as $key) {
             $this->assertArrayHasKey('state', $data[$key]);
             $this->assertArrayHasKey('nOfRecords', $data[$key]);
         }
 
         //$this->assertArrayHasKey('balance_matches', $data); //TODO check why failing
-        $this->assertArrayHasKey('remaining_sections', $data);
-        $this->assertArrayHasKey('section_status', $data);
-        $this->assertArrayHasKey('is_ready_to_submit', $data);
+        $this->assertArrayHasKey('status', $data);
     }
 
     /**
@@ -507,6 +504,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertCount(3, $ret['reports']);
         $this->assertEquals('102', $ret['reports'][0]['type']);
         $this->assertEquals('pa1Client1', $ret['reports'][0]['client']['firstname']);
+        $this->assertArrayHasKey('status', $ret['reports'][0]['status']);
 
         //test pagination
         $reportsPaginated = $reportsGetAllRequest([

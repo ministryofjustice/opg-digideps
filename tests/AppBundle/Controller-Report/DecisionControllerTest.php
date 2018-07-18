@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class DecisionControllerTest extends AbstractTestController
@@ -161,7 +162,8 @@ class DecisionControllerTest extends AbstractTestController
         $decision = self::fixtures()->getRepo('Report\Decision')->find($return['data']['id']); /* @var $decision \AppBundle\Entity\Report\Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
-        // TODO assert other fields
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
     }
 
     public function testupsertDecisionPost()

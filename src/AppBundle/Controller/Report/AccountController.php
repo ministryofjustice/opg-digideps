@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends RestController
 {
+    private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
+
     /**
      * @Route("/report/{reportId}/account")
      * @Method({"POST"})
@@ -32,6 +34,9 @@ class AccountController extends RestController
         $this->fillAccountData($account, $data);
 
         $this->persistAndFlush($account);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $account->getId()];
     }
@@ -61,6 +66,7 @@ class AccountController extends RestController
     public function editAccountAction(Request $request, $id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount*/
+        $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $data = $this->deserializeBodyContent($request);
@@ -68,7 +74,9 @@ class AccountController extends RestController
         $this->fillAccountData($account, $data);
 
         $account->setLastEdit(new \DateTime());
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         $this->setJmsSerialiserGroups(['account']);
@@ -129,10 +137,12 @@ class AccountController extends RestController
     public function accountDelete($id)
     {
         $account = $this->findEntityBy(EntityDir\Report\BankAccount::class, $id, 'Account not found'); /* @var $account EntityDir\Report\BankAccount */
-        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
-
+        $report = $account->getReport();
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->getEntityManager()->remove($account);
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

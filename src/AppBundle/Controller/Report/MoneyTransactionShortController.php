@@ -11,6 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class MoneyTransactionShortController extends RestController
 {
+    private $sectionIds = [
+        EntityDir\Report\Report::SECTION_MONEY_IN_SHORT,
+        EntityDir\Report\Report::SECTION_MONEY_OUT_SHORT
+    ];
+
     /**
      * @Route("/report/{reportId}/money-transaction-short")
      * @Method({"POST"})
@@ -31,6 +36,9 @@ class MoneyTransactionShortController extends RestController
         $this->fillData($t, $data);
 
         $this->getEntityManager()->persist($t);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         $this->persistAndFlush($t);
@@ -54,7 +62,9 @@ class MoneyTransactionShortController extends RestController
         // set data
         $data = $this->deserializeBodyContent($request);
         $this->fillData($t, $data);
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return $t->getId();
@@ -73,7 +83,9 @@ class MoneyTransactionShortController extends RestController
         $t = $this->findEntityBy(EntityDir\Report\MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t EntityDir\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
         $this->getEntityManager()->remove($t);
+        $this->getEntityManager()->flush();
 
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

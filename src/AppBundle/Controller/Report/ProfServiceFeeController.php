@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProfServiceFeeController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
+
     /**
      *
      * @Route("/report/{reportId}/prof-service-fee")
@@ -30,7 +32,9 @@ class ProfServiceFeeController extends RestController
         $this->updateEntity($data, $profServiceFee);
         $report->setCurrentProfPaymentsReceived('yes');
         $this->persistAndFlush($profServiceFee);
-        $this->getEntityManager()->flush($report);
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -44,12 +48,15 @@ class ProfServiceFeeController extends RestController
     {
         /** @var EntityDir\Report\ProfServiceFee $profServiceFee */
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id);
+        $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $profServiceFee);
+        $this->getEntityManager()->flush();
 
-        $this->getEntityManager()->flush($profServiceFee);
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $profServiceFee->getId()];
     }
@@ -84,9 +91,13 @@ class ProfServiceFeeController extends RestController
     public function deleteProfServiceFee($id)
     {
         $profServiceFee = $this->findEntityBy(EntityDir\Report\ProfServiceFee::class, $id, 'Prof Service fee not found');
+        $report = $profServiceFee->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         $this->getEntityManager()->remove($profServiceFee);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

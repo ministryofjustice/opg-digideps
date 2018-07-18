@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AssetController extends RestController
 {
+    private $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
+
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
@@ -51,8 +53,11 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
 
-        $this->persistAndFlush($asset);
-        $this->persistAndFlush($report);
+        $this->getEntityManager()->persist($asset);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -73,8 +78,10 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->updateEntityWithData($asset, $data);
+        $this->getEntityManager()->flush();
 
-        $this->getEntityManager()->flush($asset);
+        $report->updateSectionsStatusCache($this->sectionIds);
+        $this->getEntityManager()->flush();
 
         return ['id' => $asset->getId()];
     }
@@ -93,6 +100,9 @@ class AssetController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
 
         $this->getEntityManager()->remove($asset);
+        $this->getEntityManager()->flush();
+
+        $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
         return [];

@@ -373,6 +373,16 @@ class Fixtures
     }
 
     /**
+     * @param EntityDir\Report\Report $report
+     * @param $section
+     * @return array
+     */
+    public function getReportFreshSectionStatus(EntityDir\Report\Report $report, $section)
+    {
+        return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
+    }
+
+    /**
      * @param $email
      *
      * @return EntityDir\User

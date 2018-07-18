@@ -5,6 +5,7 @@ namespace Tests\AppBundle\Controller\Report;
 use AppBundle\Entity\Report\MoneyTransactionShort;
 use AppBundle\Entity\Report\MoneyTransactionShortIn;
 use AppBundle\Entity\Report\MoneyTransactionShortOut;
+use AppBundle\Entity\Report\Report;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
@@ -111,6 +112,8 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         ])['data'];
 
         self::fixtures()->clear();
+
+        $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN_SHORT));
 
         $t = self::fixtures()->getRepo('Report\MoneyTransactionShortIn')->find($data); /* @var $t MoneyTransactionShortIn */
         $this->assertEquals(123.45, $t->getAmount());

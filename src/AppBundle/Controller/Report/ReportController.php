@@ -46,6 +46,7 @@ class ReportController extends RestController
         $report = new Report($client, $reportType, new \DateTime($reportData['start_date']), new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
+        $report->updateSectionsStatusCache($report->getAvailableSections());
         $this->persistAndFlush($report);
 
         return ['report' => $report->getId()];
@@ -151,12 +152,19 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($debt);
                 }
             }
-
             $this->setJmsSerialiserGroups(['debts']); //returns saved data (AJAX operations)
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DEBTS
+            ]);
         }
 
         if (array_key_exists('debt_management', $data)) {
             $report->setDebtManagement($data['debt_management']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DEBTS,
+            ]);
         }
 
         if (array_key_exists('fees', $data)) {
@@ -168,6 +176,10 @@ class ReportController extends RestController
                 $fee->setAmountAndDetails($row['amount'], $row['more_details']);
                 $this->getEntityManager()->flush($fee);
             }
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DEPUTY_EXPENSES,
+                Report::SECTION_PA_DEPUTY_EXPENSES
+            ]);
         }
 
         if (array_key_exists('reason_for_no_fees', $data)) {
@@ -178,6 +190,11 @@ class ReportController extends RestController
                         ->setMoreDetails(null);
                 }
             }
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DEPUTY_EXPENSES,
+                Report::SECTION_PA_DEPUTY_EXPENSES
+            ]);
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
@@ -187,6 +204,11 @@ class ReportController extends RestController
                 }
             }
             $report->setPaidForAnything($data['paid_for_anything']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DEPUTY_EXPENSES,
+                Report::SECTION_PA_DEPUTY_EXPENSES
+            ]);
         }
 
         if (array_key_exists('gifts_exist', $data)) {
@@ -196,6 +218,10 @@ class ReportController extends RestController
                 }
             }
             $report->setGiftsExist($data['gifts_exist']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_GIFTS,
+            ]);
         }
 
         if (array_key_exists('start_date', $data)) {
@@ -216,6 +242,9 @@ class ReportController extends RestController
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_CONTACTS,
+            ]);
         }
 
 
@@ -227,6 +256,9 @@ class ReportController extends RestController
                 }
                 $this->getEntityManager()->flush();
             }
+            $report->updateSectionsStatusCache([
+                Report::SECTION_ASSETS,
+            ]);
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
@@ -236,16 +268,24 @@ class ReportController extends RestController
                     $this->getEntityManager()->remove($e);
                 }
             }
-
             $report->setNoTransfersToAdd($data['no_transfers_to_add']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_TRANSFERS,
+            ]);
         }
 
         if (array_key_exists('reason_for_no_decisions', $data)) {
             $report->setReasonForNoDecisions($data['reason_for_no_decisions']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DECISIONS,
+            ]);
         }
 
         if (array_key_exists('balance_mismatch_explanation', $data)) {
             $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
+            $report->updateSectionsStatusCache([
+                Report::SECTION_BALANCE,
+            ]);
         }
 
         if (array_key_exists('action_more_info', $data)) {
@@ -255,6 +295,9 @@ class ReportController extends RestController
                     $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
                 );
             }
+            $report->updateSectionsStatusCache([
+                Report::SECTION_OTHER_INFO,
+            ]);
         }
 
         if (array_key_exists('money_short_categories_in', $data)) {
@@ -266,6 +309,11 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($e);
                 }
             }
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN_SHORT,
+                Report::SECTION_MONEY_OUT_SHORT,
+            ]);
         }
 
         if (array_key_exists('money_short_categories_out', $data)) {
@@ -277,6 +325,11 @@ class ReportController extends RestController
                     $this->getEntityManager()->flush($e);
                 }
             }
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN_SHORT,
+                Report::SECTION_MONEY_OUT_SHORT,
+            ]);
         }
 
         if (array_key_exists('money_transactions_short_in_exist', $data)) {
@@ -286,6 +339,11 @@ class ReportController extends RestController
                 }
             }
             $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN_SHORT,
+                Report::SECTION_MONEY_OUT_SHORT,
+            ]);
         }
 
         if (array_key_exists('money_transactions_short_out_exist', $data)) {
@@ -295,6 +353,11 @@ class ReportController extends RestController
                 }
             }
             $report->setMoneyTransactionsShortOutExist($data['money_transactions_short_out_exist']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_MONEY_IN_SHORT,
+                Report::SECTION_MONEY_OUT_SHORT,
+            ]);
         }
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
@@ -302,6 +365,10 @@ class ReportController extends RestController
                 || ('no' == $data['wish_to_provide_documentation'] && 0 == count($report->getDocuments()))) {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_DOCUMENTS,
+            ]);
         }
 
 
@@ -312,6 +379,10 @@ class ReportController extends RestController
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
             }
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_PROF_CURRENT_FEES,
+            ]);
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
@@ -323,6 +394,10 @@ class ReportController extends RestController
                 $report->setProfFeesEstimateSccoReason(null);
             }
             $report->setCurrentProfPaymentsReceived($data['current_prof_payments_received']);
+            $this->getEntityManager()->flush();
+            $report->updateSectionsStatusCache([
+                Report::SECTION_PROF_CURRENT_FEES,
+            ]);
         }
 
         $this->getEntityManager()->flush();
@@ -416,23 +491,20 @@ class ReportController extends RestController
                    'notFinished'   => 0,
                    'readyToSubmit' => 0];
         foreach ($records as $report) {
-            $counts[$report->getStatus()->getStatus()]++;
+            $counts[$report->getStatus()->setUseStatusCache(true)->getStatus()]++;
             $counts['total']++;
         }
 
         // status filters
         if ($status) {
-            $records = array_filter($records, function ($report) use ($status) {
-                return $report->getStatus()->getStatus() == $status;
+            $records = array_filter($records, function ($report) use ($status) { /* @var $report Report */
+                return $report->getStatus()->setUseStatusCache(true)->getStatus() == $status;
             });
         }
         // apply offset and limit filters (has to be last)
         $records = array_slice($records, $offset, $limit);
 
-        $serialisedGroups = $request->query->has('groups')
-            ? (array) $request->query->get('groups')
-            : ['report', 'report-client', 'client', 'status'];
-        $this->setJmsSerialiserGroups($serialisedGroups);
+        $this->setJmsSerialiserGroups(['report', 'report-client', 'client', 'report-status']);
 
         return [
             'counts'  => $counts,
