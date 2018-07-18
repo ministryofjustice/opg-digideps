@@ -142,7 +142,7 @@ class ReportController extends AbstractController
             )
         );
 
-        if (!$report->getSubmitted()) {
+        if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
             throw new DisplayableException('Cannot manage active report');
         }
 
