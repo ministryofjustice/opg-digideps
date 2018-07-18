@@ -88,7 +88,7 @@
                     </td>
                     {% if enableManageLink %}
                         <td class="change-answer width-tenth">
-                            {% if report.type in ['102', '102-4'] %}
+                            {% if report.type in ['102', '102-4', '103', '103-4'] %}
                                 <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
                                    class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
                                 <br />

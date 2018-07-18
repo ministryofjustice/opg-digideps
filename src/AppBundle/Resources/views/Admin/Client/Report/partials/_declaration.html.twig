@@ -1,0 +1,45 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline">{{ (page ~ '.heading.declaration') | trans }}</h3>
+
+<div class="form-section">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.deputysDeclaration') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(true) }}
+                    <tbody>
+                        <tr>
+                            <td>{{ 'declaration' | trans({}, 'report-declaration') }}</td>
+                            <td>{{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}</td>
+                        </tr>
+                        {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                            <td>{{ 'partAgreedReason' | trans({}, 'report-declaration') }}</td>
+                            <td>{{ report.agreedBehalfDeputyExplanation | nl2br }}</td>
+                        {% endif %}
+                        <tr>
+                            <td>{{ 'declarationTime' | trans({}, 'report-declaration') }}</td>
+                            <td>{{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ 'deputyName' | trans({}, 'report-declaration') }}</td>
+                            <td>{{ report.submittedBy.fullname }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+</div>

@@ -16,16 +16,21 @@
             {% if categories | length == 0 %}
                 None
             {% else %}
-                {# display categories comma separated #}
-                {% for c in categories %}
-                    {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
+                <ul class="list list-bullet flush--ends">
+                    {% for c in categories %}
+                        <li>
+                            {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </td>
-        <td class="change-answer">
-            <a href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}"
-               class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-        </td>
+        {% if not hideEditLink  %}
+            <td class="change-answer">
+                <a href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}"
+                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+            </td>
+        {% endif %}
     </tr>
 
     </tbody>
@@ -53,10 +58,12 @@
                 {{ report.moneyTransactionsShortInExist | capitalize }}
             </td>
         {% endif %}
-        <td class="change-answer">
-            <a href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-               class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-        </td>
+        {% if not hideEditLink  %}
+            <td class="change-answer">
+                <a href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
+                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+            </td>
+        {% endif %}
     </tr>
     </tbody>
 </table>
@@ -67,13 +74,15 @@
         <div class="column-half">
             <h2 class="heading-medium flush--ends">List of items of income over £1000</h2>
         </div>
-        <div class="column-half text--right">
-            <a href="{{ path('money_in_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
-               class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                {{ 'summaryPage.moneyIn.addButton' | trans }}
-            </a>
-        </div>
+        {% if not hideEditLink  %}
+            <div class="column-half text--right">
+                <a href="{{ path('money_in_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
+                   class="bold-small move-quarter--up action-link behat-link-add">
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.moneyIn.addButton' | trans }}
+                </a>
+            </div>
+        {% endif %}
     </div>
 {% endif %}
 
@@ -84,9 +93,11 @@
             <th>Description</th>
             <th class="numeric">Date</th>
             <th class="numeric">Amount</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
+            {% if not hideEditLink  %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -101,12 +112,14 @@
                 <td class="numeric-small">
                     £{{ tr.amount | money_format }}
                 </td>
-                <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
-                       class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                    <a href="{{ path('money_in_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
-                       class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
-                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ path('money_in_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
+                           class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                        <a href="{{ path('money_in_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
+                           class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         <tr class="no-border">
@@ -117,7 +130,9 @@
             <td class="numeric-small">
                 <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortIn) | money_format }}</span>
             </td>
-            <td></td>
+            {% if not hideEditLink  %}
+                <td></td>
+            {% endif %}
         </tr>
         </tbody>
     </table>
