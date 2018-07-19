@@ -844,4 +844,42 @@ class Client
         });
         return count($reports);
     }
+
+    /**
+     * Generates the expected Report Start date based on the Court date
+     * @JMS\VirtualProperty
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\SerializedName("expected_report_start_date")
+     * @JMS\Groups({"checklist-information"})
+     * @return DateTime
+     */
+    public function getExpectedReportStartDate()
+    {
+        // create new datetime object. Do not alter object courtDate property.
+        /** @var \DateTime $expectedReportStartDate */
+        $expectedReportStartDate = new \DateTime();
+
+        $expectedReportStartDate->setDate((date('Y') -1), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+
+        return $expectedReportStartDate;
+    }
+
+    /**
+     * Generates the expected Report End date based on the Court date
+     * @JMS\VirtualProperty
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\SerializedName("expected_report_end_date")
+     * @JMS\Groups({"checklist-information"})
+     *
+     * @return DateTime
+     */
+    public function getExpectedReportEndDate()
+    {
+        $expectedReportEndDate = clone $this->getExpectedReportStartDate();
+        return $expectedReportEndDate->modify('+1year -1day');
+    }
 }

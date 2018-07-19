@@ -1151,7 +1151,7 @@ class Report implements ReportInterface
             $previousReport = $this->getPreviousReport();
 
             if (empty($previousReport)) {
-                return false;
+                return ['report-summary' => null, 'financial-summary' => null];
             }
 
             return [
