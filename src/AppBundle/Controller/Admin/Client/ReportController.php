@@ -81,8 +81,8 @@ class ReportController extends AbstractController
         $report = $this->getReport($id, []);
         $reportDueDate = $report->getDueDate();
 
-        if (!$report->getSubmitted()) {
-            throw new DisplayableException('Cannot manage active report');
+        if (!$report->getSubmitted() || !$report->isLayReport()) {
+            throw new DisplayableException('Cannot manage report');
         }
 
         $form = $this->createForm(UnsubmitReportType::class, $report);
