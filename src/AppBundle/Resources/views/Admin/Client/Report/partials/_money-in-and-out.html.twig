@@ -19,7 +19,7 @@
         <div class="panel panel-border-narrow">
             <div>
 
-                {% if report.previousReportData['financial-summary']['accounts'] %}
+                {% if report.previousReportData['financial-summary']['accounts'] is defined   %}
 
                     <h3 class="heading-medium">
                         {{ (page ~ '.closingBalancesPrevReport') | trans }}
@@ -80,7 +80,7 @@
                     </tbody>
                 </table>
 
-                {% if report.previousReportData['financial-summary']['accounts'] %}
+                {% if report.previousReportData['financial-summary']['accounts'] is defined %}
 
                     <table class="push--top">
                         <tbody>
