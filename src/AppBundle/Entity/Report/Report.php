@@ -1019,10 +1019,13 @@ class Report implements ReportInterface
      */
     public function getDeputyDocuments()
     {
-        return array_filter($this->documents, function ($document) {
-            /* @var $document Document */
-            return !($document->isAdminDocument() || $document->isReportPdf());
-        });
+        if (is_array($this->documents)) {
+            return array_filter($this->documents, function ($document) {
+                /* @var $document Document */
+                return !($document->isAdminDocument() || $document->isReportPdf());
+            });
+        }
+        return [];
     }
 
     /**
