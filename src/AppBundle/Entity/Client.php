@@ -853,7 +853,7 @@ class Client
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("expected_report_start_date")
      * @JMS\Groups({"checklist-information"})
-     * @return DateTime
+     * @return \DateTime|null
      */
     public function getExpectedReportStartDate()
     {
@@ -861,6 +861,9 @@ class Client
         /** @var \DateTime $expectedReportStartDate */
         $expectedReportStartDate = new \DateTime();
 
+        if (!($this->getCourtDate() instanceof \DateTime)) {
+            return null;
+        }
         $expectedReportStartDate->setDate((date('Y') -1), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
 
         return $expectedReportStartDate;
@@ -875,10 +878,13 @@ class Client
      * @JMS\SerializedName("expected_report_end_date")
      * @JMS\Groups({"checklist-information"})
      *
-     * @return DateTime
+     * @return \DateTime|null
      */
     public function getExpectedReportEndDate()
     {
+        if (!($this->getExpectedReportStartDate() instanceof \DateTime)) {
+            return null;
+        }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate();
         return $expectedReportEndDate->modify('+1year -1day');
     }
