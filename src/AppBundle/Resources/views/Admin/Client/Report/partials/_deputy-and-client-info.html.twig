@@ -18,7 +18,10 @@
                 <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
             </p>
             <p class="flush--bottom behat-region-expected-date">
-                <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong> {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+                <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
+                {% if report.client.expectedReportEndDate is defined %}
+                    {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+                {% endif %}
             </p>
             <p class="behat-region-submitted-date">
                 <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
