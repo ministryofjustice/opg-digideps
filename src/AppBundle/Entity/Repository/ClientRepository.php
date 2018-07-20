@@ -30,7 +30,6 @@ class ClientRepository extends EntityRepository
         $qb = $this->createQueryBuilder('c');
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
-        $qb->leftJoin('c.users', 'u');
         $qb->orderBy('c.' . $orderBy, $sortOrder);
 
         if ($query) {
