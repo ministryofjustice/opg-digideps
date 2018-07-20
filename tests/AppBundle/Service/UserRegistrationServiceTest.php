@@ -216,9 +216,14 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
-        $mockClient = m::mock('\AppBundle\Entity\Client')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('addUser')->with($mockUser)
+        $mockClient = m::mock(Client::class)
+            ->makePartial()
+            ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
+            ->getMock();
+
+        $datetime = new \DateTime('2015-05-04');
+        $mockClient->shouldIgnoreMissing(true)
+            ->shouldReceive('getCourtDate')->andReturn($datetime)
             ->getMock();
 
         $mockConnection = m::mock('\Doctrine\Common\Persistence\Connection')
@@ -255,7 +260,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
-
         $this->userRegistrationService->selfRegisterUser($data);
     }
 

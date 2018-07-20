@@ -30,8 +30,6 @@ class ClientRepository extends EntityRepository
         $qb = $this->createQueryBuilder('c');
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
-        $qb->leftJoin('c.users', 'u')
-            ->where('u.roleName = \'' . User::ROLE_LAY_DEPUTY . '\'');
         $qb->orderBy('c.' . $orderBy, $sortOrder);
 
         if ($query) {
