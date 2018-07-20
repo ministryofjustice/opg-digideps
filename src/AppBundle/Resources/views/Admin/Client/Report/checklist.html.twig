@@ -63,7 +63,8 @@
     {% endif %}
 
     {# Attached documents #}
-    {% if report.deputydocuments %}
+
+    {% if report.deputyDocuments is defined and (report.deputyDocuments is not empty)%}
         <details class="push--bottom">
             <summary>
                 <span class="summary">Attached documents</span>
@@ -76,7 +77,7 @@
                             <th class="text--right">{{ 'summaryPage.dateAttached' | trans({}, 'report-documents') }}</th>
                         </thead>
                         <tbody>
-                            {% for document in report.deputydocuments %}
+                            {% for document in report.deputyDocuments %}
                                 <tr>
                                     <td>{{ document.fileName }}</td>
                                     <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>

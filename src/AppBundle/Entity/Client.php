@@ -220,6 +220,23 @@ class Client
      */
     private $activeReportCount;
 
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"checklist-information"})
+     */
+    private $expectedReportStartDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"checklist-information"})
+     */
+    private $expectedReportEndDate;
+
+
     public function __construct()
     {
         $this->users = [];
@@ -811,39 +828,6 @@ class Client
     }
 
     /**
-     * Generates the expected Report Start date based on the Court date
-     *
-     * @var DateTime
-     *
-     * @JMS\Type("DateTime")
-     * @return DateTime
-     */
-    public function getExpectedReportStartDate()
-    {
-        // create new datetime object. Do not alter object courtDate property.
-        /** @var \DateTime $expectedReportStartDate */
-        $expectedReportStartDate = new \DateTime();
-
-        $expectedReportStartDate->setDate((date('Y') -1), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
-
-        return $expectedReportStartDate;
-    }
-
-    /**
-     * Generates the expected Report End date based on the Court date
-     *
-     * @var DateTime
-     *
-     * @JMS\Type("DateTime")
-     * @return DateTime
-     */
-    public function getExpectedReportEndDate()
-    {
-        $expectedReportEndDate = clone $this->getExpectedReportStartDate();
-        return $expectedReportEndDate->modify('+1year -1day');
-    }
-
-    /**
      * @return int
      */
     public function getTotalReportCount()
@@ -875,5 +859,37 @@ class Client
         $this->activeReportCount = $activeReportCount;
     }
 
+    /**
+     * @return DateTime
+     */
+    public function getExpectedReportStartDate()
+    {
+        return $this->expectedReportStartDate;
+    }
 
+    /**
+     * @param DateTime $expectedReportStartDate
+     */
+    public function setExpectedReportStartDate($expectedReportStartDate)
+    {
+        $this->expectedReportStartDate = $expectedReportStartDate;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getExpectedReportEndDate()
+    {
+        return $this->expectedReportEndDate;
+    }
+
+    /**
+     * @param DateTime $expectedReportEndDate
+     */
+    public function setExpectedReportEndDate($expectedReportEndDate)
+    {
+        $this->expectedReportEndDate = $expectedReportEndDate;
+        return $this;
+    }
 }

@@ -35,7 +35,11 @@
                         </tr>
                         <tr>
                             <td>{{ 'deputyName' | trans({}, 'report-declaration') }}</td>
-                            <td>{{ report.submittedBy.fullname }}</td>
+                            {% if report.submittedBy is defined and report.submittedBy is not empty %}
+                                <td>{{ report.submittedBy.fullname }}</td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>

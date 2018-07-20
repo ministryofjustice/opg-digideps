@@ -40,7 +40,6 @@ class ReportController extends AbstractController
         'debt-management',
         'fee',
         'balance',
-        'client',
         'contact',
         'debts',
         'decision',
@@ -82,8 +81,8 @@ class ReportController extends AbstractController
         $report = $this->getReport($id, []);
         $reportDueDate = $report->getDueDate();
 
-        if (!$report->getSubmitted()) {
-            throw new DisplayableException('Cannot manage active report');
+        if (!$report->getSubmitted() || !$report->isLayReport()) {
+            throw new DisplayableException('Cannot manage report');
         }
 
         $form = $this->createForm(UnsubmitReportType::class, $report);
@@ -137,13 +136,13 @@ class ReportController extends AbstractController
             array_merge(
                 self::$reportGroupsAll,
                 [
-                    'report', 'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data'
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data'
                 ]
             )
         );
 
         if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-            throw new DisplayableException('Cannot manage active report');
+            throw new DisplayableException('Cannot lodge a checklist for an incomplete report');
         }
 
         $checklist = $report->getChecklist();
@@ -151,6 +150,7 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportChecklistType::class, $checklist);
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
+
         if ($buttonClicked instanceof SubmitButton) {
             $checklist->setButtonClicked($buttonClicked->getName());
         }

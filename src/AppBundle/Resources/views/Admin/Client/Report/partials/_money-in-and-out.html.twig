@@ -19,7 +19,7 @@
         <div class="panel panel-border-narrow">
             <div>
 
-                {% if report.previousReportData['financial-summary']['accounts'] %}
+                {% if report.previousReportData['financial-summary']['accounts'] is defined   %}
 
                     <h3 class="heading-medium">
                         {{ (page ~ '.closingBalancesPrevReport') | trans }}
@@ -44,7 +44,7 @@
                             <tr class="no-border">
                                 <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
                                 <td class="numeric-small">
-                                    <span class="bold">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
+                                    <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -80,7 +80,7 @@
                     </tbody>
                 </table>
 
-                {% if report.previousReportData['financial-summary']['accounts'] %}
+                {% if report.previousReportData['financial-summary']['accounts'] is defined %}
 
                     <table class="push--top">
                         <tbody>

@@ -37,7 +37,7 @@ Feature: Admin report checklist
       | 163,010                                             | asset-total                  |
       | £3.00                                               | debt-loans                   |
       | 200 per month payment plan                          | debt-management-details      |
-      | No previous reports on record to show closing balance | checklist-no-previous-reports |
+      | £0.00 | checklist-closing-balance-previous-report |
       | £335.40   | checklist-accounts-opening-total |
       | £243.39   | calculated-balance               |
       | £193.11   | balance-difference               |
