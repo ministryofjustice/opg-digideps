@@ -130,6 +130,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-pa-checklist"})
+     */
+    protected $satisfiedWithPaExpenses;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.bondAdequate.notBlank", groups={"submit-lay-checklist"})
      */
     private $bondAdequate;
@@ -230,15 +239,6 @@ class Checklist
      * @JMS\Groups({"report-checklist"})
      */
     protected $buttonClicked;
-
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-pa-checklist"})
-     */
-    protected $satisfiedWithPaExpenses;
 
     /**
      * Checklist constructor.
@@ -464,6 +464,24 @@ class Checklist
     public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithPaExpenses()
+    {
+        return $this->satisfiedWithPaExpenses;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     * @return $this
+     */
+    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
+    {
+        $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
         return $this;
     }
 
@@ -712,24 +730,6 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSatisfiedWithPaExpenses()
-    {
-        return $this->satisfiedWithPaExpenses;
-    }
-
-    /**
-     * @param string $satisfiedWithPaExpenses
-     * @return $this
-     */
-    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
-    {
-        $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
         return $this;
     }
 }
