@@ -141,6 +141,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
+     * @ORM\Column(name="satisfied_with_pa_expenses", type="string", length=3, nullable=true)
+     */
+    private $satisfiedWithPaExpenses;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     *
      * @ORM\Column(name="bond_adequate", type="string", length=3, nullable=true)
      */
     private $bondAdequate;
@@ -495,6 +504,22 @@ class Checklist
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithPaExpenses()
+    {
+        return $this->satisfiedWithPaExpenses;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     */
+    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
+    {
+        $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
     }
 
     /**
