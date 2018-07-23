@@ -615,6 +615,7 @@ class ReportController extends RestController
             'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
             'accounts_balance' => 'setAccountsBalance',
             'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
+            'satisfied_with_pa_expenses' => 'setSatisfiedWithPaExpenses',
             'bond_adequate' => 'setBondAdequate',
             'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
             'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
