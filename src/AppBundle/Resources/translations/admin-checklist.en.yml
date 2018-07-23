@@ -10,6 +10,7 @@ checklistPage:
     assetsAndDebts: Assets and debts
     money: Money in and money out
     bonds: Bonds
+    paFeeExpenses: Deputy fees and Expenses
     nextPeriod: Next reporting period
     declaration: Declaration
   lodgingSummary:
@@ -86,6 +87,10 @@ checklistPage:
         Are you satisfied that the money in and money out entries (including transfers), along
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
+    satisfiedWithPaExpenses:
+      label: |
+        Are you satisfied that responses have been provided that are in line with the terms of
+        the practice direction (including any explanation of non-claiming of fees)?
     bondAdequate:
       label: |
         Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security

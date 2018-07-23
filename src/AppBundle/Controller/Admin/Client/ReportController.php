@@ -147,7 +147,7 @@ class ReportController extends AbstractController
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
-        $form = $this->createForm(ReportChecklistType::class, $checklist);
+        $form = $this->createForm(ReportChecklistType::class, $checklist, ['report' => $report]);
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 

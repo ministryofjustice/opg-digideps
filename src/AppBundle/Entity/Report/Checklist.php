@@ -31,7 +31,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.reportingPeriodAccurate.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.reportingPeriodAccurate.notBlank", groups={"submit-common-checklist"})
      */
     private $reportingPeriodAccurate;
 
@@ -40,7 +40,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-common-checklist"})
      */
     private $contactDetailsUptoDate;
 
@@ -49,7 +49,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateinCasrec.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateinCasrec.notBlank", groups={"submit-common-checklist"})
      */
     private $deputyFullNameAccurateInCasrec;
 
@@ -58,7 +58,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-common-checklist"})
      */
     private $decisionsSatisfactory;
 
@@ -67,7 +67,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.consultationsSatisfactory.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.consultationsSatisfactory.notBlank", groups={"submit-common-checklist"})
      */
     private $consultationsSatisfactory;
 
@@ -76,7 +76,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-common-checklist"})
      */
     private $careArrangements;
 
@@ -85,7 +85,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-common-checklist"})
      */
     private $assetsDeclaredAndManaged;
 
@@ -94,7 +94,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-common-checklist"})
      */
     private $debtsManaged;
 
@@ -103,7 +103,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-common-checklist"})
      */
     private $openClosingBalancesMatch;
 
@@ -112,7 +112,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-common-checklist"})
      */
     private $accountsBalance;
 
@@ -121,7 +121,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-common-checklist"})
      */
     private $moneyMovementsAcceptable;
 
@@ -130,7 +130,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondAdequate.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.bondAdequate.notBlank", groups={"submit-lay-checklist"})
      */
     private $bondAdequate;
 
@@ -139,7 +139,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-lay-checklist"})
      */
     private $bondOrderMatchCasrec;
 
@@ -148,7 +148,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.futureSignificantFinancialDecisions.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.futureSignificantFinancialDecisions.notBlank", groups={"submit-common-checklist"})
      */
     private $futureSignificantFinancialDecisions;
 
@@ -157,7 +157,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyRaisedConcerns.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.hasDeputyRaisedConcerns.notBlank", groups={"submit-common-checklist"})
      */
     private $hasDeputyRaisedConcerns;
 
@@ -166,7 +166,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.caseWorkerSatisified.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.caseWorkerSatisified.notBlank", groups={"submit-common-checklist"})
      */
     private $caseWorkerSatisified;
 
@@ -175,7 +175,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
      */
     private $lodgingSummary;
 
@@ -184,7 +184,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.finalDecision.notBlank", groups={"submit-checklist"})
+     * @Assert\NotBlank(message="checklist.finalDecision.notBlank", groups={"submit-common-checklist"})
      */
     private $finalDecision;
 
@@ -230,6 +230,15 @@ class Checklist
      * @JMS\Groups({"report-checklist"})
      */
     protected $buttonClicked;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-pa-checklist"})
+     */
+    protected $satisfiedWithPaExpenses;
 
     /**
      * Checklist constructor.
@@ -703,6 +712,24 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithPaExpenses()
+    {
+        return $this->satisfiedWithPaExpenses;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     * @return $this
+     */
+    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
+    {
+        $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
         return $this;
     }
 }

@@ -2,9 +2,14 @@
 
 namespace AppBundle\Form\Admin;
 
+use AppBundle\Entity\Report\Checklist;
+use AppBundle\Entity\Report\Report;
+use Doctrine\Common\Util\Debug;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,9 +18,12 @@ class ReportChecklistType extends AbstractType
     const SAVE_ACTION = 'submitAndDownload';
     const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
 
+    private $report;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
+        $this->report = $options['report'];
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('reportingPeriodAccurate', FormTypes\ChoiceType::class, [
@@ -67,16 +75,6 @@ class ReportChecklistType extends AbstractType
                 'expanded' => true
             ])
 
-            // Bonds
-            ->add('bondAdequate', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
-            ->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
-
             // Next reporting period
             ->add('futureSignificantFinancialDecisions', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
@@ -111,21 +109,51 @@ class ReportChecklistType extends AbstractType
         ->add('saveFurtherInformation', FormTypes\SubmitType::class)
         ->add('save', FormTypes\SubmitType::class)
         ->add('submitAndDownload', FormTypes\SubmitType::class);
+
+
+        // If PA report, add PA deputy Expenses question
+        if ($this->report->isPaReport()) {
+            $builder->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'expanded' => true
+            ]);
+        } else {
+            // Otherwise add Bonds question
+            $builder->add('bondAdequate', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'expanded' => true
+            ]);
+            $builder->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'expanded' => true
+            ]);
+        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-checklist',
+            'data-class' => Checklist::class,
             'name'               => 'checklist',
             'validation_groups'  => function (FormInterface $form) {
                 $ret = [];
                 if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
-                    $ret[] = 'submit-checklist';
-                }
+                    $ret[] = 'submit-common-checklist';
 
+                    if ($this->report->isLayReport()) {
+                        $ret[] = 'submit-lay-checklist';
+                    } elseif ($this->report->isPaReport()) {
+                        $ret[] = 'submit-pa-checklist';
+                    } elseif ($this->report->isProfReport()) {
+                        $ret[] = 'submit-prof-checklist';
+                    }
+                }
                 return $ret;
             },
-        ]);
+        ])
+        ->setRequired(['report'])
+        ;
     }
 }
