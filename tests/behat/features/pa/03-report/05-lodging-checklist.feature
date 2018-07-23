@@ -6,8 +6,6 @@ Feature: Admin report checklist
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | 31 clients | client-search-count |
-    Then each text should be present in the corresponding region:
       | Cly7 Hent | client-01000014 |
     When I fill in the following:
       | search_clients_q | 01000014 |
