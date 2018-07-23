@@ -369,6 +369,22 @@ class Report implements ReportInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isPAReport()
+    {
+        return strpos($this->type, '-6');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProfReport()
+    {
+        return strpos($this->type, '-5');
+    }
+
+    /**
      * @param  string $type
      * @return $this
      */

@@ -112,9 +112,12 @@
     {# Money transfers, Money in and money out #}
     {% include 'AppBundle:Admin/Client/Report/partials:_money-in-and-out.html.twig' %}
 
-    {# Bonds #}
-    {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
-
+    {# Bonds - hidden for PA checklist #}
+    {% if report.hasSection('paDeputyExpenses') %}
+        {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
+    {% else %}
+        {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
+    {% endif %}
     {# Next reporting period #}
     {% include 'AppBundle:Admin/Client/Report/partials:_next-reporting-period.html.twig' %}
 

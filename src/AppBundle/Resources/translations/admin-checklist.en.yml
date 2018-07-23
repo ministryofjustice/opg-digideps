@@ -10,8 +10,10 @@ checklistPage:
     assetsAndDebts: Assets and debts
     money: Money in and money out
     bonds: Bonds
+    paFeeExpenses: Deputy fees and Expenses
     nextPeriod: Next reporting period
     declaration: Declaration
+    paDeputyExpenses: Deputy fees and expenses
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
@@ -47,7 +49,7 @@ checklistPage:
     moneyInSummary: View money in summary
     moneyOutSummary: View money out summary
     deputysDeclaration: View deputy's declaration
-
+    paDeputyExpenses: View deputy's fees and expenses
   form:
     save:
       label: Save progress
@@ -81,11 +83,18 @@ checklistPage:
       label: |
         Do the accounts balance and match bank statements, where provided? Allow up to £250
         leeway for lay deputies.
+    accountsBalancePA:
+      label: |
+        Do the accounts balance and match bank statements, where provided?
     moneyMovementsAcceptable:
       label: |
         Are you satisfied that the money in and money out entries (including transfers), along
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
+    satisfiedWithPaExpenses:
+      label: |
+        Are you satisfied that responses have been provided that are in line with the terms of
+        the practice direction (including any explanation of non-claiming of fees)?
     bondAdequate:
       label: |
         Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
