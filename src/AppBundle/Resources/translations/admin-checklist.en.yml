@@ -83,6 +83,9 @@ checklistPage:
       label: |
         Do the accounts balance and match bank statements, where provided? Allow up to £250
         leeway for lay deputies.
+    accountsBalancePA:
+      label: |
+        Do the accounts balance and match bank statements, where provided?
     moneyMovementsAcceptable:
       label: |
         Are you satisfied that the money in and money out entries (including transfers), along

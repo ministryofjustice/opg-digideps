@@ -1,5 +1,9 @@
 {% set page = 'checklistPage' %}
-
+{% if report.hasSection('paDeputyExpenses') %}
+    {% set accountsBalanceLabel = (page ~ '.form.accountsBalancePA') %}
+{% else %}
+    {% set accountsBalanceLabel = (page ~ '.form.accountsBalance') %}
+{% endif %}
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.css.twig' %}
 </style>
@@ -159,7 +163,7 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ (page ~ '.form.accountsBalance.label') | trans({}, 'admin-checklist') }}</h3>
+            <h3 class="label question bold">{{ accountsBalanceLabel | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
