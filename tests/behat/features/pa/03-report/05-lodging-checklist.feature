@@ -206,7 +206,7 @@ Feature: Admin report checklist
     Then I click on "submit-and-download"
     And the form should be valid
 
-  @deputy 
+  @deputy
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search

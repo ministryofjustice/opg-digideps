@@ -13,6 +13,7 @@ checklistPage:
     paFeeExpenses: Deputy fees and Expenses
     nextPeriod: Next reporting period
     declaration: Declaration
+    paDeputyExpenses: Deputy fees and expenses
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
@@ -48,7 +49,7 @@ checklistPage:
     moneyInSummary: View money in summary
     moneyOutSummary: View money out summary
     deputysDeclaration: View deputy's declaration
-
+    paDeputyExpenses: View deputy's fees and expenses
   form:
     save:
       label: Save progress

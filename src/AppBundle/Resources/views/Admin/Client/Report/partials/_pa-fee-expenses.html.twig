@@ -10,4 +10,31 @@
             'fieldSetClass' : 'inline'
         }) }}
     </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.paDeputyExpenses') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+
+                {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
+                'report': report,
+                'transDomain': translationDomain,
+                'hideEditLink' : true
+                } %}
+
+                {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
+                'report': report,
+                'transDomain': translationDomain
+                } %}
+
+                {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
+                'report': report,
+                'transDomain': translationDomain
+                } %}
+            </div>
+        </div>
+    </details>
+
 </div>
