@@ -64,7 +64,7 @@ class SelfRegisterController extends RestController
         $this->populateSelfReg($selfRegisterData, $this->deserializeBodyContent($request));
 
         $validator = $this->get('validator');
-        $errors = $validator->validate($selfRegisterData, ['verify_codeputy']);
+        $errors = $validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
             throw new \RuntimeException('Invalid registration data: ' . $errors);
