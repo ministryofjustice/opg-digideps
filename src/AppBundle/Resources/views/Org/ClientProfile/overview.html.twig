@@ -30,23 +30,16 @@
 
     {# if the report is unsubmitted, show the other active one #}
     {% if report.unSubmitDate %}
-
-    <details class="panel panel-admin hard">
-
-        <summary class="panel-heading flush--bottom">
-            <span class="summary heading-medium">{{ ('currentReport') | trans }}</span>
-        </summary>
-
-        <div class="panel-body soft-half--top soft-half--sides">
-
-            {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-                report: client.activeReport,
-            } %}
-
-        </div>
-
-    </details>
-
+        <details class="panel panel-admin hard">
+            <summary class="panel-heading flush--bottom">
+                <span class="summary heading-medium">{{ ('currentReport') | trans }}</span>
+            </summary>
+            <div class="panel-body soft-half--top soft-half--sides">
+                {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
+                    report: client.activeReport,
+                } %}
+            </div>
+        </details>
     {% endif %}
 
     {% include 'AppBundle:Org/ClientProfile:_notes.html.twig' with {
