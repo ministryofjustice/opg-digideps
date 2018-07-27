@@ -1,6 +1,8 @@
+{# @param report AppBundle\Entity\Report #}
+{# @param client AppBundle\Entity\Client #}
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': client.firstname | e } %}
 {% set sectionId = sectionId | default(null) %}
 {% set needsAttention =  sectionId in sectionsNeedsAttention %}
 

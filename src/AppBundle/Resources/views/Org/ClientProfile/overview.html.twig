@@ -5,8 +5,6 @@
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-{% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
-{% set currentReport =  report %}
 
 {% block htmlTitle %}{{ 'htmlTitle-ORG' | trans }}{% endblock %}
 {% block pageTitle %}
@@ -30,7 +28,8 @@
         report: report,
     } %}
 
-    {% if report.unSubmitDate and report.submitted == false %}
+    {# if the report is unsubmitted, show the other active one #}
+    {% if report.unSubmitDate %}
 
     <details class="panel panel-admin hard">
 
@@ -40,9 +39,8 @@
 
         <div class="panel-body soft-half--top soft-half--sides">
 
-
             {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-                report: currentReport,
+                report: client.activeReport,
             } %}
 
         </div>

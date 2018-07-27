@@ -7,7 +7,6 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e
 } %}
-{% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
 
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}

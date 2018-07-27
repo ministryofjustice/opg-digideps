@@ -210,6 +210,7 @@ class ReportController extends AbstractController
 
         $vars = [
             'user' => $user,
+            'client' => $client,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
         ];
