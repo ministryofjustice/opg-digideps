@@ -581,7 +581,7 @@ class Client
     /**
      * Get un-submitted reports.
      *
-     * @return ArrayCollection
+     * @return Report[]
      */
     public function getUnsubmittedReports()
     {
@@ -591,6 +591,9 @@ class Client
     }
 
     /**
+     * get progress the user is currenty work on
+     * First one that is unsubmitted and has to unsubmit date
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("AppBundle\Entity\Report\Report")
      * @JMS\SerializedName("current_report")
@@ -600,7 +603,11 @@ class Client
      */
     public function getCurrentReport()
     {
-        return $this->getUnsubmittedReports()->first() ?: null;
+        foreach($this->getReports() as $r) {
+            if (!$r->getSubmitted() && empty($r->getUnSubmitDate())) {
+                return $r;
+            }
+        }
     }
 
     /**
@@ -830,6 +837,9 @@ class Client
     }
 
     /**
+     * @deprecated
+     *
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("integer")
      * @JMS\SerializedName("active_report_count")
@@ -839,11 +849,21 @@ class Client
      */
     public function getActiveReportCount()
     {
-        $reports = $this->getReports()->filter(function (Report $report) {
-            return !empty($report->getSubmitted());
-        });
-        return count($reports);
+        return count($this->getActiveReports());
     }
+
+    /**
+     * @JMS\Exclude()
+     *
+     * @return integer
+     */
+    public function getActiveReports()
+    {
+        return $this->getReports()->filter(function (Report $report) {
+            return empty($report->getSubmitted());
+        });
+    }
+
 
     /**
      * Generates the expected Report Start date based on the Court date
