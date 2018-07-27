@@ -60,7 +60,7 @@
                 %}
 
                 {# only show submitted and unsubmitted reports #}
-                {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() %}
+                {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace(' ', '-') %}
                 <tr class="{{ behatRegionPrefix }}">
                     <td>
                         {{ report.period | replace({'to': '-'}) }}
