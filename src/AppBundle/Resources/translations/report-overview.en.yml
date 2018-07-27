@@ -23,6 +23,7 @@ status:
   readyToSubmit: "Ready to submit"
 reportDueDate: "Report due date"
 currentReport: "Current report"
+incompleteReport: "Incomplete report"
 reportStatus: "Report status"
 reportOptions: "Report options"
 reportSectionsToComplete: "Report sections to complete"
@@ -191,3 +192,5 @@ decisionsMadeAsDeputy: Decisions made as deputy
 announcement: |
   We've made some changes to the layout of this page.<br/>
   Use the links on this page to view and edit the different sections of your report.
+
+currentReport: Current report
