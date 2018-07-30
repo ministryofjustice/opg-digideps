@@ -490,7 +490,13 @@ class ReportController extends RestController
                    'notStarted'    => 0,
                    'notFinished'   => 0,
                    'readyToSubmit' => 0];
-        foreach ($records as $report) {
+        foreach ($records as $k => $report) {
+            $client = $report->getClient();
+            // in case there is a current AND an unsubmitted report, remove the current one
+            if (count($client->getUnsubmittedReports()) > 1 && $client->getCurrentReport() === $report) {
+                unset($records[$k]);
+                continue;
+            }
             $counts[$report->getStatus()->setUseStatusCache(true)->getStatus()]++;
             $counts['total']++;
         }
