@@ -216,9 +216,8 @@ class Client
      * @var integer
      *
      * @JMS\Type("integer")
-     * @JMS\Groups({"active-report-count"})
      */
-    private $activeReportCount;
+    private $unsubmittedReportsCount;
 
     /**
      * @var \DateTime
@@ -846,17 +845,19 @@ class Client
     /**
      * @return int
      */
-    public function getActiveReportCount()
+    public function getUnsubmittedReportsCount()
     {
-        return $this->activeReportCount;
+        return $this->unsubmittedReportsCount;
     }
 
     /**
-     * @param int $activeReportCount
+     * @param int $unsubmittedReportsCount
+     * @return Client
      */
-    public function setActiveReportCount($activeReportCount)
+    public function setUnsubmittedReportsCount($unsubmittedReportsCount)
     {
-        $this->activeReportCount = $activeReportCount;
+        $this->unsubmittedReportsCount = $unsubmittedReportsCount;
+        return $this;
     }
 
     /**
