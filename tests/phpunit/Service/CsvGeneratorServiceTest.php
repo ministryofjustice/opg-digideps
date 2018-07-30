@@ -316,7 +316,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mock->shouldReceive('getLastname')->andReturn('Lastname' . $counter);
         $mock->shouldReceive('getCaseNumber')->andReturn($counter . $counter . $counter . $counter);
         $mock->shouldReceive('getTotalReportCount')->andReturn($counter * 2);
-        $mock->shouldReceive('getActiveReportCount')->andReturn(1);
+        $mock->shouldReceive('getUnsubmittedReportsCount')->andReturn(1);
         $mock->shouldReceive('getCourtDate')->andReturn(new \DateTime('11/8/2011'));
 
         return $mock;

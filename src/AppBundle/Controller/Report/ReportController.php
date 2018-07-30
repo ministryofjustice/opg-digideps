@@ -60,7 +60,8 @@ class ReportController extends AbstractController
         'documents',
         'report-prof-service-fees',
         'prof-service-fees',
-        'client-named-deputy'
+        'client-named-deputy',
+        'unsubmitted-reports-count'
     ];
 
     /**
@@ -210,6 +211,7 @@ class ReportController extends AbstractController
 
         $vars = [
             'user' => $user,
+            'client' => $client,
             'report' => $report,
             'reportStatus' => $report->getStatus(),
         ];

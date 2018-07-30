@@ -89,4 +89,15 @@ trait ReportUnsubmittedSections
             }
         }
     }
+
+    /**
+     * @param $sectionId
+     * @return bool
+     */
+    public function isSectionFlaggedForAttention($sectionId)
+    {
+        $sna = array_map('trim', explode(',',$this->getUnsubmittedSectionsList()));
+
+        return in_array($sectionId, $sna);
+    }
 }

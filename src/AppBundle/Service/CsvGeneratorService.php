@@ -251,12 +251,13 @@ class CsvGeneratorService
         } else {
             array_push($data, null);
         }
-        array_push($data, $reportOrNdr->getClient()->getFirstname());
-        array_push($data, $reportOrNdr->getClient()->getLastname());
-        array_push($data, $reportOrNdr->getClient()->getCaseNumber());
-        array_push($data, $this->outputDate($reportOrNdr->getClient()->getCourtDate()));
-        array_push($data, $reportOrNdr->getClient()->getTotalReportCount());
-        array_push($data, $reportOrNdr->getClient()->getActiveReportCount());
+        $client = $reportOrNdr->getClient();
+        array_push($data, $client->getFirstname());
+        array_push($data, $client->getLastname());
+        array_push($data, $client->getCaseNumber());
+        array_push($data, $this->outputDate($client->getCourtDate()));
+        array_push($data, $client->getTotalReportCount());
+        array_push($data, $client->getUnsubmittedReportsCount());
 
         return $data;
     }

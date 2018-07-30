@@ -7,8 +7,6 @@
 {% set transOptions = {
     '%client%': report.client.firstname | e
 } %}
-{% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
-
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{% endblock %}
@@ -107,7 +105,7 @@
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
-                
+
                 {% if report.hasSection('bankAccounts') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
