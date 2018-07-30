@@ -4,13 +4,13 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': client.firstname | e } %}
 {% set sectionId = sectionId | default(null) %}
-{% set needsAttention =  sectionId in sectionsNeedsAttention %}
+{% set sectionNeedsAttention = report.isSectionFlaggedForAttention(sectionId) %}
 
 {% if linkToSubSection is not defined %}
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<li id="{{ subSection }}-section" class="section-list-item {{ needsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
+<li id="{{ subSection }}-section" class="section-list-item {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
     <div id="{{ subSection }}-sub-section">
         <a class="behat-link-edit-{{ subSection }} link-edit soft-half--ends" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
             {{ (subSection ~ '.subSectionTitle') | trans }}
