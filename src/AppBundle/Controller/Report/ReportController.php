@@ -492,7 +492,7 @@ class ReportController extends RestController
                    'readyToSubmit' => 0];
         foreach ($records as $k => $report) {
             $client = $report->getClient();
-            if (count($client->getActiveReports()) > 1 && $client->getCurrentReport() === $report) {
+            if (count($client->getUnsubmittedReports()) > 1 && $client->getCurrentReport() === $report) {
                 unset($records[$k]);
                 continue;
             }

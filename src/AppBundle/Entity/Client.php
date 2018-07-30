@@ -578,17 +578,7 @@ class Client
         return new ArrayCollection(iterator_to_array($arrayIterator));
     }
 
-    /**
-     * Get un-submitted reports.
-     *
-     * @return Report[]
-     */
-    public function getUnsubmittedReports()
-    {
-        return $this->reports->filter(function ($report) {
-            return !$report->getSubmitted();
-        });
-    }
+
 
     /**
      * get progress the user is currenty work on
@@ -837,27 +827,23 @@ class Client
     }
 
     /**
-     * @deprecated
-     *
-     *
      * @JMS\VirtualProperty
      * @JMS\Type("integer")
-     * @JMS\SerializedName("active_report_count")
-     * @JMS\Groups({"active-report-count"})"})
+     * @JMS\Groups({"unsubmitted-reports-count"})
      *
      * @return integer
      */
-    public function getActiveReportCount()
+    public function getUnsubmittedReportsCount()
     {
-        return count($this->getActiveReports());
+        return count($this->getUnsubmittedReports());
     }
 
     /**
      * @JMS\Exclude()
      *
-     * @return integer
+     * @return Report[]
      */
-    public function getActiveReports()
+    public function getUnsubmittedReports()
     {
         return $this->getReports()->filter(function (Report $report) {
             return empty($report->getSubmitted());
