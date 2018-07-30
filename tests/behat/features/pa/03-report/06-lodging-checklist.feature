@@ -39,10 +39,11 @@ Feature: Admin report checklist
       | B301QL         | checklist-client-address         |
       | 078912345678   | checklist-client-phone           |
       | John Named     | checklist-deputy-firstname       |
-      | Green          | checklist-deputy-lastname        |
+#      | Green          | checklist-deputy-lastname        |
+#      | +4410000000003 | checklist-deputy-phone           |
 #      | Bobby Team member              | checklist-deputy-firstname |
 #      | BlackAndBlue               | checklist-deputy-lastname |
-      | +4410000000003 | checklist-deputy-phone           |
+#      | +4410000000003 | checklist-deputy-phone           |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0             |
