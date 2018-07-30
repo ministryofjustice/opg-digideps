@@ -50,6 +50,8 @@ checklistPage:
     moneyOutSummary: View money out summary
     deputysDeclaration: View deputy's declaration
     paDeputyExpenses: View deputy's fees and expenses
+    giftsSummary: View gifts summary
+    deputyExpensesSummary: View deputy expenses
   form:
     save:
       label: Save progress

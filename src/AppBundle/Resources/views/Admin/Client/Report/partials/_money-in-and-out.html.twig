@@ -195,7 +195,7 @@
         </div>
     </details>
 
-    <details class="push--bottom">
+    <details>
         <summary>
             <span class="summary">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
         </summary>
@@ -215,4 +215,61 @@
         </div>
     </details>
 
+    {% if report.hasSection('gifts') %}
+        <details>
+            <summary>
+                <span class="summary">{{ (page ~ '.revealTitle.giftsSummary') | trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/Gift:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+    {% endif %}
+
+    {% if report.hasSection('deputyExpenses') %}
+        <details>
+            <summary>
+                <span class="summary">{{ (page ~ '.revealTitle.deputyExpensesSummary') | trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {# Questions and answers table #}
+                    {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+    {% endif %}
+
+    {% if report.hasSection('paDeputyExpenses') %}
+        <details>
+            <summary>
+                <span class="summary">{{ (page ~ '.revealTitle.paDeputyExpenses') | trans }}</span>
+            </summary>
+            <div class="panel panel-border-narrow">
+                <div>
+                    {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
+                        report: report,
+                        transDomain: translationDomain,
+                        showDetailsColumn: true,
+                        hideEditLink: true
+                    } %}
+                    {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
+                        report: report,
+                        transDomain: translationDomain,
+                        hideEditLink: true
+                    } %}
+                </div>
+            </div>
+        </details>
+    {% endif %}
+
 </div>
+
+
