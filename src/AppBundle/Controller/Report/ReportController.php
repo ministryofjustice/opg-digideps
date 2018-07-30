@@ -492,6 +492,7 @@ class ReportController extends RestController
                    'readyToSubmit' => 0];
         foreach ($records as $k => $report) {
             $client = $report->getClient();
+            // in case there is a current AND an unsubmitted report, remove the current one
             if (count($client->getUnsubmittedReports()) > 1 && $client->getCurrentReport() === $report) {
                 unset($records[$k]);
                 continue;

@@ -582,7 +582,7 @@ class Client
 
     /**
      * get progress the user is currenty work on
-     * First one that is unsubmitted and has to unsubmit date
+     * That means the first one that is unsubmitted AND has an unsubmit date
      *
      * @JMS\VirtualProperty
      * @JMS\Type("AppBundle\Entity\Report\Report")
@@ -594,7 +594,7 @@ class Client
     public function getCurrentReport()
     {
         foreach($this->getReports() as $r) {
-            if (!$r->getSubmitted() && empty($r->getUnSubmitDate())) {
+            if (empty($r->getSubmitted()) && empty($r->getUnSubmitDate())) {
                 return $r;
             }
         }
