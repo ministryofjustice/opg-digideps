@@ -21,30 +21,27 @@ Feature: Admin report checklist
     And I should see the "court-date" region
     And I should see the "expected-date" region
     And each text should be present in the corresponding region:
-      | Not saved yet  | last-saved-by                    |
-      | Not saved yet  | last-modified-by                 |
+      | Not saved yet     | last-saved-by                    |
+      | Not saved yet     | last-modified-by                 |
     #failing on master
-      | Cly7           | checklist-client-firstname       |
-      | Hent           | checklist-client-lastname        |
-      | 078912345678   | checklist-client-phone           |
-      | rfnd           | reason-no-decisions              |
-      | rfnc           | reason-no-contacts               |
-      | December 2015  | care-plan-last-reviewed          |
-      | No             | has-assets                       |
-      | No             | has-debts                        |
-      | £100.40        | checklist-accounts-opening-total |
-      | £100.40        | calculated-balance               |
-      | £0.00          | balance-difference               |
-      | Cly7           | checklist-client-firstname       |
-      | Hent           | checklist-client-lastname        |
-      | B301QL         | checklist-client-address         |
-      | 078912345678   | checklist-client-phone           |
-      | John Named     | checklist-deputy-firstname       |
-#      | Green          | checklist-deputy-lastname        |
-#      | +4410000000003 | checklist-deputy-phone           |
-#      | Bobby Team member              | checklist-deputy-firstname |
-#      | BlackAndBlue               | checklist-deputy-lastname |
-#      | +4410000000003 | checklist-deputy-phone           |
+      | Cly7              | checklist-client-firstname       |
+      | Hent              | checklist-client-lastname        |
+      | 078912345678      | checklist-client-phone           |
+      | rfnd              | reason-no-decisions              |
+      | rfnc              | reason-no-contacts               |
+      | December 2015     | care-plan-last-reviewed          |
+      | No                | has-assets                       |
+      | No                | has-debts                        |
+      | £100.40           | checklist-accounts-opening-total |
+      | £100.40           | calculated-balance               |
+      | £0.00             | balance-difference               |
+      | Cly7              | checklist-client-firstname       |
+      | Hent              | checklist-client-lastname        |
+      | B301QL            | checklist-client-address         |
+      | 078912345678      | checklist-client-phone           |
+      | Bobby Team member | checklist-deputy-firstname       |
+      | BlackAndBlue      | checklist-deputy-lastname        |
+      | +4410000000003    | checklist-deputy-phone           |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0             |
