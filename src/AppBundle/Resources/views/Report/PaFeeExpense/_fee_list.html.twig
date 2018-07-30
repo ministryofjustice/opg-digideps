@@ -1,6 +1,8 @@
 {% set translationDomain = "report-pa-fee-expense" %}
 {% trans_default_domain translationDomain %}
 
+{% set hideEditLink = hideEditLink | default(false) %}
+
 {% if report.hasFees == 'yes' %}
 
     {% set showDetailsColumn = false %}
@@ -15,9 +17,11 @@
         <div class="column-half">
             <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
         </div>
-        <div class="column-half text--right">
-            <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-        </div>
+        {% if not hideEditLink %}
+            <div class="column-half text--right">
+                <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </div>
+        {% endif %}
     </div>
 
     {# Items list table #}
