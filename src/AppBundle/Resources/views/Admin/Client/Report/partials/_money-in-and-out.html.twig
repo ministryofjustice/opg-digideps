@@ -255,15 +255,15 @@
             <div class="panel panel-border-narrow">
                 <div>
                     {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
-                    'report': report,
-                    'transDomain': translationDomain,
-                    'showDetailsColumn': true,
-                    'hideEditLink': true
+                        report: report,
+                        transDomain: translationDomain,
+                        showDetailsColumn: true,
+                        hideEditLink: true
                     } %}
                     {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
-                    'report': report,
-                    'transDomain': translationDomain,
-                    'hideEditLink': true
+                        report: report,
+                        transDomain: translationDomain,
+                        hideEditLink: true
                     } %}
                 </div>
             </div>
