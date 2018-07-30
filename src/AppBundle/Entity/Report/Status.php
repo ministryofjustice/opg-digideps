@@ -540,9 +540,12 @@ class Status
     public function getState()
     {
         switch ($this->status) {
-            case 'notStarted': return Status::STATE_NOT_STARTED;
-            case 'notFinished': return Status::STATE_INCOMPLETE;
-            case 'readyToSubmit': return Status::STATE_DONE;
+            case 'notStarted':
+                return Status::STATE_NOT_STARTED;
+            case 'notFinished':
+                return Status::STATE_INCOMPLETE;
+            case 'readyToSubmit':
+                return Status::STATE_DONE;
         }
     }
 }

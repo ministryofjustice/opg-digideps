@@ -3,10 +3,11 @@
 {% trans_default_domain translationDomain %}
 
 {% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
+{% set reportIsUnsubmitted = report.unSubmitDate and not report.submitted  %}
 
  <div class="panel panel-admin hard">
     <div class="panel-heading">
-    {% if report.unSubmitDate and report.submitted == false %}
+    {% if reportIsUnsubmitted %}
         <h2 class="heading-medium flush--bottom push--right"><i class="icon icon-important-small"></i> {{ 'incompleteReport' | trans() }}</h2>
     {% else %}
         <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
@@ -20,7 +21,7 @@
                         <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        <span class="status status-large {{ reportStatus.getState() }} flush--bottom">
+                        <span class="status status-large {{ reportIsUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
                             {{ ('status.' ~ reportStatus.status) | trans() }}
                         </span>
                     </dd>
