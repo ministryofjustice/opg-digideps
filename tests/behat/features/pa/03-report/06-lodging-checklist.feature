@@ -1,7 +1,8 @@
 Feature: Admin report checklist
 
   Scenario: Case manager submits empty PA checklist for the report
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I load the application status from "pa-report-submitted"
+    And I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
