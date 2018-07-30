@@ -1192,5 +1192,13 @@ class Report implements ReportInterface
         return $this;
     }
 
+    /**
+     * @return bool
+     */
+    public function isUnsubmitted()
+    {
+        return $this->getUnSubmitDate() && !$this->getSubmitted();
+    }
+
 
 }

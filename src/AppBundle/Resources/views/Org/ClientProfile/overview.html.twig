@@ -24,9 +24,20 @@
 
     <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ report.client.caseNumber }}</p>
 
-    {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-        report: report,
-    } %}
+    <div class="panel panel-admin hard">
+        <div class="panel-heading">
+          {% if report.isUnsubmitted %}
+              <h2 class="heading-medium flush--bottom push--right"><i class="icon icon-important-small"></i> {{ 'incompleteReport' | trans() }}</h2>
+          {% else %}
+              <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
+          {% endif %}
+        </div>
+        <div class="panel-body soft-half">
+        {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
+            report: report
+        } %}
+        </div>
+    </div>
 
     {# if the report is unsubmitted, show the other active one #}
     {% if report.unSubmitDate %}
@@ -36,7 +47,7 @@
             </summary>
             <div class="panel-body soft-half--top soft-half--sides">
                 {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-                    report: client.activeReport,
+                    report: client.activeReport
                 } %}
             </div>
         </details>

@@ -3,77 +3,67 @@
 {% trans_default_domain translationDomain %}
 
 {% set sectionsNeedsAttention = report.unsubmittedSectionsList | split(',') %}
-{% set reportIsUnsubmitted = report.unSubmitDate and not report.submitted  %}
 
- <div class="panel panel-admin hard">
-    <div class="panel-heading">
-    {% if reportIsUnsubmitted %}
-        <h2 class="heading-medium flush--bottom push--right"><i class="icon icon-important-small"></i> {{ 'incompleteReport' | trans() }}</h2>
-    {% else %}
-        <h2 class="heading-medium flush--bottom push--right">{{ 'currentReport' | trans() }}</h2>
-    {% endif %}
+<div class="grid-row">
+    <div class="column-one-half">
+        <dl class="push--bottom">
+            <dt>
+                <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                <span class="status status-large {{ report.isUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
+                    {{ ('status.' ~ reportStatus.status) | trans() }}
+                </span>
+            </dd>
+
+            <dt class="visually-hidden">
+                <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                    <p class="push--top">
+                        <a class="behat-link-edit-report_submit button" id="edit-report_{{ report.isUnsubmitted ? 're':'' }}submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a>
+                    </p>
+                {% else %}
+                    <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
+                {% endif %}
+            </dd>
+        </dl>
     </div>
-    <div class="panel-body soft-half">
-        <div class="grid-row">
-            <div class="column-one-half">
-                <dl class="push--bottom">
-                    <dt>
-                        <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        <span class="status status-large {{ reportIsUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
-                            {{ ('status.' ~ reportStatus.status) | trans() }}
-                        </span>
-                    </dd>
 
-                    <dt class="visually-hidden">
-                        <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
-                            <p class="push--top">
-                                <a class="behat-link-edit-report_submit button" id="edit-report_{{ reportIsUnsubmitted ? 're':'' }}submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a>
-                            </p>
-                        {% else %}
-                            <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
-                        {% endif %}
-                    </dd>
-                </dl>
-            </div>
+    <div class="column-one-half">
+        <dl class="push--bottom">
+            <dt>
+                <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
+                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
+            </dd>
 
-            <div class="column-one-half">
-                <dl class="push--bottom">
-                    <dt>
-                        <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
-                        <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
-                    </dd>
+            <dt>
+                <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                {{ report.dueDate | date(" j F Y") }}<br>
+                {% if report.dueDateDiffDays < 0 %}
+                    <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                {% elseif report.dueDateDiffDays == 0 %}
+                    <span class="font-xsmall bold">Due today</span>
+                {% elseif report.dueDateDiffDays <= 30 %}
+                    <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
 
-                    <dt>
-                        <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
-                    </dt>
-                    <dd class="push--bottom">
-                        {{ report.dueDate | date(" j F Y") }}<br>
-                        {% if report.dueDateDiffDays < 0 %}
-                            <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
-                        {% elseif report.dueDateDiffDays == 0 %}
-                            <span class="font-xsmall bold">Due today</span>
-                        {% elseif report.dueDateDiffDays <= 30 %}
-                            <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
-                        {% endif %}
-                    </dd>
-                </dl>
-            </div>
+</div>
 
-        </div>
+<p>
+    <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
+</p>
 
-        <p>
-            <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
-        </p>
-
-        <div id="overview-sections" class="push--bottom">
+<div id="overview-sections" class="push--bottom">
 
             <div class="grid-row">
                 <div class="column-one-half">
@@ -311,5 +301,4 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+
