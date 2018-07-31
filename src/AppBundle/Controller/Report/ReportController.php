@@ -179,6 +179,7 @@ class ReportController extends AbstractController
      */
     public function overviewAction(Request $request, $reportId)
     {
+        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData();
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'report_overview')) {
@@ -187,7 +188,7 @@ class ReportController extends AbstractController
 
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state']);
+        $report = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup);
 
         // 1711 take client->users with a separate call to avoid recursion
         // neede for clientContactVoter
@@ -203,31 +204,24 @@ class ReportController extends AbstractController
         ]);
         $report->setClient($client);
 
-        // Lay and PA users have different views.
-        // PA overview is named "client profile" from the business side
-        $template = $this->getUser()->isDeputyOrg()
-            ? 'AppBundle:Org/ClientProfile:overview.html.twig'
-            : 'AppBundle:Report/Report:overview.html.twig';
+        if ($this->getUser()->isDeputyOrg()) {
+            // PA/PROF overview is named "client profile" from the business side
+            return $this->render('AppBundle:Org/ClientProfile:overview.html.twig', [
+                'user' => $user,
+                'client' => $client,
+                'report' => $report,
+                'activeReport' => $report->getUnSubmitDate() && ($activeReportId = $client->getActiveReport()->getId())
+                    ? $this->getReportIfNotSubmitted($activeReportId, $reportJmsGroup)
+                    : null,
+            ]);
+        }
 
-        $vars = [
+        return $this->render('AppBundle:Report/Report:overview.html.twig', [
             'user' => $user,
             'client' => $client,
             'report' => $report,
-            'reportStatus' => $report->getStatus(),
-        ];
+        ]);
 
-        // "agre" checkbox for unsubmitted report.
-        // KEEP THIS until incomplete report has merged and not further changes are required
-//        if ($report->getUnSubmitDate()) {
-//            $form = $this->createForm(FormDir\Report\ReportResubmitType::class, $report);
-//            $form->handleRequest($request);
-//            if ($form->isValid()) {
-//                return $this->redirectToRoute('report_review', ['reportId' => $report->GetId()]);
-//            }
-//            $vars['form'] = $form->createView();
-//        }
-
-        return $this->render($template, $vars);
     }
 
     /**
