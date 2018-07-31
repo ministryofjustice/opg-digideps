@@ -188,39 +188,46 @@ class ReportController extends AbstractController
 
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
-        $report = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup);
+        $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-        // 1711 take client->users with a separate call to avoid recursion
-        // neede for clientContactVoter
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $report->getClient()->getId(), 'Client', [
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', [
             'client',
             'client-users', 'user',
-            'client-reports', 'report',
+            'client-reports',
+            'report', //needed ?
             'client-clientcontacts',
             'clientcontact',
             'client-notes',
             'notes',
         ]);
-        $report->setClient($client);
 
         if ($this->getUser()->isDeputyOrg()) {
-            // PA/PROF overview is named "client profile" from the business side
-            return $this->render('AppBundle:Org/ClientProfile:overview.html.twig', [
-                'user' => $user,
-                'client' => $client,
-                'report' => $report,
-                'activeReport' => $report->getUnSubmitDate() && ($activeReportId = $client->getActiveReport()->getId())
-                    ? $this->getReportIfNotSubmitted($activeReportId, $reportJmsGroup)
-                    : null,
-            ]);
+            // PR and PROF: unsubmitted at the top (if exists), active below (
+            $template = 'AppBundle:Org/ClientProfile:overview.html.twig';
+            if ($client->getUnsubmittedReport()) {
+                //alternative: redirect (but more API calls overall)
+                $reportId = $client->getUnsubmittedReport()->getId();
+                $activeReportId = $client->getActiveReport()->getId();
+            } else {
+                $reportId = $client->getActiveReport()->getId();
+                $activeReportId = null; //active dispaly
+            }
+        } else { // Lay. keep the report Id
+            $template = 'AppBundle:Report/Report:overview.html.twig';
+            $activeReportId = null;
         }
 
-        return $this->render('AppBundle:Report/Report:overview.html.twig', [
+        $report = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup);
+        $activeReport = $activeReportId ? $this->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
+
+        return $this->render($template, [
             'user' => $user,
             'client' => $client,
             'report' => $report,
+            'activeReport' => $activeReport,
         ]);
+
 
     }
 
