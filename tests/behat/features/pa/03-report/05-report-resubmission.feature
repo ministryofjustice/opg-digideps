@@ -30,7 +30,7 @@ Feature: Admin unsubmit and client re-submit
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-paDeputyExpenses-needs-attention" region
     # submit
-    When I click on "edit-report_resubmit"
+    When I click on "edit-report_submit_incomplete"
     And I click on "declaration-page"
     And I fill in the following:
       | report_declaration_agree | 1 |

@@ -34,7 +34,8 @@
         </div>
         <div class="panel-body soft-half">
         {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-            'report': report
+            'report': report,
+            'incomplete': true
         } %}
         </div>
     </div>
@@ -47,7 +48,8 @@
             </summary>
             <div class="panel-body soft-half--top soft-half--sides">
                 {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-                    'report': activeReport
+                    'report': activeReport,
+                    'incomplete': false
                 } %}
             </div>
         </details>
