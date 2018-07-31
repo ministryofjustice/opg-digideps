@@ -202,20 +202,18 @@ class ReportController extends AbstractController
             'notes',
         ]);
 
+        $activeReportId = null;
         if ($this->getUser()->isDeputyOrg()) {
             // PR and PROF: unsubmitted at the top (if exists), active below (
             $template = 'AppBundle:Org/ClientProfile:overview.html.twig';
+            // if there is an unsubmitted report, swap them, so linkswill both show the unsubmitted first
             if ($client->getUnsubmittedReport()) {
                 //alternative: redirect (but more API calls overall)
                 $reportId = $client->getUnsubmittedReport()->getId();
                 $activeReportId = $client->getActiveReport()->getId();
-            } else {
-                $reportId = $client->getActiveReport()->getId();
-                $activeReportId = null; //active dispaly
             }
         } else { // Lay. keep the report Id
             $template = 'AppBundle:Report/Report:overview.html.twig';
-            $activeReportId = null;
         }
 
         $report = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup);
