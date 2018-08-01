@@ -4,11 +4,11 @@
 
 {% set translationDomain = "report-overview" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {'%client%': client.firstname | e } %}
 
 {% block htmlTitle %}{{ 'htmlTitle-ORG' | trans }}{% endblock %}
 {% block pageTitle %}
-    {{ 'pageTitle' | trans({}, 'client-profile') }} {{ report.client.fullname | title }}
+    {{ 'pageTitle' | trans({}, 'client-profile') }} {{ client.fullname | title }}
 {% endblock %}
 {% block pageTitleClass %}heading-large flush--bottom behat-region-report-title{% endblock %}
 
@@ -22,7 +22,7 @@
 
 {% block pageContent %}
 
-    <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ report.client.caseNumber }}</p>
+    <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ client.caseNumber }}</p>
 
     <div class="panel panel-admin hard">
         <div class="panel-heading">
@@ -56,19 +56,22 @@
     {% endif %}
 
     {% include 'AppBundle:Org/ClientProfile:_notes.html.twig' with {
-    notes: report.client.notes,
+        'notes': client.notes,
+        'client': client
     } %}
 
     {% include 'AppBundle:Org/ClientProfile:_contacts.html.twig' with {
-    contacts: report.client.clientContacts,
+        'contacts': client.clientContacts,
+			' client': client
     } %}
 
     {% include 'AppBundle:Org/ClientProfile:_reports.html.twig' with {
-    reports: report.client.submittedReports,
+        'reports': client.submittedReports,
+			  'client': client
     } %}
 
     {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
-    client: report.client,
+    '   client': client
     } %}
 
 {% endblock %}
