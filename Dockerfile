@@ -7,6 +7,7 @@ COPY composer.json /app/
 COPY composer.lock /app/
 RUN  composer install --prefer-dist --no-interaction --no-scripts
 COPY package.json /app/
+COPY package-lock.json /app/
 RUN  npm -g set progress=false
 RUN  npm install
 
