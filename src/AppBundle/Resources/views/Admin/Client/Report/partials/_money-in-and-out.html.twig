@@ -21,100 +21,85 @@
             <span class="summary">{{ (page ~ '.revealTitle.accountsBalances') | trans }}</span>
         </summary>
 
-        <div class="push--top">
+        <div class="panel panel-border-narrow">
+            <div class="grid-row">
+                <div class="column-one-half">
 
-                <div class="grid-row">
-                    <div class="column-one-half">
-                        <div class="panel panel-border-narrow">
+                    {% if report.previousReportData['financial-summary']['accounts'] is defined %}
 
-                            {% if report.previousReportData['financial-summary']['accounts'] is defined   %}
-
-                                <h3 class="heading-medium">
-                                    {{ (page ~ '.closingBalancesPrevReport') | trans }}
-                                    {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
-                                        ({{ report.previousReportData['report-summary']['type'] | upper }})
-                                    {% endif %}
-                                </h3>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                                            <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
-                                            <tr>
-                                                <td>{{ previousAccount.nameOneLine }}</td>
-                                                <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                        <tr class="no-border">
-                                            <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                                            <td class="numeric-small">
-                                                <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            {% else %}
-
-                                <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
-
+                        <h3 class="heading-medium">
+                            {{ (page ~ '.closingBalancesPrevReport') | trans }}
+                            {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
+                                ({{ report.previousReportData['report-summary']['type'] | upper }})
                             {% endif %}
-                        </div>
-                    </div>
-                    <div class="column-one-half">
-                        <div class="panel panel-border-narrow">
-
-                            <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
-                            <table>
-                                <thead>
+                        </h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                                    <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
                                     <tr>
-                                        <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                                        <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                                        <td>{{ previousAccount.nameOneLine }}</td>
+                                        <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {% for account in report.bankAccounts %}
-                                        <tr>
-                                            <td>{{ account.getNameOneLine() }}</td>
-                                            <td class="numeric-small">£{{ account.openingBalance | money_format }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    <tr class="no-border">
-                                        <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</span></td>
-                                        <td class="numeric-small">
-                                            <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                {% endfor %}
+                                <tr class="no-border">
+                                    <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
+                                    <td class="numeric-small">
+                                        <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                        </div>
-                        {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+                    {% else %}
 
-                            <table>
-                                <tbody>
-                                    <tr class="no-border">
-                                        <td class="text--right">
-                                            <span class="heading-medium">{{ (page ~ '.balanceDifference') | trans }}:</span>
-                                        </td>
-                                        <td class="numeric-small">
-                                            <span class="heading-medium">£{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
 
-                        {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
 
+                <div class="column-one-half">
+
+                    <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                                <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for account in report.bankAccounts %}
+                                <tr>
+                                    <td>{{ account.getNameOneLine() }}</td>
+                                    <td class="numeric-small">£{{ account.openingBalance | money_format }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="no-border">
+                                <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</span></td>
+                                <td class="numeric-small">
+                                    <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+
+                <h3 class="heading-medium">
+                    {{ (page ~ '.balanceDifference') | trans }}: £{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}
+                </h3>
+
+            {% endif %}
 
         </div>
-
     </details>
 </div>
 
