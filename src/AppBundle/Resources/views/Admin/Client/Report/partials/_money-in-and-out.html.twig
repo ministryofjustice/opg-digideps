@@ -112,7 +112,7 @@
     </div>
 
     {# Don't show Account Balance Summary for 103 #}
-    {% if report.type not in ['103', '103-4'] %}
+    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
 
         <details class="push--bottom">
             <summary>
@@ -157,7 +157,7 @@
     </div>
 
     {# Don't show money transfers for 103 #}
-    {% if report.type not in ['103', '103-4'] %}
+    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
         <details>
             <summary>
                 <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
@@ -180,11 +180,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4'] %}
+                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
                     {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4'] %}
+                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
                     {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
@@ -200,11 +200,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4'] %}
+                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
                     {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4'] %}
+                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
                     {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
