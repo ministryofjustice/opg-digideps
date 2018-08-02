@@ -25,7 +25,7 @@
                 {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
             </td>
             <td>
-                {{ report.noTransfersToAdd ? 'No' : 'Yes' }}
+                {{ (report.noTransfersToAdd == true or report.noTransfersToAdd is null) ? 'No' : 'Yes' }}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
