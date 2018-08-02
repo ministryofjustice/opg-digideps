@@ -252,6 +252,13 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
+                    {% if report.hasFees == 'no' or report.paidForAnything == 'no' %}
+                        {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
+                            report: report,
+                            transDomain: translationDomain,
+                            hideEditLink: true
+                        } %}
+                    {% endif %}
                     {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
                         report: report,
                         transDomain: translationDomain,
