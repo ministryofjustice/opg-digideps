@@ -1,11 +1,7 @@
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalancePA') %}
-{% else %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalance') %}
-{% endif %}
+
 <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
 <div class="form-section push--bottom">
@@ -103,9 +99,15 @@
     </details>
 </div>
 
+{% if report.hasSection('paDeputyExpenses') %}
+    {% set paAppend = 'PA' %}
+{% else %}
+    {% set paAppend = '' %}
+{% endif %}
+
 <div class="form-section push--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.accountsBalance, accountsBalanceLabel, {
+        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ paAppend), {
             'fieldSetClass' : 'inline',
             'formGroupClass': 'push-half--bottom'
         }) }}
