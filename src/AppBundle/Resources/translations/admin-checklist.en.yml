@@ -13,7 +13,6 @@ checklistPage:
     paFeeExpenses: Deputy fees and expenses
     nextPeriod: Next reporting period
     declaration: Declaration
-    paDeputyExpenses: Deputy fees and expenses
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
