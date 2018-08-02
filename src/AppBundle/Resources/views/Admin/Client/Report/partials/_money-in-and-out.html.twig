@@ -1,11 +1,7 @@
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalancePA') %}
-{% else %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalance') %}
-{% endif %}
+
 <h3 class="heading-medium underline">{{ (page ~ '.heading.money') | trans }}</h3>
 
 <div class="form-section push--bottom">
@@ -103,16 +99,22 @@
     </details>
 </div>
 
+{% if report.hasSection('paDeputyExpenses') %}
+    {% set paAppend = 'PA' %}
+{% else %}
+    {% set paAppend = '' %}
+{% endif %}
+
 <div class="form-section push--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.accountsBalance, accountsBalanceLabel, {
+        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ paAppend), {
             'fieldSetClass' : 'inline',
             'formGroupClass': 'push-half--bottom'
         }) }}
     </div>
 
     {# Don't show Account Balance Summary for 103 #}
-    {% if report.type not in ['103', '103-4'] %}
+    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
 
         <details class="push--bottom">
             <summary>
@@ -157,7 +159,7 @@
     </div>
 
     {# Don't show money transfers for 103 #}
-    {% if report.type not in ['103', '103-4'] %}
+    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
         <details>
             <summary>
                 <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
@@ -180,11 +182,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4'] %}
+                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
                     {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4'] %}
+                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
                     {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
@@ -200,11 +202,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4'] %}
+                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
                     {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4'] %}
+                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
                     {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
@@ -252,6 +254,13 @@
             </summary>
             <div class="panel panel-border-narrow">
                 <div>
+                    {% if report.hasFees == 'no' or report.paidForAnything == 'no' %}
+                        {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
+                            report: report,
+                            transDomain: translationDomain,
+                            hideEditLink: true
+                        } %}
+                    {% endif %}
                     {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
                         report: report,
                         transDomain: translationDomain,

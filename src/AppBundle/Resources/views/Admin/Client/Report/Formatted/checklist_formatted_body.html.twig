@@ -1,9 +1,4 @@
 {% set page = 'checklistPage' %}
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalancePA') %}
-{% else %}
-    {% set accountsBalanceLabel = (page ~ '.form.accountsBalance') %}
-{% endif %}
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.css.twig' %}
 </style>
@@ -163,7 +158,13 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ accountsBalanceLabel | trans({}, 'admin-checklist') }}</h3>
+            {% if report.hasSection('paDeputyExpenses') %}
+                {% set paAppend = 'PA' %}
+            {% else %}
+                {% set paAppend = '' %}
+            {% endif %}
+
+            <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ paAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
@@ -196,7 +197,7 @@
 
         <div class="section">
         {% if report.hasSection('paDeputyExpenses') %}
-            <h2 class="section-heading">{{ (page ~ '.heading.paDeputyExpenses') | trans({}, 'admin-checklist') }}</h2>
+            <h2 class="section-heading">{{ (page ~ '.heading.paFeeExpenses') | trans({}, 'admin-checklist') }}</h2>
 
             <h3 class="label question bold">{{ (page ~ '.form.satisfiedWithPaExpenses.label') | trans({}, 'admin-checklist') }}</h3>
 
