@@ -115,34 +115,33 @@ class OrgService
     private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
         $depType = $csvRow['Dep Type'];
+        $userEmail = strtolower($csvRow['Email']);
+        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
-        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
-        $criteria = [
+        $user = $this->userRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
-        ];
-        $user = $this->userRepository->findOneBy($criteria);
-        $userEmail = strtolower($csvRow['Email']);
+        ]);
 
-        if ($user) {
-            // Notify email change
-            if ($user->getEmail() !== $userEmail) {
-                $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
-                    ' has changed their email to ' . $user->getEmail() . '. ' .
-                    'Please update the CSV to reflect the new email address.<br />';
-            }
-        } else {
-            // create user
+        // Notify email change
+        if ($user && $user->getEmail() !== $userEmail) {
+            $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
+                ' has changed their email to ' . $user->getEmail() . '. ' .
+                'Please update the CSV to reflect the new email address.<br />';
+        }
+
+        // create user if not existing
+        if (!$user) {
             $this->log('Creating user');
             // check for duplicate email address
-            $user = $this->userRepository->findOneBy(['email' => $userEmail]);
-            if ($user) {
+            $userWithSameEmail = $this->userRepository->findOneBy(['email' => $userEmail]);
+            if ($userWithSameEmail) {
                 $this->warnings[] = 'Deputy ' . $deputyNo .
-                    ' cannot be added with email ' . $user->getEmail() .
-                    '. Email already taken by Deputy No: ' . $user->getDeputyNo();
+                    ' cannot be added with email ' . $userEmail .
+                    '. Email already taken by Deputy No: ' . $userWithSameEmail->getDeputyNo();
             } else {
                 $user = new EntityDir\User();
                 $user
@@ -161,14 +160,26 @@ class OrgService
                     $this->em->persist($team);
                     $this->em->flush($team);
                 }
-                $this->em->persist($user);
-                $this->em->flush($user);
+
                 if ($user->isProfDeputy()) {
                     $this->added['prof_users'][] = $csvRow['Email'];
                 } elseif ($user->isPaDeputy()) {
                     $this->added['pa_users'][] = $csvRow['Email'];
                 }
+
             }
+        }
+
+        // update user address, if not set
+        // the following could be moved to line 154 if no update is needed (DDPB-2262)
+        if (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1()) {
+            $user
+                ->setAddress1($csvRow['Dep Adrs1'])
+                ->setAddress2($csvRow['Dep Adrs2'])
+                ->setAddress3($csvRow['Dep Adrs3'])
+                ->setAddressPostcode($csvRow['Dep Postcode'])
+                ->setAddressCountry('GB')
+            ;
         }
 
         // update team name, if not set
@@ -182,6 +193,9 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
+
+        $this->em->persist($user);
+        $this->em->flush($user);
 
         return $user;
     }
