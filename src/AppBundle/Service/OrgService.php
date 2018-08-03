@@ -261,6 +261,7 @@ class OrgService
             $this->added['clients'][] = $client->getCaseNumber();
             $this->em->persist($client);
         }
+        $client->setNamedDeputy($userOrgNamed);
 
         // Add client to named user (will be done later anyway)
         $userOrgNamed->addClient($client);
@@ -269,9 +270,7 @@ class OrgService
         // (duplicates are auto-skipped)
         foreach ($userOrgNamed->getTeams() as $team) {
             foreach ($team->getMembers() as $member) {
-                //                if ($member->getId() != $userOrgNamed->getId()) {
-                    $member->addClient($client);
-//                }
+                $member->addClient($client);
             }
         }
 
