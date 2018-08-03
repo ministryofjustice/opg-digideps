@@ -36,7 +36,7 @@ class IndexController extends AbstractController
             'role_name'   => '',
             'q'           => '',
             'ndr_enabled' => '',
-            'order_by'    => 'id',
+            'order_by'    => 'registrationDate',
             'sort_order'  => 'DESC',
         ];
 
