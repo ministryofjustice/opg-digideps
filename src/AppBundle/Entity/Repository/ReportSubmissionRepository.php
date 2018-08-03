@@ -52,10 +52,10 @@ class ReportSubmissionRepository extends EntityRepository
                 'lower(c.firstname) LIKE :qLike',
                 'lower(c.lastname) LIKE :qLike',
                 // case number
-                'lower(c.caseNumber) LIKE :lcq'
+                'c.caseNumber = :q'
             ]));
             $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('lcq' , strtolower($q));
+            $qb->setParameter('q' , strtolower($q));
         }
         // role filter
         if ($createdByRole) {
