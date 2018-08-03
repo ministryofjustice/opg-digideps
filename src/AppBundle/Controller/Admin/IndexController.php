@@ -427,7 +427,10 @@ class IndexController extends AbstractController
                         'Dep Forename',
                         'Dep Surname',
                         'Dep Type', // 23 = PA (but not confirmed)
-                        //'Dep Adrs1', 'Dep Adrs2', 'Dep Adrs3', 'Dep Postcode', // recognised but not mandatory
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Dep Postcode',
                         'Email', //mandatory, used as user ID whem uploading
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
@@ -443,10 +446,6 @@ class IndexController extends AbstractController
                         'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3',
-                        'Dep Postcode',
                     ])
                     ->getData();
 
