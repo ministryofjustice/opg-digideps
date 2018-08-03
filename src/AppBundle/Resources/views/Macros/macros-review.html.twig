@@ -93,6 +93,8 @@
             <dd class="value">{{client.phone}}</dd>
         </dl>
     </div>
+    {# TODO code seems replicated and could be rendered under a single condition #}
+    {# if (ndr and not adLoggedAsDeputy) or not ndr .... #}
     {% if ndr %}
         {% if not adLoggedAsDeputy %}
             <div class="full-width push-half--top">
