@@ -246,7 +246,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/get-all", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
+     * @Route("/get-all")
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
