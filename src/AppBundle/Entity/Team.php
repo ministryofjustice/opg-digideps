@@ -15,8 +15,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Team
 {
-    use AddressTrait;
-
     /**
      * @var int
      * @JMS\Type("integer")

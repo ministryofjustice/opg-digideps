@@ -157,30 +157,10 @@ class OrgService
                 if ($user->getTeams()->isEmpty()) {
                     // Dep Surname in the CSV is actually the PA team name
                     $team = new EntityDir\Team($csvRow['Dep Surname']);
-
-                    // Address from upload is the team's address, not the user's
-                    if (!empty($csvRow['Dep Adrs1'])) {
-                        $team->setAddress1($csvRow['Dep Adrs1']);
-                    }
-
-                    if (!empty($csvRow['Dep Adrs2'])) {
-                        $team->setAddress2($csvRow['Dep Adrs2']);
-                    }
-
-                    if (!empty($csvRow['Dep Adrs3'])) {
-                        $team->setAddress3($csvRow['Dep Adrs3']);
-                    }
-
-                    if (!empty($csvRow['Dep Postcode'])) {
-                        $team->setAddressPostcode($csvRow['Dep Postcode']);
-                        $team->setAddressCountry('GB'); //postcode given means a UK address is given
-                    }
-
                     $user->addTeam($team);
                     $this->em->persist($team);
                     $this->em->flush($team);
                 }
-
                 $this->em->persist($user);
                 $this->em->flush($user);
                 if ($user->isProfDeputy()) {
