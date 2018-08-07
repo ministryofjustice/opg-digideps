@@ -38,7 +38,9 @@
         </div>
 
         <div class="form-group">
-            {{ form_submit(form.search, '', {'labelText': (page ~ '.download')}) }}
+            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                'buttonClass': 'behat-link-submit-and-download'
+            }) }}
             <a href="{{ path('admin_stats') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
         </div>
         {{ form_end(form) }}

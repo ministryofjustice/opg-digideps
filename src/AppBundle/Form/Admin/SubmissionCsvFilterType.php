@@ -16,7 +16,7 @@ class SubmissionCsvFilterType extends AbstractType
                 'input'           => 'datetime',
                 'format'          => 'dd-MM-yyyy',
                 'invalid_message' => 'Enter a valid date'])
-            ->add('search', FormTypes\SubmitType::class);
+            ->add('submitAndDownload', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -86,11 +86,13 @@ statsPage:
   limitedTo100: Based on CASREC file + additional columns (instantly added on CASREC upload, and updated every hour on weekdays)
   reportSubmissionsPara: Today's report submissions file for uploading into CASREC
   downloadCSV: <a href="%csvFile%">Download</a>
-  download: Download
   pleaseWait: Please wait ...
   dataGenerated: |
     Data is being generated, Click here to <a href="%csvFile%">download</a>
   reportsHeading: Report submissions
+  form:
+    submitAndDownload:
+      label: Download
 
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users
