@@ -129,7 +129,8 @@ class ReportSubmissionRepository extends EntityRepository
         $offset,
         $limit,
         $orderBy = 'createdOn',
-        $order = 'ASC'
+        $order = 'ASC',
+        $fromDate = null
     ) {
 
         // BASE QUERY BUILDER with filters (for both count and results)
@@ -146,7 +147,8 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect->select('rs');
 
         // add date restriction depending on which day we have (to include weekend submissions on Monday)
-        $fromDate = $this->determineCreationFromDate();
+        // fromDate (if set) passed from form
+        $fromDate = $this->determineCreationFromDate($fromDate);
 
         $qbSelect->andWhere('rs.createdOn >= :fromDate')
             ->setParameter(':fromDate', $fromDate);
@@ -171,15 +173,21 @@ class ReportSubmissionRepository extends EntityRepository
      *
      * @return \DateTime
      */
-    private function determineCreationFromDate()
+    private function determineCreationFromDate($fromDate)
     {
-        // default
-        $fromString = 'yesterday midnight';
+        if (empty($fromDate)) {
 
-        if (date('N') == 1) {
-            $fromString = 'last Friday midnight';
+            // default
+            $fromString = 'yesterday midnight';
+
+            if (date('N') == 1) {
+                $fromString = 'last Friday midnight';
+            }
+            $fromDate = new \DateTime($fromString);
+
+            return $fromDate;
         }
-        $fromDate = new \DateTime($fromString);
-        return $fromDate;
+
+        return new \DateTime($fromDate['date']);
     }
 }
