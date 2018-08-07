@@ -28,9 +28,21 @@
 
     <div class="text">
         <p>{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
-        <p>
-            {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_report_submissions_csv')}) | raw }}
-        </p>
+
+
+        {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+        <div class="form-group form-groups-inline flush--bottom">
+            <p>Capture all report submissions since:</p>
+            {{ form_known_date(form.fromDate, 'statsPage.form.fromDate') }}
+        </div>
+
+        <div class="form-group">
+            {{ form_submit(form.search, '', {'labelText': (page ~ '.download')}) }}
+            <a href="{{ path('admin_stats') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+        </div>
+        {{ form_end(form) }}
+
     </div>
 
 {% endblock %}

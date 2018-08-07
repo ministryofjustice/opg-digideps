@@ -3,7 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Exception\DisplayableException;
+use AppBundle\Form\Admin\SubmissionCsvFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,7 +24,49 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request)
     {
-        return [];
+        $filters = [
+            'order_by'    => 'id',
+            'sort_order'  => 'DESC',
+        ];
+
+        // This form is for the submissions CSV only and its filters are fromDate, order_by and sort_order
+        $form = $this->createForm(SubmissionCsvFilterType::class , null);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $filters = $form->getData() + $filters;
+
+            try {
+                $ret = $this->getRestClient()->get(
+                    '/report-submission/casrec_data?' . http_build_query($filters),
+                    'array'
+                );
+
+                $records = $this->getRestClient()->arrayToEntities(ReportSubmission::class . '[]', $ret['records']);
+
+                $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($records);
+
+                $response = new Response($csvContent);
+                $response->headers->set('Content-Type', 'text/csv');
+
+                $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
+                    date('Y-m-d')
+                );
+
+                $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+
+                // Send headers before outputting anything
+                $response->sendHeaders();
+
+                return $response;
+            } catch (\Exception $e) {
+                throw new DisplayableException($e);
+            }
+        }
+
+        return [
+            'form'    => $form->createView(),
+            'filters' => $filters
+        ];
     }
 
     /**
