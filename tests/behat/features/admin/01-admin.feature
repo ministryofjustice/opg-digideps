@@ -43,9 +43,10 @@ Feature: admin / admin
     When I am on admin page "/"
     Then the response status code should be 200
 
-  Scenario: Report submissions CSV link
+  Scenario: Report submissions CSV download No dates
     Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I go to admin page "/admin/report-submissions/dd-report-submissions.csv"
+    When I go to admin page "/admin/stats"
+    And I click on "submit-and-download"
     And the response status code should be 200
     And the response should have the "Content-Type" header containing "text/csv"
     And the response should have the "Content-Disposition" header containing ".csv"

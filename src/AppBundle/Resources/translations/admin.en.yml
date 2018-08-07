@@ -90,6 +90,9 @@ statsPage:
   dataGenerated: |
     Data is being generated, Click here to <a href="%csvFile%">download</a>
   reportsHeading: Report submissions
+  form:
+    submitAndDownload:
+      label: Download
 
 uploadPA:
   htmlTitle: Administration - Upload PA/Prof users

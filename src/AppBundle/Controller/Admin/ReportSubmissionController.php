@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Form\Admin\SubmissionCsvFilterType;
 use AppBundle\Service\File\MultiDocumentZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -171,45 +172,8 @@ class ReportSubmissionController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
             'created_by_role'   => $request->get('created_by_role'),
             'orderBy'           => $request->get('orderBy', 'createdOn'),
-            'order'             => $request->get('order', 'ASC')
+            'order'             => $request->get('order', 'ASC'),
+            'fromDate'          => $request->get('fromDate')
         ];
-    }
-
-    /**
-     * @Route("/report-submissions/dd-report-submissions.csv", name="admin_report_submissions_csv")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template
-     */
-    public function reportSubmissionsCsvAction(Request $request)
-    {
-        try {
-
-            $currentFilters = self::getFiltersFromRequest($request);
-            $ret = $this->getRestClient()->get(
-                '/report-submission/casrec_data?' . http_build_query($currentFilters),
-                'array'
-                );
-
-            $records = $this->getRestClient()->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
-
-        } catch (\Exception $e) {
-            throw new DisplayableException($e);
-        }
-
-        $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($records);
-
-        $response = new Response($csvContent);
-        $response->headers->set('Content-Type', 'text/csv');
-
-        $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
-            date('Y-m-d')
-        );
-
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
-
-        // Send headers before outputting anything
-        $response->sendHeaders();
-
-        return $response;
     }
 }
