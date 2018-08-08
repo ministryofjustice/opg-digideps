@@ -409,11 +409,6 @@ class UserController extends RestController
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',
             'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
-            'address1' => 'setAddress1',
-            'address2' => 'setAddress2',
-            'address3' => 'setAddress3',
-            'address_postcode' => 'setAddressPostcode',
-            'address_country' => 'setAddressCountry'
         ]);
 
         if (array_key_exists('last_logged_in', $data)) {
