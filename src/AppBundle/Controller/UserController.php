@@ -71,10 +71,6 @@ class UserController extends RestController
         $this->populateUser($user, $data);
         $userService->editUser($loggedInUser, $originalUser, $user);
 
-        if ($creatorIsOrg) {
-            $this->updateTeamAddresses($user, $data);
-        }
-
         return ['id' => $user->getId()];
     }
 
@@ -433,45 +429,6 @@ class UserController extends RestController
         }
 
         return $user;
-    }
-
-    /**
-     * Update both the team and other teammembers to have same address
-     * //TODO code seem to need a cleanup/refactor
-     *
-     * @param EntityDir\User $user
-     * @param array          $data
-     */
-    private function updateTeamAddresses(EntityDir\User $user, array $data)
-    {
-        if (!empty($data['address1'])
-            && !empty($data['address_postcode'])
-            && !empty($data['address_country'])
-        ) {
-            //set the team address to the same
-            $team = $user->getTeams()->first();
-            $this->hydrateEntityWithArrayData($team, $data, [
-                'address1' => 'setAddress1',
-                'address2' => 'setAddress2',
-                'address3' => 'setAddress3',
-                'address_postcode' => 'setAddressPostcode',
-                'address_country' => 'setAddressCountry'
-            ]);
-            $this->getEntityManager()->persist($team);
-
-            //and the other team PAs addresses
-            foreach ($team->getMembers() as $teamMember) {
-                $this->hydrateEntityWithArrayData($teamMember, $data, [
-                    'address1' => 'setAddress1',
-                    'address2' => 'setAddress2',
-                    'address3' => 'setAddress3',
-                    'address_postcode' => 'setAddressPostcode',
-                    'address_country' => 'setAddressCountry'
-                ]);
-                $this->getEntityManager()->persist($teamMember);
-                $this->getEntityManager()->flush();
-            }
-        }
     }
 
     /**

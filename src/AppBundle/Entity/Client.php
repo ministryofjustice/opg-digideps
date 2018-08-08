@@ -208,6 +208,20 @@ class Client
     private $clientContacts;
 
     /**
+     * Holds the named deputy the client belongs to
+     * Loaded from the CSV upload
+     *
+     * @var User
+     *
+     * @JMS\Groups({"client-named-deputy"})
+     * @JMS\Type("AppBundle\Entity\User")
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\JoinColumn(name="named_deputy", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $namedDeputy;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -796,25 +810,21 @@ class Client
     }
 
     /**
-     * Get Named deputy for this client.
-     *
-     * @JMS\VirtualProperty
-     * @JMS\Type("AppBundle\Entity\User")
-     * @JMS\SerializedName("named_deputy")
-     * @JMS\Groups({"client-named-deputy"})
-     *
-     * @return \AppBundle\Entity\User|null
+     * @return User
      */
     public function getNamedDeputy()
     {
-        /** @var User $user */
-        foreach ($this->getUsers() as $user) {
-            if ($user->isOrgNamedDeputy()) {
-                return $user;
-            }
-        }
+        return $this->namedDeputy;
+    }
 
-        return null;
+    /**
+     * @param User $namedDeputy
+     * @return Client
+     */
+    public function setNamedDeputy($namedDeputy)
+    {
+        $this->namedDeputy = $namedDeputy;
+        return $this;
     }
 
     /**
