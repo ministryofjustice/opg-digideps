@@ -51,9 +51,9 @@ form:
     existingError: |
       There's a problem with your email address. Please contact our helpline.
   jobTitle:
-    label: Job title
+    label: Job title (optional)
   phoneMain:
-    label: Phone
+    label: Phone (optional)
   roleName:
     label: Grant user administrator access
     hint: Administrator access will allow the new user to add and remove other users of the service
