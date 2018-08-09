@@ -229,7 +229,6 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full", "user_details_org", "org_team_add"})
      * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full", "verify-codeputy"} )
-     * @Assert\NotBlank( message="user.phoneMain.notBlankOtherUser", groups={"user_details_org"} )
      * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"user_details_full", "user_details_org", "org_team_add", "verify-codeputy"} )
      *
      * @var string
@@ -278,7 +277,6 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_org", "org_team_add"})
-     * @Assert\NotBlank( message="user.jobTitle.notBlankOtherUser", groups={"user_details_org"} )
      * @Assert\Length(max=150, maxMessage="user.jobTitle.maxMessage", groups={"user_details_org"} )
      *
      * @var string
