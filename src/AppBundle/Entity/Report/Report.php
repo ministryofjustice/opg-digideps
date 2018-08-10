@@ -42,7 +42,7 @@ class Report implements ReportInterface
     const TYPE_103_6 = '103-6';
     const TYPE_102_6 = '102-6';
     const TYPE_104_6 = '104-6';
-    const TYPE_103_4_6 = '104-4-6';
+    const TYPE_103_4_6 = '103-4-6';
     const TYPE_102_4_6 = '102-4-6';
 
     const TYPE_103_5 = '103-5';
@@ -67,7 +67,6 @@ class Report implements ReportInterface
      * @var string
      */
     private $type;
-
 
     /**
      * @JMS\Type("boolean")
@@ -331,6 +330,13 @@ class Report implements ReportInterface
      * @JMS\Type("array")
      **/
     private $previousReportData;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $reportTitle;
 
     /**
      * @return int $id
@@ -1201,27 +1207,20 @@ class Report implements ReportInterface
     }
 
     /**
-     * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
-     * for the translation keys (translations are in 'report' domain)
-     *
      * @return string
      */
     public function getReportTitle()
     {
-        $suffix = '';
-        if (strpos($this->getType(), '-4')) {
-            // hybrid reports
-            $suffix = 'HealthWelfare';
-        }
-        switch(substr($this->getType(), 0, 3)) {
-            case '102':
-                return 'propertyAffairsGeneral' . $suffix;
-            case '103':
-                return 'propertyAffairsMinimal' . $suffix;
-            case '104':
-                return 'healthWelfare';
-            default:
-                return '';
-        }
+        return $this->reportTitle;
+    }
+
+    /**
+     * @param string $reportTitle
+     * @return $this
+     */
+    public function setReportTitle($reportTitle)
+    {
+        $this->reportTitle = $reportTitle;
+        return $this;
     }
 }

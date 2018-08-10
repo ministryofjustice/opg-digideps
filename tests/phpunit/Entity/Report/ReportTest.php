@@ -224,40 +224,4 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(10 + 20 + 30 + 40, $report->getAssetsTotalsSummaryPage('cash'));
         $this->assertEquals(1+2+3+4+5, $report->getAssetsTotalsSummaryPage('other'));
     }
-
-    public function reportTypeTranslationKeyProvider()
-    {
-        return [
-            // Lay deputies
-            ['102', 'propertyAffairsGeneral'],
-            ['103', 'propertyAffairsMinimal'],
-            ['104', 'healthWelfare'],
-            ['103-4', 'propertyAffairsMinimalHealthWelfare'],
-            ['102-4', 'propertyAffairsGeneralHealthWelfare'],
-
-            // PA
-            ['102-6', 'propertyAffairsGeneral'],
-            ['103-6', 'propertyAffairsMinimal'],
-            ['104-6', 'healthWelfare'],
-            ['103-4-6', 'propertyAffairsMinimalHealthWelfare'],
-            ['102-4-6', 'propertyAffairsGeneralHealthWelfare'],
-
-            // Professional
-            ['102-5', 'propertyAffairsGeneral'],
-            ['103-5', 'propertyAffairsMinimal'],
-            ['104-5', 'healthWelfare'],
-            ['103-4-5', 'propertyAffairsMinimalHealthWelfare'],
-            ['102-4-5', 'propertyAffairsGeneralHealthWelfare'],
-        ];
-    }
-
-    /**
-     * @dataProvider reportTypeTranslationKeyProvider
-     */
-    public function testGetReportTitle($reportType, $expected)
-    {
-        $this->report->setType($reportType);
-
-        $this->assertEquals($expected, $this->report->getReportTitle());
-    }
 }
