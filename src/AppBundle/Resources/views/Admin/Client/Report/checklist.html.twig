@@ -38,6 +38,10 @@
         {{ 'courtOrderNumber' | trans({}, 'common') }}:
         <span class="bold behat-region-case-number">{{ report.client.caseNumber }}</span>
     </p>
+    <p>
+        {{ 'reportType' | trans({}, 'common') }}:
+        <span class="bold behat-region-case-number">{{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}</span>
+    </p>
     <p class="flush--bottom behat-region-last-saved-by">
         {{ 'lastSavedBy' | trans({}, 'common') }}:
         {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
