@@ -572,4 +572,15 @@ class Ndr implements ReportInterface
     {
         return new NdrStatusService($this);
     }
+
+    /**
+     * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
+     * for the translation keys (translations are in 'report' domain)
+     *
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        return 'ndr';
+    }
 }

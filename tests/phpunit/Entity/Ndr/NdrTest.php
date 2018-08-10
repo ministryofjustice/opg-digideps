@@ -61,4 +61,9 @@ class NdrTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(3, $this->ndr->getAssetsTotalValue());
     }
+
+    public function testGetReportTitle()
+    {
+        $this->assertEquals('ndr', $this->ndr->getReportTitle());
+    }
 }

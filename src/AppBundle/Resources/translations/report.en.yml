@@ -48,8 +48,8 @@ form:
 
 reportTitles:
   ndr: New deputy report
-  propertyAndAffairsGeneral: "Property and affairs: general"
-  propertyAndAffairsMinimal: "Property and affairs: minimal"
-  healthAndWelfare: Health and welfare
-  propertyAndAffairsGeneralHealthWelfare: "Property and affairs with health and welfare: general"
-  propertyAndAffairsMinimalHealthWelfare: "Property and affairs with health and welfare: minimal"
+  propertyAffairsGeneral: "Property and affairs: general"
+  propertyAffairsMinimal: "Property and affairs: minimal"
+  healthWelfare: Health and welfare
+  propertyAffairsGeneralHealthWelfare: "Property and affairs with health and welfare: general"
+  propertyAffairsMinimalHealthWelfare: "Property and affairs with health and welfare: minimal"

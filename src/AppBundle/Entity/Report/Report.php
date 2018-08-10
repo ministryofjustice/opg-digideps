@@ -1203,22 +1203,23 @@ class Report implements ReportInterface
     /**
      * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
      * for the translation keys (translations are in 'report' domain)
+     *
      * @return string
      */
     public function getReportTitle()
     {
         $suffix = '';
-        if (strpos('-4', $this->getType())) {
+        if (strpos($this->getType(), '-4')) {
             // hybrid reports
             $suffix = 'HealthWelfare';
         }
         switch(substr($this->getType(), 0, 3)) {
             case '102':
-                return 'propertyAndAffairsGeneral' . $suffix;
+                return 'propertyAffairsGeneral' . $suffix;
             case '103':
-                return 'propertyAndAffairsMinimal' . $suffix;
+                return 'propertyAffairsMinimal' . $suffix;
             case '104':
-                return 'healthAndWelfare';
+                return 'healthWelfare';
             default:
                 return '';
         }
