@@ -1234,4 +1234,37 @@ class Report implements ReportInterface
         ];
     }
 
+    /**
+     * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
+     * for the translation keys (translations are in 'report' domain)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"report"})
+     * @JMS\Type("string")
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        $titleTranslationKeys = [
+            self::TYPE_103 => 'propertyAffairsMinimal',
+            self::TYPE_102 => 'propertyAffairsGeneral',
+            self::TYPE_104 => 'healthWelfare',
+            self::TYPE_103_4 => 'propertyAffairsMinimalHealthWelfare',
+            self::TYPE_102_4 => 'propertyAffairsGeneralHealthWelfare',
+
+            self::TYPE_103_6 => 'propertyAffairsMinimal',
+            self::TYPE_102_6 => 'propertyAffairsGeneral',
+            self::TYPE_104_6 => 'healthWelfare',
+            self::TYPE_103_4_6 => 'propertyAffairsMinimalHealthWelfare',
+            self::TYPE_102_4_6 => 'propertyAffairsGeneralHealthWelfare',
+
+            self::TYPE_103_5 => 'propertyAffairsMinimal',
+            self::TYPE_102_5 => 'propertyAffairsGeneral',
+            self::TYPE_104_5 => 'healthWelfare',
+            self::TYPE_103_4_5 => 'propertyAffairsMinimalHealthWelfare',
+            self::TYPE_102_4_5 => 'propertyAffairsGeneralHealthWelfare',
+        ];
+
+        return $titleTranslationKeys[$this->getType()];
+    }
 }

@@ -557,4 +557,18 @@ class Ndr implements ReportInterface
     {
         //cache not needed for NDR
     }
+
+    /**
+     * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
+     * for the translation keys (translations are in 'report' domain)
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"ndr"})
+     * @JMS\Type("string")
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        return 'ndr';
+    }
 }
