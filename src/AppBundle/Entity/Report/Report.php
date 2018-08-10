@@ -1200,5 +1200,27 @@ class Report implements ReportInterface
         return $this->getUnSubmitDate() && !$this->getSubmitted();
     }
 
-
+    /**
+     * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
+     * for the translation keys (translations are in 'report' domain)
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        $suffix = '';
+        if (strpos('-4', $this->getType())) {
+            // hybrid reports
+            $suffix = 'HealthWelfare';
+        }
+        switch(substr($this->getType(), 0, 3)) {
+            case '102':
+                return 'propertyAndAffairsGeneral' . $suffix;
+            case '103':
+                return 'propertyAndAffairsMinimal' . $suffix;
+            case '104':
+                return 'healthAndWelfare';
+            default:
+                return '';
+        }
+    }
 }
