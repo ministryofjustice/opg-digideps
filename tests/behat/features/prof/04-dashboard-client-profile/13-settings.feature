@@ -88,8 +88,6 @@ Feature: PROF settings
       | profile_firstname        |
       | profile_lastname         |
       | profile_email            |
-      | profile_jobTitle         |
-      | profile_phoneMain        |
     When I fill in the following:
       | profile_firstname        | Tim Team Member                                 |
       | profile_lastname         | Chap                                            |
