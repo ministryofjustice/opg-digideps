@@ -40,7 +40,7 @@
     </p>
     <p>
         {{ 'reportType' | trans({}, 'common') }}:
-        <span class="bold behat-region-case-number">{{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}</span>
+        <span class="bold">{{ ('reportTitles.' ~ report.reportTitle) | trans({}, 'report') }}</span>
     </p>
     <p class="flush--bottom behat-region-last-saved-by">
         {{ 'lastSavedBy' | trans({}, 'common') }}:
