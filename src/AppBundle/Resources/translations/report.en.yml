@@ -20,7 +20,7 @@ codeputy:
 
 # Edit reporting period page (Lay and Organisation (PA/Prof))
 editReportingDates:
-  htmlTitle: Annual deputy reports for %client%
+  htmlTitle: Annual deputy reports for client
   pageTitle: Annual deputy reports for %client%
   title: %period% reporting period
   pageSectionDescription: Tell us when your reporting period starts and finishes.
