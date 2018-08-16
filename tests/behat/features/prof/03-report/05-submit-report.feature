@@ -23,7 +23,7 @@ Feature: Report submit (client 01000010)
             | Green                                 | deputy-lastname |
             | ADD1                                  | deputy-address |
             | 10000000001                           | deputy-phone |
-            | behat-pa1@publicguardian.gsi.gov.uk   | deputy-email |
+            | behat-prof1@publicguardian.gsi.gov.uk   | deputy-email |
         And I click on "declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
