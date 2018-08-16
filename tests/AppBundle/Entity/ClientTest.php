@@ -42,13 +42,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function courtDateExpectedStartDateProvider()
     {
         $currentYear = date('Y');
+
         return [
-            [new \DateTime('2000-01-01'), new \DateTime($currentYear-1 . '-01-01')],
-            [new \DateTime('2000-12-31'), new \DateTime(($currentYear -1) . '-12-31')],
+            [new \DateTime('2000-01-01'), new \DateTime(($currentYear-1) . '-01-01')],
+            [new \DateTime('2000-12-31'), new \DateTime(($currentYear-1) . '-12-31')],
             [new \DateTime('2003-09-30'), new \DateTime(($currentYear-1) . '-09-30')],
             [new \DateTime('2015-03-31'), new \DateTime(($currentYear-1) . '-03-31')],
             [new \DateTime('2016-02-29'), new \DateTime(($currentYear-1) . '-03-01')],
-            [new \DateTime('2017-03-01'), new \DateTime(($currentYear-1) . '-03-01')]
+            [new \DateTime('2017-03-01'), new \DateTime(($currentYear-1) . '-03-01')],
+            [new \DateTime('2018-08-15'), new \DateTime(($currentYear) . '-08-15')],
+            [new \DateTime('2018-08-16'), new \DateTime(($currentYear) . '-08-16')],
         ];
     }
 
@@ -65,7 +68,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [new \DateTime('2003-09-30'), new \DateTime(($currentYear) . '-09-29')],
             [new \DateTime('2015-03-31'), new \DateTime(($currentYear) . '-03-30')],
             [new \DateTime('2016-02-29'), new \DateTime(($currentYear) . '-02-28')],
-            [new \DateTime('2017-03-01'), new \DateTime(($currentYear) . '-02-28')]
+            [new \DateTime('2017-03-01'), new \DateTime(($currentYear) . '-02-28')],
+            [new \DateTime('2018-08-15'), new \DateTime(($currentYear+1) . '-08-14')],
+            [new \DateTime('2018-08-16'), new \DateTime(($currentYear+1) . '-08-15')],
+            [new \DateTime('2017-08-17'), new \DateTime(($currentYear) . '-08-16')]
         ];
     }
 

@@ -884,7 +884,14 @@ class Client
         if (!($this->getCourtDate() instanceof \DateTime)) {
             return null;
         }
-        $expectedReportStartDate->setDate((date('Y') -1), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+
+        // if court Date is this year, just return it as the start date
+        if ($this->getCourtDate()->format('Y') == date('Y')) {
+            return $this->getCourtDate();
+        }
+
+        // else make it last year
+        $expectedReportStartDate->setDate(date('Y')-1, $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
 
         return $expectedReportStartDate;
     }
