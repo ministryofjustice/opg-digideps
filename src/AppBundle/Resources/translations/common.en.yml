@@ -82,6 +82,7 @@ amount: Amount
 totalAmount: Total amount
 firstNames: First names
 lastName: Last name
+reportType: Report type
 
 # Statuses
 notCreated: Not created

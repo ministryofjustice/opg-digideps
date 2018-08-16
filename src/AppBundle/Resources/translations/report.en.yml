@@ -45,3 +45,11 @@ form:
     controls:
       cancel:
         label: "Cancel"
+
+reportTitles:
+  ndr: New deputy report
+  propertyAffairsGeneral: "Property and affairs: general"
+  propertyAffairsMinimal: "Property and affairs: minimal"
+  healthWelfare: Health and welfare
+  propertyAffairsGeneralHealthWelfare: "Property and affairs with health and welfare: general"
+  propertyAffairsMinimalHealthWelfare: "Property and affairs with health and welfare: minimal"

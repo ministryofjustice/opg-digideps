@@ -32,25 +32,6 @@ class Report implements ReportInterface
     use ReportTraits\ReportProfServiceFeesTrait;
     use ReportTraits\ReportUnsubmittedSections;
 
-
-    const TYPE_103 = '103';
-    const TYPE_102 = '102';
-    const TYPE_104 = '104';
-    const TYPE_103_4 = '103-4';
-    const TYPE_102_4 = '102-4';
-
-    const TYPE_103_6 = '103-6';
-    const TYPE_102_6 = '102-6';
-    const TYPE_104_6 = '104-6';
-    const TYPE_103_4_6 = '104-4-6';
-    const TYPE_102_4_6 = '102-4-6';
-
-    const TYPE_103_5 = '103-5';
-    const TYPE_102_5 = '102-5';
-    const TYPE_104_5 = '104-5';
-    const TYPE_103_4_5 = '103-4-5';
-    const TYPE_102_4_5 = '102-4-5';
-
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"visits-care"})
@@ -67,7 +48,6 @@ class Report implements ReportInterface
      * @var string
      */
     private $type;
-
 
     /**
      * @JMS\Type("boolean")
@@ -331,6 +311,13 @@ class Report implements ReportInterface
      * @JMS\Type("array")
      **/
     private $previousReportData;
+
+    /**
+     * @JMS\Type("string")
+     *
+     * @var string
+     */
+    private $reportTitle;
 
     /**
      * @return int $id
@@ -1200,5 +1187,21 @@ class Report implements ReportInterface
         return $this->getUnSubmitDate() && !$this->getSubmitted();
     }
 
+    /**
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        return $this->reportTitle;
+    }
 
+    /**
+     * @param string $reportTitle
+     * @return $this
+     */
+    public function setReportTitle($reportTitle)
+    {
+        $this->reportTitle = $reportTitle;
+        return $this;
+    }
 }

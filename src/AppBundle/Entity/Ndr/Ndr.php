@@ -572,4 +572,22 @@ class Ndr implements ReportInterface
     {
         return new NdrStatusService($this);
     }
+
+    /**
+     * @return string
+     */
+    public function getReportTitle()
+    {
+        return $this->reportTitle;
+    }
+
+    /**
+     * @param string $reportTitle
+     * @return $this
+     */
+    public function setReportTitle($reportTitle)
+    {
+        $this->reportTitle = $reportTitle;
+        return $this;
+    }
 }

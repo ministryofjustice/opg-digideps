@@ -24,6 +24,7 @@ Feature: Admin report checklist
       | Not saved yet | last-saved-by |
       | Not saved yet | last-modified-by |
       | 1 Jan 2016 | court-date |
+      | Property and affairs: general | report-type-title |
       | 1 Jan 2017 to 31 Dec 2017 | expected-date |
       | Cly | checklist-client-firstname |
       | Hent | checklist-client-lastname |

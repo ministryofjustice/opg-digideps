@@ -121,7 +121,7 @@ class FormattedTest extends WebTestCase
 
         $this->report = new Report();
         $this->report
-            ->setType(Report::TYPE_102)
+            ->setType('102')
             ->setAvailableSections([//102
             'decisions', 'contacts','visitsCare',
             'lifestyle','balance','bankAccounts',
