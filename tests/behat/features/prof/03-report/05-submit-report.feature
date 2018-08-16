@@ -17,7 +17,14 @@ Feature: Report submit (client 01000010)
         And I reset the email log
         And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000010" region
-        And I click on "edit-report_submit, declaration-page"
+        And I click on "edit-report_submit"
+        Then each text should be present in the corresponding region:
+            | John Named                            | deputy-firstname |
+            | Green                                 | deputy-lastname |
+            | ADD1                                  | deputy-address |
+            | 10000000001                           | deputy-phone |
+            | behat-pa1@publicguardian.gsi.gov.uk   | deputy-email |
+        And I click on "declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
             | report_declaration_agreedBehalfDeputy_0 | only_deputy |
