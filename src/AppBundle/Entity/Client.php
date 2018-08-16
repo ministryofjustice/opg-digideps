@@ -889,16 +889,9 @@ class Client
         if ($this->getCourtDate()->format('Y') == date('Y')) {
             return $this->getCourtDate();
         }
-        $currentDate = new \DateTime();
-        $courtDateThisYear = new \DateTime();
-        $courtDateThisYear->setDate((date('Y')), $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
 
-        if (intval($currentDate->format('md'))  < intval($courtDateThisYear->format('md'))) {
-            $year = date('Y') -1;
-        } else {
-            $year = date('Y');
-        }
-        $expectedReportStartDate->setDate($year, $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+        // else make it last year
+        $expectedReportStartDate->setDate(date('Y')-1, $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
 
         return $expectedReportStartDate;
     }
