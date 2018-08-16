@@ -1,5 +1,15 @@
 FROM registry.service.opg.digital/opguk/digi-deps-frontend-base:nightly
 
+# INSTALL postgresql-client-9.6, neede to connect to postgres 9.6 db from test container
+# https://askubuntu.com/questions/831292/how-do-i-install-postgresql-9-6-on-any-ubuntu-version
+USER root
+RUN add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main"
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+RUN apt-get update && \
+    apt-get install -y postgresql-client-9.6 && \
+    apt-get clean && apt-get autoremove && \
+    rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
+
 WORKDIR /app
 USER app
 ENV  HOME /app
