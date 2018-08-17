@@ -15,8 +15,8 @@
     <div id="deputy-details-subsection" class="half-width first">
         <h3 class="left">Deputy details</h3>
 
-        {# ORG users  #}
-        {% set deputy = loggedInDeputy.isLayDeputy ? loggedInDeputy : (client.getNamedDeputy | default(loggedInDeputy)) %}
+        {# for PROF users, deputy is always the named deputy #}
+        {% set deputy = loggedInDeputy.isDeputyProf and client.getNamedDeputy ? client.getNamedDeputy : loggedInDeputy %}
         <dl class="labelvalue cl">
             <dt class="label">First names</dt>
             <dd class="value behat-region-deputy-firstname">{{ deputy.firstname}}</dd>
