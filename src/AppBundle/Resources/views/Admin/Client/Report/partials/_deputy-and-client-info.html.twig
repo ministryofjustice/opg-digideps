@@ -15,8 +15,16 @@
     <div class="panel panel-border-narrow push--bottom">
         <div>
             <p class="flush--bottom behat-region-court-date">
-                <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
+                <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong>
+                {% if report.client.courtDate is not null %}
+                    {{ report.client.courtDate | date("j M Y") }}
+                {% elseif report.client.calculatedCourtDate is not null %}
+                    {{ report.client.calculatedCourtDate | date("j M Y") }} (calculated based on first report submission)
+                {% else %}
+                    Not known
+                {% endif %}
             </p>
+
             <p class="flush--bottom behat-region-expected-date">
                 <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
                 {% if report.client.expectedReportEndDate is defined %}
