@@ -880,7 +880,12 @@ class Client
         // clone datetime object. Do not alter object courtDate property.
         /** @var \DateTime $expectedReportStartDate */
         if (!($this->getCourtDate() instanceof \DateTime)) {
-            $expectedReportStartDate = clone $this->getCalculatedCourtDate();
+            if ($this->getCalculatedCourtDate() instanceof \DateTime) {
+                $expectedReportStartDate = clone $this->getCalculatedCourtDate();
+            } else {
+                // nothing to use for expected start date
+                return null;
+            }
         } else {
             $expectedReportStartDate = clone $this->getCourtDate();
         }
@@ -943,11 +948,13 @@ class Client
             return $first->getEndDate() > $second->getEndDate() ? 1 : -1;
         });
 
-        $calculatedCourtDate = clone iterator_to_array($arrayIterator)[0]->getEndDate();
+        $orderedReports = iterator_to_array($arrayIterator);
 
-        if ($calculatedCourtDate instanceof \DateTime) {
+        if (isset($orderedReports[0]) && $orderedReports[0] instanceof Report && $orderedReports[0]->getEndDate() instanceof \DateTime) {
+            $calculatedCourtDate = clone $orderedReports[0]->getEndDate();
             return $calculatedCourtDate->modify('-1 year +1 day');
         }
 
+        return null;
     }
 }
