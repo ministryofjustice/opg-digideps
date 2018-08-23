@@ -34,6 +34,7 @@ checklistPage:
   closingBalancesPrevReport: Closing balances from previous report
   closingBalancesPrevReportMissing: No previous reports on record to show closing balance
   openingBalances: Opening balances
+  closingBalances: Closing balances
   balanceDifference: Balance difference
   revealTitle:
     contactDetails: View contact details
