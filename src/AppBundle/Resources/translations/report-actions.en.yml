@@ -67,8 +67,8 @@ form:
       summary: Selling property on %client%'s behalf
       content:
         para01: |
-          Unless your court order already gives you authority to sell property %client% owns or
-          has a share in, you need to apply to the Court of Protection for permission.
+          If your court order says that you must not sell, buy, lease or rent property %client%
+          owns or has a share in, you need to apply to the Court of Protection for permission.
         para02: |
           It costs £385 to apply – paid from %client%'s funds – and there may be additional
           costs if there's a court hearing.
