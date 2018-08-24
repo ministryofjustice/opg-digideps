@@ -95,6 +95,42 @@
 
             {% endif %}
 
+
+            <div class="grid-row">
+                <div class="column-one-half">
+                    <p class="text-white">Ignore this content. Only here to affect layout.</p>
+                </div>
+
+                <div class="column-one-half">
+
+                    <h3 class="heading-medium">{{ (page ~ '.closingBalances') | trans }}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                                <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for account in report.bankAccounts %}
+                                <tr>
+                                    <td>{{ account.getNameOneLine() }}</td>
+                                    <td class="numeric-small">£{{ account.closingBalance | money_format }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr class="no-border">
+                                <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</span></td>
+                                <td class="numeric-small">
+                                    <span class="bold behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
         </div>
     </details>
 </div>
