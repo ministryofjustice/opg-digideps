@@ -7,26 +7,24 @@
 <div class="form-section push-half--bottom">
     <div class="form-group-outer">
         {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-            'fieldSetClass': 'inline',
-            'formGroupClass': 'push-half--bottom'
+            'fieldSetClass': 'inline'
         }) }}
     </div>
 
-    <div class="panel panel-border-narrow push--bottom">
-        <div>
-            <p class="flush--bottom behat-region-court-date">
-                <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
-            </p>
-            <p class="flush--bottom behat-region-expected-date">
-                <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
-                {% if report.client.expectedReportEndDate is defined %}
-                    {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
-                {% endif %}
-            </p>
-            <p class="behat-region-submitted-date">
-                <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
-            </p>
-        </div>
+    {# Hiding these dates while they're glitchy #}
+    <div class="panel panel-border-narrow push--bottom hidden">
+        <p class="flush--bottom behat-region-court-date">
+            <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
+        </p>
+        <p class="flush--bottom behat-region-expected-date">
+            <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
+            {% if report.client.expectedReportEndDate is defined %}
+                {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+            {% endif %}
+        </p>
+        <p class="behat-region-submitted-date">
+            <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
+        </p>
     </div>
 </div>
 
