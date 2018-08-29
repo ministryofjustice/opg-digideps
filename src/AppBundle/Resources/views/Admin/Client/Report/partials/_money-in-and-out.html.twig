@@ -196,6 +196,7 @@
 
     {# Don't show money transfers for 103 #}
     {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+      {% if report.enoughBankAccountForTransfers %}
         <details>
             <summary>
                 <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
@@ -209,6 +210,11 @@
                 </div>
             </div>
         </details>
+      {% else %}
+        <p class="text">
+            {{ (page ~ '.noTransferToShow') | trans }}
+        </p>
+      {% endif %}
     {% endif %}
 
     <details>
