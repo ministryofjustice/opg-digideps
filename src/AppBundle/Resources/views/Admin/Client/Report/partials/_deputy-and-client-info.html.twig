@@ -7,16 +7,16 @@
 <div class="form-section push-half--bottom">
     <div class="form-group-outer">
         {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-            'fieldSetClass': 'inline'
+            'fieldSetClass': 'inline',
+            'formGroupClass': 'push-half--bottom'
         }) }}
     </div>
 
-    {# Hiding these dates while they're glitchy #}
-    <div class="panel panel-border-narrow push--bottom hidden">
-        <p class="flush--bottom behat-region-court-date">
+    <div class="panel panel-border-narrow push--bottom">
+        <p class="flush--bottom behat-region-court-date hidden">
             <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong> {{ report.client.courtDate | date("j M Y") }}
         </p>
-        <p class="flush--bottom behat-region-expected-date">
+        <p class="flush--bottom behat-region-expected-date hidden">
             <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
             {% if report.client.expectedReportEndDate is defined %}
                 {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
