@@ -31,7 +31,7 @@ class MoneyTransferController extends RestController
 
         $transfer = new EntityDir\Report\MoneyTransfer();
         $transfer->setReport($report);
-        $report->setNoTransfersToAdd(null);
+        $report->setNoTransfersToAdd(false);
         $this->fillEntity($transfer, $data);
 
         $this->persistAndFlush($transfer);
