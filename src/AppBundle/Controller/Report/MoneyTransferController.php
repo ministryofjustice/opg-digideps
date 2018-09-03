@@ -29,7 +29,7 @@ class MoneyTransferController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (count($report->getBankAccounts()) < 2) {
+        if (!$report->enoughBankAccountForTransfers()) {
             return $this->render('AppBundle:Report/MoneyTransfer:error.html.twig', [
                 'error' => 'atLeastTwoBankAccounts',
                 'report' => $report,
@@ -59,12 +59,12 @@ class MoneyTransferController extends AbstractController
         ]);
 
         $form->handleRequest($request);
-
         if ($form->isValid()) {
+
             switch ($report->getNoTransfersToAdd()) {
-                case false:
+                case 0:
                     return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'step' => 1]);
-                case true:
+                case 1:
                     $this->getRestClient()->put('report/' . $reportId, $report, ['money-transfers-no-transfers']);
                     return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
             }
@@ -98,7 +98,6 @@ class MoneyTransferController extends AbstractController
         $stepUrlData = $dataFromUrl;
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromPage = $request->get('from');
-
 
         $stepRedirector = $this->stepRedirector()
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')

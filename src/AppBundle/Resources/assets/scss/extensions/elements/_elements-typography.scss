@@ -20,6 +20,10 @@
 	}
 }
 
+.text-white {
+    color: $white;
+}
+
 // Subheadings within multiple grouped tables (summary page)
 .heading-small--table {
     @include bold-19();

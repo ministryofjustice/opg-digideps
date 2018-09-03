@@ -34,6 +34,7 @@ checklistPage:
   closingBalancesPrevReport: Closing balances from previous report
   closingBalancesPrevReportMissing: No previous reports on record to show closing balance
   openingBalances: Opening balances
+  closingBalances: Closing balances
   balanceDifference: Balance difference
   revealTitle:
     contactDetails: View contact details
@@ -51,6 +52,7 @@ checklistPage:
     paDeputyExpenses: View deputy's fees and expenses
     giftsSummary: View gifts summary
     deputyExpensesSummary: View deputy expenses
+  noTransferToShow: No money transfers to view
   form:
     save:
       label: Save progress
