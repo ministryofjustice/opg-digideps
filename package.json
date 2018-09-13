@@ -11,7 +11,7 @@
     "del": "^3.0.0",
     "govuk-elements-sass": "^3.1.0",
     "govuk_template_mustache": "^0.24.0",
-    "gulp": "^4.0.0",
+    "gulp": "^3.2.1",
     "gulp-concat": "^2.6.1",
     "jshint": "^2.9.5",
     "gulp-jshint": "^2.1.0",
