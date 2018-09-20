@@ -16,7 +16,11 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Reports.
  *
- * @ORM\Table(name="report")
+ * @ORM\Table(name="report",
+ *     indexes={
+ *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
+ *     @ORM\Index(name="submitted_idx", columns={"submitted"})
+ *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
 class Report implements ReportInterface
