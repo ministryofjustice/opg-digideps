@@ -520,6 +520,7 @@ class ReportController extends RestController
                 //print_r($reportArray);die;
                 $reports[] = [
                     'id' => $reportArray['id'],
+                    'type' => $reportArray['type'],
                     'status' => ['status' => $reportArray['reportStatusCached']],
                     'due_date' => $reportArray['dueDate']->format('Y-m-d'),
                     'client' => [
