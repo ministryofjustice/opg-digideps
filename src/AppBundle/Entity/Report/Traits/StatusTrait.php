@@ -69,7 +69,7 @@ trait StatusTrait
         $this->setStatusCached($currentStatus);
 
         // update report status
-        $this->reportStatusCached = $this->getStatus()->setUseStatusCache(true)->getStatus();
+        $this->reportStatusCached = $this->getStatus()->setUseStatusCache(true)->getStatus(true);
     }
 
     /**

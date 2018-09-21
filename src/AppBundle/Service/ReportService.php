@@ -27,7 +27,8 @@ class ReportService
 
     public function __construct(
         EntityManager $em
-    ) {
+    )
+    {
         $this->reportRepository = $em->getRepository(Report::class);
         $this->casRecRepository = $em->getRepository(CasRec::class);
         $this->_em = $em;
@@ -309,22 +310,13 @@ class ReportService
             ->select('COUNT(r)')
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->where('u.id = ' . $userId)
-            ->andWhere('r.reportStatusCached = :rsc')
-            ->setParameter('rsc', $status);
+            ->where('u.id = ' . $userId);
 
-        if ($exclude_submitted) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
-
-        if ($q) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', $q);
-        }
+        $this->additionalFilters($qb, $exclude_submitted, $status, $q);
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
 
     public function getAllReportsQb($status, $userId, $exclude_submitted, $sort, $sortDirection, $q, $limit, $offset)
     {
@@ -335,23 +327,54 @@ class ReportService
             ->leftJoin('c.users', 'u')
             ->leftJoin('r.submittedBy', 'sb')
             ->where('u.id = ' . $userId)
-
             ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
+            ->setMaxResults($limit);
 
-        if ($status) {
-            $qb->andWhere('r.reportStatusCached = :rsc')
-            ->setParameter('rsc', $status);
-        }
-
-        if ($exclude_submitted) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
+        $this->additionalFilters($qb, $exclude_submitted, $status, $q);
 
         if ($sort == 'end_date') {
             $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
             $qb->addOrderBy('c.caseNumber', 'ASC');
+        }
+
+        return $qb;
+    }
+
+
+    private function additionalFilters($qb, $exclude_submitted, $status, $q)
+    {
+        if ($exclude_submitted) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
+        $lastMidnight = new \DateTime();
+        $lastMidnight->setTime(0, 0, 0);
+        switch ($status) {
+            /**
+             * since the reportStatusCached is not stored considering isDue/endDate,
+             * notFinished today become readyToSubmit
+             *
+             * //TODO test carefully
+             */
+            case Report::STATUS_READY_TO_SUBMIT:
+                $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate <= :today)')
+                    ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
+                    ->setParameter('status', $status)
+                    ->setParameter('today', $lastMidnight);
+                break;
+
+            case Report::STATUS_NOT_FINISHED:
+                $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate > :today)')
+                    ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
+                    ->setParameter('status', $status)
+                    ->setParameter('today', $lastMidnight);
+                break;
+
+            case Report::STATUS_NOT_STARTED:
+                $qb->andWhere('r.reportStatusCached = :status')
+                    ->setParameter('status', $status);
+
+                break;
         }
 
         if ($q) {
@@ -359,7 +382,5 @@ class ReportService
             $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             $qb->setParameter('q', $q);
         }
-
-        return $qb;
     }
 }

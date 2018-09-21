@@ -483,12 +483,6 @@ class ReportController extends RestController
      */
     public function getAll(Request $request)
     {
-//        $stack = new \Doctrine\DBAL\Logging\DebugStack();
-//        $this->get('em')->getConnection()->getConfiguration()->setSQLLogger($stack);
-//        $s = microtime(1);
-
-
-
         $rs = $this->get('opg_digideps.report_service');
         /* @var $rs ReportService */
 
@@ -501,12 +495,10 @@ class ReportController extends RestController
         $sortDirection = $request->get('sort_direction');
         $exclude_submitted = $request->get('exclude_submitted');
 
+        // in order for the following code to work, the status cache needs to be build
         $this->updateReportStatusCache($userId);
 
         $qb = $rs->getAllReportsQb($status, $userId, $exclude_submitted, $sort, $sortDirection, $q, $limit, $offset);
-
-        /* @var $records Report[] */
-        $records = $qb->getQuery()->getResult();
 
         // calculate counts, and apply limit/offset
         $counts = [
@@ -516,18 +508,38 @@ class ReportController extends RestController
         ];
         $counts['total'] = array_sum($counts);
 
-        $this->setJmsSerialiserGroups([
-            'report', 'report-client', 'client'
-            , 'report-status'
-        ]);
-
+        // only a few pieces of info are needed from the dashboard.
+        // ways more efficient to hydrate as an array (no extra queries), and manually add the needed data
+        // When tested successfully, remove the else branch and the variable (=hydrate as array as a default)
+        $hydrateArray = true;
+        if ($hydrateArray) {
+            /* @var $records Report[] */
+            $reports = [];
+            $reportArrays = $qb->getQuery()->getArrayResult();
+            foreach ($reportArrays as $reportArray) {
+                //print_r($reportArray);die;
+                $reports[] = [
+                    'id' => $reportArray['id'],
+                    'status' => ['status' => $reportArray['reportStatusCached']],
+                    'due_date' => $reportArray['dueDate']->format('Y-m-d'),
+                    'client' => [
+                        'firstname' => $reportArray['client']['firstname'],
+                        'lastname' => $reportArray['client']['lastname'],
+                        'case_number' => (string)$reportArray['client']['id'],
+                    ]
+                ];
+            }
+        } else {
+            $reports = $qb->getQuery()->getResult();
+            $this->setJmsSerialiserGroups([
+                'report', 'report-client', 'client'
+                , 'report-status'
+            ]);
+        }
 
         return [
-//            'time' => microtime(1) - $s,
-//            'queries' => $stack->queries,
-//            'nQueries' => count($stack->queries),
             'counts' => $counts,
-            'reports' => $records,
+            'reports' => $reports,
         ];
     }
 

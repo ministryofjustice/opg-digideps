@@ -639,16 +639,17 @@ class ReportStatusService
      *
      * @return string
      */
-    public function getStatus()
+    public function getStatus($ignoreIsDue = false)
     {
         if (!$this->hasStarted()) {
             return 'notStarted';
         }
 
-        if ($this->report->isDue() && $this->isReadyToSubmit()) {
-            return 'readyToSubmit';
+        if ($ignoreIsDue) {
+            return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
         } else {
-            return 'notFinished';
+            return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
         }
     }
+
 }
