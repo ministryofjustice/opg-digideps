@@ -66,8 +66,10 @@ trait StatusTrait
                 $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
             }
         }
-
         $this->setStatusCached($currentStatus);
+
+        // update report status
+        $this->reportStatusCached = $this->getStatus()->setUseStatusCache(true)->getStatus();
     }
 
     /**

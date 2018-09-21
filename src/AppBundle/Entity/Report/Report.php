@@ -194,7 +194,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
 
@@ -294,7 +294,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"report-submitted-by"})
      * @JMS\Type("AppBundle\Entity\User")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
@@ -332,14 +332,14 @@ class Report implements ReportInterface
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
 
@@ -392,11 +392,37 @@ class Report implements ReportInterface
     /**
      * @var Checklist
      *
+     * // TODO "report" group is used by deputy side each time a report is loaded. Better to use a new one like report-checklist
+     *
      * @JMS\Groups({"report"})
      * @JMS\Type("AppBundle\Entity\Report\Checklist")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
+
+    const STATUS_NOT_STARTED = 'notStarted';
+    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    const STATUS_NOT_FINISHED = 'notFinished';
+
+    /**
+     * Holds a copy of result of the ReportStatusService::getStatus() results
+     * Used for ORG dashboard for tab calculation and pagination
+     *
+     * value: STATUS_* constant
+     *
+     * @JMS\Exclude()
+     *
+     * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
+     */
+    private $reportStatusCached;
+
+    /**
+     * @return mixed
+     */
+    public function getReportStatusCached()
+    {
+        return $this->reportStatusCached;
+    }
 
     /**
      * Report constructor.
@@ -471,6 +497,7 @@ class Report implements ReportInterface
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
         $this->setStatusCached($statusCached);
+        $this->statusStatusCached = self::STATUS_NOT_STARTED;
     }
 
     /**

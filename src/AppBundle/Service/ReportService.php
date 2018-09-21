@@ -118,7 +118,7 @@ class ReportService
     /**
      * Using an array of CasRec entities update any corresponding report type if it has been changed
      *
-     * @param array  $casRecEntities
+     * @param array $casRecEntities
      * @param string $userRoleName
      *
      * @throws \Exception
@@ -143,9 +143,10 @@ class ReportService
         $qb = $this->reportRepository->createQueryBuilder('r');
 
         $qb->leftJoin('r.client', 'c')
-           ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
+            ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
 
-        $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+        $reports = $qb->getQuery()->getResult();
+        /* @var $reports Report[] */
 
         //  Loop through the reports and update the report type if necessary
         foreach ($reports as $report) {
@@ -170,8 +171,8 @@ class ReportService
      * Set report submitted and create a new year report
      *
      * @param Report|Ndr $currentReport
-     * @param User       $user
-     * @param \DateTime  $submitDate
+     * @param User $user
+     * @param \DateTime $submitDate
      *
      * @return Report new year's report
      */
@@ -212,7 +213,7 @@ class ReportService
     }
 
     /**
-     * @param Report    $report
+     * @param Report $report
      * @param \DateTime $unsubmitDate
      * @param \DateTime $dueDate
      * @param $sectionList
@@ -235,8 +236,8 @@ class ReportService
     /**
      * Set report submission for additional documents
      *
-     * @param Report    $currentReport
-     * @param User      $user
+     * @param Report $currentReport
+     * @param User $user
      * @param \DateTime $submitDate
      *
      * @return Report new year's report
@@ -270,18 +271,21 @@ class ReportService
     public function findDeleteableReports(Collection $reports)
     {
         $reportIdToStatus = [];
-        foreach ($reports as $ur) { /* @var $ur Report */
+        foreach ($reports as $ur) {
+            /* @var $ur Report */
             $reportIdToStatus[$ur->getId()] = [
-                'status'=> $ur->getStatus()->getStatus(),
-                'start'=> $ur->getStartDate()->format('Y-m-d'),
+                'status' => $ur->getStatus()->getStatus(),
+                'start' => $ur->getStartDate()->format('Y-m-d'),
                 'end' => $ur->getEndDate()->format('Y-m-d'),
                 'sections' => $ur->getStatus()->getSectionStatus()
             ];
         }
 
         $ret = [];
-        foreach ($reports as $report1) {  /* @var $report1 Report */
-            foreach ($reports as $report2) {  /* @var $report2 Report */
+        foreach ($reports as $report1) {
+            /* @var $report1 Report */
+            foreach ($reports as $report2) {
+                /* @var $report2 Report */
                 if ($report1->getId() === $report2->getId()) {
                     continue;
                 }
@@ -295,5 +299,67 @@ class ReportService
         }
 
         return $ret;
+    }
+
+
+    public function getReportsCount($status, $userId, $exclude_submitted, $q)
+    {
+        $qb = $this->_em->getRepository(Report::class)
+            ->createQueryBuilder('r')
+            ->select('COUNT(r)')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            ->where('u.id = ' . $userId)
+            ->andWhere('r.reportStatusCached = :rsc')
+            ->setParameter('rsc', $status);
+
+        if ($exclude_submitted) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
+        if ($q) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('q', $q);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getAllReportsQb($status, $userId, $exclude_submitted, $sort, $sortDirection, $q, $limit, $offset)
+    {
+        $qb = $this->_em->getRepository(Report::class)
+            ->createQueryBuilder('r')
+            ->select('r,c,u')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            ->leftJoin('r.submittedBy', 'sb')
+            ->where('u.id = ' . $userId)
+
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+
+        if ($status) {
+            $qb->andWhere('r.reportStatusCached = :rsc')
+            ->setParameter('rsc', $status);
+        }
+
+        if ($exclude_submitted) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
+
+        if ($sort == 'end_date') {
+            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('c.caseNumber', 'ASC');
+        }
+
+        if ($q) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('q', $q);
+        }
+
+        return $qb;
     }
 }
