@@ -511,7 +511,7 @@ class ReportController extends RestController
         // only a few pieces of info are needed from the dashboard.
         // ways more efficient to hydrate as an array (no extra queries), and manually add the needed data
         // When tested successfully, remove the else branch and the variable (=hydrate as array as a default)
-        $hydrateArray = true;
+        $hydrateArray = true; // 4 times faster with this set to true
         if ($hydrateArray) {
             /* @var $records Report[] */
             $reports = [];
