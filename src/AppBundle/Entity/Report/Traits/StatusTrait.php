@@ -27,6 +27,20 @@ trait StatusTrait
     private $statusCached;
 
     /**
+     * @var string
+     *
+     * Holds a copy of result of the ReportStatusService::getStatus() results
+     * Used for ORG dashboard for tab calculation and pagination
+     *
+     * value: STATUS_* constant
+     *
+     * @JMS\Exclude()
+     *
+     * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
+     */
+    private $reportStatusCached;
+
+    /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>]
      *
      * @JMS\Exclude
@@ -44,6 +58,14 @@ trait StatusTrait
     public function setStatusCached(array $status)
     {
         $this->statusCached = json_encode($status);
+    }
+
+    /**
+     * @return string
+     */
+    public function getReportStatusCached()
+    {
+        return $this->reportStatusCached;
     }
 
 

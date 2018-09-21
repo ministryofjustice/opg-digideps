@@ -19,7 +19,8 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="report",
  *     indexes={
  *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
- *     @ORM\Index(name="submitted_idx", columns={"submitted"})
+ *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
+ *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
@@ -403,26 +404,6 @@ class Report implements ReportInterface
     const STATUS_NOT_STARTED = 'notStarted';
     const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
     const STATUS_NOT_FINISHED = 'notFinished';
-
-    /**
-     * Holds a copy of result of the ReportStatusService::getStatus() results
-     * Used for ORG dashboard for tab calculation and pagination
-     *
-     * value: STATUS_* constant
-     *
-     * @JMS\Exclude()
-     *
-     * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
-     */
-    private $reportStatusCached;
-
-    /**
-     * @return mixed
-     */
-    public function getReportStatusCached()
-    {
-        return $this->reportStatusCached;
-    }
 
     /**
      * Report constructor.
