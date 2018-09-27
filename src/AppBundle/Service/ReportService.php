@@ -342,13 +342,15 @@ class ReportService
             $qb->setParameter('q', $q);
         }
 
-        $qb->andWhere('r.reportStatusCached = :status')
-            ->setParameter('status', $status);
+        if ($status) {
+            $qb->andWhere('r.reportStatusCached = :status')
+                ->setParameter('status', $status);
 
-        // Since reportStatusCached is stored ignoring due date, an additional filter is needed
-        if ($status == Report::STATUS_READY_TO_SUBMIT) {
-            $qb->andWhere('r.endDate <= :today')
-                ->setParameter('today', new \DateTime('today midnight'));
+            // Since reportStatusCached is stored ignoring due date, an additional filter is needed
+            if ($status == Report::STATUS_READY_TO_SUBMIT) {
+                $qb->andWhere(':tomorrowMidnight >= r.endDate')
+                    ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
+            }
         }
 
         return $qb;
