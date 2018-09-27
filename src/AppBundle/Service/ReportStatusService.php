@@ -27,6 +27,9 @@ class ReportStatusService
      */
     private $report;
 
+    /**
+     * @var bool set to true to use the report status cached
+     */
     private $useStatusCache = false;
 
     public function __construct(Report $report)

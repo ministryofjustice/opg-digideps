@@ -445,7 +445,12 @@ class ReportController extends RestController
         return ['id' => $report->getId()];
     }
 
-
+    /**
+     * Update users's reports cached status when not set
+     * Flushes every 5 records to allow resuming in case of timeouts
+     *
+     * @param $userId
+     */
     private function updateReportStatusCache($userId)
     {
         $em = $this->get('em');
@@ -469,8 +474,6 @@ class ReportController extends RestController
             }
             $em->flush();
         }
-
-        return [];
     }
 
     /**

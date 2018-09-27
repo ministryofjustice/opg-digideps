@@ -70,7 +70,9 @@ trait StatusTrait
 
 
     /**
-     * Update the status cache of the given sections
+     * Update the status cache of the given sections,
+     * and also the report.reportStatusCached using the cache
+     *
      * using the `ReportService::getSectionStateNotCached`
      *
      * @param array $sectionIds
@@ -78,20 +80,20 @@ trait StatusTrait
     public function updateSectionsStatusCache(array $sectionIds)
     {
         $currentStatus = $this->getStatusCached();
+        $statusObject = $this->getStatus();
 
-        //TODO optimise and add those only when a financial section is affected
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
         $sectionIds[] = Report::SECTION_BALANCE;
 
         foreach($sectionIds as $sectionId) {
             if ($this->hasSection($sectionId)) {
-                $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
+                $currentStatus[$sectionId] = $statusObject->getSectionStateNotCached($sectionId);
             }
         }
         $this->setStatusCached($currentStatus);
 
-        // update report status
-        $this->reportStatusCached = $this->getStatus()->setUseStatusCache(true)->getStatus(true);
+        // update report status, using the cached version of the section statuses
+        $this->reportStatusCached = $statusObject->setUseStatusCache(true)->getStatus(true);
     }
 
     /**
