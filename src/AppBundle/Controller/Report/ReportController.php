@@ -510,7 +510,13 @@ class ReportController extends RestController
         $counts['total'] = array_sum($counts);
 
         // Get reports for the current page, hydrating as array (more efficient) and return the min amount of data needed for the dashboard
-        $qb = $rs->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q, $sort, $sortDirection, $limit, $offset);
+        $qb = $rs->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q, $sort, $sortDirection, $limit, $offset)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+        if ($sort == 'end_date') {
+            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
+            $qb->addOrderBy('c.caseNumber', 'ASC');
+        }
         /* @var $records Report[] */
         $reports = [];
         $reportArrays = $qb->getQuery()->getArrayResult();

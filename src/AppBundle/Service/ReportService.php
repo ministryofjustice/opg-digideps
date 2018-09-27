@@ -303,22 +303,32 @@ class ReportService
     }
 
 
-    public function getAllReportsQb($select, $status, $userId, $exclude_submitted, $q, $sort = null, $sortDirection = null, $limit = null, $offset = null)
+    /**
+     * @param $select reports|count
+     * @param $status
+     * @param $userId
+     * @param $exclude_submitted
+     * @param $q
+     *
+     * @return QueryBuilder
+     */
+    public function getAllReportsQb($select, $status, $userId, $exclude_submitted, $q)
     {
         $qb = $this->_em->getRepository(Report::class)
-            ->createQueryBuilder('r')
-        ;
+            ->createQueryBuilder('r');
 
         if ($select == 'reports') {
-            $qb->select('r,c,u')
-                ->leftJoin('r.submittedBy', 'sb')
-                ->setFirstResult($offset)
-                ->setMaxResults($limit);
+            $qb
+                ->select('r,c,u')
+                ->leftJoin('r.submittedBy', 'sb');
         } elseif ($select == 'count') {
             $qb->select('COUNT(r)');
+        } else {
+            throw new \InvalidArgumentException(__METHOD__ . ": first must be reports|count");
         }
 
-        $qb->leftJoin('r.client', 'c')
+        $qb
+            ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
             ->where('u.id = ' . $userId);
 
@@ -332,21 +342,7 @@ class ReportService
             $qb->setParameter('q', $q);
         }
 
-        $this->addReportStatusFilter($qb, $status);
-
-        if ($sort == 'end_date') {
-            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
-            $qb->addOrderBy('c.caseNumber', 'ASC');
-        }
-
-        return $qb;
-    }
-
-
-    private function addReportStatusFilter($qb, $status)
-    {
         $lastMidnight = new \DateTime('today midnight');
-
         switch ($status) {
             /**
              * since the reportStatusCached is not stored considering isDue/endDate,
@@ -369,9 +365,13 @@ class ReportService
             case Report::STATUS_NOT_STARTED:
                 $qb->andWhere('r.reportStatusCached = :status')
                     ->setParameter('status', Report::STATUS_NOT_STARTED);
-
                 break;
+
+            default:
+                throw new \InvalidArgumentException(__METHOD__.' invalid status');
         }
 
+        return $qb;
     }
+
 }
