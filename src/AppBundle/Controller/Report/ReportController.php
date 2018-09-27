@@ -498,20 +498,19 @@ class ReportController extends RestController
         $sortDirection = $request->get('sort_direction');
         $exclude_submitted = $request->get('exclude_submitted');
 
-        // in order for the following code to work, the status cache needs to be build
+        // Calculate missing report statuses. Needed for the following code
         $this->updateReportStatusCache($userId);
-
-        $qb = $rs->getAllReportsQb($status, $userId, $exclude_submitted, $sort, $sortDirection, $q, $limit, $offset);
 
         // calculate counts, and apply limit/offset
         $counts = [
-            Report::STATUS_NOT_STARTED => $rs->getReportsCount(Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q),
-            Report::STATUS_NOT_FINISHED => $rs->getReportsCount(Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q),
-            Report::STATUS_READY_TO_SUBMIT => $rs->getReportsCount(Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)
+            Report::STATUS_NOT_STARTED => $rs->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_NOT_FINISHED => $rs->getAllReportsQb('count', Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_READY_TO_SUBMIT => $rs->getAllReportsQb('count', Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult()
         ];
         $counts['total'] = array_sum($counts);
 
-        // Hydrate as array (more efficient) and return the min amount of data needed for the dashboard
+        // Get reports for the current page, hydrating as array (more efficient) and return the min amount of data needed for the dashboard
+        $qb = $rs->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q, $sort, $sortDirection, $limit, $offset);
         /* @var $records Report[] */
         $reports = [];
         $reportArrays = $qb->getQuery()->getArrayResult();

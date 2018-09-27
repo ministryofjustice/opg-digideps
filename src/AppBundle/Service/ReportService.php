@@ -303,34 +303,36 @@ class ReportService
     }
 
 
-    public function getReportsCount($status, $userId, $exclude_submitted, $q)
+    public function getAllReportsQb($select, $status, $userId, $exclude_submitted, $q, $sort = null, $sortDirection = null, $limit = null, $offset = null)
     {
         $qb = $this->_em->getRepository(Report::class)
             ->createQueryBuilder('r')
-            ->select('COUNT(r)')
-            ->leftJoin('r.client', 'c')
+        ;
+
+        if ($select == 'reports') {
+            $qb->select('r,c,u')
+                ->leftJoin('r.submittedBy', 'sb')
+                ->setFirstResult($offset)
+                ->setMaxResults($limit);
+        } elseif ($select == 'count') {
+            $qb->select('COUNT(r)');
+        }
+
+        $qb->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
             ->where('u.id = ' . $userId);
 
-        $this->additionalFilters($qb, $exclude_submitted, $status, $q);
+        if ($exclude_submitted) {
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
+        }
 
-        return $qb->getQuery()->getSingleScalarResult();
-    }
+        if ($q) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('q', $q);
+        }
 
-
-    public function getAllReportsQb($status, $userId, $exclude_submitted, $sort, $sortDirection, $q, $limit, $offset)
-    {
-        $qb = $this->_em->getRepository(Report::class)
-            ->createQueryBuilder('r')
-            ->select('r,c,u')
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('c.users', 'u')
-            ->leftJoin('r.submittedBy', 'sb')
-            ->where('u.id = ' . $userId)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        $this->additionalFilters($qb, $exclude_submitted, $status, $q);
+        $this->addReportStatusFilter($qb, $status);
 
         if ($sort == 'end_date') {
             $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
@@ -341,46 +343,35 @@ class ReportService
     }
 
 
-    private function additionalFilters($qb, $exclude_submitted, $status, $q)
+    private function addReportStatusFilter($qb, $status)
     {
-        if ($exclude_submitted) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
+        $lastMidnight = new \DateTime('today midnight');
 
-        $lastMidnight = new \DateTime();
-        $lastMidnight->setTime(0, 0, 0);
         switch ($status) {
             /**
              * since the reportStatusCached is not stored considering isDue/endDate,
              * notFinished today become readyToSubmit
-             *
-             * //TODO test carefully
              */
             case Report::STATUS_READY_TO_SUBMIT:
                 $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate <= :today)')
                     ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
-                    ->setParameter('status', $status)
+                    ->setParameter('status', Report::STATUS_READY_TO_SUBMIT)
                     ->setParameter('today', $lastMidnight);
                 break;
 
             case Report::STATUS_NOT_FINISHED:
                 $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate > :today)')
                     ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
-                    ->setParameter('status', $status)
+                    ->setParameter('status', Report::STATUS_NOT_FINISHED)
                     ->setParameter('today', $lastMidnight);
                 break;
 
             case Report::STATUS_NOT_STARTED:
                 $qb->andWhere('r.reportStatusCached = :status')
-                    ->setParameter('status', $status);
+                    ->setParameter('status', Report::STATUS_NOT_STARTED);
 
                 break;
         }
 
-        if ($q) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', $q);
-        }
     }
 }
