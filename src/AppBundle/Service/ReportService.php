@@ -342,15 +342,24 @@ class ReportService
             $qb->setParameter('q', $q);
         }
 
-        if ($status) {
+        // note: reportStatusCached is stored ignoring due date
+        if ($status == Report::STATUS_READY_TO_SUBMIT) {
+            // reports ready to submit are when status is ready AND is due (enddate < today)
+            $qb->andWhere('r.reportStatusCached = :status AND r.endDate <= :tomorrowMidnight')
+                ->setParameter('status', $status)
+                ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
+        }
+        if ($status == Report::STATUS_NOT_FINISHED) {
+            // report not finished are report not finished
+            // OR ready to submit but not yet due
+            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSub AND r.endDate > :tomorrowMidnight)')
+                ->setParameter('status', $status)
+                ->setParameter('readyToSub', Report::STATUS_READY_TO_SUBMIT)
+                ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
+        }
+        if ($status == Report::STATUS_NOT_STARTED) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
-
-            // Since reportStatusCached is stored ignoring due date, an additional filter is needed
-            if ($status == Report::STATUS_READY_TO_SUBMIT) {
-                $qb->andWhere(':tomorrowMidnight >= r.endDate')
-                    ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
-            }
         }
 
         return $qb;
