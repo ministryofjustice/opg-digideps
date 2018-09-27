@@ -93,6 +93,7 @@ trait StatusTrait
         $this->setStatusCached($currentStatus);
 
         // update report status, using the cached version of the section statuses
+        // Note: the isDue is skipped
         $this->reportStatusCached = $statusObject->setUseStatusCache(true)->getStatus(true);
     }
 

@@ -345,32 +345,27 @@ class ReportService
         $lastMidnight = new \DateTime('today midnight');
         switch ($status) {
             /**
-             * since the reportStatusCached is not stored considering isDue/endDate,
-             * notFinished today become readyToSubmit
+             * report.reportStatusCached is not stored considering isDue/endDate
+             *
+             * A notFinished could today become a readyToSubmit
              */
             case Report::STATUS_READY_TO_SUBMIT:
                 $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate <= :today)')
                     ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
-                    ->setParameter('status', Report::STATUS_READY_TO_SUBMIT)
+                    ->setParameter('status', $status)
                     ->setParameter('today', $lastMidnight);
                 break;
 
             case Report::STATUS_NOT_FINISHED:
-                $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :notFinished AND r.endDate > :today)')
-                    ->setParameter('notFinished', Report::STATUS_NOT_FINISHED)
-                    ->setParameter('status', Report::STATUS_NOT_FINISHED)
-                    ->setParameter('today', $lastMidnight);
-                break;
-
             case Report::STATUS_NOT_STARTED:
                 $qb->andWhere('r.reportStatusCached = :status')
-                    ->setParameter('status', Report::STATUS_NOT_STARTED);
+                    ->setParameter('status', $status);
                 break;
 
             default:
-                throw new \InvalidArgumentException(__METHOD__.' invalid status');
+                throw new \InvalidArgumentException(__METHOD__ . ' invalid status');
         }
-
+        
         return $qb;
     }
 
