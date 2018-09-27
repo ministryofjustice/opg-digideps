@@ -511,34 +511,24 @@ class ReportController extends RestController
         ];
         $counts['total'] = array_sum($counts);
 
-        // only a few pieces of info are needed from the dashboard.
-        // ways more efficient to hydrate as an array (no extra queries), and manually add the needed data
-        // When tested successfully, remove the else branch and the variable (=hydrate as array as a default)
-        $hydrateArray = true; // 4 times faster with this set to true
-        if ($hydrateArray) {
-            /* @var $records Report[] */
-            $reports = [];
-            $reportArrays = $qb->getQuery()->getArrayResult();
-            foreach ($reportArrays as $reportArray) {
-                //print_r($reportArray);die;
-                $reports[] = [
-                    'id' => $reportArray['id'],
-                    'type' => $reportArray['type'],
-                    'status' => ['status' => $reportArray['reportStatusCached']],
-                    'due_date' => $reportArray['dueDate']->format('Y-m-d'),
-                    'client' => [
-                        'firstname' => $reportArray['client']['firstname'],
-                        'lastname' => $reportArray['client']['lastname'],
-                        'case_number' => (string)$reportArray['client']['id'],
-                    ]
-                ];
-            }
-        } else {
-            $reports = $qb->getQuery()->getResult();
-            $this->setJmsSerialiserGroups([
-                'report', 'report-client', 'client'
-                , 'report-status'
-            ]);
+        // Hydrate as array (more efficient) and return the min amount of data needed for the dashboard
+        /* @var $records Report[] */
+        $reports = [];
+        $reportArrays = $qb->getQuery()->getArrayResult();
+        foreach ($reportArrays as $reportArray) {
+            $reports[] = [
+                'id' => $reportArray['id'],
+                'type' => $reportArray['type'],
+                'status' => [
+                    'status' => $reportArray['reportStatusCached'] // use cache built above
+                ],
+                'due_date' => $reportArray['dueDate']->format('Y-m-d'),
+                'client' => [
+                    'firstname' => $reportArray['client']['firstname'],
+                    'lastname' => $reportArray['client']['lastname'],
+                    'case_number' => (string)$reportArray['client']['id'],
+                ]
+            ];
         }
 
         return [
