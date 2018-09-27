@@ -526,7 +526,7 @@ class ReportController extends RestController
                 'client' => [
                     'firstname' => $reportArray['client']['firstname'],
                     'lastname' => $reportArray['client']['lastname'],
-                    'case_number' => (string)$reportArray['client']['id'],
+                    'case_number' => $reportArray['client']['caseNumber'],
                 ]
             ];
         }
