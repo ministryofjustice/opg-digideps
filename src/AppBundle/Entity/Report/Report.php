@@ -890,6 +890,10 @@ class Report implements ReportInterface
         return $this;
     }
 
+    /**
+     * @param \DateTime|null $endDate
+     * @return bool
+     */
     public static function isDue(\DateTime $endDate = null)
     {
         if (!$endDate) {
