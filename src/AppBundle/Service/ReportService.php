@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -14,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\QueryBuilder;
 
 class ReportService
 {
@@ -21,9 +23,24 @@ class ReportService
     protected $reportRepository;
 
     /**
-     * @var CasRecRepository
+     * @var EntityManager
+     */
+    protected $_em;
+
+    /**
+     * @var EntityRepository
      */
     private $casRecRepository;
+    
+    /**
+     * @var EntityRepository
+     */
+    private $assetRepository;
+
+    /**
+     * @var EntityRepository
+     */
+    private $bankAccountRepository;
 
     public function __construct(
         EntityManager $em
@@ -171,7 +188,7 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report|Ndr $currentReport
+     * @param Ndr|Report $currentReport
      * @param User $user
      * @param \DateTime $submitDate
      *
@@ -304,11 +321,11 @@ class ReportService
 
 
     /**
-     * @param $select reports|count
-     * @param $status
-     * @param $userId
-     * @param $exclude_submitted
-     * @param $q
+     * @param string $select reports|count
+     * @param string $status see Report::STATUS_* constants
+     * @param integer $userId
+     * @param boolean $exclude_submitted
+     * @param string $q search query client firstname/lastname or case number
      *
      * @return QueryBuilder
      */
