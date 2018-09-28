@@ -899,15 +899,6 @@ class Report implements ReportInterface
         $endOfToday = new \DateTime('today midnight');
 
         return $endDate < $endOfToday;
-
-        // reset time on dates
-        $today = new \DateTime();
-        $today->setTime(0, 0, 0);
-
-        $reportDueOn = clone $endDate;
-        $reportDueOn->setTime(0, 0, 0);
-
-        return $today >= $reportDueOn;
     }
 
     /**
