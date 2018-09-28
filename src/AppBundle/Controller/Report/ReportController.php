@@ -517,6 +517,7 @@ class ReportController extends RestController
             $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
             $qb->addOrderBy('c.caseNumber', 'ASC');
         }
+
         /* @var $records Report[] */
         $reports = [];
         $reportArrays = $qb->getQuery()->getArrayResult();
@@ -526,7 +527,8 @@ class ReportController extends RestController
                 'type' => $reportArray['type'],
                 'hasUnsumitDate' => $reportArray['unSubmitDate'] ? true : false,
                 'status' => [
-                    'status' => $reportArray['reportStatusCached'] // use cache built above
+                    // adjust report status cached using end date
+                    'status' => $rs->adjustReportStatus($reportArray['reportStatusCached'], $reportArray['endDate'])
                 ],
                 'due_date' => $reportArray['dueDate']->format('Y-m-d'),
                 'client' => [

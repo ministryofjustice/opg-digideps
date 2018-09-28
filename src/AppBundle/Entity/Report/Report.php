@@ -890,17 +890,21 @@ class Report implements ReportInterface
         return $this;
     }
 
-    public function isDue()
+    public static function isDue(\DateTime $endDate = null)
     {
-        if (!$this->getEndDate() instanceof \DateTime) {
+        if (!$endDate) {
             return false;
         }
+
+        $endOfToday = new \DateTime('today midnight');
+
+        return $endDate < $endOfToday;
 
         // reset time on dates
         $today = new \DateTime();
         $today->setTime(0, 0, 0);
 
-        $reportDueOn = clone $this->getEndDate();
+        $reportDueOn = clone $endDate;
         $reportDueOn->setTime(0, 0, 0);
 
         return $today >= $reportDueOn;

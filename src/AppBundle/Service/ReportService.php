@@ -31,7 +31,7 @@ class ReportService
      * @var EntityRepository
      */
     private $casRecRepository;
-    
+
     /**
      * @var EntityRepository
      */
@@ -42,6 +42,11 @@ class ReportService
      */
     private $bankAccountRepository;
 
+    /**
+     * @var \DateTime
+     */
+    private $endOfToday;
+
     public function __construct(
         EntityManager $em
     )
@@ -51,6 +56,7 @@ class ReportService
         $this->_em = $em;
         $this->assetRepository = $em->getRepository(Asset::class);
         $this->bankAccountRepository = $em->getRepository(BankAccountEntity::class);
+        $this->endOfToday = new \DateTime('today midnight');
     }
 
     public function findById($id)
@@ -362,24 +368,40 @@ class ReportService
         // note: reportStatusCached is stored ignoring due date
         if ($status == Report::STATUS_READY_TO_SUBMIT) {
             // reports ready to submit are when reportStatusCached=readyToSubmit AND is also due (enddate < today)
-            $qb->andWhere('r.reportStatusCached = :status AND r.endDate <= :tomorrowMidnight')
+            $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
-                ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
-        }
-        if ($status == Report::STATUS_NOT_FINISHED) {
+                ->setParameter('endOfToday', $this->endOfToday);
+        } else if ($status == Report::STATUS_NOT_FINISHED) {
             // report not finished are report with reportStatusCached=notFinished
             // OR ready to submit but not yet due
-            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSub AND r.endDate > :tomorrowMidnight)')
+            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
-                ->setParameter('readyToSub', Report::STATUS_READY_TO_SUBMIT)
-                ->setParameter('tomorrowMidnight', new \DateTime('tomorrow midnight'));
-        }
-        if ($status == Report::STATUS_NOT_STARTED) {
+                ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
+                ->setParameter('endOfToday', $this->endOfToday);
+        } else if ($status == Report::STATUS_NOT_STARTED) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
 
         return $qb;
+    }
+
+    /**
+     * If the report is ready to submit, but is not yet due, return notFinished instead
+     * In all the the cases, return original $status
+     *
+     * @param $status
+     * @param \DateTime $endDate
+     *
+     * @return string
+     */
+    public function adjustReportStatus($status, \DateTime $endDate)
+    {
+        if ($status == Report::STATUS_READY_TO_SUBMIT && !Report::isDue($endDate)) {
+            return Report::STATUS_NOT_FINISHED;
+        }
+
+        return $status;
     }
 
 }
