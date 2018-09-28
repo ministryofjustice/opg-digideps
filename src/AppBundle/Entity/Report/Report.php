@@ -478,7 +478,7 @@ class Report implements ReportInterface
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
         $this->setStatusCached($statusCached);
-        $this->statusStatusCached = self::STATUS_NOT_STARTED;
+        $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }
 
     /**
