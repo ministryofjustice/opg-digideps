@@ -61,6 +61,8 @@ trait StatusTrait
     }
 
     /**
+     * //TODO remove adn check test passing
+     * 
      * @return string
      */
     public function getReportStatusCached()
