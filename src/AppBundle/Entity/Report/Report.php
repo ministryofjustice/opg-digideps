@@ -657,7 +657,8 @@ class Report implements ReportInterface
 
     /**
      * Return true when the report is Due (today's date => report end date).
-     *
+     * //TODO consider using the API value instead of recalculating
+     * 
      * @return bool
      * @Assert\IsTrue(message="report.submissionExceptions.due", groups={"due"})
      */
@@ -667,14 +668,9 @@ class Report implements ReportInterface
             return false;
         }
 
-        // reset time on dates
-        $today = new \DateTime();
-        $today->setTime(0, 0, 0);
+        $endOfToday = new \DateTime('today midnight');
 
-        $reportDueOn = clone $this->getEndDate();
-        $reportDueOn->setTime(0, 0, 0);
-
-        return $today >= $reportDueOn;
+        return $this->getEndDate() < $endOfToday;
     }
 
     public function hasContacts()
