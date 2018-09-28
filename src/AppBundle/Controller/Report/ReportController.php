@@ -524,16 +524,29 @@ class ReportController extends RestController
             $reports[] = [
                 'id' => $reportArray['id'],
                 'type' => $reportArray['type'],
+                'hasUnsumitDate' => $reportArray['unSubmitDate'] ? true : false,
                 'status' => [
                     'status' => $reportArray['reportStatusCached'] // use cache built above
                 ],
                 'due_date' => $reportArray['dueDate']->format('Y-m-d'),
                 'client' => [
+                    'id' => $reportArray['client']['id'],
                     'firstname' => $reportArray['client']['firstname'],
                     'lastname' => $reportArray['client']['lastname'],
                     'case_number' => $reportArray['client']['caseNumber'],
                 ]
             ];
+        }
+
+        // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
+        foreach($reports as $k => $unsubmittedReport) {
+            if ($unsubmittedReport['hasUnsumitDate']) {
+                foreach($reports as $k2 => $currentReport) {
+                    if (!$currentReport['hasUnsumitDate'] && $currentReport['client']['id'] == $unsubmittedReport['client']['id']) {
+                        unset($reports[$k2]);
+                    }
+                }
+            }
         }
 
         return [
