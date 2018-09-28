@@ -50,6 +50,10 @@ class Report implements ReportInterface
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
 
+    const STATUS_NOT_STARTED = 'notStarted';
+    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    const STATUS_NOT_FINISHED = 'notFinished';
+
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const TYPE_103 = '103';
     const TYPE_102 = '102';
@@ -400,10 +404,6 @@ class Report implements ReportInterface
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
-
-    const STATUS_NOT_STARTED = 'notStarted';
-    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    const STATUS_NOT_FINISHED = 'notFinished';
 
     /**
      * Report constructor.
