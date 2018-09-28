@@ -62,7 +62,7 @@ trait StatusTrait
 
     /**
      * //TODO remove adn check test passing
-     * 
+     *
      * @return string
      */
     public function getReportStatusCached()
@@ -81,22 +81,22 @@ trait StatusTrait
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {
-        $currentStatus = $this->getStatusCached();
-        $statusObject = $this->getStatus();
+        $currentSectionStatus = $this->getStatusCached();
+        $currentReportStatus = $this->getStatus();
 
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
         $sectionIds[] = Report::SECTION_BALANCE;
 
         foreach($sectionIds as $sectionId) {
             if ($this->hasSection($sectionId)) {
-                $currentStatus[$sectionId] = $statusObject->getSectionStateNotCached($sectionId);
+                $currentSectionStatus[$sectionId] = $currentReportStatus->getSectionStateNotCached($sectionId);
             }
         }
-        $this->setStatusCached($currentStatus);
+        $this->setStatusCached($currentSectionStatus);
 
         // update report status, using the cached version of the section statuses
         // Note: the isDue is skipped
-        $this->reportStatusCached = $statusObject
+        $this->reportStatusCached = $currentReportStatus
             ->setUseStatusCache(true)
             ->getStatusIgnoringDueDate(true);
     }
