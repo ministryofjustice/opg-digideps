@@ -636,23 +636,37 @@ class ReportStatusService
      * Note: a cached/redundant value is hold in report.statusCached
      * This should not be used from the client, as expensive to calculate each time
      *
+     * TODO rewrite API and client to ALWAYS ignore the isDue. Othercase its caching is difficult
+     * Also, it makes more sense to decouple the date from the report status that could be renamed into
+     * e.g. "filled"
+     *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\Groups({"status", "report-status"})
      *
-     * @return string
+     * @return string notStarted|readyToSubmit|notFinished
      */
-    public function getStatus($ignoreIsDue = false)
+    public function getStatus()
     {
         if (!$this->hasStarted()) {
             return 'notStarted';
         }
 
-        if ($ignoreIsDue) {
-            return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
-        } else {
-            return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+    }
+
+    /**
+     * Used to fill report.reportStatusCached
+     *
+     * @return string notStarted|readyToSubmit|notFinished
+     */
+    public function getStatusIgnoringDueDate()
+    {
+        if (!$this->hasStarted()) {
+            return 'notStarted';
         }
+
+        return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
     }
 
 }
