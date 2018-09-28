@@ -486,8 +486,12 @@ class ReportController extends RestController
      */
     public function getAll(Request $request)
     {
-        $rs = $this->get('opg_digideps.report_service');
         /* @var $rs ReportService */
+        $rs = $this->get('opg_digideps.report_service');
+        /**
+         * @var $repo EntityDir\Repository\ReportRepository
+         */
+        $repo = $this->get('em')->getRepository(Report::class);
 
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
@@ -503,14 +507,14 @@ class ReportController extends RestController
 
         // calculate counts, and apply limit/offset
         $counts = [
-            Report::STATUS_NOT_STARTED => $rs->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
-            Report::STATUS_NOT_FINISHED => $rs->getAllReportsQb('count', Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
-            Report::STATUS_READY_TO_SUBMIT => $rs->getAllReportsQb('count', Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult()
+            Report::STATUS_NOT_STARTED => $repo->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_NOT_FINISHED => $repo->getAllReportsQb('count', Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_READY_TO_SUBMIT => $repo->getAllReportsQb('count', Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult()
         ];
         $counts['total'] = array_sum($counts);
 
         // Get reports for the current page, hydrating as array (more efficient) and return the min amount of data needed for the dashboard
-        $qb = $rs->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q)
+        $qb = $repo->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         if ($sort == 'end_date') {
