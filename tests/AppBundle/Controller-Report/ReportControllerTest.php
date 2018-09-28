@@ -503,7 +503,7 @@ class ReportControllerTest extends AbstractTestController
         //assert results
         $this->assertCount(3, $ret['reports']);
         $this->assertEquals('102', $ret['reports'][0]['type']);
-        $this->assertNotNull($ret['reports'][0]['client']['firstname']);
+        $this->assertEquals('pa1Client1', $ret['reports'][0]['client']['firstname']);
         $this->assertArrayHasKey('status', $ret['reports'][0]['status']);
 
         //test pagination
