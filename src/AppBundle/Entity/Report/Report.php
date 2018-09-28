@@ -469,7 +469,7 @@ class Report implements ReportInterface
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
-        $this->profServicefees = new ArrayCollection();
+        $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
 
         // set sections as notStarted when a new report is created
