@@ -891,18 +891,13 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param \DateTime|null $endDate
-     * @return bool
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("is_due")
+     * @JMS\Groups({"report"})
      */
-    public static function isDue(\DateTime $endDate = null)
+    public function isDue()
     {
-        if (!$endDate) {
-            return false;
-        }
-
-        $endOfToday = new \DateTime('today midnight');
-
-        return $endDate < $endOfToday;
+        return ReportService::isDue($this->getEndDate());
     }
 
     /**

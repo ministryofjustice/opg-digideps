@@ -331,11 +331,27 @@ class ReportService
      */
     public function adjustReportStatus($status, \DateTime $endDate)
     {
-        if ($status == Report::STATUS_READY_TO_SUBMIT && !Report::isDue($endDate)) {
+        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
         }
 
         return $status;
+    }
+
+
+    /**
+     * @param \DateTime|null $endDate
+     * @return bool
+     */
+    public static function isDue(\DateTime $endDate = null)
+    {
+        if (!$endDate) {
+            return false;
+        }
+
+        $endOfToday = new \DateTime('today midnight');
+
+        return $endDate <= $endOfToday;
     }
 
 }

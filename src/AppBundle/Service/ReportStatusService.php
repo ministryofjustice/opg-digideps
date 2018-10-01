@@ -608,7 +608,7 @@ class ReportStatusService
     public function getSubmitState()
     {
         return [
-            'state'  => $this->isReadyToSubmit() && Report::isDue($this->report->getEndDate())
+            'state'  => $this->isReadyToSubmit() && $this->report->isDue()
                 ? self::STATE_DONE
                 : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
@@ -652,7 +652,7 @@ class ReportStatusService
             return 'notStarted';
         }
 
-        return Report::isDue($this->report->getEndDate()) && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
     }
 
     /**
