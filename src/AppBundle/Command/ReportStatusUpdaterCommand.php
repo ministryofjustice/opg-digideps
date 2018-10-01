@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
- * Update report.statusCached when empty
+ * Update report.sectionStatusesCached when empty
  *
  * @codeCoverageIgnore
  */
@@ -41,7 +41,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
                 ->select('r')
-                ->where('r.statusCached IS NULL OR r.reportStatusCached IS NULL')
+                ->where('r.sectionStatusesCached IS NULL OR r.reportStatusCached IS NULL')
                 ->orderBy('r.id', 'DESC')
                 ->setMaxResults($chunkSize)
                 ->getQuery()

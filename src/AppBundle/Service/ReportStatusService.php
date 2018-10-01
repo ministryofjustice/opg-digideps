@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Statuses are cached into report.statusCached, and used when present
+ * Statuses are cached into report.sectionStatusesCached, and used when present
  * The cached status are set from the endpoints on CRUD operations on sections
  * Look at `ReportStatusUpdaterCommand` and its cron usage.
  *
@@ -633,7 +633,7 @@ class ReportStatusService
 
     /**
      * Calculate status using report info
-     * Note: a cached/redundant value is hold in report.statusCached
+     * Note: a cached/redundant value is hold in report.sectionStatusesCached
      * This should not be used from the client, as expensive to calculate each time
      *
      * TODO rewrite API and client to ALWAYS ignore the isDue. Othercase its caching is difficult
