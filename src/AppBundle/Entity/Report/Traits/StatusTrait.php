@@ -24,7 +24,7 @@ trait StatusTrait
      *
      * @ORM\Column(name="status_cached", type="text", nullable=true)
      */
-    private $statusCached;
+    private $sectionStatusesCached;
 
     /**
      * @var string
@@ -47,17 +47,17 @@ trait StatusTrait
      *
      * @return array
      */
-    public function getStatusCached()
+    public function getSectionStatusesCached()
     {
-        return $this->statusCached ? json_decode($this->statusCached, true) : [];
+        return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
     }
 
     /**
      * @param array $status
      */
-    public function setStatusCached(array $status)
+    public function setSectionStatusesCached(array $status)
     {
-        $this->statusCached = json_encode($status);
+        $this->sectionStatusesCached = json_encode($status);
     }
 
     /**
@@ -81,7 +81,7 @@ trait StatusTrait
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {
-        $currentSectionStatus = $this->getStatusCached();
+        $currentSectionStatus = $this->getSectionStatusesCached();
         $currentReportStatus = $this->getStatus();
 
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
@@ -92,7 +92,7 @@ trait StatusTrait
                 $currentSectionStatus[$sectionId] = $currentReportStatus->getSectionStateNotCached($sectionId);
             }
         }
-        $this->setStatusCached($currentSectionStatus);
+        $this->setSectionStatusesCached($currentSectionStatus);
 
         // update report status, using the cached version of the section statuses
         // Note: the isDue is skipped

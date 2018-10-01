@@ -559,7 +559,7 @@ class ReportStatusService
      */
     public function getSectionStatus()
     {
-        $statusCached = $this->report->getStatusCached();
+        $statusCached = $this->report->getSectionStatusesCached();
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {

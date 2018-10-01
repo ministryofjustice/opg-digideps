@@ -51,7 +51,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
                 return 0;
             }
             foreach ($reports as $report) {
-                $report->setStatusCached([]);
+                $report->setSectionStatusesCached([]);
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
