@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportService;
+use Doctrine\ORM\AbstractQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -38,7 +39,7 @@ class ReportController extends RestController
 
         $this->validateArray($reportData, [
             'start_date' => 'notEmpty',
-            'end_date'   => 'notEmpty',
+            'end_date' => 'notEmpty',
         ]);
 
         // report type is taken from CASREC. In case that's not available (shouldn't happen unless casrec table is dropped), use a 102
@@ -64,7 +65,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id)
     {
         $groups = $request->query->has('groups')
-            ? (array) $request->query->get('groups') : ['report'];
+            ? (array)$request->query->get('groups') : ['report'];
 
         $this->setJmsSerialiserGroups($groups);
 
@@ -237,7 +238,7 @@ class ReportController extends RestController
 
 
         if (array_key_exists('report_seen', $data)) {
-            $report->setReportSeen((boolean) $data['report_seen']);
+            $report->setReportSeen((boolean)$data['report_seen']);
         }
 
         if (array_key_exists('reason_for_no_contacts', $data)) {
@@ -386,7 +387,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
-            if ($data['current_prof_payments_received'] =='no') { //reset whole section
+            if ($data['current_prof_payments_received'] == 'no') { //reset whole section
                 foreach ($report->getCurrentProfServiceFees() as $f) {
                     $this->getEntityManager()->remove($f);
                 }
@@ -421,14 +422,15 @@ class ReportController extends RestController
         }
 
         $data = $this->deserializeBodyContent($request, [
-            'un_submit_date'            => 'notEmpty',
-            'due_date'                  => 'notEmpty',
+            'un_submit_date' => 'notEmpty',
+            'due_date' => 'notEmpty',
             'unsubmitted_sections_list' => 'notEmpty',
-            'start_date'                => 'notEmpty',
-            'end_date'                  => 'notEmpty',
+            'start_date' => 'notEmpty',
+            'end_date' => 'notEmpty',
         ]);
 
-        $rs = $this->get('opg_digideps.report_service'); /** @var $rs ReportService */
+        $rs = $this->get('opg_digideps.report_service');
+        /** @var $rs ReportService */
         $rs->unSubmit(
             $report,
             new \DateTime($data['un_submit_date']),
@@ -444,6 +446,37 @@ class ReportController extends RestController
     }
 
     /**
+     * Update users's reports cached status when not set
+     * Flushes every 5 records to allow resuming in case of timeouts
+     *
+     * @param $userId
+     */
+    private function updateReportStatusCache($userId)
+    {
+        $em = $this->get('em');
+        $repo = $em->getRepository(Report::class);
+
+        while (($reports = $repo
+                ->createQueryBuilder('r')
+                ->select('r,c,u')
+                ->leftJoin('r.client', 'c')
+                ->leftJoin('c.users', 'u')
+                ->where('u.id = :uid')
+                ->andWhere('r.reportStatusCached IS NULL')
+                ->setParameter('uid', $userId)
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult()) && count($reports)
+        ) {
+            foreach ($reports as $report) {
+                /* @var $report Report */
+                $report->updateSectionsStatusCache($report->getAvailableSections());
+            }
+            $em->flush();
+        }
+    }
+
+    /**
      * Get list of reports, currently only for PA users
      *
      *
@@ -453,6 +486,13 @@ class ReportController extends RestController
      */
     public function getAll(Request $request)
     {
+        /* @var $rs ReportService */
+        $rs = $this->get('opg_digideps.report_service');
+        /**
+         * @var $repo EntityDir\Repository\ReportRepository
+         */
+        $repo = $this->get('em')->getRepository(Report::class);
+
         $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
         $offset = $request->get('offset');
         $q = $request->get('q');
@@ -460,61 +500,64 @@ class ReportController extends RestController
         $limit = $request->get('limit', 15);
         $sort = $request->get('sort');
         $sortDirection = $request->get('sort_direction');
+        $exclude_submitted = $request->get('exclude_submitted');
 
-        $qb = $this->getRepository(EntityDir\Report\Report::class)->createQueryBuilder('r');
-        $qb
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('c.users', 'u')
-            ->where('u.id = ' . $userId);
+        // Calculate missing report statuses. Needed for the following code
+        $this->updateReportStatusCache($userId);
 
-        if ($request->get('exclude_submitted')) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
+        // calculate counts, and apply limit/offset
+        $counts = [
+            Report::STATUS_NOT_STARTED => $repo->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_NOT_FINISHED => $repo->getAllReportsQb('count', Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
+            Report::STATUS_READY_TO_SUBMIT => $repo->getAllReportsQb('count', Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult()
+        ];
+        $counts['total'] = array_sum($counts);
 
+        // Get reports for the current page, hydrating as array (more efficient) and return the min amount of data needed for the dashboard
+        $qb = $repo->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
         if ($sort == 'end_date') {
             $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
             $qb->addOrderBy('c.caseNumber', 'ASC');
         }
 
-        if ($q) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', $q);
-        }
-
-        $records = $qb->getQuery()->getResult();
         /* @var $records Report[] */
+        $reports = [];
+        $reportArrays = $qb->getQuery()->getArrayResult();
+        foreach ($reportArrays as $reportArray) {
+            $reports[] = [
+                'id' => $reportArray['id'],
+                'type' => $reportArray['type'],
+                'hasUnsumitDate' => $reportArray['unSubmitDate'] ? true : false,
+                'status' => [
+                    // adjust report status cached using end date
+                    'status' => $rs->adjustReportStatus($reportArray['reportStatusCached'], $reportArray['endDate'])
+                ],
+                'due_date' => $reportArray['dueDate']->format('Y-m-d'),
+                'client' => [
+                    'id' => $reportArray['client']['id'],
+                    'firstname' => $reportArray['client']['firstname'],
+                    'lastname' => $reportArray['client']['lastname'],
+                    'case_number' => $reportArray['client']['caseNumber'],
+                ]
+            ];
+        }
 
-        // calculate counts, and apply limit/offset
-        $counts = ['total'         => 0,
-                   'notStarted'    => 0,
-                   'notFinished'   => 0,
-                   'readyToSubmit' => 0];
-        foreach ($records as $k => $report) {
-            $client = $report->getClient();
-            // in case there is a current AND an unsubmitted report, remove the current one
-            if (count($client->getUnsubmittedReports()) > 1 && $client->getCurrentReport() === $report) {
-                unset($records[$k]);
-                continue;
+        // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
+        foreach($reports as $k => $unsubmittedReport) {
+            if ($unsubmittedReport['hasUnsumitDate']) {
+                foreach($reports as $k2 => $currentReport) {
+                    if (!$currentReport['hasUnsumitDate'] && $currentReport['client']['id'] == $unsubmittedReport['client']['id']) {
+                        unset($reports[$k2]);
+                    }
+                }
             }
-            $counts[$report->getStatus()->setUseStatusCache(true)->getStatus()]++;
-            $counts['total']++;
         }
-
-        // status filters
-        if ($status) {
-            $records = array_filter($records, function ($report) use ($status) { /* @var $report Report */
-                return $report->getStatus()->setUseStatusCache(true)->getStatus() == $status;
-            });
-        }
-        // apply offset and limit filters (has to be last)
-        $records = array_slice($records, $offset, $limit);
-
-        $this->setJmsSerialiserGroups(['report', 'report-client', 'client', 'report-status']);
 
         return [
-            'counts'  => $counts,
-            'reports' => $records,
+            'counts' => $counts,
+            'reports' => $reports,
         ];
     }
 

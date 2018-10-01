@@ -41,7 +41,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
             $reports = $em->getRepository(Report::class)
                 ->createQueryBuilder('r')
                 ->select('r')
-                ->where('r.statusCached IS NULL')
+                ->where('r.statusCached IS NULL OR r.reportStatusCached IS NULL')
                 ->orderBy('r.id', 'DESC')
                 ->setMaxResults($chunkSize)
                 ->getQuery()
@@ -51,7 +51,7 @@ class ReportStatusUpdaterCommand extends ContainerAwareCommand
                 return 0;
             }
             foreach ($reports as $report) {
-                $report->setStatusCached([]);
+                $report->setSectionStatusesCached([]);
                 /* @var $report Report */
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }

@@ -24,7 +24,21 @@ trait StatusTrait
      *
      * @ORM\Column(name="status_cached", type="text", nullable=true)
      */
-    private $statusCached;
+    private $sectionStatusesCached;
+
+    /**
+     * @var string
+     *
+     * Holds a copy of result of the ReportStatusService::getStatus() results
+     * Used for ORG dashboard for tab calculation and pagination
+     *
+     * value: STATUS_* constant
+     *
+     * @JMS\Exclude()
+     *
+     * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
+     */
+    private $reportStatusCached;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>]
@@ -33,41 +47,58 @@ trait StatusTrait
      *
      * @return array
      */
-    public function getStatusCached()
+    public function getSectionStatusesCached()
     {
-        return $this->statusCached ? json_decode($this->statusCached, true) : [];
+        return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
     }
 
     /**
      * @param array $status
      */
-    public function setStatusCached(array $status)
+    public function setSectionStatusesCached(array $status)
     {
-        $this->statusCached = json_encode($status);
+        $this->sectionStatusesCached = json_encode($status);
+    }
+
+    /**
+     * //TODO remove adn check test passing
+     *
+     * @return string
+     */
+    public function getReportStatusCached()
+    {
+        return $this->reportStatusCached;
     }
 
 
     /**
-     * Update the status cache of the given sections
+     * Update the status cache of the given sections,
+     * and also the report.reportStatusCached using the cache
+     *
      * using the `ReportService::getSectionStateNotCached`
      *
      * @param array $sectionIds
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {
-        $currentStatus = $this->getStatusCached();
+        $currentSectionStatus = $this->getSectionStatusesCached();
+        $currentReportStatus = $this->getStatus();
 
-        //TODO optimise and add those only when a financial section is affected
         $sectionIds[] = Report::SECTION_MONEY_TRANSFERS;
         $sectionIds[] = Report::SECTION_BALANCE;
 
         foreach($sectionIds as $sectionId) {
             if ($this->hasSection($sectionId)) {
-                $currentStatus[$sectionId] = $this->getStatus()->getSectionStateNotCached($sectionId);
+                $currentSectionStatus[$sectionId] = $currentReportStatus->getSectionStateNotCached($sectionId);
             }
         }
+        $this->setSectionStatusesCached($currentSectionStatus);
 
-        $this->setStatusCached($currentStatus);
+        // update report status, using the cached version of the section statuses
+        // Note: the isDue is skipped
+        $this->reportStatusCached = $currentReportStatus
+            ->setUseStatusCache(true)
+            ->getStatusIgnoringDueDate(true);
     }
 
     /**

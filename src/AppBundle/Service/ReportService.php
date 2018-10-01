@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
@@ -14,6 +15,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Internal\Hydration\IterableResult;
+use Doctrine\ORM\QueryBuilder;
 
 class ReportService
 {
@@ -21,13 +23,29 @@ class ReportService
     protected $reportRepository;
 
     /**
-     * @var CasRecRepository
+     * @var EntityManager
+     */
+    protected $_em;
+
+    /**
+     * @var EntityRepository
      */
     private $casRecRepository;
 
+    /**
+     * @var EntityRepository
+     */
+    private $assetRepository;
+
+    /**
+     * @var EntityRepository
+     */
+    private $bankAccountRepository;
+
     public function __construct(
         EntityManager $em
-    ) {
+    )
+    {
         $this->reportRepository = $em->getRepository(Report::class);
         $this->casRecRepository = $em->getRepository(CasRec::class);
         $this->_em = $em;
@@ -118,7 +136,7 @@ class ReportService
     /**
      * Using an array of CasRec entities update any corresponding report type if it has been changed
      *
-     * @param array  $casRecEntities
+     * @param array $casRecEntities
      * @param string $userRoleName
      *
      * @throws \Exception
@@ -143,9 +161,10 @@ class ReportService
         $qb = $this->reportRepository->createQueryBuilder('r');
 
         $qb->leftJoin('r.client', 'c')
-           ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
+            ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
 
-        $reports = $qb->getQuery()->getResult(); /* @var $reports Report[] */
+        $reports = $qb->getQuery()->getResult();
+        /* @var $reports Report[] */
 
         //  Loop through the reports and update the report type if necessary
         foreach ($reports as $report) {
@@ -169,9 +188,9 @@ class ReportService
     /**
      * Set report submitted and create a new year report
      *
-     * @param Report|Ndr $currentReport
-     * @param User       $user
-     * @param \DateTime  $submitDate
+     * @param Ndr|Report $currentReport
+     * @param User $user
+     * @param \DateTime $submitDate
      *
      * @return Report new year's report
      */
@@ -212,7 +231,7 @@ class ReportService
     }
 
     /**
-     * @param Report    $report
+     * @param Report $report
      * @param \DateTime $unsubmitDate
      * @param \DateTime $dueDate
      * @param $sectionList
@@ -235,8 +254,8 @@ class ReportService
     /**
      * Set report submission for additional documents
      *
-     * @param Report    $currentReport
-     * @param User      $user
+     * @param Report $currentReport
+     * @param User $user
      * @param \DateTime $submitDate
      *
      * @return Report new year's report
@@ -270,18 +289,21 @@ class ReportService
     public function findDeleteableReports(Collection $reports)
     {
         $reportIdToStatus = [];
-        foreach ($reports as $ur) { /* @var $ur Report */
+        foreach ($reports as $ur) {
+            /* @var $ur Report */
             $reportIdToStatus[$ur->getId()] = [
-                'status'=> $ur->getStatus()->getStatus(),
-                'start'=> $ur->getStartDate()->format('Y-m-d'),
+                'status' => $ur->getStatus()->getStatus(),
+                'start' => $ur->getStartDate()->format('Y-m-d'),
                 'end' => $ur->getEndDate()->format('Y-m-d'),
                 'sections' => $ur->getStatus()->getSectionStatus()
             ];
         }
 
         $ret = [];
-        foreach ($reports as $report1) {  /* @var $report1 Report */
-            foreach ($reports as $report2) {  /* @var $report2 Report */
+        foreach ($reports as $report1) {
+            /* @var $report1 Report */
+            foreach ($reports as $report2) {
+                /* @var $report2 Report */
                 if ($report1->getId() === $report2->getId()) {
                     continue;
                 }
@@ -296,4 +318,40 @@ class ReportService
 
         return $ret;
     }
+
+
+    /**
+     * If the report is ready to submit, but is not yet due, return notFinished instead
+     * In all the the cases, return original $status
+     *
+     * @param $status
+     * @param \DateTime $endDate
+     *
+     * @return string
+     */
+    public function adjustReportStatus($status, \DateTime $endDate)
+    {
+        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
+            return Report::STATUS_NOT_FINISHED;
+        }
+
+        return $status;
+    }
+
+
+    /**
+     * @param \DateTime|null $endDate
+     * @return bool
+     */
+    public static function isDue(\DateTime $endDate = null)
+    {
+        if (!$endDate) {
+            return false;
+        }
+
+        $endOfToday = new \DateTime('today midnight');
+
+        return $endDate <= $endOfToday;
+    }
+
 }

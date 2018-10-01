@@ -20,7 +20,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     private function getReportMocked(array $reportMethods = [], $hasBalance = true)
     {
         $report =  m::mock(Report::class, $reportMethods + [
-                'getStatusCached'                   => [],
+                'getSectionStatusesCached'          => [],
                 'getBankAccounts'                   => [],
                 'getBankAccountsIncomplete'         => [],
                 'getExpenses'                       => [],

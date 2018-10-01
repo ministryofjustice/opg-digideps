@@ -10,4 +10,6 @@
 # To update after a release, launch manually with custom limit (e.g. 5000) until they are all changed
 # Every 10 minutes, 6am-7pm on working days
 #
-*/10 6-19 * * 1-5 app php /app/app/console digideps:report-status-update --limit=10 --env=prod > /dev/null 2>&1
+# Disabled with DDPB-2310. Report statuses for dashboard are calculated on the fly when missing at the first load
+#
+# */10 6-19 * * 1-5 app php /app/app/console digideps:report-status-update --limit=10 --env=prod > /dev/null 2>&1

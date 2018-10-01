@@ -174,6 +174,30 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
     }
 
+
+    public function testIsDue()
+    {
+        $this->assertEquals(false, ReportService::isDue(null));
+
+
+        $todayMidnight = new \DateTime('today midnight');
+
+        $oneMinuteBeforeLastMidnight = clone $todayMidnight;
+        $oneMinuteBeforeLastMidnight->modify('-1 minute');
+
+        $oneMinuteAfterLastMidnight = clone $todayMidnight;
+        $oneMinuteAfterLastMidnight->modify('+1 minute');
+
+
+        // end date is past (before midnight) => due
+        $this->assertEquals(true, ReportService::isDue(new \DateTime('last week')));
+        $this->assertEquals(true, ReportService::isDue($oneMinuteBeforeLastMidnight));
+
+        // otherwise not due
+        $this->assertEquals(false, ReportService::isDue($oneMinuteAfterLastMidnight));
+        $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
+    }
+
     public function tearDown()
     {
         m::close();
