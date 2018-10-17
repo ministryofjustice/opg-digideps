@@ -1,7 +1,7 @@
 nav:
     adArea: Assisted Digital
     reports: Your reports
-    userAccount: Deputyship details
+    userAccount: Your details
     # only in case of exception, when it's not clear the user role not the page
     homepage: Homepage
     adminArea: Users
