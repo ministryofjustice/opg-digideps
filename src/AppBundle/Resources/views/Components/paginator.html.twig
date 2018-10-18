@@ -18,7 +18,7 @@
 
 {% set nbPages = (totalRecords / recordsPerPage) +1 %}
 {% set nearbyPagesLimit = 10 %}
-{% set currentPage = (filters.offset / recordsPerPage) +1 %}
+{% set currentPage = (currentOffset / recordsPerPage) +1 %}
 
 <div class="pager">
     {% if totalRecords <= recordsPerPage %}

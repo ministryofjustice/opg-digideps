@@ -81,7 +81,7 @@
     </div>
 
     {# table with records #}
-    {% if  records | length %}
+    {% if  records | length or true%}
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
         {% if nOfdownloadableSubmissions > 0 %}
             {% for action in postActions %}
@@ -192,7 +192,7 @@
         {% include 'AppBundle:Components:paginator.html.twig' with {
             currentOffset: filters.offset,
             recordsPerPage: filters.limit,
-            totalRecords: counts[filters.status ?: 'total'],
+            totalRecords: 100,
             routeName: 'admin_documents',
             routeParams: filtersToPreserveInPagination,
             messages: {
