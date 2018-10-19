@@ -16,7 +16,7 @@
 
 #}
 
-{% set nbPages = (totalRecords / recordsPerPage) +1 %}
+{% set nbPages = (totalRecords / recordsPerPage) %}
 {% set nearbyPagesLimit = 10 %}
 {% set currentPage = (currentOffset / recordsPerPage) +1 %}
 
