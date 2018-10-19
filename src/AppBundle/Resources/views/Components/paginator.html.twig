@@ -16,16 +16,16 @@
 
 #}
 
-{% set nbPages = (totalRecords / recordsPerPage) %}
-{% set nearbyPagesLimit = 10 %}
-{% set currentPage = (currentOffset / recordsPerPage) +1 %}
-
 <div class="pager">
     {% if totalRecords <= recordsPerPage %}
         <p class="pager-summary">
             {{ messages.singlePage | transchoice(totalRecords) | raw }}
         </p>
     {% else %}
+        {% set nbPages = (totalRecords / recordsPerPage)|round(0, 'ceil') %}
+        {% set nearbyPagesLimit = 10 %}
+        {% set currentPage = (currentOffset / recordsPerPage) +1 %}
+
 
         {# prev #}
         {% if currentOffset > 0 %}
