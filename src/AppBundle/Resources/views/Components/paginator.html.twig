@@ -15,51 +15,58 @@
     }
 
 #}
+
 <div class="pager">
     {% if totalRecords <= recordsPerPage %}
-        <div class="pager-summary">
+        <p class="pager-summary">
             {{ messages.singlePage | transchoice(totalRecords) | raw }}
-        </div>
+        </p>
     {% else %}
-        {# range requires a maximum of totalRecords -1 to prevent an extra page being displayed when the records per
-        page is a multiple of totalRecords, hence -1 #}
-        {% set pages = range(0, (totalRecords-1), recordsPerPage) %}
+        {% set nbPages = (totalRecords / recordsPerPage)|round(0, 'ceil') %}
+        {% set nearbyPagesLimit = 10 %}
+        {% set currentPage = (currentOffset / recordsPerPage) +1 %}
 
-        <div class="pager-controls">
-            {# prev #}
-            {% if currentOffset > 0 %}
-                <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
-                    'offset': (currentOffset - recordsPerPage)
-                })) }}">{{ 'previous' | trans({}, 'common' ) }}</a>
-            {% endif %}
+        {# prev #}
+        {% if currentOffset > 0 %}
+            <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
+                'offset': (currentOffset - recordsPerPage)
+            })) }}">{{ 'previous' | trans({}, 'common' ) }}</a>
+        {% endif %}
 
-            {# links to single pages #}
-            <ul class="pager-items">
-                {% for offset in pages %}
-                    {% if offset == currentOffset %}
-                        <li>{{ loop.index }}</li>
-                    {% else %}
-                        <li><a href="{{ path(routeName, routeParams | merge({
-                                'offset': offset
-                            })) }}" class="behat-link-paginator-page-{{ loop.index }}">{{ loop.index }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+        <ul class="pager-items">
 
-            {# next #}
-            {% if (currentOffset + recordsPerPage) < totalRecords %}
-                <a class="pager-next" href="{{ path(routeName, routeParams | merge({
-                    'offset': currentOffset + recordsPerPage
-                })) }}">{{ 'next' | trans({}, 'common' ) }}</a>
-            {% endif %}
+            {% for i in 1..nbPages %}
+                {% if 0 == (currentPage - nearbyPagesLimit) - loop.index %} {# dot before #}
+                    <li class="disabled">...</li>
+                {% elseif 0 == (currentPage + nearbyPagesLimit) - loop.index %} {# dot after #}
+                    <li class="disabled">...</li>
+                {% elseif 0 < (currentPage - nearbyPagesLimit) - loop.index %} {# hide all before #}
+                {% elseif 0 > (currentPage + nearbyPagesLimit) - loop.index %} {# hide all after #}
+                {% elseif currentPage == loop.index %}
+                    <li>{{ currentPage }}</li>
+                {% else %}
+                    {% set offset = (loop.index * recordsPerPage) - recordsPerPage %}
+                    <li {% if currentPage == loop.index  %} class="active"{% endif %}>
+                        <a  href="{{ path(routeName, routeParams | merge({'offset': offset })) }}"
+                            class="behat-link-paginator-page-{{ loop.index }}">{{ loop.index }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
 
-        </div>
+        </ul>
+
+        {# next #}
+        {% if (currentOffset + recordsPerPage) < totalRecords %}
+            <a class="pager-next" href="{{ path(routeName, routeParams | merge({
+                'offset': currentOffset + recordsPerPage
+            })) }}">{{ 'next' | trans({}, 'common' ) }}</a>
+        {% endif %}
 
         {# summary #}
         {% set firstRecordDisplayed = currentOffset + 1 %}
         {% set lastRecordDisplayed = (currentOffset + recordsPerPage) > totalRecords ? totalRecords : (currentOffset + recordsPerPage) %}
-        <div class="pager-summary">
+        <p class="pager-summary">
             {{ messages.multiPage | trans({'%from%': firstRecordDisplayed, '%to%': lastRecordDisplayed, '%total%': totalRecords}) | raw }}
-        </div>
+        </p>
     {% endif %}
 </div>
