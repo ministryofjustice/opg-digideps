@@ -26,7 +26,6 @@
         {% set nearbyPagesLimit = 10 %}
         {% set currentPage = (currentOffset / recordsPerPage) +1 %}
 
-
         {# prev #}
         {% if currentOffset > 0 %}
             <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
