@@ -110,18 +110,31 @@
     {# Contact with client, care arrangements and care plan #}
     {% include 'AppBundle:Admin/Client/Report/partials:_contact-with-client.html.twig' %}
 
+    {# Health & Lifestyle #}
+    {% if report.hasSection('lifestyle') %}
+        {% include 'AppBundle:Admin/Client/Report/partials:_health-and-lifestyle.html.twig' %}
+    {% endif %}
+
     {# Assets and debts #}
-    {% include 'AppBundle:Admin/Client/Report/partials:_assets-and-debts.html.twig' %}
+    {% if report.hasSection('assets') or report.hasSection('debts') %}
+        {% include 'AppBundle:Admin/Client/Report/partials:_assets-and-debts.html.twig' %}
+    {% endif %}
 
     {# Money transfers, Money in and money out #}
-    {% include 'AppBundle:Admin/Client/Report/partials:_money-in-and-out.html.twig' %}
+    {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
+        {% include 'AppBundle:Admin/Client/Report/partials:_money-in-and-out.html.twig' %}
+    {% endif %}
 
     {# Bonds - hidden for PA checklist #}
     {% if report.hasSection('paDeputyExpenses') %}
         {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
     {% else %}
-        {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
+        {% if report.hasSection('bankAccounts') %}
+            {# Assuming if it has bankAccounts, it should have bonds #}
+            {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
+        {% endif %}
     {% endif %}
+
     {# Next reporting period #}
     {% include 'AppBundle:Admin/Client/Report/partials:_next-reporting-period.html.twig' %}
 

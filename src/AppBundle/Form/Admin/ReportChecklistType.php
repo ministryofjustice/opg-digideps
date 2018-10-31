@@ -15,15 +15,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReportChecklistType extends AbstractType
 {
-    const SAVE_ACTION = 'submitAndDownload';
+    const SAVE_ACTION = 'submitAndDownfload';
     const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
 
     private $report;
+    private $hideMoneySections;
+    private $nonPFATypes = array("104", "104-6", "104-5");
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
         $this->report = $options['report'];
+        $this->hideMoneySections = in_array($this->report->type, $nonPFATypes);
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('reportingPeriodAccurate', FormTypes\ChoiceType::class, [
@@ -128,6 +131,12 @@ class ReportChecklistType extends AbstractType
                 'expanded' => true
             ]);
         }
+
+        // Health and Lifestyle question
+        $builder->add('satisfiedWithHealthAndLifestyle', FormTypes\ChoiceType::class, [
+            'choices' => ['Yes' => 'yes', 'No' => 'no'],
+            'expanded' => true
+        ]);
 
     }
 

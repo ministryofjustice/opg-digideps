@@ -661,6 +661,8 @@ checklist:
     notBlank: Please choose an option
   bondAdequate:
     notBlank: Please choose an option
+  lifestyle:
+    notBlank: Please choose an option
   bondOrderMatchCasrec:
     notBlank: Please choose an option
   futureSignificantFinancialDecisions:
@@ -675,7 +677,7 @@ checklist:
     notBlank: Please enter all your concerns and decisions
   satisfiedWithPaExpenses:
     notBlank: Please choose an option
-    
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 

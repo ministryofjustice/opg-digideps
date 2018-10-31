@@ -139,7 +139,16 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondAdequate.notBlank", groups={"submit-lay-checklist"})
+     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lay-checklist"})
+     */
+    private $satisfiedWithHealthAndLifestyle;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-lay-checklist"})
      */
     private $bondAdequate;
 
@@ -482,6 +491,24 @@ class Checklist
     public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithHealthAndLifestyle()
+    {
+        return $this->satisfiedWithHealthAndLifestyle;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     * @return $this
+     */
+    public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
+    {
+        $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
         return $this;
     }
 
