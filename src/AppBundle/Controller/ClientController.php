@@ -38,11 +38,8 @@ class ClientController extends AbstractController
     public function editAction(Request $request)
     {
         $client = $this->getFirstClient();
-        $client_validated = true; // Always true since it's an edit route
 
-        $form = $this->createForm(FormDir\ClientType::class, $client,
-            ['client_validated' => $client_validated,
-            'action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
+        $form = $this->createForm(FormDir\ClientType::class, $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
 
         // edit client form
@@ -87,7 +84,7 @@ class ClientController extends AbstractController
             $client_validated = false;
         }
 
-        $form = $this->createForm(FormDir\ClientType::class, $client, ['client_validated' => $client_validated]);
+        $form = $this->createForm(FormDir\ClientType::class, $client);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
