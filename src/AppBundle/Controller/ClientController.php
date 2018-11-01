@@ -32,14 +32,17 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/deputyship-details/your-client/edit", name="client_edit")
+     * @Route("/deputyship-details/your-client/`", name="client_edit")
      * @Template()
      */
     public function editAction(Request $request)
     {
         $client = $this->getFirstClient();
+        $client_validated = true; // Always true since it's an edit route
 
-        $form = $this->createForm(FormDir\ClientType::class, $client, ['action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
+        $form = $this->createForm(FormDir\ClientType::class, $client,
+            ['client_validated' => $client_validated,
+            'action' => $this->generateUrl('client_edit', ['action' => 'edit'])]);
         $form->handleRequest($request);
 
         // edit client form
@@ -55,6 +58,7 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
+            'client_validated' => $client_validated,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
