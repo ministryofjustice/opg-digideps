@@ -58,7 +58,6 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
             'form' => $form->createView(),
-            'client_validated' => $client_validated,
             'lastSignedIn' => $request->getSession()->get('lastLoggedIn'),
         ];
     }
