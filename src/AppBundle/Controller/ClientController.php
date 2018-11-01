@@ -32,7 +32,7 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/deputyship-details/your-client/`", name="client_edit")
+     * @Route("/deputyship-details/your-client/edit", name="client_edit")
      * @Template()
      */
     public function editAction(Request $request)
