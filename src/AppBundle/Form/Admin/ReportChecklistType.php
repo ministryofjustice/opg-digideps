@@ -22,7 +22,6 @@ class ReportChecklistType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
         $this->report = $options['report'];
 
@@ -170,6 +169,10 @@ class ReportChecklistType extends AbstractType
                         $ret[] = 'submit-pa-checklist';
                     } elseif ($this->report->isProfReport()) {
                         $ret[] = 'submit-prof-checklist';
+                    }
+
+                    if ($this->report->hasSection('lifestyle')) {
+                        $ret[] = 'submit-hw-checklist';
                     }
                 }
                 return $ret;
