@@ -15,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReportChecklistType extends AbstractType
 {
-    const SAVE_ACTION = 'submitAndDownfload';
+    const SAVE_ACTION = 'submitAndDownload';
     const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
 
     private $report;
