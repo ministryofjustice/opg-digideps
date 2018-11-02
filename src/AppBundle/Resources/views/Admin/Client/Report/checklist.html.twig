@@ -126,11 +126,10 @@
     {% endif %}
 
     {# Bonds - hidden for PA checklist #}
-    {% if report.hasSection('paDeputyExpenses') %}
-        {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
-    {% else %}
-        {% if report.hasSection('bankAccounts') %}
-            {# Assuming if it has bankAccounts, it should have bonds #}
+    {% if report.hasSection('bankAccounts') %} {# Assuming if it has bankAccounts, it should have bonds #}
+        {% if report.hasSection('paDeputyExpenses') %}
+            {% include 'AppBundle:Admin/Client/Report/partials:_pa-fee-expenses.html.twig' %}
+        {% else %}
             {% include 'AppBundle:Admin/Client/Report/partials:_bonds.html.twig' %}
         {% endif %}
     {% endif %}

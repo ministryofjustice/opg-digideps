@@ -19,14 +19,17 @@ class ReportChecklistType extends AbstractType
     const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
 
     private $report;
-    private $hideMoneySections;
-    private $nonPFATypes = array("104", "104-6", "104-5");
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
         $this->report = $options['report'];
-        $this->hideMoneySections = in_array($this->report->type, $nonPFATypes);
+
+        $includeMoneySections = in_array('bankAccounts', $this->report->getAvailableSections());
+        $includeHWSections = in_array('lifestyle', $this->report->getAvailableSections());
+
+        // HW & PFA
         $builder
             ->add('id', FormTypes\HiddenType::class)
             ->add('reportingPeriodAccurate', FormTypes\ChoiceType::class, [
@@ -52,33 +55,68 @@ class ReportChecklistType extends AbstractType
             ->add('careArrangements', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
-            ])
+            ]);
+
+        // PFA
+        if($includeMoneySections) {
 
             // Client Assets and Debt
-            ->add('assetsDeclaredAndManaged', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
-            ->add('debtsManaged', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
+            $builder
+                ->add('assetsDeclaredAndManaged', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ])
+                ->add('debtsManaged', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ])
 
-            // Money In
-            ->add('openClosingBalancesMatch', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
-            ->add('accountsBalance', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
-            ->add('moneyMovementsAcceptable', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ])
+                // Money In
+                ->add('openClosingBalancesMatch', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ])
+                ->add('accountsBalance', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ])
+                ->add('moneyMovementsAcceptable', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ]);
 
-            // Next reporting period
+            // If PA report, add PA deputy Expenses question
+            if ($this->report->isPaReport()) {
+                $builder->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ]);
+            } else {
+                // Otherwise add Bonds question
+                $builder->add('bondAdequate', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ]);
+                $builder->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'expanded' => true
+                ]);
+            }
+        }
+
+        // HW
+        if($includeHWSections) {
+            // Health and Lifestyle question
+            $builder->add('satisfiedWithHealthAndLifestyle', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+        }
+
+        // HW and PFA
+
+        // Next reporting period
+        $builder
             ->add('futureSignificantFinancialDecisions', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
@@ -107,37 +145,12 @@ class ReportChecklistType extends AbstractType
                 ],
                 'expanded' => true
             ])
+
             // Further information received
             ->add('furtherInformationReceived', FormTypes\TextareaType::class, [])
-        ->add('saveFurtherInformation', FormTypes\SubmitType::class)
-        ->add('save', FormTypes\SubmitType::class)
-        ->add('submitAndDownload', FormTypes\SubmitType::class);
-
-
-        // If PA report, add PA deputy Expenses question
-        if ($this->report->isPaReport()) {
-            $builder->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ]);
-        } else {
-            // Otherwise add Bonds question
-            $builder->add('bondAdequate', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ]);
-            $builder->add('bondOrderMatchCasrec', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                'expanded' => true
-            ]);
-        }
-
-        // Health and Lifestyle question
-        $builder->add('satisfiedWithHealthAndLifestyle', FormTypes\ChoiceType::class, [
-            'choices' => ['Yes' => 'yes', 'No' => 'no'],
-            'expanded' => true
-        ]);
-
+            ->add('saveFurtherInformation', FormTypes\SubmitType::class)
+            ->add('save', FormTypes\SubmitType::class)
+            ->add('submitAndDownload', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -131,6 +131,7 @@ class ReportController extends AbstractController
      */
     public function checklistAction(Request $request, $id)
     {
+
         $report = $this->getReport(
             $id,
             array_merge(
@@ -141,15 +142,15 @@ class ReportController extends AbstractController
             )
         );
 
-        echo print_r($report);
-
         if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
             throw new DisplayableException('Cannot lodge a checklist for an incomplete report');
         }
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
+
         $form = $this->createForm(ReportChecklistType::class, $checklist, ['report' => $report]);
+
         $form->handleRequest($request);
         $buttonClicked = $form->getClickedButton();
 
