@@ -50,6 +50,10 @@ Feature: Admin report checklist
       | Doe               | checklist-deputy-lastname |
       | 102 Petty France  | checklist-deputy-address   |
       | 020 3334 3555     | checklist-deputy-phone     |
+    # check auto-filled answers
+    And the following fields should have the corresponding values:
+      | report_checklist_futureSignificantFinancialDecisions_0 | yes     |
+      | report_checklist_hasDeputyRaisedConcerns_0             | yes     |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
