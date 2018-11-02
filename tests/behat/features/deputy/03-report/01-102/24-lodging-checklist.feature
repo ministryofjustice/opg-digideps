@@ -87,12 +87,6 @@ Feature: Admin report checklist
       | report_checklist_bondOrderMatchCasrec_0        |
       | report_checklist_bondOrderMatchCasrec_1        |
       | report_checklist_bondOrderMatchCasrec_2        |
-      | report_checklist_futureSignificantFinancialDecisions_0        |
-      | report_checklist_futureSignificantFinancialDecisions_1        |
-      | report_checklist_futureSignificantFinancialDecisions_2        |
-      | report_checklist_hasDeputyRaisedConcerns_0        |
-      | report_checklist_hasDeputyRaisedConcerns_1        |
-      | report_checklist_hasDeputyRaisedConcerns_2        |
       | report_checklist_caseWorkerSatisified_0        |
       | report_checklist_caseWorkerSatisified_1        |
       | report_checklist_caseWorkerSatisified_2        |
