@@ -21,82 +21,82 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Not saved yet | last-saved-by |
-      | Not saved yet | last-modified-by |
-      | 1 Jan 2016 | court-date |
-      | Property and affairs: general | report-type-title |
-      | 1 Jan 2017 to 31 Dec 2017 | expected-date |
-      | Cly | checklist-client-firstname |
-      | Hent | checklist-client-lastname |
-      | 0123456789 | checklist-client-phone        |
-      | dd1-changed | decision-1         |
-      | Andy Whites | contact-n2-aw2     |
-      | December 2015 | care-plan-last-reviewed |
-      | Yes           | has-assets              |
-      | Impressionist painting | asset-impressionist-painting |
-      | 13 gold house, mortimer road, westminster, SW11 6TF | property-sw11-6tf-address    |
-      | 163,010                                             | asset-total                  |
-      | £3.00                                               | debt-loans                   |
-      | 200 per month payment plan                          | debt-management-details      |
-      | £0.00 | checklist-closing-balance-previous-report |
-      | £335.40   | checklist-accounts-opening-total |
-      | £243.39   | calculated-balance               |
-      | £193.11   | balance-difference               |
-      | Cly               | checklist-client-firstname |
-      | Hent              | checklist-client-lastname |
-      | 1 South Parade    | checklist-client-address   |
-      | 0123456789        | checklist-client-phone     |
-      | John              | checklist-deputy-firstname |
-      | Doe               | checklist-deputy-lastname |
-      | 102 Petty France  | checklist-deputy-address   |
-      | 020 3334 3555     | checklist-deputy-phone     |
+      | Not saved yet                                       | last-saved-by                             |
+      | Not saved yet                                       | last-modified-by                          |
+      | 1 Jan 2016                                          | court-date                                |
+      | Property and affairs: general                       | report-type-title                         |
+      | 1 Jan 2017 to 31 Dec 2017                           | expected-date                             |
+      | Cly                                                 | checklist-client-firstname                |
+      | Hent                                                | checklist-client-lastname                 |
+      | 0123456789                                          | checklist-client-phone                    |
+      | dd1-changed                                         | decision-1                                |
+      | Andy Whites                                         | contact-n2-aw2                            |
+      | December 2015                                       | care-plan-last-reviewed                   |
+      | Yes                                                 | has-assets                                |
+      | Impressionist painting                              | asset-impressionist-painting              |
+      | 13 gold house, mortimer road, westminster, SW11 6TF | property-sw11-6tf-address                 |
+      | 163,010                                             | asset-total                               |
+      | £3.00                                               | debt-loans                                |
+      | 200 per month payment plan                          | debt-management-details                   |
+      | £0.00                                               | checklist-closing-balance-previous-report |
+      | £335.40                                             | checklist-accounts-opening-total          |
+      | £243.39                                             | calculated-balance                        |
+      | £193.11                                             | balance-difference                        |
+      | Cly                                                 | checklist-client-firstname                |
+      | Hent                                                | checklist-client-lastname                 |
+      | 1 South Parade                                      | checklist-client-address                  |
+      | 0123456789                                          | checklist-client-phone                    |
+      | John                                                | checklist-deputy-firstname                |
+      | Doe                                                 | checklist-deputy-lastname                 |
+      | 102 Petty France                                    | checklist-deputy-address                  |
+      | 020 3334 3555                                       | checklist-deputy-phone                    |
     When I click on "submit-and-download"
     Then the following fields should have an error:
-      | report_checklist_reportingPeriodAccurate_0        |
-      | report_checklist_reportingPeriodAccurate_1        |
-      | report_checklist_contactDetailsUptoDate        |
+      | report_checklist_reportingPeriodAccurate_0             |
+      | report_checklist_reportingPeriodAccurate_1             |
+      | report_checklist_contactDetailsUptoDate                |
       | report_checklist_deputyFullNameAccurateInCasrec        |
-      | report_checklist_decisionsSatisfactory_0        |
-      | report_checklist_decisionsSatisfactory_1        |
-      | report_checklist_consultationsSatisfactory_0        |
-      | report_checklist_consultationsSatisfactory_1        |
-      | report_checklist_careArrangements_0        |
-      | report_checklist_careArrangements_1        |
-      | report_checklist_assetsDeclaredAndManaged_0        |
-      | report_checklist_assetsDeclaredAndManaged_1        |
-      | report_checklist_assetsDeclaredAndManaged_2        |
-      | report_checklist_debtsManaged_0        |
-      | report_checklist_debtsManaged_1        |
-      | report_checklist_debtsManaged_2        |
-      | report_checklist_openClosingBalancesMatch_0        |
-      | report_checklist_openClosingBalancesMatch_1        |
-      | report_checklist_openClosingBalancesMatch_2        |
-      | report_checklist_accountsBalance_0        |
-      | report_checklist_accountsBalance_1        |
-      | report_checklist_accountsBalance_2        |
-      | report_checklist_moneyMovementsAcceptable_0        |
-      | report_checklist_moneyMovementsAcceptable_1        |
-      | report_checklist_moneyMovementsAcceptable_2        |
-      | report_checklist_bondAdequate_0        |
-      | report_checklist_bondAdequate_1        |
-      | report_checklist_bondAdequate_2        |
-      | report_checklist_bondOrderMatchCasrec_0        |
-      | report_checklist_bondOrderMatchCasrec_1        |
-      | report_checklist_bondOrderMatchCasrec_2        |
-      | report_checklist_futureSignificantFinancialDecisions_0        |
-      | report_checklist_futureSignificantFinancialDecisions_1        |
-      | report_checklist_futureSignificantFinancialDecisions_2        |
-      | report_checklist_hasDeputyRaisedConcerns_0        |
-      | report_checklist_hasDeputyRaisedConcerns_1        |
-      | report_checklist_hasDeputyRaisedConcerns_2        |
-      | report_checklist_caseWorkerSatisified_0        |
-      | report_checklist_caseWorkerSatisified_1        |
-      | report_checklist_caseWorkerSatisified_2        |
-      | report_checklist_finalDecision_0        |
-      | report_checklist_finalDecision_1        |
-      | report_checklist_finalDecision_2        |
-      | report_checklist_finalDecision_3        |
-      | report_checklist_lodgingSummary         |
+      | report_checklist_decisionsSatisfactory_0               |
+      | report_checklist_decisionsSatisfactory_1               |
+      | report_checklist_consultationsSatisfactory_0           |
+      | report_checklist_consultationsSatisfactory_1           |
+      | report_checklist_careArrangements_0                    |
+      | report_checklist_careArrangements_1                    |
+      | report_checklist_assetsDeclaredAndManaged_0            |
+      | report_checklist_assetsDeclaredAndManaged_1            |
+      | report_checklist_assetsDeclaredAndManaged_2            |
+      | report_checklist_debtsManaged_0                        |
+      | report_checklist_debtsManaged_1                        |
+      | report_checklist_debtsManaged_2                        |
+      | report_checklist_openClosingBalancesMatch_0            |
+      | report_checklist_openClosingBalancesMatch_1            |
+      | report_checklist_openClosingBalancesMatch_2            |
+      | report_checklist_accountsBalance_0                     |
+      | report_checklist_accountsBalance_1                     |
+      | report_checklist_accountsBalance_2                     |
+      | report_checklist_moneyMovementsAcceptable_0            |
+      | report_checklist_moneyMovementsAcceptable_1            |
+      | report_checklist_moneyMovementsAcceptable_2            |
+      | report_checklist_bondAdequate_0                        |
+      | report_checklist_bondAdequate_1                        |
+      | report_checklist_bondAdequate_2                        |
+      | report_checklist_bondOrderMatchCasrec_0                |
+      | report_checklist_bondOrderMatchCasrec_1                |
+      | report_checklist_bondOrderMatchCasrec_2                |
+      | report_checklist_futureSignificantFinancialDecisions_0 |
+      | report_checklist_futureSignificantFinancialDecisions_1 |
+      | report_checklist_futureSignificantFinancialDecisions_2 |
+      | report_checklist_hasDeputyRaisedConcerns_0             |
+      | report_checklist_hasDeputyRaisedConcerns_1             |
+      | report_checklist_hasDeputyRaisedConcerns_2             |
+      | report_checklist_caseWorkerSatisified_0                |
+      | report_checklist_caseWorkerSatisified_1                |
+      | report_checklist_caseWorkerSatisified_2                |
+      | report_checklist_finalDecision_0                       |
+      | report_checklist_finalDecision_1                       |
+      | report_checklist_finalDecision_2                       |
+      | report_checklist_finalDecision_3                       |
+      | report_checklist_lodgingSummary                        |
     And the URL should match "/admin/report/\d+/checklist"
 
   @deputy
@@ -114,12 +114,12 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo fields has been empties
     And the following fields should have the corresponding values:
-      | report_checklist_furtherInformationReceived | |
+      | report_checklist_furtherInformationReceived |  |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | last-saved-by |
-      | Some more info 1        | information-1 |
-      | Case Manager1, Case Manager   | information-created-by-1 |
+      | Case Manager1, Case Manager | last-saved-by            |
+      | Some more info 1            | information-1            |
+      | Case Manager1, Case Manager | information-created-by-1 |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
@@ -127,10 +127,10 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
     # Assert furtherInfo table is updated NOTE reverse order as most recent first.
     And each text should be present in the corresponding region:
-      | Some more info 2              | information-1 |
-      | Case Manager1, Case Manager   | information-created-by-1 |
-      | Some more info 1              | information-2 |
-      | Case Manager1, Case Manager   | information-created-by-2 |
+      | Some more info 2            | information-1            |
+      | Case Manager1, Case Manager | information-created-by-1 |
+      | Some more info 1            | information-2            |
+      | Case Manager1, Case Manager | information-created-by-2 |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
@@ -142,7 +142,7 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-    | Case Manager1, Case Manager | last-saved-by |
+      | Case Manager1, Case Manager | last-saved-by |
     # Begin scenario
     When I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
@@ -169,24 +169,24 @@ Feature: Admin report checklist
       | Admin User, OPG Admin | last-saved-by |
     # Assert form reloads with fields saved
     Then the following fields should have the corresponding values:
-      | report_checklist_reportingPeriodAccurate_0   | yes   |
-      | report_checklist_contactDetailsUptoDate | 1  |
-      | report_checklist_deputyFullNameAccurateInCasrec  | 1 |
-      | report_checklist_decisionsSatisfactory_1     | no   |
-      | report_checklist_consultationsSatisfactory_0   | yes   |
-      | report_checklist_careArrangements_1    | no |
-      | report_checklist_assetsDeclaredAndManaged_2    | na |
-      | report_checklist_debtsManaged_0    | yes |
-      | report_checklist_openClosingBalancesMatch_1    | no |
-      | report_checklist_accountsBalance_2    | na |
-      | report_checklist_moneyMovementsAcceptable_0    | yes |
-      | report_checklist_bondAdequate_1    | no |
-      | report_checklist_bondOrderMatchCasrec_2    | na |
-      | report_checklist_futureSignificantFinancialDecisions_0    | yes |
-      | report_checklist_hasDeputyRaisedConcerns_1    | no |
-      | report_checklist_caseWorkerSatisified_2    | na |
-      | report_checklist_finalDecision_0    | for-review |
-      | report_checklist_lodgingSummary    | I am not satisfied |
+      | report_checklist_reportingPeriodAccurate_0             | yes                |
+      | report_checklist_contactDetailsUptoDate                | 1                  |
+      | report_checklist_deputyFullNameAccurateInCasrec        | 1                  |
+      | report_checklist_decisionsSatisfactory_1               | no                 |
+      | report_checklist_consultationsSatisfactory_0           | yes                |
+      | report_checklist_careArrangements_1                    | no                 |
+      | report_checklist_assetsDeclaredAndManaged_2            | na                 |
+      | report_checklist_debtsManaged_0                        | yes                |
+      | report_checklist_openClosingBalancesMatch_1            | no                 |
+      | report_checklist_accountsBalance_2                     | na                 |
+      | report_checklist_moneyMovementsAcceptable_0            | yes                |
+      | report_checklist_bondAdequate_1                        | no                 |
+      | report_checklist_bondOrderMatchCasrec_2                | na                 |
+      | report_checklist_futureSignificantFinancialDecisions_0 | yes                |
+      | report_checklist_hasDeputyRaisedConcerns_1             | no                 |
+      | report_checklist_caseWorkerSatisified_2                | na                 |
+      | report_checklist_finalDecision_0                       | for-review         |
+      | report_checklist_lodgingSummary                        | I am not satisfied |
     Then I click on "submit-and-download"
     And the form should be valid
 
@@ -198,5 +198,5 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Admin User, OPG Admin | last-saved-by |
+      | Admin User, OPG Admin | last-saved-by     |
       | Admin User, OPG Admin | last-submitted-by |
