@@ -649,6 +649,8 @@ checklist:
     notBlank: Please select 'Yes' or 'No'
   careArrangements:
     notBlank: Please select 'Yes' or 'No'
+  lifestyle:
+    notBlank: Please select 'Yes' or 'No'
   assetsDeclaredAndManaged:
     notBlank: Please choose an option
   debtsManaged:
