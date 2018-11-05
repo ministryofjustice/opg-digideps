@@ -168,6 +168,13 @@ class ReportChecklistType extends AbstractType
                     foreach ($sectionsToValidate as $section_id) {
                         $ret[] = 'submit-' . $section_id . '-checklist';
                     }
+
+                    // bonds to show when report has financial info but not a PA one
+                    if ($this->report->hasSection('bankAccounts') && !$this->report->hasSection('paDeputyExpenses') ) {
+                        $ret[] = 'submit-bonds-checklist';
+                    }
+
+
                 }
                 return $ret;
             },
