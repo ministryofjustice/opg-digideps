@@ -1,7 +1,7 @@
 Feature: Admin report checklist
 
   @deputy
-  Scenario: Case manager submits empty checklist for the report
+  Scenario: Case manager submits empty checklist for the report 102
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search"
@@ -102,26 +102,13 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager saves further information on checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search"
-    Then each text should be present in the corresponding region:
-      | 8 clients | client-search-count |
-    Then each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    When I fill in the following:
-      | search_clients_q | hent |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    And I click on "client-details" in the "client-behat001" region
-    Then the URL should match "/admin/client/\d+/details"
+    And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | Not saved yet | last-saved-by |
     # Begin scenario
-    And I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
+    When I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
     When I click on "save-further-information"
     Then the form should be valid
     Then the URL should match "/admin/report/\d+/checklist#furtherInformation"
@@ -151,25 +138,13 @@ Feature: Admin report checklist
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    And I click on "admin-client-search"
-    Then each text should be present in the corresponding region:
-      | 8 clients | client-search-count |
-    Then each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    When I fill in the following:
-      | search_clients_q | hent |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    And I click on "client-details" in the "client-behat001" region
-    Then the URL should match "/admin/client/\d+/details"
+    When I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
     | Case Manager1, Case Manager | last-saved-by |
     # Begin scenario
-    And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
+    When I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
     And I fill in "report_checklist_deputyFullNameAccurateInCasrec" with "1"
     And I fill in "report_checklist_decisionsSatisfactory_1" with "no"
@@ -219,19 +194,7 @@ Feature: Admin report checklist
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    And I click on "admin-client-search"
-    Then each text should be present in the corresponding region:
-      | 8 clients | client-search-count |
-    Then each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    When I fill in the following:
-      | search_clients_q | hent |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    And I click on "client-details" in the "client-behat001" region
-    Then the URL should match "/admin/client/\d+/details"
+    And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
