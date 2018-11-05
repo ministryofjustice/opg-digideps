@@ -1,8 +1,8 @@
 Feature: Admin report checklist
 
   @deputy
-  Scenario: Case manager submits empty checklist for the report 102
-    Given I load the application status from "report-104-submitted"
+  Scenario: Case manager submits empty checklist for the report 104
+    #Given I load the application status from "report-104-submitted"
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
@@ -59,7 +59,7 @@ Feature: Admin report checklist
     And the URL should match "/admin/report/\d+/checklist"
 
   @deputy
-  Scenario: Case manager saves further information on checklist
+  Scenario: Case manager saves further information on 104 checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
@@ -94,7 +94,7 @@ Feature: Admin report checklist
 
 
   @deputy
-  Scenario: Admin completes checklist
+  Scenario: Admin completes 104 checklist
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     When I click on "admin-client-search, client-detail-behat001"
@@ -136,3 +136,14 @@ Feature: Admin report checklist
       | report_checklist_lodgingSummary    | I am not satisfied |
     Then I click on "submit-and-download"
     And the form should be valid
+
+  @deputy
+  Scenario: 104 Admin marked as submitted
+    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    # Navigate to checklist via search
+    And I click on "admin-client-search, client-detail-behat001"
+    And I click on "checklist" in the "report-2016" region
+    Then the URL should match "/admin/report/\d+/checklist"
+    And each text should be present in the corresponding region:
+      | Admin User, OPG Admin | last-saved-by     |
+      | Admin User, OPG Admin | last-submitted-by |

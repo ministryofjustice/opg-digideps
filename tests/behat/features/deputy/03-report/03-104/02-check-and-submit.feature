@@ -11,4 +11,4 @@ Feature: Report submit
         And I press "report_declaration_save"
         Then the form should be valid
         And the URL should match "/report/\d+/submitted"
-        And I save the application status into "report-104-submitted"
+        #And I save the application status into "report-104-submitted"
