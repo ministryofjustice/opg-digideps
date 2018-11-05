@@ -161,19 +161,26 @@ class ReportChecklistType extends AbstractType
             'validation_groups'  => function (FormInterface $form) {
                 $ret = [];
                 if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
-                    $ret[] = 'submit-common-checklist';
+                    // $ret[] = 'submit-common-checklist';
 
-                    if ($this->report->isLayReport()) {
-                        $ret[] = 'submit-lay-checklist';
-                    } elseif ($this->report->isPaReport()) {
-                        $ret[] = 'submit-pa-checklist';
-                    } elseif ($this->report->isProfReport()) {
-                        $ret[] = 'submit-prof-checklist';
+                    $sectionsToValidate = $this->report->getAvailableSections();
+
+                    foreach ($sectionsToValidate as $section_id) {
+                        $ret[] = 'submit-' . $section_id . '-checklist';
                     }
 
+                    /*
                     if ($this->report->hasSection('lifestyle')) {
                         $ret[] = 'submit-hw-checklist';
-                    }
+                    } else {
+                        if ($this->report->isLayReport()) {
+                            $ret[] = 'submit-lay-checklist';
+                        } elseif ($this->report->isPaReport()) {
+                            $ret[] = 'submit-pa-checklist';
+                        } elseif ($this->report->isProfReport()) {
+                            $ret[] = 'submit-prof-checklist';
+                        }
+                    }*/
                 }
                 return $ret;
             },

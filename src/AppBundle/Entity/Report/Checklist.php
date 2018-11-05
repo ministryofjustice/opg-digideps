@@ -139,7 +139,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-hw-checklist"})
+     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lifestyle-checklist"})
      */
     private $satisfiedWithHealthAndLifestyle;
 
@@ -148,7 +148,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-lay-checklist"})
+     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bankAccounts-checklist"})
      */
     private $bondAdequate;
 

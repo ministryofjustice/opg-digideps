@@ -18,7 +18,9 @@
 {% endblock %}
 
 {# Breadcrumbs #}
+
 {% block breadcrumbs %}
+    {{ dump(report.availableSections) }}
     <div class="breadcrumbs hard--bottom">
         <ol class="group">
             <li><a href="{{ path('admin_client_search') }}">{{ 'clients' | trans({}, 'common') }}</a></li>
