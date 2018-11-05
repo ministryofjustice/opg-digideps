@@ -18,6 +18,9 @@ class ReportChecklistType extends AbstractType
     const SAVE_ACTION = 'submitAndDownload';
     const SUBMIT_AND_DOWNLOAD_ACTION = 'submitAndDownload';
 
+    /**
+     * @var Report
+     */
     private $report;
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -25,8 +28,6 @@ class ReportChecklistType extends AbstractType
         $finalDecisionTransPrefix = 'checklistPage.form.finalDecision.options.';
         $this->report = $options['report'];
 
-        $includeMoneySections = in_array('bankAccounts', $this->report->getAvailableSections());
-        $includeHWSections = in_array('lifestyle', $this->report->getAvailableSections());
 
         // HW & PFA
         $builder
@@ -57,8 +58,7 @@ class ReportChecklistType extends AbstractType
             ]);
 
         // PFA
-        if($includeMoneySections) {
-
+        if($this->report->hasSection('bankAccounts')) {
             // Client Assets and Debt
             $builder
                 ->add('assetsDeclaredAndManaged', FormTypes\ChoiceType::class, [
@@ -85,7 +85,7 @@ class ReportChecklistType extends AbstractType
                 ]);
 
             // If PA report, add PA deputy Expenses question
-            if ($this->report->isPaReport()) {
+            if ($this->report->hasSection('paDeputyExpenses')) {
                 $builder->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                     'expanded' => true
@@ -104,7 +104,7 @@ class ReportChecklistType extends AbstractType
         }
 
         // HW
-        if($includeHWSections) {
+        if($this->report->hasSection('lifestyle')) {
             // Health and Lifestyle question
             $builder->add('satisfiedWithHealthAndLifestyle', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -161,26 +161,13 @@ class ReportChecklistType extends AbstractType
             'validation_groups'  => function (FormInterface $form) {
                 $ret = [];
                 if (self::SUBMIT_AND_DOWNLOAD_ACTION == $form->getClickedButton()->getName()) {
-                    // $ret[] = 'submit-common-checklist';
+                     $ret[] = 'submit-common-checklist';
 
                     $sectionsToValidate = $this->report->getAvailableSections();
 
                     foreach ($sectionsToValidate as $section_id) {
                         $ret[] = 'submit-' . $section_id . '-checklist';
                     }
-
-                    /*
-                    if ($this->report->hasSection('lifestyle')) {
-                        $ret[] = 'submit-hw-checklist';
-                    } else {
-                        if ($this->report->isLayReport()) {
-                            $ret[] = 'submit-lay-checklist';
-                        } elseif ($this->report->isPaReport()) {
-                            $ret[] = 'submit-pa-checklist';
-                        } elseif ($this->report->isProfReport()) {
-                            $ret[] = 'submit-prof-checklist';
-                        }
-                    }*/
                 }
                 return $ret;
             },
