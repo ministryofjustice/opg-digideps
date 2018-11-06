@@ -48,16 +48,13 @@
             </thead>
             <tbody>
             {% for report in client.reportsSubmittedAtLeastOnce %}
+                {% set isProfReport = report.hasSection('profCurrentFees')  %}
                 {% set enableManageLink = report.submitted and report.type in [
                     '102', '102-4', '103', '103-4',
                     '102-6', '102-4-6', '103-6', '103-4-6',
                     '102-5', '102-4-5', '103-5', '103-4-5',
                 ] %}
-                {% set enableChecklistLink = report.type in [
-                    '102', '102-4', '103', '103-4',
-                    '102-6', '102-4-6', '103-6', '103-4-6', '104'
-                ]
-                %}
+                {% set enableChecklistLink = not isProfReport %}
 
                 {# only show submitted and unsubmitted reports #}
                 {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace(' ', '-') %}
