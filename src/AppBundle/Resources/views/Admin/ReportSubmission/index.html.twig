@@ -156,7 +156,13 @@
                         <td>
                             <details class="push--bottom">
                                 <summary>
-                                    <span class="summary">{{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}</span>
+                                    <span class="summary">
+                                        {% if reportSubmission.hasReportPdf() %}
+                                            {{ 'page.table.rows.documentsWithReport' | transchoice(reportSubmission.documents | length) }}
+                                        {% else %}
+                                            {{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}
+                                        {% endif %}
+                                    </span>
                                 </summary>
                                 <div class="panel panel-border-narrow">
                                     <ul class="list list-group" id="docs">
