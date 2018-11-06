@@ -345,26 +345,10 @@ class Report implements ReportInterface
     /**
      * @return bool
      */
-    public function isLayReport()
-    {
-        return strpos($this->type, '-6') === false && strpos($this->type, '-5') === false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPAReport()
-    {
-        return strpos($this->type, '-6');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isProfReport()
-    {
-        return strpos($this->type, '-5');
-    }
+//    public function isLayReport()
+//    {
+//        return !$this->hasSection('paDeputyExpenses') && !$this->hasSection('paDeputyExpenses') ;
+//    }
 
     /**
      * @param  string $type

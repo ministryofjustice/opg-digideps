@@ -34,7 +34,7 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testgetSectionParamsLay()
     {
-        $this->report->shouldReceive('isLayReport')->andReturn(true);
+//        $this->report->shouldReceive('isLayReport')->andReturn(true);
 
         $actual = $this->sut->getSectionParams($this->report, 'contacts', -1);
         $this->assertEquals('decisions', $actual['section']);
@@ -52,7 +52,7 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testgetSectionParamsOrg()
     {
-        $this->report->shouldReceive('isLayReport')->andReturn(false);
+//        $this->report->shouldReceive('isLayReport')->andReturn(false);
 
         $actual = $this->sut->getSectionParams($this->report, 'profCurrentFees', +1);
         $this->assertEquals('gifts', $actual['section']);

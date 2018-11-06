@@ -67,19 +67,7 @@ class ReportSectionsLinkService
         ];
 
         // reorganize
-        if ($report->isLayReport()) { // Lay
-            $sectionIdOrder = [
-                'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'bankAccounts',
-                'deputyExpenses',
-                'gifts',
-                'moneyTransfers',
-                'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
-                'assets', 'debts',
-                'actions', 'otherInfo',
-                'documents'
-            ];
-        } else { // PA and PROF: client profile page
+        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('paDeputyExpenses')) { // PA and PROF: client profile page
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'paDeputyExpenses', //PA
@@ -89,6 +77,18 @@ class ReportSectionsLinkService
                 'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
+                'documents'
+            ];
+        } else { // Lay
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare', 'lifestyle',
+                'bankAccounts',
+                'deputyExpenses',
+                'gifts',
+                'moneyTransfers',
+                'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
+                'assets', 'debts',
+                'actions', 'otherInfo',
                 'documents'
             ];
         }
