@@ -21,37 +21,6 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-<<<<<<< HEAD
-      | Not saved yet                                       | last-saved-by                             |
-      | Not saved yet                                       | last-modified-by                          |
-      | 1 Jan 2016                                          | court-date                                |
-      | Property and affairs: general                       | report-type-title                         |
-      | 1 Jan 2017 to 31 Dec 2017                           | expected-date                             |
-      | Cly                                                 | checklist-client-firstname                |
-      | Hent                                                | checklist-client-lastname                 |
-      | 0123456789                                          | checklist-client-phone                    |
-      | dd1-changed                                         | decision-1                                |
-      | Andy Whites                                         | contact-n2-aw2                            |
-      | December 2015                                       | care-plan-last-reviewed                   |
-      | Yes                                                 | has-assets                                |
-      | Impressionist painting                              | asset-impressionist-painting              |
-      | 13 gold house, mortimer road, westminster, SW11 6TF | property-sw11-6tf-address                 |
-      | 163,010                                             | asset-total                               |
-      | £3.00                                               | debt-loans                                |
-      | 200 per month payment plan                          | debt-management-details                   |
-      | £0.00                                               | checklist-closing-balance-previous-report |
-      | £335.40                                             | checklist-accounts-opening-total          |
-      | £243.39                                             | calculated-balance                        |
-      | £193.11                                             | balance-difference                        |
-      | Cly                                                 | checklist-client-firstname                |
-      | Hent                                                | checklist-client-lastname                 |
-      | 1 South Parade                                      | checklist-client-address                  |
-      | 0123456789                                          | checklist-client-phone                    |
-      | John                                                | checklist-deputy-firstname                |
-      | Doe                                                 | checklist-deputy-lastname                 |
-      | 102 Petty France                                    | checklist-deputy-address                  |
-      | 020 3334 3555                                       | checklist-deputy-phone                    |
-=======
       | Not saved yet | last-saved-by |
       | Not saved yet | last-modified-by |
       | 1 Jan 2016 | court-date |
