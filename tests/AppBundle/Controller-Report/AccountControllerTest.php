@@ -185,7 +185,7 @@ class AccountControllerTest extends AbstractTestController
         $account1Id = self::$account1->getId();
         $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId()); /* @var $account BankAccount*/
         $report = $account->getReport();
-        $report->setStatusCached([]);
+        $report->setSectionStatusesCached([]);
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();
         $url3 = '/account/' . self::$account3->getId();

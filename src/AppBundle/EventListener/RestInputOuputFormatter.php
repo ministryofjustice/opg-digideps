@@ -6,6 +6,7 @@ use AppBundle\Exception\BusinessRulesException;
 use AppBundle\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

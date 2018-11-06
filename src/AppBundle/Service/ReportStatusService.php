@@ -6,7 +6,7 @@ use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Statuses are cached into report.statusCached, and used when present
+ * Statuses are cached into report.sectionStatusesCached, and used when present
  * The cached status are set from the endpoints on CRUD operations on sections
  * Look at `ReportStatusUpdaterCommand` and its cron usage.
  *
@@ -27,6 +27,9 @@ class ReportStatusService
      */
     private $report;
 
+    /**
+     * @var bool set to true to use the report status cached
+     */
     private $useStatusCache = false;
 
     public function __construct(Report $report)
@@ -556,7 +559,7 @@ class ReportStatusService
      */
     public function getSectionStatus()
     {
-        $statusCached = $this->report->getStatusCached();
+        $statusCached = $this->report->getSectionStatusesCached();
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
@@ -630,14 +633,18 @@ class ReportStatusService
 
     /**
      * Calculate status using report info
-     * Note: a cached/redundant value is hold in report.statusCached
+     * Note: a cached/redundant value is hold in report.sectionStatusesCached
      * This should not be used from the client, as expensive to calculate each time
+     *
+     * TODO rewrite API and client to ALWAYS ignore the isDue. Othercase its caching is difficult
+     * Also, it makes more sense to decouple the date from the report status that could be renamed into
+     * e.g. "filled"
      *
      * @JMS\VirtualProperty
      * @JMS\Type("string")
      * @JMS\Groups({"status", "report-status"})
      *
-     * @return string
+     * @return string notStarted|readyToSubmit|notFinished
      */
     public function getStatus()
     {
@@ -645,10 +652,22 @@ class ReportStatusService
             return 'notStarted';
         }
 
-        if ($this->report->isDue() && $this->isReadyToSubmit()) {
-            return 'readyToSubmit';
-        } else {
-            return 'notFinished';
-        }
+        return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
     }
+
+    /**
+     * Used to fill report.reportStatusCached
+     * Ignored the due date. Returns readyTosubmit if sections are completed, even if not due
+     *
+     * @return string notStarted|readyToSubmit|notFinished
+     */
+    public function getStatusIgnoringDueDate()
+    {
+        if (!$this->hasStarted()) {
+            return 'notStarted';
+        }
+
+        return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+    }
+
 }

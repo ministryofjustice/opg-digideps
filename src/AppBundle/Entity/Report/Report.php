@@ -16,7 +16,12 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Reports.
  *
- * @ORM\Table(name="report")
+ * @ORM\Table(name="report",
+ *     indexes={
+ *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
+ *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
+ *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
+ *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportRepository")
  */
 class Report implements ReportInterface
@@ -44,6 +49,10 @@ class Report implements ReportInterface
 
     const HEALTH_WELFARE = 1;
     const PROPERTY_AND_AFFAIRS = 2;
+
+    const STATUS_NOT_STARTED = 'notStarted';
+    const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    const STATUS_NOT_FINISHED = 'notFinished';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
     const TYPE_103 = '103';
@@ -190,7 +199,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"visits-care"})
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report\VisitsCare",  mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
 
@@ -290,7 +299,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"report-submitted-by"})
      * @JMS\Type("AppBundle\Entity\User")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
     private $submittedBy;
@@ -328,14 +337,14 @@ class Report implements ReportInterface
      *
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      * @JMS\Groups({"report-documents"})
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
     private $documents;
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\ReportSubmission>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
 
@@ -387,6 +396,8 @@ class Report implements ReportInterface
 
     /**
      * @var Checklist
+     *
+     * // TODO "report" group is used by deputy side each time a report is loaded. Better to use a new one like report-checklist
      *
      * @JMS\Groups({"report"})
      * @JMS\Type("AppBundle\Entity\Report\Checklist")
@@ -458,7 +469,7 @@ class Report implements ReportInterface
         $this->reportSubmissions = new ArrayCollection();
         $this->wishToProvideDocumentation = null;
         $this->currentProfPaymentsReceived = null;
-        $this->profServicefees = new ArrayCollection();
+        $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
 
         // set sections as notStarted when a new report is created
@@ -466,7 +477,8 @@ class Report implements ReportInterface
         foreach($this->getAvailableSections() as $sectionId) {
             $statusCached[$sectionId] = ['state' => ReportStatusService::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
-        $this->setStatusCached($statusCached);
+        $this->setSectionStatusesCached($statusCached);
+        $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }
 
     /**
@@ -878,20 +890,14 @@ class Report implements ReportInterface
         return $this;
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("is_due")
+     * @JMS\Groups({"report"})
+     */
     public function isDue()
     {
-        if (!$this->getEndDate() instanceof \DateTime) {
-            return false;
-        }
-
-        // reset time on dates
-        $today = new \DateTime();
-        $today->setTime(0, 0, 0);
-
-        $reportDueOn = clone $this->getEndDate();
-        $reportDueOn->setTime(0, 0, 0);
-
-        return $today >= $reportDueOn;
+        return ReportService::isDue($this->getEndDate());
     }
 
     /**
@@ -1267,4 +1273,5 @@ class Report implements ReportInterface
 
         return $titleTranslationKeys[$this->getType()];
     }
+
 }
