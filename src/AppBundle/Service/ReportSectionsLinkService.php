@@ -66,7 +66,9 @@ class ReportSectionsLinkService
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
         ];
 
-        // reorganize
+        //TODO ask the business if links can follow a single order
+        // eg. PROF and PA reports have assets and debts after actions (opposite of Lay)
+       
         if ($report->hasSection('paDeputyExpenses') || $report->hasSection('paDeputyExpenses')) { // PA and PROF: client profile page
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
@@ -74,7 +76,8 @@ class ReportSectionsLinkService
                 'profCurrentFees', // PROF
                 'gifts',
                 'actions', 'otherInfo',
-                'bankAccounts', 'moneyTransfers', 'moneyIn', 'moneyOut',
+                'bankAccounts',
+                'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
                 'documents'
@@ -83,10 +86,9 @@ class ReportSectionsLinkService
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'bankAccounts',
-                'deputyExpenses',
+                'deputyExpenses', // Lay
                 'gifts',
-                'moneyTransfers',
-                'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
+                'moneyTransfers', 'moneyIn', 'moneyOut', 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
                 'actions', 'otherInfo',
                 'documents'
