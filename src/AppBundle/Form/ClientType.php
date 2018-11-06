@@ -11,23 +11,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClientType extends AbstractType
 {
-    private $clientValidated = false;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (isset($options['client_validated'])) {
-            $this->setClientValidated((bool) $options['client_validated']);
-        }
 
-        if ($this->isClientValidated()) {
-            $builder->add('firstname', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']])
-                ->add('lastname', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']])
-                ->add('caseNumber', FormTypes\TextType::class, ['attr'=> ['readonly' => 'readonly']]);
-        } else {
-            $builder->add('firstname', FormTypes\TextType::class)
-                ->add('lastname', FormTypes\TextType::class)
-                ->add('caseNumber', FormTypes\TextType::class);
-        }
+        $builder->add('firstname', FormTypes\TextType::class)
+            ->add('lastname', FormTypes\TextType::class)
+            ->add('caseNumber', FormTypes\TextType::class);
+
         $builder->add('courtDate', FormTypes\DateType::class, [
             'widget' => 'text',
             'input' => 'datetime',
@@ -59,30 +49,12 @@ class ClientType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'registration',
-            'validation_groups'  => 'lay-deputy-client',
-            'client_validated'   => null
+            'validation_groups'  => 'lay-deputy-client'
         ]);
     }
 
     public function getBlockPrefix()
     {
         return 'client';
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClientValidated()
-    {
-        return $this->clientValidated;
-    }
-
-    /**
-     * @param bool $clientValidated
-     */
-    public function setClientValidated($clientValidated)
-    {
-        $this->clientValidated = $clientValidated;
-        return $this;
     }
 }

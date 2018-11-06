@@ -8,7 +8,6 @@ Feature: deputy / report / edit client
         Then the following fields should have the corresponding values:
             | client_firstname | Cly |
             | client_lastname | Hent |
-            | client_caseNumber | behat001 |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2016 |
@@ -21,7 +20,6 @@ Feature: deputy / report / edit client
         When I fill in the following:
             | client_firstname | |
             | client_lastname |  |
-            | client_caseNumber |  |
             | client_courtDate_day | |
             | client_courtDate_month | |
             | client_courtDate_year | |
@@ -38,15 +36,12 @@ Feature: deputy / report / edit client
             | client_courtDate_day |
             | client_courtDate_month |
             | client_courtDate_year |
-            | client_caseNumber |
-            | client_caseNumber |
             | client_address |
             | client_postcode |
             | client_phone |
         When I fill in the following:
             | client_firstname | Nolan |
             | client_lastname | Ross |
-            | client_caseNumber | 12345ABC |
             | client_courtDate_day | 1 |
             | client_courtDate_month | 1 |
             | client_courtDate_year | 2016 |
@@ -58,7 +53,6 @@ Feature: deputy / report / edit client
             | client_phone | 0123456789  |
         And I press "client_save"
         Then I should be on "/deputyship-details/your-client"
-        And I should see "12345ABC" in the "case-number" region
         And I should see "NG1 2HT" in the "client-address-postcode" region
         When I click on "client-edit"
         Then the following fields should have the corresponding values:

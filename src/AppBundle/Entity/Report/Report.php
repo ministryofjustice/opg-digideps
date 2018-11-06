@@ -80,6 +80,13 @@ class Report implements ReportInterface
     private $endDate;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    private $isDue;
+
+    /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report_due_date"})
      *
@@ -656,26 +663,13 @@ class Report implements ReportInterface
     }
 
     /**
-     * Return true when the report is Due (today's date => report end date).
-     *
      * @return bool
-     * @Assert\IsTrue(message="report.submissionExceptions.due", groups={"due"})
      */
     public function isDue()
     {
-        if (!$this->getEndDate() instanceof \DateTime) {
-            return false;
-        }
-
-        // reset time on dates
-        $today = new \DateTime();
-        $today->setTime(0, 0, 0);
-
-        $reportDueOn = clone $this->getEndDate();
-        $reportDueOn->setTime(0, 0, 0);
-
-        return $today >= $reportDueOn;
+        return $this->isDue;
     }
+
 
     public function hasContacts()
     {
