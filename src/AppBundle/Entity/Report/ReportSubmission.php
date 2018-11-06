@@ -133,7 +133,9 @@ class ReportSubmission
     public function hasReportPdf()
     {
         foreach ($this->documents as $document) {
-            if($document->isReportPdf()) return true;
+            if($document->isReportPdf()) {
+                return true;
+            }
         }
         return false;
     }
