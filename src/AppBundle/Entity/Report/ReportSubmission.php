@@ -128,6 +128,17 @@ class ReportSubmission
     }
 
     /**
+     * @return bool
+     */
+    public function hasReportPdf()
+    {
+        foreach ($this->documents as $document) {
+            if($document->isReportPdf()) return true;
+        }
+        return false;
+    }
+
+    /**
      * @return User
      */
     public function getArchivedBy()
