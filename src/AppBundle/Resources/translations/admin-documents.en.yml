@@ -26,4 +26,5 @@ page:
   table:
     rows:
       documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
+      documentsWithReport: "{0} No documents | {1} Report | ]1,Inf[ Report + docs"
 

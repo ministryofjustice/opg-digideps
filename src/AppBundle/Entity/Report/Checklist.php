@@ -258,6 +258,18 @@ class Checklist
     public function __construct(ReportInterface $report)
     {
         $this->setReport($report);
+
+        // DDPB-2272: prefill answers based on report content
+        if ($report instanceof Report) {
+            $action = $report->getAction();
+            if ($answer = $action->getDoYouExpectFinancialDecisions()) {
+                $this->setFutureSignificantFinancialDecisions($answer);
+            }
+            if ($answer = $action->getDoYouHaveConcerns()) {
+                $this->setHasDeputyRaisedConcerns($answer);
+            }
+        }
+
     }
 
     /**
