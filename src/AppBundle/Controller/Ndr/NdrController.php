@@ -268,8 +268,8 @@ class NdrController extends AbstractController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/submit_feedback", name="report_submit_feedback")
-     * @Template()
+     * @Route("/ndr/{ndrId}/submit_feedback", name="ndr_submit_feedback")
+     * @Template("AppBundle:Report:Report/submitFeedback.html.twig")
      */
     public function submitFeedbackAction($ndrId)
     {
