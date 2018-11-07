@@ -666,6 +666,7 @@ class ReportController extends RestController
             'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
             'satisfied_with_pa_expenses' => 'setSatisfiedWithPaExpenses',
             'bond_adequate' => 'setBondAdequate',
+            'satisfied_with_health_and_lifestyle' => 'setSatisfiedWithHealthAndLifestyle',
             'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
             'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
