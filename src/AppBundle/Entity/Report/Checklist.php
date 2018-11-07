@@ -58,7 +58,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-decisions-checklist"})
      */
     private $decisionsSatisfactory;
 
@@ -76,7 +76,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-visitsCare-checklist"})
      */
     private $careArrangements;
 
@@ -85,7 +85,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-assets-checklist"})
      */
     private $assetsDeclaredAndManaged;
 
@@ -94,7 +94,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-debts-checklist"})
      */
     private $debtsManaged;
 
@@ -103,7 +103,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-balance-checklist"})
      */
     private $openClosingBalancesMatch;
 
@@ -112,7 +112,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-balance-checklist"})
      */
     private $accountsBalance;
 
@@ -121,7 +121,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-bankAccounts-checklist"})
      */
     private $moneyMovementsAcceptable;
 
@@ -130,7 +130,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-pa-checklist"})
+     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-paDeputyExpenses-checklist"})
      */
     protected $satisfiedWithPaExpenses;
 
@@ -139,7 +139,16 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondAdequate.notBlank", groups={"submit-lay-checklist"})
+     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lifestyle-checklist"})
+     */
+    private $satisfiedWithHealthAndLifestyle;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
      */
     private $bondAdequate;
 
@@ -148,7 +157,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-lay-checklist"})
+     * @Assert\NotBlank(message="checklist.bondOrderMatchCasrec.notBlank", groups={"submit-bonds-checklist"})
      */
     private $bondOrderMatchCasrec;
 
@@ -494,6 +503,24 @@ class Checklist
     public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithHealthAndLifestyle()
+    {
+        return $this->satisfiedWithHealthAndLifestyle;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     * @return $this
+     */
+    public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
+    {
+        $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
         return $this;
     }
 
