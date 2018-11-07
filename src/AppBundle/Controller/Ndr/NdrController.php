@@ -257,7 +257,7 @@ class NdrController extends AbstractController
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
-            return $this->redirect($this->generateUrl('report_submit_feedback', ['ndrId' => $ndr->getId()]));
+            return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
         }
 
         return [
@@ -271,7 +271,7 @@ class NdrController extends AbstractController
      * @Route("/ndr/{ndrId}/submit_feedback", name="report_submit_feedback")
      * @Template()
      */
-    public function submitFeedbackAction($reportId)
+    public function submitFeedbackAction($ndrId)
     {
         $client = $this->getFirstClient(self::$ndrGroupsForValidation);
         $ndr = $client->getNdr();
