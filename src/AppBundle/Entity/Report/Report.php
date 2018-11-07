@@ -343,14 +343,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @return bool
-     */
-//    public function isLayReport()
-//    {
-//        return !$this->hasSection('paDeputyExpenses') && !$this->hasSection('paDeputyExpenses') ;
-//    }
-
-    /**
      * @param  string $type
      * @return $this
      */

@@ -69,7 +69,7 @@ class ReportSectionsLinkService
         //TODO ask the business if links can follow a single order
         // eg. PROF and PA reports have assets and debts after actions (opposite of Lay)
        
-        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('paDeputyExpenses')) { // PA and PROF: client profile page
+        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profCurrentFees')) { // PA and PROF: client profile page
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'paDeputyExpenses', //PA
