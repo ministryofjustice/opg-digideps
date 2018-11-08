@@ -150,6 +150,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
+     * @ORM\Column(name="satisfied_with_health_and_lifestyle", type="string", length=3, nullable=true)
+     */
+    private $satisfiedWithHealthAndLifestyle;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     *
      * @ORM\Column(name="bond_adequate", type="string", length=3, nullable=true)
      */
     private $bondAdequate;
@@ -520,6 +529,24 @@ class Checklist
     public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSatisfiedWithHealthAndLifestyle()
+    {
+        return $this->satisfiedWithHealthAndLifestyle;
+    }
+
+    /**
+     * @param string $satisfiedWithPaExpenses
+     * @return $this
+     */
+    public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
+    {
+        $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
+        return $this;
     }
 
     /**
