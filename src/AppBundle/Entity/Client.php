@@ -160,7 +160,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"client", "client-court-date"})
+     * @JMS\Groups({"client", "client-court-date", "checklist-information"})
      *
      * @var \Date
      *
@@ -877,21 +877,26 @@ class Client
      */
     public function getExpectedReportStartDate()
     {
-        // create new datetime object. Do not alter object courtDate property.
+        // clone datetime object. Do not alter object courtDate property.
         /** @var \DateTime $expectedReportStartDate */
-        $expectedReportStartDate = new \DateTime();
-
         if (!($this->getCourtDate() instanceof \DateTime)) {
-            return null;
+            if ($this->getCalculatedCourtDate() instanceof \DateTime) {
+                $expectedReportStartDate = clone $this->getCalculatedCourtDate();
+            } else {
+                // nothing to use for expected start date
+                return null;
+            }
+        } else {
+            $expectedReportStartDate = clone $this->getCourtDate();
         }
 
         // if court Date is this year, just return it as the start date
-        if ($this->getCourtDate()->format('Y') == date('Y')) {
+        if ($expectedReportStartDate->format('Y') == date('Y')) {
             return $this->getCourtDate();
         }
 
         // else make it last year
-        $expectedReportStartDate->setDate(date('Y')-1, $this->getCourtDate()->format('m'), $this->getCourtDate()->format('d'));
+        $expectedReportStartDate->setDate(date('Y')-1, $expectedReportStartDate->format('m'), $expectedReportStartDate->format('d'));
 
         return $expectedReportStartDate;
     }
@@ -914,5 +919,42 @@ class Client
         }
         $expectedReportEndDate = clone $this->getExpectedReportStartDate();
         return $expectedReportEndDate->modify('+1year -1day');
+    }
+
+    /**
+     * Generates the Report Court date based on the first report made by client
+     *
+     * @JMS\VirtualProperty
+     * @var DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\SerializedName("calculated_court_date")
+     * @JMS\Groups({"checklist-information"})
+     *
+     * @return \DateTime|null
+     */
+    public function getCalculatedCourtDate()
+    {
+        if ($this->getCourtDate() instanceof \DateTime) {
+            return $this->getCourtDate();
+        }
+
+        $arrayIterator = $this->reports->filter(function ($report) {
+            return $report->getEndDate();
+        })->getIterator();
+
+        # Sort by end date so the oldest first
+        $arrayIterator->uasort(function ($first, $second) {
+            return $first->getEndDate() > $second->getEndDate() ? 1 : -1;
+        });
+
+        $orderedReports = iterator_to_array($arrayIterator);
+
+        if (isset($orderedReports[0]) && $orderedReports[0] instanceof Report && $orderedReports[0]->getEndDate() instanceof \DateTime) {
+            $calculatedCourtDate = clone $orderedReports[0]->getEndDate();
+            return $calculatedCourtDate->modify('-1 year +1 day');
+        }
+
+        return null;
     }
 }

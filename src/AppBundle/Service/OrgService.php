@@ -223,6 +223,10 @@ class OrgService
                 ->setFirstname(trim($row['Forename']))
                 ->setLastname(trim($row['Surname']));
 
+            // set court date from Last report day
+            $courtDate = new \DateTime($row['Last Report Day']);
+            $client->setCourtDate($courtDate->modify('-1year +1day'));
+
             if (!empty($row['Client Adrs1'])) {
                 $client->setAddress($row['Client Adrs1']);
             }

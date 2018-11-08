@@ -217,6 +217,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $mockClient = m::mock(Client::class)
+            ->shouldIgnoreMissing(true)
             ->makePartial()
             ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
             ->getMock();
