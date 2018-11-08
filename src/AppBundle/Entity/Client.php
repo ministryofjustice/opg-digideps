@@ -96,7 +96,7 @@ class Client
     /**
      * @JMS\Accessor(setter="setCourtDateWithoutTime")
      * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"edit", "client-court-date"})
+     * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
      * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
      * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client"})
@@ -235,6 +235,13 @@ class Client
      */
     private $expectedReportEndDate;
 
+    /**
+     * @var \DateTime
+     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"checklist-information", "edit", "client-court-date"})
+     */
+    private $calculatedCourtDate;
 
     public function __construct()
     {
@@ -886,11 +893,30 @@ class Client
     }
 
     /**
-     * @param DateTime $expectedReportEndDate
+     * @param $expectedReportEndDate
+     * @return $this
      */
     public function setExpectedReportEndDate($expectedReportEndDate)
     {
         $this->expectedReportEndDate = $expectedReportEndDate;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCalculatedCourtDate()
+    {
+        return $this->calculatedCourtDate;
+    }
+
+    /**
+     * @param $calculatedCourtDate
+     * @return $this
+     */
+    public function setCalculatedCourtDate($calculatedCourtDate)
+    {
+        $this->calculatedCourtDate = $calculatedCourtDate;
         return $this;
     }
 }
