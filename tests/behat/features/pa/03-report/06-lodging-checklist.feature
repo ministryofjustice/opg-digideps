@@ -3,20 +3,8 @@ Feature: Admin report checklist
   Scenario: Case manager submits empty PA checklist for the report
     Given I load the application status from "pa-report-submitted"
     And I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search"
-    Then each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    When I fill in the following:
-      | search_clients_q | 01000014 |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    And I click on "client-details" in the "client-01000014" region
-    Then the URL should match "/admin/client/\d+/details"
-    # Begin scenario
-    And I click on "checklist"
+    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "checklist" in the "report-2016-to-2017" region
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
     And I should see the "expected-date" region
@@ -88,22 +76,9 @@ Feature: Admin report checklist
 
   Scenario: Case manager saves further information on PA checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search"
+    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    When I fill in the following:
-      | search_clients_q | 01000014 |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    And I click on "client-details" in the "client-01000014" region
-    Then the URL should match "/admin/client/\d+/details"
-    # Begin scenario
-    And I click on "checklist"
-    Then the URL should match "/admin/report/\d+/checklist"
-    And each text should be present in the corresponding region:
       | Not saved yet | last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
@@ -134,22 +109,9 @@ Feature: Admin report checklist
 
   Scenario: Admin completes PA checklist
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search"
+    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    When I fill in the following:
-      | search_clients_q | 01000014 |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    And I click on "client-details" in the "client-01000014" region
-    Then the URL should match "/admin/client/\d+/details"
-    # Begin scenario
-    And I click on "checklist"
-    Then the URL should match "/admin/report/\d+/checklist"
-    And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by |
     # Begin scenario
     And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
@@ -199,21 +161,8 @@ Feature: Admin report checklist
 
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # Navigate to checklist via search
-    And I click on "admin-client-search"
+    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    When I fill in the following:
-      | search_clients_q | 01000014 |
-    And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "1" times
-    And each text should be present in the corresponding region:
-      | Cly7 Hent | client-01000014 |
-    And I click on "client-details" in the "client-01000014" region
-    Then the URL should match "/admin/client/\d+/details"
-    # Begin scenario
-    And I click on "checklist"
-    Then the URL should match "/admin/report/\d+/checklist"
-    And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by     |
       | Case Manager1, Case Manager | last-submitted-by |
