@@ -49,7 +49,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateinCasrec.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateinCasrec.notBlank", groups={"submit-deputy-fullname-accurate-casrec-checklist"})
      */
     private $deputyFullNameAccurateInCasrec;
 

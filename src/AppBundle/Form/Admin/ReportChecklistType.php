@@ -36,11 +36,15 @@ class ReportChecklistType extends AbstractType
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
-            ->add('contactDetailsUptoDate', FormTypes\CheckboxType::class, [])
-            ->add('deputyFullNameAccurateInCasrec', FormTypes\CheckboxType::class, [])
+            ->add('contactDetailsUptoDate', FormTypes\CheckboxType::class, []);
+
+        // DDPB-2293 question not relevant for PA
+        if (!$this->report->hasSection('paDeputyExpenses')) {
+            $builder->add('deputyFullNameAccurateInCasrec', FormTypes\CheckboxType::class, []);
+        }
 
             // Decisions
-            ->add('decisionsSatisfactory', FormTypes\ChoiceType::class, [
+        $builder->add('decisionsSatisfactory', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
@@ -164,13 +168,20 @@ class ReportChecklistType extends AbstractType
                      $ret[] = 'submit-common-checklist';
 
                     $sectionsToValidate = $this->report->getAvailableSections();
+                    $isPaReport = $this->report->hasSection('paDeputyExpenses');
+                    $hasFinanceInfo = $this->report->hasSection('bankAccounts');
 
                     foreach ($sectionsToValidate as $section_id) {
                         $ret[] = 'submit-' . $section_id . '-checklist';
                     }
 
+                    // DDPB-2293 question not relevant for PA
+                    if (!$isPaReport) {
+                        $ret[] = 'submit-deputy-fullname-accurate-casrec-checklist';
+                    }
+
                     // bonds to show when report has financial info but not a PA one
-                    if ($this->report->hasSection('bankAccounts') && !$this->report->hasSection('paDeputyExpenses') ) {
+                    if ($hasFinanceInfo && !$isPaReport) {
                         $ret[] = 'submit-bonds-checklist';
                     }
 

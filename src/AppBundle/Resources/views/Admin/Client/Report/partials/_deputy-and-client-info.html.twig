@@ -137,6 +137,7 @@
     </details>
 </div>
 
+{% if form.deputyFullNameAccurateInCasrec is defined %}
 <div class="form-section push-half--bottom">
     <div class="form-group-outer border-top soft--top">
         {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
@@ -148,3 +149,4 @@
         <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ report.submittedBy.fullName }}</p>
     </div>
 </div>
+{% endif %}

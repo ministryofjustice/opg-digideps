@@ -39,7 +39,6 @@ Feature: Admin report checklist
       | report_checklist_reportingPeriodAccurate_0             |
       | report_checklist_reportingPeriodAccurate_1             |
       | report_checklist_contactDetailsUptoDate                |
-      | report_checklist_deputyFullNameAccurateInCasrec        |
       | report_checklist_decisionsSatisfactory_0               |
       | report_checklist_decisionsSatisfactory_1               |
       | report_checklist_consultationsSatisfactory_0           |
@@ -116,7 +115,6 @@ Feature: Admin report checklist
     # Begin scenario
     And I fill in "report_checklist_reportingPeriodAccurate_0" with "yes"
     And I fill in "report_checklist_contactDetailsUptoDate" with "1"
-    And I fill in "report_checklist_deputyFullNameAccurateInCasrec" with "1"
     And I fill in "report_checklist_decisionsSatisfactory_1" with "no"
     And I fill in "report_checklist_consultationsSatisfactory_0" with "yes"
     And I fill in "report_checklist_careArrangements_1" with "no"
@@ -140,7 +138,6 @@ Feature: Admin report checklist
     Then the following fields should have the corresponding values:
       | report_checklist_reportingPeriodAccurate_0             | yes                |
       | report_checklist_contactDetailsUptoDate                | 1                  |
-      | report_checklist_deputyFullNameAccurateInCasrec        | 1                  |
       | report_checklist_decisionsSatisfactory_1               | no                 |
       | report_checklist_consultationsSatisfactory_0           | yes                |
       | report_checklist_careArrangements_1                    | no                 |
