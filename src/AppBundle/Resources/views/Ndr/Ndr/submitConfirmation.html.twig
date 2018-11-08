@@ -1,42 +1,43 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-{% set translationDomain = "ndr-submitted" %}
+{% set translationDomain = "report-submitted" %}
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'page.pageTitle' | trans(clientTrans) }}{% endblock %}
-
-{% set clientTrans = {'%client%': ndr.client.firstname | e } %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
 
-    <div id="header-report-submit" class="hero">
-        <h2 class="heading-large flush--ends">
-            <span class="icon icon-tick-white"></span>
-            {{ 'reportSubmitted' | trans }}
-        </h2>
+    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans({'%reportName%': ''})) }}
+
+    <div class="text push--top">
+        <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
+        <p>{{ 'page.weWillSendReminder' | trans }}</p>
     </div>
 
-    <p class="">{{ 'weHaveSentEmail' | trans }}</p>
+    <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" class="behat-link-download-report">
+        {{ 'page.downloadLink' | trans({'%reportName%': ''}) }}
+    </a>
 
-    <!-- what happens next -->
-    <h3 class="heading-medium">{{ 'whatHappensNext.title' | trans }}</h3>
-    <div class="text">
-        <p>{{ 'whatHappensNext.body1' | trans }}</p>
-        <p>{{ 'whatHappensNext.body2' | trans }}</p>
-    </div>
-    <p>
-        <a href="{{ path('ndr_index') }}" class="button behat-link-return-homepage">{{ 'whatHappensNext.returnButton' | trans }}</a>
-    </p>
+    {# feedback form #}
+    <h2 class="heading-medium">{{ 'page.feedback.title' | trans }}</h2>
 
-    <!-- Give us feedback -->
-    <h3 class="heading-medium">{{ 'giveUsFeedback.title' | trans }}</h3>
-    <div class="text">
-        <p>{{ 'giveUsFeedback.body1' | trans }}</p>
-        <p>{{ 'giveUsFeedback.body2' | trans({
-                '%linkStart%': '<a href="' ~ feedbackUrl ~ '" target="_blank">',
-                '%linkEnd%': '</a>'
-            }) | raw }}</p>
-    </div>
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
+
+    {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
+        'legendClass' : 'form-label-bold',
+        'legend': 'satisfactionLevel'
+    }) }}
+
+    {{ form_submit(form.save, 'send') }}
+
+    {{ form_end(form) }}
+    {# end feedback form #}
+
+    {% if app.user.isDeputyOrg() %}
+        <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'page.returnToDashboard' | trans }}</a>
+    {% else %}
+        <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
+    {% endif %}
 
 {% endblock %}

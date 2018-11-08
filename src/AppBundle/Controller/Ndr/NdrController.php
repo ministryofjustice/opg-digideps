@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
+use AppBundle\Model as ModelDir;
 use AppBundle\Service\NdrStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -248,9 +249,45 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
+        $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
+            $this->getMailSender()->send($feedbackEmail, ['html']);
+
+            return $this->redirect($this->generateUrl('ndr_submit_feedback', ['ndrId' => $ndrId]));
+        }
+
         return [
             'ndr' => $ndr,
             'ndrStatus' => $ndrStatus,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/ndr/{ndrId}/submit_feedback", name="ndr_submit_feedback")
+     * @Template("AppBundle:Report:Report/submitFeedback.html.twig")
+     */
+    public function submitFeedbackAction($ndrId)
+    {
+        $client = $this->getFirstClient(self::$ndrGroupsForValidation);
+        $ndr = $client->getNdr();
+        if ($ndr->getId() != $ndrId) {
+            throw new \RuntimeException('Not authorised to access this Report');
+        }
+        $ndr->setClient($client);
+
+        if (!$ndr->getSubmitted()) {
+            throw new \RuntimeException('Report not submitted');
+        }
+
+        $ndrStatus = new NdrStatusService($ndr);
+
+        return [
+            'ndr' => $ndr,
         ];
     }
 }

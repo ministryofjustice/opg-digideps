@@ -40,7 +40,8 @@ trait DebugTrait
         $bytes = file_put_contents($filename, $data);
         echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
-        echo "- Response: saved into $filename ($bytes bytes).\n";
+        $file = basename($filename);
+        echo "- Response: saved into {$file} ({$bytes} bytes). View locally at https://digideps-client.local/behat-debugger.php?frame=page&f={$file} .\n";
         $this->visitBehatLink('logs/view');
         echo ' - Log content (scenario only): ' . $this->getSession()->getPage()->getContent();
     }

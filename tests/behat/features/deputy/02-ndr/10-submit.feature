@@ -52,7 +52,7 @@ Feature: ndr / report submit
         And the URL should match "/ndr/\d+/submitted"
         And the response status code should be 200
         # return to homepage
-        When I click on "return-homepage"
+        When I click on "return-to-reports-page"
         Then I should be on "/ndr"
 
     @ndr
