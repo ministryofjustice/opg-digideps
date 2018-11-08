@@ -88,7 +88,7 @@ class BalanceTest extends WebTestCase
             'getEndDate' => new \DateTime(),
             'getBalanceMismatchExplanation'=>'explanation-content',
             'getStartDate' => new \Datetime(),
-            'isLayReport' => true,
+//            'isLayReport' => true,
         ]);
     }
 

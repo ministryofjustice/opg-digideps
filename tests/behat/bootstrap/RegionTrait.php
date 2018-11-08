@@ -96,8 +96,17 @@ trait RegionTrait
      */
     public function eachTextShouldBePresentCorrespondingRegion(TableNode $fields)
     {
+        $errorMessages = [];
         foreach ($fields->getRowsHash() as $text => $region) {
-            $this->iShouldSeeInTheRegion($text, $region);
+            try {
+                $this->iShouldSeeInTheRegion($text, $region);
+            } catch (\Exception $e) {
+                $errorMessages[] = $e->getMessage();
+            }
+        }
+
+        if ($errorMessages) {
+            throw new \RuntimeException(implode("\n", $errorMessages));
         }
     }
 

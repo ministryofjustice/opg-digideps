@@ -13,6 +13,7 @@ checklistPage:
     paFeeExpenses: Deputy fees and expenses
     nextPeriod: Next reporting period
     declaration: Declaration
+    healthAndLifestyle: Health and lifestyle
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
@@ -52,6 +53,7 @@ checklistPage:
     paDeputyExpenses: View deputy's fees and expenses
     giftsSummary: View gifts summary
     deputyExpensesSummary: View deputy expenses
+    lifestyleResponses: View health and lifestyle responses
   noTransferToShow: No money transfers to view
   form:
     save:
@@ -102,6 +104,9 @@ checklistPage:
       label: |
         Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
         Bonds Discrepancy Resolution Job Card.
+    satisfiedWithHealthAndLifestyle:
+      label: |
+        Have satisfactory responses been provided by the deputy?
     bondOrderMatchCasrec:
       label: |
         Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
