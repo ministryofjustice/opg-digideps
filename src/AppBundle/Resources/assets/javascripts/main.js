@@ -14,6 +14,9 @@ $(document).ready(function() {
     // Character limiter module
     new GOVUK.limitChars('form');
 
+    // Text area autoSize module
+    new GOVUK.textAreaAutoSize('form');
+
     // Details expander
     new GOVUK.detailsExpander('.js-details-expander');
     new GOVUK.detailsExpander('.js-details-expander-travel-costs');
@@ -38,4 +41,26 @@ $(document).ready(function() {
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
+
+
+
+    /*var sidebarOffset = $('.js-sidebar').offset();
+    var scrollTop = $( window ).scrollTop();
+
+    sidebarOffset = sidebarOffset.top;
+
+    $(window).scroll(function(){
+      scrollTop = $( window ).scrollTop();
+
+      if (scrollTop >= sidebarOffset) {
+        $('html').addClass('fix-content');
+      }
+
+      if (scrollTop < sidebarOffset) {
+        $('html').removeClass('fix-content');
+      }
+
+    });*/
+
+
 });

@@ -13,26 +13,26 @@
 {% block pageTitle %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ (page ~ '.pageTitle') | trans }}</span>
-{% endblock %}
-
-{# Breadcrumbs #}
-
-{% block breadcrumbs %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li><a href="{{ path('admin_client_search') }}">{{ 'clients' | trans({}, 'common') }}</a></li>
-            <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">{{ 'clientDetails' | trans({}, 'common') }}</a></li>
-        </ol>
-    </div>
-{% endblock %}
-
-{% block helpline %}{% endblock %}
-
 {% block pageContent %}
     <div class="grid-row">
         <div class="column-two-thirds">
+            {% block supportTitleTop %}
+                <span class="heading-secondary">{{ (page ~ '.pageTitle') | trans }}</span>
+            {% endblock %}
+
+            {# Breadcrumbs #}
+
+            {% block breadcrumbs %}
+                <div class="breadcrumbs hard--bottom">
+                    <ol class="group">
+                        <li><a href="{{ path('admin_client_search') }}">{{ 'clients' | trans({}, 'common') }}</a></li>
+                        <li><a href="{{ path('admin_client_details', {'id' : report.client.id}) }}">{{ 'clientDetails' | trans({}, 'common') }}</a></li>
+                    </ol>
+                </div>
+            {% endblock %}
+
+            {% block helpline %}{% endblock %}
+
             <p class="flush--bottom">
                 {{ 'client' | trans({}, 'common') }}:
                 <span class="bold behat-region-fullName">{{ report.client.fullName }}</span>
@@ -198,7 +198,7 @@
 
             <div class="form-section push-double--bottom">
                 {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformationReceived'), {
-                    'formGroupClass': 'explanation',
+                    'formGroupClass': 'explanation js-auto-size',
                 }) }}
                 {{ form_submit(form.saveFurtherInformation, (page ~ '.form.saveFurtherInformation'), {
                     'buttonClass': 'button-secondary behat-link-save-further-information'
@@ -220,7 +220,7 @@
             {{ form_end(form) }}
         </div>
         <div class="column-third flush--top">
-            <aside class="govuk-related-items " role="complementary">
+            <aside class="govuk-related-items js-sidebar" role="complementary">
                 <h2 class="heading-small">{{ (page ~ '.heading.contents') | trans }}</h2>
                 <ul class="list font-xsmall">
                     <li><a href="#deputyAndClientInfo">{{ (page ~ '.heading.info') | trans }}</a></li>
