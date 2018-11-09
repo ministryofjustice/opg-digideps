@@ -32,27 +32,33 @@
                 </tbody>
             </table>
 
-            <h3 class="label question bold">{{ (page ~ '.form.contactDetailsUptoDate.label') | trans({}, 'admin-checklist') }}</h3>
+            {# DDPB-2293 question not relevant for PA #}
+            {% if not report.hasSection('paDeputyExpenses') %}
 
-            <table class="checkboxes labelvalue inline">
-                <tbody>
-                    <tr>
-                        <td class="checkbox value">{% if checklist.contactDetailsUptoDate == true %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3 class="label question bold">{{ (page ~ '.form.contactDetailsUptoDate.label') | trans({}, 'admin-checklist') }}</h3>
 
-            <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateinCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+                <table class="checkboxes labelvalue inline">
+                    <tbody>
+                        <tr>
+                            <td class="checkbox value">{% if checklist.contactDetailsUptoDate == true %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-            <table class="checkboxes labelvalue inline">
-                <tbody>
-                    <tr>
-                        <td class="checkbox value">{% if checklist.deputyFullNameAccurateinCasrec == true %}X{% else %}&nbsp;{% endif %}</td>
-                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <h3 class="label question bold">{{ (page ~ '.form.deputyFullNameAccurateinCasrec.label') | trans({}, 'admin-checklist') }}</h3>
+
+                <table class="checkboxes labelvalue inline">
+                    <tbody>
+                        <tr>
+                            <td class="checkbox value">{% if checklist.deputyFullNameAccurateinCasrec == true %}X{% else %}&nbsp;{% endif %}</td>
+                            <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            {% endif %}
+
         </div>
 
         <div class="section">
