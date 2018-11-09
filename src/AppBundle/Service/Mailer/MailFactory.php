@@ -258,6 +258,7 @@ class MailFactory
 
         $viewParams = [
             'submittedReport' => $submittedReport,
+            'newReport'       => $newReport,
             'deputyFirstName' => $user->getFirstname() . ' ' . $user->getLastname(),
             'newReport'       => $newReport,
             'homepageUrl'     => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
