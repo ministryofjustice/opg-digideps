@@ -13,8 +13,8 @@ default:
         Go to the 'Your reports' homepage, where you'll find a link to download a PDF of your report.
     whatNext: What happens next
     startNextReport: |
-        If you like, you can start working on your next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+        If you like, you can start working on your next annual deputy report (for %newStartDate% to %newEndDate%)
+        right away.
     signInToKeepTrack: |
         Sign in to <a style="word-wrap: break-word;" href="%homepageUrl%">%homepageUrl%</a> to keep
         track of your deputyship decisions and spending throughout the year.
