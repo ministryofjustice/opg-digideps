@@ -32,3 +32,16 @@
 		top: 2px;
 	}
 }
+
+aside.pull-above-title {
+    margin-top: -6em;
+
+    @include media(mobile) {
+        display: none;
+    }
+}
+
+aside.sidebar-fix-top {
+    position: fixed;
+    top: 7em;
+}

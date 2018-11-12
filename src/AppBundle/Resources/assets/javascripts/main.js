@@ -44,23 +44,23 @@ $(document).ready(function() {
 
 
 
-    /*var sidebarOffset = $('.js-sidebar').offset();
-    var scrollTop = $( window ).scrollTop();
+    var sidebarOffset = $('.js-sidebar').offset();
+    var scrollTop = $(window).scrollTop();
 
     sidebarOffset = sidebarOffset.top;
 
     $(window).scroll(function(){
-      scrollTop = $( window ).scrollTop();
+      scrollTop = $(window).scrollTop();
 
       if (scrollTop >= sidebarOffset) {
-        $('html').addClass('fix-content');
+        $('.js-sidebar').addClass('sidebar-fix-top');
       }
 
       if (scrollTop < sidebarOffset) {
-        $('html').removeClass('fix-content');
+        $('.js-sidebar').removeClass('sidebar-fix-top');
       }
 
-    });*/
+    });
 
 
 });

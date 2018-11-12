@@ -132,8 +132,8 @@ input[type=text]::-ms-clear {
 
 // Auto sized text area
 .js-auto-size textarea {
-    overflow: hidden;
+    width: 100%;
     min-height: 7em;
     padding: 0;
-    width: 100%;
+    overflow: hidden;
 }
