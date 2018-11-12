@@ -48,15 +48,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $this->assertContains('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
     }
 
-    public function testGenerateSubmissionsCsvNoSubmissions()
-    {
-        $csvString = $this->sut->generateReportSubmissionsCsv([]);
-        $this->assertContains(
-            'id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted,last_logged_in,client_name,client_lastname,client_casenumber,client_court_order_date,total_reports,active_reports',
-            $csvString
-        );
-    }
-
     public function testGenerateTransactionsCsvWtihTransactions()
     {
         $this->mockReport = $this->generateMockReport(
@@ -76,45 +67,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
 
         $this->assertEquals(35, preg_match_all('/Custom bank name/', $csvString));
         $this->assertEquals(35, preg_match_all('/\(\*\*\*\* 1234\) 12\-34\-56\)/', $csvString));
-    }
-
-    public function testGenerateSubmissionsCsvWithSubmissions()
-    {
-        $csvString = $this->sut->generateReportSubmissionsCsv(
-            [
-                $this->generateMockReportSubmission(24, 88, 33),
-                $this->generateMockReportSubmission(25, 92, 33)
-            ]
-        );
-        $this->assertContains(
-            '24,102,12345678,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
-            $csvString
-        );
-        $this->assertContains(
-            '25,102,12345678,email+33@unittest.com,Firstname33,Lastname33,05/04/2005,05/02/2018,28/04/2018,03/02/2018,Firstname32,Lastname32,32323232,08/11/2011,64,1',
-            $csvString
-        );
-    }
-
-    public function testGenerateSubmissionsCsvWithBadDataSubmissions()
-    {
-        $mockSubmission1 = $this->generateMockReportSubmission(24, 88, null, null, null);
-        $mockSubmission2 = $this->generateMockReportSubmission(25, 106, null, null, null);
-
-        $csvString = $this->sut->generateReportSubmissionsCsv(
-            [
-                $mockSubmission1,
-                $mockSubmission2
-            ]
-        );
-        $this->assertContains(
-            '24,102,,,,,,,,,Firstname32,Lastname32,32323232,08/11/2011,64,1',
-            $csvString
-        );
-        $this->assertContains(
-            '25,102,,,,,,,,,Firstname32,Lastname32,32323232,08/11/2011,64,1',
-            $csvString
-        );
     }
 
     /**
@@ -164,59 +116,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
 
         return $mockReport;
     }
-
-    /**
-     * Generates a mock Report with id and associated transactions
-     *
-     * @param $reportId
-     * @param $numGifts
-     * @param $numExpenses
-     * @param $numMoneyOut
-     * @param $numMoneyIn
-     */
-    private function generateMockNdr($ndrId)
-    {
-        $this->mockReport = m::mock(ReportInterface::class);
-
-        $this->mockReport->shouldReceive('getId')->andReturn($ndrId);
-        $this->mockReport->shouldReceive('getType')->andReturn('ndr');
-
-    }
-
-    /**
-     * Generates a mock Report with id and associated transactions
-     *
-     * @param $reportId
-     * @param $numGifts
-     * @param $numExpenses
-     * @param $numMoneyOut
-     * @param $numMoneyIn
-     */
-    private function generateMockReportSubmission($reportSubmissionId, $reportId, $createdById = null,
-                                                  $dueDate = '2/5/2018', $submitDate = '4/28/2018')
-    {
-        $mockReportSubmission = m::mock(ReportSubmission::class);
-
-        $mockReportSubmission->shouldReceive('getId')->andReturn($reportSubmissionId);
-        $mockReportSubmission->shouldReceive('getReport')->andReturn(
-            $this->generateMockReport($reportId,0,0,0,0, $dueDate, $submitDate)
-        );
-
-        $mockReportSubmission->shouldReceive('getNdr')->andReturn(
-            $this->generateMockNdr($reportId    )
-        );
-
-        if (is_numeric($createdById)) {
-            $mockReportSubmission->shouldReceive('getCreatedBy')->andReturn(
-                $this->generateMockUser($createdById)
-            );
-        } else {
-            $mockReportSubmission->shouldReceive('getCreatedBy')->andReturnNull();
-        }
-
-        return $mockReportSubmission;
-    }
-
 
     /**
      * Generates $qty of Mock entited of class $class
@@ -282,25 +181,6 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $mockBankAccount->shouldReceive('getBank')->andReturn('Custom bank name ' . $counter);
 
         return $mockBankAccount;
-    }
-
-    /**
-     * Generates instance of mock user
-     *
-     * @param $counter
-     * @return \Mockery\Mock
-     */
-    private function generateMockUser($counter)
-    {
-        $mock = m::mock(User::class)->makePartial();
-        $mock->shouldReceive('getFirstname')->andReturn('Firstname' . $counter);
-        $mock->shouldReceive('getLastname')->andReturn('Lastname' . $counter);
-        $mock->shouldReceive('getEmail')->andReturn('email+' . $counter . '@unittest.com');
-        $mock->shouldReceive('getRegistrationDate')->andReturn(new \DateTime('4/5/2005'));
-        $mock->shouldReceive('getLastLoggedIn')->andReturn(new \DateTime('2/3/2018'));
-        $mock->shouldReceive('getDeputyNo')->andReturn(12345678);
-
-        return $mock;
     }
 
     /**
