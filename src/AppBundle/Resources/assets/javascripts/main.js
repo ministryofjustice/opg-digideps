@@ -17,6 +17,9 @@ $(document).ready(function() {
     // Text area autoSize module
     new GOVUK.textAreaAutoSize('form');
 
+    // Sidebar fixing to top module
+    new GOVUK.fixSidebar();
+
     // Details expander
     new GOVUK.detailsExpander('.js-details-expander');
     new GOVUK.detailsExpander('.js-details-expander-travel-costs');
@@ -41,26 +44,5 @@ $(document).ready(function() {
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
-
-
-
-    var sidebarOffset = $('.js-sidebar').offset();
-    var scrollTop = $(window).scrollTop();
-
-    sidebarOffset = sidebarOffset.top;
-
-    $(window).scroll(function(){
-      scrollTop = $(window).scrollTop();
-
-      if (scrollTop >= sidebarOffset) {
-        $('.js-sidebar').addClass('sidebar-fix-top');
-      }
-
-      if (scrollTop < sidebarOffset) {
-        $('.js-sidebar').removeClass('sidebar-fix-top');
-      }
-
-    });
-
 
 });

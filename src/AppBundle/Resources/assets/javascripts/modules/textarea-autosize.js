@@ -1,5 +1,6 @@
 // Auto size textarea
 // Use the class name of .js-auto-size on the textarea
+// Note that associated styles live under _.forms.scss
 
 (function () {
     // "use strict";
