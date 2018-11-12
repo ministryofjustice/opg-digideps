@@ -268,12 +268,14 @@ class Ndr implements ReportInterface
      * @param $startDate
      * @return \DateTime
      */
-    public static function getDueDateBasedOnStartDate(\DateTime $startDate)
+    public static function getDueDateBasedOnStartDate(\DateTime $startDate = null)
     {
-        $dueDate = clone $startDate;
-        $dueDate->modify('+40 days');
+        if ($startDate) {
+            $dueDate = clone $startDate;
+            $dueDate->modify('+40 days');
 
-        return $dueDate;
+            return $dueDate;
+        }
     }
 
     /**
@@ -529,7 +531,8 @@ class Ndr implements ReportInterface
      *
      * @return array
      */
-    public function getFinancialSummary() {
+    public function getFinancialSummary()
+    {
 
         $accounts = [];
 
@@ -556,7 +559,8 @@ class Ndr implements ReportInterface
      *
      * @return array
      */
-    public function getReportSummary() {
+    public function getReportSummary()
+    {
         return [
             'type' => self::TYPE_NDR,
         ];
