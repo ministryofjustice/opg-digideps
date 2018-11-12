@@ -261,7 +261,16 @@ class Ndr implements ReportInterface
 
     public function getDueDate()
     {
-        $dueDate = clone $this->getStartDate();
+        return self::getDueDateBasedOnStartDate($this->getStartDate());
+    }
+
+    /**
+     * @param $startDate
+     * @return \DateTime
+     */
+    public static function getDueDateBasedOnStartDate(\DateTime $startDate)
+    {
+        $dueDate = clone $startDate;
         $dueDate->modify('+40 days');
 
         return $dueDate;

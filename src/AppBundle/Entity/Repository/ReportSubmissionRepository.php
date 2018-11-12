@@ -120,7 +120,7 @@ class ReportSubmissionRepository extends EntityRepository
      * @param string $orderBy       default createdOn
      * @param string $order         default ASC
      *
-     * @return array [  counts=>[new=>integer, archived=>integer],    records => [array<ReportSubmission>]    ]
+     * @return ReportSubmission[]
      */
     public function findAllReportSubmissions(
         $status,
@@ -136,15 +136,16 @@ class ReportSubmissionRepository extends EntityRepository
         // BASE QUERY BUILDER with filters (for both count and results)
         $qb = $this->createQueryBuilder('rs');
         $qb
-            ->leftJoin('rs.report', 'r')
-            ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('rs.createdBy', 'cb')
+            ->leftJoin('rs.report', 'r')
             ->leftJoin('r.client', 'c')
+            ->leftJoin('rs.ndr', 'ndr')
+            ->leftJoin('ndr.client', 'ndrClient')
         ;
 
         // get results (base query + ordered + pagination + status filter)
         $qbSelect = clone $qb;
-        $qbSelect->select('rs');
+        $qbSelect->select('rs,r,ndr,cb,c,ndrClient');
 
         // add date restriction depending on which day we have (to include weekend submissions on Monday)
         // fromDate (if set) passed from form
@@ -161,11 +162,8 @@ class ReportSubmissionRepository extends EntityRepository
         $qbSelect
             ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset);
-        $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
 
-        return [
-            'records'=>$records,
-        ];
+        return $qbSelect->getQuery()->getArrayResult();
     }
 
     /**
