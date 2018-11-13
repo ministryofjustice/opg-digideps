@@ -14,6 +14,12 @@ $(document).ready(function() {
     // Character limiter module
     new GOVUK.limitChars('form');
 
+    // Text area autoSize module
+    new GOVUK.textAreaAutoSize('form');
+
+    // Sidebar fixing to top module
+    new GOVUK.fixSidebar();
+
     // Details expander
     new GOVUK.detailsExpander('.js-details-expander');
     new GOVUK.detailsExpander('.js-details-expander-travel-costs');
@@ -38,4 +44,5 @@ $(document).ready(function() {
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
+
 });

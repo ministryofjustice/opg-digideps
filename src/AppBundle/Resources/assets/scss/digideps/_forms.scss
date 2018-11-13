@@ -129,3 +129,11 @@ input[type=text]::-ms-clear {
         }
     }
 }
+
+// Auto sized text area
+.js-auto-size textarea {
+    width: 100%;
+    min-height: 7em;
+    padding: 0;
+    overflow: hidden;
+}
