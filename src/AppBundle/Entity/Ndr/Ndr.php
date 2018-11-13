@@ -10,8 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * @ORM\Table(name="odr",
+ *     indexes={
+ *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
+ *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
+ *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Ndr\NdrRepository")
- * @ORM\Table(name="odr")
  */
 class Ndr implements ReportInterface
 {
@@ -261,10 +265,21 @@ class Ndr implements ReportInterface
 
     public function getDueDate()
     {
-        $dueDate = clone $this->getStartDate();
-        $dueDate->modify('+40 days');
+        return self::getDueDateBasedOnStartDate($this->getStartDate());
+    }
 
-        return $dueDate;
+    /**
+     * @param $startDate
+     * @return \DateTime
+     */
+    public static function getDueDateBasedOnStartDate(\DateTime $startDate = null)
+    {
+        if ($startDate) {
+            $dueDate = clone $startDate;
+            $dueDate->modify('+40 days');
+
+            return $dueDate;
+        }
     }
 
     /**
@@ -520,7 +535,8 @@ class Ndr implements ReportInterface
      *
      * @return array
      */
-    public function getFinancialSummary() {
+    public function getFinancialSummary()
+    {
 
         $accounts = [];
 
@@ -547,7 +563,8 @@ class Ndr implements ReportInterface
      *
      * @return array
      */
-    public function getReportSummary() {
+    public function getReportSummary()
+    {
         return [
             'type' => self::TYPE_NDR,
         ];

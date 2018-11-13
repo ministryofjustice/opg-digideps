@@ -63,3 +63,8 @@ services:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
             - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+    report_submission_stat_service:
+        class: AppBundle\Service\ReportSubmissionStatService
+        public: true
+        arguments: [ "@logger" ]

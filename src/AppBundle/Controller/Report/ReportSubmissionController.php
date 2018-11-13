@@ -159,24 +159,6 @@ class ReportSubmissionController extends RestController
             $request->get('fromDate')
         );
 
-        $this->setJmsSerialiserGroups(
-            [
-                'report-submission',
-                'report-type',
-                'report-client',
-                'ndr-client',
-                'ndr',
-                'report',
-                'client-name',
-                'client-case-number',
-                'client-court-date',
-                'client-email',
-                'user',
-                'total-report-count',
-                'active-report-count'
-            ]
-        );
-
-        return $ret;
+        return $this->get('report_submission_stat_service')->generateReportSubmissionsCsvLines($ret);
     }
 }

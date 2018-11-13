@@ -11,7 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @ORM\Table(name="report_submission")
+ * @ORM\Table(name="report_submission",
+ *     indexes={
+ *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
+ *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
