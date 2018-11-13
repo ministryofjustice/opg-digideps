@@ -36,14 +36,12 @@ class StatsController extends AbstractController
             $filters = $form->getData() + $filters;
 
             try {
-                $ret = $this->getRestClient()->get(
+                $csvLines = $this->getRestClient()->get(
                     '/report-submission/casrec_data?' . http_build_query($filters),
                     'array'
                 );
 
-                $records = $this->getRestClient()->arrayToEntities(ReportSubmission::class . '[]', $ret['records']);
-
-                $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($records);
+                $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($csvLines);
 
                 $response = new Response($csvContent);
                 $response->headers->set('Content-Type', 'text/csv');

@@ -63,17 +63,19 @@ class CsvGeneratorService
     /**
      * Generate all the report submissions as csv
      *
-     * @param array $records
+     * @param array $lines
      *
      * @return string Csv content
      */
-    public function generateReportSubmissionsCsv($records)
+    public function generateReportSubmissionsCsv($lines)
     {
         $this->logger->info('Generating Report submissions CSV : ');
 
         $this->initialiseFilePointer();
 
-        $this->generateReportSubmissionsCsvLines($records);
+        foreach($lines as $line) {
+            fputcsv($this->fd, $line);
+        }
 
         rewind($this->fd);
         $csvContent = stream_get_contents($this->fd);
@@ -116,21 +118,6 @@ class CsvGeneratorService
         //}
     }
 
-    /**
-     * Generates the lines of the CSV
-     *
-     * @param ReportInterface $report
-     */
-    private function generateReportSubmissionsCsvLines($records)
-    {
-        $headers = [
-            'id', 'report_type', 'deputy_no', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
-            'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date',
-            'total_reports', 'active_reports'
-        ];
-        $this->generateCsvHeaders($headers);
-        $this->generateReportSubmissionRows($records);
-    }
 
     /**
      * Generates a Bank Account Summary to the CSV file pointer
@@ -191,89 +178,6 @@ class CsvGeneratorService
                 ]
             );
         }
-    }
-
-    /**
-     * Generates Report submission row
-     *
-     * @param $records
-     * @param $type
-     */
-    private function generateReportSubmissionRows($records)
-    {
-        foreach ($records as $rs) {
-            /** @var $rs \AppBundle\Entity\Report\ReportSubmission */
-            $report = $rs->getReport();
-            if (empty($report)) {
-                $report = $rs->getNdr();
-            }
-
-            if (!empty($report)) {
-                fputcsv($this->fd, $this->generateDataRow($rs, $report));
-            }
-        }
-    }
-
-    /**
-     * Takes an instance of ReportSubmission and ReportInterface and returns a summary of data relating to the
-     * report submission. Returned to generate and sanitize the data to ensure CSV generation does not fail.
-     *
-     * @param ReportSubmission $rs
-     * @param ReportInterface $reportOrNdr
-     * @return array
-     */
-    private function generateDataRow(ReportSubmission $rs, ReportInterface $reportOrNdr)
-    {
-        $data = [];
-        array_push($data, $rs->getId());
-        array_push($data, $reportOrNdr->getType());
-        $createdBy = $rs->getCreatedBy();
-
-        if ($createdBy instanceof User) {
-            array_push($data, $createdBy->getDeputyNo());
-            array_push($data, $createdBy->getEmail());
-            array_push($data, $createdBy->getFirstname());
-            array_push($data, $createdBy->getLastname());
-            array_push($data, $this->outputDate($rs->getCreatedBy()->getRegistrationDate()));
-        } else {
-            array_push($data, null);
-            array_push($data, null);
-            array_push($data, null);
-            array_push($data, null);
-            array_push($data, null);
-        }
-
-        array_push($data, $this->outputDate($reportOrNdr->getDueDate()));
-        array_push($data, $this->outputDate($reportOrNdr->getSubmitDate()));
-
-        if ($createdBy instanceof User) {
-            array_push($data, $this->outputDate($rs->getCreatedBy()->getLastLoggedIn()));
-        } else {
-            array_push($data, null);
-        }
-        $client = $reportOrNdr->getClient();
-        array_push($data, $client->getFirstname());
-        array_push($data, $client->getLastname());
-        array_push($data, $client->getCaseNumber());
-        array_push($data, $this->outputDate($client->getCourtDate()));
-        array_push($data, $client->getTotalReportCount());
-        array_push($data, $client->getUnsubmittedReportsCount());
-
-        return $data;
-    }
-    
-    /**
-     * Output a formatted string from a given \DateTime object if set.
-     *
-     * @param null|\DateTime $date
-     * @return null|string
-     */
-    private function outputDate($date)
-    {
-        if ($date instanceof \DateTime) {
-            return $date->format('d/m/Y');
-        }
-        return null;
     }
 
     /**
