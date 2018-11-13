@@ -17,8 +17,7 @@ class ReportSubmissionStatService
     {
         $ret = [[
             'id', 'report_type', 'deputy_no', 'email','name', 'lastname', 'registration_date', 'report_due_date', 'report_date_submitted',
-            'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date',
-            'total_reports', 'active_reports'
+            'last_logged_in', 'client_name', 'client_lastname', 'client_casenumber', 'client_court_order_date'
         ]];
 
         foreach ($records as $rs) {
@@ -83,8 +82,6 @@ class ReportSubmissionStatService
         array_push($data, $client['lastname'] );
         array_push($data, $client['caseNumber'] );
         array_push($data, $this->outputDate($client['courtDate'] ));
-        array_push($data, /*$client->getTotalReportCount()*/'n.a.');
-        array_push($data, /*$client>getUnsubmittedReportsCount()*/'n.a.');
 
         return $data;
     }
