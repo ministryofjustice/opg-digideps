@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @ORM\Table(name="report_submission",
  *     indexes={
- *     @ORM\Index(name="created_on_idx", columns={"created_on"})
+ *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
  *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ReportSubmissionRepository")
  */

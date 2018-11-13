@@ -10,8 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * @ORM\Table(name="odr",
+ *     indexes={
+ *     @ORM\Index(name="odr_submitted_idx", columns={"submitted"}),
+ *     @ORM\Index(name="odr_submit_date_idx", columns={"submit_date"})
+ *  })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Ndr\NdrRepository")
- * @ORM\Table(name="odr")
  */
 class Ndr implements ReportInterface
 {

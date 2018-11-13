@@ -19,6 +19,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="report",
  *     indexes={
  *     @ORM\Index(name="end_date_idx", columns={"end_date"}),
+ *     @ORM\Index(name="submit_date_idx", columns={"submit_date"}),
  *     @ORM\Index(name="submitted_idx", columns={"submitted"}),
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
