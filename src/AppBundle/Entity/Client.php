@@ -977,4 +977,13 @@ class Client
         $this->archivedAt = $archivedAt;
     }
 
+    /**
+     * @return \DateTime|null
+     */
+    public function getArchivedAt()
+    {
+        return $this->archivedAt;
+    }
+
+
 }
