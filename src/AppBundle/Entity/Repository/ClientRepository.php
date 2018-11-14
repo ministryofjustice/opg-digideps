@@ -28,6 +28,7 @@ class ClientRepository extends EntityRepository
     public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = '0')
     {
         $qb = $this->createQueryBuilder('c');
+        $qb->andWhere('c.archivedAt IS NULL'); // admin don't see archived clients
         $qb->setFirstResult($offset);
         $qb->setMaxResults($limit);
         $qb->orderBy('c.' . $orderBy, $sortOrder);
