@@ -14,7 +14,10 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(
  *     name="client",
- *     indexes={@ORM\Index(name="case_number_idx", columns={"case_number"})},
+ *     indexes={
+ *       @ORM\Index(name="case_number_idx", columns={"case_number"}),
+ *       @ORM\Index(name="archived_at_idx", columns={"archived_at"})
+ *     },
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
@@ -220,6 +223,14 @@ class Client
      * @ORM\JoinColumn(name="named_deputy", referencedColumnName="id", onDelete="SET NULL")
      */
     private $namedDeputy;
+
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @ORM\Column(name="archived_at", type="datetime", nullable=true)
+     */
+    private $archivedAt;
 
     /**
      * Constructor.
@@ -957,4 +968,13 @@ class Client
 
         return null;
     }
+
+    /**
+     * @param \DateTime|null $archivedAt
+     */
+    public function setArchivedAt(\DateTime $archivedAt = null)
+    {
+        $this->archivedAt = $archivedAt;
+    }
+
 }
