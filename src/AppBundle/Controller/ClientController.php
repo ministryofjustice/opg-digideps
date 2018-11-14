@@ -86,6 +86,10 @@ class ClientController extends RestController
         $this->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
+        if ($client->getArchivedAt()) {
+            throw $this->createAccessDeniedException('Cannot access archived reports');
+        };
+
 
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
@@ -123,16 +127,15 @@ class ClientController extends RestController
      */
     public function archiveAction(Request $request, $id)
     {
+        /* @var $client EntityDir\Client */
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 
-        foreach ($client->getUsers() as $user) {
-            $client->removeUser($user);
-        }
-        $this->persistAndFlush($client);
+        $client->setArchivedAt(new \DateTime);
+        $this->getEntityManager()->flush($client);
 
         return [
             'id' => $client->getId()
