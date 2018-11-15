@@ -243,6 +243,13 @@ class Client
      */
     private $calculatedCourtDate;
 
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     */
+    private $archivedAt;
+
+
     public function __construct()
     {
         $this->users = [];
@@ -919,4 +926,13 @@ class Client
         $this->calculatedCourtDate = $calculatedCourtDate;
         return $this;
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getArchivedAt()
+    {
+        return $this->archivedAt;
+    }
+
 }

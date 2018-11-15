@@ -58,6 +58,9 @@
                             </td>
                             <td>
                                 {{ client.caseNumber }}
+                                {% if client.archivedAt %}
+                                    (Archived)
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
