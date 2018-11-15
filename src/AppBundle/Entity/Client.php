@@ -227,6 +227,7 @@ class Client
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"client"})
      *
      * @ORM\Column(name="archived_at", type="datetime", nullable=true)
      */
