@@ -129,7 +129,9 @@ class ReportRepository extends EntityRepository
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->where('u.id = ' . $userId);
+            ->where('u.id = ' . $userId)
+            ->andWhere('c.archivedAt IS NULL')
+        ;
 
         if ($exclude_submitted) {
             $qb->andWhere('r.submitted = false OR r.submitted is null');
