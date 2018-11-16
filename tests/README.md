@@ -96,9 +96,6 @@ browser, possible values for profile are:
 * chrome
 * safari
 * firefox
-* ie8
-* ie9
-* ie10
 * ie11
 
 More profiles and devices will be added in time.
