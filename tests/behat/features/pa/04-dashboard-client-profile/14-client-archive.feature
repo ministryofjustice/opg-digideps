@@ -30,6 +30,6 @@ Feature: PA client archive
     When I attach the file "behat-pa.csv" to "admin_upload_file"
     And I press "admin_upload_upload"
     Then the form should be valid
-    #
+      # assert archived is shown in admin area
     Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I should not see the "client-01000016" region
