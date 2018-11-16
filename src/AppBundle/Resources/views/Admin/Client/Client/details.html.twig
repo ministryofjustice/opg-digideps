@@ -25,6 +25,9 @@
 {% block pageContent %}
 
     <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
+    {% if client.archivedAt %}
+        <p class="flush--bottom">Archived on: <span class="bold">{{ client.archivedAt | date("j M Y") }}</span></p>
+    {% endif %}
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
 
     <h2 class="heading-medium flush--ends">{{ (page ~ '.reportsTitle') | trans }}</h2>
