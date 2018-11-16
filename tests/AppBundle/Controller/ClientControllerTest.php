@@ -223,10 +223,12 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
             'data' => [],
         ]);
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']);
+        $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['id']);
 
         $this->assertInstanceOf('AppBundle\Entity\Client', $client);
-        $this->assertEquals(0, count($client->getUsers()));
+        $this->assertEquals(1, count($client->getUsers()));
+        $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
+
     }
 
     public function testDetailsAction()

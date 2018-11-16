@@ -20,6 +20,11 @@ class Fixtures
         $this->em = $em;
     }
 
+    public function getQueryResults($dql)
+    {
+        return $this->em->createQuery($dql)->getResult();
+    }
+
     /**
      * @return string
      **/

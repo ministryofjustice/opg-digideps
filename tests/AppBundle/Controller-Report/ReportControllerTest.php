@@ -2,6 +2,7 @@
 
 namespace Tests\AppBundle\Controller\Report;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\Report;
@@ -72,11 +73,11 @@ class ReportControllerTest extends AbstractTestController
 
         // pa 1
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
-        self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1']);
+        self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
-        self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2']);
+        self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
         self::$pa1Client2Report1 = self::fixtures()->createReport(self::$pa1Client2);
-        self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3']);
+        self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3', 'setCaseNumber' => '33333333']);
         self::$pa1Client3Report1 = self::fixtures()->createReport(self::$pa1Client3);
 
         // pa 2
@@ -498,7 +499,7 @@ class ReportControllerTest extends AbstractTestController
         };
 
         // assert get
-        $ret = $reportsGetAllRequest([]);
+        $ret = $reportsGetAllRequest(['sort'=>'end_date']);
 
         //assert results
         $this->assertCount(3, $ret['reports']);
