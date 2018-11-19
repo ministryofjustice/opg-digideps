@@ -120,10 +120,9 @@ gulp.task('js.application', ['lint.js', 'clean'], function () {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// ie.js and jQuery copied
+// jQuery copied
 gulp.task('js.other', ['clean'], function() {
     return gulp.src([
-        './node_modules/govuk_template_mustache/assets/javascripts/ie.js',
         './node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
