@@ -190,19 +190,19 @@ class UserController extends AbstractController
             try {
                 $emailAddress = $user->getEmail();
                 $disguisedEmail = '***' . substr($emailAddress, 3);
-                $logger->debug('Reset password request for : ' . $emailAddress);
+                $logger->warning('Reset password request for : ' . $emailAddress);
                 /* @var $user EntityDir\User */
                 $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
                 if (empty($user)) {
                     $logger->warning('Email ' . $emailAddress . ' not found');
                 }
 
-                $logger->debug('Sending reset email to ' . $disguisedEmail);
+                $logger->warning('Sending reset email to ' . $disguisedEmail);
 
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
                 $sendResult = $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-                $logger->debug('Email sent to ' . $disguisedEmail);
+                $logger->warning('Email sent to ' . $disguisedEmail);
 
             } catch (\Exception $e) {
                 $logger->warning($e->getMessage());
