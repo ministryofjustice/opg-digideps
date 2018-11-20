@@ -55,7 +55,6 @@ gulp.task('clean-formatted-report', ['rename'], function () {
 gulp.task('sass', ['clean', 'lint.sass'], function () {
     return gulp.src([
             config.sassSrc + '/application.scss',
-            config.sassSrc + '/application-ie8.scss',
             config.sassSrc + '/application-print.scss'])
         .pipe(!config.production ? sourcemaps.init() : gutil.noop())
         .pipe(sass(config.sass).on('error', sass.logError))
@@ -83,9 +82,7 @@ gulp.task('rename', ['sass.formatted-report'] ,function () {
 // Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
 gulp.task('govuk-template-css', ['clean'], function () {
     return gulp.src([
-            './node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css',
             './node_modules/govuk_template_mustache/assets/stylesheets/fonts.css',
-            './node_modules/govuk_template_mustache/assets/stylesheets/govuk-template-ie8.css',
             './node_modules/govuk_template_mustache/assets/stylesheets/govuk-template.css',
         ])
         .pipe(replace('images/', '/images/'))
@@ -123,10 +120,9 @@ gulp.task('js.application', ['lint.js', 'clean'], function () {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// ie.js and jQuery copied
+// jQuery copied
 gulp.task('js.other', ['clean'], function() {
     return gulp.src([
-        './node_modules/govuk_template_mustache/assets/javascripts/ie.js',
         './node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });

@@ -1,8 +1,7 @@
 {% block topOfPage %}{% endblock %}
 
 <!DOCTYPE html>
-<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+<html lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
@@ -10,12 +9,8 @@
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
 
-    <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/govuk-template.css'| assetUrl }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
-    <!--[if IE 8]><link href="{{ 'stylesheets/govuk-template-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
-
-    <!--[if IE 8]><link href="{{ 'stylesheets/fonts-ie8.css' | assetUrl }}" media="all" rel="stylesheet" /><![endif]-->
-    <!--[if gte IE 9]><!--><link href="{{ 'stylesheets/fonts.css'| assetUrl }}" media="all" rel="stylesheet" /><!--<![endif]-->
-    <!--[if lt IE 9]><script src="{{ 'javascripts/ie.js' | assetUrl }}"></script><![endif]-->
+    <link href="{{ 'stylesheets/govuk-template.css'| assetUrl }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ 'stylesheets/fonts.css'| assetUrl }}" media="all" rel="stylesheet" />
 
     <!-- Size for iPad and iPad mini (high resolution) -->
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset('images/apple-touch-icon-152x152.png') }}">
@@ -33,8 +28,7 @@
       <meta name="reportId" content="{{ report.id }}">
     {% endif %}
 
-    <!--[if gt IE 8]><!--><link href="{{ 'stylesheets/application.css'| assetUrl }}"  rel="stylesheet" type="text/css"><!--<![endif]-->
-    <!--[if IE 8]><link href="{{ 'stylesheets/application-ie8.css'| assetUrl }}" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ 'stylesheets/application.css'| assetUrl }}"  rel="stylesheet" type="text/css">
 
     <link href="{{ 'stylesheets/application-print.css'| assetUrl }}" media="print" rel="stylesheet" type="text/css" />
 
