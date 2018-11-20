@@ -114,6 +114,8 @@ checklistPage:
         Bonds Discrepancy Resolution Job Card.
     futureSignificantFinancialDecisions:
       label: Are there any significant financial decision(s) in the next reporting period?
+    futureSignificantChanges:
+      label: Are there any significant changes in the next reporting period?
     hasDeputyRaisedConcerns:
       label: Does the deputy raise any concerns about their deputyship?
     caseWorkerSatisified:
