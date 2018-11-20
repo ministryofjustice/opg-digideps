@@ -180,19 +180,32 @@ class UserController extends AbstractController
      **/
     public function passwordForgottenAction(Request $request)
     {
+        $logger = $this->get('logger');
+
         $user = new EntityDir\User();
         $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
+                $emailAddress = $user->getEmail();
+                $disguisedEmail = '***' . substr($emailAddress, 3);
+                $logger->warning('Reset password request for : ' . $emailAddress);
                 /* @var $user EntityDir\User */
                 $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+                if (empty($user)) {
+                    $logger->warning('Email ' . $emailAddress . ' not found');
+                }
+
+                $logger->warning('Sending reset email to ' . $disguisedEmail);
+
                 $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
 
-                $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                $sendResult = $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
+                $logger->warning('Email sent to ' . $disguisedEmail);
+
             } catch (\Exception $e) {
-                $this->get('logger')->debug($e->getMessage());
+                $logger->warning($e->getMessage());
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
