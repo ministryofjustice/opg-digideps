@@ -668,7 +668,7 @@ class ReportController extends RestController
             'bond_adequate' => 'setBondAdequate',
             'satisfied_with_health_and_lifestyle' => 'setSatisfiedWithHealthAndLifestyle',
             'bond_order_match_casrec' => 'setBondOrderMatchCasrec',
-            'future_significant_financial_decisions' => 'setFutureSignificantFinancialDecisions',
+            'future_significant_decisions' => 'setFutureSignificantDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
             'lodging_summary' => 'setLodgingSummary',

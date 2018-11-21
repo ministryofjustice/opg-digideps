@@ -177,9 +177,9 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\Column(name="future_significant_financial_decisions", type="string", length=3, nullable=true)
+     * @ORM\Column(name="future_significant_decisions", type="string", length=3, nullable=true)
      */
-    private $futureSignificantFinancialDecisions;
+    private $futureSignificantDecisions;
 
     /**
      * @var string
@@ -590,19 +590,19 @@ class Checklist
     /**
      * @return string
      */
-    public function getFutureSignificantFinancialDecisions()
+    public function getFutureSignificantDecisions()
     {
-        return $this->futureSignificantFinancialDecisions;
+        return $this->futureSignificantDecisions;
     }
 
     /**
-     * @param string $futureSignificantFinancialDecisions
+     * @param string $futureSignificantDecisions
      *
      * @return $this
      */
-    public function setFutureSignificantFinancialDecisions($futureSignificantFinancialDecisions)
+    public function setFutureSignificantDecisions($futureSignificantDecisions)
     {
-        $this->futureSignificantFinancialDecisions = $futureSignificantFinancialDecisions;
+        $this->futureSignificantDecisions = $futureSignificantDecisions;
         return $this;
     }
 
