@@ -52,7 +52,7 @@ Feature: Admin report checklist
       | 020 3334 3555     | checklist-deputy-phone     |
     # check auto-filled answers
     And the following fields should have the corresponding values:
-      | report_checklist_futureSignificantFinancialDecisions_0 | yes     |
+      | report_checklist_futureSignificantDecisions_0 | yes     |
       | report_checklist_hasDeputyRaisedConcerns_0             | yes     |
     When I click on "submit-and-download"
     Then the following fields should have an error:
@@ -132,7 +132,7 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
 
 
-  @deputy
+  @deputy @shauns
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -155,7 +155,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_moneyMovementsAcceptable_0" with "yes"
     And I fill in "report_checklist_bondAdequate_1" with "no"
     And I fill in "report_checklist_bondOrderMatchCasrec_2" with "na"
-    And I fill in "report_checklist_futureSignificantFinancialDecisions_0" with "yes"
+    And I fill in "report_checklist_futureSignificantDecisions_0" with "yes"
     And I fill in "report_checklist_hasDeputyRaisedConcerns_1" with "no"
     And I fill in "report_checklist_caseWorkerSatisified_2" with "na"
     And I fill in "report_checklist_finalDecision_0" with "for-review"
@@ -180,7 +180,7 @@ Feature: Admin report checklist
       | report_checklist_moneyMovementsAcceptable_0            | yes                |
       | report_checklist_bondAdequate_1                        | no                 |
       | report_checklist_bondOrderMatchCasrec_2                | na                 |
-      | report_checklist_futureSignificantFinancialDecisions_0 | yes                |
+      | report_checklist_futureSignificantDecisions_0 | yes                |
       | report_checklist_hasDeputyRaisedConcerns_1             | no                 |
       | report_checklist_caseWorkerSatisified_2                | na                 |
       | report_checklist_finalDecision_0                       | for-review         |
