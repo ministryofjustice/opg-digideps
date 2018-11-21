@@ -6,9 +6,9 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.futureSignificantFinancialDecisions, (
+        {{ form_checkbox_group(form.futureSignificantDecisions, (
             report.hasSection('lifestyle') ? page ~ '.form.futureSignificantChanges':
-                page ~ '.form.futureSignificantFinancialDecisions'
+                page ~ '.form.futureSignificantDecisions'
             ), {
             'fieldSetClass' : 'inline',
             'formGroupClass': 'push-half--bottom'
