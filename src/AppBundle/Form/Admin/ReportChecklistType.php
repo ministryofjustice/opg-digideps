@@ -84,7 +84,7 @@ class ReportChecklistType extends AbstractType
                     'expanded' => true
                 ])
                 ->add('moneyMovementsAcceptable', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true
                 ]);
 
@@ -121,17 +121,17 @@ class ReportChecklistType extends AbstractType
         // Next reporting period
         $builder
             ->add('futureSignificantFinancialDecisions', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
             ->add('hasDeputyRaisedConcerns', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
 
             // Deputy declaration
             ->add('caseWorkerSatisified', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true
             ])
 

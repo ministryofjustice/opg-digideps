@@ -126,7 +126,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_satisfiedWithPaExpenses_1" with "no"
     And I fill in "report_checklist_futureSignificantFinancialDecisions_0" with "yes"
     And I fill in "report_checklist_hasDeputyRaisedConcerns_1" with "no"
-    And I fill in "report_checklist_caseWorkerSatisified_2" with "na"
+    And I fill in "report_checklist_caseWorkerSatisified_0" with "yes"
     And I fill in "report_checklist_finalDecision_0" with "for-review"
     And I fill in "report_checklist_lodgingSummary" with "I am not satisfied"
     Then I click on "save-progress"
@@ -150,7 +150,7 @@ Feature: Admin report checklist
       | report_checklist_satisfiedWithPaExpenses_1             | no                 |
       | report_checklist_futureSignificantFinancialDecisions_0 | yes                |
       | report_checklist_hasDeputyRaisedConcerns_1             | no                 |
-      | report_checklist_caseWorkerSatisified_2                | na                 |
+      | report_checklist_caseWorkerSatisified_0                | yes                 |
       | report_checklist_finalDecision_0                       | for-review         |
       | report_checklist_lodgingSummary                        | I am not satisfied |
     Then I click on "submit-and-download"
