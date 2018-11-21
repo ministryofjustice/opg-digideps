@@ -44,7 +44,6 @@ Feature: Admin report checklist
       | report_checklist_satisfiedWithHealthAndLifestyle_1 |
       | report_checklist_caseWorkerSatisified_0        |
       | report_checklist_caseWorkerSatisified_1        |
-      | report_checklist_caseWorkerSatisified_2        |
       | report_checklist_finalDecision_0        |
       | report_checklist_finalDecision_1        |
       | report_checklist_finalDecision_2        |

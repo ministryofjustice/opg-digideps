@@ -59,13 +59,11 @@ Feature: Admin report checklist
       | report_checklist_accountsBalance_2                     |
       | report_checklist_moneyMovementsAcceptable_0            |
       | report_checklist_moneyMovementsAcceptable_1            |
-      | report_checklist_moneyMovementsAcceptable_2            |
       | report_checklist_satisfiedWithPaExpenses_0             |
       | report_checklist_satisfiedWithPaExpenses_1             |
       | report_checklist_satisfiedWithPaExpenses_2             |
       | report_checklist_caseWorkerSatisified_0                |
       | report_checklist_caseWorkerSatisified_1                |
-      | report_checklist_caseWorkerSatisified_2                |
       | report_checklist_finalDecision_0                       |
       | report_checklist_finalDecision_1                       |
       | report_checklist_finalDecision_2                       |
