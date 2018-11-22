@@ -723,7 +723,7 @@ class ReportControllerTest extends AbstractTestController
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
                 'bond_order_match_casrec' => 'yes',
-                'future_significant_financial_decisions' => 'yes',
+                'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
             ],
@@ -748,7 +748,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
         $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
-        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
     }
@@ -781,7 +781,7 @@ class ReportControllerTest extends AbstractTestController
                 'money_movements_acceptable' => 'yes',
                 'bond_adequate' => 'yes',
                 'bond_order_match_casrec' => 'yes',
-                'future_significant_financial_decisions' => 'yes',
+                'future_significant_decisions' => 'yes',
                 'has_deputy_raised_concerns' => 'no',
                 'case_worker_satisified' => 'yes',
             ],
@@ -806,7 +806,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
         $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
-        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
@@ -876,7 +876,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getMoneyMovementsAcceptable());
         $this->assertEquals('yes', $checklist->getBondAdequate());
         $this->assertEquals('yes', $checklist->getBondOrderMatchCasrec());
-        $this->assertEquals('yes', $checklist->getFutureSignificantFinancialDecisions());
+        $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
         $this->assertEquals('All complete', $checklist->getLodgingSummary());
