@@ -665,7 +665,7 @@ checklist:
     notBlank: Please choose an option
   bondOrderMatchCasrec:
     notBlank: Please choose an option
-  futureSignificantFinancialDecisions:
+  futureSignificantDecisions:
     notBlank: Please choose an option
   hasDeputyRaisedConcerns:
     notBlank: Please choose an option

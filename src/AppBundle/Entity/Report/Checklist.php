@@ -166,9 +166,9 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.futureSignificantFinancialDecisions.notBlank", groups={"submit-common-checklist"})
+     * @Assert\NotBlank(message="checklist.futureSignificantDecisions.notBlank", groups={"submit-common-checklist"})
      */
-    private $futureSignificantFinancialDecisions;
+    private $futureSignificantDecisions;
 
     /**
      * @var string
@@ -263,7 +263,7 @@ class Checklist
         if ($report instanceof Report) {
             $action = $report->getAction();
             if ($answer = $action->getDoYouExpectFinancialDecisions()) {
-                $this->setFutureSignificantFinancialDecisions($answer);
+                $this->setFutureSignificantDecisions($answer);
             }
             if ($answer = $action->getDoYouHaveConcerns()) {
                 $this->setHasDeputyRaisedConcerns($answer);
@@ -563,18 +563,18 @@ class Checklist
     /**
      * @return string
      */
-    public function getFutureSignificantFinancialDecisions()
+    public function getFutureSignificantDecisions()
     {
-        return $this->futureSignificantFinancialDecisions;
+        return $this->futureSignificantDecisions;
     }
 
     /**
-     * @param  string $futureSignificantFinancialDecisions
+     * @param  string $futureSignificantDecisions
      * @return $this
      */
-    public function setFutureSignificantFinancialDecisions($futureSignificantFinancialDecisions)
+    public function setFutureSignificantDecisions($futureSignificantDecisions)
     {
-        $this->futureSignificantFinancialDecisions = $futureSignificantFinancialDecisions;
+        $this->futureSignificantDecisions = $futureSignificantDecisions;
         return $this;
     }
 

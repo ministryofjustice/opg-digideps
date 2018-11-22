@@ -103,7 +103,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_consultationsSatisfactory_0" with "yes"
     And I fill in "report_checklist_careArrangements_1" with "no"
     And I fill in "report_checklist_satisfiedWithHealthAndLifestyle_0" with "yes"
-    And I fill in "report_checklist_futureSignificantFinancialDecisions_0" with "yes"
+    And I fill in "report_checklist_futureSignificantDecisions_0" with "yes"
     And I fill in "report_checklist_hasDeputyRaisedConcerns_1" with "no"
     And I fill in "report_checklist_caseWorkerSatisified_0" with "yes"
     And I fill in "report_checklist_finalDecision_0" with "for-review"
@@ -122,7 +122,7 @@ Feature: Admin report checklist
       | report_checklist_consultationsSatisfactory_0   | yes   |
       | report_checklist_careArrangements_1    | no |
       | report_checklist_satisfiedWithHealthAndLifestyle_0    | yes |
-      | report_checklist_futureSignificantFinancialDecisions_0    | yes |
+      | report_checklist_futureSignificantDecisions_0    | yes |
       | report_checklist_hasDeputyRaisedConcerns_1    | no |
       | report_checklist_caseWorkerSatisified_0    | yes |
       | report_checklist_finalDecision_0    | for-review |

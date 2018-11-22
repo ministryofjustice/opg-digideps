@@ -112,8 +112,10 @@ checklistPage:
       label: |
         Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
         Bonds Discrepancy Resolution Job Card.
-    futureSignificantFinancialDecisions:
+    futureSignificantDecisions:
       label: Are there any significant financial decision(s) in the next reporting period?
+    futureSignificantChanges:
+      label: Are there any significant changes in the next reporting period?
     hasDeputyRaisedConcerns:
       label: Does the deputy raise any concerns about their deputyship?
     caseWorkerSatisified:
