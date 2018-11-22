@@ -120,7 +120,7 @@ class ReportChecklistType extends AbstractType
 
         // Next reporting period
         $builder
-            ->add('futureSignificantFinancialDecisions', FormTypes\ChoiceType::class, [
+            ->add('futureSignificantDecisions', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ])
