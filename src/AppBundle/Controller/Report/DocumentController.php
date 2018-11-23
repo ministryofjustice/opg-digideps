@@ -74,13 +74,15 @@ class DocumentController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
-            if ('no' === $data->getWishToProvideDocumentation() && count($data->getDeputyDocuments()) > 0) {
-                $translator = $this->get('translator');
-                $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
-                $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+            if ('no' === $data->getWishToProvideDocumentation()) {
+                if (count($data->getDeputyDocuments()) > 0) {
+                    $translator = $this->get('translator');
+                    $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
+                    $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+                } else {
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
+                }
             }
-
-            $this->getRestClient()->put('report/' . $reportId, $data, ['report','wish-to-provide-documentation']);
 
             $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
                 ? $this->generateUrl('report_documents', ['reportId' => $report->getId()])
@@ -145,6 +147,7 @@ class DocumentController extends AbstractController
                         false
                     );
                     $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+
                 } else {
                     $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
                 }
