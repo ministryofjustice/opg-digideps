@@ -432,8 +432,10 @@ class ReportStatusService
     {
         $numRecords = count($this->report->getDeputyDocuments());
 
-        if ($this->report->getWishToProvideDocumentation() === null || ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0)) {
+        if ($this->report->getWishToProvideDocumentation() === null) {
             $status = ['state' => self::STATE_NOT_STARTED];
+        } elseif ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0) {
+            $status = ['state' => self::STATE_INCOMPLETE];
         } else {
             $status = ['state' => self::STATE_DONE];
         }
