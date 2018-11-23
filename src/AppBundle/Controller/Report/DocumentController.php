@@ -74,7 +74,7 @@ class DocumentController extends AbstractController
             /* @var $data EntityDir\Report\Report */
             $data = $form->getData();
 
-            if ('no' === $data->getWishToProvideDocumentation() && count($data->getDocuments()) > 0) {
+            if ('no' === $data->getWishToProvideDocumentation() && count($data->getDeputyDocuments()) > 0) {
                 $translator = $this->get('translator');
                 $translatedMessage = $translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
                 $request->getSession()->getFlashBag()->add('error', $translatedMessage);
