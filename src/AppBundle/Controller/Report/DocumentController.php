@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DocumentController extends RestController
 {
@@ -23,10 +24,13 @@ class DocumentController extends RestController
      */
     public function add(Request $request, $reportType, $reportId)
     {
-        /* @var $report Report */
-        $report = $reportType === 'report' ?
-            $this->findEntityBy(EntityDir\Report\Report::class, $reportId)
-            : $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+        if ($reportType === 'report') {
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+            $report->setWishToProvideDocumentation('yes');
+        } else {
+            throw new \RuntimeException('Adding documents to NDRs is not supported');
+        }
+
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
@@ -91,6 +95,11 @@ class DocumentController extends RestController
 
         $this->getEntityManager()->remove($document);
         $this->getEntityManager()->flush();
+
+        // update yesno question to null if its the last document to be removed
+        if (count($report->getDeputyDocuments()) == 0) {
+            $report->setWishToProvideDocumentation(null);
+        }
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
