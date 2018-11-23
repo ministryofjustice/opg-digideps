@@ -28,6 +28,8 @@
 
         {# prev #}
         {% if currentOffset > 0 %}
+            <a class="pager-first" href="{{ path(routeName, routeParams | merge({
+                'offset': 0 })) }}">{{ 'first' | trans({}, 'common' ) }}</a> ...
             <a class="pager-prev" href="{{ path(routeName, routeParams | merge({
                 'offset': (currentOffset - recordsPerPage)
             })) }}">{{ 'previous' | trans({}, 'common' ) }}</a>
@@ -59,7 +61,10 @@
         {% if (currentOffset + recordsPerPage) < totalRecords %}
             <a class="pager-next" href="{{ path(routeName, routeParams | merge({
                 'offset': currentOffset + recordsPerPage
-            })) }}">{{ 'next' | trans({}, 'common' ) }}</a>
+            })) }}">{{ 'next' | trans({}, 'common' ) }}</a> ...
+            <a class="pager-last" href="{{ path(routeName, routeParams | merge({
+                'offset': (nbPages -1) * recordsPerPage
+            })) }}">{{ 'last' | trans({}, 'common' ) }}</a>
         {% endif %}
 
         {# summary #}

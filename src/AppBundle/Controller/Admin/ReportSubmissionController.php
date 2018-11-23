@@ -165,6 +165,8 @@ class ReportSubmissionController extends AbstractController
      */
     private static function getFiltersFromRequest(Request $request)
     {
+        $order = $request->get('status', 'new') === 'new' ? 'ASC' : 'DESC';
+
         return [
             'q'      => $request->get('q'),
             'status' => $request->get('status', 'new'), // new | archived
@@ -172,7 +174,7 @@ class ReportSubmissionController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
             'created_by_role'   => $request->get('created_by_role'),
             'orderBy'           => $request->get('orderBy', 'createdOn'),
-            'order'             => $request->get('order', 'ASC'),
+            'order'             => $request->get('order', $order),
             'fromDate'          => $request->get('fromDate')
         ];
     }
