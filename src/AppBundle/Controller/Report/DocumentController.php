@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DocumentController extends RestController
 {
@@ -28,7 +27,7 @@ class DocumentController extends RestController
             $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
             $report->setWishToProvideDocumentation('yes');
         } else {
-            throw new \RuntimeException('Adding documents to NDRs is not supported');
+            $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
         }
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
