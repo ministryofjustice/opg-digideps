@@ -2,7 +2,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager submits empty PA checklist for the report
     Given I load the application status from "pa-report-submitted"
-    And I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then the URL should match "/admin/report/\d+/checklist"
@@ -72,7 +72,7 @@ Feature: Admin report checklist
     And the URL should match "/admin/report/\d+/checklist"
 
   Scenario: Case manager saves further information on PA checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
@@ -105,7 +105,7 @@ Feature: Admin report checklist
 
 
   Scenario: Admin completes PA checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
@@ -155,7 +155,7 @@ Feature: Admin report checklist
     And the form should be valid
 
   Scenario: Admin marked as submitted
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:

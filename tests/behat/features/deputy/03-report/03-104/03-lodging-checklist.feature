@@ -3,7 +3,7 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager submits empty checklist for the report 104
     #Given I load the application status from "report-104-submitted"
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
@@ -53,7 +53,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Case manager saves further information on 104 checklist
-    Given I am logged in to admin as "casemanager@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
