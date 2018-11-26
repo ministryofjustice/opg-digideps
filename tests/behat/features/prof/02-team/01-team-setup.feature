@@ -25,7 +25,7 @@ Feature: PROF team setup
 #    When I fill in the following:
 #      | team_member_account_firstname  | Markk Admin                               |
 #      | team_member_account_lastname   | Yelloww                                   |
-#      | team_member_account_email      | behat-prof1-admin@someotherdomain.gsi.gov.uk |
+#      | team_member_account_email      | behat-prof1-admin@someotherdomain.gov.uk |
 #      | team_member_account_roleName_0 | ROLE_PROF_ADMIN                             |
 #    And I press "team_member_account_save"
 #    Then the following fields should have an error:
