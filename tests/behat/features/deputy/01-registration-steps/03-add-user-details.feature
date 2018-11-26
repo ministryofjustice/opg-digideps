@@ -2,7 +2,7 @@ Feature: deputy / user / add details
 
   @deputy
   Scenario: add user details (deputy)
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "/user/details"
       # wrong form
     Then the following hidden fields should have the corresponding values:

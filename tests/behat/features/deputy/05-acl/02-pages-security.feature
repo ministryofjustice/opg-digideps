@@ -37,7 +37,7 @@ Feature: deputy / acl / security on pages
   @deputy
   Scenario: Malicious User cannot access other's pages
     # behat-user can access report n.2
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I save the application status into "deputy-acl-before"
     Then the following "client" pages should return the following status:
       | /report/1/overview         | 200 |

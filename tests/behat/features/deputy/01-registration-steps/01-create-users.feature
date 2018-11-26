@@ -36,15 +36,15 @@ Feature: deputy / user / add user
     And I fill in the following:
       | self_registration_firstname       | John                                 |
       | self_registration_lastname        | Doe                                  |
-      | self_registration_email_first     | behat-user@publicguardian.gsi.gov.uk |
-      | self_registration_email_second    | behat-user@publicguardian.gsi.gov.uk |
+      | self_registration_email_first     | behat-user@publicguardian.gov.uk |
+      | self_registration_email_second    | behat-user@publicguardian.gov.uk |
       | self_registration_postcode        | P0ST C0D3                            |
       | self_registration_clientFirstname | Cly                                  |
       | self_registration_clientLastname  | Hent                                 |
       | self_registration_caseNumber      | BEHAT001                             |
     And I press "self_registration_save"
     Then I should see "Please check your email"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gov.uk"
 
   @ndr
   Scenario: add deputy user (ndr)

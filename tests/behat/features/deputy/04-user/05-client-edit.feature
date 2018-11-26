@@ -3,7 +3,7 @@ Feature: deputy / report / edit client
     @deputy
     Scenario: edit client details
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, client-show, client-edit"
         Then the following fields should have the corresponding values:
             | client_firstname | Cly |

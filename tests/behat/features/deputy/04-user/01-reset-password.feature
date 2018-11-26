@@ -26,11 +26,11 @@ Feature: deputy / password reset
       # existing email (email is now sent)
       When I go to "/login" 
       And I click on "forgotten-password"
-      And I fill in "password_forgotten_email" with "behat-user@publicguardian.gsi.gov.uk"
+      And I fill in "password_forgotten_email" with "behat-user@publicguardian.gov.uk"
       And I press "password_forgotten_submit"
       Then the form should be valid
       And I click on "return-to-login"
-      And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+      And the last email should have been sent to "behat-user@publicguardian.gov.uk"
       # open password reset page
       When I open the "/user/password-reset/" link from the email
       # empty
@@ -54,7 +54,7 @@ Feature: deputy / password reset
       Then the form should be valid
       And the URL should match "/lay"
       # test login
-      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd12345"
+      Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd12345"
       Then the URL should match "/lay"
       # assert set password link is not accessible
       When I open the "/user/password-reset/" link from the email

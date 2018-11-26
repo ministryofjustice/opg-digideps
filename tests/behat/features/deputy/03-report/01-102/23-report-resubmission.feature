@@ -81,7 +81,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: Deputy resubmit report
-    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     And I should see the "report-active" region
     But I should not see the "submitted-reports" region
