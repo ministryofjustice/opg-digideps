@@ -88,7 +88,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: Admin completes 104 checklist
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     When I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region
@@ -132,7 +132,7 @@ Feature: Admin report checklist
 
   @deputy
   Scenario: 104 Admin marked as submitted
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
     And I click on "admin-client-search, client-detail-behat001"
     And I click on "checklist" in the "report-2016" region

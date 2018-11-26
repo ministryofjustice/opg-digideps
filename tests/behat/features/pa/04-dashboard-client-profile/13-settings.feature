@@ -2,7 +2,7 @@ Feature: PA settings
 
   Scenario: named PA logs in and views profile page
     Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings"
 
     # settings page
@@ -13,18 +13,18 @@ Feature: PA settings
 
     # profile page
     Then I should see "John Named Green" in the "profile-name" region
-    And I should see "behat-pa1@publicguardian.gsi.gov.uk" in the "profile-email" region
+    And I should see "behat-pa1@publicguardian.gov.uk" in the "profile-email" region
     And I should see "Solicitor" in the "profile-job" region
     And I should see "10000000001" in the "profile-phone" region
 
   Scenario: named PA logs in and updates profile and does not see removeAdmin field
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | John Named Chap                       |
       | profile_lastname   | Greenish                              |
-      | profile_email      | behat-pa1@publicguardian.gsi.gov.uk   |
+      | profile_email      | behat-pa1@publicguardian.gov.uk   |
       | profile_jobTitle   | Solicitor General                     |
       | profile_phoneMain  | 10000000011                           |
       | profile_address1         | 123 Streetname |
@@ -33,7 +33,7 @@ Feature: PA settings
     And I press "profile_save"
     Then the form should be valid
     Then I should see "John Named Chap Greenish" in the "profile-name" region
-    And I should see "behat-pa1@publicguardian.gsi.gov.uk" in the "profile-email" region
+    And I should see "behat-pa1@publicguardian.gov.uk" in the "profile-email" region
     And I should see "Solicitor General" in the "profile-job" region
     And I should see "10000000011" in the "profile-phone" region
     And I should see "123 Streetname" in the "profile-address" region
@@ -41,24 +41,24 @@ Feature: PA settings
     And I should see "United Kingdom" in the "profile-address" region
 
   Scenario: PA Admin logs in and updates profile and sees removeAdmin field but does not
-    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     Then I fill in the following:
       | profile_firstname  | Mark Admin Chap                           |
       | profile_lastname   | Yellowish                                 |
-      | profile_email      | behat-pa1-admin@publicguardian.gsi.gov.uk |
+      | profile_email      | behat-pa1-admin@publicguardian.gov.uk |
       | profile_jobTitle   | Solicitor Assistant                       |
       | profile_phoneMain  | 10000000012                               |
     And I press "profile_save"
     Then the form should be valid
     Then I should see "Mark Admin Chap Yellowish" in the "profile-name" region
-    And I should see "behat-pa1-admin@publicguardian.gsi.gov.uk" in the "profile-email" region
+    And I should see "behat-pa1-admin@publicguardian.gov.uk" in the "profile-email" region
     And I should see "Solicitor Assistant" in the "profile-job" region
     And I should see "10000000012" in the "profile-phone" region
 
   Scenario: PA Admin logs in and updates profile and removes admin
-    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
     When I check "profile_removeAdmin_0"
@@ -67,14 +67,14 @@ Feature: PA settings
     And I should be on "/login"
 
   Scenario: PA Admin is no longer admin and tests nav
-    Given I am logged in as "behat-pa1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
     Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
     And I should not see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
     But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
 
   Scenario: PA Team member logs in and edits info
-    Given I am logged in as "behat-pa3-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa3-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should not see "Give up administrator rights"
     When I fill in the following:
@@ -91,7 +91,7 @@ Feature: PA settings
     When I fill in the following:
       | profile_firstname        | Tim Team Member                                 |
       | profile_lastname         | Chap                                            |
-      | profile_email            | behat-pa3-team-member@publicguardian.gsi.gov.uk |
+      | profile_email            | behat-pa3-team-member@publicguardian.gov.uk |
       | profile_jobTitle         | Solicitor helper                                |
       | profile_phoneMain        | 30000000123                                     |
       | profile_address1         | 123 SomeRoad                                    |
@@ -100,7 +100,7 @@ Feature: PA settings
     And I press "profile_save"
     Then the form should be valid
     Then I should see "Tim Team Member Chap" in the "profile-name" region
-    And I should see "behat-pa3-team-member@publicguardian.gsi.gov.uk" in the "profile-email" region
+    And I should see "behat-pa3-team-member@publicguardian.gov.uk" in the "profile-email" region
     And I should see "Solicitor helper" in the "profile-job" region
     And I should see "30000000123" in the "profile-phone" region
     And I should see "123 SomeRoad" in the "profile-address" region
@@ -108,7 +108,7 @@ Feature: PA settings
     And I should see "United Kingdom" in the "profile-address" region
 
   Scenario: Named PA logs in and changes password
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, password-edit"
     Then I should see "Change password"
     When I press "change_password_save"
@@ -171,10 +171,10 @@ Feature: PA settings
     And I should be on "/org/settings"
 
   Scenario: Named PA logs in and changes email to an existing one (expected error)
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd2345"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd2345"
     When I click on "org-settings, profile-show, profile-edit"
     When I fill in the following:
-      | profile_email       | behat-pa2@publicguardian.gsi.gov.uk  |
+      | profile_email       | behat-pa2@publicguardian.gov.uk  |
     And I press "profile_save"
     Then the following fields should have an error:
       | profile_email  |

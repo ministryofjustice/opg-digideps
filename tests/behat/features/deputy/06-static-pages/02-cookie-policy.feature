@@ -8,7 +8,7 @@ Feature: Cookie Policy
     Scenario: I see a link in the bottom footer of the service on every page
         Given I go to "/login"
         Then the "Cookies" link, in the footer, url should contain "https://www.gov.uk/help/cookies"
-        And I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "admin@publicguardian.gov.uk" with password "Abcd1234"
         Then the "Cookies" link, in the footer, url should contain "https://www.gov.uk/help/cookies"
             
     @deputy

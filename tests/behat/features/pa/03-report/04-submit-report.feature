@@ -2,7 +2,7 @@ Feature: Report submit (client 01000014)
 
     Scenario: 102 report declaration page
         Given I load the application status from "pa-report-completed"
-        And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "tab-ready"
         And I click on "pa-report-open" in the "client-01000014" region
         Then I should not see the "download-2016-report" link
@@ -16,14 +16,14 @@ Feature: Report submit (client 01000014)
         Given emails are sent from "deputy" area
         And I reset the email log
         # log in as team member to submit the report and test that named deputy details are displayed
-        And I am logged in as "behat-pa1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
             | Bobby Team member                               | deputy-firstname |
             | BlackAndBlue                                    | deputy-lastname  |
             | 4410000000003                                   | deputy-phone     |
-            | behat-pa1-team-member@publicguardian.gsi.gov.uk | deputy-email     |
+            | behat-pa1-team-member@publicguardian.gov.uk | deputy-email     |
         And I click on "declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |
@@ -38,10 +38,10 @@ Feature: Report submit (client 01000014)
         Then the URL should match "/org"
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
-        And the last email should have been sent to "behat-pa1-team-member@publicguardian.gsi.gov.uk"
+        And the last email should have been sent to "behat-pa1-team-member@publicguardian.gov.uk"
 
     Scenario: 102 assert submitted report displays correctly in client profile page
-        Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-01000014" region
         And I should see the "submitted-report-20170528" region
@@ -53,7 +53,7 @@ Feature: Report submit (client 01000014)
         Then the current URL should match with the URL previously saved as "client-01000014-profile"
 
     Scenario: 102 assert 2nd year report has been created and displays correctly
-        Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "tab-in-progress"
         And I click on "pa-report-open" in the "client-01000014" region
         Then I should see a "#edit-contacts" element

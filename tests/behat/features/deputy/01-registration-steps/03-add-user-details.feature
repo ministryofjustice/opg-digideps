@@ -50,7 +50,7 @@ Feature: deputy / user / add details
 
   @ndr
   Scenario: add user details (deputy ndr)
-    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "/user/details"
     When I set the user details to:
       | name    | John NDR         | Doe NDR       |        |          |    |

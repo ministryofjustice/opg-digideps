@@ -103,7 +103,7 @@ Feature: Report submit
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
-        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "admin-documents-list-new"

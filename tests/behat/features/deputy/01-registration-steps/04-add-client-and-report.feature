@@ -62,7 +62,7 @@ Feature: deputy / user / add client and report
 
   @ndr
   Scenario: add client (ndr) with no casrec record
-    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:
@@ -80,7 +80,7 @@ Feature: deputy / user / add client and report
     Given I add the following users to CASREC:
       | Case     | Surname       | Deputy No | Dep Surname  | Dep Postcode | Typeofrep |
       | behat001 | Hent          | D001      | Doe NDR      | p0stc0d3      | OPG102    |
-    And I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:

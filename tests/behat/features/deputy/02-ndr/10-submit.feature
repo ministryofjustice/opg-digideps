@@ -2,7 +2,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR review page
-        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
         # go to review page
         When I click on "ndr-start, ndr-submit"
         Then the URL should match "/ndr/\d+/review"
@@ -21,7 +21,7 @@ Feature: ndr / report submit
     Scenario: NDR declaration and submission
         Given emails are sent from "deputy" area
         And I reset the email log
-        And I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "ndr-start, ndr-submit, ndr-declaration-page"
         Then the URL should match "/ndr/\d+/declaration"
         #
@@ -57,7 +57,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: admin area check submission ZIP file
-        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "ndr-admin-documents-list-new"
@@ -92,7 +92,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: check NDR report not accessible after submission
-        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
         And the URL "/ndr/1/visits-care/summary" should not be accessible
         And the URL "/ndr/1/deputy-expenses/summary" should not be accessible
         And the URL "/ndr/1/income-benefits/summary" should not be accessible
@@ -104,7 +104,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR homepage and create new report
-        Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
         Then I should be on "/ndr"
         And I should see the "reports-history" region
         # create report

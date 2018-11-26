@@ -1,7 +1,7 @@
 Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 gifts
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-gifts, start"
     # chose "no records"
@@ -10,7 +10,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_giftsExist_1 | no |
 
   Scenario: PROF 102-5 assets
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-assets, start"
       # chose "no records"
@@ -18,7 +18,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_noAssetToAdd_1 | 1 |
 
   Scenario: PROF 102-5  debts
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-debts, start"
       # chose "no records"
@@ -27,7 +27,7 @@ Feature: PROF user edits 102-5 report sections
       | yes_no_hasDebts_1 | no |
 
   Scenario: PROF 102-5 add current account
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-bank_accounts, start"
     # step 1
@@ -52,7 +52,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 add postoffice account (no sort code, no bank name)
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-bank_accounts, add"
     # step 1
@@ -73,7 +73,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 add no sortcode account (still requires bank name)
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-bank_accounts, add"
     # step 1
@@ -95,7 +95,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 deletes bank account
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
@@ -104,7 +104,7 @@ Feature: PROF user edits 102-5 report sections
     Then I should see "Bank account deleted"
 
   Scenario: PROF 102-5 money in
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-money_in, start"
     # add transaction n.1 and check validation
@@ -117,7 +117,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
     
   Scenario: PROF 102-5 money out
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
@@ -130,7 +130,7 @@ Feature: PROF user edits 102-5 report sections
     And I choose "no" when asked for adding another record
 
   Scenario: PROF 102-5 Report should be submittable
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     Then the PROF report should be submittable
     And I save the application status into "prof-report-completed"

@@ -18,7 +18,7 @@ Feature: deputy / password reset
       And I press "password_forgotten_submit"
       Then the form should be invalid
       # non-existing email (no email is sent)
-      When I fill in "password_forgotten_email" with "ehat-not-existing@publicguardian.gsi.gov.uk"
+      When I fill in "password_forgotten_email" with "ehat-not-existing@publicguardian.gov.uk"
       And I press "password_forgotten_submit"
       Then the form should be valid
       And I click on "return-to-login"

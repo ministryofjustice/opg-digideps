@@ -9,8 +9,8 @@ Feature: deputy / acl / security on pages
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 12345ABC | Client  | D003      | User        | SW1H 9AJ     | OPG102    |
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    When I create a new "NDR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gsi.gov.uk" and postcode "SW1H 9AJ"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I create a new "NDR-disabled" "Lay Deputy" user "Malicious" "User" with email "behat-malicious@publicguardian.gov.uk" and postcode "SW1H 9AJ"
     And I activate the user with password "Abcd1234"
     And I set the user details to:
       | name    | Malicious        | User          |        |          |    |
@@ -52,7 +52,7 @@ Feature: deputy / acl / security on pages
       # accounts
       | /report/1/bank-accounts    | 200 |
     # behat-malicious CANNOT access the same URLs
-    Given I am logged in as "behat-malicious@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     # reload the status (as some URLs calls might have deleted data)
     And I load the application status from "deputy-acl-before"
     Then the following "client" pages should return the following status:

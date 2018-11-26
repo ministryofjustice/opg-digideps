@@ -3,7 +3,7 @@ Feature: Admin unsubmit and client re-submit
   @deputy
   Scenario: Admin unsubmits report for client 01000014
     Given I load the application status from "pa-report-submitted"
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     When I fill in the following:
       | search_clients_q | 01000014 |
@@ -22,7 +22,7 @@ Feature: Admin unsubmit and client re-submit
 
   @deputy
   Scenario: PA resubmit report
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I fill in "search" with "01000014"
     And I press "search_submit"
     Then I should see the "client" region exactly 1 times
@@ -39,7 +39,7 @@ Feature: Admin unsubmit and client re-submit
 
   @deputy
   Scenario: Admin checks report was re-submitted
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-01000014.url"
     Then I should see "SUBMITTED" in the "report-2016-to-2017" region
     # restore previous status

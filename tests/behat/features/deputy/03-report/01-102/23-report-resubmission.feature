@@ -3,7 +3,7 @@ Feature: Admin unsubmit report (from client page)
   @deputy 
   Scenario: Admin client page + search
     Given I load the application status from "more-documents-added"
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
       | 8 clients | client-search-count |
@@ -20,7 +20,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: Admin unsubmits report and changes report due date and reporting period
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-search-client-behat001"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
@@ -115,7 +115,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: admin sees new submission and client page updated
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
     And I go to the URL previously saved as "admin-client-search-client-behat001"
     Then I should see "SUBMITTED" in the "report-2016-label" region

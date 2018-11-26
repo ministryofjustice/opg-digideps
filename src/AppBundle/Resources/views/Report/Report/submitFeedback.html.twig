@@ -14,7 +14,7 @@
 
         <p>Thank you for giving us your feedback about completing your deputy report online. We regularly update the service and pay careful attention to all the comments we receive.</p>
 
-        <p>If you have a question that needs a response, please email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gsi.gov.uk</a> or call the helpline.</p>
+        <p>If you have a question that needs a response, please email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a> or call the helpline.</p>
 
         {% if app.user.isDeputyOrg() %}
             <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'continue' | trans({}, 'common') }}</a>

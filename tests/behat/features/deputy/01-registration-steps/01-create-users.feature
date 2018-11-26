@@ -6,20 +6,20 @@ Feature: deputy / user / add user
     Given I am on admin login page
       # test wrong credentials
     When I fill in the following:
-      | login_email    | admin@publicguardian.gsi.gov.uk |
+      | login_email    | admin@publicguardian.gov.uk |
       | login_password | WRONG PASSWORD !!               |
     And I click on "login"
     Then I should see an "#error-summary" element
       # test user email in caps
     When I fill in the following:
-      | login_email    | admin@publicguardian.gsi.gov.uk |
+      | login_email    | admin@publicguardian.gov.uk |
       | login_password | Abcd1234                        |
     And I click on "login"
-    Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
+    Then I should see "admin@publicguardian.gov.uk" in the "users" region
     Given I go to "/logout"
       # test right credentials
     When I fill in the following:
-      | login_email    | admin@publicguardian.gsi.gov.uk |
+      | login_email    | admin@publicguardian.gov.uk |
       | login_password | Abcd1234                        |
     And I click on "login"
       #When I go to "/admin"
@@ -51,11 +51,11 @@ Feature: deputy / user / add user
     Given emails are sent from "admin" area
     And I reset the email log
     And I load the application status from "init"
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # assert form OK
-    When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gsi.gov.uk" and postcode "AB12CD"
-    Then I should see "behat-user-ndr@publicguardian.gsi.gov.uk" in the "users" region
+    When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"
+    Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region
     And I should see "yes" in the "behat-user-ndrpublicguardiangsigovuk-ndr-enabled" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gsi.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gov.uk"
 
 
