@@ -23,6 +23,8 @@ status:
   readyToSubmit: Continue
 next: Next
 previous: Previous
+first: First
+last: Last
 manage: Manage
 checklist: Checklist
 
