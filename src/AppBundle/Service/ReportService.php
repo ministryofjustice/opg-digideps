@@ -161,7 +161,7 @@ class ReportService
         $qb = $this->reportRepository->createQueryBuilder('r');
 
         $qb->leftJoin('r.client', 'c')
-            ->where('(r.submitted = false OR r.submitted is null) AND c.caseNumber IN (' . $caseNumbersString . ')');
+            ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (' . $caseNumbersString . ')');
 
         $reports = $qb->getQuery()->getResult();
         /* @var $reports Report[] */
