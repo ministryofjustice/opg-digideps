@@ -281,8 +281,12 @@
 
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.nextPeriod') | trans({}, 'admin-checklist') }}</h2>
-
-            <h3 class="label question bold">{{ (page ~ '.form.futureSignificantDecisions.label') | trans({}, 'admin-checklist') }}</h3>
+            
+            {% if report.hasSection('lifestyle') %}
+                <h3 class="label question bold">{{ (page ~ '.form.futureSignificantChanges.label') | trans({}, 'admin-checklist') }}</h3>
+            {%  else %}
+                <h3 class="label question bold">{{ (page ~ '.form.futureSignificantDecisions.label') | trans({}, 'admin-checklist') }}</h3>
+            {% endif %}
 
             <table class="checkboxes labelvalue inline">
                 <tbody>
