@@ -23,10 +23,12 @@ class DocumentController extends RestController
      */
     public function add(Request $request, $reportType, $reportId)
     {
-        /* @var $report Report */
-        $report = $reportType === 'report' ?
-            $this->findEntityBy(EntityDir\Report\Report::class, $reportId)
-            : $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+        if ($reportType === 'report') {
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
+        } else {
+            $report = $this->findEntityBy(EntityDir\Ndr\Ndr::class, $reportId);
+        }
+
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         // hydrate and persist
@@ -39,6 +41,10 @@ class DocumentController extends RestController
         $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);
         $document->setIsReportPdf($data['is_report_pdf']);
+        if (!$document->isAdminDocument()) {
+            // only set flag to yes if document being added is a deputy Document (and not auto-generated)
+            $report->setWishToProvideDocumentation('yes');
+        }
         $this->persistAndFlush($document);
 
         $report->updateSectionsStatusCache($this->sectionIds);
@@ -91,6 +97,11 @@ class DocumentController extends RestController
 
         $this->getEntityManager()->remove($document);
         $this->getEntityManager()->flush();
+
+        // update yesno question to null if its the last document to be removed
+        if (count($report->getDeputyDocuments()) == 0) {
+            $report->setWishToProvideDocumentation(null);
+        }
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
