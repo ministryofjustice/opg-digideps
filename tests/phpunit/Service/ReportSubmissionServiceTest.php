@@ -148,7 +148,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
 
         $this->mockMailSender->shouldReceive('send')
             ->once()
-            ->with($mockEmail, ['text', 'html'], 'secure-smtp');
+            ->with($mockEmail, ['text', 'html']);
 
         $this->sut = $this->generateSut();
 
