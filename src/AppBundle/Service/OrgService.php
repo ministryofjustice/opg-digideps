@@ -299,7 +299,7 @@ class OrgService
         // already existing, just change type
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
-            if ($report->getType() != $reportType && !$report->getSubmitted()) {
+            if ($report->getType() != $reportType && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 $this->log('Changing report type');
                 $report->setType($reportType);
                 $this->em->persist($report);
