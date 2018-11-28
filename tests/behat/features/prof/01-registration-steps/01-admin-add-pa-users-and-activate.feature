@@ -13,7 +13,7 @@ Feature: Add PROF users and activate PROF user (journey)
     #Then I should see "Added 1 PROF users"
       # activate PROF user 1
     When I click on "admin-homepage"
-    And I click on "send-activation-email" in the "user-behat-prof1publicguardiangsigovuk" region
+    And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"
 
@@ -51,13 +51,13 @@ Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should not see "send-activation-email" in the "user-behat-prof1publicguardiangsigovuk" region
+    Then I should not see "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
 
   Scenario: Register PROF2 user
     Given emails are sent from "admin" area
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "send-activation-email" in the "user-behat-prof2publicguardiangsigovuk" region
+    And I click on "send-activation-email" in the "user-behat-prof2publicguardiangovuk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
     # terms
@@ -84,7 +84,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "send-activation-email" in the "user-behat-prof3publicguardiangsigovuk" region
+    And I click on "send-activation-email" in the "user-behat-prof3publicguardiangovuk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
     # terms
@@ -110,7 +110,7 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Edit PROF2 user
     Given I save the application status into "prof-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "user-behat-prof2publicguardiangsigovuk" in the "user-behat-prof2publicguardiangsigovuk" region
+    And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
     Then the following fields should have the corresponding values:
       | admin_email      | behat-prof2@publicguardian.gov.uk |
       | admin_firstname  | Pa User                             |
@@ -123,9 +123,9 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "admin_save"
     Then the form should be valid
     When I click on "admin_cancel"
-    Then I should not see the "user-behat-prof2publicguardiangsigovuk" region
-    And I should see "Edited Pa User Edited Two" in the "user-behat-prof2-editedpublicguardiangsigovuk" region
-    And I should see "behat-prof2-edited@publicguardian.gov.uk" in the "user-behat-prof2-editedpublicguardiangsigovuk" region
+    Then I should not see the "user-behat-prof2publicguardiangovuk" region
+    And I should see "Edited Pa User Edited Two" in the "user-behat-prof2-editedpublicguardiangovuk" region
+    And I should see "behat-prof2-edited@publicguardian.gov.uk" in the "user-behat-prof2-editedpublicguardiangovuk" region
     When I go to "/logout"
     # try logging in with the new email
     And I am logged in as "behat-prof2-edited@publicguardian.gov.uk" with password "Abcd1234"
@@ -134,7 +134,7 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Edit PROF2 user email to an existing email
     Given I load the application status from "prof-users-uploaded"
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "user-behat-prof2publicguardiangsigovuk" in the "user-behat-prof2publicguardiangsigovuk" region
+    And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
     And I fill in the following:
       | admin_email      | behat-prof3@publicguardian.gov.uk |
       | admin_firstname  | Pa User                             |
@@ -144,6 +144,6 @@ Feature: Add PROF users and activate PROF user (journey)
       | admin_email |
     When I click on "admin_cancel"
     # edit did not occur due to re used email
-    Then I should see the "user-behat-prof2publicguardiangsigovuk" region
-    And I should see "Pa User Two" in the "user-behat-prof2publicguardiangsigovuk" region
-    And I should see "behat-prof2@publicguardian.gov.uk" in the "user-behat-prof2publicguardiangsigovuk" region
+    Then I should see the "user-behat-prof2publicguardiangovuk" region
+    And I should see "Pa User Two" in the "user-behat-prof2publicguardiangovuk" region
+    And I should see "behat-prof2@publicguardian.gov.uk" in the "user-behat-prof2publicguardiangovuk" region

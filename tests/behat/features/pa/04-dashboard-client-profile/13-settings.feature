@@ -69,9 +69,9 @@ Feature: PA settings
   Scenario: PA Admin is no longer admin and tests nav
     Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
-    And I should not see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangsigovuk" region
-    But I should not see "Edit" in the "team-user-behat-pa1publicguardiangsigovuk" region
+    Then I should not see "Edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
+    And I should not see "Edit" in the "team-user-behat-pa1-team-memberpublicguardiangovuk" region
+    But I should not see "Edit" in the "team-user-behat-pa1publicguardiangovuk" region
 
   Scenario: PA Team member logs in and edits info
     Given I am logged in as "behat-pa3-team-member@publicguardian.gov.uk" with password "Abcd1234"

@@ -55,7 +55,7 @@ Feature: deputy / user / add user
       # assert form OK
     When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"
     Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region
-    And I should see "yes" in the "behat-user-ndrpublicguardiangsigovuk-ndr-enabled" region
+    And I should see "yes" in the "behat-user-ndrpublicguardiangovuk-ndr-enabled" region
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gov.uk"
 
 

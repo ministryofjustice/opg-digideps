@@ -66,7 +66,7 @@ Feature: PA cannot access other's PA's reports and clients
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_roleName_1 | ROLE_PA_TEAM_MEMBER                             |
     And I press "team_member_account_save"
@@ -78,7 +78,7 @@ Feature: PA cannot access other's PA's reports and clients
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-pa1-adminpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_firstname  | edit                                             |
     And I press "team_member_account_save"

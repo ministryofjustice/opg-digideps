@@ -6,7 +6,7 @@ Feature: PROF team setup
     When I click on "org-settings"
     # settings page
     And I click on "user-accounts"
-    Then I should see the "team-user-behat-prof1publicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1publicguardiangovuk" region
 
   # VOTERS and controllers need to be updated with PROF role to have this working
   Scenario: named PROF logs in and adds PROF_ADMIN user
@@ -38,7 +38,7 @@ Feature: PROF team setup
       | team_member_account_roleName_0 | ROLE_PROF_ADMIN                             |
     And I press "team_member_account_save"
     Then the form should be valid
-    Then I should see the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1-adminpublicguardiangovuk" region
 
   Scenario: activate PROF_ADMIN user
     Given emails are sent from "deputy" area
@@ -59,8 +59,8 @@ Feature: PROF team setup
     And I should see the "client-01000010" region
     # check I see all the users
     When I click on "org-settings, user-accounts"
-    Then I should see the "team-user-behat-prof1publicguardiangsigovuk" region
-    And I should see the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1publicguardiangovuk" region
+    And I should see the "team-user-behat-prof1-adminpublicguardiangovuk" region
 
   Scenario: PROF_ADMIN logs in and adds PROF_TEAM_MEMBER with invalid email
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -87,9 +87,9 @@ Feature: PROF team setup
     And I press "team_member_account_save"
     Then the form should be valid
     # check all 3 users are displayed
-    Then I should see the "team-user-behat-prof1publicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1publicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
 
   Scenario: activate ROLE_PROF_TEAM_MEMBER user
     Given emails are sent from "deputy" area
@@ -110,17 +110,17 @@ Feature: PROF team setup
     And I should see the "client-01000010" region
     # check I see all the users
     When I click on "org-settings, user-accounts"
-    Then I should see the "team-user-behat-prof1publicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1publicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
     And I should not see the "add" link
 
   Scenario: PROF (named) logs in and edit users
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    Then I should not see "edit" in the "team-user-behat-prof1publicguardiangsigovuk" region
+    Then I should not see "edit" in the "team-user-behat-prof1publicguardiangovuk" region
     # edit PROF named
-    When I click on "edit" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
     Then the following fields should have the corresponding values:
       | team_member_account_firstname | Robert Team member                              |
       | team_member_account_lastname  | Black                                           |
@@ -137,36 +137,36 @@ Feature: PROF team setup
       | team_member_account_phoneMain | +4410000000003                                  |
     And I press "team_member_account_save"
     Then the form should be valid
-    And I should see "Bobby Team member" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
-    And I should see "BlackAndBlue" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
-    And I should see "Helper solicitor" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
-    And I should see "+4410000000003" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    And I should see "Bobby Team member" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
+    And I should see "BlackAndBlue" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
+    And I should see "Helper solicitor" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
+    And I should see "+4410000000003" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
     # PROF named edits Admin, downgrade role into team member
     Given I save the application status into "prof-team-before-downgrading-admin"
-    And I should see "Administrator" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    And I should see "Administrator" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
     Then the "team_member_account_roleName_0" field should contain "ROLE_PROF_ADMIN"
     When I fill in "team_member_account_roleName_1" with "ROLE_PROF_TEAM_MEMBER"
     And I press "team_member_account_save"
-    Then I should not see "Administrator" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    Then I should not see "Administrator" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
     # restore Admin role
     And I load the application status from "prof-team-before-downgrading-admin"
     # check PROF named can edit team members
-    When I click on "edit" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
     Then the "team_member_account_roleName_1" field should contain "ROLE_PROF_TEAM_MEMBER"
     Then the response status code should be 200
 
   Scenario: PROF admin logs in and edit users
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    Then I should not see "Edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    And I should see "Edit" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
-    But I should not see "Edit" in the "team-user-behat-prof1publicguardiangsigovuk" region
+    Then I should not see "Edit" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    And I should see "Edit" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
+    But I should not see "Edit" in the "team-user-behat-prof1publicguardiangovuk" region
 
   Scenario: PROF (named) deputy adds, then removes a PROF_ADMIN user
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    Then I should not see "Remove" in the "team-user-behat-prof1publicguardiangsigovuk" region
+    Then I should not see "Remove" in the "team-user-behat-prof1publicguardiangovuk" region
     When I click on "add"
     Then the response status code should be 200
     And I press "team_member_account_save"
@@ -178,20 +178,20 @@ Feature: PROF team setup
     And I press "team_member_account_save"
     Then the form should be valid
     Then the response status code should be 200
-    Then I should see the "team-user-behat-prof1-admin2publicguardiangsigovuk" region
-    Then I should see "Remove" in the "team-user-behat-prof1-admin2publicguardiangsigovuk" region
-    But I should not see "Remove" in the "team-user-behat-prof1publicguardiangsigovuk" region
-    Then I click on "delete" in the "team-user-behat-prof1-admin2publicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1-admin2publicguardiangovuk" region
+    Then I should see "Remove" in the "team-user-behat-prof1-admin2publicguardiangovuk" region
+    But I should not see "Remove" in the "team-user-behat-prof1publicguardiangovuk" region
+    Then I click on "delete" in the "team-user-behat-prof1-admin2publicguardiangovuk" region
     Then the response status code should be 200
     # test cancel button on confirmation page
     When I click on "confirm-cancel"
     Then the response status code should be 200
-    Then I click on "delete" in the "team-user-behat-prof1-admin2publicguardiangsigovuk" region
+    Then I click on "delete" in the "team-user-behat-prof1-admin2publicguardiangovuk" region
     Then the response status code should be 200
     # now confirm
     When I click on "confirm"
     Then the response status code should be 200
-    Then I should not see the "team-user-behat-prof1-admin2publicguardiangsigovuk" region
+    Then I should not see the "team-user-behat-prof1-admin2publicguardiangovuk" region
 
   Scenario: PROF_ADMIN logs in, adds then removes a PROF_TEAM_MEMBER
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -205,16 +205,16 @@ Feature: PROF team setup
     And I press "team_member_account_save"
     Then the form should be valid
     # check all 3 users are displayed
-    Then I should see the "team-user-behat-prof1publicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    Then I should see the "team-user-behat-prof1-team-member2publicguardiangsigovuk" region
-    Then I should see "Remove" in the "team-user-behat-prof1-team-member2publicguardiangsigovuk" region
-    But I should not see "Remove" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
-    Then I click on "delete" in the "team-user-behat-prof1-team-member2publicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof1publicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    Then I should see the "team-user-behat-prof1-team-member2publicguardiangovuk" region
+    Then I should see "Remove" in the "team-user-behat-prof1-team-member2publicguardiangovuk" region
+    But I should not see "Remove" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
+    Then I click on "delete" in the "team-user-behat-prof1-team-member2publicguardiangovuk" region
     Then the response status code should be 200
     When I click on "confirm"
     Then the response status code should be 200
-    Then I should not see the "team-user-behat-prof1-team-member2publicguardiangsigovuk" region
+    Then I should not see the "team-user-behat-prof1-team-member2publicguardiangovuk" region
 
   Scenario: named PROF3 logs in, adds and activates PROF_ADMIN user
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
@@ -227,7 +227,7 @@ Feature: PROF team setup
       | team_member_account_roleName_0 | ROLE_PROF_ADMIN                             |
     And I press "team_member_account_save"
     Then the form should be valid
-    Then I should see the "team-user-behat-prof3-adminpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof3-adminpublicguardiangovuk" region
     When emails are sent from "deputy" area
     And I activate the user with password "Abcd1234"
     When I fill in the following:
@@ -261,7 +261,7 @@ Feature: PROF team setup
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
     # edit PROF named
-    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_firstname | Edited PROF3                                |
       | team_member_account_lastname  | Edited Team Member                        |
@@ -274,14 +274,14 @@ Feature: PROF team setup
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
     # delete existing admin user
-    And I click on "delete" in the "team-user-behat-prof3-adminpublicguardiangsigovuk" region
+    And I click on "delete" in the "team-user-behat-prof3-adminpublicguardiangovuk" region
     And I click on "confirm"
     # edit PROF named
-    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_firstname | Edited PROF3                                |
       | team_member_account_lastname  | Edited Team Member                        |
       | team_member_account_email     | behat-prof3-admin@publicguardian.gov.uk |
     And I press "team_member_account_save"
     Then the form should be valid
-    And I should see "behat-prof3-admin@publicguardian.gov.uk" in the "team-user-behat-prof3-adminpublicguardiangsigovuk" region
+    And I should see "behat-prof3-admin@publicguardian.gov.uk" in the "team-user-behat-prof3-adminpublicguardiangovuk" region

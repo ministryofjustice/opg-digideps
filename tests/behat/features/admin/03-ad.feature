@@ -54,7 +54,7 @@ Feature: admin / AD
     # find user
     And I go to admin page "/admin"
     And I create a new "NDR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gov.uk" and postcode "HA4"
-    And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
+    And I click on "view" in the "user-behat-lay-assistedpublicguardiangovuk" region
     # login on behalf
     And I click on "login-as"
     Then the response status code should be 200

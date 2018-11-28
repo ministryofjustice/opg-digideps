@@ -17,7 +17,7 @@ Feature: PROF cross team members
     Then I should see the "client-03000003" region
     # members page
     And I click on "org-settings, user-accounts"
-    Then I should see the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
+    Then I should see the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
     When I click on "add"
     # add member already existing in the team => no extra behaviour (as cannot detect which team)
     And I fill in the following:
@@ -27,14 +27,14 @@ Feature: PROF cross team members
       | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
     And I press "team_member_account_save"
     Then the form should be valid
-    And I should see the "team-user-behat-prof3-team-memberpublicguardiangsigovuk" region
+    And I should see the "team-user-behat-prof3-team-memberpublicguardiangovuk" region
     # add member from team1
     When I click on "add"
     And I fill in the following:
       | team_member_account_email      | behat-prof1-team-member@publicguardian.gov.uk |
     And I press "team_member_account_save"
     Then the form should be valid
-    And I should see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    And I should see the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
 
   Scenario: "behat-prof1-team-member" can login and access deputies from TEAM1 and TEAM3
     Given I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
@@ -48,10 +48,10 @@ Feature: PROF cross team members
   Scenario: "behat-prof1-team-member" removed from the team
     Given I am logged in as "behat-prof3@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    And I click on "delete" in the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    And I click on "delete" in the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
     And I click on "confirm"
     Then the response status code should be 200
-    Then I should not see the "team-user-behat-prof1-team-memberpublicguardiangsigovuk" region
+    Then I should not see the "team-user-behat-prof1-team-memberpublicguardiangovuk" region
 
 
   Scenario: new team member can still access TEAM1, but not TEAM3 clients
