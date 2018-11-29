@@ -2,7 +2,7 @@ Feature: Report balance
 
     @deputy
     Scenario: balance fix
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         # assert report not submittable
         And I click on "report-start"
         #And I should see an "#finances-section .behat-alert-message" element
@@ -31,7 +31,7 @@ Feature: Report balance
     Scenario: balance explanation
         # restore previous bad balance, add explanation
         Given I load the application status from "balance-before-adding-explanation"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start, edit-balance"
         And I should see the "balance-bad" region
         # add explanation
@@ -47,7 +47,7 @@ Feature: Report balance
 
     @deputy
     Scenario: Transactions CSV link
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         When I click on "report-start, edit-balance"
         And I click on "download-transactions"
         And the response status code should be 200

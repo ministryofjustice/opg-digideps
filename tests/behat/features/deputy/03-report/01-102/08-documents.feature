@@ -2,7 +2,7 @@ Feature: Report documents
 
   @deputy
   Scenario: No documents to attach
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-documents, start"
     # chose "no documents"
     Then the URL should match "report/\d+/documents/step/1"
@@ -16,7 +16,7 @@ Feature: Report documents
 
   @deputy
   Scenario: Upload PDF documents
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-documents"
     Then the URL should match "report/\d+/documents/summary"
     And I should see "Edit" in the "provided-documentation" region
@@ -58,7 +58,7 @@ Feature: Report documents
 
   @deputy
   Scenario: Delete document
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-documents"
     # chose "yes documents"
     Then the URL should match "report/\d+/documents/summary"
@@ -80,7 +80,7 @@ Feature: Report documents
 
   @deputy
   Scenario: Upload image documents
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "reports, report-start, edit-documents"
     Then the URL should match "report/\d+/documents/summary"
     And I should see "Edit" in the "provided-documentation" region
@@ -112,7 +112,7 @@ Feature: Report documents
 
   @deputy
     Scenario: Upload file1.pdf
-      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
       And I click on "report-start, edit-documents"
       Then the URL should match "report/\d+/documents/summary"
       When I click on "edit" in the "provided-documentation" region

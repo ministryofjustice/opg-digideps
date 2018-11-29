@@ -5,11 +5,11 @@ Feature: admin / AD
     Given I load the application status from "admin-init"
     And emails are sent from "admin" area
     And I reset the email log
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I create a new "NDR-disabled" "AD" user "Assis" "Ter" with email "behat-ad@publicguardian.gsi.gov.uk" and postcode "HA3"
-    Then I should see "behat-ad@publicguardian.gsi.gov.uk" in the "users" region
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "AD" user "Assis" "Ter" with email "behat-ad@publicguardian.gov.uk" and postcode "HA3"
+    Then I should see "behat-ad@publicguardian.gov.uk" in the "users" region
     Then the response status code should be 200
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-ad@publicguardian.gsi.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-ad@publicguardian.gov.uk"
 
   @ad
   Scenario: activate AD user
@@ -24,7 +24,7 @@ Feature: admin / AD
 
   @ad
   Scenario: Add new assisted Lay and login on behalf
-    Given I am logged in to admin as "behat-ad@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "/ad/"
     # add assisted Lay
     When I press "ad_save"
@@ -49,12 +49,12 @@ Feature: admin / AD
 
   @ad
   Scenario: Login on behalf of a newly created (not activated) Lay deputy
-    Given I am logged in to admin as "behat-ad@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    # behat-lay-assisted@publicguardian.gsi.gov.uk
+    Given I am logged in to admin as "behat-ad@publicguardian.gov.uk" with password "Abcd1234"
+    # behat-lay-assisted@publicguardian.gov.uk
     # find user
     And I go to admin page "/admin"
-    And I create a new "NDR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gsi.gov.uk" and postcode "HA4"
-    And I click on "view" in the "user-behat-lay-assistedpublicguardiangsigovuk" region
+    And I create a new "NDR-disabled" "Lay Deputy" user "Assis" "Ted" with email "behat-lay-assisted@publicguardian.gov.uk" and postcode "HA4"
+    And I click on "view" in the "user-behat-lay-assistedpublicguardiangovuk" region
     # login on behalf
     And I click on "login-as"
     Then the response status code should be 200

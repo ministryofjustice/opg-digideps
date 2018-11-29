@@ -3,14 +3,14 @@ Feature: PA report
   Scenario: PA does not see unsubmitted reports in the submitted reports section
     Given I load the application status from "team-users-complete"
     And I change the report of the client with case number "01000014" to "102-6"
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000014" region
     Then I should see "No submitted reports" in the "client-profile-reports" region
 
   # Logic will evolve differently therefore better to have regression test on this
   Scenario: PA edit 102 report dates
     Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000014" region
 
     And I click on "edit-report-period"
@@ -61,7 +61,7 @@ Feature: PA report
 
   Scenario: PA admin has access to edit 102 report dates
     Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-report-period"
     Then the response status code should be 200

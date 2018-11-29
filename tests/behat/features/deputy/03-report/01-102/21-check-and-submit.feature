@@ -3,7 +3,7 @@ Feature: Report submit
     @deputy
     Scenario: report declaration page
         #Given I set the report 1 end date to 3 days ago
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should not see the "report-review" link
         # if not found, it means that the report is not submittable
@@ -16,7 +16,7 @@ Feature: Report submit
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I reset the email log
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
         # assert I cannot access the submitted page directly
@@ -64,7 +64,7 @@ Feature: Report submit
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
         And the last email should contain "next annual deputy report (for 01/01/2017 to 31/12/2017)"
-        #And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        #And the last email should have been sent to "behat-user@publicguardian.gov.uk"
 #        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
 #        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
@@ -74,7 +74,7 @@ Feature: Report submit
         Given emails are sent from "deputy" area
         And I reset the email log
         And I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         And I click on "report-submit"
         And I click on "declaration-page"
@@ -103,7 +103,7 @@ Feature: Report submit
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
-        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "admin-documents-list-new"
@@ -148,7 +148,7 @@ Feature: Report submit
 
     @deputy
     Scenario: assert 2nd year report has been created
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -163,7 +163,7 @@ Feature: Report submit
 
     @deputy
     Scenario: assert report is not editable after submission
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         Then the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/decisions/summary" should not be accessible
         And the URL "/report/1/contacts/summary" should not be accessible
@@ -180,7 +180,7 @@ Feature: Report submit
 
     @deputy
     Scenario: deputy report download
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         When I click on "report-review"
         Then the URL should match "report/\d+/review"
         And the response should contain "behat001"

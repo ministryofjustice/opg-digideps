@@ -104,7 +104,7 @@ Feature: User Self Registration
       #
     Then I am on admin login page
     And I fill in the following:
-      | login_email    | admin@publicguardian.gsi.gov.uk |
+      | login_email    | admin@publicguardian.gov.uk |
       | login_password | Abcd1234                        |
     Then I click on "login"
     Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region

@@ -5,14 +5,14 @@ Feature: admin / admin
     And I reset the email log
     And I am on admin page "/"
     Then I should be on "/login"
-    And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     Given I am on admin page "/"
     Then I should be on "/admin/"
-    And I create a new "NDR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk" and postcode "AB12CD"
-    Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
+    And I create a new "NDR-disabled" "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gov.uk" and postcode "AB12CD"
+    Then I should see "behat-admin-user@publicguardian.gov.uk" in the "users" region
     Then the response status code should be 200
     And I should see "OPG Admin" in the "users" region
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gov.uk"
       #When I go to "/logout"
     Given I am on admin page "/logout"
 
@@ -34,7 +34,7 @@ Feature: admin / admin
     And I should be on "/user/details"
 
   Scenario: check pages
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "csv-upload" in the "navbar" region
     Then the response status code should be 200
     When I go to admin page "/admin/stats"
@@ -44,7 +44,7 @@ Feature: admin / admin
     Then the response status code should be 200
 
   Scenario: Report submissions CSV download No dates
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     When I go to admin page "/admin/stats"
     And I click on "submit-and-download"
     And the response status code should be 200
@@ -53,7 +53,7 @@ Feature: admin / admin
     And the response should contain "id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted"
 
   Scenario: change user password on admin area
-    Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     And I save the application status into "admin-pasword-change-init"
     And I click on "user-account"
     Then the response status code should be 200
@@ -114,7 +114,7 @@ Feature: admin / admin
     And I go to "/login"
     Then I should not see the "service-notification-behat" region
     # go to admin page
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/settings/service-notification"
     Then the following fields should have the corresponding values:
       | setting_content   |  |

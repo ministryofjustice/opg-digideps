@@ -3,7 +3,7 @@ Feature: PA user edits common report sections common to ALL report types
   @102 @103-6 @104
   Scenario: PA 102 user edit decisions section
     Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
@@ -22,7 +22,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 saves a contact
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-contacts, start"
         # chose "no records"
@@ -33,7 +33,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 visits and care steps
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-visits_care, start"
     # step 1 empty
@@ -63,7 +63,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 report actions
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-actions, start"
       # step 1
@@ -79,7 +79,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA 102 any other info
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-other_info, start"
      # step 1
@@ -90,7 +90,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA adds documents to 102
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     # Check report is not submittable until documents section complete
     And the PA report should not be submittable
@@ -124,7 +124,7 @@ Feature: PA user edits common report sections common to ALL report types
 
   @102 @103-6 @104
   Scenario: PA deletes document from 102
-    Given I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-documents"
     # chose "yes documents"

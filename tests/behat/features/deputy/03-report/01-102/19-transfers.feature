@@ -2,7 +2,7 @@ Feature: Report account transfers
 
   @deputy
   Scenario: transfers
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-money_transfers, start"
       # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -68,7 +68,7 @@ Feature: Report account transfers
   @deputy
     Scenario: Remove account with transfers
       # navigate to accounts list (that now have transfers)
-      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
       And I click on "report-start, edit-bank_accounts"
       And I click on "delete" in the "account-11cf" region
       # Account still visible

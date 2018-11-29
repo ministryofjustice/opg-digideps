@@ -4,7 +4,7 @@ Feature: PROF report 102-5
   Scenario: PROF does not see unsubmitted reports in the submitted reports section
     Given I load the application status from "prof-team-users-complete"
     And I change the report of the client with case number "01000010" to "102-5"
-    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
     Then I should see "No submitted reports" in the "client-profile-reports" region
 
@@ -13,7 +13,7 @@ Feature: PROF report 102-5
   @102-5
   Scenario: PROF edit 102-5 report dates
     Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
 
     And I click on "edit-report-period"
@@ -66,7 +66,7 @@ Feature: PROF report 102-5
   @102-5
   Scenario: PROF admin has access to edit 102-5 report dates
     Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-report-period"
     Then the response status code should be 200

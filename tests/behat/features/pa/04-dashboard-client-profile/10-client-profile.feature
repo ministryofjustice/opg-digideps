@@ -2,7 +2,7 @@ Feature: PA client profile
 
   Scenario: PA view client details
     Given I load the application status from "team-users-complete"
-    And I am logged in as "behat-pa1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     Then each text should be present in the corresponding region:
       | Cly1 Hent1    | client-profile-details |

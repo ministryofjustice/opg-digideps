@@ -3,7 +3,7 @@ Feature: deputy / report / edit user
     @deputy
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, profile-show, profile-edit"
         Then I should be on "/deputyship-details/your-details/edit"
         Then the following fields should have the corresponding values:
@@ -52,7 +52,7 @@ Feature: deputy / report / edit user
   
     @deputy
     Scenario: change user password
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, password-edit"
         # wrong old password
         When I fill in "change_password_current_password" with "this.is.the.wrong.password"
