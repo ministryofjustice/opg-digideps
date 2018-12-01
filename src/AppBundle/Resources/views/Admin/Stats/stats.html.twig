@@ -32,9 +32,17 @@
 
         {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
+        <div class="form-group flush--bottom">
+            <h2 class="heading-medium">{{ (page ~ '.form.fromDate.header') | trans }}</h2>
+            {{ form_known_date(form.fromDate, 'statsPage.form.fromDate', {
+                'hintText': 'statsPage.form.fromDate.hint'
+            }) }}
+        </div>
         <div class="form-group form-groups-inline flush--bottom">
-            <p>Capture all report submissions since:</p>
-            {{ form_known_date(form.fromDate, 'statsPage.form.fromDate') }}
+            <h2 class="heading-medium">{{ (page ~ '.form.toDate.header') | trans }}</h2>
+            {{ form_known_date(form.toDate, 'statsPage.form.toDate', {
+                'hintText': 'statsPage.form.toDate.hint'
+            }) }}
         </div>
 
         <div class="form-group">
