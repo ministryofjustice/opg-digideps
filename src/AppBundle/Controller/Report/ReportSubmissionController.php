@@ -149,14 +149,13 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
 
         $ret = $repo->findAllReportSubmissions(
-            $request->get('status'),
-            $request->get('q'),
-            $request->get('created_by_role'),
             $request->get('offset', 0),
             $request->get('limit', 100),
+            $request->get('fromDate', []),
+            $request->get('toDate', []),
             $request->get('orderBy', 'createdOn'),
-            $request->get('order', 'ASC'),
-            $request->get('fromDate')
+            $request->get('order', 'ASC')
+
         );
 
         return $this->get('report_submission_stat_service')->generateReportSubmissionsCsvLines($ret);
