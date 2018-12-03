@@ -47,4 +47,5 @@ prevNextLinks:
     documents: Documents
     balance: Balance
     profCurrentFees: Current fees and expenses
-    paDeputyExpenses: Deputy fees and Expenses
+    profDeputyCosts: Deputy costs estimate
+    profDeputyCostsEstimate: Deputy costs estimate

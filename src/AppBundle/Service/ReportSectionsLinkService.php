@@ -61,6 +61,8 @@ class ReportSectionsLinkService
             'moneyInShort' => ['section' => 'moneyInShort', 'link' => $this->router->generate('money_in_short', $routeParams)],
             'moneyOutShort' => ['section' => 'moneyOutShort', 'link' => $this->router->generate('money_out_short', $routeParams)],
             'otherInfo' => ['section' => 'otherInfo', 'link' => $this->router->generate('other_info', $routeParams)],
+            'profDeputyCosts' => ['section' => 'profDeputyCosts', 'link' => $this->router->generate('prof_deputy_costs', $routeParams)],
+//            'profDeputyCostsEstimate' => ['section' => 'profDeputyCostsEstimate', 'link' => $this->router->generate('prof_deputy_costs_estimate', $routeParams)],
             'paDeputyExpenses' => ['section' => 'paFeeExpense', 'link' => $this->router->generate('pa_fee_expense', $routeParams)],
             'profCurrentFees' => ['section' => 'profCurrentFees', 'link' => $this->router->generate('prof_current_fees', $routeParams)],
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
@@ -69,13 +71,15 @@ class ReportSectionsLinkService
         //TODO ask the business if links can follow a single order
         // eg. PROF and PA reports have assets and debts after actions (opposite of Lay)
        
-        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profCurrentFees')) { // PA and PROF: client profile page
+        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profDeputyCosts')) { // PA and PROF: client profile page
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'paDeputyExpenses', //PA
                 'profCurrentFees', // PROF
                 'gifts',
                 'actions', 'otherInfo',
+                'profDeputyCosts',
+//                'profDeputyCostsEstimate',
                 'bankAccounts',
                 'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
