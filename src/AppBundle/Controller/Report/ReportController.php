@@ -401,6 +401,18 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)) {
+            $report->setProfDeputyCostsHowChargedFixed($data['prof_deputy_costs_how_charged_fixed']);
+        }
+
+        if (array_key_exists('prof_deputy_costs_how_charged_assessed', $data)) {
+            $report->setProfDeputyCostsHowChargedAssessed($data['prof_deputy_costs_how_charged_assessed']);
+        }
+
+        if (array_key_exists('prof_deputy_costs_how_charged_agreed', $data)) {
+            $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
