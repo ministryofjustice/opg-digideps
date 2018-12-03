@@ -18,7 +18,7 @@ class ProfDeputyCostsController extends AbstractController
 {
     private static $jmsGroups = [
         'status',
-        // TODO
+        'deputy-costs-how-charged',
     ];
 
     /**
