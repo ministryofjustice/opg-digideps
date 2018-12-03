@@ -181,19 +181,6 @@
                             } %}
                         {% endif %}
 
-                        {% if report.hasSection('otherInfo') %}
-                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'other_info',
-                                sectionId: 'otherInfo',
-                                linkToSubSection: path('other_info', {reportId: report.id}),
-                                report: report,
-                                info: true,
-                                description: true,
-                                state: reportStatus.otherInfoState,
-                            } %}
-                        {% endif %}
-
                         {% if report.hasSection('profDeputyCosts') %}
                             {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                                 transDomain: translationDomain,
