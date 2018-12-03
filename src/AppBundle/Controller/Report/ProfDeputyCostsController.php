@@ -50,24 +50,17 @@ class ProfDeputyCostsController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $fromSummaryPage = $request->get('from') == 'summary';
 
-        $form = $this->createForm(FormDir\Report\MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesIn']);
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostHowType::class, $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $data = $form->getData();
 
-//            $this->getRestClient()->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
+            $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
-            if ($fromSummaryPage) {
-//                $request->getSession()->getFlashBag()->add(
-//                    'notice',
-//                    'Answer edited'
-//                );
+            $route = $fromSummaryPage ? 'prof_deputy_costs_summary' : 'prof_deputy_costs';
 
-                return $this->redirectToRoute('prof_deputy_costs_summary', ['reportId'=>$reportId]);
-            }
-
-            return $this->redirectToRoute('prof_deputy_costs', ['reportId'=>$reportId]);
+            return $this->redirectToRoute($route, ['reportId'=>$reportId]);
         }
 
 

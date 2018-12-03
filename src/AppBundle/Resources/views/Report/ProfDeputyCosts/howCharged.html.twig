@@ -1,0 +1,45 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'howCharged' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {#<p class="text">#}
+        {#{{ (page ~ '.profDeputyCostsHow.label') | trans(transOptions) }}#}
+    {#</p>#}
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox(form.profDeputyCostsHowChargedFixed, page ~ '.form.profDeputyCostsHowChargedFixed', {
+            'useFormGroup': false,
+            'formGroupClass': 'form-group-compound',
+        }) }}
+
+        {{ form_checkbox(form.profDeputyCostsHowChargedAssessed, page ~ '.form.profDeputyCostsHowChargedAssessed', {
+            'useFormGroup': false,
+            'formGroupClass': 'form-group-compound',
+        }) }}
+
+        {{ form_checkbox(form.profDeputyCostsHowChargedAgreed, page ~ '.form.profDeputyCostsHowChargedAgreed', {
+            'useFormGroup': false,
+            'formGroupClass': 'form-group-compound',
+        }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

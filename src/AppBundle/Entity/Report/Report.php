@@ -31,6 +31,7 @@ class Report implements ReportInterface
     use ReportTraits\ReportMoreInfoTrait;
     use ReportTraits\ReportPaFeeExpensesTrait;
     use ReportTraits\ReportProfServiceFeesTrait;
+    use ReportTraits\ReportProfDeputyCostsTrait;
     use ReportTraits\ReportUnsubmittedSections;
 
     /**
