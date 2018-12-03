@@ -28,6 +28,10 @@ RUN find . -not -user app -exec chown app:app {} \;
 # crontab
 COPY scripts/cron/digideps /etc/cron.d/digideps
 RUN chmod 0744 /etc/cron.d/digideps
+
+# Install version of Gulp CLI thatt works with Gulp 4
+RUN npm i -g gulp-cli@2.0.1
+
 # post-install scripts
 USER app
 ENV  HOME /app
