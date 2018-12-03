@@ -42,10 +42,11 @@ class SubmissionCsvFilterType extends AbstractType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $formData = $event->getData();
+        $entity = $event->getData();
 
-        if ($formData['toDate'] instanceof \DateTime) {
-            $formData['toDate']->setTime(23, 59, 59);
+        if ($entity->getToDate() instanceof \DateTime) {
+            $toDate = $entity->getToDate();
+            $entity->setToDate($toDate->setTime(23, 59, 59));
         }
     }
 
