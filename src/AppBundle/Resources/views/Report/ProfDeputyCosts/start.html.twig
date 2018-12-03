@@ -2,7 +2,7 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "TODO" %}
+{% set translationDomain = "report-prof-deputy-costs" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'startPage' %}
 
@@ -14,6 +14,22 @@
 
 {% block pageContent %}
 
-    COPY FROM OTHER SECTIONS
+    <div class="text behat-region-start-page">
+        <p>{{ (page ~ '.pageSectionDescription1') | trans }}</p>
+        <p>{{ (page ~ '.pageSectionDescription2') | trans }}</p>
+        <ul class="list list-bullet">
+            <li>{{ (page ~ '.listItem01') | trans }}</li>
+            <li>{{ (page ~ '.listItem02') | trans }}</li>
+            <li>{{ (page ~ '.listItem03') | trans }}</li>
+        </ul>
+    </div>
+
+    <a href="{{ path('prof_deputy_costs_how_charged', { 'reportId': report.id}) }}" class="button button-start behat-link-start">{{ (page ~ '.startButton') | trans }}</a>
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'profDeputyCosts',
+    } %}
 
 {% endblock %}
