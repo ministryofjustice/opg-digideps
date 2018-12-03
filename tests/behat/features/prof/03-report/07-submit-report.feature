@@ -1,5 +1,12 @@
 Feature: Report submit (client 01000010)
 
+    Scenario: PROF 102-5 Report should be submittable
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "pa-report-open" in the "client-01000010" region
+        Then the PROF report should be submittable
+        And I save the application status into "prof-report-completed"
+
+
     Scenario: 102-5 report declaration page
         Given I load the application status from "prof-report-completed"
         And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
