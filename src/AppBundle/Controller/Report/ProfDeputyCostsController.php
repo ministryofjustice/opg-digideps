@@ -58,7 +58,7 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
-            $route = $fromSummaryPage ? 'prof_deputy_costs_summary' : 'prof_deputy_costs';
+            $route = $fromSummaryPage ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_previous_received_exists';
 
             return $this->redirectToRoute($route, ['reportId'=>$reportId]);
         }
@@ -67,9 +67,150 @@ class ProfDeputyCostsController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short', ['reportId'=>$reportId])
+            'backLink' => $fromSummaryPage ? $this->generateUrl('prof_deputy_costs_summary') : null
         ];
     }
+
+    /**
+     * @Route("/previous-received-exists", name="prof_deputy_costs_previous_received_exists")
+     * @Template()
+     */
+    public function previousReceivedExists(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $form = $this->createForm(FormDir\YesNoType::class, $report, [
+            'field' => 'profDeputyCostsHasPrevious',
+            'translation_domain' => 'report-prof-deputy-costs'
+            ]
+        );
+        $form->handleRequest($request);
+        $from = $request->get('from');
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            /* @var $data EntityDir\Report\Report */
+            switch ($data->getProfDeputyCostsHasPrevious()) {
+                case 'yes':
+                    // no need to save. "Yes" will be set when one entry is added to keep db data consistent
+                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>'exist']);
+                case 'no':
+                    // store and go to next route
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
+
+                    //TODO check with Rob
+                    if ($from =='summary') {
+                        $nextRoute = 'prof_deputy_costs_summary';
+                    } else if ($report->profDeputyCostsHowChargedFixed()) {
+                        $nextRoute = 'prof_deputy_costs_fixed';
+                    } else {
+                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                    }
+
+                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+            }
+        }
+
+        return [
+            'backLink' => null,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * @Route("/previous-received", name="prof_deputy_costs_previous_received")
+     * @Template()
+     */
+    public function previousReceived(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostPreviousType::class, $report, [
+            ]
+        );
+
+        return [
+            'backLink' => null,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+
+
+    /**
+     * @Route("/inline-interim-19b-exists", name="prof_deputy_costs_inline_interim_19b_exists")
+     * @Template()
+     */
+    public function inlineInterim19bExists(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        \Doctrine\Common\Util\Debug::dump($report); die;
+
+        return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId'=>$reportId]);
+        return $this->redirectToRoute('prof_deputy_costs_breakdown', ['reportId'=>$reportId]);
+
+
+        // not for fixed
+        //yes / no
+    }
+
+    /**
+     * @Route("/inline-interim-19b", name="prof_deputy_costs_inline_interim_19b")
+     * @Template()
+     */
+    public function inlineInterim19b(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        \Doctrine\Common\Util\Debug::dump($report); die;
+
+        // 3 x
+        // value, date
+    }
+
+    /**
+     * @Route("/fixed-cost", name="prof_deputy_costs_fixed")
+     * @Template()
+     */
+    public function fixedCost(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        \Doctrine\Common\Util\Debug::dump($report); die;
+
+        // value
+    }
+
+    /**
+     * @Route("/amount-scco", name="prof_deputy_costs_amount_scco")
+     * @Template()
+     */
+    public function amountToSCCO(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        \Doctrine\Common\Util\Debug::dump($report); die;
+
+        // value
+        // textarea
+    }
+
+    /**
+     * @Route("/breakdown", name="prof_deputy_costs_breakdown")
+     * @Template()
+     */
+    public function breakdown(Request $request, $reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        \Doctrine\Common\Util\Debug::dump($report); die;
+
+        // 7 values + one textarea
+        // similar to debts
+    }
+
 
     /**
      * @Route("/summary", name="prof_deputy_costs_summary")

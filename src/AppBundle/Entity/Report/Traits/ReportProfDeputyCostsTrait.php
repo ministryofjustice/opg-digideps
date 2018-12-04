@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ReportProfDeputyCostsTrait
 {
     /**
-     * @var string yes/no
+     * @var boolean
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"deputyCostsHowCharged"})
@@ -18,7 +18,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHowChargedFixed;
 
     /**
-     * @var string yes/no
+     * @var boolean
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"deputyCostsHowCharged"})
@@ -26,12 +26,21 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHowChargedAssessed;
 
     /**
-     * @var string yes/no
+     * @var boolean
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"deputyCostsHowCharged"})
      */
     private $profDeputyCostsHowChargedAgreed;
+
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"profDeputyCostsHasPrevious"})
+     */
+    private $profDeputyCostsHasPrevious;
 
     /**
      * @return boolean
@@ -86,6 +95,26 @@ trait ReportProfDeputyCostsTrait
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsHasPrevious()
+    {
+        return $this->profDeputyCostsHasPrevious;
+    }
+
+    /**
+     * @param string $profDeputyCostsHasPrevious
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    {
+        $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+        return $this;
+    }
+
+
 
 
 

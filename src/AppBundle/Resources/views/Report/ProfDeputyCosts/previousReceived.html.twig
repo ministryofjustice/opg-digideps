@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'previousReceived' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
+
+
+    <div class="text">
+        <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
+    </div>
+
+    <div class="text">
+        <p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        .form
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
