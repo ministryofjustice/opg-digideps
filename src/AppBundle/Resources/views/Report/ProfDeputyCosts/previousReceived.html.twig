@@ -11,12 +11,17 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
-
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
 {% endblock %}
 
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
 {% block pageContent %}
 
     <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
@@ -49,9 +54,11 @@
 
     </div>
 
-    {# TODO must be grey #}
-    {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
-    {{ macros.saveAndContinueButton(form.save) }}
+    {% if form.saveAndAddAnother is defined %}
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
 
     {{ form_end(form) }}
 

@@ -9,6 +9,13 @@ use DateTime;
 class ProfDeputyPreviousCost
 {
     /**
+     * @JMS\Type("integer")
+     *
+     * @var int
+     */
+    private $id;
+
+    /**
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -42,6 +49,22 @@ class ProfDeputyPreviousCost
      * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyPreviousCost.amount.minMessage", maxMessage = "profDeputyPreviousCost.amount.maxMessage", groups={"prof-deputy-prev-costs"})
      */
     private $amount;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return DateTime

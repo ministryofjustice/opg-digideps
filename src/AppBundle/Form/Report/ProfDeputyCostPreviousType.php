@@ -27,11 +27,16 @@ class ProfDeputyCostPreviousType extends AbstractType
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
-//                'invalid_message' => 'TODO.amount.notNumeric',
-            ])
+            ]);
 
-            ->add('saveAndAddAnother', FormTypes\SubmitType::class, ['label' => 'save.label'])
-            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label'])
+        if(!$options['editMode']) {
+            $builder
+                ->add('saveAndAddAnother', FormTypes\SubmitType::class, ['label' => 'save.label'])
+            ;
+        }
+
+        $builder
+            ->add('saveAndContinue', FormTypes\SubmitType::class, ['label' => 'save.label'])
         ;
     }
 
@@ -40,7 +45,8 @@ class ProfDeputyCostPreviousType extends AbstractType
         $resolver->setDefaults([
              'translation_domain' => 'report-prof-deputy-costs',
              'validation_groups' => ['prof-deputy-prev-costs'],
-        ]);
+        ])
+        ->setRequired(['editMode']);
     }
 
     public function getBlockPrefix()

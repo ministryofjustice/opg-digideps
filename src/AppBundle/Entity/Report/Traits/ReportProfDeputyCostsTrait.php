@@ -33,7 +33,6 @@ trait ReportProfDeputyCostsTrait
      */
     private $profDeputyCostsHowChargedAgreed;
 
-
     /**
      * @var string yes/no
      *
@@ -41,6 +40,14 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Groups({"profDeputyCostsHasPrevious"})
      */
     private $profDeputyCostsHasPrevious;
+
+    /**
+     * @var AppBundle\Entity\Report\ProfDeputyPreviousCost[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
+     */
+    private $profDeputyPreviousCosts;
+
 
     /**
      * @return boolean
@@ -114,7 +121,21 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    /**
+     * @return AppBundle\Entity\Report\ProfDeputyPreviousCost[]
+     */
+    public function getProfDeputyPreviousCosts()
+    {
+        return $this->profDeputyPreviousCosts;
+    }
 
+    /**
+     * @param AppBundle\Entity\Report\ProfDeputyPreviousCost[] $profDeputyPreviousCosts
+     */
+    public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
+    {
+        $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
+    }
 
 
 

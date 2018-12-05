@@ -30,7 +30,7 @@
                 {{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}
             </td>
             <td>
-                {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
+                {{ report.profDeputyCostsHasPrevious == 'yes' ? 'Yes': 'No' }}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
@@ -38,6 +38,23 @@
                 </td>
             {% endif %}
         </tr>
+
+        {% for pc in report.profDeputyPreviousCosts %}
+            <tr class="behat-region-has-debts">
+                <td>
+                    Received for {{ pc.startDate | date('d/m/Y') }} - {{ pc.endDate | date('d/m/Y') }}
+                    {#{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}#}
+                </td>
+                <td>
+                    £{{ pc.amount | money_format }}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'previousReceivedId': pc.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
 
 
         {#{% if report.action.doYouExpectFinancialDecisions == 'yes' %}#}
