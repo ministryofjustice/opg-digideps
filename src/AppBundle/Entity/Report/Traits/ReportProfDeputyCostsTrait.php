@@ -32,6 +32,17 @@ trait ReportProfDeputyCostsTrait
      */
     private $profDeputyCostsHowChargedAgreed;
 
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"profDeputyCostsHasPrevious"})
+     * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
+     */
+    private $profDeputyCostsHasPrevious;
+
+
     /**
      * @return boolean
      */
@@ -85,6 +96,26 @@ trait ReportProfDeputyCostsTrait
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsHasPrevious()
+    {
+        return $this->profDeputyCostsHasPrevious;
+    }
+
+    /**
+     * @param string $profDeputyCostsHasPrevious
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    {
+        $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+        return $this;
+    }
+
+
 
 
 
