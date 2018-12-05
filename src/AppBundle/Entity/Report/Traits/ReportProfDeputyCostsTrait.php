@@ -13,21 +13,21 @@ trait ReportProfDeputyCostsTrait
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_fixed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedFixed;
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_assessed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedAssessed;
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_agreed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedAgreed;
@@ -41,6 +41,15 @@ trait ReportProfDeputyCostsTrait
      * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
      */
     private $profDeputyCostsHasPrevious;
+
+
+    /**
+     * @JMS\Groups({"report-prof-deputy-costs-prev"})
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
+     */
+    private $profDeputyPreviousCosts;
 
 
     /**
@@ -115,7 +124,21 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getProfDeputyPreviousCosts()
+    {
+        return $this->profDeputyPreviousCosts;
+    }
 
+    /**
+     * @param mixed $profDeputyPreviousCosts
+     */
+    public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
+    {
+        $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
+    }
 
 
 
