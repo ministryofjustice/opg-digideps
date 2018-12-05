@@ -101,10 +101,11 @@ class ProfDeputyCostsController extends AbstractController
                     //TODO check with Rob
                     if ($from =='summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
-                    } else if ($report->profDeputyCostsHowChargedFixed()) {
+                    } /*else if ($report->profDeputyCostsHowChargedFixed()) {
                         $nextRoute = 'prof_deputy_costs_fixed';
-                    } else {
-                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                    } */else {
+//                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                        $nextRoute = 'prof_deputy_costs_summary';
                     }
 
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
@@ -119,16 +120,40 @@ class ProfDeputyCostsController extends AbstractController
     }
 
     /**
-     * @Route("/previous-received", name="prof_deputy_costs_previous_received")
+     * @Route("/previous-received/{previousReceivedId}", name="prof_deputy_costs_previous_received")
      * @Template()
      */
-    public function previousReceived(Request $request, $reportId)
+    public function previousReceived(Request $request, $reportId, $previousReceivedId = null)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostPreviousType::class, $report, [
-            ]
-        );
+        // create (add mode) or load transaction (edit mode)
+        if ($previousReceivedId) {
+            $pr = $this->getRestClient()->get('/report/' . $reportId . '/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\\ProfDeputyPreviousCost');
+        } else {
+            $pr = new EntityDir\Report\ProfDeputyPreviousCost();
+        }
+
+        //TODO in edit mode, only show save and continue to go back to summary
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostPreviousType::class, $pr);
+        $form->handleRequest($request);
+
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+
+            if ($previousReceivedId) { // edit
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Entry edited'
+                );
+                $this->getRestClient()->put('/report/' . $reportId . '/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
+            } else { // add
+                $this->getRestClient()->post('/report/' . $reportId . '/prof-deputy-previous-cost', $previousReceivedId, ['profDeputyPrevCosts']);
+            }
+
+            //TODO buttons goes on different pages
+            return $this->redirectToRoute('prof_deputy_costs_summary', ['reportId' => $reportId]);
+        }
+
 
         return [
             'backLink' => null,
@@ -224,7 +249,7 @@ class ProfDeputyCostsController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ($report->getStatus()->getProfDeputyCostsState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
-            return $this->redirect($this->generateUrl('prof_deputy_costs', ['reportId' => $reportId]));
+//            return $this->redirect($this->generateUrl('prof_deputy_costs', ['reportId' => $reportId]));
         }
 
         return [

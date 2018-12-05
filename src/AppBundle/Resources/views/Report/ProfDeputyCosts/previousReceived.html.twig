@@ -26,16 +26,31 @@
         <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
     </div>
 
-    <div class="text">
-        <p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p>
+    <div class="push--top">
+        <div class="alert-info panel panel-border-narrow">
+            <span class="icon icon-information"></span>
+            <div class="alert-message"><p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p></div>
+        </div>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        .form
+        {{ form_known_date(form.startDate, page ~ '.form.startDate') }}
+
+        {{ form_known_date(form.endDate, page ~ '.form.endDate') }}
+
+        {{ form_input(form.amount, page ~ '.form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
     </div>
 
+    {# TODO must be grey #}
+    {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
     {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
