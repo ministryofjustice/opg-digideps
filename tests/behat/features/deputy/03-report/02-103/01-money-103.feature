@@ -2,7 +2,7 @@ Feature: Report money 103
 
   @deputy
   Scenario: money in 103
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-money_in_short, start"
     # categories
     And the step with the following values CAN be submitted:
@@ -69,7 +69,7 @@ Feature: Report money 103
 
   @deputy
   Scenario: money out 103
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-money_out_short, start"
     # categories
     And the step with the following values CAN be submitted:

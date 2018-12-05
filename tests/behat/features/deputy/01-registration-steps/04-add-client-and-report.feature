@@ -2,7 +2,7 @@ Feature: deputy / user / add client and report
 
   @deputy
   Scenario: update client (client name/case number/postcode already set)
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
     # submit empty form and check errors
     Then the following hidden fields should have the corresponding values:
@@ -62,7 +62,7 @@ Feature: deputy / user / add client and report
 
   @ndr
   Scenario: add client (ndr) with no casrec record
-    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:
@@ -80,7 +80,7 @@ Feature: deputy / user / add client and report
     Given I add the following users to CASREC:
       | Case     | Surname       | Deputy No | Dep Surname  | Dep Postcode | Typeofrep |
       | behat001 | Hent          | D001      | Doe NDR      | p0stc0d3      | OPG102    |
-    And I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:
@@ -94,7 +94,7 @@ Feature: deputy / user / add client and report
 
   @deputy
   Scenario: create report
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     Then the URL should match "report/create/\d+"
       # missing D,M,Y
     When I fill in the following:
@@ -154,13 +154,13 @@ Feature: deputy / user / add client and report
 
   @deputy
   Scenario: report-overview
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     Given I click on "report-start"
     Then the URL should match "report/\d+/overview"
 
   @deputy
   Scenario: report-overview links
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     #Lay deputy links
     Then I should see the "user-account" link
     And I should see the "reports" link

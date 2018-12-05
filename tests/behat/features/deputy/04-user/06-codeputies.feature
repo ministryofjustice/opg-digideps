@@ -156,5 +156,5 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy
-    Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     Then I should see "Invited co-deputy" in the "users" region

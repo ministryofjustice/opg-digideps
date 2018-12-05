@@ -2,7 +2,7 @@ Feature: NDR expenses
 
   @ndr
   Scenario: NDR expenses
-    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-deputy_expenses, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection

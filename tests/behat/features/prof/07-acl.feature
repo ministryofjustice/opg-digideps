@@ -7,20 +7,20 @@ Feature: PROF cannot access other's PROF's reports and clients
 
   Scenario: Assert team1 can only access its reports
     # Named PROF
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
     And I save the current URL as "report-for-client-01000010.url"
     But I should not see the "client-02000003" region
     # Admin
-    Given I am logged in as "behat-prof1-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
     Then the response status code should be 200
     And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
     But I should not see the "client-02000003" region
     # team member
-    Given I am logged in as "behat-prof1-team-member@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1-team-member@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-01000010" region
     Then the response status code should be 200
     And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
@@ -28,7 +28,7 @@ Feature: PROF cannot access other's PROF's reports and clients
 
   Scenario: team2 can access its client but not team1's data
     # can access team2 reports
-    Given I am logged in as "behat-prof2@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof2@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "pa-report-open" in the "client-02000001" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
@@ -38,7 +38,7 @@ Feature: PROF cannot access other's PROF's reports and clients
     Then the response status code should be 500
 
   Scenario: PROF user cannot edit client
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     Then the URL "/deputyship-details" should be forbidden
     And the URL "/deputyship-details/your-client" should be forbidden
     And the URL "/deputyship-details/your-client/edit" should be forbidden
@@ -49,7 +49,7 @@ Feature: PROF cannot access other's PROF's reports and clients
 #  Scenario: Submitted reports cannot be viewed (overview page) or edited
 #    # load "pre-submission" status and save links
 #    Given I load the application status from "prof-report-completed"
-#    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
 #    When I click on "pa-report-open" in the "client-01000014" region
 #    And I save the current URL as "client-01000014-report-overview"
 #    And I click on "edit-report-period"
@@ -64,9 +64,9 @@ Feature: PROF cannot access other's PROF's reports and clients
 
   Scenario: PROF_ADMIN logs in, edits own account and removes admin privilege should be logged out
     Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_roleName_1 | ROLE_PROF_TEAM_MEMBER                             |
     And I press "team_member_account_save"
@@ -76,9 +76,9 @@ Feature: PROF cannot access other's PROF's reports and clients
 
   Scenario: PROF_ADMIN logs in, edits own account keeps admin privilege should remain logged in
     Given I load the application status from "prof-team-users-complete"
-    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, user-accounts"
-    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangsigovuk" region
+    When I click on "edit" in the "team-user-behat-prof1-adminpublicguardiangovuk" region
     And I fill in the following:
       | team_member_account_firstname  | edit                                             |
     And I press "team_member_account_save"

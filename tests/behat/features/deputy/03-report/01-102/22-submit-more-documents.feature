@@ -3,7 +3,7 @@ Feature: Add more documents after report has been submitted
   @deputy
   Scenario: Deputy adds documents after submission
     Given I load the application status from "report-submit-reports"
-    And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I save the current URL as "your-reports"
     And I click on "add-more-documents" in the "submitted-reports" region
     Then the URL should match "report/\d+/documents/step/2"

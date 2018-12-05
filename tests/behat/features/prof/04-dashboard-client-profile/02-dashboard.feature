@@ -2,7 +2,7 @@ Feature: PROF dashboard
 
   Scenario: PROF dashboard check visibility, pagination and search
     Given I load the application status from "prof-users-uploaded"
-    And I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     # check pagination
     And I should see the "client" region exactly 15 times
     When I click on "paginator-page-2"
@@ -20,7 +20,7 @@ Feature: PROF dashboard
     Then the URL should match "/org"
 
   Scenario: PROF links in header
-    Given I am logged in as "behat-prof1@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     #PROF links
     Then I should see the "org-dashboard" link
     And I should see the "org-settings" link

@@ -12,7 +12,7 @@ Feature: Terms of use
 
     @deputy
     Scenario: The footer provides a link to the terms of use when logged in
-        Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in as "admin@publicguardian.gov.uk" with password "Abcd1234"
         Then the "Terms of use" link, in the footer, url should contain "/terms"
 
     @deputy

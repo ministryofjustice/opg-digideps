@@ -2,7 +2,7 @@ Feature: NDR actions
 
   @ndr
   Scenario: NDR actions gifts
-    Given I am logged in as "behat-user-ndr@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-actions, start"
        # gifts
     And the step cannot be submitted without making a selection
