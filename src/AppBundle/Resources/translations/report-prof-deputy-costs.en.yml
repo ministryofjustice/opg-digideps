@@ -49,7 +49,21 @@ previousReceived:
     saveAndContinue:
       label: Save and continue
 
+inlineInterim19bExists:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
 
+inlineInterim19b:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+
+fixedCosts:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+
+amountToSCCO:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
