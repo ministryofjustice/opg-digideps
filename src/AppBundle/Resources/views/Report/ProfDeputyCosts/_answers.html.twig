@@ -1,4 +1,4 @@
-{% set translationDomain = "report-actions" %}
+{% set translationDomain = "report-prof-deputy-costs" %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
@@ -11,7 +11,7 @@
         {# step 1 #}
         <tr class="behat-region">
                 <td>
-                    {{ ('form.howcharged.label') | trans(transOptions) }}
+                    {{ 'howCharged.form.profDeputyCostsHow.label' | trans }}
                 </td>
                 <td>
                     {{ report.profDeputyCostsHowChargedFixed ? 'Fixed<br>' : '' | raw }}
@@ -21,6 +21,20 @@
             {% if not hideEditLink  %}
                 <td class="change-answer">
                     <a href="{{ path('prof_deputy_costs_how_charged', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+
+        <tr class="behat-region-has-debts">
+            <td>
+                {{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_previous_received_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             {% endif %}
         </tr>

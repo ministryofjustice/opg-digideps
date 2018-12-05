@@ -12,7 +12,7 @@ howCharged:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: How did you charge for your services
   form:
-    profDeputyCostsHow.label: ""
+    profDeputyCostsHow.label: "How did you charge for your costs?"
     profDeputyCostsHowChargedFixed.label: "Fixed costs"
     profDeputyCostsHowChargedAssessed.label: "Assessed costs"
     profDeputyCostsHowChargedAgreed.label: "Agreed"
