@@ -30,7 +30,7 @@ class ProfDeputyPreviousCost
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="profDeputyPrevCosts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="profDeputyPreviousCosts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -74,6 +74,22 @@ class ProfDeputyPreviousCost
     public function __construct(Report $report)
     {
         $this->report = $report;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport()
+    {
+        return $this->report;
     }
 
     /**

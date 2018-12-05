@@ -37,20 +37,19 @@ trait ReportProfDeputyCostsTrait
      * @var string yes/no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyCostsHasPrevious"})
+     * @JMS\Groups({"report-prof-deputy-costs-prev"})
      * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
      */
     private $profDeputyCostsHasPrevious;
 
-
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
      *
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyPreviousCosts;
-
 
     /**
      * @return boolean
@@ -139,7 +138,5 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
     }
-
-
 
 }

@@ -39,7 +39,7 @@ abstract class ProfServiceFee
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof-service-fees")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="profServiceFees")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
     private $report;
