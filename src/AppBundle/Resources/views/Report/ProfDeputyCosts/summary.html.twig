@@ -20,6 +20,15 @@
 
     COPY FROM OTHER SECTIONS
 
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'profDeputyCosts',
+    } %}
+
 {% endblock %}
 
 

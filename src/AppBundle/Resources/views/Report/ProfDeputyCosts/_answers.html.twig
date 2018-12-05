@@ -1,0 +1,79 @@
+{% set translationDomain = "report-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region">
+                <td>
+                    {{ ('form.howcharged.label') | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.profDeputyCostsHowChargedFixed ? 'Fixed<br>' : '' | raw }}
+                    {{ report.profDeputyCostsHowChargedAssessed ? 'Assessed<br>' : '' | raw }}
+                    {{ report.profDeputyCostsHowChargedAgreed  ? 'Agreed<br>' : '' | raw}}
+                </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_how_charged', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+
+
+        {#{% if report.action.doYouExpectFinancialDecisions == 'yes' %}#}
+            {#<tr class="behat-region-expect-financial-decision-details">#}
+                {#<td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}</td>#}
+                {#<td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>#}
+                {#{% if not hideEditLink  %}#}
+                    {#<td class="change-answer">#}
+                        {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
+                    {#</td>#}
+                {#{% endif %}#}
+            {#</tr>#}
+        {#{% endif %}#}
+
+        {# step 2 #}
+        {#<tr class="behat-region-have-concerns">#}
+            {#{% if report.action.doYouHaveConcerns is null %}#}
+                {#<td>#}
+                    {#<span class="error">#}
+                        {#{{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}#}
+                    {#</span>#}
+                {#</td>#}
+                {#<td>#}
+                    {#<span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>#}
+                {#</td>#}
+            {#{% else %}#}
+                {#<td>#}
+                    {#{{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}#}
+                {#</td>#}
+                {#<td>#}
+                    {#{{ report.action.doYouHaveConcerns | capitalize }}#}
+                {#</td>#}
+            {#{% endif %}#}
+            {#{% if not hideEditLink  %}#}
+                {#<td class="change-answer">#}
+                    {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
+                {#</td>#}
+            {#{% endif %}#}
+        {#</tr>#}
+        {#{% if report.action.doYouHaveConcerns == 'yes' %}#}
+            {#<tr class="behat-region-have-concerns-details">#}
+                {#<td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>#}
+                {#<td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>#}
+                {#{% if not hideEditLink  %}#}
+                    {#<td class="change-answer">#}
+                        {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
+                    {#</td>#}
+                {#{% endif %}#}
+            {#</tr>#}
+        {#{% endif %}#}
+    </tbody>
+
+</table>
