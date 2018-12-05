@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Fee;
+use AppBundle\Entity\Report\ProfOtherCost;
 use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -41,6 +42,11 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Groups({"profDeputyCostsHasPrevious"})
      */
     private $profDeputyCostsHasPrevious;
+
+    /**
+     * @var ProfOtherCost[]
+     */
+    private $profOtherCosts;
 
     /**
      * @return boolean
@@ -114,6 +120,23 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    /**
+     * @return ProfOtherCost[]
+     */
+    public function getProfOtherCosts()
+    {
+        return $this->profOtherCosts;
+    }
+
+    /**
+     * @param $profOtherCosts
+     * @return $this
+     */
+    public function setProfOtherCosts($profOtherCosts)
+    {
+        $this->profOtherCosts = $profOtherCosts;
+        return $this;
+    }
 
 
 

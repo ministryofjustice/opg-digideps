@@ -205,10 +205,20 @@ class ProfDeputyCostsController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        //\Doctrine\Common\Util\Debug::dump($report); die;
 
         // 7 values + one textarea
         // similar to debts
+
+        $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, [
+            ]
+        );
+
+        return [
+            'backLink' => null,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
     }
 
 
