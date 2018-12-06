@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Fee;
+use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,6 +32,15 @@ trait ReportProfDeputyCostsTrait
      * @ORM\Column(name="prof_dc_hc_agreed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedAgreed;
+
+    /**
+     * @var ProfDeputyOtherCost[]
+     *
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $profDeputyOtherCosts;
 
     /**
      * @return boolean
@@ -87,5 +97,22 @@ trait ReportProfDeputyCostsTrait
     }
 
 
+    /**
+     * @return ProfDeputyOtherCost[]
+     */
+    public function getProfDeputyOtherCosts()
+    {
+        return $this->profDeputyOtherCosts;
+    }
+
+    /**
+     * @param $profDeputyOtherCosts
+     * @return $this
+     */
+    public function setProfDeputyOtherCosts($profDeputyOtherCosts)
+    {
+        $this->profDeputyOtherCosts = $profDeputyOtherCosts;
+        return $this;
+    }
 
 }

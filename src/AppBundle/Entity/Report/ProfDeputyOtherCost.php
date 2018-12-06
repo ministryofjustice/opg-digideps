@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +17,7 @@ class ProfDeputyOtherCost
      *
      * @var array
      */
-        public static $profDeputyOtherCostTypeIds = [
+    public static $profDeputyOtherCostTypeIds = [
         ['appointments', false],
         ['annual-reporting', false],
         ['conveyancing', false],
@@ -31,7 +30,7 @@ class ProfDeputyOtherCost
     /**
      * @var int
      *
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -43,25 +42,25 @@ class ProfDeputyOtherCost
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof_other_costs")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof_deputy_other_costs")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 
     /**
-     * @var string a value in self:$profOtherCostTypeIds
+     * @var string a value in self:$profDeputyOtherCostTypeIds
      *
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      *
-     * @ORM\Column(name="prof_other_cost_type_id", type="string", nullable=false)
+     * @ORM\Column(name="prof_deputy_other_cost_type_id", type="string", nullable=false)
      */
-    private $profOtherCostTypeId;
+    private $profDeputyOtherCostTypeId;
 
     /**
      * @var float
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -70,7 +69,7 @@ class ProfDeputyOtherCost
     /**
      * @var bool
      *
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      * @JMS\Type("boolean")
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
@@ -80,7 +79,7 @@ class ProfDeputyOtherCost
     /**
      * @var string
      *
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
@@ -88,16 +87,16 @@ class ProfDeputyOtherCost
 
     /**
      * @param Report $report
-     * @param string $profOtherCostTypeId
+     * @param string $profDeputyOtherCostTypeId
      * @param bool   $hasMoreDetails
      * @param float  $amount
      */
-    public function __construct(Report $report, $profOtherCostTypeId, $hasMoreDetails, $amount)
+    public function __construct(Report $report, $profDeputyOtherCostTypeId, $hasMoreDetails, $amount)
     {
         $this->report = $report;
-        $report->addProfOtherCost($this);
+        $report->addProfDeputyOtherCost($this);
 
-        $this->profOtherCostTypeId = $profOtherCostTypeId;
+        $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         $this->hasMoreDetails = $hasMoreDetails;
         $this->amount = $amount;
     }
@@ -137,18 +136,18 @@ class ProfDeputyOtherCost
     /**
      * @return string
      */
-    public function getProfOtherCostTypeId()
+    public function getProfDeputyOtherCostTypeId()
     {
-        return $this->profOtherCostTypeId;
+        return $this->profDeputyOtherCostTypeId;
     }
 
     /**
      * @param $otherCostTypeId
      * @return $this
      */
-    public function setProfOtherCostTypeId($profOtherCostTypeId)
+    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId)
     {
-        $this->profOtherCostTypeId = $profOtherCostTypeId;
+        $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         return $this;
     }
 
