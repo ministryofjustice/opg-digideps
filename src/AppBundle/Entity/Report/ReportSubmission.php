@@ -69,7 +69,7 @@ class ReportSubmission
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\Document", mappedBy="reportSubmission")
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @ORM\OrderBy({"createdBy"="ASC"})
+     * @ORM\OrderBy({"createdOn"="ASC"})
      */
     private $documents;
 

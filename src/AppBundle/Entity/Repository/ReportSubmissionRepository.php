@@ -136,11 +136,12 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('ndr.client', 'ndrClient')
+            ->leftJoin('rs.documents', 'documents')
         ;
 
         $qbSelect = clone $qb;
         $qbSelect
-            ->select('rs,r,ndr,cb,c,ndrClient')
+            ->select('rs,r,ndr,cb,c,ndrClient,documents')
             ->andWhere('rs.createdOn >= :fromDate')
             ->andWhere('rs.createdOn <= :toDate')
             ->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate')
@@ -152,7 +153,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $qbSelect->getQuery()->getArrayResult();
+        return $qbSelect->getQuery()->getResult();
     }
 
     /**
