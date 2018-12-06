@@ -413,6 +413,13 @@ class ReportController extends RestController
             $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
         }
 
+        if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
+            $report->setProfDeputyCostsHasPrevious($data['prof_deputy_costs_has_previous']);
+            foreach ($report->getProfDeputyPreviousCosts() as $pc) {
+                $this->getEntityManager()->remove($pc);
+            }
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
