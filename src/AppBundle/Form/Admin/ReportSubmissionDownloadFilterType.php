@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,7 +9,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SubmissionCsvFilterType extends AbstractType
+class ReportSubmissionDownloadFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

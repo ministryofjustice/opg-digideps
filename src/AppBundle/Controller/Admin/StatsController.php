@@ -3,10 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Entity\Report\SubmissionCsvFilter;
+use AppBundle\Dto\ReportSubmissionDownloadFilterDto;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Form\Admin\SubmissionCsvFilterType;
+use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,7 +29,7 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request)
     {
-        $form = $this->createForm(SubmissionCsvFilterType::class , new SubmissionCsvFilter());
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionDownloadFilterDto());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -49,39 +48,39 @@ class StatsController extends AbstractController
     }
 
     /**
-     * @param SubmissionCsvFilter $submissionCsvFilter
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
      * @return mixed
      */
-    private function generateCsv(SubmissionCsvFilter $submissionCsvFilter)
+    private function generateCsv(ReportSubmissionDownloadFilterDto $downloadFilterDto)
     {
-        $csvData = $this->getCsvData($submissionCsvFilter);
+        $csvData = $this->getCsvData($downloadFilterDto);
 
         return $this->get('csv_generator_service')->generateReportSubmissionsCsv($csvData);
     }
 
     /**
-     * @param SubmissionCsvFilter $submissionCsvFilter
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
      * @return mixed
      */
-    private function getCsvData(SubmissionCsvFilter $submissionCsvFilter)
+    private function getCsvData(ReportSubmissionDownloadFilterDto $downloadFilterDto)
     {
-        return $this->getRestClient()->get($this->generateApiUrl($submissionCsvFilter), 'array');
+        return $this->getRestClient()->get($this->generateApiUrl($downloadFilterDto), 'array');
     }
 
     /**
-     * @param SubmissionCsvFilter $submissionCsvFilter
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
      * @return string
      */
-    private function generateApiUrl(SubmissionCsvFilter $submissionCsvFilter)
+    private function generateApiUrl(ReportSubmissionDownloadFilterDto $downloadFilterDto)
     {
         return sprintf (
             '%s?%s',
             self::API_ENDPOINT,
             http_build_query([
-                'fromDate' => $submissionCsvFilter->getFromDate(),
-                'toDate' => $submissionCsvFilter->getToDate(),
-                'orderBy' => $submissionCsvFilter->getOrderBy(),
-                'order' => $submissionCsvFilter->getSortOrder()
+                'fromDate' => $downloadFilterDto->getFromDate(),
+                'toDate' => $downloadFilterDto->getToDate(),
+                'orderBy' => $downloadFilterDto->getOrderBy(),
+                'order' => $downloadFilterDto->getSortOrder()
             ])
         );
     }

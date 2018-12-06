@@ -1,13 +1,13 @@
 <?php
 
-namespace AppBundle\Entity\Report;
+namespace AppBundle\Dto;
 
 use AppBundle\Validator\Constraints as AppAssert;
 
 /**
  * @AppAssert\StartAndEndDateComparison
  */
-class SubmissionCsvFilter
+class ReportSubmissionDownloadFilterDto
 {
     /** @var \DateTime */
     private $fromDate;
@@ -39,7 +39,7 @@ class SubmissionCsvFilter
 
     /**
      * @param \DateTime $fromDate
-     * @return SubmissionCsvFilter
+     * @return ReportSubmissionDownloadFilterDto
      */
     public function setFromDate($fromDate)
     {
@@ -50,7 +50,7 @@ class SubmissionCsvFilter
 
     /**
      * @param \DateTime $toDate
-     * @return SubmissionCsvFilter
+     * @return ReportSubmissionDownloadFilterDto
      */
     public function setToDate($toDate)
     {
@@ -69,7 +69,7 @@ class SubmissionCsvFilter
 
     /**
      * @param mixed $orderBy
-     * @return SubmissionCsvFilter
+     * @return ReportSubmissionDownloadFilterDto
      */
     public function setOrderBy($orderBy)
     {
@@ -88,7 +88,7 @@ class SubmissionCsvFilter
 
     /**
      * @param mixed $sortOrder
-     * @return SubmissionCsvFilter
+     * @return ReportSubmissionDownloadFilterDto
      */
     public function setSortOrder($sortOrder)
     {
