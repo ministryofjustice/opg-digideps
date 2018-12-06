@@ -49,11 +49,14 @@ previousReceived:
     saveAndContinue:
       label: Save and continue
 
-inlineInterim19bExists:
+interimExists:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  form:
+    profDeputyCostsHasInterim:
+      label: Have you charged in line with interim billing under Practice Direction 19B for the work you carried out in this reporting period?
 
-inlineInterim19b:
+interim:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
 
