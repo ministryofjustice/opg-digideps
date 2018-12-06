@@ -74,3 +74,6 @@ summaryPage:
   pageTitle:  Deputy costs
   pageSectionDescription: ...
 
+otherCostsPage:
+  pageSectionDescription: Breakdown of other professional deputy costs (including VAT) received in this reporting period.
+  pageHint: ""

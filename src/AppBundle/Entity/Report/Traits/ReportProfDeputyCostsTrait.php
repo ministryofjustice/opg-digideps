@@ -3,7 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\ProfOtherCost;
+use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -44,9 +44,11 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @var ProfOtherCost[]
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
+     * @var ProfDeputyOtherCost[]
+     * @JMS\Groups({"prof-deputy-other-costs"})
      */
-    private $profOtherCosts;
+    private $profDeputyOtherCosts;
 
     /**
      * @return boolean
@@ -121,20 +123,20 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return ProfOtherCost[]
+     * @return ProfDeputyOtherCost[]
      */
-    public function getProfOtherCosts()
+    public function getProfDeputyOtherCosts()
     {
-        return $this->profOtherCosts;
+        return $this->profDeputyOtherCosts;
     }
 
     /**
-     * @param $profOtherCosts
+     * @param $profDeputyOtherCosts
      * @return $this
      */
-    public function setProfOtherCosts($profOtherCosts)
+    public function setProfDeputyOtherCosts($profDeputyOtherCosts)
     {
-        $this->profOtherCosts = $profOtherCosts;
+        $this->profDeputyOtherCosts = $profDeputyOtherCosts;
         return $this;
     }
 

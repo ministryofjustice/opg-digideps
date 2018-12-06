@@ -14,7 +14,7 @@ class ProfDeputyOtherCostsType extends AbstractType
     {
         $builder
             ->add('id', FormTypes\HiddenType::class)
-            ->add('profOtherCosts', FormTypes\CollectionType::class, [
+            ->add('profDeputyOtherCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyOtherCostSingleType::class,
                 'constraints' => new Valid(),
             ])
@@ -24,9 +24,9 @@ class ProfDeputyOtherCostsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-//            'data_class' => 'AppBundle\Entity\Report\Report',
-////            'validation_groups' => ['debts'],
-//            'constraints' => new Valid(),
+            'data_class' => 'AppBundle\Entity\Report\Report',
+//            'validation_groups' => ['prof-other-costs'],
+            'constraints' => new Valid(),
 //            'translation_domain' => 'report-debts',
         ]);
     }

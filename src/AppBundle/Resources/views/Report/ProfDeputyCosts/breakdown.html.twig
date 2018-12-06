@@ -19,5 +19,40 @@
 
 {% block pageContent %}
 
+    <h3 class="heading-small push-half--bottom">
+        {{ 'otherCostsPage.pageSectionDescription' | trans(transOptions, translationDomain) }}
+        <span class="form-hint text push-half--bottom">{{ 'otherCostsPage.pageHint' | trans(transOptions, translationDomain) }}</span>
+    </h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
+        {{ dump(profDeputyOtherCost) }}
+        {#<div class="{{ profDeputyOtherCost.moreDetails is defined ? ' js-details-expander ' : '' }}">#}
+            {#{{ form_row(profDeputyOtherCost.profDeputyOtherCostsTypeId) }}#}
+            {#{{ form_input(profDeputyOtherCost.amount, 'amount', {#}
+                {#'inputPrefix' : '£',#}
+                {#'inputClass' : 'form-control-1-4 js-format-currency',#}
+                {#'labelText': ('form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans,#}
+                {#'hintText': ('form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.hint') | trans(transOptions),#}
+                {#'labelRaw': true#}
+            {#}) }}#}
+
+            {#{% if profDeputyOtherCost.moreDetails is defined %}#}
+                {#<div class="js-hidden">#}
+                    {#{{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {#}
+                        {#'labelText': ('form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformations') | trans,#}
+                        {#'formGroupClass': 'panel panel-border-narrow',#}
+                        {#'hintTe xt': ('form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions),#}
+                        {#'labelRaw': true#}
+                    {#}) }}#}
+                {#</div>#}
+            {#{% endif %}#}
+        {#</div>#}
+    {% endfor %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
 
 {% endblock %}

@@ -5,51 +5,51 @@ namespace AppBundle\Entity\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProfOtherCost
+class ProfDeputyOtherCost
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      */
-    private $profOtherCostTypeId;
+    private $profDeputyOtherCostTypeId;
 
     /**
      * @var decimal
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"prof-other-costs"})
-     * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     * @Assert\Type(type="numeric", message="profDeputyOtherCost.amount.notNumeric", groups={"prof-deputy-other-costs"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "profDeputyOtherCost.amount.minMessage", maxMessage = "profDeputyOtherCost.amount.maxMessage", groups={"prof-deputy-other-costs"})
      */
     private $amount;
 
     /**
      * @var string
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      * @JMS\Type("boolean")
      */
     private $hasMoreDetails;
 
     /**
      * @var string
-     * @JMS\Groups({"prof-other-costs"})
+     * @JMS\Groups({"prof-deputy-other-costs"})
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank(message="profOtherCost.moreDetails.notEmpty", groups={"prof-other-cost-more-details"})
+     * @Assert\NotBlank(message="profDeputyOtherCost.moreDetails.notEmpty", groups={"prof-deputy-other-cost-more-details"})
      */
     private $moreDetails;
 
     /**
-     * Debt constructor.
+     * ProfDeputyOtherCost constructor.
      *
-     * @param $profOtherCostTypeId
+     * @param $profDeputyOtherCostTypeId
      * @param decimal $amount
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
-    public function __construct($profOtherCostTypeId, $amount, $hasMoreDetails, $moreDetails)
+    public function __construct($profDeputyOtherCostTypeId, $amount, $hasMoreDetails, $moreDetails)
     {
-        $this->profOtherCostTypeId = $profOtherCostTypeId;
+        $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         $this->amount = $amount;
         $this->hasMoreDetails = $hasMoreDetails;
         $this->moreDetails = $moreDetails;
@@ -64,7 +64,7 @@ class ProfOtherCost
     }
 
     /**
-     * @param array $debtTypeIds
+     * @param $profDeputyOtherCostTypeIds
      */
     public static function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
     {
@@ -74,17 +74,17 @@ class ProfOtherCost
     /**
      * @return mixed
      */
-    public function getProfOtherCostTypeId()
+    public function getProfDeputyOtherCostTypeId()
     {
-        return $this->profOtherCostTypeId;
+        return $this->profDeputyOtherCostTypeId;
     }
 
     /**
-     * @param mixed $debtTypeId
+     * @param $profDeputyOtherCostTypeId
      */
-    public function setProfOtherCostTypeId($profOtherCostTypeId)
+    public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId)
     {
-        $this->profOtherCostTypeId = $profOtherCostTypeId;
+        $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
     }
 
     /**
