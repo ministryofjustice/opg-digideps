@@ -19,7 +19,7 @@ class ProfDeputyCostsController extends AbstractController
     private static $jmsGroups = [
         'status',
         'deputy-costs-how-charged',
-        'prof-other-costs',
+        'prof-deputy-other-costs',
     ];
 
     /**
@@ -206,7 +206,7 @@ class ProfDeputyCostsController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-//        \Doctrine\Common\Util\Debug::dump($report); die;
+        \Doctrine\Common\Util\Debug::dump($report->getProfDeputyOtherCosts());
 
         // 7 values + one textarea
         // similar to debts
