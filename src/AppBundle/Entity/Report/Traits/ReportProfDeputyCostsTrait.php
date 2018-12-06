@@ -115,4 +115,16 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    /**
+     * @param ProfDeputyOtherCost $profDeputyOtherCost
+     * @return $this
+     */
+    public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost)
+    {
+        if (!$this->profDeputyOtherCosts->contains($profDeputyOtherCost)) {
+            $this->profDeputyOtherCosts->add($profDeputyOtherCost);
+        }
+
+        return $this;
+    }
 }

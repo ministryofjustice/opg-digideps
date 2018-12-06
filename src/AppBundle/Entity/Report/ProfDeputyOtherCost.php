@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\Report\Traits\ReportProfDeputyCostsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,6 +12,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ProfDeputyOtherCost
 {
+    use ReportProfDeputyCostsTrait;
+
     /**
      * Hold prof deputy other costs type
      * 1st value = id, 2nd value = hasMoreInformation.
@@ -142,7 +145,7 @@ class ProfDeputyOtherCost
     }
 
     /**
-     * @param $otherCostTypeId
+     * @param $profDeputyOtherCostTypeId
      * @return $this
      */
     public function setProfDeputyOtherCostTypeId($profDeputyOtherCostTypeId)
