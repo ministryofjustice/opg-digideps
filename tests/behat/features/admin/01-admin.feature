@@ -50,7 +50,7 @@ Feature: admin / admin
     And the response status code should be 200
     And the response should have the "Content-Type" header containing "text/csv"
     And the response should have the "Content-Disposition" header containing ".csv"
-    And the response should contain "id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted"
+    And the response should contain "case_number,date_received,scan_date,document_id,document_type,form_type"
 
   Scenario Outline: Downloading Report Submissions with start and end dates
     Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
@@ -62,7 +62,7 @@ Feature: admin / admin
     And I fill in "admin_toDate_month" with "<to_month>"
     And I fill in "admin_toDate_year" with "<to_year>"
     And I click on "submit-and-download"
-    Then the response should contain "id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted"
+    Then the response should contain "case_number,date_received,scan_date,document_id,document_type,form_type"
     Examples:
       | from_day | from_month | from_year | to_day | to_month | to_year |
       | 12       | 12         | 2018      | 12     | 12       | 2018    |
