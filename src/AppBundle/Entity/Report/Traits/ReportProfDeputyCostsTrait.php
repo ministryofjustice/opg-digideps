@@ -14,24 +14,43 @@ trait ReportProfDeputyCostsTrait
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_fixed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedFixed;
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_assessed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedAssessed;
 
     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"deputy-costs-how-charged"})
+     * @JMS\Groups({"prof-deputy-costs-how-charged"})
      * @ORM\Column(name="prof_dc_hc_agreed", type="boolean", nullable=true)
      */
     private $profDeputyCostsHowChargedAgreed;
+
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-costs-prev"})
+     * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
+     */
+    private $profDeputyCostsHasPrevious;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
+     * @JMS\Groups({"report-prof-deputy-costs-prev"})
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $profDeputyPreviousCosts;
 
     /**
      * @var ProfDeputyOtherCost[]
@@ -96,10 +115,43 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsHasPrevious()
+    {
+        return $this->profDeputyCostsHasPrevious;
+    }
 
     /**
-     * @return ProfDeputyOtherCost[]
+     * @param string $profDeputyCostsHasPrevious
+     * @return ReportProfDeputyCostsTrait
      */
+    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    {
+        $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfDeputyPreviousCosts()
+    {
+        return $this->profDeputyPreviousCosts;
+    }
+
+    /**
+     * @param mixed $profDeputyPreviousCosts
+     */
+    public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
+    {
+        $this->profDeputyPreviousCosts = $profDeputyPreviousCosts;
+    }
+
+   /**
+    * @return ProfDeputyOtherCost[]
+    */
     public function getProfDeputyOtherCosts()
     {
         return $this->profDeputyOtherCosts;

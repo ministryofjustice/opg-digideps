@@ -393,7 +393,13 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        // TODO implement when logic is added
+        if ($this->report->getProfDeputyCostsHowChargedAgreed()
+            || $this->report->getProfDeputyCostsHowChargedAssessed()
+            || $this->report->getProfDeputyCostsHowChargedFixed()
+            || $this->report->getProfDeputyCostsHasPrevious()
+        ) {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
