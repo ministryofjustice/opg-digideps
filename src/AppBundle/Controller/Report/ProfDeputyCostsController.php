@@ -145,13 +145,17 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isValid()) {
 
             if ($previousReceivedId) { // edit
+                $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    'Entry edited'
+                    'Cost edited'
                 );
-                $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
             } else {
                 $this->getRestClient()->post('/report/' . $reportId . '/prof-deputy-previous-cost', $pr, ['profDeputyPrevCosts']);
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Cost added'
+                );
             }
 
             if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
