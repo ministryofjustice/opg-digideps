@@ -8,8 +8,8 @@
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
-        {# step 1 #}
-        <tr class="behat-region">
+        {# How did you charge for your costs? #}
+        <tr class="behat-region-how-changed">
                 <td>
                     {{ 'howCharged.form.profDeputyCostsHow.label' | trans }}
                 </td>
@@ -25,12 +25,20 @@
             {% endif %}
         </tr>
 
-        <tr class="behat-region-has-debts">
+
+        {# Are there any remaining fees #}
+        <tr class="behat-region-has-previous">
             <td>
+                {% if report.profDeputyCostsHasPrevious is null %}<span class="error">{% endif %}
                 {{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}
+                {% if report.profDeputyCostsHasPrevious is null %}</span>{% endif %}
             </td>
             <td>
-                {{ report.profDeputyCostsHasPrevious == 'yes' ? 'Yes': 'No' }}
+                {% if  report.profDeputyCostsHasPrevious is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    {{ report.profDeputyCostsHasPrevious | capitalize }}
+                {% endif %}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
@@ -40,7 +48,7 @@
         </tr>
 
         {% for pc in report.profDeputyPreviousCosts %}
-            <tr class="behat-region-has-debts">
+            <tr class="behat-region-prev-costs">
                 <td>
                     Received for {{ pc.startDate | date('d/m/Y') }} - {{ pc.endDate | date('d/m/Y') }}
                     {#{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}#}
@@ -49,62 +57,19 @@
                     £{{ pc.amount | money_format }}
                 </td>
                 {% if not hideEditLink  %}
-                    <td class="change-answer">
+                    <td class="change-answer width-sixth soft-half--left hard--right">
                         <a href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'previousReceivedId': pc.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                        <a href="{{ path('prof_deputy_costs_previous_received_delete', {'reportId': report.id, 'previousReceivedId': pc.id}) }}" class="action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                     </td>
                 {% endif %}
             </tr>
         {% endfor %}
 
 
-        {#{% if report.action.doYouExpectFinancialDecisions == 'yes' %}#}
-            {#<tr class="behat-region-expect-financial-decision-details">#}
-                {#<td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}</td>#}
-                {#<td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>#}
-                {#{% if not hideEditLink  %}#}
-                    {#<td class="change-answer">#}
-                        {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
-                    {#</td>#}
-                {#{% endif %}#}
-            {#</tr>#}
-        {#{% endif %}#}
 
-        {# step 2 #}
-        {#<tr class="behat-region-have-concerns">#}
-            {#{% if report.action.doYouHaveConcerns is null %}#}
-                {#<td>#}
-                    {#<span class="error">#}
-                        {#{{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}#}
-                    {#</span>#}
-                {#</td>#}
-                {#<td>#}
-                    {#<span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>#}
-                {#</td>#}
-            {#{% else %}#}
-                {#<td>#}
-                    {#{{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}#}
-                {#</td>#}
-                {#<td>#}
-                    {#{{ report.action.doYouHaveConcerns | capitalize }}#}
-                {#</td>#}
-            {#{% endif %}#}
-            {#{% if not hideEditLink  %}#}
-                {#<td class="change-answer">#}
-                    {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
-                {#</td>#}
-            {#{% endif %}#}
-        {#</tr>#}
-        {#{% if report.action.doYouHaveConcerns == 'yes' %}#}
-            {#<tr class="behat-region-have-concerns-details">#}
-                {#<td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>#}
-                {#<td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>#}
-                {#{% if not hideEditLink  %}#}
-                    {#<td class="change-answer">#}
-                        {#<a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>#}
-                    {#</td>#}
-                {#{% endif %}#}
-            {#</tr>#}
-        {#{% endif %}#}
+
+
+
     </tbody>
 
 </table>

@@ -175,6 +175,28 @@ class ProfDeputyCostsController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/previous-received/{previousReceivedId}/delete", name="prof_deputy_costs_previous_received_delete")
+     * @Template()
+     *
+     * @param Request $request
+     * @param $reportId
+     * @param $previousReceivedId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function previousCostDelete(Request $request, $reportId, $previousReceivedId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Cost deleted'
+        );
+
+        return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+    }
 
 
     /**
