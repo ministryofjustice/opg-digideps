@@ -72,8 +72,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyInterimCosts;
 
     /**
-     * @var ProfDeputyOtherCost[]
-     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
