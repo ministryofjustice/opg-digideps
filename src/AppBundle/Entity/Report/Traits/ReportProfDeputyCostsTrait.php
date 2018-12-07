@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\Fee;
-use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Report\ProfDeputyPreviousCost;
+use AppBundle\Entity\Report\ProfDeputyInterimCost;
 
 trait ReportProfDeputyCostsTrait
 {
@@ -42,12 +42,11 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @var AppBundle\Entity\Report\ProfDeputyPreviousCost[]
+     * @var ProfDeputyPreviousCost[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
      */
     private $profDeputyPreviousCosts;
-
 
     /**
      * @var string yes/no
@@ -58,7 +57,7 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasInterim;
 
     /**
-     * @var AppBundle\Entity\Report\ProfDeputyInterimCost[]
+     * @var ProfDeputyInterimCost[]
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
      */
@@ -74,12 +73,10 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHowChargedFixed
-     * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHowChargedFixed($profDeputyCostsHowChargedFixed)
     {
         $this->profDeputyCostsHowChargedFixed = $profDeputyCostsHowChargedFixed;
-        return $this;
     }
 
     /**
@@ -92,12 +89,10 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHowChargedAssessed
-     * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHowChargedAssessed($profDeputyCostsHowChargedAssessed)
     {
         $this->profDeputyCostsHowChargedAssessed = $profDeputyCostsHowChargedAssessed;
-        return $this;
     }
 
     /**
@@ -110,12 +105,10 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHowChargedAgreed
-     * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHowChargedAgreed($profDeputyCostsHowChargedAgreed)
     {
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
-        return $this;
     }
 
     /**
@@ -128,16 +121,14 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasPrevious
-     * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
-        return $this;
     }
 
     /**
-     * @return AppBundle\Entity\Report\ProfDeputyPreviousCost[]
+     * @return ProfDeputyPreviousCost[]
      */
     public function getProfDeputyPreviousCosts()
     {
@@ -145,7 +136,7 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @param AppBundle\Entity\Report\ProfDeputyPreviousCost[] $profDeputyPreviousCosts
+     * @param ProfDeputyPreviousCost[] $profDeputyPreviousCosts
      */
     public function setProfDeputyPreviousCosts($profDeputyPreviousCosts)
     {
@@ -162,16 +153,14 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasInterim
-     * @return ReportProfDeputyCostsTrait
      */
     public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
     {
         $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
-        return $this;
     }
 
     /**
-     * @return AppBundle\Entity\Report\ProfDeputyInterimCost[]
+     * @return ProfDeputyInterimCost[]
      */
     public function getProfDeputyInterimCosts()
     {
@@ -179,17 +168,12 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @param AppBundle\Entity\Report\ProfDeputyInterimCost[] $profDeputyInterimCosts
-     * @return ReportProfDeputyCostsTrait
+     * @param ProfDeputyInterimCost[] $profDeputyInterimCosts
      */
     public function setProfDeputyInterimCosts($profDeputyInterimCosts)
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
-        return $this;
     }
-
-
-
 
 
 }
