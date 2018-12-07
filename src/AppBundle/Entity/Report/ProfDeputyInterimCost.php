@@ -16,6 +16,16 @@ class ProfDeputyInterimCost
     private $id;
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"profDeputyInterimCosts"})
+     *
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-interim-costs"})
+     */
+    private $amount;
+
+    /**
      * @var DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
@@ -25,16 +35,6 @@ class ProfDeputyInterimCost
      */
     private $date;
 
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"profDeputyInterimCosts"})
-     *
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-interim-costs"})
-     */
-    private $amount;
 
     /**
      * @return int
@@ -52,6 +52,24 @@ class ProfDeputyInterimCost
         $this->id = $id;
     }
 
+
+    /**
+     * @return string
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * @param string $amount
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+    }
+
+
     /**
      * @return DateTime
      */
@@ -68,23 +86,5 @@ class ProfDeputyInterimCost
         $this->date = $date;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param string $amount
-     * @return ProfDeputyPreviousCost
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-        return $this;
-    }
 
 }

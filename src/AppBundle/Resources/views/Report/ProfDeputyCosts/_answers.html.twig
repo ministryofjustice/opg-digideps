@@ -74,7 +74,7 @@
                 {% if report.profDeputyCostsHasInterim is null %}</span>{% endif %}
             </td>
             <td>
-                {% if  report.profDeputyCostsHasInterim is null %}
+                {% if report.profDeputyCostsHasInterim is null %}
                     <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 {% else %}
                     {{ report.profDeputyCostsHasInterim | capitalize }}
@@ -86,6 +86,22 @@
                 </td>
             {% endif %}
         </tr>
+
+        {% for ic in report.profDeputyInterimCosts %}
+            <tr class="behat-region-prev-costs">
+                <td>
+                    Costs for interim {{ loop.index }}
+                </td>
+                <td>
+                    £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer width-sixth soft-half--left hard--right">
+                        <a href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
 
 
 

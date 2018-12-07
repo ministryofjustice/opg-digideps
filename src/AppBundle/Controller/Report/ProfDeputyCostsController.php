@@ -20,7 +20,7 @@ class ProfDeputyCostsController extends AbstractController
         'status',
         'prof-deputy-costs-how-charged',
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
-        'report-prof-deputy-interim', 'prof-deputy-interim',
+        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
     ];
 
     /**
@@ -79,7 +79,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function previousReceivedExists(Request $request, $reportId)
     {
-        $from = $request->get('from');
+        $from = $request->get('from', 'exist');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
             'field' => 'profDeputyCostsHasPrevious',
@@ -94,7 +94,7 @@ class ProfDeputyCostsController extends AbstractController
             switch ($data->getProfDeputyCostsHasPrevious()) {
                 case 'yes':
                     // no need to save. "Yes" will be set when one entry is added to keep db data consistent
-                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
@@ -205,7 +205,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function interimExists(Request $request, $reportId)
     {
-        $from = $request->get('from');
+        $from = $request->get('from', 'exist');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
                 'field' => 'profDeputyCostsHasInterim',
@@ -220,7 +220,7 @@ class ProfDeputyCostsController extends AbstractController
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
                     // no need to save. "Yes" will be set when one entry is added to keep db data consistent
-                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);

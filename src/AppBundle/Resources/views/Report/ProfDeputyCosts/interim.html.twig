@@ -31,14 +31,14 @@
     {% for ic in form.profDeputyInterimCosts %}
         <div class="form-section push--bottom">
             <p class="heading-medium">Interim {{ loop.index }}</p>
-            {{ form_known_date(ic.date, page ~ '.form.date') }}
-
             {{ form_input(ic.amount, page ~ '.form.amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control-1-4 js-format-currency',
                 'labelClass' : 'form-label-bold',
                 'formGroupClass': ' form-group-value'
             }) }}
+
+            {{ form_known_date(ic.date, page ~ '.form.date') }}
         </div>
     {% endfor %}
 
