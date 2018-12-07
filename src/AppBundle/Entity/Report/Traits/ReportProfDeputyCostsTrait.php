@@ -52,6 +52,25 @@ trait ReportProfDeputyCostsTrait
      */
     private $profDeputyPreviousCosts;
 
+
+    /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-interim"})
+     * @ORM\Column(name="prof_dc_has_interim", type="string", length=3, nullable=true)
+     */
+    private $profDeputyCostsHasInterim;
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
+     * @JMS\Groups({"report-prof-deputy-costs-interim"})
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $profDeputyInterimCosts;
+
     /**
      * @var ProfDeputyOtherCost[]
      *
@@ -179,4 +198,39 @@ trait ReportProfDeputyCostsTrait
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsHasInterim()
+    {
+        return $this->profDeputyCostsHasInterim;
+    }
+
+    /**
+     * @param string $profDeputyCostsHasInterim
+     */
+    public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
+    {
+        $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfDeputyInterimCosts()
+    {
+        return $this->profDeputyInterimCosts;
+    }
+
+    /**
+     * @param mixed $profDeputyInterimCosts
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyInterimCosts($profDeputyInterimCosts)
+    {
+        $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+        return $this;
+    }
+
 }

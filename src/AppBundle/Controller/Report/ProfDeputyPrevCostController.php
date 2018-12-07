@@ -93,8 +93,9 @@ class ProfDeputyPrevCostController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
         $this->getEntityManager()->remove($cost);
+        $this->getEntityManager()->flush();
 
-        if (count($report->getProfDeputyPreviousCosts())===0) {
+        if (count($report->getProfDeputyPreviousCosts()) === 0) {
             $report->setProfDeputyCostsHasPrevious(null);
         }
 
