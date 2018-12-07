@@ -260,6 +260,20 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
+
+            if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else { // saveAndContinue
+                $nextRoute = 'prof_deputy_costs_amount_scco'; // TODO use next step
+            }
+
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+        }
 
         return [
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,

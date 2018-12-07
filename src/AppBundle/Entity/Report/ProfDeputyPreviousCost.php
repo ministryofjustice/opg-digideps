@@ -45,7 +45,7 @@ class ProfDeputyPreviousCost
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyPrevCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyPreviousCost.amount.notBlank", groups={"transaction-amount"})
+     * @Assert\NotBlank(message="profDeputyPreviousCost.amount.notBlank", groups={"prof-deputy-prev-costs"})
      * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyPreviousCost.amount.minMessage", maxMessage = "profDeputyPreviousCost.amount.maxMessage", groups={"prof-deputy-prev-costs"})
      */
     private $amount;

@@ -21,8 +21,7 @@ class ProfDeputyInterimCost
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"profDeputyInterimCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyInterimCost.date.notBlank", groups={"prof-deputy-prev-costs"})
-     * @Assert\Date(message="profDeputyInterimCost.date.notValid", groups={"prof-deputy-prev-costs"})
+     * @Assert\Date(message="profDeputyInterimCost.date.notValid", groups={"prof-deputy-interim-costs"})
      */
     private $date;
 
@@ -33,8 +32,7 @@ class ProfDeputyInterimCost
      * @JMS\Type("string")
      * @JMS\Groups({"profDeputyInterimCosts"})
      *
-     * @Assert\NotBlank(message="profDeputyInterimCost.amount.notBlank", groups={"transaction-amount"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-prev-costs"})
+     * @Assert\Range(min=0.01, max=10000000, minMessage = "profDeputyInterimCost.amount.minMessage", maxMessage = "profDeputyInterimCost.amount.maxMessage", groups={"prof-deputy-interim-costs"})
      */
     private $amount;
 

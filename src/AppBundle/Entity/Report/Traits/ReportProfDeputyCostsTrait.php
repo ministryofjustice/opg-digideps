@@ -58,7 +58,7 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @var ProfDeputyInterimCost[]
-     *
+     * @JMS\Groups({"profDeputyInterimCosts"})
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
      */
     private $profDeputyInterimCosts = [];
