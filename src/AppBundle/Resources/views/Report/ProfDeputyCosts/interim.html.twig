@@ -19,28 +19,27 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-small flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
 
 
     <div class="text">
         <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
     </div>
 
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% for i in [1,2,3] %}
-    <div class="form-section push--bottom">
-        <p class="heading-medium">Interim {{ i }}</p>
-        {{ form_known_date(form.date, page ~ '.form.startDate') }}
+    {% for ic in form.profDeputyInterimCosts %}
+        <div class="form-section push--bottom">
+            <p class="heading-medium">Interim {{ loop.index }}</p>
+            {{ form_known_date(ic.date, page ~ '.form.date') }}
 
-        {{ form_input(form.amount, page ~ '.form.amount', {
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control-1-4 js-format-currency',
-            'labelClass' : 'form-label-bold',
-            'formGroupClass': ' form-group-value'
-        }) }}
-    </div>
+            {{ form_input(ic.amount, page ~ '.form.amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'labelClass' : 'form-label-bold',
+                'formGroupClass': ' form-group-value'
+            }) }}
+        </div>
     {% endfor %}
 
     {{ macros.saveAndContinueButton(form.save) }}

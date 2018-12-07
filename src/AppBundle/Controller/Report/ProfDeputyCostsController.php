@@ -19,10 +19,8 @@ class ProfDeputyCostsController extends AbstractController
     private static $jmsGroups = [
         'status',
         'prof-deputy-costs-how-charged',
-        'report-prof-deputy-costs-prev', // relation
-        'prof-deputy-costs-prev', // entity
-        'report-prof-deputy-interim', // entity
-        'prof-deputy-interim', // entity
+        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
+        'report-prof-deputy-interim', 'prof-deputy-interim',
     ];
 
     /**
@@ -256,8 +254,12 @@ class ProfDeputyCostsController extends AbstractController
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        // fill missing interim with empty entities, in order for 3 subforms in total to appear
+        for($i = count($report->getProfDeputyInterimCosts()); $i < 3; $i++) {
+            $report->addProfDeputyInterimCosts(new EntityDir\Report\ProfDeputyInterimCost());
+        }
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class);
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class, $report);
 
         return [
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,

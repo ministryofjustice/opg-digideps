@@ -46,7 +46,7 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
      */
-    private $profDeputyPreviousCosts;
+    private $profDeputyPreviousCosts = [];
 
     /**
      * @var string yes/no
@@ -61,7 +61,7 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
      */
-    private $profDeputyInterimCosts;
+    private $profDeputyInterimCosts = [];
 
     /**
      * @return boolean
@@ -173,6 +173,14 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyInterimCosts($profDeputyInterimCosts)
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+    }
+
+    /**
+     * @param ProfDeputyInterimCost $ic
+     */
+    public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
+    {
+        $this->profDeputyInterimCosts[] = $ic;
     }
 
 
