@@ -35,16 +35,16 @@
                 'labelRaw': true
             }) }}
 
-                {{ dump(profDeputyOtherCost.hasMoreDetails) }}
-            {#{% if profDeputyOtherCost.hasMoreDetails == true %}#}
-                {#<div class="">#}
-                    {#{{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {#}
-                        {#'labelText': (page ~ 'form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,#}
-                        {#'formGroupClass': 'panel panel-border-narrow',#}
-                        {#'labelRaw': true#}
-                    {#}) }}#}
-                {#</div>#}
-            {#{% endif %}#}
+            {# this is testing the form field is defined. Not the entity property #}
+            {% if profDeputyOtherCost.moreDetails is defined %}
+                <div class="">
+                    {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
+                        'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,
+                        'formGroupClass': 'panel panel-border-narrow',
+                        'labelRaw': true
+                    }) }}
+                </div>
+            {% endif %}
         </div>
     {% endfor %}
 

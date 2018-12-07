@@ -89,6 +89,7 @@ breakdown:
         label: Cost draftsman
       other:
         label: Other
+        moreInformation: Give details of any 'other' costs
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
