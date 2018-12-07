@@ -13,14 +13,40 @@ class ProfDeputyCostPreviousType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
+            ->add('startDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
+            ])
+            ->add('endDate', FormTypes\DateType::class, ['widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
+            ])
+            ->add('amount', FormTypes\NumberType::class, [
+                'scale' => 2,
+                'grouping' => true,
+                'error_bubbling' => false,
+            ]);
+
+        if(!$options['editMode']) {
+            $builder
+                ->add('saveAndAddAnother', FormTypes\SubmitType::class, ['label' => 'save.label'])
+            ;
+        }
+
+        $builder
+            ->add('saveAndContinue', FormTypes\SubmitType::class, ['label' => 'save.label'])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
              'translation_domain' => 'report-prof-deputy-costs',
-        ]);
+             'validation_groups' => ['prof-deputy-prev-costs'],
+        ])
+        ->setRequired(['editMode']);
     }
 
     public function getBlockPrefix()

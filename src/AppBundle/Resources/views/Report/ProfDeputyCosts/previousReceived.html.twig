@@ -11,12 +11,17 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
-
 {% block linkBack %}
-    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
 {% endblock %}
 
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
 {% block pageContent %}
 
     <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
@@ -26,17 +31,34 @@
         <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
     </div>
 
-    <div class="text">
-        <p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p>
+    <div class="push--top">
+        <div class="alert-info panel panel-border-narrow">
+            <span class="icon icon-information"></span>
+            <div class="alert-message"><p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p></div>
+        </div>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        .form
+        {{ form_known_date(form.startDate, page ~ '.form.startDate') }}
+
+        {{ form_known_date(form.endDate, page ~ '.form.endDate') }}
+
+        {{ form_input(form.amount, page ~ '.form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
     </div>
 
-    {{ macros.saveAndContinueButton(form.save) }}
+    {% if form.saveAndAddAnother is defined %}
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
 
     {{ form_end(form) }}
 
