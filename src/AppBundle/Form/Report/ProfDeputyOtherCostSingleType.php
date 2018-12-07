@@ -3,6 +3,7 @@
 namespace AppBundle\Form\Report;
 
 use AppBundle\Entity\Report\Debt;
+use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,7 @@ class ProfDeputyOtherCostSingleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('otherCostTypeId', FormTypes\HiddenType::class)
+            ->add('profDeputyOtherCostTypeId', FormTypes\HiddenType::class)
             ->add('amount', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
@@ -25,15 +26,15 @@ class ProfDeputyOtherCostSingleType extends AbstractType
             ]);
 
         // add textarea to debts that has more details flag set to true
-//        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $debt = $event->getData();
-//            /* @var $debt Debt */
-//            $form = $event->getForm();
-//
-//            if ($debt->getHasMoreDetails()) {
-//                $form->add('moreDetails', FormTypes\TextareaType::class, []);
-//            }
-//        });
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $profDeputyOtherCost = $event->getData();
+            /* @var $profDeputyOtherCost ProfDeputyOtherCost */
+            $form = $event->getForm();
+
+            if ($profDeputyOtherCost->getHasMoreDetails()) {
+                $form->add('moreDetails', FormTypes\TextareaType::class, []);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

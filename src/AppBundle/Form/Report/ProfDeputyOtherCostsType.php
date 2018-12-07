@@ -14,7 +14,7 @@ class ProfDeputyOtherCostsType extends AbstractType
     {
         $builder
             ->add('id', FormTypes\HiddenType::class)
-            ->add('profDeputyOtherCosts', FormTypes\CollectionType::class, [
+                ->add('profDeputyOtherCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyOtherCostSingleType::class,
                 'constraints' => new Valid(),
             ])

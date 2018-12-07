@@ -304,9 +304,6 @@ class ProfDeputyCostsController extends AbstractController
 
         \Doctrine\Common\Util\Debug::dump($report->getProfDeputyOtherCosts());
 
-        // 7 values + one textarea
-        // similar to debts
-
         $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, [
             ]
         );

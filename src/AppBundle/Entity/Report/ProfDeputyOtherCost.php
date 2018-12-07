@@ -56,22 +56,6 @@ class ProfDeputyOtherCost
     }
 
     /**
-     * @return array
-     */
-    public static function getProfDeputyOtherCostTypeIds()
-    {
-        return self::$profDeputyOtherCostTypeIds;
-    }
-
-    /**
-     * @param $profDeputyOtherCostTypeIds
-     */
-    public static function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
-    {
-        self::$profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
-    }
-
-    /**
      * @return mixed
      */
     public function getProfDeputyOtherCostTypeId()

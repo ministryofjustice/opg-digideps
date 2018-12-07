@@ -71,12 +71,26 @@ amountToSCCO:
 breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  pageSectionDescription: Breakdown of other professional deputy costs (including VAT) received in this reporting period.
+  pageHint: ""
+  form:
+    entries:
+      appointments:
+        label: Appointments
+      annual-reporting:
+        label: Annual reporting
+      conveyancing:
+        label: Conveyancing
+      tax-returns:
+        label: Tax returns
+      disbursements:
+        label: Disbursements
+      cost-draftsman:
+        label: Cost draftsman
+      other:
+        label: Other
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle:  Deputy costs
   pageSectionDescription: ...
-
-otherCostsPage:
-  pageSectionDescription: Breakdown of other professional deputy costs (including VAT) received in this reporting period.
-  pageHint: ""
