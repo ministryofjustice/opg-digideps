@@ -22,6 +22,8 @@ class ProfDeputyCostsController extends AbstractController
         'prof-deputy-costs-how-charged',
         'report-prof-deputy-costs-prev', // relation
         'prof-deputy-costs-prev', // entity
+        'report-prof-deputy-interim', // entity
+        'prof-deputy-interim', // entity
     ];
 
     /**
@@ -146,13 +148,17 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isValid()) {
 
             if ($previousReceivedId) { // edit
+                $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
                 $request->getSession()->getFlashBag()->add(
                     'notice',
-                    'Entry edited'
+                    'Cost edited'
                 );
-                $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
             } else {
                 $this->getRestClient()->post('/report/' . $reportId . '/prof-deputy-previous-cost', $pr, ['profDeputyPrevCosts']);
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Cost added'
+                );
             }
 
             if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
@@ -172,37 +178,93 @@ class ProfDeputyCostsController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/previous-received/{previousReceivedId}/delete", name="prof_deputy_costs_previous_received_delete")
+     * @Template()
+     *
+     * @param Request $request
+     * @param $reportId
+     * @param $previousReceivedId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function previousCostDelete(Request $request, $reportId, $previousReceivedId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
+
+        $request->getSession()->getFlashBag()->add(
+            'notice',
+            'Cost deleted'
+        );
+
+        return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+    }
 
 
     /**
-     * @Route("/inline-interim-19b-exists", name="prof_deputy_costs_inline_interim_19b_exists")
+     * @Route("/interim-exists", name="prof_deputy_costs_inline_interim_19b_exists")
      * @Template()
      */
-    public function inlineInterim19bExists(Request $request, $reportId)
+    public function interimExists(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        $form = $this->createForm(FormDir\YesNoType::class, $report, [
+                'field' => 'profDeputyCostsHasInterim',
+                'translation_domain' => 'report-prof-deputy-costs'
+            ]
+        );
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId'=>$reportId]);
-        return $this->redirectToRoute('prof_deputy_costs_breakdown', ['reportId'=>$reportId]);
+        if ($form->isValid()) {
+            $data = $form->getData();
+            /* @var $data EntityDir\Report\Report */
+            switch ($data->getProfDeputyCostsHasInterim()) {
+                case 'yes':
+                    // no need to save. "Yes" will be set when one entry is added to keep db data consistent
+                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>'exist']);
+                case 'no':
+                    // store and go to next route
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
 
+                    //TODO check with Rob
+                    if ($from =='summary') {
+                        $nextRoute = 'prof_deputy_costs_summary';
+                    } /*else if ($report->profDeputyCostsHowChargedFixed()) {
+                        $nextRoute = 'prof_deputy_costs_fixed';
+                    } */else {
+//                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                        $nextRoute = 'prof_deputy_costs_fixed';
+                    }
 
-        // not for fixed
-        //yes / no
+                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+            }
+        }
+
+        return [
+            'backLink' => null,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
     }
 
     /**
-     * @Route("/inline-interim-19b", name="prof_deputy_costs_inline_interim_19b")
+     * @Route("/interim", name="prof_deputy_costs_inline_interim_19b")
      * @Template()
      */
-    public function inlineInterim19b(Request $request, $reportId)
+    public function interim(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class);
 
-        // 3 x
-        // value, date
+        return [
+            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
     }
 
     /**

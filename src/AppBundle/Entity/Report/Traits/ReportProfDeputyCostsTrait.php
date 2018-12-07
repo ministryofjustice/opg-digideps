@@ -57,6 +57,21 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyPreviousCosts;
 
     /**
+     * @var string yes/no
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"profDeputyCostsHasInterim"})
+     */
+    private $profDeputyCostsHasInterim;
+
+    /**
+     * @var AppBundle\Entity\Report\ProfDeputyInterimCost[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyInterimCost>")
+     */
+    private $profDeputyInterimCosts;
+
+    /**
      * @return boolean
      */
     public function getProfDeputyCostsHowChargedFixed()
@@ -145,13 +160,50 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
+     * @return string
+     */
+    public function getProfDeputyCostsHasInterim()
+    {
+        return $this->profDeputyCostsHasInterim;
+    }
+
+    /**
+     * @param string $profDeputyCostsHasInterim
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyCostsHasInterim($profDeputyCostsHasInterim)
+    {
+        $this->profDeputyCostsHasInterim = $profDeputyCostsHasInterim;
+        return $this;
+    }
+
+    /**
+     * @return AppBundle\Entity\Report\ProfDeputyInterimCost[]
+     */
+    public function getProfDeputyInterimCosts()
+    {
+        return $this->profDeputyInterimCosts;
+    }
+
+    /**
+     * @param AppBundle\Entity\Report\ProfDeputyInterimCost[] $profDeputyInterimCosts
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyInterimCosts($profDeputyInterimCosts)
+    {
+        $this->profDeputyInterimCosts = $profDeputyInterimCosts;
+        return $this;
+    }
+
+    /**
+     *
      * @return ProfDeputyOtherCost[]
      */
     public function getProfDeputyOtherCosts()
     {
         return $this->profDeputyOtherCosts;
     }
-
+    
     /**
      * @param $profDeputyOtherCosts
      * @return $this

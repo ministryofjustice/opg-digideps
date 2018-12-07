@@ -5,7 +5,7 @@
 
 {% set translationDomain = "report-prof-deputy-costs" %}
 {% trans_default_domain translationDomain %}
-{% set page = 'inlineInterim19b' %}
+{% set page = 'interim' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -32,9 +32,19 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
+    {% for i in [1,2,3] %}
     <div class="form-section push--bottom">
-        .form
+        <p class="heading-medium">Interim {{ i }}</p>
+        {{ form_known_date(form.date, page ~ '.form.startDate') }}
+
+        {{ form_input(form.amount, page ~ '.form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
     </div>
+    {% endfor %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 
