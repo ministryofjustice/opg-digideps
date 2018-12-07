@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\Report;
 
-use AppBundle\Entity\Report\Traits\ReportProfDeputyCostsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,8 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ProfDeputyOtherCost
 {
-    use ReportProfDeputyCostsTrait;
-
     /**
      * Hold prof deputy other costs type
      * 1st value = id, 2nd value = hasMoreInformation.
@@ -45,7 +42,7 @@ class ProfDeputyOtherCost
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="prof_deputy_other_costs")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report\Report", inversedBy="profDeputyOtherCosts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
@@ -97,7 +94,8 @@ class ProfDeputyOtherCost
     public function __construct(Report $report, $profDeputyOtherCostTypeId, $hasMoreDetails, $amount)
     {
         $this->report = $report;
-        $report->addProfDeputyOtherCost($this);
+        /** @todo implement this methood without pulling in the trait containing the method */
+        //$report->addProfDeputyOtherCost($this);
 
         $this->profDeputyOtherCostTypeId = $profDeputyOtherCostTypeId;
         $this->hasMoreDetails = $hasMoreDetails;
