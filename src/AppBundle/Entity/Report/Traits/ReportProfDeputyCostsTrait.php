@@ -57,7 +57,7 @@ trait ReportProfDeputyCostsTrait
      * @var string yes/no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-prof-deputy-interim"})
+     * @JMS\Groups({"report-prof-deputy-costs-interim"})
      * @ORM\Column(name="prof_dc_has_interim", type="string", length=3, nullable=true)
      */
     private $profDeputyCostsHasInterim;
