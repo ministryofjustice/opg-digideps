@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Fee;
+use AppBundle\Entity\Report\ProfDeputyInterimCost;
 use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -190,6 +191,16 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
         return $this;
+    }
+
+    /**
+     * @param ProfDeputyInterimCost $ic
+     */
+    public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
+    {
+        if (!$this->getProfDeputyInterimCosts()->contains($ic)) {
+            $this->getProfDeputyInterimCosts()->add($ic);
+        }
     }
 
 }
