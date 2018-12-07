@@ -43,8 +43,9 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
      * @var ProfDeputyOtherCost[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      */
     private $profDeputyOtherCosts;

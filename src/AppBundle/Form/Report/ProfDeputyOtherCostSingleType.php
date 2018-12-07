@@ -22,7 +22,7 @@ class ProfDeputyOtherCostSingleType extends AbstractType
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
-                'invalid_message' => 'debt.amount.notNumeric',
+                'invalid_message' => 'profDeputyOtherCost.amount.notNumeric',
             ]);
 
         // add textarea to debts that has more details flag set to true
@@ -46,9 +46,9 @@ class ProfDeputyOtherCostSingleType extends AbstractType
                 /* @var $data \AppBundle\Entity\Report\ProfDeputyOtherCost */
                 $validationGroups = ['prof_deputy_other_cost'];
 
-//                if ($data->getAmount() && $data->getHasMoreDetails()) {
-//                    $validationGroups[] = 'debts-more-details';
-//                }
+                if ($data->getAmount() && $data->getHasMoreDetails()) {
+                    $validationGroups[] = 'prof-deputy-other-costs-more-details';
+                }
 
                 return $validationGroups;
             },

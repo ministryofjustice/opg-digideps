@@ -27,7 +27,7 @@ class ProfDeputyOtherCostsType extends AbstractType
             'data_class' => 'AppBundle\Entity\Report\Report',
 //            'validation_groups' => ['prof-other-costs'],
             'constraints' => new Valid(),
-//            'translation_domain' => 'report-debts',
+            'translation_domain' => 'report-prof-deputy-costs',
         ]);
     }
 
