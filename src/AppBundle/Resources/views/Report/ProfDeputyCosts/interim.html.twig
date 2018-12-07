@@ -19,16 +19,13 @@
 
 {% block pageContent %}
 
-    <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
+    <h2 class="heading-small flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
 
 
     <div class="text">
         <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
     </div>
 
-    <div class="text">
-        <p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p>
-    </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
