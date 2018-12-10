@@ -307,6 +307,12 @@ class ProfDeputyCostsController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
         $form->handleRequest($request);
 
+        if ($form->isValid()) {
+            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
+
+//            return $this->redirect($this->generateUrl('to-do', ['reportId' => $reportId]));
+        }
+
         return [
             'backLink' => null,
             'form' => $form->createView(),
