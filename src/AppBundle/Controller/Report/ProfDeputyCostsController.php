@@ -21,6 +21,7 @@ class ProfDeputyCostsController extends AbstractController
         'prof-deputy-costs-how-charged',
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
+
     ];
 
     /**
@@ -301,12 +302,30 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function amountToSCCO(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostSCCOType::class, $report);
+        $form->handleRequest($request);
 
-        // value
-        // textarea
+        if ($form->isValid()) {
+
+            //$this->getRestClient()->put('/report/' . $reportId, $report, ['deputyCostsSCCO']);
+
+            if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else { // saveAndContinue
+                $nextRoute = 'prof_deputy_costs_breakdown'; // TODO use next step
+            }
+
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+        }
+
+        return [
+            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'form' => $form->createView(),
+            'report' => $report
+        ];
     }
 
     /**

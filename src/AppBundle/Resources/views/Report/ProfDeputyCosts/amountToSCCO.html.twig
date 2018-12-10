@@ -19,5 +19,21 @@
 
 {% block pageContent %}
 
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.profDeputyCostsAmountToSCCO, page ~ '.form.profDeputyCostsAmountToSCCO', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
+        {{ form_input(form.profDeputyCostsBeyondEstimateReason, page ~ '.form.profDeputyCostsBeyondEstimateReason') }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
 
 {% endblock %}

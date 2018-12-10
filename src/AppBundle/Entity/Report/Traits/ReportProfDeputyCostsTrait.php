@@ -64,6 +64,24 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyInterimCosts = [];
 
     /**
+     * @var float
+     *
+     * @Assert\NotBlank( message="profDeputyCostsSCCO.amountToSCCO.notBlank", groups={"prof-deputy-costs-scco"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyCostsSCCO.amountToSCCO.minMessage", groups={"prof-deputy-costs-scco"})
+     * @JMS\Type("double")
+     * @JMS\Groups({"deputyCostsSCCO"})
+     */
+    private $profDeputyCostsAmountToSCCO;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"deputyCostsSCCO"})
+     */
+    private $profDeputyCostsBeyondEstimateReason;
+
+    /**
      * @return boolean
      */
     public function getProfDeputyCostsHowChargedFixed()
@@ -183,5 +201,35 @@ trait ReportProfDeputyCostsTrait
         $this->profDeputyInterimCosts[] = $ic;
     }
 
+    /**
+     * @return float
+     */
+    public function getProfDeputyCostsAmountToSCCO()
+    {
+        return $this->profDeputyCostsAmountToSCCO;
+    }
 
+    /**
+     * @param float $profDeputyCostsAmountToSCCO
+     */
+    public function setProfDeputyCostsAmountToSCCO($profDeputyCostsAmountToSCCO)
+    {
+        $this->profDeputyCostsAmountToSCCO = $profDeputyCostsAmountToSCCO;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsBeyondEstimateReason()
+    {
+        return $this->profDeputyCostsBeyondEstimateReason;
+    }
+
+    /**
+     * @param string $profDeputyCostsBeyondEstimateReason
+     */
+    public function setProfDeputyCostsBeyondEstimateReason($profDeputyCostsBeyondEstimateReason)
+    {
+        $this->profDeputyCostsBeyondEstimateReason = $profDeputyCostsBeyondEstimateReason;
+    }
 }
