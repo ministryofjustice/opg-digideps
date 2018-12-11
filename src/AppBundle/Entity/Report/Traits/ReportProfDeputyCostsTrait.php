@@ -52,7 +52,6 @@ trait ReportProfDeputyCostsTrait
      */
     private $profDeputyPreviousCosts;
 
-
     /**
      * @var string yes/no
      *
@@ -70,6 +69,24 @@ trait ReportProfDeputyCostsTrait
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyInterimCosts;
+
+    /**
+     * @var float
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-costs-scco"})
+     * @ORM\Column(name="prof_dc_scco_amount", type="decimal", precision=14, scale=2, nullable=true)
+     */
+    private $profDeputyCostsAmountToScco;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-costs-scco"})
+     * @ORM\Column(name="prof_dc_scco_reason_beyond_estimate", type="text", nullable=true)
+     */
+    private $profDeputyCostsReasonBeyondEstimate;
 
     /**
      * @return boolean
@@ -201,6 +218,42 @@ trait ReportProfDeputyCostsTrait
         if (!$this->getProfDeputyInterimCosts()->contains($ic)) {
             $this->getProfDeputyInterimCosts()->add($ic);
         }
+    }
+
+    /**
+     * @return float
+     */
+    public function getProfDeputyCostsAmountToScco()
+    {
+        return $this->profDeputyCostsAmountToScco;
+    }
+
+    /**
+     * @param float $profDeputyCostsAmountToScco
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
+    {
+        $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsBeyondEstimateReason()
+    {
+        return $this->profDeputyCostsReasonBeyondEstimate;
+    }
+
+    /**
+     * @param string $profDeputyCostsReasonBeyondEstimate
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
+    {
+        $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
+        return $this;
     }
 
 }
