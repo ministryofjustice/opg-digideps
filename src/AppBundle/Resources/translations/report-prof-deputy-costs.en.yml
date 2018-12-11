@@ -59,6 +59,18 @@ interimExists:
 interim:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  pageSectionDescription01: |
+    How much has John paid you in this reporting period for work carried out in
+    this reporting period (including VAT)?
+  pageSectionDescription02: |
+    If you charged more than 3 interim bills, please combine these into 3 groups of payments.
+    For 'Date paid', use the date the last payment in each group was made.
+  form:
+    date.label: Amount paid
+    amount.label: Date paid
+
+
+
 
 fixedCosts:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
@@ -67,6 +79,9 @@ fixedCosts:
 amountToSCCO:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  form:
+    profDeputyCostsAmountToSCCO.label: "What amount is being submitted to SCCO for assessment this reporting period (including VAT)?"
+    profDeputyCostsBeyondEstimateReason.label: "If you charged 20% or more above your estimate from your last reporting period, tell us why."
 
 breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

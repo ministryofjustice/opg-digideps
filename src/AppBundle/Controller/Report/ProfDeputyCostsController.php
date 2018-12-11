@@ -20,10 +20,9 @@ class ProfDeputyCostsController extends AbstractController
         'status',
         'prof-deputy-other-costs',
         'prof-deputy-costs-how-charged',
-        'report-prof-deputy-costs-prev', // relation
-        'prof-deputy-costs-prev', // entity
-        'report-prof-deputy-interim', // entity
-        'prof-deputy-interim', // entity
+        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
+        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
+
     ];
 
     /**
@@ -82,7 +81,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function previousReceivedExists(Request $request, $reportId)
     {
-        $from = $request->get('from');
+        $from = $request->get('from', 'exist');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
             'field' => 'profDeputyCostsHasPrevious',
@@ -97,7 +96,7 @@ class ProfDeputyCostsController extends AbstractController
             switch ($data->getProfDeputyCostsHasPrevious()) {
                 case 'yes':
                     // no need to save. "Yes" will be set when one entry is added to keep db data consistent
-                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('prof_deputy_costs_previous_received', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
@@ -208,7 +207,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function interimExists(Request $request, $reportId)
     {
-        $from = $request->get('from');
+        $from = $request->get('from', 'exist');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(FormDir\YesNoType::class, $report, [
                 'field' => 'profDeputyCostsHasInterim',
@@ -223,7 +222,7 @@ class ProfDeputyCostsController extends AbstractController
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
                     // no need to save. "Yes" will be set when one entry is added to keep db data consistent
-                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>'exist']);
+                    return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
@@ -257,8 +256,26 @@ class ProfDeputyCostsController extends AbstractController
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        // fill missing interim with empty entities, in order for 3 subforms in total to appear
+        for($i = count($report->getProfDeputyInterimCosts()); $i < 3; $i++) {
+            $report->addProfDeputyInterimCosts(new EntityDir\Report\ProfDeputyInterimCost());
+        }
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class);
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostInterimType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
+
+            if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else { // saveAndContinue
+                $nextRoute = 'prof_deputy_costs_amount_scco'; // TODO use next step
+            }
+
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+        }
 
         return [
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
@@ -286,12 +303,30 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function amountToSCCO(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostSCCOType::class, $report);
+        $form->handleRequest($request);
 
-        // value
-        // textarea
+        if ($form->isValid()) {
+
+            //$this->getRestClient()->put('/report/' . $reportId, $report, ['deputyCostsSCCO']);
+
+            if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else { // saveAndContinue
+                $nextRoute = 'prof_deputy_costs_breakdown'; // TODO use next step
+            }
+
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+        }
+
+        return [
+            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'form' => $form->createView(),
+            'report' => $report
+        ];
     }
 
     /**
