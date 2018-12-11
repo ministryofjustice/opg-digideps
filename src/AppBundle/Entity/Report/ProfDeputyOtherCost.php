@@ -11,21 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ProfDeputyOtherCost
 {
-    /**
-     * Hold prof deputy other costs type
-     * 1st value = id, 2nd value = hasMoreInformation.
-     *
-     * @var array
-     */
-    public static $profDeputyOtherCostTypeIds = [
-        ['appointments', false],
-        ['annual-reporting', false],
-        ['conveyancing', false],
-        ['tax-returns', false],
-        ['disbursements', false],
-        ['cost-draftsman', false],
-        ['other', true]
-    ];
 
     /**
      * @var int

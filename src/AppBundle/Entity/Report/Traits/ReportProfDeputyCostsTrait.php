@@ -81,6 +81,45 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyOtherCosts;
 
     /**
+     * Hold prof deputy other costs type
+     * 1st value = id, 2nd value = hasMoreInformation.
+     *
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     *
+     * @var array
+     */
+    public static $profDeputyOtherCostTypeIds = [
+        ['appointments', false],
+        ['annual-reporting', false],
+        ['conveyancing', false],
+        ['tax-returns', false],
+        ['disbursements', false],
+        ['cost-draftsman', false],
+        ['other', true]
+    ];
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("prof_deputy_other_cost_type_ids")
+     * @JMS\Type("array")
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     *
+     * @return array
+     */
+    public static function getProfDeputyOtherCostTypeIds()
+    {
+        return self::$profDeputyOtherCostTypeIds;
+    }
+
+    /**
+     * @param array $profDeputyOtherCostTypeIds
+     */
+    public static function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
+    {
+        self::$profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
+    }
+
+    /**
      * @return boolean
      */
     public function getProfDeputyCostsHowChargedFixed()
