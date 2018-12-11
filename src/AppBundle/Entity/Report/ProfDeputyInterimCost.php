@@ -57,12 +57,16 @@ class ProfDeputyInterimCost
     private $amount;
 
     /**
-     * ProfDeputyPreviousCost constructor.
+     * ProfDeputyInterimCost constructor.
      * @param Report $report
+     * @param DateTime $date
+     * @param string $amount
      */
-    public function __construct(Report $report)
+    public function __construct(Report $report, DateTime $date, $amount)
     {
         $this->report = $report;
+        $this->date = $date;
+        $this->amount = $amount;
     }
 
     /**

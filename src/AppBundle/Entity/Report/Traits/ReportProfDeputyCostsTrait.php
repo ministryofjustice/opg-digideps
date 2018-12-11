@@ -4,7 +4,8 @@ namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\Fee;
 use AppBundle\Entity\Report\ProfDeputyOtherCost;
-use AppBundle\Entity\Report\ProfServiceFee;
+use AppBundle\Entity\Report\ProfDeputyInterimCost;
+    use AppBundle\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -57,7 +58,7 @@ trait ReportProfDeputyCostsTrait
      * @var string yes/no
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-prof-deputy-interim"})
+     * @JMS\Groups({"report-prof-deputy-costs-interim"})
      * @ORM\Column(name="prof_dc_has_interim", type="string", length=3, nullable=true)
      */
     private $profDeputyCostsHasInterim;
@@ -230,6 +231,16 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
         return $this;
+    }
+
+    /**
+     * @param ProfDeputyInterimCost $ic
+     */
+    public function addProfDeputyInterimCosts(ProfDeputyInterimCost $ic)
+    {
+        if (!$this->getProfDeputyInterimCosts()->contains($ic)) {
+            $this->getProfDeputyInterimCosts()->add($ic);
+        }
     }
 
 }

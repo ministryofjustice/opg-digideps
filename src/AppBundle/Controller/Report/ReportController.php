@@ -427,6 +427,25 @@ class ReportController extends RestController
             }
         }
 
+        if (array_key_exists('prof_deputy_interim_costs', $data)) {
+            // wipe existing interim costs
+            foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                $this->getEntityManager()->remove($ic);
+            }
+            // add new
+            foreach ($data['prof_deputy_interim_costs'] as $row) {
+                if ($row['date'] && $row['amount']) {
+                    $report->addProfDeputyInterimCosts(
+                        new EntityDir\Report\ProfDeputyInterimCost($report, new \DateTime($row['date']), $row['amount'])
+                    );
+                }
+                if (count($report->getProfDeputyInterimCosts())) {
+                    $report->setProfDeputyCostsHasInterim('yes');
+                }
+            }
+            $this->getEntityManager()->flush();
+        }
+
 
         $this->getEntityManager()->flush();
 
@@ -572,9 +591,9 @@ class ReportController extends RestController
         }
 
         // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
-        foreach($reports as $k => $unsubmittedReport) {
+        foreach ($reports as $k => $unsubmittedReport) {
             if ($unsubmittedReport['hasUnsumitDate']) {
-                foreach($reports as $k2 => $currentReport) {
+                foreach ($reports as $k2 => $currentReport) {
                     if (!$currentReport['hasUnsumitDate'] && $currentReport['client']['id'] == $unsubmittedReport['client']['id']) {
                         unset($reports[$k2]);
                     }
