@@ -51,8 +51,13 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyOtherCosts;
 
     /**
+     * @var array
+     */
+    private $profDeputyOtherCostIds;
+
+    /**
      * @var ProfDeputyPreviousCost[]
-     *  
+     *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
      */
     private $profDeputyPreviousCosts;
@@ -89,6 +94,30 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Groups({"deputyCostsSCCO"})
      */
     private $profDeputyCostsBeyondEstimateReason;
+
+    /**
+     * @JMS\Type("array")
+     * @JMS\Groups({"prof-deputy-other-costs"})
+     */
+    private $profDeputyOtherCostTypeIds;
+
+    /**
+     * @return array
+     */
+    public function getProfDeputyOtherCostTypeIds()
+    {
+        return $this->profDeputyOtherCostTypeIds;
+    }
+
+    /**
+     * @param $profDeputyOtherCostTypeIds
+     * @return $this
+     */
+    public function setProfDeputyOtherCostTypeIds($profDeputyOtherCostTypeIds)
+    {
+        $this->profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
+        return $this;
+    }
 
     /**
      * @return boolean
@@ -260,5 +289,21 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsBeyondEstimateReason($profDeputyCostsBeyondEstimateReason)
     {
         $this->profDeputyCostsBeyondEstimateReason = $profDeputyCostsBeyondEstimateReason;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfDeputyOtherCostIds()
+    {
+        return $this->profDeputyOtherCostIds;
+    }
+
+    /**
+     * @param array $profDeputyOtherCostIds
+     */
+    public function setProfDeputyOtherCostIds($profDeputyOtherCostIds)
+    {
+        $this->profDeputyOtherCostIds = $profDeputyOtherCostIds;
     }
 }

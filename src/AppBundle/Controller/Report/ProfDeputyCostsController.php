@@ -337,8 +337,13 @@ class ProfDeputyCostsController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        //\Doctrine\Common\Util\Debug::dump($report->getProfDeputyOtherCosts(),3);
+        if (empty($report->getProfDeputyOtherCosts())) {
+            // if none set generate other costs manually
+            $otherCosts = $this->generateDefaultOtherCosts($report);
 
+            $report->setProfDeputyOtherCosts($otherCosts);
+        }
+                
         $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
         $form->handleRequest($request);
 
@@ -355,6 +360,22 @@ class ProfDeputyCostsController extends AbstractController
         ];
     }
 
+    private function generateDefaultOtherCosts(EntityDir\Report\Report $report)
+    {
+        $otherCosts = [];
+
+        $defaultOtherCostTypeIds = $report->getProfDeputyOtherCostTypeIds();
+        foreach ($defaultOtherCostTypeIds as $defaultOtherCostTypeId) {
+            $otherCosts[] = new EntityDir\Report\ProfDeputyOtherCost(
+                $defaultOtherCostTypeId[0],
+                null,
+                $defaultOtherCostTypeId[1],
+                null
+            );
+
+        }
+        return $otherCosts;
+    }
 
     /**
      * @Route("/summary", name="prof_deputy_costs_summary")
