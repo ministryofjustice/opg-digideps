@@ -76,12 +76,12 @@ fixedCosts:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
 
-amountToSCCO:
+AmountToScco:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   form:
-    profDeputyCostsAmountToSCCO.label: "What amount is being submitted to SCCO for assessment this reporting period (including VAT)?"
-    profDeputyCostsBeyondEstimateReason.label: "If you charged 20% or more above your estimate from your last reporting period, tell us why."
+    profDeputyCostsAmountToScco.label: "What amount is being submitted to SCCO for assessment this reporting period (including VAT)?"
+    profDeputyCostsReasonBeyondEstimate.label: "If you charged 20% or more above your estimate from your last reporting period, tell us why."
 
 breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

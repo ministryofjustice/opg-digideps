@@ -21,7 +21,7 @@ class ProfDeputyCostsController extends AbstractController
         'prof-deputy-costs-how-charged',
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-
+        'report-prof-deputy-costs-scco'
     ];
 
     /**
@@ -300,17 +300,17 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("/amount-scco", name="prof_deputy_costs_amount_scco")
      * @Template()
      */
-    public function amountToSCCO(Request $request, $reportId)
+    public function AmountToSccoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostSCCOType::class, $report);
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostSccoType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
 
-            //$this->getRestClient()->put('/report/' . $reportId, $report, ['deputyCostsSCCO']);
+            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
 
             if ($from === 'summary') {
                 $nextRoute = 'prof_deputy_costs_summary';

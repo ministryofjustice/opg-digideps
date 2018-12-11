@@ -66,20 +66,20 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var float
      *
-     * @Assert\NotBlank( message="profDeputyCostsSCCO.amountToSCCO.notBlank", groups={"prof-deputy-costs-scco"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsSCCO.amountToSCCO.minMessage", groups={"prof-deputy-costs-scco"})
+     * @Assert\NotBlank( message="profDeputyCostsScco.AmountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.AmountToScco.minMessage", groups={"prof-deputy-costs-scco"})
      * @JMS\Type("double")
-     * @JMS\Groups({"deputyCostsSCCO"})
+     * @JMS\Groups({"profDeputyCostsScco"})
      */
-    private $profDeputyCostsAmountToSCCO;
+    private $profDeputyCostsAmountToScco;
 
     /**
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"deputyCostsSCCO"})
+     * @JMS\Groups({"profDeputyCostsScco"})
      */
-    private $profDeputyCostsBeyondEstimateReason;
+    private $profDeputyCostsReasonBeyondEstimate;
 
     /**
      * @return boolean
@@ -204,32 +204,32 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return float
      */
-    public function getProfDeputyCostsAmountToSCCO()
+    public function getProfDeputyCostsAmountToScco()
     {
-        return $this->profDeputyCostsAmountToSCCO;
+        return $this->profDeputyCostsAmountToScco;
     }
 
     /**
-     * @param float $profDeputyCostsAmountToSCCO
+     * @param float $profDeputyCostsAmountToScco
      */
-    public function setProfDeputyCostsAmountToSCCO($profDeputyCostsAmountToSCCO)
+    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
     {
-        $this->profDeputyCostsAmountToSCCO = $profDeputyCostsAmountToSCCO;
+        $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
     }
 
     /**
      * @return string
      */
-    public function getProfDeputyCostsBeyondEstimateReason()
+    public function getProfDeputyCostsReasonBeyondEstimate()
     {
-        return $this->profDeputyCostsBeyondEstimateReason;
+        return $this->profDeputyCostsReasonBeyondEstimate;
     }
 
     /**
-     * @param string $profDeputyCostsBeyondEstimateReason
+     * @param string $profDeputyCostsReasonBeyondEstimate
      */
-    public function setProfDeputyCostsBeyondEstimateReason($profDeputyCostsBeyondEstimateReason)
+    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
     {
-        $this->profDeputyCostsBeyondEstimateReason = $profDeputyCostsBeyondEstimateReason;
+        $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
     }
 }
