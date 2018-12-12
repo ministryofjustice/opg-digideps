@@ -312,11 +312,7 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
 
-            if ($from === 'summary') {
-                $nextRoute = 'prof_deputy_costs_summary';
-            } else { // saveAndContinue
-                $nextRoute = 'prof_deputy_costs_breakdown'; // TODO use next step
-            }
+            $nextRoute = ($from === 'summary') ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_breakdown';
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }

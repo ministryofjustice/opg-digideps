@@ -66,8 +66,8 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var float
      *
-     * @Assert\NotBlank( message="profDeputyCostsScco.AmountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.AmountToScco.minMessage", groups={"prof-deputy-costs-scco"})
+     * @Assert\NotBlank( message="profDeputyCostsScco.amountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.amountToScco.minMessage", groups={"prof-deputy-costs-scco"})
      * @JMS\Type("double")
      * @JMS\Groups({"profDeputyCostsScco"})
      */

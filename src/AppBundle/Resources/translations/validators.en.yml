@@ -485,7 +485,7 @@ profDeputyInterimCost:
     maxMessage: The amount must be less than £10,000,000,000
 
 profDeputyCostsScco:
-  AmountToScco:
+  amountToScco:
     notBlank: Enter 0 if you are not requesting an SCCO assessment
     minMessage: Please enter a positive amount
 

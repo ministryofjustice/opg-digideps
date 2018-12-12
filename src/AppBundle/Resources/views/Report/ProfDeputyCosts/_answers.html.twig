@@ -103,9 +103,32 @@
             </tr>
         {% endfor %}
 
-
-
-
+        {# SCCO assessment #}
+        <tr class="behat-region-scco-assessment-amount">
+            <td>
+                {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
+            </td>
+            <td>
+                {{ report.profDeputyCostsAmountToScco | raw }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+        <tr class="behat-region-scco-assessment-reason">
+            <td>
+                {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.label' | trans }}
+            </td>
+            <td>
+                {{ report.profDeputyCostsReasonBeyondEstimate | raw }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
     </tbody>
-
 </table>
