@@ -226,13 +226,9 @@ class ProfDeputyCostsController extends AbstractController
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
 
-                    //TODO check with Rob
-                    if ($from =='summary') {
+                    if ($from === 'summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
-                    } /*else if ($report->profDeputyCostsHowChargedFixed()) {
-                        $nextRoute = 'prof_deputy_costs_fixed';
-                    } */else {
-//                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
+                    } else {
                         $nextRoute = 'prof_deputy_costs_fixed';
                     }
 

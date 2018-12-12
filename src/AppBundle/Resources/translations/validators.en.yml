@@ -465,6 +465,9 @@ profServiceFee:
         profFeesEstimateSccoReason:
             notBlank: Please provide an explanation
 
+profDeputyHowChanged:
+  atLeastOne: Please select at least one option
+
 profDeputyPreviousCost:
   startDate:
     notBlank: Please enter a date

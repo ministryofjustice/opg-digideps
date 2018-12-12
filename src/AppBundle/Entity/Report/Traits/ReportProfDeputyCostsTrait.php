@@ -6,6 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Report\ProfDeputyPreviousCost;
 use AppBundle\Entity\Report\ProfDeputyInterimCost;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsTrait
 {
@@ -139,6 +140,23 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
     }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
+    {
+        if (count(array_filter([
+            $this->profDeputyCostsHowChargedFixed,
+            $this->profDeputyCostsHowChargedAssessed,
+            $this->profDeputyCostsHowChargedAgreed
+            ])) === 0
+        ) {
+            $context->buildViolation('profDeputyHowChanged.atLeastOne')->atPath('profDeputyCostsHowChargedFixed')->addViolation();
+        }
+
+    }
+
 
     /**
      * @return string
