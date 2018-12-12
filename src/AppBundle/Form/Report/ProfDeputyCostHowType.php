@@ -22,7 +22,7 @@ class ProfDeputyCostHowType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-//             'validation_groups' => ['TODO'],
+             'validation_groups' => ['prof-deputy-costs-how-changed'],
              'translation_domain' => 'report-prof-deputy-costs',
         ]);
     }

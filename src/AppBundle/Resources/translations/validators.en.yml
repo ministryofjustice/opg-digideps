@@ -465,6 +465,9 @@ profServiceFee:
         profFeesEstimateSccoReason:
             notBlank: Please provide an explanation
 
+profDeputyHowChanged:
+  atLeastOne: Please select at least one option
+
 profDeputyPreviousCost:
   startDate:
     notBlank: Please enter a date
@@ -473,6 +476,7 @@ profDeputyPreviousCost:
     notBlank: Please enter a date
     notValid: Date not valid
   amount:
+    notBlank: Please enter a value
     minMessage: The amount must be more than £{{ limit }}
     maxMessage: The amount must be less than £10,000,000,000
 
@@ -484,8 +488,8 @@ profDeputyInterimCost:
     minMessage: The amount must be more than £{{ limit }}
     maxMessage: The amount must be less than £10,000,000,000
 
-profDeputyCostsSCCO:
-  amountToSCCO:
+profDeputyCostsScco:
+  amountToScco:
     notBlank: Enter 0 if you are not requesting an SCCO assessment
     minMessage: Please enter a positive amount
 

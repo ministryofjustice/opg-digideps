@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProfDeputyCostSCCOType extends AbstractType
+class ProfDeputyCostSccoType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -15,12 +15,12 @@ class ProfDeputyCostSCCOType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('profDeputyCostsAmountToSCCO', FormTypes\NumberType::class, [
+            ->add('profDeputyCostsAmountToScco', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
             ])
-            ->add('profDeputyCostsBeyondEstimateReason', FormTypes\TextareaType::class)
+            ->add('profDeputyCostsReasonBeyondEstimate', FormTypes\TextareaType::class)
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 

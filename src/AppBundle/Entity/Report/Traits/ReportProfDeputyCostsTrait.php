@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Report\ProfDeputyPreviousCost;
 use AppBundle\Entity\Report\ProfDeputyInterimCost;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsTrait
 {
@@ -80,20 +81,31 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var float
      *
-     * @Assert\NotBlank( message="profDeputyCostsSCCO.amountToSCCO.notBlank", groups={"prof-deputy-costs-scco"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsSCCO.amountToSCCO.minMessage", groups={"prof-deputy-costs-scco"})
+     * @Assert\NotBlank( message="profDeputyCostsScco.amountToScco.notBlank", groups={"prof-deputy-costs-scco"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyCostsScco.amountToScco.minMessage", groups={"prof-deputy-costs-scco"})
      * @JMS\Type("double")
-     * @JMS\Groups({"deputyCostsSCCO"})
+     * @JMS\Groups({"profDeputyCostsScco"})
      */
-    private $profDeputyCostsAmountToSCCO;
+    private $profDeputyCostsAmountToScco;
 
     /**
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"deputyCostsSCCO"})
+     * @JMS\Groups({"profDeputyCostsScco"})
      */
-    private $profDeputyCostsBeyondEstimateReason;
+    private $profDeputyCostsReasonBeyondEstimate;
+
+    /**
+     * return true if only fixed is true
+     * @return boolean
+     */
+    public function hasProfDeputyCostsHowChargedFixedOnly()
+    {
+        return $this->profDeputyCostsHowChargedFixed
+            && !$this->profDeputyCostsHowChargedAssessed
+            && !$this->profDeputyCostsHowChargedAgreed;
+    }
 
     /**
      * @JMS\Type("array")
@@ -166,6 +178,20 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
     }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
+    {
+        if (!$this->profDeputyCostsHowChargedFixed
+            && !$this->profDeputyCostsHowChargedAssessed
+            && ! $this->profDeputyCostsHowChargedAgreed
+        ) {
+            $context->buildViolation('profDeputyHowChanged.atLeastOne')->atPath('profDeputyCostsHowChargedFixed')->addViolation();
+        }
+    }
+
 
     /**
      * @return string
@@ -262,33 +288,33 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return float
      */
-    public function getProfDeputyCostsAmountToSCCO()
+    public function getProfDeputyCostsAmountToScco()
     {
-        return $this->profDeputyCostsAmountToSCCO;
+        return $this->profDeputyCostsAmountToScco;
     }
 
     /**
-     * @param float $profDeputyCostsAmountToSCCO
+     * @param float $profDeputyCostsAmountToScco
      */
-    public function setProfDeputyCostsAmountToSCCO($profDeputyCostsAmountToSCCO)
+    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
     {
-        $this->profDeputyCostsAmountToSCCO = $profDeputyCostsAmountToSCCO;
+        $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
     }
 
     /**
      * @return string
      */
-    public function getProfDeputyCostsBeyondEstimateReason()
+    public function getProfDeputyCostsReasonBeyondEstimate()
     {
-        return $this->profDeputyCostsBeyondEstimateReason;
+        return $this->profDeputyCostsReasonBeyondEstimate;
     }
 
     /**
-     * @param string $profDeputyCostsBeyondEstimateReason
+     * @param string $profDeputyCostsReasonBeyondEstimate
      */
-    public function setProfDeputyCostsBeyondEstimateReason($profDeputyCostsBeyondEstimateReason)
+    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
     {
-        $this->profDeputyCostsBeyondEstimateReason = $profDeputyCostsBeyondEstimateReason;
+        $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
     }
 
     /**
