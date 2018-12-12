@@ -343,14 +343,14 @@ class ProfDeputyCostsController extends AbstractController
 
             $report->setProfDeputyOtherCosts($otherCosts);
         }
-                
+
         $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
 
-//            return $this->redirect($this->generateUrl('to-do', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
         return [
@@ -360,16 +360,24 @@ class ProfDeputyCostsController extends AbstractController
         ];
     }
 
+    /**
+     * Retrieves the list of default other cost type IDs using virtual property from api
+     * Used to generate the page since with no initial data, we cant display form inputs
+     * without this list.
+     *
+     * @param EntityDir\Report\Report $report
+     * @return array
+     */
     private function generateDefaultOtherCosts(EntityDir\Report\Report $report)
     {
         $otherCosts = [];
 
         $defaultOtherCostTypeIds = $report->getProfDeputyOtherCostTypeIds();
-        foreach ($defaultOtherCostTypeIds as $defaultOtherCostTypeId) {
+        foreach ($defaultOtherCostTypeIds as $defaultOtherCostType) {
             $otherCosts[] = new EntityDir\Report\ProfDeputyOtherCost(
-                $defaultOtherCostTypeId[0],
+                $defaultOtherCostType['typeId'],
                 null,
-                $defaultOtherCostTypeId[1],
+                $defaultOtherCostType['hasMoreDetails'],
                 null
             );
 
