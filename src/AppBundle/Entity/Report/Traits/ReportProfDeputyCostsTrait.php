@@ -89,13 +89,13 @@ trait ReportProfDeputyCostsTrait
      * @var array
      */
     public static $profDeputyOtherCostTypeIds = [
-        ['appointments', false],
-        ['annual-reporting', false],
-        ['conveyancing', false],
-        ['tax-returns', false],
-        ['disbursements', false],
-        ['cost-draftsman', false],
-        ['other', true]
+        ['typeId' => 'appointments', 'hasMoreDetails' => false],
+        ['typeId' => 'annual-reporting', 'hasMoreDetails' => false],
+        ['typeId' => 'conveyancing', 'hasMoreDetails' => false],
+        ['typeId' => 'tax-returns', 'hasMoreDetails' => false],
+        ['typeId' => 'disbursements', 'hasMoreDetails' => false],
+        ['typeId' => 'cost-draftsman', 'hasMoreDetails' => false],
+        ['typeId' => 'other', 'hasMoreDetails' => true],
     ];
 
     /**
@@ -236,6 +236,18 @@ trait ReportProfDeputyCostsTrait
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $typeId
+     *
+     * @return ProfDeputyOtherCost
+     */
+    public function getProfDeputyOtherCostByTypeId($typeId)
+    {
+        return $this->getProfDeputyOtherCosts()->filter(function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
+            return $profDeputyOtherCost->getProfDeputyOtherCostTypeId() == $typeId;
+        })->first();
     }
 
     /**

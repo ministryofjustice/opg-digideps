@@ -160,6 +160,39 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('prof_deputy_other_costs', $data)) {
+            $defaultCostTypeIds = array_column($report->getProfDeputyOtherCostTypeIds(), 'typeId');
+
+            foreach ($data['prof_deputy_other_costs'] as $postedProfDeputyOtherCostType) {
+                if (in_array(
+                    $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
+                        $defaultCostTypeIds
+                    )) {
+                    $profDeputyOtherCost = $report->getProfDeputyOtherCostByTypeId(
+                        $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id']
+                    );
+
+                    // update if exists, or instantiate a new entitys
+                    if ($profDeputyOtherCost instanceof EntityDir\Report\ProfDeputyOtherCost) {
+                        $profDeputyOtherCost->setAmount($postedProfDeputyOtherCostType['amount']);
+                    } else {
+                        $profDeputyOtherCost = new EntityDir\Report\ProfDeputyOtherCost(
+                            $report,
+                            $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
+                            $postedProfDeputyOtherCostType['has_more_details'],
+                            $postedProfDeputyOtherCostType['amount']
+                        );
+                    }
+                    if ($profDeputyOtherCost->getHasMoreDetails()) {
+                        $profDeputyOtherCost->setMoreDetails($postedProfDeputyOtherCostType['more_details']);
+                    }
+
+                    $this->getEntityManager()->persist($profDeputyOtherCost);
+                }
+            }
+            $this->getEntityManager()->flush();
+        }
+
         if (array_key_exists('debt_management', $data)) {
             $report->setDebtManagement($data['debt_management']);
             $this->getEntityManager()->flush();

@@ -76,8 +76,11 @@ class ProfDeputyOtherCost
      * @param bool   $hasMoreDetails
      * @param float  $amount
      */
-    public function __construct(Report $report, $profDeputyOtherCostTypeId, $hasMoreDetails, $amount)
-    {
+    public function __construct(Report $report,
+                                $profDeputyOtherCostTypeId,
+                                $hasMoreDetails,
+                                $amount
+    ) {
         $this->report = $report;
         /** @todo implement this methood without pulling in the trait containing the method */
         //$report->addProfDeputyOtherCost($this);
