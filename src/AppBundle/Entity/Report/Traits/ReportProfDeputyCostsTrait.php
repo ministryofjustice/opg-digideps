@@ -82,6 +82,17 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
+     * return true if only fixed is true
+     * @return boolean
+     */
+    public function hasProfDeputyCostsHowChargedFixedOnly()
+    {
+        return $this->profDeputyCostsHowChargedFixed
+            && !$this->profDeputyCostsHowChargedAssessed
+            && !$this->profDeputyCostsHowChargedAgreed;
+    }
+
+    /**
      * @return boolean
      */
     public function getProfDeputyCostsHowChargedFixed()

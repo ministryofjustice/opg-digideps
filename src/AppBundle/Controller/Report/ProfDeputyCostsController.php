@@ -100,14 +100,12 @@ class ProfDeputyCostsController extends AbstractController
                     // store and go to next route
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
 
-                    //TODO check with Rob
                     if ($from =='summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
-                    } /*else if ($report->profDeputyCostsHowChargedFixed()) {
+                    } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                         $nextRoute = 'prof_deputy_costs_fixed';
-                    } */else {
-//                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
-                        $nextRoute = 'prof_deputy_costs_summary';
+                    } else {
+                        $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
                     }
 
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
@@ -137,7 +135,6 @@ class ProfDeputyCostsController extends AbstractController
             $pr = new EntityDir\Report\ProfDeputyPreviousCost();
         }
 
-        //TODO in edit mode, only show save and continue to go back to summary
         $form = $this->createForm(FormDir\Report\ProfDeputyCostPreviousType::class, $pr, [
             'editMode' =>  !empty($previousReceivedId)
         ]);
@@ -161,13 +158,16 @@ class ProfDeputyCostsController extends AbstractController
 
             if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
                 $nextRoute = 'prof_deputy_costs_previous_received';
-            } else { // saveAndContinue
-                $nextRoute = 'prof_deputy_costs_summary'; // TODO use next step
+            } else if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+                $nextRoute = 'prof_deputy_costs_fixed';
+            } else {
+                $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
             }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
-
 
         return [
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
