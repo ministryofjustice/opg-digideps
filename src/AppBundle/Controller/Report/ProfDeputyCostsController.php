@@ -51,7 +51,7 @@ class ProfDeputyCostsController extends AbstractController
     public function howChargedAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = $request->get('from') == 'summary';
+        $from = $request->get('from');
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostHowType::class, $report);
         $form->handleRequest($request);
@@ -61,16 +61,20 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
-            $route = $fromSummaryPage ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_previous_received_exists';
+            if ($from === 'summary') {
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else {
+                $nextRoute = 'prof_deputy_costs_previous_received_exists';
+            }
 
-            return $this->redirectToRoute($route, ['reportId'=>$reportId]);
+            return $this->redirectToRoute($nextRoute, ['reportId'=>$reportId]);
         }
 
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $fromSummaryPage ? $this->generateUrl('prof_deputy_costs_summary', ['reportId'=>$reportId]) : null
+            'backLink' => $from === 'summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId'=>$reportId]) : null
         ];
     }
 
