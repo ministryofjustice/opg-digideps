@@ -146,15 +146,12 @@ trait ReportProfDeputyCostsTrait
      */
     public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
     {
-        if (count(array_filter([
-            $this->profDeputyCostsHowChargedFixed,
-            $this->profDeputyCostsHowChargedAssessed,
-            $this->profDeputyCostsHowChargedAgreed
-            ])) === 0
+        if (!$this->profDeputyCostsHowChargedFixed
+            && !$this->profDeputyCostsHowChargedAssessed
+            && ! $this->profDeputyCostsHowChargedAgreed
         ) {
             $context->buildViolation('profDeputyHowChanged.atLeastOne')->atPath('profDeputyCostsHowChargedFixed')->addViolation();
         }
-
     }
 
 
