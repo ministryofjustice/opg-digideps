@@ -479,6 +479,13 @@ class ReportController extends RestController
             $this->getEntityManager()->flush();
         }
 
+        if (array_key_exists('prof_deputy_costs_amount_to_scco', $data)) {
+            $report->setProfDeputyCostsAmountToScco($data['prof_deputy_costs_amount_to_scco']);
+        }
+
+        if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
+            $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);
+        }
 
         $this->getEntityManager()->flush();
 
