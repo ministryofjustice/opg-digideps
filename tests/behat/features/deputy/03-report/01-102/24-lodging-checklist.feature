@@ -50,6 +50,7 @@ Feature: Admin report checklist
       | Doe               | checklist-deputy-lastname |
       | 102 Petty France  | checklist-deputy-address   |
       | 020 3334 3555     | checklist-deputy-phone     |
+      | behat-user@publicguardian.gov.uk | checklist-deputy-email |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
