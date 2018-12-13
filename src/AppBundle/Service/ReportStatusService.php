@@ -393,6 +393,40 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
+        $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
+            && ! $this->report->getProfDeputyCostsHowChargedAgreed()
+            && ! $this->report->getProfDeputyCostsHowChargedAssessed();
+
+        $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
+            || $this->report->getProfDeputyCostsHowChargedAgreed()
+            || $this->report->getProfDeputyCostsHowChargedFixed();
+        if (!$atLeastOneTicked) {
+            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+        }
+
+        // remaining costs are valid if answer is "no" or ("Yes" + at least one record)
+        $isRemainingValid = $this->report->getProfDeputyCostsHasPrevious() === 'no' ||
+            ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
+
+        // interim costs are valid if answer is "no" or ("Yes" + at least one record)
+         $isInterimValid = $this->report->getProfDeputyCostsHasInterim() =='no'
+                || ($this->report->getProfDeputyCostsHasInterim() =='yes' && count($this->report->getProfDeputyInterimCosts()));
+
+         // skipped if "fixed" is not the only ticked
+        $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyCostsFixed();
+        $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
+
+        $isBreakdownValid = false;
+        foreach($this->report->getProfDeputyOtherCosts() as $oc) {
+            if ($oc->getAmount()) {
+                $isBreakdownValid = true;
+            }
+        }
+
+        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $isBreakdownValid) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
         if ($this->report->getProfDeputyCostsHowChargedAgreed()
             || $this->report->getProfDeputyCostsHowChargedAssessed()
             || $this->report->getProfDeputyCostsHowChargedFixed()

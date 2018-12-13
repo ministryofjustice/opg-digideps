@@ -345,4 +345,9 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
+    public function getProfDeputyCostsFixed()
+    {
+        return null; //TODO implement
+    }
+
 }

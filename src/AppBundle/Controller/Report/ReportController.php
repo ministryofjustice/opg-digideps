@@ -455,13 +455,17 @@ class ReportController extends RestController
 
         if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
             $report->setProfDeputyCostsHasInterim($data['prof_deputy_costs_has_interim']);
-            foreach ($report->getProfDeputyInterimCosts() as $ic) {
-                $this->getEntityManager()->remove($ic);
+            // remove interim if changed to "no"
+            if ($data['prof_deputy_costs_has_interim'] === 'no') {
+                foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                    $this->getEntityManager()->remove($ic);
+                }
             }
         }
 
         if (array_key_exists('prof_deputy_interim_costs', $data)) {
-            // wipe existing interim costs
+            // wipe existing interim costs in order to overwrite
+            // TODO consider keeping and updating the existing ones if simpler to implement
             foreach ($report->getProfDeputyInterimCosts() as $ic) {
                 $this->getEntityManager()->remove($ic);
             }
