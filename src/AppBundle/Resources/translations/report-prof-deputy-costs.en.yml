@@ -1,11 +1,16 @@
 startPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
-  pageSectionDescription1: ...
-  pageSectionDescription2: Include information about:
-  listItem01: Professional deputy costs
-  listItem02: Annual management costs
-  listItem03: Other costs
+  pageSectionDescription1: |
+    Use this section to tell us how much John paid for your professional deputy services
+     in this reporting period (15 March 2017 to 14 March 2018).
+  pageSectionDescription2: This includes money John paid you in this reporting period:
+  listItem01: for work carried out in previous reporting periods
+  listItem02: for work carried out in this reporting period
+  pageSectionDescription3: Please include both fixed and assessed costs.
+  pageSectionDescription4: |
+    For more detail, refer to the court’s Practice Directive 19B: Fixed Costs in the
+    Court of Protection, published as part of the Court of Protection (Amendment) Rules 2017."
   startButton: Start
 
 howCharged:
@@ -68,9 +73,6 @@ interim:
   form:
     date.label: Date paid
     amount.label: Amount paid
-
-
-
 
 fixedCosts:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
