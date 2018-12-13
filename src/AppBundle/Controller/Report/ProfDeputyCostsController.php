@@ -271,14 +271,14 @@ class ProfDeputyCostsController extends AbstractController
             if ($from === 'summary') {
                 $nextRoute = 'prof_deputy_costs_summary';
             } else { // saveAndContinue
-                $nextRoute = 'prof_deputy_costs_amount_scco'; // TODO use next step
+                $nextRoute = 'prof_deputy_costs_amount_scco';
             }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
 
         return [
-            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'backLink' => $this->generateUrl($from =='summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_inline_interim_19b_exists', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
