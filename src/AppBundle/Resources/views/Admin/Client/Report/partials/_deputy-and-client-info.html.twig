@@ -91,52 +91,53 @@
             </table>
 
             {# DEPUTY DETAILS #}
+            {% set deputy = report.submittedBy.isDeputyOrg and report.client.getNamedDeputy ? report.client.getNamedDeputy : report.submittedBy %}
             <h3 class="heading-medium">Deputy details</h3>
             <table class="text">
                 <tbody>
                     <tr>
                         <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
-                        <td class="behat-region-checklist-deputy-firstname">{{ report.submittedBy.firstname }}</td>
+                        <td class="behat-region-checklist-deputy-firstname">{{ deputy.firstname }}</td>
                     </tr>
                     <tr>
                         <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
-                        <td class="behat-region-checklist-deputy-lastname">{{ report.submittedBy.lastname }}</td>
+                        <td class="behat-region-checklist-deputy-lastname">{{ deputy.lastname }}</td>
                     </tr>
                     <tr valign="top">
                         <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
                         <td class="behat-region-checklist-deputy-address">
                             <p>
-                                {% if report.submittedBy.address1 is not empty %}
-                                    {{ report.submittedBy.address1 }}<br/>
+                                {% if deputy.address1 is not empty %}
+                                    {{ deputy.address1 }}<br/>
                                 {% endif %}
-                                {% if report.submittedBy.address2 is not empty %}
-                                    {{ report.submittedBy.address2 }}<br/>
+                                {% if deputy.address2 is not empty %}
+                                    {{ deputy.address2 }}<br/>
                                 {% endif %}
-                                {% if report.submittedBy.address3 is not empty %}
-                                    {{ report.submittedBy.address3 }}<br/>
+                                {% if deputy.address3 is not empty %}
+                                    {{ deputy.address3 }}<br/>
                                 {% endif %}
-                                {% if report.submittedBy.addressPostcode is not empty %}
-                                    {{ report.submittedBy.addressPostcode }}<br/>
+                                {% if deputy.addressPostcode is not empty %}
+                                    {{ deputy.addressPostcode }}<br/>
                                 {% endif %}
-                                {% if report.submittedBy.addressCountry is not empty %}
-                                    {{ report.submittedBy.addressCountry | country_name }}
+                                {% if deputy.addressCountry is not empty %}
+                                    {{ deputy.addressCountry | country_name }}
                                 {% endif %}
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
-                        <td class="behat-region-checklist-deputy-phone">{{ report.submittedBy.phoneMain }}</td>
+                        <td class="behat-region-checklist-deputy-phone">{{ deputy.phoneMain }}</td>
                     </tr>
-                    {% if (report.submittedBy.phoneAlternative is defined) %}
+                    {% if (deputy.phoneAlternative is defined) %}
                         <tr>
                             <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
-                            <td>{{report.submittedBy.phoneAlternative}}</td>
+                            <td>{{deputy.phoneAlternative}}</td>
                         </tr>
                     {% endif %}
                     <tr>
                         <th scope="row" class="bold">{{ 'email' | trans({}, 'common') }}</th>
-                        <td class="dont-break-out">{{ report.submittedBy.email }}</td>
+                        <td class="dont-break-out">{{ deputy.email }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -153,7 +154,7 @@
         }) }}
     </div>
     <div class="panel panel-border-narrow push-half--top">
-        <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ report.submittedBy.fullName }}</p>
+        <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}</p>
     </div>
 </div>
 {% endif %}
