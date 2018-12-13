@@ -64,6 +64,16 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyPreviousCosts;
 
     /**
+     * @var float
+     *
+     * @Assert\NotBlank( message="profDeputyCostsReceived.amount.notBlank", groups={"prof-deputy-costs-received"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyCostsReceived.amount.minMessage", groups={"prof-deputy-costs-received"})
+     * @JMS\Type("double")
+     * @JMS\Groups({"profDeputyCostsReceived"})
+     */
+    private $profDeputyCostsReceived;
+
+    /**
      * @var string yes/no
      *
      * @JMS\Type("string")
@@ -331,5 +341,21 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyOtherCostIds($profDeputyOtherCostIds)
     {
         $this->profDeputyOtherCostIds = $profDeputyOtherCostIds;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProfDeputyCostsReceived()
+    {
+        return $this->profDeputyCostsReceived;
+    }
+
+    /**
+     * @param float $profDeputyCostsReceived
+     */
+    public function setProfDeputyCostsReceived($profDeputyCostsReceived)
+    {
+        $this->profDeputyCostsReceived = $profDeputyCostsReceived;
     }
 }

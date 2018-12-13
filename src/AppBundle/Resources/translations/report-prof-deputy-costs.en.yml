@@ -24,7 +24,6 @@ previousReceivedExists:
     profDeputyCostsHasPrevious:
       label: "Are there any remaining fees from previous reporting periods that you’ve received in this reporting period?"
 
-
 previousReceived:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
@@ -69,12 +68,11 @@ interim:
     date.label: Amount paid
     amount.label: Date paid
 
-
-
-
-fixedCosts:
+costsReceived:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  form:
+    profDeputyCostsReceived.label: "How much has %client% paid you in this reporting period for work carried out in this reporting period (including VAT)?"
 
 amountToScco:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

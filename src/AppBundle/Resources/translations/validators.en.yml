@@ -480,6 +480,11 @@ profDeputyPreviousCost:
     minMessage: The amount must be more than £{{ limit }}
     maxMessage: The amount must be less than £10,000,000,000
 
+profDeputyCostsReceived:
+  amount:
+    notBlank: Enter 0 if you have not received any payments from John for this reporting period
+    minMessage: Please enter a positive amount
+
 profDeputyInterimCost:
   date:
     notBlank: Please enter a date

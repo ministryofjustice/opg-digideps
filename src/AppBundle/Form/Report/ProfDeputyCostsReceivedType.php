@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProfDeputyCostSccoType extends AbstractType
+class ProfDeputyCostsReceivedType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -15,12 +15,11 @@ class ProfDeputyCostSccoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('profDeputyCostsAmountToScco', FormTypes\NumberType::class, [
+            ->add('profDeputyCostsReceived', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
             ])
-            ->add('profDeputyCostsReasonBeyondEstimate', FormTypes\TextareaType::class)
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 
@@ -30,7 +29,7 @@ class ProfDeputyCostSccoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['prof-deputy-costs-scco'],
+            'validation_groups' => ['prof-deputy-costs-received'],
             'translation_domain' => 'report-prof-deputy-costs'
         ]);
     }
@@ -40,6 +39,6 @@ class ProfDeputyCostSccoType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'deputy_costs_scco';
+        return 'deputy_costs_received';
     }
 }

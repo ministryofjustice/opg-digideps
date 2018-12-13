@@ -108,7 +108,7 @@ class ProfDeputyCostsController extends AbstractController
                     if ($from =='summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
                     } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
-                        $nextRoute = 'prof_deputy_costs_fixed';
+                        $nextRoute = 'prof_deputy_costs_received';
                     } else {
                         $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
                     }
@@ -166,7 +166,7 @@ class ProfDeputyCostsController extends AbstractController
             } else if ($from === 'summary') {
                 $nextRoute = 'prof_deputy_costs_summary';
             } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
-                $nextRoute = 'prof_deputy_costs_fixed';
+                $nextRoute = 'prof_deputy_costs_received';
             } else {
                 $nextRoute = 'prof_deputy_costs_inline_interim_19b_exists';
             }
@@ -234,7 +234,7 @@ class ProfDeputyCostsController extends AbstractController
                     if ($from === 'summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
                     } else {
-                        $nextRoute = 'prof_deputy_costs_fixed';
+                        $nextRoute = 'prof_deputy_costs_received';
                     }
 
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
@@ -285,16 +285,32 @@ class ProfDeputyCostsController extends AbstractController
     }
 
     /**
-     * @Route("/fixed-cost", name="prof_deputy_costs_fixed")
+     * @Route("/costs-received", name="prof_deputy_costs_received")
      * @Template()
      */
-    public function fixedCost(Request $request, $reportId)
+    public function costsReceivedAction(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        \Doctrine\Common\Util\Debug::dump($report); die;
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostsReceivedType::class, $report);
+        $form->handleRequest($request);
 
-        // value
+        if ($form->isValid()) {
+
+            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsReceived']);
+
+            $nextRoute = ($from === 'summary') ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco';
+
+            return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
+        }
+
+        return [
+            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'form' => $form->createView(),
+            'report' => $report
+        ];
+
     }
 
     /**
