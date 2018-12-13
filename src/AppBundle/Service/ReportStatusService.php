@@ -400,8 +400,9 @@ class ReportStatusService
         $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
             || $this->report->getProfDeputyCostsHowChargedAgreed()
             || $this->report->getProfDeputyCostsHowChargedFixed();
+
         if (!$atLeastOneTicked) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
         // remaining costs are valid if answer is "no" or ("Yes" + at least one record)
@@ -423,19 +424,14 @@ class ReportStatusService
             }
         }
 
-        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $isBreakdownValid) {
+
+
+        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $isBreakdownValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        if ($this->report->getProfDeputyCostsHowChargedAgreed()
-            || $this->report->getProfDeputyCostsHowChargedAssessed()
-            || $this->report->getProfDeputyCostsHowChargedFixed()
-            || $this->report->getProfDeputyCostsHasPrevious()
-        ) {
-            return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
 
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
     /**
