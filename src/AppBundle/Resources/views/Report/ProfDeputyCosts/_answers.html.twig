@@ -5,6 +5,10 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
+<h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
+
+<p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
@@ -133,5 +137,42 @@
                 </td>
             {% endif %}
         </tr>
+    </tbody>
+</table>
+
+<h2 class="heading-medium">{{ (page ~ '.breakdownOfAdditionalCosts') |  trans(transOptions) }}</h2>
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>{{ (page ~ '.item') |  trans }}</th>
+            <th>{{ (page ~ '.amount') |  trans }}</th>
+            {% if not hideEditLink %}
+                <th class="change-answer">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds   %}
+        <tr class="behat-region-prev-costs">
+            <td>
+                {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
+            </td>
+            <td>
+                {% if submittedOtherCosts[otherCostTypeId.typeId]['amount'] is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ submittedOtherCosts[otherCostTypeId.typeId]['amount'] | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
     </tbody>
 </table>

@@ -417,6 +417,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
+            'submittedOtherCosts' => $report->generateActualSubmittedOtherCosts(),
             'report' => $report,
         ];
     }

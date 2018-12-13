@@ -113,3 +113,11 @@ summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle:  Deputy costs
   pageSectionDescription: ...
+  weveListedYourAnswers: We've listed your saved answers below
+  checkTheyreCorrect: Check they're correct and edit them where necessary.
+  breakdownOfAdditionalCosts: |
+      Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
+  item: Item
+  amount: Amount
+
+
