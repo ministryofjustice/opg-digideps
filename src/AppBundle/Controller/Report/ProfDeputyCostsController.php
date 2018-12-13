@@ -223,16 +223,19 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
+
+            // store yes or no
+            $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
+
+            // next route calculation
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
-                    // no need to save. "Yes" will be set when one entry is added to keep db data consistent
+                    // go to interim page, and pass by the "from"
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
-                    // store and go to next route
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
-
                     if ($from === 'summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
+                        // TODO consider going to fixed costs adding from=summmary if not set
                     } else {
                         $nextRoute = 'prof_deputy_costs_fixed';
                     }
