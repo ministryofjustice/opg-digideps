@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
  * @Assert\Callback(callback="profCostsHowChangedAtLeastOne", groups={"prof-deputy-costs-how-changed"})
+ * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
 class Report implements ReportInterface

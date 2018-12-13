@@ -223,16 +223,19 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isValid()) {
             $data = $form->getData();
             /* @var $data EntityDir\Report\Report */
+
+            // store yes or no
+            $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
+
+            // next route calculation
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
-                    // no need to save. "Yes" will be set when one entry is added to keep db data consistent
+                    // go to interim page, and pass by the "from"
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
-                    // store and go to next route
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
-
                     if ($from === 'summary') {
                         $nextRoute = 'prof_deputy_costs_summary';
+                        // TODO consider going to fixed costs adding from=summmary if not set
                     } else {
                         $nextRoute = 'prof_deputy_costs_received';
                     }
@@ -271,14 +274,14 @@ class ProfDeputyCostsController extends AbstractController
             if ($from === 'summary') {
                 $nextRoute = 'prof_deputy_costs_summary';
             } else { // saveAndContinue
-                $nextRoute = 'prof_deputy_costs_amount_scco'; // TODO use next step
+                $nextRoute = 'prof_deputy_costs_amount_scco';
             }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
 
         return [
-            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'backLink' => $this->generateUrl($from =='summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_inline_interim_19b_exists', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -335,6 +338,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
+            // backlink depends on "fixed" being selected. Simpler not to show a backlink unless necessary
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
             'form' => $form->createView(),
             'report' => $report

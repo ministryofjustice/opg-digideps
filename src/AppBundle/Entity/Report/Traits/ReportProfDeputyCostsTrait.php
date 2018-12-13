@@ -202,6 +202,23 @@ trait ReportProfDeputyCostsTrait
         }
     }
 
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function profCostsInterimAtLeastOne(ExecutionContextInterface $context)
+    {
+        // skip validation if there is at least one interim with date
+        foreach($this->getProfDeputyInterimCosts() as $ic) {
+            if (!empty($ic->getAmount()) && !empty($ic->getDate())) {
+                return;
+            }
+        }
+
+        $context->buildViolation('profDeputyInterimCost.atLeastOne')->atPath('profDeputyInterimCosts[0].amount')->addViolation();
+        $context->buildViolation('profDeputyInterimCost.date.notBlank')->atPath('profDeputyInterimCosts[0].date')->addViolation();
+    }
+
+
 
     /**
      * @return string
