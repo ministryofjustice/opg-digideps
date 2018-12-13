@@ -66,8 +66,8 @@ interim:
     If you charged more than 3 interim bills, please combine these into 3 groups of payments.
     For 'Date paid', use the date the last payment in each group was made.
   form:
-    date.label: Amount paid
-    amount.label: Date paid
+    date.label: Date paid
+    amount.label: Amount paid
 
 
 

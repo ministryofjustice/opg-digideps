@@ -23,6 +23,7 @@ class ProfDeputyCostInterimSingleType extends AbstractType
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
+                'invalid_message' => 'profDeputyInterimCost.amount.notNumeric',
             ]);
 
     }
