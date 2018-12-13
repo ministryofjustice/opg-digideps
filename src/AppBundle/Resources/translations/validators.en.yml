@@ -481,7 +481,9 @@ profDeputyPreviousCost:
     maxMessage: The amount must be less than £10,000,000,000
 
 profDeputyInterimCost:
+  atLeastOne: Add at least one interim cost
   date:
+    notBlank: Please enter a date
     notValid: Date not valid
   amount:
     notNumeric: Amount not valid

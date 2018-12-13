@@ -319,6 +319,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
+            // backlink depends on "fixed" being selected. Simpler not to show a backlink unless necessary
             'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
             'form' => $form->createView(),
             'report' => $report
