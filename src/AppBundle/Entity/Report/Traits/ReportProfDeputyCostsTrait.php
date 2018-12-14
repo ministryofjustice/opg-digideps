@@ -375,4 +375,40 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
     }
+
+    /**
+     * @param string $typeId
+     *
+     * @return ProfDeputyOtherCost
+     */
+    private function getProfDeputyOtherCostByTypeId($typeId)
+    {
+        foreach ($this->getProfDeputyOtherCosts() as $submittedCost) {
+
+            if ($typeId == $submittedCost->getProfDeputyOtherCostTypeId()) {
+                return $submittedCost;
+            }
+        }
+    }
+
+    /**
+     * Generates a static data array of submitted costs (values set in the database). Used in the summary view.
+     *
+     * @return array
+     */
+    public function generateActualSubmittedOtherCosts()
+    {
+        $defaultOtherCosts = $this->getProfDeputyOtherCostTypeIds();
+        $submittedCosts = [];
+        foreach ($defaultOtherCosts as $defaultOtherCost) {
+            $submittedCost = $this->getProfDeputyOtherCostByTypeId($defaultOtherCost['typeId']);
+            $submittedCosts[$defaultOtherCost['typeId']]['typeId'] = $defaultOtherCost['typeId'];
+            $submittedCosts[$defaultOtherCost['typeId']]['amount'] = !empty($submittedCost) ? $submittedCost->getAmount() : null;
+            $submittedCosts[$defaultOtherCost['typeId']]['hadMoreDetails'] = $defaultOtherCost['hasMoreDetails'];
+            $submittedCosts[$defaultOtherCost['typeId']]['moreDetails'] = !empty($submittedCost) ? $submittedCost->getMoreDetails() : '';
+
+        }
+
+        return $submittedCosts;
+    }
 }

@@ -5,6 +5,10 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
+<h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
+
+<p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
@@ -67,41 +71,44 @@
 
 
         {# Have you charged in line with interim billing under Practice Direction 19B  #}
-        <tr class="behat-region-has-interim">
-            <td>
-                {% if report.profDeputyCostsHasInterim is null %}<span class="error">{% endif %}
-                {{ 'interimExists.form.profDeputyCostsHasInterim.label' | trans(transOptions) }}
-                {% if report.profDeputyCostsHasInterim is null %}</span>{% endif %}
-            </td>
-            <td>
-                {% if report.profDeputyCostsHasInterim is null %}
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                {% else %}
-                    {{ report.profDeputyCostsHasInterim | capitalize }}
-                {% endif %}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            {% endif %}
-        </tr>
-
-        {% for ic in report.profDeputyInterimCosts %}
-            <tr class="behat-region-prev-costs">
+        {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
+            <tr class="behat-region-has-interim">
                 <td>
-                    Costs for interim {{ loop.index }}
+                    {% if report.profDeputyCostsHasInterim is null %}<span class="error">{% endif %}
+                    {{ 'interimExists.form.profDeputyCostsHasInterim.label' | trans(transOptions) }}
+                    {% if report.profDeputyCostsHasInterim is null %}</span>{% endif %}
                 </td>
                 <td>
-                    £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
+                    {% if report.profDeputyCostsHasInterim is null %}
+                        <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                    {% else %}
+                        {{ report.profDeputyCostsHasInterim | capitalize }}
+                    {% endif %}
                 </td>
                 {% if not hideEditLink  %}
-                    <td class="change-answer width-sixth soft-half--left hard--right">
-                        <a href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
                     </td>
                 {% endif %}
             </tr>
-        {% endfor %}
+
+            {% for ic in report.profDeputyInterimCosts %}
+                <tr class="behat-region-prev-costs">
+                    <td>
+                        Costs for interim {{ loop.index }}
+                    </td>
+                    <td>
+                        £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="change-answer width-sixth soft-half--left hard--right">
+                            <a href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+
+        {% endif %}
 
         {# Fixed cost #}
         {% if report.hasProfDeputyCostsHowChargedFixedOnly or report.profDeputyCostsHasInterim == 'no'  %}
@@ -159,5 +166,42 @@
                 </td>
             {% endif %}
         </tr>
+    </tbody>
+</table>
+
+<h2 class="heading-medium">{{ (page ~ '.breakdownOfAdditionalCosts') |  trans(transOptions) }}</h2>
+
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+        <tr>
+            <th>{{ (page ~ '.item') |  trans }}</th>
+            <th>{{ (page ~ '.amount') |  trans }}</th>
+            {% if not hideEditLink %}
+                <th class="change-answer">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds   %}
+        <tr class="behat-region-prev-costs">
+            <td>
+                {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
+            </td>
+            <td>
+                {% if submittedOtherCosts[otherCostTypeId.typeId]['amount'] is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ submittedOtherCosts[otherCostTypeId.typeId]['amount'] | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
