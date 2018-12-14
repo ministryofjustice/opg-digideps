@@ -114,7 +114,7 @@
         {% if report.hasProfDeputyCostsHowChargedFixedOnly or report.profDeputyCostsHasInterim == 'no'  %}
         <tr class="behat-region-fixed-cost-amount">
             <td>
-                {{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}
+                {{ (page ~ '.questionLabel.paidThisPeriod') | trans(transOptions) }}
             </td>
             <td>
                 {% if report.profDeputyFixedCost is null %}
@@ -130,6 +130,16 @@
             {% endif %}
         </tr>
         {% endif %}
+
+        {# Total cost this period#}
+        <tr class="behat-region-total-cost">
+            <td>
+                {{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}
+            </td>
+            <td>
+                £{{ report.profDeputyTotalCosts | money_format }}
+            </td>
+        </tr>
 
         {# SCCO assessment #}
         <tr class="behat-region-scco-assessment-amount">

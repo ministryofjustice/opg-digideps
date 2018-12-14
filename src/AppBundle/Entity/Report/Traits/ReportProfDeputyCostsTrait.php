@@ -107,6 +107,13 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
+     * @var float
+     *
+     * @JMS\Type("double")
+     */
+    private $profDeputyTotalCosts;
+
+    /**
      * return true if only fixed is true
      * @return boolean
      */
@@ -374,6 +381,22 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyFixedCost($profDeputyFixedCost)
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
+    }
+
+    /**
+     * @return float
+     */
+    public function getProfDeputyTotalCosts()
+    {
+        return $this->profDeputyTotalCosts;
+    }
+
+    /**
+     * @param float $profDeputyTotalCosts
+     */
+    public function setProfDeputyTotalCosts($profDeputyTotalCosts)
+    {
+        $this->profDeputyTotalCosts = $profDeputyTotalCosts;
     }
 
     /**
