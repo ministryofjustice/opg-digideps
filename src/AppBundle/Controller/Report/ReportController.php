@@ -460,6 +460,8 @@ class ReportController extends RestController
                 foreach ($report->getProfDeputyInterimCosts() as $ic) {
                     $this->getEntityManager()->remove($ic);
                 }
+            } else if ($data['prof_deputy_costs_has_interim'] === 'yes') {
+                $report->setProfDeputyFixedCost(null);
             }
         }
 
