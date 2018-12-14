@@ -228,14 +228,12 @@ class ProfDeputyCostsController extends AbstractController
             /* @var $data EntityDir\Report\Report */
 
             // store yes or no
+            $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
 
             // next route calculation
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
                     // go to interim page, and pass by the "from"
-                    $data->setProfDeputyFixedCost(null);
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim', 'profDeputyFixedCost']);
-
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     if ($from === 'summary') {
@@ -244,9 +242,6 @@ class ProfDeputyCostsController extends AbstractController
                     } else {
                         $nextRoute = 'prof_deputy_costs_received';
                     }
-
-                    $data->setProfDeputyInterimCosts(new ArrayCollection());
-                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim', 'profDeputyInterimCosts']);
 
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
             }
