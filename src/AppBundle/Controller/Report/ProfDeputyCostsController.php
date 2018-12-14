@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +21,11 @@ class ProfDeputyCostsController extends AbstractController
         'status',
         'prof-deputy-other-costs',
         'prof-deputy-costs-how-charged',
+        'report-prof-deputy-costs',
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-        'report-prof-deputy-costs-scco', 'report-prof-deputy-fixed-cost'
+        'report-prof-deputy-costs-scco',
+        'report-prof-deputy-fixed-cost'
     ];
 
     /**
@@ -225,12 +228,14 @@ class ProfDeputyCostsController extends AbstractController
             /* @var $data EntityDir\Report\Report */
 
             // store yes or no
-            $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim']);
 
             // next route calculation
             switch ($data->getProfDeputyCostsHasInterim()) {
                 case 'yes':
                     // go to interim page, and pass by the "from"
+                    $data->setProfDeputyFixedCost(null);
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim', 'profDeputyFixedCost']);
+
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     if ($from === 'summary') {
@@ -239,6 +244,9 @@ class ProfDeputyCostsController extends AbstractController
                     } else {
                         $nextRoute = 'prof_deputy_costs_received';
                     }
+
+                    $data->setProfDeputyInterimCosts(new ArrayCollection());
+                    $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasInterim', 'profDeputyInterimCosts']);
 
                     return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
             }
