@@ -108,6 +108,7 @@ breakdown:
       other:
         label: Other
         moreInformation: Give details of any 'other' costs
+        moreInformationLabelSummary: Details of other costs
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

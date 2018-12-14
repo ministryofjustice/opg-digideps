@@ -184,24 +184,41 @@
         </tr>
     </thead>
     <tbody>
-        {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds   %}
+    {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
+        {% set costRow = submittedOtherCosts[otherCostTypeId.typeId] %}
         <tr class="behat-region-prev-costs">
             <td>
                 {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
             </td>
             <td>
-                {% if submittedOtherCosts[otherCostTypeId.typeId]['amount'] is null %}
+                {% if costRow['amount'] is null %}
                     <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 {% else %}
-                    £{{ submittedOtherCosts[otherCostTypeId.typeId]['amount'] | money_format }}
+                    £{{ costRow['amount'] | money_format }}
                 {% endif %}
             </td>
-            {% if not hideEditLink  %}
+            {% if not hideEditLink %}
                 <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
+                       class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             {% endif %}
         </tr>
-        {% endfor %}
+        {# more details ("other" only) #}
+        {% if costRow.hadMoreDetails and costRow.moreDetails %}
+            <td>
+                {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
+            </td>
+            <td>
+                {{  costRow.moreDetails | nl2br }}
+            </td>
+            {% if not hideEditLink %}
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
+                       class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
     </tbody>
 </table>
