@@ -7,7 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProfDeputyCostsReceivedType extends AbstractType
+class ProfDeputyFixedCostType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -15,7 +15,7 @@ class ProfDeputyCostsReceivedType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('profDeputyCostsReceived', FormTypes\NumberType::class, [
+            ->add('profDeputyFixedCost', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
@@ -29,7 +29,7 @@ class ProfDeputyCostsReceivedType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['prof-deputy-costs-received'],
+            'validation_groups' => ['prof-deputy-fixed-cost'],
             'translation_domain' => 'report-prof-deputy-costs'
         ]);
     }

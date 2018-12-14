@@ -73,11 +73,11 @@ interim:
     date.label: Date paid
     amount.label: Amount paid
 
-costsReceived:
+fixedCost:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   form:
-    profDeputyCostsReceived.label: "How much has %client% paid you in this reporting period for work carried out in this reporting period (including VAT)?"
+    profDeputyFixedCost.label: "How much has %client% paid you in this reporting period for work carried out in this reporting period (including VAT)?"
 
 amountToScco:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

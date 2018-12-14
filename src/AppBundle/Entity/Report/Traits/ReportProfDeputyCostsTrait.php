@@ -66,12 +66,12 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var float
      *
-     * @Assert\NotBlank( message="profDeputyCostsReceived.amount.notBlank", groups={"prof-deputy-costs-received"} )
-     * @Assert\Range(min=0, minMessage = "profDeputyCostsReceived.amount.minMessage", groups={"prof-deputy-costs-received"})
+     * @Assert\NotBlank( message="profDeputyFixedCost.amount.notBlank", groups={"prof-deputy-fixed-cost"} )
+     * @Assert\Range(min=0, minMessage = "profDeputyFixedCost.amount.minMessage", groups={"prof-deputy-fixed-cost"})
      * @JMS\Type("double")
-     * @JMS\Groups({"profDeputyCostsReceived"})
+     * @JMS\Groups({"profDeputyFixedCost"})
      */
-    private $profDeputyCostsReceived;
+    private $profDeputyFixedCost;
 
     /**
      * @var string yes/no
@@ -363,16 +363,16 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return float
      */
-    public function getProfDeputyCostsReceived()
+    public function getProfDeputyFixedCost()
     {
-        return $this->profDeputyCostsReceived;
+        return $this->profDeputyFixedCost;
     }
 
     /**
-     * @param float $profDeputyCostsReceived
+     * @param float $profDeputyFixedCost
      */
-    public function setProfDeputyCostsReceived($profDeputyCostsReceived)
+    public function setProfDeputyFixedCost($profDeputyFixedCost)
     {
-        $this->profDeputyCostsReceived = $profDeputyCostsReceived;
+        $this->profDeputyFixedCost = $profDeputyFixedCost;
     }
 }

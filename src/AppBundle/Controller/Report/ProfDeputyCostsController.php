@@ -22,7 +22,7 @@ class ProfDeputyCostsController extends AbstractController
         'prof-deputy-costs-how-charged',
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-        'report-prof-deputy-costs-scco'
+        'report-prof-deputy-costs-scco', 'report-prof-deputy-fixed-cost'
     ];
 
     /**
@@ -291,17 +291,17 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("/costs-received", name="prof_deputy_costs_received")
      * @Template()
      */
-    public function costsReceivedAction(Request $request, $reportId)
+    public function fixedCostAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostsReceivedType::class, $report);
+        $form = $this->createForm(FormDir\Report\ProfDeputyFixedCostType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
 
-            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsReceived']);
+            $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
 
             $nextRoute = ($from === 'summary') ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco';
 

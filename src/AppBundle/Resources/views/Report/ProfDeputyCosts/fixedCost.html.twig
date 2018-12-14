@@ -5,7 +5,7 @@
 
 {% set translationDomain = "report-prof-deputy-costs" %}
 {% trans_default_domain translationDomain %}
-{% set page = 'costsReceived' %}
+{% set page = 'fixedCost' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
@@ -22,7 +22,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">
-        {{ form_input(form.profDeputyCostsReceived, page ~ '.form.profDeputyCostsReceived', {
+        {{ form_input(form.profDeputyFixedCost, page ~ '.form.profDeputyFixedCost', {
             'inputPrefix' : '£',
             'inputClass' : 'form-control-1-4 js-format-currency',
             'labelClass' : 'form-label-bold',

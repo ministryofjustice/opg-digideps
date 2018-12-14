@@ -103,13 +103,38 @@
             </tr>
         {% endfor %}
 
+        {# Fixed cost #}
+        {% if report.hasProfDeputyCostsHowChargedFixedOnly or report.profDeputyCostsHasInterim == 'no'  %}
+        <tr class="behat-region-fixed-cost-amount">
+            <td>
+                {{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}
+            </td>
+            <td>
+                {% if report.profDeputyFixedCost is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ report.profDeputyFixedCost | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endif %}
+
         {# SCCO assessment #}
         <tr class="behat-region-scco-assessment-amount">
             <td>
                 {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
             </td>
             <td>
-                {{ report.profDeputyCostsAmountToScco | raw }}
+                {%  if report.profDeputyCostsAmountToScco is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ report.profDeputyCostsAmountToScco | money_format }}
+                {% endif %}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
@@ -122,7 +147,11 @@
                 {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.label' | trans }}
             </td>
             <td>
-                {{ report.profDeputyCostsReasonBeyondEstimate | raw }}
+                {% if report.profDeputyCostsReasonBeyondEstimate is null %}
+                    <span>-</span>
+                {% else %}
+                    {{ report.profDeputyCostsReasonBeyondEstimate | nl2br }}
+                {% endif %}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
