@@ -398,10 +398,15 @@ trait ReportProfDeputyCostsTrait
             $total += (float) $previousCost->getAmount();
         }
 
-        $total += (float) $this->getProfDeputyFixedCost();
+        // consider fixed costs if
+        if ($this->getProfDeputyCostsHasInterim() !== 'yes') {
+            $total += (float) $this->getProfDeputyFixedCost();
+        }
 
-        foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
-            $total += (float) $interimCost->getAmount();
+        if ($this->getProfDeputyCostsHasInterim() === 'yes') {
+            foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
+                $total += (float) $interimCost->getAmount();
+            }
         }
 
         return $total;
