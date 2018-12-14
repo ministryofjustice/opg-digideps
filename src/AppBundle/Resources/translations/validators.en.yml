@@ -470,11 +470,11 @@ profDeputyHowChanged:
 
 profDeputyPreviousCost:
   startDate:
-    notBlank: Please enter a date
-    notValid: Date not valid
+    notBlank: Please enter the start date
+    notValid: Start date not valid
   endDate:
-    notBlank: Please enter a date
-    notValid: Date not valid
+    notBlank: Please enter the end date
+    notValid: End date not valid
   amount:
     notBlank: Please enter a value
     minMessage: The amount must be more than £{{ limit }}

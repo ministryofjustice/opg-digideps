@@ -134,11 +134,12 @@
         {# Total cost this period#}
         <tr class="behat-region-total-cost">
             <td>
-                {{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}
+                <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
             </td>
             <td>
-                £{{ report.profDeputyTotalCosts | money_format }}
+                <strong class="bold">£{{ report.profDeputyTotalCosts | money_format }}</strong>
             </td>
+            {% if not hideEditLink  %}<td></td> {% endif %}
         </tr>
 
         {# SCCO assessment #}
