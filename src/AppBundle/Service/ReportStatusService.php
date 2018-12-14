@@ -393,6 +393,7 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
+        //TODO move to method
         $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
             && ! $this->report->getProfDeputyCostsHowChargedAgreed()
             && ! $this->report->getProfDeputyCostsHowChargedAssessed();
