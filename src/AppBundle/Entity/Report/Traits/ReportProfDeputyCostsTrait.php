@@ -381,13 +381,24 @@ trait ReportProfDeputyCostsTrait
     {
         $total = 0;
 
+        //TODO move to method
+        $onlyFixedTicked = $this->getProfDeputyCostsHowChargedFixed()
+            && ! $this->getProfDeputyCostsHowChargedAgreed()
+            && ! $this->getProfDeputyCostsHowChargedAssessed();
+
+        // return null if data incomplete
+        if (!$this->getProfDeputyCostsHasPrevious()
+            || (!$onlyFixedTicked && !$this->getProfDeputyCostsHasInterim())
+            || ($onlyFixedTicked && null === $this->getProfDeputyFixedCost())
+        ) {
+            return null;
+        }
+
         foreach ($this->getProfDeputyPreviousCosts() as $previousCost) {
             $total += (float) $previousCost->getAmount();
         }
 
-        if (null !== $this->getProfDeputyFixedCost()) {
-            return $total + (float) $this->getProfDeputyFixedCost();
-        }
+        $total += (float) $this->getProfDeputyFixedCost();
 
         foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
             $total += (float) $interimCost->getAmount();

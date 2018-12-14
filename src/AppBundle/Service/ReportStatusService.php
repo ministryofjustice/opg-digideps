@@ -393,6 +393,7 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
+        //TODO move to method
         $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
             && ! $this->report->getProfDeputyCostsHowChargedAgreed()
             && ! $this->report->getProfDeputyCostsHowChargedAssessed();
@@ -410,8 +411,9 @@ class ReportStatusService
             ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
 
         // interim costs are valid if answer is "no" or ("Yes" + at least one record)
-         $isInterimValid = $this->report->getProfDeputyCostsHasInterim() =='no'
-                || ($this->report->getProfDeputyCostsHasInterim() =='yes' && count($this->report->getProfDeputyInterimCosts()));
+        $isInterimValid = $onlyFixedTicked
+            || $this->report->getProfDeputyCostsHasInterim() === 'no'
+            || ($this->report->getProfDeputyCostsHasInterim() === 'yes' && count($this->report->getProfDeputyInterimCosts()));
 
          // skipped if "fixed" is not the only ticked
         $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyFixedCost();
