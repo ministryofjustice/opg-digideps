@@ -415,7 +415,7 @@ class ReportStatusService
             || ($this->report->getProfDeputyCostsHasInterim() === 'yes' && count($this->report->getProfDeputyInterimCosts()));
 
          // skipped if "fixed" is not the only ticked
-        $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyCostsFixed();
+        $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyFixedCost();
         $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
 
         $isBreakdownValid = false;

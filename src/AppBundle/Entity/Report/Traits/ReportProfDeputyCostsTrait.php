@@ -70,6 +70,33 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyInterimCosts;
 
     /**
+     * @var float
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-fixed-cost"})
+     * @ORM\Column(name="prof_dc_fixed_cost_amount", type="decimal", precision=14, scale=2, nullable=true)
+     */
+    private $profDeputyFixedCost;
+
+    /**
+     * @var float
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-costs-scco"})
+     * @ORM\Column(name="prof_dc_scco_amount", type="decimal", precision=14, scale=2, nullable=true)
+     */
+    private $profDeputyCostsAmountToScco;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-prof-deputy-costs-scco"})
+     * @ORM\Column(name="prof_dc_scco_reason_beyond_estimate", type="text", nullable=true)
+     */
+    private $profDeputyCostsReasonBeyondEstimate;
+
+    /**
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
@@ -115,24 +142,6 @@ trait ReportProfDeputyCostsTrait
     {
         self::$profDeputyOtherCostTypeIds = $profDeputyOtherCostTypeIds;
     }
-
-    /**
-     * @var float
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     * @ORM\Column(name="prof_dc_scco_amount", type="decimal", precision=14, scale=2, nullable=true)
-     */
-    private $profDeputyCostsAmountToScco;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     * @ORM\Column(name="prof_dc_scco_reason_beyond_estimate", type="text", nullable=true)
-     */
-    private $profDeputyCostsReasonBeyondEstimate;
 
     /**
      * @return boolean
@@ -345,9 +354,22 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
-    public function getProfDeputyCostsFixed()
+    /**
+     * @return float
+     */
+    public function getProfDeputyFixedCost()
     {
-        return null; //TODO implement
+        return $this->profDeputyFixedCost;
+    }
+
+    /**
+     * @param float $profDeputyFixedCost
+     * @return ReportProfDeputyCostsTrait
+     */
+    public function setProfDeputyFixedCost($profDeputyFixedCost)
+    {
+        $this->profDeputyFixedCost = $profDeputyFixedCost;
+        return $this;
     }
 
 }
