@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
