@@ -132,15 +132,17 @@
         {% endif %}
 
         {# Total cost this period#}
-        <tr class="behat-region-total-cost">
-            <td>
-                <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
-            </td>
-            <td>
-                <strong class="bold">£{{ report.profDeputyTotalCosts | money_format }}</strong>
-            </td>
-            {% if not hideEditLink  %}<td></td> {% endif %}
-        </tr>
+        {%  if report.profDeputyTotalCosts is not null %}
+            <tr class="behat-region-total-cost">
+                <td>
+                    <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
+                </td>
+                <td>
+                    <strong class="bold">£{{ report.profDeputyTotalCosts | money_format }}</strong>
+                </td>
+                {% if not hideEditLink  %}<td></td> {% endif %}
+            </tr>
+        {% endif %}
 
         {# SCCO assessment #}
         <tr class="behat-region-scco-assessment-amount">
