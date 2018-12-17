@@ -548,9 +548,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @todo consider removal
-     *
-     * @param string $section
+     * @param string $section see SECTION_ constants
      *
      * @return bool
      */
