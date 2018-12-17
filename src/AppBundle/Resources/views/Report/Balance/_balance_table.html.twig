@@ -150,6 +150,38 @@
             {% endif %}
         </tr>
 
+
+        {% if report.hasSection('profDeputyCosts') %}
+            {% set started = report.status.profDeputyCostsState['state'] != 'not-started' %}
+            <tr>
+                <td>{{ 'balanceTable.profDeputyCosts' | trans }}</td>
+                <td></td>
+                <td class="numeric">
+                    {% if not started %}
+                        -
+                    {% else %}
+                        £{{ report.profDeputyTotalCosts | money_format }}
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    {% if not started %}
+                        -
+                    {% else %}
+                        {% set partialBalance = partialBalance - report.profDeputyTotalCosts %}
+                        £{{ partialBalance  | money_format }}
+                    {% endif %}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="numeric">
+                        <a href="{{ path('prof_deputy_costs', {'reportId': report.id}) }}" class="bold">
+                            {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                        </a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endif %}
+
+
         {# MONEY IN #}
         {% set started = report.status.moneyInState['state'] != 'not-started' %}
         <tr>
