@@ -18,6 +18,15 @@ class CsvToArray
      */
     private $expectedColumns = [];
 
+
+    /**
+     * Columns that we definitely dont expect.
+     * (those that are present that would indicate the wrong CSV is being used)
+     *
+     * @var array
+     */
+    private $unexpectedColumns = [];
+
     /**
      * @var array
      */
@@ -58,6 +67,13 @@ class CsvToArray
     public function setExpectedColumns(array $expectedColumns)
     {
         $this->expectedColumns = $expectedColumns;
+
+        return $this;
+    }
+
+    public function setUnexpectedColumns(array $unexpectedColumns)
+    {
+        $this->unexpectedColumns = $unexpectedColumns;
 
         return $this;
     }
@@ -104,8 +120,12 @@ class CsvToArray
             throw new \RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
+        $rogueColumns = array_diff($header, $this->unexpectedColumns);
+        if (!empty($rogueColumns)) {
+            throw new \RuntimeException('Invalid file. File contains unexpected header columns: ' . implode(', ', $rogueColumns));
+        }
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find expected header columns ' . implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find expected header columns: ' . implode(', ', $missingColumns));
         }
 
         // read rows
