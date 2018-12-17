@@ -400,7 +400,7 @@ class ReportStatusService
 
         $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
             || $this->report->getProfDeputyCostsHowChargedAgreed()
-            || $this->report->getProfDeputyCostsHowChargedFixed();
+            || $this->report->getProfDeputyCostsHowChargedAssessed();
 
         if (!$atLeastOneTicked) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
