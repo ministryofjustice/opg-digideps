@@ -2,9 +2,9 @@ startPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   pageSectionDescription1: |
-    Use this section to tell us how much John paid for your professional deputy services
+    Use this section to tell us how much %client% paid for your professional deputy services
      in this reporting period (15 March 2017 to 14 March 2018).
-  pageSectionDescription2: This includes money John paid you in this reporting period:
+  pageSectionDescription2: This includes money %client% paid you in this reporting period:
   listItem01: for work carried out in previous reporting periods
   listItem02: for work carried out in this reporting period
   pageSectionDescription3: Please include both fixed and assessed costs.
@@ -64,7 +64,7 @@ interim:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   pageSectionDescription01: |
-    How much has John paid you in this reporting period for work carried out in
+    How much has %client% paid you in this reporting period for work carried out in
     this reporting period (including VAT)?
   pageSectionDescription02: |
     If you charged more than 3 interim bills, please combine these into 3 groups of payments.

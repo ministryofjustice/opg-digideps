@@ -1,4 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig'%}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
@@ -15,7 +16,7 @@
 {% block pageContent %}
 
     <div class="text behat-region-start-page">
-        <p>{{ (page ~ '.pageSectionDescription1') | trans }}</p>
+        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
         <p>{{ (page ~ '.pageSectionDescription2') | trans }}</p>
         <ul class="list list-bullet">
             <li>{{ (page ~ '.listItem01') | trans }}</li>
