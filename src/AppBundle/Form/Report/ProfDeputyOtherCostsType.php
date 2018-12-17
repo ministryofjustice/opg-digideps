@@ -24,7 +24,7 @@ class ProfDeputyOtherCostsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Report\Report',
-//            'validation_groups' => ['prof-other-costs'],
+            'validation_groups' => ['prof-deputy-other-costs'],
             'constraints' => new Valid(),
             'translation_domain' => 'report-prof-deputy-costs',
         ]);

@@ -217,7 +217,7 @@
             </td>
             <td>
                 {% if costRow['amount'] is null %}
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                    -
                 {% else %}
                     £{{ costRow['amount'] | money_format }}
                 {% endif %}

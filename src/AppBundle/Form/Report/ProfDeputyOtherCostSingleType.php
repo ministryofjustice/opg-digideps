@@ -40,11 +40,11 @@ class ProfDeputyOtherCostSingleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'AppBundle\Entity\Report\ProfDeputyOtherCost',
+            'data_class' => ProfDeputyOtherCost::class,
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
                 /* @var $data \AppBundle\Entity\Report\ProfDeputyOtherCost */
-                $validationGroups = ['prof_deputy_other_cost'];
+                $validationGroups = ['prof-deputy-other-costs'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {
                     $validationGroups[] = 'prof-deputy-other-costs-more-details';
