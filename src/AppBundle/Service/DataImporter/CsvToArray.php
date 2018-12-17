@@ -120,12 +120,13 @@ class CsvToArray
             throw new \RuntimeException('Empty or corrupted file, cannot parse CSV header');
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
-        $rogueColumns = array_diff($header, $this->unexpectedColumns);
-        if (!empty($rogueColumns)) {
-            throw new \RuntimeException('Invalid file. File contains unexpected header columns: ' . implode(', ', $rogueColumns));
-        }
         if ($missingColumns) {
             throw new \RuntimeException('Invalid file. Cannot find expected header columns: ' . implode(', ', $missingColumns));
+        }
+
+        $rogueColumns = array_intersect($header, $this->unexpectedColumns);
+        if (!empty($rogueColumns)) {
+            throw new \RuntimeException('Invalid file. File contains unexpected header columns: ' . implode(', ', $rogueColumns));
         }
 
         // read rows
