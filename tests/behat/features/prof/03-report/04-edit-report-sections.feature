@@ -128,3 +128,4 @@ Feature: PROF user edits 102-5 report sections
       | account_amount      | 50.00     |
       # add another: no
     And I choose "no" when asked for adding another record
+    And I save the application status into "pre-deputy-costs"

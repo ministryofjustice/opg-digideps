@@ -105,7 +105,7 @@
             </tr>
 
             {% for ic in report.profDeputyInterimCosts %}
-                <tr class="behat-region-prev-costs">
+                <tr class="behat-region-interim-costs">
                     <td>
                         Costs for interim {{ loop.index }}
                     </td>
@@ -211,7 +211,7 @@
     <tbody>
     {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
         {% set costRow = submittedOtherCosts[otherCostTypeId.typeId] %}
-        <tr class="behat-region-prev-costs">
+        <tr class="behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}">
             <td>
                 {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
             </td>
@@ -231,6 +231,7 @@
         </tr>
         {# more details ("other" only) #}
         {% if costRow.hadMoreDetails and costRow.moreDetails %}
+          <tr class="behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}-details">
             <td>
                 {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
             </td>
@@ -243,6 +244,7 @@
                        class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             {% endif %}
+          </tr>
         {% endif %}
     {% endfor %}
     </tbody>
