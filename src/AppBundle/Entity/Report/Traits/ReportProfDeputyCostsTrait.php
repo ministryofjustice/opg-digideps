@@ -411,4 +411,14 @@ trait ReportProfDeputyCostsTrait
 
         return $total;
     }
+
+    /**
+     * @return boolean
+     */
+    public function hasProfDeputyCostsHowChargedFixedOnly()
+    {
+        return $this->profDeputyCostsHowChargedFixed
+            && !$this->profDeputyCostsHowChargedAssessed
+            && !$this->profDeputyCostsHowChargedAgreed;
+    }
 }
