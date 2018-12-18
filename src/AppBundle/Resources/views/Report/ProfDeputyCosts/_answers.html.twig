@@ -52,7 +52,7 @@
         </tr>
 
         {% for pc in report.profDeputyPreviousCosts %}
-            <tr class="behat-region-prev-costs">
+            <tr class="behat-region-prev-cost-{{ loop.index }}">
                 <td>
                     Received for {{ pc.startDate | date('d/m/Y') }} - {{ pc.endDate | date('d/m/Y') }}
                     {#{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}#}
@@ -105,7 +105,7 @@
             </tr>
 
             {% for ic in report.profDeputyInterimCosts %}
-                <tr class="behat-region-interim-costs">
+                <tr class="behat-region-interim-cost-{{ loop.index }}">
                     <td>
                         Costs for interim {{ loop.index }}
                     </td>
