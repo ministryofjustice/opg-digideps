@@ -446,13 +446,19 @@ class ReportController extends RestController
             $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
         }
 
-        if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
-            $report->setProfDeputyCostsHasInterim(null);
-            foreach ($report->getProfDeputyInterimCosts() as $ic) {
-                $this->getEntityManager()->remove($ic);
+        // update depending data depending on the selection on the "how charged" checkboxes
+        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)
+            || array_key_exists('prof_deputy_costs_how_charged_assessed', $data)
+            || array_key_exists('prof_deputy_costs_how_charged_agreed', $data)
+        ) {
+            if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+                $report->setProfDeputyCostsHasInterim(null);
+                foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                    $this->getEntityManager()->remove($ic);
+                }
+            } else if ($report->getProfDeputyCostsHasInterim() === 'yes') {
+                $report->setProfDeputyFixedCost(null);
             }
-        } else {
-            $report->setProfDeputyFixedCost(null);
         }
 
         if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
