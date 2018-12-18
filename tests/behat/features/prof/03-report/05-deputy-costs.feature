@@ -129,19 +129,17 @@ Feature: PROF deputy costs
       | £60.00, paid 02/01/2015              | interim-cost-2 |
       | £410                                 | total-cost     |
     And I should not see the "fixed-cost-amount" region
-
-
-#      | yes_no_profDeputyCostsHasInterim_1 | no |
-#    And the step with the following values CAN be submitted:
-#      | deputy_costs_received_profDeputyFixedCost | 1000 |
-#    And the step with the following values CAN be submitted:
-#      | deputy_costs_scco_profDeputyCostsAmountToScco | 100 |
-#    And I click on "save-and-continue"
-#    And each text should be present in the corresponding region:
-#      | Fixed    | how-changed       |
-#      | Assessed | how-changed       |
-#      | Agreed   | how-changed       |
-#      | No       | has-previous      |
-#      | No       | has-interim       |
-#      | 1,000.00 | fixed-cost-amount |
-
+  
+  Scenario: balance check and fix
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000010" region
+    Then the prof report should not be submittable
+        # check balance mismatch difference
+    When I click on "edit-balance"
+    Then I should see the "balance-bad" region
+    And I should see "£410.00" in the "unaccounted-for" region
+    # add explanation
+    And the step with the following values CAN be submitted:
+      | balance_balanceMismatchExplanation    | fix prof balance altered by costs |
+    Then the URL should match "report/\d+/overview"
+    Then the prof report should be submittable
