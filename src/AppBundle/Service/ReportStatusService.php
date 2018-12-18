@@ -443,7 +443,8 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        // TODO implement when logic is added
+        // TODO replace with real logic when implemented
+        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
