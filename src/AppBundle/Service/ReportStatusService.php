@@ -419,14 +419,8 @@ class ReportStatusService
         $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyFixedCost();
         $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
 
-        $isBreakdownValid = false;
-        foreach($this->report->getProfDeputyOtherCosts() as $oc) {
-            if ($oc->getAmount()) {
-                $isBreakdownValid = true;
-            }
-        }
-
-
+        // empty breakdown is allowed
+        $isBreakdownValid = true;
 
         if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $isBreakdownValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
