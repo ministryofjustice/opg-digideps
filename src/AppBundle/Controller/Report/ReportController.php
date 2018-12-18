@@ -190,6 +190,9 @@ class ReportController extends RestController
                     $this->getEntityManager()->persist($profDeputyOtherCost);
                 }
             }
+            $report->updateSectionsStatusCache([
+                Report::SECTION_PROF_DEPUTY_COSTS
+            ]);
             $this->getEntityManager()->flush();
         }
 
@@ -436,14 +439,17 @@ class ReportController extends RestController
 
         if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)) {
             $report->setProfDeputyCostsHowChargedFixed($data['prof_deputy_costs_how_charged_fixed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (array_key_exists('prof_deputy_costs_how_charged_assessed', $data)) {
             $report->setProfDeputyCostsHowChargedAssessed($data['prof_deputy_costs_how_charged_assessed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (array_key_exists('prof_deputy_costs_how_charged_agreed', $data)) {
             $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         // update depending data depending on the selection on the "how charged" checkboxes
@@ -459,6 +465,7 @@ class ReportController extends RestController
             } else if ($report->getProfDeputyCostsHasInterim() === 'yes') {
                 $report->setProfDeputyFixedCost(null);
             }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
@@ -466,6 +473,7 @@ class ReportController extends RestController
             foreach ($report->getProfDeputyPreviousCosts() as $pc) {
                 $this->getEntityManager()->remove($pc);
             }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
@@ -478,6 +486,7 @@ class ReportController extends RestController
             } else if ($data['prof_deputy_costs_has_interim'] === 'yes') {
                 $report->setProfDeputyFixedCost(null);
             }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (array_key_exists('prof_deputy_interim_costs', $data)) {
@@ -497,19 +506,23 @@ class ReportController extends RestController
                     $report->setProfDeputyCostsHasInterim('yes');
                 }
             }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
             $this->getEntityManager()->flush();
         }
 
         if (array_key_exists('prof_deputy_fixed_cost', $data)) {
             $report->setProfDeputyFixedCost($data['prof_deputy_fixed_cost']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (array_key_exists('prof_deputy_costs_amount_to_scco', $data)) {
             $report->setProfDeputyCostsAmountToScco($data['prof_deputy_costs_amount_to_scco']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
             $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         $this->getEntityManager()->flush();
