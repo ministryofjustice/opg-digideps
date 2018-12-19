@@ -230,7 +230,7 @@
             {% endif %}
         </tr>
         {# more details ("other" only) #}
-        {% if costRow.hadMoreDetails and costRow.moreDetails %}
+        {% if costRow.hasMoreDetails and costRow.moreDetails %}
             <td>
                 {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
             </td>

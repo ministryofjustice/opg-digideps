@@ -61,7 +61,15 @@ class ReportController extends AbstractController
         'report-prof-service-fees',
         'prof-service-fees',
         'client-named-deputy',
-        'unsubmitted-reports-count'
+        'unsubmitted-reports-count',
+        'prof-deputy-costs-how-charged',
+        'report-prof-deputy-costs-prev',
+        'prof-deputy-costs-prev',
+        'report-prof-deputy-fixed-cost',
+        'report-prof-deputy-costs-interim',
+        'prof-deputy-costs-interim',
+        'prof-deputy-other-costs',
+        'report-prof-deputy-costs-scco'
     ];
 
     /**

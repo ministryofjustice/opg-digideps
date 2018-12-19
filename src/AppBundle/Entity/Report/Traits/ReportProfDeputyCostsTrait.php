@@ -427,7 +427,7 @@ trait ReportProfDeputyCostsTrait
             $submittedCost = $this->getProfDeputyOtherCostByTypeId($defaultOtherCost['typeId']);
             $submittedCosts[$defaultOtherCost['typeId']]['typeId'] = $defaultOtherCost['typeId'];
             $submittedCosts[$defaultOtherCost['typeId']]['amount'] = !empty($submittedCost) ? $submittedCost->getAmount() : null;
-            $submittedCosts[$defaultOtherCost['typeId']]['hadMoreDetails'] = $defaultOtherCost['hasMoreDetails'];
+            $submittedCosts[$defaultOtherCost['typeId']]['hasMoreDetails'] = $defaultOtherCost['hasMoreDetails'];
             $submittedCosts[$defaultOtherCost['typeId']]['moreDetails'] = !empty($submittedCost) ? $submittedCost->getMoreDetails() : '';
 
         }
