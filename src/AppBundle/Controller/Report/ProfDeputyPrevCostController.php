@@ -26,7 +26,10 @@ class ProfDeputyPrevCostController extends RestController
         /* @var $report EntityDir\Report\Report */
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-        $cost = new EntityDir\Report\ProfDeputyPreviousCost($report);
+        if (!array_key_exists('amount', $data)) {
+            throw new \InvalidArgumentException("Missing amount");
+        }
+        $cost = new EntityDir\Report\ProfDeputyPreviousCost($report, $data['amount']);
         $this->updateEntity($data, $cost);
         $report->setProfDeputyCostsHasPrevious('yes');
         $this->persistAndFlush($cost);
