@@ -14,6 +14,7 @@ use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\MoneyTransactionShortIn;
 use AppBundle\Entity\Report\MoneyTransactionShortOut;
 use AppBundle\Entity\Report\ProfDeputyInterimCost;
+use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\ProfDeputyPreviousCost;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
@@ -152,7 +153,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
     }
 
-    public function testGetCalculatedBalanceProfDeputyFixed()
+    public function testGetCalculatedBalanceProfDeputy()
     {
         $this->validReportCtorArgs = [$this->client, Report::TYPE_102_5, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
@@ -164,13 +165,17 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->setProfDeputyCostsHowChargedFixed(true);
         $this->report->setProfDeputyCostsHasPrevious('yes');
         $this->report->setProfDeputyPreviousCosts(new ArrayCollection([
-            (new ProfDeputyPreviousCost($this->report))->setAmount(1),
-            (new ProfDeputyPreviousCost($this->report))->setAmount(1)
+            (new ProfDeputyPreviousCost($this->report, 1)),
+            (new ProfDeputyPreviousCost($this->report, 1))
         ]));
         $this->report->setProfDeputyCostsHasInterim('no');
         $this->report->setProfDeputyFixedCost(3);
+        $this->report->setProfDeputyOtherCosts(new ArrayCollection([
+            (new ProfDeputyOtherCost($this->report, 'id1', false, 10)),
+            (new ProfDeputyOtherCost($this->report, 'id2', false, 10)),
+        ]));
 
-        $this->assertEquals(-1 -1 -3, $this->report->getCalculatedBalance());
+        $this->assertEquals(-1 -1 -3 - 10 - 10, $this->report->getCalculatedBalance());
 
         //change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
@@ -178,7 +183,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
             (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
         ]));
-        $this->assertEquals(-1 -1 -11 -11, $this->report->getCalculatedBalance());
+        $this->assertEquals(-1 -1 -11 -11 -10 -10, $this->report->getCalculatedBalance());
 
     }
 
