@@ -59,7 +59,7 @@
     <div class="dont-break">
         {% if
             report.hasProfDeputyCostsHowChargedFixedOnly or
-            not report.profDeputyCostsHasInterim
+            not report.profDeputyCostsHasInterim or
             (not report.profDeputyCostsHowChargedFixed and not report.profDeputyCostsHowChargedAssessed and not report.profDeputyCostsHowChargedAgreed)
         %}
             <div class="box">
@@ -80,29 +80,38 @@
                     </tr>
                 </table>
             </div>
-            <div class="box">
-                <h3 class="label question bold">{{ 'interim.pageSectionDescription01' | trans(transOptions) }}</h3>
-                {% for j in range(0, 2) %}
-                    <h4>Interim {{ j + 1 }}</h4>
-                    <dl class="labelvalue half-width first">
-                        <dt class="label">{{ 'interim.form.amount.label' | trans(transOptions) }}</dt>
-                        {% if report.profDeputyInterimCosts[j] is defined %}
-                            <dd class="value">£{{ attribute(report.profDeputyInterimCosts, j).amount | money_format }}</dd>
-                        {% else %}
-                            <dd class="value"></dd>
-                        {% endif %}
-                    </dl>
+            {% if report.profDeputyCostsHasInterim == 'no' %}
+                <div class="box">
+                    <h3 class="label question bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>
+                    <div class="value">
+                        £{{ report.profDeputyFixedCost | money_format }}
+                    </div>
+                </div>
+            {% elseif report.profDeputyCostsHasInterim == 'yes' %}
+                <div class="box">
+                    <h3 class="label question bold">{{ 'interim.pageSectionDescription01' | trans(transOptions) }}</h3>
+                    {% for j in range(0, 2) %}
+                        <h4>Interim {{ j + 1 }}</h4>
+                        <dl class="labelvalue half-width first">
+                            <dt class="label">{{ 'interim.form.amount.label' | trans(transOptions) }}</dt>
+                            {% if report.profDeputyInterimCosts[j] is defined %}
+                                <dd class="value">£{{ attribute(report.profDeputyInterimCosts, j).amount | money_format }}</dd>
+                            {% else %}
+                                <dd class="value"></dd>
+                            {% endif %}
+                        </dl>
 
-                    <dl class="labelvalue half-width push--bottom">
-                        <dt class="label">{{ 'interim.form.date.label' | trans(transOptions) }}</dt>
-                        {% if report.profDeputyInterimCosts[j] is defined %}
-                            <dd class="value">{{ attribute(report.profDeputyInterimCosts, j).date | date("d / m / Y") }}</dd>
-                        {% else %}
-                            <dd class="value"></dd>
-                        {% endif %}
-                    </dl>
-                {% endfor %}
-            </div>
+                        <dl class="labelvalue half-width push--bottom">
+                            <dt class="label">{{ 'interim.form.date.label' | trans(transOptions) }}</dt>
+                            {% if report.profDeputyInterimCosts[j] is defined %}
+                                <dd class="value">{{ attribute(report.profDeputyInterimCosts, j).date | date("d / m / Y") }}</dd>
+                            {% else %}
+                                <dd class="value"></dd>
+                            {% endif %}
+                        </dl>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -138,6 +147,15 @@
 
             {% endfor %}
             </table>
+        </div>
+    </div>
+
+    <div class="dont-break">
+        <div class="box">
+            <h3 class="label question bold">Total costs paid this reporting period</h3>
+            <div class="value">
+                £{{ report.profDeputyTotalCosts | money_format }}
+            </div>
         </div>
     </div>
 </div>
