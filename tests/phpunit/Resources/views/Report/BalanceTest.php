@@ -105,6 +105,7 @@ class BalanceTest extends WebTestCase
             'getExpensesState' => ['state'=>'not-started'],
             'getPaFeesExpensesState' => ['state'=>'not-started'],
             'getGiftsState' => ['state'=>'not-started'],
+            'getProfDeputyCostsState' => ['state'=>'not-started'],
 
         ]);
     }
