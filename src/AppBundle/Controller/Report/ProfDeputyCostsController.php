@@ -77,7 +77,7 @@ class ProfDeputyCostsController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $from === 'summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId'=>$reportId]) : null
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs', ['reportId'=>$reportId])
         ];
     }
 
@@ -120,7 +120,8 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => $from === 'summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId'=>$reportId]) : null,
+            // previous step could be interim or fixed. easier NOT showing any backlink
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_how_charged', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -177,7 +178,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => $from =='summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'backLink' => $this->generateUrl($from =='summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_previous_received_exists', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -322,7 +323,7 @@ class ProfDeputyCostsController extends AbstractController
      * @Route("/amount-scco", name="prof_deputy_costs_amount_scco")
      * @Template()
      */
-    public function AmountToSccoAction(Request $request, $reportId)
+    public function amountToSccoAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -353,6 +354,7 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function breakdown(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if (empty($report->getProfDeputyOtherCosts())) {
@@ -372,7 +374,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => null,
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];

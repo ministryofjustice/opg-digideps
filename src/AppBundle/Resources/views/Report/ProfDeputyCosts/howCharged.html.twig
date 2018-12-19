@@ -13,6 +13,10 @@
 
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
 {% block pageContent %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

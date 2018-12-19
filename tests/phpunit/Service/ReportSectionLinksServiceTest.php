@@ -56,7 +56,9 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasSection')->with('paDeputyExpenses')->andReturn(false)
             ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(false)
             ->shouldReceive('hasSection')->with('actions')->andReturn(true)
-            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(true);
+            ->shouldReceive('hasSection')->with('profDeputyCosts')->andReturn(false)
+            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(true)
+        ;
 
         $actual = $this->sut->getSectionParams($this->report, 'debts', 1);
         $this->assertEquals('actions', $actual['section']);
@@ -70,7 +72,9 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
         $this->report
             ->shouldReceive('hasSection')->with('paDeputyExpenses')->andReturn(true)
             ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(false)
-            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false);
+            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false)
+            ->shouldReceive('hasSection')->with('profDeputyCosts')->andReturn(false)
+        ;
 
         $actual = $this->sut->getSectionParams($this->report, 'paFeeExpense', +1);
         $this->assertEquals('gifts', $actual['section']);
@@ -80,11 +84,13 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
     {
         $this->report
             ->shouldReceive('hasSection')->with('paDeputyExpenses')->andReturn(false)
-            ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(true)
-            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false);
+            ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(false)// currently disabled
+            ->shouldReceive('hasSection')->with('profDeputyCosts')->andReturn(true)
+            ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false)
+        ;
 
-        $actual = $this->sut->getSectionParams($this->report, 'profCurrentFees', +1);
-        $this->assertEquals('gifts', $actual['section']);
+        $actual = $this->sut->getSectionParams($this->report, 'profDeputyCosts', +1);
+        $this->assertEquals('bankAccounts', $actual['section']);
     }
 
     public function tearDown()

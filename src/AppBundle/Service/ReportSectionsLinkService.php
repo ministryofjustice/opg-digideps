@@ -44,6 +44,7 @@ class ReportSectionsLinkService
 
         $routeParams = ['reportId' => $report->getId()];
 
+        // define sections and links (not following the order with which are presented in the dashboards)
         $allSectionsAvailable = [
             'actions' => ['section' => 'actions', 'link' => $this->router->generate('actions', $routeParams)],
             'assets' => ['section' => 'assets', 'link' => $this->router->generate('assets', $routeParams)],
@@ -69,9 +70,10 @@ class ReportSectionsLinkService
         ];
 
         //TODO ask the business if links can follow a single order
-        // eg. PROF and PA reports have assets and debts after actions (opposite of Lay)
-       
-        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profDeputyCosts')) { // PA and PROF: client profile page
+
+
+        // defined order for Client profile page (PROF or PA)
+        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profDeputyCosts')) {
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
                 'paDeputyExpenses', //PA
