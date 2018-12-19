@@ -16,7 +16,6 @@
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.css.twig' %}
 </style>
-
 <div id="wrapper">
     <div class="formatted-report">
 
@@ -107,6 +106,10 @@
 
         {% if report.hasSection('profCurrentFees') %}
             {% include 'AppBundle:Report/Formatted:_prof_current_fees.html.twig' %}
+        {% endif %}
+
+        {% if report.hasSection('profDeputyCosts') %}
+            {% include 'AppBundle:Report/Formatted:_prof_deputy_costs.html.twig' %}
         {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
