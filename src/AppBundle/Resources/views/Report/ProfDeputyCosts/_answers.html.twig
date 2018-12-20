@@ -63,7 +63,7 @@
                 {% if not hideEditLink  %}
                     <td class="change-answer width-sixth soft-half--left hard--right">
                         <a href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'previousReceivedId': pc.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-                        <a href="{{ path('prof_deputy_costs_previous_received_delete', {'reportId': report.id, 'previousReceivedId': pc.id}) }}" class="action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                        &nbsp;<a href="{{ path('prof_deputy_costs_previous_received_delete', {'reportId': report.id, 'previousReceivedId': pc.id}) }}" class="action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                     </td>
                 {% endif %}
             </tr>
@@ -143,18 +143,6 @@
         </tr>
         {% endif %}
 
-        {# Total cost this period#}
-        {%  if report.profDeputyTotalCosts is not null %}
-            <tr class="behat-region-total-cost">
-                <td>
-                    <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
-                </td>
-                <td>
-                    <strong class="bold">£{{ report.profDeputyTotalCosts | money_format }}</strong>
-                </td>
-                {% if not hideEditLink  %}<td></td> {% endif %}
-            </tr>
-        {% endif %}
 
         {# SCCO assessment #}
         <tr class="behat-region-scco-assessment-amount">
@@ -247,5 +235,33 @@
           </tr>
         {% endif %}
     {% endfor %}
+
+
+
+
     </tbody>
 </table>
+
+
+{% if report.profDeputyTotalCosts is not null %}
+    <table class="check-your-answers columns-2 push--bottom">
+        <tbody>
+        {# empty line to have border. fix with CSS if simpler#}
+        <tr>
+            <td colspan="{{ hideEditLink ? 2 : 3 }}"></td>
+        </tr>
+        {# Total cost this period#}
+        <tr class="behat-region-total-cost">
+            <td>
+                <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
+            </td>
+            <td>
+                <strong class="bold">£{{ report.profDeputyTotalCosts | money_format }}</strong>
+            </td>
+            {% if not hideEditLink %}
+                <td></td>
+            {% endif %}
+        </tr>
+        </tbody>
+    </table>
+{% endif %}
