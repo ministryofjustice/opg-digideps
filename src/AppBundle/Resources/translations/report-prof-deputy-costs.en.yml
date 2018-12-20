@@ -88,14 +88,14 @@ amountToScco:
 breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
-  pageSectionDescription: Breakdown of other professional deputy costs (including VAT) received in this reporting period.
+  pageSectionDescription: Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period.
   pageHint: ""
   form:
     entries:
       appointments:
-        label: Appointments
+        label: Appointment
       annual-reporting:
-        label: Annual reporting
+        label: Annual report
       conveyancing:
         label: Conveyancing
       tax-returns:
