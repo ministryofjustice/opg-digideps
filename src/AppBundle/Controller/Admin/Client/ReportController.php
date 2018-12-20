@@ -23,7 +23,7 @@ class ReportController extends AbstractController
 {
     /**
      * JMS groups used for report preview and PDF
-     *
+     * //TODO consider take/merge the value from ReportController::$reportGroupsAll
      * @var array
      */
     private static $reportGroupsAll = [
@@ -33,6 +33,13 @@ class ReportController extends AbstractController
         'expenses',
         'fee',
         'gifts',
+        'prof-deputy-other-costs',
+        'prof-deputy-costs-how-charged',
+        'report-prof-deputy-costs',
+        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
+        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
+        'report-prof-deputy-costs-scco',
+        'report-prof-deputy-fixed-cost',
         'action',
         'action-more-info',
         'asset',
