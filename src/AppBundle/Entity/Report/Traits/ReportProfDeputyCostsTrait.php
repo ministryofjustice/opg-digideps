@@ -208,7 +208,9 @@ trait ReportProfDeputyCostsTrait
             && !$this->profDeputyCostsHowChargedAssessed
             && ! $this->profDeputyCostsHowChargedAgreed
         ) {
-            $context->buildViolation('profDeputyHowChanged.atLeastOne')->atPath('profDeputyCostsHowChargedFixed')->addViolation();
+            $context->buildViolation('profDeputyHowChanged.atLeastOne')
+                ->atPath('profDeputyCostsHowChargedFixed')
+                ->addViolation();
         }
     }
 

@@ -15,9 +15,10 @@ startPage:
 
 howCharged:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
-  pageTitle: How did you charge for your services
+  pageTitle: Deputy costs
   form:
-    profDeputyCostsHow.label: "How did you charge for your costs?"
+    profDeputyCostsHow.label: "How did you charge for the services %client% paid you for in this reporting period?"
+    profDeputyCostsHow.hint: "Select all that apply"
     profDeputyCostsHowChargedFixed.label: "Fixed costs"
     profDeputyCostsHowChargedAssessed.label: "Assessed costs"
     profDeputyCostsHowChargedAgreed.label: "Agreed"
