@@ -301,8 +301,18 @@ class IndexController extends AbstractController
                         'Dep Postcode',
                         'Typeofrep',
                         'Corref',
+                        'NDR' // if not present, would indicate a prof/PA CSV is being used incorrectly here
                     ])
                     ->setOptionalColumns($csvToArray->getFirstRow())
+                    ->setUnexpectedColumns([
+                        //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
+                        'Dep Type', // 23 = PA (but not confirmed)
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3',
+                        'Email',
+                        'Last Report Day'
+                    ])
                     ->getData();
 
                 // small amount of data -> immediate posting and redirect (needed for behat)
@@ -446,6 +456,9 @@ class IndexController extends AbstractController
                         'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
+                    ])
+                    ->setUnexpectedColumns([
+                        'NDR'
                     ])
                     ->getData();
 
