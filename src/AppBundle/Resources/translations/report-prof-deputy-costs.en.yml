@@ -84,6 +84,7 @@ amountToScco:
   form:
     profDeputyCostsAmountToScco.label: "What amount is being submitted to SCCO for assessment this reporting period (including VAT)?"
     profDeputyCostsReasonBeyondEstimate.label: "If you charged 20% or more above your estimate from your last reporting period, tell us why."
+    profDeputyCostsReasonBeyondEstimate.labelSummary: "Why are costs 20% or more than estimated in last reporting period?."
 
 breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
@@ -112,7 +113,7 @@ breakdown:
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle:  Deputy costs
-  pageSectionDescription: ...
+  returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
   checkTheyreCorrect: Check they're correct and edit them where necessary.
   breakdownOfAdditionalCosts: |

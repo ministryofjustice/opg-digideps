@@ -9,13 +9,15 @@
 
 <p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
 
+<a href="{{path('org_dashboard')}}" class="right behat-link-return-to-org-dashboard">{{ (page ~ '.returnToClientProfile') | trans }}</a>
+
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
     <tbody>
         {# How did you charge for your costs? #}
         <tr class="behat-region-how-changed">
                 <td>
-                    {{ 'howCharged.form.profDeputyCostsHow.label' | trans }}
+                    {{ 'howCharged.form.profDeputyCostsHow.label' | trans(transOptions) }}
                 </td>
                 <td>
                     {{ report.profDeputyCostsHowChargedFixed ? 'Fixed<br>' : '' | raw }}
@@ -150,7 +152,7 @@
                 {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
             </td>
             <td>
-                {%  if report.profDeputyCostsAmountToScco is null %}
+                {% if report.profDeputyCostsAmountToScco is null %}
                     <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 {% else %}
                     £{{ report.profDeputyCostsAmountToScco | money_format }}
@@ -162,23 +164,25 @@
                 </td>
             {% endif %}
         </tr>
-        <tr class="behat-region-scco-assessment-reason">
-            <td>
-                {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.label' | trans }}
-            </td>
-            <td>
-                {% if report.profDeputyCostsReasonBeyondEstimate is null %}
-                    <span>-</span>
-                {% else %}
-                    {{ report.profDeputyCostsReasonBeyondEstimate | nl2br }}
-                {% endif %}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+        {% if report.profDeputyCostsAmountToScco is null %}
+            <tr class="behat-region-scco-assessment-reason">
+                <td>
+                    {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.labelSummary' | trans }}
                 </td>
-            {% endif %}
-        </tr>
+                <td>
+                    {% if report.profDeputyCostsReasonBeyondEstimate is null %}
+                        <span>-</span>
+                    {% else %}
+                        {{ report.profDeputyCostsReasonBeyondEstimate | nl2br }}
+                    {% endif %}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endif %}
     </tbody>
 </table>
 
