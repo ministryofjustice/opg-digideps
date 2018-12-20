@@ -54,6 +54,7 @@ previousReceived:
 interimExists:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
+  pageSectionDescription: Costs for this reporting period
   form:
     profDeputyCostsHasInterim:
       label: Have you charged in line with interim billing under Practice Direction 19B for the work you carried out in this reporting period?
