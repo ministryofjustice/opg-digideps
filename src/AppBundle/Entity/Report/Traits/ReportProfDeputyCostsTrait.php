@@ -162,6 +162,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHowChargedFixed($profDeputyCostsHowChargedFixed)
     {
         $this->profDeputyCostsHowChargedFixed = $profDeputyCostsHowChargedFixed;
+        return $this;
     }
 
     /**
@@ -178,6 +179,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHowChargedAssessed($profDeputyCostsHowChargedAssessed)
     {
         $this->profDeputyCostsHowChargedAssessed = $profDeputyCostsHowChargedAssessed;
+        return $this;
     }
 
     /**
@@ -194,6 +196,7 @@ trait ReportProfDeputyCostsTrait
     public function setProfDeputyCostsHowChargedAgreed($profDeputyCostsHowChargedAgreed)
     {
         $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
+        return $this;
     }
 
     /**
