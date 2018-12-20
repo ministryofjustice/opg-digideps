@@ -35,20 +35,17 @@ previousReceived:
   pageTitle: Deputy costs
   pageSectionDescription01: Costs for earlier reporting periods
   pageSectionDescription02: |
-    Are there any costs which were billed for work carried out in a previous
-    reporting period and received in this reporting period (including VAT)?
-  pageSectionDescriptionExample: |
-      For example, the final amount received after assessment by the Senior
-      Courts Costs Office (SCCO) and taking into account the three interim bills already received.
+    Tell us about money John paid you in this reporting period for
+    work you carried out in a previous reporting period
   form:
     startDate:
       label: Previous reporting period start
       hint: For example, 31 3 2015
-    endDate.label:
+    endDate:
       label: Previous reporting period end
       hint: ""
     amount:
-      label: Amount received
+      label: Amount paid (including VAT)
     saveAddAnother:
       label: Save and add another
     saveAndContinue:

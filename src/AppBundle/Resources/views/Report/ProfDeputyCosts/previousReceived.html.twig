@@ -26,16 +26,8 @@
 
     <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
 
-
     <div class="text">
         <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
-    </div>
-
-    <div class="push--top">
-        <div class="alert-info panel panel-border-narrow">
-            <span class="icon icon-information"></span>
-            <div class="alert-message"><p>{{ (page ~ '.pageSectionDescriptionExample') | trans }}</p></div>
-        </div>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
@@ -57,7 +49,7 @@
     {% if form.saveAndAddAnother is defined %}
         {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
     {% endif %}
-    {#<p class="push-half--ends">or</p>#}
+    <span class="push-half--sides align--bottom text--center">or</span>
     {{ macros.saveAndContinueButton(form.saveAndContinue) }}
 
     {{ form_end(form) }}
