@@ -393,6 +393,7 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
+
         //TODO move to method
         $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
             && ! $this->report->getProfDeputyCostsHowChargedAgreed()
@@ -410,19 +411,19 @@ class ReportStatusService
         $isRemainingValid = $this->report->getProfDeputyCostsHasPrevious() === 'no' ||
             ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
 
+        $hasInterim = $this->report->getProfDeputyCostsHasInterim();
         // interim costs are valid if answer is "no" or ("Yes" + at least one record)
         $isInterimValid = $onlyFixedTicked
-            || $this->report->getProfDeputyCostsHasInterim() === 'no'
-            || ($this->report->getProfDeputyCostsHasInterim() === 'yes' && count($this->report->getProfDeputyInterimCosts()));
+            || $hasInterim === 'no'
+            || ($hasInterim === 'yes' && count($this->report->getProfDeputyInterimCosts()));
 
          // skipped if "fixed" is not the only ticked
-        $isFixedValid = !$onlyFixedTicked || $this->report->getProfDeputyFixedCost();
+        $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
+        $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
+
         $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
 
-        // empty breakdown is allowed
-        $isBreakdownValid = true;
-
-        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $isBreakdownValid) {
+        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
