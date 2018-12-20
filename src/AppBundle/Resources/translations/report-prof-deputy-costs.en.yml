@@ -25,10 +25,10 @@ howCharged:
 
 previousReceivedExists:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
-  pageTitle: Payments received for earlier reporting periods
+  pageTitle: Deputy costs
   form:
     profDeputyCostsHasPrevious:
-      label: "Are there any remaining fees from previous reporting periods that you’ve received in this reporting period?"
+      label: "Has %client% paid you in this reporting period for work carried out in a previous reporting period?"
 
 previousReceived:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
