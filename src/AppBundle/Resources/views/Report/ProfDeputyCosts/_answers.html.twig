@@ -164,7 +164,7 @@
                 </td>
             {% endif %}
         </tr>
-        {% if report.profDeputyCostsAmountToScco is null %}
+        {% if report.profDeputyCostsAmountToScco is not null %}
             <tr class="behat-region-scco-assessment-reason">
                 <td>
                     {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.labelSummary' | trans }}
