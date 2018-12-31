@@ -34,6 +34,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'setEndDate'     => new \DateTime('2014-12-31'),
                 'setSubmitted'   => true,
                 'setSubmittedBy' => self::$pa1, //irrelevant for assertions
+                'setSubmitDate'  => new \DateTime('2015-01-01')
             ]);
             // create submission
             $submission = new ReportSubmission($report, ($i<3) ? self::$pa2 : self::$deputy1);
@@ -150,5 +151,128 @@ class ReportSubmissionControllerTest extends AbstractTestController
         });
 
         return array_shift($ret);
+    }
+
+    /**
+     * @dataProvider getDateRangeThresholds
+     * @param $fromDate
+     * @param $toDate
+     * @param array $expectedOutcomes
+     */
+    public function testGetCaserecDataRetrievesWithinGivenDateRangesInclusive($fromDate, $toDate, array $expectedOutcomes)
+    {
+        $this->updateReportSubmissionByIdWithNewDateTime(1, '2018-01-01 12:00:00');
+        $this->updateReportSubmissionByIdWithNewDateTime(2, '2018-01-31 12:00:00');
+        self::fixtures()->flush();
+
+        $data = $this->makeRequestAndReturnResults(
+            '/report-submission/casrec_data',
+            ['fromDate[date]' => $fromDate, 'toDate[date]' => $toDate]
+        );
+
+        $this->assertEquals($expectedOutcomes['count'], count($data));
+
+        foreach ($expectedOutcomes['reportIds'] as $expectedId) {
+            $this->assertResponseIncludesReportWithId($data, $expectedId);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDateRangeThresholds()
+    {
+        return [
+            [
+                'fromDate' => '2018-01-01 12:00:00',
+                'toDate' => '2018-01-31 12:00:00',
+                'expectedOutcomes' => [
+                    'count' => 2,
+                    'reportIds' => [1, 2]
+                ]
+            ],
+            [
+                'fromDate' => '2017-12-31 23:59:59',
+                'toDate' => '2018-02-01 00:00:00',
+                'expectedOutcomes' => [
+                    'count' => 2,
+                    'reportIds' => [1, 2]
+                ]
+            ],
+            [
+                'fromDate' => '2018-01-01 12:00:01',
+                'toDate' => '2018-01-31 12:00:00',
+                'expectedOutcomes' => [
+                    'count' => 1,
+                    'reportIds' => [2]
+                ]
+            ],
+            [
+                'fromDate' => '2018-01-01 12:00:00',
+                'toDate' => '2018-01-31 09:59:59',
+                'expectedOutcomes' => [
+                    'count' => 1,
+                    'reportIds' => [1]
+                ]
+            ]
+        ];
+    }
+
+    public function testGetCaserecDataRetrievesUpToNowIfNotGivenToDate()
+    {
+        $reportId = 1;
+        $this->updateReportSubmissionByIdWithNewDateTime($reportId, 'today');
+        self::fixtures()->flush();
+
+        $result = $this->makeRequestAndReturnResults('/report-submission/casrec_data', []);
+        $this->assertResponseIncludesReportWithId($result, $reportId);
+    }
+
+    /**
+     * @param $id
+     * @param $date
+     */
+    private function updateReportSubmissionByIdWithNewDateTime($id, $date)
+    {
+        $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
+        $entity->setCreatedOn(new \DateTime($date));
+
+        self::fixtures()->persist($entity);
+    }
+
+    /**
+     * @param $endpoint
+     * @param array $params
+     * @return mixed
+     */
+    private function makeRequestAndReturnResults($endpoint, array $params)
+    {
+        $url = sprintf('%s?%s', $endpoint, http_build_query($params));
+
+        $response = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken'   => self::$tokenAdmin,
+        ]);
+
+        array_shift($response['data']);
+
+        return $response['data'];
+    }
+
+    /**
+     * @param $data
+     * @param $id
+     */
+    private function assertResponseIncludesReportWithId($data, $id)
+    {
+        $testPassed = false;
+        foreach ($data as $row) {
+            if ($row[0] == $id) {
+                $testPassed = true;
+                break;
+            }
+        }
+
+        $this->assertTrue($testPassed, sprintf('Response does not contain report with id %s', $id));
     }
 }
