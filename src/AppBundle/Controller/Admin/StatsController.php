@@ -3,9 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Dto\ReportSubmissionDownloadFilterDto;
 use AppBundle\Exception\DisplayableException;
-use AppBundle\Form\Admin\SubmissionCsvFilterType;
+use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -17,54 +17,92 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class StatsController extends AbstractController
 {
+    /** @var string */
+    const API_ENDPOINT = '/report-submission/casrec_data';
+
     /**
      * @Route("", name="admin_stats")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      * @Template
+     * @param Request $request
+     * @return array|Response
      */
     public function statsAction(Request $request)
     {
-        $filters = [
-            'order_by'    => 'id',
-            'sort_order'  => 'DESC',
-        ];
-
-        // This form is for the submissions CSV only and its filters are fromDate, order_by and sort_order
-        $form = $this->createForm(SubmissionCsvFilterType::class , null);
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionDownloadFilterDto());
         $form->handleRequest($request);
+
         if ($form->isValid()) {
-            $filters = $form->getData() + $filters;
-
             try {
-                $csvLines = $this->getRestClient()->get(
-                    '/report-submission/casrec_data?' . http_build_query($filters),
-                    'array'
-                );
+                $csv = $this->generateCsv($form->getData());
 
-                $csvContent = $this->get('csv_generator_service')->generateReportSubmissionsCsv($csvLines);
-
-                $response = new Response($csvContent);
-                $response->headers->set('Content-Type', 'text/csv');
-
-                $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
-                    date('Y-m-d')
-                );
-
-                $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
-
-                // Send headers before outputting anything
-                $response->sendHeaders();
-
-                return $response;
+                return $this->buildResponse($csv);
             } catch (\Exception $e) {
                 throw new DisplayableException($e);
             }
         }
 
         return [
-            'form'    => $form->createView(),
-            'filters' => $filters
+            'form'    => $form->createView()
         ];
+    }
+
+    /**
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
+     * @return mixed
+     */
+    private function generateCsv(ReportSubmissionDownloadFilterDto $downloadFilterDto)
+    {
+        $csvData = $this->getCsvData($downloadFilterDto);
+
+        return $this->get('csv_generator_service')->generateReportSubmissionsCsv($csvData);
+    }
+
+    /**
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
+     * @return mixed
+     */
+    private function getCsvData(ReportSubmissionDownloadFilterDto $downloadFilterDto)
+    {
+        return $this->getRestClient()->get($this->generateApiUrl($downloadFilterDto), 'array');
+    }
+
+    /**
+     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
+     * @return string
+     */
+    private function generateApiUrl(ReportSubmissionDownloadFilterDto $downloadFilterDto)
+    {
+        return sprintf (
+            '%s?%s',
+            self::API_ENDPOINT,
+            http_build_query([
+                'fromDate' => $downloadFilterDto->getFromDate(),
+                'toDate' => $downloadFilterDto->getToDate(),
+                'orderBy' => $downloadFilterDto->getOrderBy(),
+                'order' => $downloadFilterDto->getSortOrder()
+            ])
+        );
+    }
+
+    /**
+     * @param $csvContent
+     * @return Response
+     */
+    private function buildResponse($csvContent)
+    {
+        $response = new Response($csvContent);
+        $response->headers->set('Content-Type', 'text/csv');
+
+        $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
+            date('Y-m-d')
+        );
+
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
+
+        $response->sendHeaders();
+
+        return $response;
     }
 
     /**
