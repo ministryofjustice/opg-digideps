@@ -59,7 +59,7 @@ class ReportSubmissionSummaryTransformer
 
         $data = [];
         $data[] = $this->getCaseNumber($report);
-        $data[] = $this->getDateReceived($report);
+        $data[] = $this->getDateReceived($reportSubmission);
         $data[] = $this->getScanDate();
         $data[] = $this->getDocumentId($reportSubmission);
         $data[] = $this->getReportType();
@@ -78,12 +78,12 @@ class ReportSubmissionSummaryTransformer
     }
 
     /**
-     * @param ReportInterface $report
+     * @param ReportSubmission $reportSubmission
      * @return null|string
      */
-    private function getDateReceived(ReportInterface $report)
+    private function getDateReceived(ReportSubmission $reportSubmission)
     {
-        return $this->outputDate($report->getSubmitDate());
+        return $this->outputDate($reportSubmission->getCreatedOn());
     }
 
     /**

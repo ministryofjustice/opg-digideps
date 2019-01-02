@@ -172,8 +172,8 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         $this->assertEquals($expectedOutcomes['count'], count($data));
 
-        foreach ($expectedOutcomes['reportIds'] as $expectedId) {
-            $this->assertResponseIncludesReportWithId($data, $expectedId);
+        foreach ($expectedOutcomes['caseNumbers'] as $expectedCaseNumber) {
+            $this->assertResponseIncludesReportWithCaseNumber($data, $expectedCaseNumber);
         }
     }
 
@@ -188,7 +188,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-31 12:00:00',
                 'expectedOutcomes' => [
                     'count' => 2,
-                    'reportIds' => [1, 2]
+                    'caseNumbers' => ['1000000', '1000001']
                 ]
             ],
             [
@@ -196,7 +196,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-02-01 00:00:00',
                 'expectedOutcomes' => [
                     'count' => 2,
-                    'reportIds' => [1, 2]
+                    'caseNumbers' => ['1000000', '1000001']
                 ]
             ],
             [
@@ -204,7 +204,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-31 12:00:00',
                 'expectedOutcomes' => [
                     'count' => 1,
-                    'reportIds' => [2]
+                    'caseNumbers' => ['1000001']
                 ]
             ],
             [
@@ -212,7 +212,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 'toDate' => '2018-01-31 09:59:59',
                 'expectedOutcomes' => [
                     'count' => 1,
-                    'reportIds' => [1]
+                    'caseNumbers' => ['1000000']
                 ]
             ]
         ];
@@ -225,7 +225,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         $result = $this->makeRequestAndReturnResults('/report-submission/casrec_data', []);
-        $this->assertResponseIncludesReportWithId($result, $reportId);
+        $this->assertResponseIncludesReportWithCaseNumber($result, '1000000');
     }
 
     /**
@@ -261,18 +261,18 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     /**
      * @param $data
-     * @param $id
+     * @param $caseNumber
      */
-    private function assertResponseIncludesReportWithId($data, $id)
+    private function assertResponseIncludesReportWithCaseNumber($data, $caseNumber)
     {
         $testPassed = false;
         foreach ($data as $row) {
-            if ($row[0] == $id) {
+            if ($row[0] == $caseNumber) {
                 $testPassed = true;
                 break;
             }
         }
 
-        $this->assertTrue($testPassed, sprintf('Response does not contain report with id %s', $id));
+        $this->assertTrue($testPassed, sprintf('Response does not contain report for case number %s', $caseNumber));
     }
 }

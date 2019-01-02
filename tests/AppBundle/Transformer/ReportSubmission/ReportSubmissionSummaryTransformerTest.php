@@ -74,8 +74,8 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $ndrReportSubmission = $this->buildReportSubmissionWith([
             'report_type' => Ndr::class,
+            'created_on' => new \DateTime('2012-01-01'),
             'report' => [
-                'submit_date' => new \DateTime('2012-01-01'),
                 'client' => ['case_number' => 132]
             ],
             'documents' => [
@@ -85,8 +85,8 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'report_type' => Report::class,
+            'created_on' => new \DateTime('2012-01-02'),
             'report' => [
-                'submit_date' => new \DateTime('2012-01-02'),
                 'client' => ['case_number' => 133]
             ],
             'documents' => [
@@ -127,8 +127,8 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'report_type' => Report::class,
+            'created_on' => new \DateTime('2012-01-01'),
             'report' => [
-                'submit_date' => new \DateTime('2012-01-01'),
                 'client' => ['case_number' => 132]
             ],
             'documents' => [
@@ -164,6 +164,8 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             $reportSubmission->addDocument($this->buildDocumentWith($document));
         }
 
+        $reportSubmission->setCreatedOn($data['created_on']);
+
         return $reportSubmission;
     }
 
@@ -178,8 +180,6 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             ->getMockBuilder($type)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $report->method('getSubmitDate')->willReturn($data['submit_date']);
 
         $client = (new Client())->setCaseNumber($data['client']['case_number']);
         $report->method('getClient')->willReturn($client);
