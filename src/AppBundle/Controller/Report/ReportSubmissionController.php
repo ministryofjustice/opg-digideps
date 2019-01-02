@@ -146,18 +146,27 @@ class ReportSubmissionController extends RestController
      */
     public function getCasrecData(Request $request)
     {
-        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class); /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        /* @var $repo EntityDir\Repository\ReportSubmissionRepository */
+        $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
         $ret = $repo->findAllReportSubmissions(
             $request->get('offset', 0),
             $request->get('limit', 100),
-            $request->get('fromDate', []),
-            $request->get('toDate', []),
+            $this->convertDateArrayToDateTime($request->get('fromDate', [])),
+            $this->convertDateArrayToDateTime($request->get('toDate', [])),
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
-
         );
 
         return $this->get('app.transformer.report_submission.report_submission_summary_transformer')->transform($ret);
+    }
+
+    /**
+     * @param array $date
+     * @return \DateTime|null
+     */
+    private function convertDateArrayToDateTime(array $date)
+    {
+        return (isset($date['date'])) ? new \DateTime($date['date']) : null;
     }
 }

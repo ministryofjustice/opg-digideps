@@ -114,8 +114,8 @@ class ReportSubmissionRepository extends EntityRepository
     /**
      * @param $offset
      * @param $limit
-     * @param array $fromDate
-     * @param array $toDate
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
      * @param string $orderBy default createdOn
      * @param string $order default ASC
      * @return array
@@ -123,8 +123,8 @@ class ReportSubmissionRepository extends EntityRepository
     public function findAllReportSubmissions(
         $offset,
         $limit,
-        array $fromDate,
-        array $toDate,
+        \DateTime $fromDate = null,
+        \DateTime $toDate = null,
         $orderBy = 'createdOn',
         $order = 'ASC'
     ) {
@@ -141,7 +141,7 @@ class ReportSubmissionRepository extends EntityRepository
 
         $qbSelect = clone $qb;
         $qbSelect
-            ->select('rs,r,ndr,cb,c,ndrClient,documents')
+            ->select('rs,r,ndr,cb,c,ndrClient')
             ->andWhere('rs.createdOn >= :fromDate')
             ->andWhere('rs.createdOn <= :toDate')
             ->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate')
@@ -159,34 +159,22 @@ class ReportSubmissionRepository extends EntityRepository
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
      *
-     * @param array $fromDate
+     * @param \DateTime|null $date
      * @return \DateTime
      */
-    private function determineCreatedFromDate(array $fromDate)
+    private function determineCreatedFromDate(\DateTime $date = null)
     {
-        if (empty($fromDate)) {
+        $dateFormat = (date('N') == 1) ? 'last Friday midnight' : 'yesterday midnight';
 
-            // default
-            $fromString = 'yesterday midnight';
-
-            if (date('N') == 1) {
-                $fromString = 'last Friday midnight';
-            }
-            $fromDate = new \DateTime($fromString);
-
-            return $fromDate;
-        }
-
-        return new \DateTime($fromDate['date']);
+        return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
     }
 
     /**
-     * @param array $toDate
-     *
+     * @param \DateTime|null $date
      * @return \DateTime
      */
-    private function determineCreatedToDate(array $toDate)
+    private function determineCreatedToDate(\DateTime $date = null)
     {
-        return (empty($toDate)) ? new \DateTime() : new \DateTime($toDate['date']);
+        return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 }
