@@ -27,9 +27,10 @@ Feature: Admin report checklist
       | Hent              | checklist-client-lastname        |
       | B301QL            | checklist-client-address         |
       | 078912345678      | checklist-client-phone           |
-      | Bobby Team member | checklist-deputy-firstname       |
-      | BlackAndBlue      | checklist-deputy-lastname        |
-      | +4410000000003    | checklist-deputy-phone           |
+      | John Named        | checklist-deputy-firstname       |
+      | Green             | checklist-deputy-lastname        |
+      | 10000000001       | checklist-deputy-phone           |
+      | behat-pa1@publicguardian.gov.uk | checklist-deputy-email |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
