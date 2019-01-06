@@ -3,9 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Dto\ReportSubmissionDownloadFilterDto;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
+use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -17,9 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class StatsController extends AbstractController
 {
-    /** @var string */
-    const API_ENDPOINT = '/report-submission/casrec_data';
-
     /**
      * @Route("", name="admin_stats")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
@@ -29,60 +26,28 @@ class StatsController extends AbstractController
      */
     public function statsAction(Request $request)
     {
-        $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionDownloadFilterDto());
+        $form = $this->createForm(ReportSubmissionDownloadFilterType::class , new ReportSubmissionSummaryQuery());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             try {
-                $csv = $this->generateCsv($form->getData());
 
-                return $this->buildResponse($csv);
+                $mapper = $this->get('mapper.report_submission_summary_mapper');
+                $transformer = $this->get('transformer.report_submission_bur_fixed_width_transformer');
+
+                $reportSubmissionSummaries = $mapper->getBy($form->getData());
+                $downloadableData = $transformer->transform($reportSubmissionSummaries);
+
+                return $this->buildResponse($downloadableData);
+
             } catch (\Exception $e) {
                 throw new DisplayableException($e);
             }
         }
 
         return [
-            'form'    => $form->createView()
+            'form' => $form->createView()
         ];
-    }
-
-    /**
-     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
-     * @return mixed
-     */
-    private function generateCsv(ReportSubmissionDownloadFilterDto $downloadFilterDto)
-    {
-        $csvData = $this->getCsvData($downloadFilterDto);
-
-        return $this->get('csv_generator_service')->generateReportSubmissionsCsv($csvData);
-    }
-
-    /**
-     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
-     * @return mixed
-     */
-    private function getCsvData(ReportSubmissionDownloadFilterDto $downloadFilterDto)
-    {
-        return $this->getRestClient()->get($this->generateApiUrl($downloadFilterDto), 'array');
-    }
-
-    /**
-     * @param ReportSubmissionDownloadFilterDto $downloadFilterDto
-     * @return string
-     */
-    private function generateApiUrl(ReportSubmissionDownloadFilterDto $downloadFilterDto)
-    {
-        return sprintf (
-            '%s?%s',
-            self::API_ENDPOINT,
-            http_build_query([
-                'fromDate' => $downloadFilterDto->getFromDate(),
-                'toDate' => $downloadFilterDto->getToDate(),
-                'orderBy' => $downloadFilterDto->getOrderBy(),
-                'order' => $downloadFilterDto->getSortOrder()
-            ])
-        );
     }
 
     /**
@@ -92,12 +57,9 @@ class StatsController extends AbstractController
     private function buildResponse($csvContent)
     {
         $response = new Response($csvContent);
-        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Type', 'application/octet-stream');
 
-        $attachmentName = sprintf('DD_ReportSubmissions-%s.csv',
-            date('Y-m-d')
-        );
-
+        $attachmentName = sprintf('DD_ReportSubmissions-%s.dat', date('Y-m-d'));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         $response->sendHeaders();
