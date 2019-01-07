@@ -59,7 +59,7 @@ class StatsController extends AbstractController
         $response = new Response($csvContent);
         $response->headers->set('Content-Type', 'application/octet-stream');
 
-        $attachmentName = sprintf('DD_ReportSubmissions-%s.dat', date('Y-m-d'));
+        $attachmentName = sprintf('cwsxxxxxxxxopg00001%s.dat', date('Ymdhi'));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         $response->sendHeaders();
