@@ -254,8 +254,6 @@ class ReportSubmissionControllerTest extends AbstractTestController
             'AuthToken'   => self::$tokenAdmin,
         ]);
 
-        array_shift($response['data']);
-
         return $response['data'];
     }
 
@@ -267,7 +265,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     {
         $testPassed = false;
         foreach ($data as $row) {
-            if ($row[0] == $caseNumber) {
+            if ($row['case_number'] == $caseNumber) {
                 $testPassed = true;
                 break;
             }

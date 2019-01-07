@@ -26,21 +26,12 @@ class ReportSubmissionSummaryTransformer
     public function transform(array $reportSubmissions)
     {
         $ret = [];
-        $ret[] = $this->getHeaderLine();
 
         foreach ($reportSubmissions as $reportSubmission) {
             $ret[] = $this->generateDataRow($reportSubmission);
         }
 
         return array_filter($ret);
-    }
-
-    /**
-     * @return array
-     */
-    private function getHeaderLine()
-    {
-        return ['case_number', 'date_received', 'scan_date', 'document_id', 'document_type', 'form_type'];
     }
 
     /**
@@ -58,14 +49,24 @@ class ReportSubmissionSummaryTransformer
             $reportSubmission->getNdr();
 
         $data = [];
-        $data[] = $this->getCaseNumber($report);
-        $data[] = $this->getDateReceived($reportSubmission);
-        $data[] = $this->getScanDate();
-        $data[] = $this->getDocumentId($reportSubmission);
-        $data[] = $this->getReportType();
-        $data[] = $this->getFormType();
+        $data['id'] = $this->getId($reportSubmission);
+        $data['case_number'] = $this->getCaseNumber($report);
+        $data['date_received'] = $this->getDateReceived($reportSubmission);
+        $data['scan_date'] = $this->getScanDate();
+        $data['document_id'] = $this->getDocumentId($reportSubmission);
+        $data['document_type'] = $this->getReportType();
+        $data['form_type'] = $this->getFormType();
 
         return $data;
+    }
+
+    /**
+     * @param ReportSubmission $reportSubmission
+     * @return int
+     */
+    private function getId(ReportSubmission $reportSubmission)
+    {
+        return $reportSubmission->getId();
     }
 
     /**
@@ -129,6 +130,6 @@ class ReportSubmissionSummaryTransformer
      */
     private function outputDate($date)
     {
-        return ($date instanceof \DateTime) ? $date->format('d/m/Y') : null;
+        return ($date instanceof \DateTime) ? $date->format('Y-m-d') : null;
     }
 }

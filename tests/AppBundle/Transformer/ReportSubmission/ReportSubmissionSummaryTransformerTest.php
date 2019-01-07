@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Transformer\ReportSummary;
+namespace Tests\AppBundle\Transformer\ReportSubmission;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
@@ -64,7 +64,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
     private function assertResultDoesNotContainDataRows()
     {
-        $this->assertCount(1, $this->result);
+        $this->assertCount(0, $this->result);
     }
 
     public function testTransformsAReportSubmission()
@@ -73,6 +73,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $ndrReportSubmission = $this->buildReportSubmissionWith([
+            'id' => 1,
             'report_type' => Ndr::class,
             'created_on' => new \DateTime('2012-01-01'),
             'report' => [
@@ -84,6 +85,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         ]);
 
         $reportSubmission = $this->buildReportSubmissionWith([
+            'id' => 2,
             'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-02'),
             'report' => [
@@ -98,17 +100,19 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $expectedRows = [
             [
+                'id' => 1,
                 'case_number' => 132,
-                'date_received' => '01/01/2012',
-                'scan_date' => '01/01/2013',
+                'date_received' => '2012-01-01',
+                'scan_date' => '2013-01-01',
                 'document_id' => 'NDR-report.pdf',
                 'document_type' => 'Reports',
                 'form_type' => 'Reports General'
             ],
             [
+                'id' => 2,
                 'case_number' => 133,
-                'date_received' => '02/01/2012',
-                'scan_date' => '01/01/2013',
+                'date_received' => '2012-01-02',
+                'scan_date' => '2013-01-01',
                 'document_id' => 'full-report.pdf',
                 'document_type' => 'Reports',
                 'form_type' => 'Reports General'
@@ -116,7 +120,6 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         ];
 
         $this->result = $this->sut->transform([$ndrReportSubmission, $reportSubmission]);
-        $this->assertResultContainsHeaderRow();
         $this->assertRowsContain($expectedRows);
     }
 
@@ -126,6 +129,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $reportSubmission = $this->buildReportSubmissionWith([
+            'id' => 3,
             'report_type' => Report::class,
             'created_on' => new \DateTime('2012-01-01'),
             'report' => [
@@ -138,9 +142,10 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $expectedRows = [
             [
+                'id' => 3,
                 'case_number' => 132,
-                'date_received' => '01/01/2012',
-                'scan_date' => '01/01/2013',
+                'date_received' => '2012-01-01',
+                'scan_date' => '2013-01-01',
                 'document_id' => null,
                 'document_type' => 'Reports',
                 'form_type' => 'Reports General'
@@ -164,6 +169,7 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             $reportSubmission->addDocument($this->buildDocumentWith($document));
         }
 
+        $reportSubmission->setId($data['id']);
         $reportSubmission->setCreatedOn($data['created_on']);
 
         return $reportSubmission;
@@ -200,23 +206,13 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
             ->setIsReportPdf($document['is_report_pdf']);
     }
 
-    private function assertResultContainsHeaderRow()
-    {
-        $this->assertEquals($this->result[0][0], 'case_number');
-        $this->assertEquals($this->result[0][1], 'date_received');
-        $this->assertEquals($this->result[0][2], 'scan_date');
-        $this->assertEquals($this->result[0][3], 'document_id');
-        $this->assertEquals($this->result[0][4], 'document_type');
-        $this->assertEquals($this->result[0][5], 'form_type');
-    }
-
     /**
      * @param array $expectedRows
      */
     private function assertRowsContain(array $expectedRows)
     {
         foreach ($expectedRows as $index => $expectedRow) {
-            $this->assertResultContainsRow($expectedRow, $index + 1);
+            $this->assertResultContainsRow($expectedRow, $index);
         }
     }
 
@@ -226,11 +222,12 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
      */
     private function assertResultContainsRow($expectedRow, $row)
     {
-        $this->assertEquals($expectedRow['case_number'], $this->result[$row][0]);
-        $this->assertEquals($expectedRow['date_received'], $this->result[$row][1]);
-        $this->assertEquals($expectedRow['scan_date'], $this->result[$row][2]);
-        $this->assertEquals($expectedRow['document_id'], $this->result[$row][3]);
-        $this->assertEquals($expectedRow['document_type'], $this->result[$row][4]);
-        $this->assertEquals($expectedRow['form_type'], $this->result[$row][5]);
+        $this->assertEquals($expectedRow['id'], $this->result[$row]['id']);
+        $this->assertEquals($expectedRow['case_number'], $this->result[$row]['case_number']);
+        $this->assertEquals($expectedRow['date_received'], $this->result[$row]['date_received']);
+        $this->assertEquals($expectedRow['scan_date'], $this->result[$row]['scan_date']);
+        $this->assertEquals($expectedRow['document_id'], $this->result[$row]['document_id']);
+        $this->assertEquals($expectedRow['document_type'], $this->result[$row]['document_type']);
+        $this->assertEquals($expectedRow['form_type'], $this->result[$row]['form_type']);
     }
 }
