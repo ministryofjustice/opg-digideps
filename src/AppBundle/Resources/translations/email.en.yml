@@ -28,3 +28,7 @@ feedbackForm:
 codeputyInvitation:
     subject: Deputy report - activate your account now
     fromName: Office of the Public Guardian
+addressUpdateForm:
+    subject: Deputy address change
+    fromName: Deputy report service - deputy address updated
+    toName: Deputyship Service

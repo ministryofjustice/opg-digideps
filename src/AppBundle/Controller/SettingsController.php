@@ -131,6 +131,10 @@ class SettingsController extends AbstractController
 
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
+//var_dump($form->getData());exit;
+//                // send email to notify address change
+                $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUser());
+                $this->getMailSender()->send($addressUpdateEmail, ['html']);
 
                 return $this->redirectToRoute($redirectRoute);
             } catch (\Exception $e) {
