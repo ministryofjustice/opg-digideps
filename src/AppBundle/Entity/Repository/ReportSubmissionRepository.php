@@ -112,28 +112,23 @@ class ReportSubmissionRepository extends EntityRepository
     }
 
     /**
-     * @param string $status        string new|archived
-     * @param string $q             serach string
-     * @param string $createdByRole see values in USER::ROLE_*
-     * @param int    $offset
-     * @param int    $limit
-     * @param string $orderBy       default createdOn
-     * @param string $order         default ASC
-     *
-     * @return ReportSubmission[]
+     * @param $offset
+     * @param $limit
+     * @param \DateTime $fromDate
+     * @param \DateTime $toDate
+     * @param string $orderBy default createdOn
+     * @param string $order default ASC
+     * @return array
      */
     public function findAllReportSubmissions(
-        $status,
-        $q,
-        $createdByRole,
         $offset,
         $limit,
+        \DateTime $fromDate = null,
+        \DateTime $toDate = null,
         $orderBy = 'createdOn',
-        $order = 'ASC',
-        $fromDate = null
+        $order = 'ASC'
     ) {
 
-        // BASE QUERY BUILDER with filters (for both count and results)
         $qb = $this->createQueryBuilder('rs');
         $qb
             ->leftJoin('rs.createdBy', 'cb')
@@ -143,25 +138,19 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('ndr.client', 'ndrClient')
         ;
 
-        // get results (base query + ordered + pagination + status filter)
         $qbSelect = clone $qb;
-        $qbSelect->select('rs,r,ndr,cb,c,ndrClient');
-
-        // add date restriction depending on which day we have (to include weekend submissions on Monday)
-        // fromDate (if set) passed from form
-        $fromDate = $this->determineCreationFromDate($fromDate);
-
-        $qbSelect->andWhere('rs.createdOn >= :fromDate')
-            ->setParameter(':fromDate', $fromDate);
-
-        // to filter out multiple submissions, look at the rs.createdOn as being greater or equal to the original
-        // report submission date
-        $qbSelect->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate');
-        $qbSelect->andWhere('r.submitted = true OR ndr.submitted = true');
-        $qbSelect->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL');
         $qbSelect
+            ->select('rs,r,ndr,cb,c,ndrClient')
+            ->andWhere('rs.createdOn >= :fromDate')
+            ->andWhere('rs.createdOn <= :toDate')
+            ->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate')
+            ->andWhere('r.submitted = true OR ndr.submitted = true')
+            ->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL')
+            ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
+            ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
             ->orderBy('rs.' . $orderBy, $order)
-            ->setFirstResult($offset);
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
 
         return $qbSelect->getQuery()->getArrayResult();
     }
@@ -169,23 +158,22 @@ class ReportSubmissionRepository extends EntityRepository
     /**
      * Calculate FromDate for ReportSubmissions. Used for CSV generation to include weekends reports on Monday.
      *
+     * @param \DateTime|null $date
      * @return \DateTime
      */
-    private function determineCreationFromDate($fromDate)
+    private function determineCreatedFromDate(\DateTime $date = null)
     {
-        if (empty($fromDate)) {
+        $dateFormat = (date('N') == 1) ? 'last Friday midnight' : 'yesterday midnight';
 
-            // default
-            $fromString = 'yesterday midnight';
+        return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
+    }
 
-            if (date('N') == 1) {
-                $fromString = 'last Friday midnight';
-            }
-            $fromDate = new \DateTime($fromString);
-
-            return $fromDate;
-        }
-
-        return new \DateTime($fromDate['date']);
+    /**
+     * @param \DateTime|null $date
+     * @return \DateTime
+     */
+    private function determineCreatedToDate(\DateTime $date = null)
+    {
+        return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 }
