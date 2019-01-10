@@ -136,6 +136,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('r.client', 'c')
             ->leftJoin('rs.ndr', 'ndr')
             ->leftJoin('ndr.client', 'ndrClient')
+            ->leftJoin('rs.documents', 'documents')
         ;
 
         $qbSelect = clone $qb;
@@ -152,7 +153,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
 
-        return $qbSelect->getQuery()->getArrayResult();
+        return $qbSelect->getQuery()->getResult();
     }
 
     /**

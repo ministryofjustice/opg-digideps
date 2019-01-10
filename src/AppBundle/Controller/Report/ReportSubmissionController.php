@@ -156,10 +156,9 @@ class ReportSubmissionController extends RestController
             $this->convertDateArrayToDateTime($request->get('toDate', [])),
             $request->get('orderBy', 'createdOn'),
             $request->get('order', 'ASC')
-
         );
 
-        return $this->get('report_submission_stat_service')->generateReportSubmissionsCsvLines($ret);
+        return $this->get('app.transformer.report_submission.report_submission_summary_transformer')->transform($ret);
     }
 
     /**
