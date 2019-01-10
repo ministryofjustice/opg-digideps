@@ -1,0 +1,4 @@
+services:
+  mapper.report_submission_summary_mapper:
+    class: AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper
+    arguments: [ "@rest_client" ]

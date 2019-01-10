@@ -61,30 +61,6 @@ class CsvGeneratorService
     }
 
     /**
-     * Generate all the report submissions as csv
-     *
-     * @param array $lines
-     *
-     * @return string Csv content
-     */
-    public function generateReportSubmissionsCsv($lines)
-    {
-        $this->logger->info('Generating Report submissions CSV : ');
-
-        $this->initialiseFilePointer();
-
-        foreach($lines as $line) {
-            fputcsv($this->fd, $line);
-        }
-
-        rewind($this->fd);
-        $csvContent = stream_get_contents($this->fd);
-        fclose($this->fd);
-
-        return $csvContent;
-    }
-
-    /**
      * Initialise file pointer to php memory for CSV creation
      *
      * @throws \Exception
