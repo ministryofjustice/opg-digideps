@@ -301,16 +301,15 @@ class IndexController extends AbstractController
                         'Dep Postcode',
                         'Typeofrep',
                         'Corref',
-                        'NDR' // if not present, would indicate a prof/PA CSV is being used incorrectly here
+                        'NDR', // if not present, would indicate a prof/PA CSV is being used incorrectly here
+                        'Dep Type',
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3'
                     ])
                     ->setOptionalColumns($csvToArray->getFirstRow())
                     ->setUnexpectedColumns([
                         //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Dep Type', // 23 = PA (but not confirmed)
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3',
-                        'Email',
                         'Last Report Day'
                     ])
                     ->getData();
@@ -471,7 +470,9 @@ class IndexController extends AbstractController
 
                 // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
                 $chunks = array_chunk($data, $chunkSize);
+
                 foreach ($chunks as $k => $chunk) {
+
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
                 }
