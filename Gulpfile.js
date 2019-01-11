@@ -30,12 +30,12 @@ var config = {
 };
 
 const setDevelopment = (done) => { // Non production
-    config.production = false; 
+    config.production = false;
     done();
 }
 
 const cleanAssets = () => { // Clear web assets folder and formatted report css folder
-    return del([ 
+    return del([
         'web/assets/*',
         config.viewsSrc + '/Css/*'
 
@@ -55,7 +55,7 @@ const lintJS = () => { // JS quality control
         .pipe(jshint.reporter('default'));
 }
 
-const CompileFormattedReportSassToCSS = () => { 
+const CompileFormattedReportSassToCSS = () => {
     return gulp.src(config.sassSrc + '/formatted-report.scss')
         .pipe(!config.production ? sourcemaps.init() : gutil.noop())
         .pipe(sass(config.sass).on('error', sass.logError))
@@ -64,13 +64,13 @@ const CompileFormattedReportSassToCSS = () => {
         .pipe(gulp.dest(config.viewsSrc + '/Css'));
 }
 
-const copyFormattedReportCSSToTwigVersion = () => { 
+const copyFormattedReportCSSToTwigVersion = () => {
     return gulp.src(config.viewsSrc + '/Css/formatted-report.css')
     .pipe(rename(config.viewsSrc + '/Css/formatted-report.css.twig'))
     .pipe(gulp.dest('./'));
 }
 
-const deleteFormattedReportCSSVersion = () => { 
+const deleteFormattedReportCSSVersion = () => {
     return del([config.viewsSrc + '/Css/formatted-report.css']);
 }
 
@@ -127,24 +127,23 @@ const copyJQuery = () => {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 }
 
-// Compile formatted report CSS and copy to twig, then delete the .css version 
+// Compile formatted report CSS and copy to twig, then delete the .css version
 gulp.task('rebuild-formatted-report-css', gulp.series(CompileFormattedReportSassToCSS, copyFormattedReportCSSToTwigVersion, deleteFormattedReportCSSVersion));
 
 gulp.task('sass', gulp.series(lintSass, buildApplicationCSSFromSass));
 
 gulp.task('app-js', gulp.series(lintJS, concatJSThenMinifyAndCopy));
 
-// Prepare and build all assets. 
+// Prepare and build all assets.
 gulp.task('default', gulp.series(
-    cleanAssets, 
-    lintSass, 
+    cleanAssets,
     gulp.parallel(
-        'sass', 
-        makeImagePathsAbsoluteInGovUKCSSThenCopy, 
-        copyAllImages, 
-        copyGovUKFonts, 
-        'app-js', 
-        copyJQuery, 
+        'sass',
+        makeImagePathsAbsoluteInGovUKCSSThenCopy,
+        copyAllImages,
+        copyGovUKFonts,
+        'app-js',
+        copyJQuery,
         'rebuild-formatted-report-css'
     )));
 
