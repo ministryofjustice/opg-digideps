@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -101,6 +102,7 @@ trait BalanceTrait
         return $this->getAccountsOpeningBalanceTotal()
             + $this->getMoneyInTotal()
             - $this->getMoneyOutTotal()
+            - ($this->hasSection(Report::SECTION_PROF_DEPUTY_COSTS) ? $this->getProfDeputyTotalCosts() : 0)
             - ($this->has106Flag() ? $this->getFeesTotal() : 0)
             - $this->getExpensesTotal()
             - $this->getGiftsTotal();
