@@ -444,8 +444,7 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        // TODO replace with real logic when implemented
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        // TODO replace with real logic when implementeds
 
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }

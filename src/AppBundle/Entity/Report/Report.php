@@ -173,7 +173,7 @@ class Report implements ReportInterface
             ] : [],
             self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
-            //self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
+            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }
