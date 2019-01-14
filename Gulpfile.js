@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp = require('gulp'),
+const gulp = require('gulp'),
     gutil = require('gulp-util'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
@@ -29,105 +29,87 @@ var config = {
     production: true
 };
 
-
-// Set to development
-gulp.task('set-development', function (done) {
+const setDevelopment = (done) => { // Non production
     config.production = false;
     done();
-});
+}
 
-// Clean out old assets
-gulp.task('clean', function (done) {
-    del([
+const cleanAssets = () => { // Clear web assets folder and formatted report css folder
+    return del([
         'web/assets/*',
         config.viewsSrc + '/Css/*'
 
     ]);
-    done();
-});
+}
 
-// sass quality control
-gulp.task('lint.sass', function() {
+const lintSass = () => { // sass quality control
     return gulp.src([
         config.sassSrc + '/**/*.scss',
         config.sassSrc + '/*.scss'])
         .pipe(scsslint());
-});
+}
 
-// js quality control
-gulp.task('lint.js', function () {
+const lintJS = () => { // JS quality control
     return gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
-});
+}
 
-gulp.task('sass.formatted-report', gulp.series(gulp.parallel('clean', 'lint.sass'), function () {
+const CompileFormattedReportSassToCSS = () => {
     return gulp.src(config.sassSrc + '/formatted-report.scss')
         .pipe(!config.production ? sourcemaps.init() : gutil.noop())
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(!config.production ? sourcemaps.write('./') : gutil.noop())
         .pipe(config.production ? uglifycss() : gutil.noop())
         .pipe(gulp.dest(config.viewsSrc + '/Css'));
-}));
+}
 
-// Rename formatted-report.css to formatted-report.html.twig
-gulp.task('rename', gulp.series('sass.formatted-report' ,function () {
+const copyFormattedReportCSSToTwigVersion = () => {
     return gulp.src(config.viewsSrc + '/Css/formatted-report.css')
-        .pipe(rename(config.viewsSrc + '/Css/formatted-report.css.twig'))
-        .pipe(gulp.dest('./'));
-}));
+    .pipe(rename(config.viewsSrc + '/Css/formatted-report.css.twig'))
+    .pipe(gulp.dest('./'));
+}
 
-// Clean out old assets
-gulp.task('clean-formatted-report', gulp.series('rename', function () {
-    return del([
-        config.viewsSrc + '/Css/formatted-report.css'
-    ]);
-}));
+const deleteFormattedReportCSSVersion = () => {
+    return del([config.viewsSrc + '/Css/formatted-report.css']);
+}
 
-// Compile sass files
-// Development builds sourcemaps
-// Production minifies
-gulp.task('sass', gulp.series(gulp.parallel('clean', 'lint.sass'), function () {
+const buildApplicationCSSFromSass = () => { // Compile sass files, uglify, copy
     return gulp.src([
-            config.sassSrc + '/application.scss',
-            config.sassSrc + '/application-print.scss'])
+        config.sassSrc + '/application.scss',
+        config.sassSrc + '/application-print.scss'])
         .pipe(!config.production ? sourcemaps.init() : gutil.noop())
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(!config.production ? sourcemaps.write('./') : gutil.noop())
         .pipe(config.production ? uglifycss() : gutil.noop())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-}));
+};
 
-// Copy govuk template css to stylesheets and fix image paths while we're at it (make them absolute)
-gulp.task('govuk-template-css', gulp.series('clean', function () {
+const makeImagePathsAbsoluteInGovUKCSSThenCopy = () => {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/stylesheets/fonts.css',
             './node_modules/govuk_template_mustache/assets/stylesheets/govuk-template.css',
         ])
         .pipe(replace('images/', '/images/'))
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-}));
+}
 
-// fonts
-gulp.task('fonts', gulp.series('clean', function () {
+const copyGovUKFonts = () => {
     return gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
-}));
-
-// Copy all images
-gulp.task('images', gulp.series('clean', function () {
+}
+const copyAllImages = () => {
     return gulp.src([
-        './node_modules/govuk_frontend_toolkit/images/**/*',
-        './node_modules/govuk_template_mustache/assets/images/*',
-        './node_modules/govuk_template_mustache/assets/stylesheets/images/**/*',
-        './node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png',
-        config.imgSrc + '/**/*'])
+            './node_modules/govuk_frontend_toolkit/images/**/*',
+            './node_modules/govuk_template_mustache/assets/images/*',
+            './node_modules/govuk_template_mustache/assets/stylesheets/images/**/*',
+            './node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png',
+            config.imgSrc + '/**/*'
+        ])
         .pipe(gulp.dest('./web/images'));
-}));
+}
 
-// Concats js into application.js
-// Production minifies
-gulp.task('js.application', gulp.series(gulp.parallel('lint.js', 'clean'), function () {
+const concatJSThenMinifyAndCopy = () => { // Only minify if prod
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/show-hide-content.js',
@@ -137,22 +119,36 @@ gulp.task('js.application', gulp.series(gulp.parallel('lint.js', 'clean'), funct
         .pipe(concat('application.js'))
         .pipe(config.production ? uglify() : gutil.noop())
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
-}));
+}
 
-// jQuery copied
-gulp.task('js.other', gulp.series('clean', function() {
+const copyJQuery = () => {
     return gulp.src([
         './node_modules/jquery/dist/jquery.min.js'])
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
-}));
+}
 
-// Prepare and build all assets
-gulp.task('default', gulp.parallel('clean', 'sass', 'sass.formatted-report', 'govuk-template-css', 'images', 'fonts', 'js.application', 'js.other', 'rename', 'clean-formatted-report'));
-// Prepare and build all assets in Development mode
-gulp.task('development', gulp.parallel('set-development', 'default'));
+// Compile formatted report CSS and copy to twig, then delete the .css version
+gulp.task('rebuild-formatted-report-css', gulp.series(CompileFormattedReportSassToCSS, copyFormattedReportCSSToTwigVersion, deleteFormattedReportCSSVersion));
+
+gulp.task('sass', gulp.series(lintSass, buildApplicationCSSFromSass));
+
+gulp.task('app-js', gulp.series(lintJS, concatJSThenMinifyAndCopy));
+
+// Prepare and build all assets.
+gulp.task('default', gulp.series(
+    cleanAssets,
+    gulp.parallel(
+        'sass',
+        makeImagePathsAbsoluteInGovUKCSSThenCopy,
+        copyAllImages,
+        copyGovUKFonts,
+        'app-js',
+        copyJQuery,
+        'rebuild-formatted-report-css'
+    )));
 
 // Watch sass, images and js and recompile as Development
-gulp.task('watch', gulp.series('development', function () {
+gulp.task('watch', gulp.series(setDevelopment, function () {
     gulp.watch([
         config.sassSrc + '/**/*',
         config.sassSrc + '/*',
@@ -160,5 +156,5 @@ gulp.task('watch', gulp.series('development', function () {
         config.jsSrc + '/**/*.js',
         config.jsSrc + '/*.js'],
         { interval: 1000 },
-        gulp.series('development'));
+        gulp.series('default'));
 }));
