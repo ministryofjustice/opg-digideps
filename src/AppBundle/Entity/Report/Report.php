@@ -517,6 +517,60 @@ class Report implements ReportInterface
     }
 
     /**
+     * Generates next reporting period's start date
+     *
+     * @return \DateTime
+     */
+    public function getNextStartDate()
+    {
+        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
+        if (!empty($reportingPeriodInDays)) {
+
+            $nextStart = clone $this->getStartDate();
+            $nextStart = $nextStart->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+            $nextStart->setTime(0,0,0);
+
+            return $nextStart;
+        }
+        return null;
+    }
+
+    /**
+     * Generates next reporting period's end date.
+     * Note: Date diff returns 'difference' and so 1 day needs to be added
+     *
+     * @return \DateTime
+     */
+    public function getNextEndDate()
+    {
+        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
+        if (!empty($reportingPeriodInDays)) {
+            $nextEnd = clone $this->getEndDate();
+            $nextEnd = $nextEnd->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+
+            $nextEnd->setTime(0,0,0);
+            return $nextEnd;
+        }
+        return null;
+    }
+
+    /**
+     * Calculates the Reporting period according to $format
+     *
+     * @param string $format recognised by \DateTime
+     * @return string
+     */
+    private function calculateReportingPeriod($format = '%a')
+    {
+        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime)
+        {
+            // add one day because difference doesn't include end date itself
+            return $this->getStartDate()->diff($this->getEndDate())->format($format);
+        }
+        return null;
+    }
+
+    /**
      * Return string representation of the start-end date period
      * e.g. 2004 to 2005.
      *

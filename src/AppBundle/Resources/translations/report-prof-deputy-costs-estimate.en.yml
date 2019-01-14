@@ -1,0 +1,29 @@
+startPage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs estimates
+  pageSectionDescription1: |
+    Tell us about the costs that you and other fee earners expect to charge the client during
+    the next reporting period (%nextStartDate% - %nextEndDate%).
+    You must submit this insert to the SCCO at the end of the next reporting period along with
+    your bill of costs. This will help the SCCO understand whether the professional deputy costs
+    charged to the client are reasonable and proportionate to the client’s estate and the work done on their behalf.
+  pageSectionDescription2: |
+    OPG will review your estimate for the next reporting period looking at a number of factors,
+    for example the estimate in relation to the size of the estate and previous costs in the case.
+  startButton: Start
+
+summaryPage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle:  Deputy costs estimates
+  returnToClientProfile: Return to client profile
+  weveListedYourAnswers: We've listed your saved answers below
+  checkTheyreCorrect: Check they're correct and edit them where necessary.
+  breakdownOfAdditionalCosts: |
+      Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
+  item: Item
+  amount: Amount
+  questionLabel:
+    paidThisPeriod: Paid for this reporting period
+    totaPaidThisPeriod: Total costs paid this reporting period
+
+
