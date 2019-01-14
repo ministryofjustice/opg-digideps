@@ -63,11 +63,8 @@ class CsvToArray
             $this->handle = fopen('data://text/plain,' . $content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
-            if ($autoDetectLineEndings) {
-                $this->handle = fopen($file, 'rb');
-            } else {
-                $this->handle = fopen($file, 'r');
-            }
+            $openMode = $autoDetectLineEndings ? 'rb' : 'r';
+            $this->handle = fopen($file, $openMode);
         }
     }
 
@@ -138,8 +135,6 @@ class CsvToArray
 
         // read rows
         $rowNumber = 1;
-//        $maxChars = 0;
-//        $rowsProcessed = 0;
         while (($row = $this->getRow()) !== false) {
             $rowNumber++;
             $rowArray = [];
@@ -162,15 +157,7 @@ class CsvToArray
                     $rowArray[$optionalColumn] = $row[$index];
                 }
             }
-
-            // ascertain max chars per row contains all data
-//            if (strlen(implode("", $rowArray)) > self::CHAR_LIMIT_PER_ROW) {
-//                echo "MAX-> " . $maxChars  . " in " . $rowsProcessed . "rows";
-//                throw new \RuntimeException("Character limit " . self::CHAR_LIMIT_PER_ROW . " exceeded in line $rowNumber");
-//            } else {
-                $ret[] = $rowArray;
-//            }
-
+            $ret[] = $rowArray;
         }
 
 
