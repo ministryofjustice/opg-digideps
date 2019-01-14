@@ -435,7 +435,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $fileName = $form->get('file');
+            $fileName = $form->get('file')->getData();
             try {
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([
