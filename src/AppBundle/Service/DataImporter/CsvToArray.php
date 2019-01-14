@@ -165,6 +165,7 @@ class CsvToArray
 
             // ascertain max chars per row contains all data
 //            if (strlen(implode("", $rowArray)) > self::CHAR_LIMIT_PER_ROW) {
+//                echo "MAX-> " . $maxChars  . " in " . $rowsProcessed . "rows";
 //                throw new \RuntimeException("Character limit " . self::CHAR_LIMIT_PER_ROW . " exceeded in line $rowNumber");
 //            } else {
                 $ret[] = $rowArray;
@@ -172,9 +173,6 @@ class CsvToArray
 
         }
 
-//        if ($this->debug) {
-//            echo "MAX-> " . $maxChars  . " in " . $rowsProcessed . "rows";
-//        }
 
         return $ret;
     }
