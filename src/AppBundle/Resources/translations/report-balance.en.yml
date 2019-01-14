@@ -25,6 +25,7 @@ balanceTable:
   deputyExpenses: Deputy expenses
   paDeputyExpenses: Deputy fees and expenses
   gifts: Gifts
+  profDeputyCosts: Deputy costs
   footer: Report closing balance after incoming and outgoing payments
 
 differenceTable:

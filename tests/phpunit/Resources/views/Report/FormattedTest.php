@@ -12,6 +12,7 @@ use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Decision;
 use AppBundle\Entity\Report\MoneyTransaction;
 use AppBundle\Entity\Report\MoneyTransfer;
+use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\Report as Report;
 use AppBundle\Entity\Report\Status;
 use AppBundle\Entity\User;
@@ -37,6 +38,9 @@ class FormattedTest extends WebTestCase
     protected $contacts;
     protected $twig;
 
+    /** @var Crawler */
+    private $crawler;
+
     public function setUp()
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
@@ -57,6 +61,7 @@ class FormattedTest extends WebTestCase
             ->setFirstname('Peter')
             ->setLastname('Jones')
             ->setCaseNumber('1234567t');
+
         $this->client->addUser($this->user);
 
         $this->account1 = (new BankAccount())
@@ -123,14 +128,14 @@ class FormattedTest extends WebTestCase
         $this->report
             ->setType('102')
             ->setAvailableSections([//102
-            'decisions', 'contacts','visitsCare',
-            'lifestyle','balance','bankAccounts',
+            'decisions', 'contacts', 'visitsCare',
+            'lifestyle', 'balance', 'bankAccounts',
             'moneyTransfers',
             'moneyIn', 'moneyOut',
             'moneyInShort', 'moneyOutShort',
             'assets', 'debts', 'gifts',
             'actions', 'otherInfo', 'deputyExpenses',
-            'paDeputyExpenses', 'documents'
+            'paDeputyExpenses', 'documents', 'profDeputyCosts'
         ])
             ->setClient($this->client)
             ->setStartDate(new \Datetime('2015-01-01'))
@@ -151,6 +156,19 @@ class FormattedTest extends WebTestCase
         ]);
 
         return new Crawler($html);
+    }
+
+    /**
+     * @param array $additionalVars
+     */
+    private function renderTemplateOntoCrawler($additionalVars = [])
+    {
+        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', $additionalVars + [
+                'report' => $this->report,
+                'app' => ['user' => $this->user],
+            ]);
+
+        $this->crawler = new Crawler($html);
     }
 
     public function testReport()
@@ -331,6 +349,115 @@ class FormattedTest extends WebTestCase
         $this->assertCount(0, $crawler->filter('#report-summary'));
     }
 
+    public function testProfDeputyCostsDefaultLayout()
+    {
+        $this->renderTemplateOntoCrawler();
+
+        $this->assertSectionExists('#prof-deputy-costs-section');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-how-charged]');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-has-previous]');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-fixed-cost]');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-amount-scco]');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-breakdown]');
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-total]');
+
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-previous-item]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-has-interim]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-interim-list]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-breakdown-more-details]');
+    }
+
+    public function testProfDeputyCostsDisplaysFixedCostQuestion()
+    {
+        $this->ensureDeputyCostsWithHowChargedNotAnswered();
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-fixed-cost]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-has-interim]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-interim-list]');
+
+        $this->ensureDeputyCostsWithFixedOnly();
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-fixed-cost]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-has-interim]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-interim-list]');
+
+        $this->ensureDeputyCostsWithNonFixedAndInterimNotAnswered();
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-fixed-cost]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-has-interim]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-interim-list]');
+
+        $this->ensureDeputyCostsWithNonFixedAndInterimEqualTo('no');
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-fixed-cost]');
+        $this->assertAttributeNotExists('//*[@data-prof-deputy-costs-interim-list]');
+    }
+
+    public function testProfDeputyCostsDisplaysInterimCostQuestion()
+    {
+        $this->ensureDeputyCostsWithNonFixedAndInterimEqualTo('no');
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-has-interim]');
+
+        $this->ensureDeputyCostsWithNonFixedAndInterimEqualTo('yes');
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-has-interim]');
+    }
+
+    public function testProfDeputyCostsDisplaysInterimCostItems()
+    {
+        $this->ensureDeputyCostsWithNonFixedAndInterimEqualTo('yes');
+        $this->renderTemplateOntoCrawler();
+        $this->assertAttributeExists('//*[@data-prof-deputy-costs-has-interim]');
+        $this->assertAttributeExistsNtimes('//*[@data-prof-deputy-costs-interim-list-item]', 3);
+    }
+
+    /**
+     * @return Report
+     */
+    private function ensureDeputyCostsWithHowChargedNotAnswered()
+    {
+        $this
+            ->report
+            ->setProfDeputyCostsHowChargedFixed(null)
+            ->setProfDeputyCostsHowChargedAssessed(null)
+            ->setProfDeputyCostsHowChargedAgreed(null);
+    }
+
+    /**
+     * @return Report
+     */
+    private function ensureDeputyCostsWithFixedOnly()
+    {
+        $this
+            ->report
+            ->setProfDeputyCostsHowChargedFixed(true)
+            ->setProfDeputyCostsHowChargedAssessed(false)
+            ->setProfDeputyCostsHowChargedAgreed(false);
+    }
+
+    private function ensureDeputyCostsWithNonFixedAndInterimEqualTo($interim)
+    {
+        $this
+            ->report
+            ->setProfDeputyCostsHowChargedFixed(false)
+            ->setProfDeputyCostsHowChargedAssessed(true)
+            ->setProfDeputyCostsHasInterim($interim);
+    }
+
+    /**
+     * @return $this
+     */
+    private function ensureDeputyCostsWithNonFixedAndInterimNotAnswered()
+    {
+        $this
+            ->report
+            ->setProfDeputyCostsHowChargedFixed(true)
+            ->setProfDeputyCostsHowChargedAssessed(true)
+            ->setProfDeputyCostsHowChargedAgreed(false)
+            ->setProfDeputyCostsHasInterim(null);
+    }
+
     public function tearDown()
     {
         m::close();
@@ -340,5 +467,37 @@ class FormattedTest extends WebTestCase
     private function html(Crawler $crawler, $expr)
     {
         return $crawler->filter($expr)->eq(0)->html();
+    }
+
+    /**
+     * @param $section
+     */
+    private function assertSectionExists($section)
+    {
+        $this->assertCount(1, $this->crawler->filter($section));
+    }
+
+    /**
+     * @param $attributeXpath
+     */
+    private function assertAttributeExists($attributeXpath)
+    {
+        $this->assertEquals(1, $this->crawler->filterXPath($attributeXpath)->count());
+    }
+
+    /**
+     * @param $attributeXpath
+     */
+    private function assertAttributeExistsNtimes($attributeXpath, $count)
+    {
+        $this->assertEquals($count, $this->crawler->filterXPath($attributeXpath)->count());
+    }
+
+    /**
+     * @param $attributeXpath
+     */
+    private function assertAttributeNotExists($attributeXpath)
+    {
+        $this->assertEquals(0, $this->crawler->filterXPath($attributeXpath)->count());
     }
 }

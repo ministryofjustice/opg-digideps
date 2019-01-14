@@ -177,6 +177,20 @@ class Status
     private $profCurrentFeesState;
 
     /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
+    private $profDeputyCostsState;
+
+    /**
+     * @JMS\Type("array")
+     *
+     * @var array
+     */
+    private $profDeputyCostsEstimateState;
+
+    /**
      * @return mixed
      */
     public function getDecisionsState()
@@ -535,6 +549,38 @@ class Status
     public function setProfCurrentFeesState($profCurrentFeesState)
     {
         $this->profCurrentFeesState = $profCurrentFeesState;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfDeputyCostsState()
+    {
+        return $this->profDeputyCostsState;
+    }
+
+    /**
+     * @param array $profDeputyCostsState
+     */
+    public function setProfDeputyCostsState($profDeputyCostsState)
+    {
+        $this->profDeputyCostsState = $profDeputyCostsState;
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfDeputyCostsEstimateState()
+    {
+        return $this->profDeputyCostsEstimateState;
+    }
+
+    /**
+     * @param array $profDeputyCostsEstimateState
+     */
+    public function setProfDeputyCostsEstimateState($profDeputyCostsEstimateState)
+    {
+        $this->profDeputyCostsEstimateState = $profDeputyCostsEstimateState;
     }
 
     public function getState()

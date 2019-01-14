@@ -64,6 +64,7 @@
         {% include 'AppBundle:Report/Balance:_difference_table.html.twig' %}
     {% endif %}
 
+    {# TODO use report.hasSection('moneyIn') || report.hasSection('gifts') || report.hasSection('deputyExpenses') to decouple #}
     {% if report.type in ['102','102-4'] %}
         {# If no transactions, don't display download CSV link #}
         {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}

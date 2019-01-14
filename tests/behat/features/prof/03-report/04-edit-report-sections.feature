@@ -128,9 +128,4 @@ Feature: PROF user edits 102-5 report sections
       | account_amount      | 50.00     |
       # add another: no
     And I choose "no" when asked for adding another record
-
-  Scenario: PROF 102-5 Report should be submittable
-    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
-    Then the PROF report should be submittable
-    And I save the application status into "prof-report-completed"
+    And I save the application status into "pre-deputy-costs"
