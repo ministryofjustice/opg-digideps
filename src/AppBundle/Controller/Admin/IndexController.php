@@ -213,6 +213,8 @@ class IndexController extends AbstractController
      * @Method({"POST"})
      *
      * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
     {
@@ -241,6 +243,8 @@ class IndexController extends AbstractController
      * @Template()
      *
      * @param int $id
+     *
+     * @return array
      */
     public function deleteConfirmAction($id)
     {
@@ -264,6 +268,8 @@ class IndexController extends AbstractController
      * @Template()
      *
      * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction($id)
     {
@@ -292,7 +298,8 @@ class IndexController extends AbstractController
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
-                $csvToArray = new CsvToArray($fileName, true);
+                $csvToArray = new CsvToArray($fileName, false, true);
+
                 $data = $csvToArray->setExpectedColumns([
                         'Case',
                         'Surname',
@@ -317,6 +324,7 @@ class IndexController extends AbstractController
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
+
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
                     $request->getSession()->getFlashBag()->add(
@@ -340,6 +348,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('chunk' . $k, $compressedData);
                 }
+
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
@@ -426,7 +435,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $fileName = $form->get('file')->getData();
+            $fileName = $form->get('file');
             try {
                 $data = (new CsvToArray($fileName, false))
                     ->setExpectedColumns([

@@ -7,6 +7,7 @@ class CsvToArray
     const DELIMITER = ',';
     const ENCLOSURE = '"';
     const ESCAPE = '\\';
+    const CHAR_LIMIT_PER_ROW = 2000; // current average is around the 300-400 chars
 
     /**
      * @var resource
@@ -40,13 +41,15 @@ class CsvToArray
     private $firstRow = [];
 
     /**
-     * @param string $file              path to file
-     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No' ...]
-     * @param bool   $normaliseNewLines
+     * CsvToArray constructor.
+     *
+     * @param $file
+     * @param $normaliseNewLines
+     * @param bool $autoDetectLineEndings - setup to maintain compatibility with other code that uses this class
      *
      * @throws \RuntimeException
      */
-    public function __construct($file, $normaliseNewLines)
+    public function __construct($file, $normaliseNewLines, $autoDetectLineEndings = false)
     {
         $this->normaliseNewLines = $normaliseNewLines;
 
@@ -60,7 +63,11 @@ class CsvToArray
             $this->handle = fopen('data://text/plain,' . $content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
-            $this->handle = fopen($file, 'r');
+            if ($autoDetectLineEndings) {
+                $this->handle = fopen($file, 'rb');
+            } else {
+                $this->handle = fopen($file, 'r');
+            }
         }
     }
 
@@ -90,7 +97,7 @@ class CsvToArray
      */
     private function getRow()
     {
-        return fgetcsv($this->handle, 2000, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
+        return fgetcsv($this->handle, self::CHAR_LIMIT_PER_ROW, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
     }
 
     /**
@@ -131,6 +138,8 @@ class CsvToArray
 
         // read rows
         $rowNumber = 1;
+//        $maxChars = 0;
+//        $rowsProcessed = 0;
         while (($row = $this->getRow()) !== false) {
             $rowNumber++;
             $rowArray = [];
@@ -153,8 +162,19 @@ class CsvToArray
                     $rowArray[$optionalColumn] = $row[$index];
                 }
             }
-            $ret[] = $rowArray;
+
+            // ascertain max chars per row contains all data
+//            if (strlen(implode("", $rowArray)) > self::CHAR_LIMIT_PER_ROW) {
+//                throw new \RuntimeException("Character limit " . self::CHAR_LIMIT_PER_ROW . " exceeded in line $rowNumber");
+//            } else {
+                $ret[] = $rowArray;
+//            }
+
         }
+
+//        if ($this->debug) {
+//            echo "MAX-> " . $maxChars  . " in " . $rowsProcessed . "rows";
+//        }
 
         return $ret;
     }
