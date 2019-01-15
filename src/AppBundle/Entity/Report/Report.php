@@ -41,7 +41,7 @@ class Report implements ReportInterface
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
     use ReportTraits\ReportProfDeputyCostsTrait;
-    use ReportTraits\ReportProfDeputyCostsEstimatesTrait;
+    use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\StatusTrait;
 
     /**

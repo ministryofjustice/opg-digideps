@@ -18,7 +18,7 @@ class Version204 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report ADD prof_dc_estimates_hc VARCHAR(10) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD prof_dc_estimate_hc VARCHAR(10) DEFAULT NULL');
     }
 
     /**
@@ -30,6 +30,6 @@ class Version204 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE report DROP prof_dc_estimates_hc');
+        $this->addSql('ALTER TABLE report DROP prof_dc_estimate_hc');
     }
 }
