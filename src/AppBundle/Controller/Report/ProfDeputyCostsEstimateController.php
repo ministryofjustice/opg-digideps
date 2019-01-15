@@ -50,7 +50,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $from = $request->get('from');
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyCostEstimatesHowType::class, $report);
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateHowType::class, $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isValid()) {

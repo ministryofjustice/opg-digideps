@@ -7,13 +7,12 @@ use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProfDeputyCostEstimatesHowType extends AbstractType
+class ProfDeputyCostsEstimateHowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('profDeputyCostsHowChargedFixed', FormTypes\CheckboxType::class)
-            ->add('profDeputyCostsHowChargedEstimates', FormTypes\ChoiceType::class, [
+            ->add('profDeputyCostsEstimateHowCharged', FormTypes\ChoiceType::class, [
                 'choices'  => ['fixed' => 'fixed', 'assessed' => 'assessed', 'both' => 'both'],
                 'expanded' => true
             ])
@@ -23,8 +22,8 @@ class ProfDeputyCostEstimatesHowType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-             'validation_groups' => ['prof-deputy-costs-how-changed-estimates'],
-             'translation_domain' => 'report-prof-deputy-costs-estimates',
+             'validation_groups' => ['prof-deputy-costs-estimate-how-changed'],
+             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
 

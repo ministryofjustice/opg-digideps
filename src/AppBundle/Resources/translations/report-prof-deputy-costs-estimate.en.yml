@@ -1,5 +1,5 @@
 startPage:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle: Deputy costs estimates
   pageSectionDescription1: |
     Tell us about the costs that you and other fee earners expect to charge the client during
@@ -12,8 +12,14 @@ startPage:
     for example the estimate in relation to the size of the estate and previous costs in the case.
   startButton: Start
 
+howCharged:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy costs estimates
+  form:
+    profDeputyCostsEstimateHowCharged.label: "How will you be charging for your services?"
+
 summaryPage:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle:  Deputy costs estimates
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
