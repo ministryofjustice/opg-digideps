@@ -48,9 +48,38 @@ Feature: admin / admin
     When I go to admin page "/admin/stats"
     And I click on "submit-and-download"
     And the response status code should be 200
-    And the response should have the "Content-Type" header containing "text/csv"
-    And the response should have the "Content-Disposition" header containing ".csv"
-    And the response should contain "id,report_type,deputy_no,email,name,lastname,registration_date,report_due_date,report_date_submitted"
+    And the response should have the "Content-Type" header containing "application/octet-stream"
+    And the response should have the "Content-Disposition" header containing ".dat"
+
+  Scenario Outline: Downloading Report Submissions with start and end dates
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to admin page "/admin/stats"
+    And I fill in "admin_fromDate_day" with "<from_day>"
+    And I fill in "admin_fromDate_month" with "<from_month>"
+    And I fill in "admin_fromDate_year" with "<from_year>"
+    And I fill in "admin_toDate_day" with "<to_day>"
+    And I fill in "admin_toDate_month" with "<to_month>"
+    And I fill in "admin_toDate_year" with "<to_year>"
+    And I click on "submit-and-download"
+    And the response status code should be 200
+    And the response should have the "Content-Type" header containing "application/octet-stream"
+    And the response should have the "Content-Disposition" header containing ".dat"
+    Examples:
+      | from_day | from_month | from_year | to_day | to_month | to_year |
+      | 12       | 12         | 2018      | 12     | 12       | 2018    |
+      | 12       | 12         | 2018      | 13     | 12       | 2018    |
+
+  Scenario: Attempting to download Report Submissions with an end date earlier than the start date
+    Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to admin page "/admin/stats"
+    And I fill in "admin_fromDate_day" with "12"
+    And I fill in "admin_fromDate_month" with "12"
+    And I fill in "admin_fromDate_year" with "2018"
+    And I fill in "admin_toDate_day" with "11"
+    And I fill in "admin_toDate_month" with "12"
+    And I fill in "admin_toDate_year" with "2018"
+    And I click on "submit-and-download"
+    Then I should see "End date cannot be before the start date"
 
   Scenario: change user password on admin area
     Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"

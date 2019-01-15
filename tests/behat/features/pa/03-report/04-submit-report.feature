@@ -20,10 +20,10 @@ Feature: Report submit (client 01000014)
         And I click on "pa-report-open" in the "client-01000014" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
-            | Bobby Team member                               | deputy-firstname |
-            | BlackAndBlue                                    | deputy-lastname  |
-            | 4410000000003                                   | deputy-phone     |
-            | behat-pa1-team-member@publicguardian.gov.uk | deputy-email     |
+            | John Named                                      | deputy-firstname |
+            | Green                                           | deputy-lastname  |
+            | 10000000001                                     | deputy-phone     |
+            | behat-pa1@publicguardian.gov.uk                 | deputy-email     |
         And I click on "declaration-page"
         When I fill in the following:
             | report_declaration_agree | 1 |

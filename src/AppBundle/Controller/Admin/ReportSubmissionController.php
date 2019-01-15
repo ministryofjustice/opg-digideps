@@ -5,7 +5,6 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Form\Admin\SubmissionCsvFilterType;
 use AppBundle\Service\File\MultiDocumentZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

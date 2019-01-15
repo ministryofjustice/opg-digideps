@@ -25,7 +25,7 @@ Feature: Admin report checklist
       | Not saved yet | last-modified-by |
       | 1 Jan 2016 | court-date |
       | Property and affairs: general | report-type-title |
-      | 1 Jan 2017 to 31 Dec 2017 | expected-date |
+      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
       | Cly | checklist-client-firstname |
       | Hent | checklist-client-lastname |
       | 0123456789 | checklist-client-phone        |
@@ -50,6 +50,7 @@ Feature: Admin report checklist
       | Doe               | checklist-deputy-lastname |
       | 102 Petty France  | checklist-deputy-address   |
       | 020 3334 3555     | checklist-deputy-phone     |
+      | behat-user@publicguardian.gov.uk | checklist-deputy-email |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |

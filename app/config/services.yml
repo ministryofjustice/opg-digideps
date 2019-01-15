@@ -1,4 +1,6 @@
 imports:
+    - { resource: services/mappers.yml }
+    - { resource: services/transformers.yml }
     - { resource: services_mail.yml }
     - { resource: services_forms.yml }
     - { resource: services_twig.yml }
@@ -45,4 +47,3 @@ services:
     report_section_link_service:
       class: AppBundle\Service\ReportSectionsLinkService
       arguments: [ "@router" ]
-

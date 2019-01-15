@@ -91,6 +91,12 @@ statsPage:
     Data is being generated, Click here to <a href="%csvFile%">download</a>
   reportsHeading: Report submissions
   form:
+    fromDate:
+      header: Start date
+      hint: For example, 31 3 2015
+    toDate:
+      header: End date
+      hint: For example, 31 3 2016
     submitAndDownload:
       label: Download
 
