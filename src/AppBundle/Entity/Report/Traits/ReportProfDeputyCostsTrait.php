@@ -123,33 +123,6 @@ trait ReportProfDeputyCostsTrait
     ];
 
     /**
-     * @var boolean
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"prof-deputy-costs-how-charged-estimates"})
-     * @ORM\Column(name="prof_dc_hc_estimates", type="boolean", nullable=true)
-     */
-    private $profDeputyCostsEstimatesHowCharged;
-
-    /**
-     * @return bool
-     */
-    public function getProfDeputyCostsEstimatesHowCharged()
-    {
-        return $this->profDeputyCostsEstimatesHowCharged;
-    }
-
-    /**
-     * @param $profDeputyCostsEstimatesHowCharged bool
-     * @return $this
-     */
-    public function setProfDeputyCostsEstimatesHowCharged($profDeputyCostsEstimatesHowCharged)
-    {
-        $this->profDeputyCostsEstimatesHowCharged = $profDeputyCostsEstimatesHowCharged;
-        return $this;
-    }
-
-    /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("prof_deputy_other_cost_type_ids")
      * @JMS\Type("array")
