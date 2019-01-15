@@ -398,7 +398,7 @@ trait ReportProfDeputyCostsTrait
             $total += (float) $previousCost->getAmount();
         }
 
-        // consider fixed costs if
+        // include fixed costs if interim answer is not a "no"
         if ($this->getProfDeputyCostsHasInterim() !== 'yes') {
             $total += (float) $this->getProfDeputyFixedCost();
         }
@@ -407,6 +407,10 @@ trait ReportProfDeputyCostsTrait
             foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
                 $total += (float) $interimCost->getAmount();
             }
+        }
+
+        foreach ($this->getProfDeputyOtherCosts() as $oc) {
+            $total += (float) $oc->getAmount();
         }
 
         return $total;

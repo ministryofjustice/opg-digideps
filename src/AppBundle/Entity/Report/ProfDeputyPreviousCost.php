@@ -58,7 +58,7 @@ class ProfDeputyPreviousCost
 
 
     /**
-     * @var string
+     * @var float
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-deputy-costs-prev"})
@@ -69,11 +69,13 @@ class ProfDeputyPreviousCost
 
     /**
      * ProfDeputyPreviousCost constructor.
+     * @param float $amount
      * @param Report $report
      */
-    public function __construct(Report $report)
+    public function __construct(Report $report, $amount)
     {
         $this->report = $report;
+        $this->amount = $amount;
     }
 
     /**
@@ -129,7 +131,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @return string
+     * @return float
      */
     public function getAmount()
     {
@@ -137,7 +139,7 @@ class ProfDeputyPreviousCost
     }
 
     /**
-     * @param string $amount
+     * @param float $amount
      * @return ProfDeputyPreviousCost
      */
     public function setAmount($amount)
