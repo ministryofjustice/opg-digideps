@@ -19,6 +19,10 @@
 
 {% block pageContent %}
 
+    <h3 class="heading-small push-half--bottom">
+        {{ (page ~ '.form.profDeputyCostsHow.label') | trans(transOptions, translationDomain) }}
+    </h3>
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {#<p class="text">#}
@@ -26,6 +30,8 @@
     {#</p>#}
 
     <div class="form-section push--bottom">
+        <p class="form-hint">{{ (page ~ '.form.profDeputyCostsHow.hint') | trans }}</p>
+
         {{ form_checkbox(form.profDeputyCostsHowChargedFixed, page ~ '.form.profDeputyCostsHowChargedFixed', {
             'useFormGroup': false,
             'formGroupClass': 'form-group-compound',

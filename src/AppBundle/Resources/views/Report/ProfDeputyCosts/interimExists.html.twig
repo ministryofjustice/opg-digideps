@@ -19,6 +19,9 @@
 
 {% block pageContent %}
 
+    <p class="heading-medium">{{ (page ~ '.pageSectionDescription') | trans }}</p>
+
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     <div class="form-section push--bottom">

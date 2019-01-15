@@ -19,9 +19,9 @@
 
 {% block pageContent %}
 
-    <h3 class="heading-small push-half--bottom">
-        {{ (page ~ '.pageSectionDescription') | trans(transOptions, translationDomain) }}
-    </h3>
+    <p class="heading-small push-half--bottom  text">
+        {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
+    </p>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
