@@ -64,11 +64,11 @@
         if ($(element).length == 1) {
             var nOfChunks = $(element).attr('max') - 1;
 
-            $(window).load(function () {
+            $(window).on('load', (function () {
                 setTimeout(function () {
                     uploadChunk(0,nOfChunks,element);
                 }, 50);
-            });
+            }));
         }
     };
 

@@ -213,6 +213,8 @@ class IndexController extends AbstractController
      * @Method({"POST"})
      *
      * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function editNdrAction(Request $request, $id)
     {
@@ -241,6 +243,8 @@ class IndexController extends AbstractController
      * @Template()
      *
      * @param int $id
+     *
+     * @return array
      */
     public function deleteConfirmAction($id)
     {
@@ -264,6 +268,8 @@ class IndexController extends AbstractController
      * @Template()
      *
      * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function deleteAction($id)
     {
@@ -292,7 +298,8 @@ class IndexController extends AbstractController
         if ($form->isValid()) {
             $fileName = $form->get('file')->getData();
             try {
-                $csvToArray = new CsvToArray($fileName, true);
+                $csvToArray = new CsvToArray($fileName, false, true);
+
                 $data = $csvToArray->setExpectedColumns([
                         'Case',
                         'Surname',
@@ -301,16 +308,15 @@ class IndexController extends AbstractController
                         'Dep Postcode',
                         'Typeofrep',
                         'Corref',
-                        'NDR' // if not present, would indicate a prof/PA CSV is being used incorrectly here
+                        'NDR', // if not present, would indicate a prof/PA CSV is being used incorrectly here
+                        'Dep Type',
+                        'Dep Adrs1',
+                        'Dep Adrs2',
+                        'Dep Adrs3'
                     ])
                     ->setOptionalColumns($csvToArray->getFirstRow())
                     ->setUnexpectedColumns([
                         //'Pat Create', 'Dship Create', //should hold reg date / Cour order date, but no specs given yet
-                        'Dep Type', // 23 = PA (but not confirmed)
-                        'Dep Adrs1',
-                        'Dep Adrs2',
-                        'Dep Adrs3',
-                        'Email',
                         'Last Report Day'
                     ])
                     ->getData();
@@ -318,6 +324,7 @@ class IndexController extends AbstractController
                 // small amount of data -> immediate posting and redirect (needed for behat)
                 if (count($data) < $chunkSize) {
                     $compressedData = CsvUploader::compressData($data);
+
                     $this->getRestClient()->delete('casrec/truncate');
                     $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
                     $request->getSession()->getFlashBag()->add(
@@ -341,6 +348,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('chunk' . $k, $compressedData);
                 }
+
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
             } catch (\Exception $e) {
@@ -471,7 +479,9 @@ class IndexController extends AbstractController
 
                 // big amount of data => save data into redis and redirect with nOfChunks param so that JS can do the upload with small AJAX calls
                 $chunks = array_chunk($data, $chunkSize);
+
                 foreach ($chunks as $k => $chunk) {
+
                     $compressedData = CsvUploader::compressData($chunk);
                     $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
                 }
