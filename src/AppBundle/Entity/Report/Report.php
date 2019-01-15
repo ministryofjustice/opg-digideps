@@ -34,7 +34,13 @@ class Report implements ReportInterface
     use ReportTraits\ReportPaFeeExpensesTrait;
     use ReportTraits\ReportProfServiceFeesTrait;
     use ReportTraits\ReportProfDeputyCostsTrait;
+    use ReportTraits\ReportProfDeputyCostsEstimatesTrait;
     use ReportTraits\ReportUnsubmittedSections;
+
+    // PROF ESTIMATE COSTS
+    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_BOTH = 'both';
 
     /**
      * @JMS\Type("integer")

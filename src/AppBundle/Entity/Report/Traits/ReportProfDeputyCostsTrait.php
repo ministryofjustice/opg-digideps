@@ -114,32 +114,6 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyTotalCosts;
 
     /**
-     * @var boolean
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"deputyCostsHowCharged"})
-     */
-    private $profDeputyCostsEstimatesHowCharged;
-
-    /**
-     * @return bool
-     */
-    public function isProfDeputyCostsEstimatesHowCharged()
-    {
-        return $this->profDeputyCostsEstimatesHowCharged;
-    }
-
-    /**
-     * @param $profDeputyCostsEstimatesHowCharged bool
-     * @return $this
-     */
-    public function setProfDeputyCostsEstimatesHowCharged($profDeputyCostsEstimatesHowCharged)
-    {
-        $this->profDeputyCostsEstimatesHowCharged = $profDeputyCostsEstimatesHowCharged;
-        return $this;
-    }
-
-    /**
      * return true if only fixed is true
      * @return boolean
      */
