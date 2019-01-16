@@ -75,11 +75,70 @@ class ProfDeputyCostsEstimateController extends AbstractController
         ];
     }
 
+
+
+    /**
+     * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
+     * @Template()
+     */
+    public function breakdown(Request $request, $reportId)
+    {
+        $from = $request->get('from');
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        if (empty($report->getProfDeputyEstimateCosts())) {
+            // if none set generate other costs manually
+            $otherCosts = $this->generateDefaultOtherCosts($report);
+
+            $report->setProfDeputyOtherCosts($otherCosts);
+        }
+
+        $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
+
+            return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+        }
+
+        return [
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco', ['reportId'=>$reportId]),
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
+
+    /**
+     * Retrieves the list of default other cost type IDs using virtual property from api
+     * Used to generate the page since with no initial data, we cant display form inputs
+     * without this list.
+     *
+     * @param EntityDir\Report\Report $report
+     * @return array
+     */
+    private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
+    {
+        $otherCosts = [];
+
+        $defaultEstimateCostTypeIds = $report->getProfDeputyEstimateCostTypeIds();
+        foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
+            $estimateCosts[] = new EntityDir\Report\ProfDeputyEstimateCost(
+                $defaultEstimateCostType['typeId'],
+                null,
+                $defaultEstimateCostType['hasMoreDetails'],
+                null
+            );
+
+        }
+        return $estimateCosts;
+    }
+
     /**
      * @return string
      */
     protected function getSectionId()
     {
-        return 'profDeputyCosts';
+        return 'profDeputyCostsEstimate ';
     }
 }

@@ -21,6 +21,14 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyCostsEstimateHowCharged;
 
     /**
+     * @var ProfDeputyEstimateCost[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     */
+    private $profDeputyEstimateCosts;
+
+    /**
      * @return string
      */
     public function getProfDeputyCostsEstimateHowCharged()
@@ -48,6 +56,23 @@ trait ReportProfDeputyCostsEstimateTrait
         return strtolower($this->getProfDeputyCostsEstimateHowCharged()) == Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED;
     }
 
+    /**
+     * @return ProfDeputyEstimateCost[]
+     */
+    public function getProfDeputyEstimateCosts()
+    {
+        return $this->profDeputyEstimateCosts;
+    }
 
+    /**
+     * @param ProfDeputyEstimateCosts[] $profDeputyEstimateCosts
+     *
+     * @return $this
+     */
+    public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
+    {
+        $this->profDeputyEstimateCosts = $profDeputyEstimateCosts;
+        return $this;
+    }
 
 }
