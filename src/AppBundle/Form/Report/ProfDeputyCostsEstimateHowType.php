@@ -11,9 +11,14 @@ class ProfDeputyCostsEstimateHowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $transPrefix = 'howCharged.form.options.';
+
         $builder
             ->add('profDeputyCostsEstimateHowCharged', FormTypes\ChoiceType::class, [
-                'choices'  => ['fixed' => 'fixed', 'assessed' => 'assessed', 'both' => 'both'],
+                'choices'  => [
+                    $transPrefix . 'fixed' => 'fixed',
+                    $transPrefix . 'assessed' => 'assessed',
+                    $transPrefix . 'both' => 'both'],
                 'expanded' => true
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);

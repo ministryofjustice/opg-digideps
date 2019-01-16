@@ -16,8 +16,12 @@ howCharged:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle: Deputy costs estimates
   form:
-    profDeputyCostsEstimateHowCharged.label: "How will you be charging for your services?"
-
+    profDeputyCostsEstimateHowCharged:
+      label: "How will you be charging for your services?"
+    options:
+      fixed: Fixed costs
+      assessed: Assessed costs
+      both: Both
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle:  Deputy costs estimates

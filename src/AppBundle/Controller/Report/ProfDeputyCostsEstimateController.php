@@ -70,7 +70,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         return [
             'report' => $report,
-            //'form' => $form->createView(),
+            'form' => $form->createView(),
             'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate', ['reportId'=>$reportId])
         ];
     }

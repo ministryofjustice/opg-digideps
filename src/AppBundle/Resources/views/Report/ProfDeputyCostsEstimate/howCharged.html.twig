@@ -23,33 +23,21 @@
         {{ (page ~ '.form.profDeputyCostsEstimateHowCharged.label') | trans(transOptions, translationDomain) }}
     </h3>
 
-    {#{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}#}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {#<p class="text">#}
-        {#{{ (page ~ '.profDeputyCostsHow.label') | trans(transOptions) }}#}
-    {#</p>#}
+    <div class="form-section push--bottom">
 
-    {#<div class="form-section push--bottom">#}
-        {#<p class="form-hint">{{ (page ~ '.form.profDeputyCostsHow.hint') | trans }}</p>#}
+        <div class="form-group push--bottom {% if not form.profDeputyCostsEstimateHowCharged.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.profDeputyCostsEstimateHowCharged, 'report.form.profDeputyCostsEstimateHowCharged', {
+                'legendClass' : 'form-label-bold',
+                'useFormGroup': false,
+            }) }}
+        </div>
 
-        {#{{ form_checkbox(form.profDeputyCostsHowChargedFixed, page ~ '.form.profDeputyCostsHowChargedFixed', {#}
-            {#'useFormGroup': false,#}
-            {#'formGroupClass': 'form-group-compound',#}
-        {#}) }}#}
+    </div>
 
-        {#{{ form_checkbox(form.profDeputyCostsHowChargedAssessed, page ~ '.form.profDeputyCostsHowChargedAssessed', {#}
-            {#'useFormGroup': false,#}
-            {#'formGroupClass': 'form-group-compound',#}
-        {#}) }}#}
+    {{ macros.saveAndContinueButton(form.save) }}
 
-        {#{{ form_checkbox(form.profDeputyCostsHowChargedAgreed, page ~ '.form.profDeputyCostsHowChargedAgreed', {#}
-            {#'useFormGroup': false,#}
-            {#'formGroupClass': 'form-group-compound',#}
-        {#}) }}#}
-    {#</div>#}
-
-    {#{{ macros.saveAndContinueButton(form.save) }}#}
-
-    {#{{ form_end(form) }}#}
+    {{ form_end(form) }}
 
 {% endblock %}
