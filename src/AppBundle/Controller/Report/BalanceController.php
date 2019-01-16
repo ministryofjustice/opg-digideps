@@ -16,6 +16,7 @@ class BalanceController extends AbstractController
         'expenses',
         'fee',
         'gifts',
+        'report-prof-deputy-costs',
         'debt',
         'fee',
         'balance',

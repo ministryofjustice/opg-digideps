@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'interimExists' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="heading-medium">{{ (page ~ '.pageSectionDescription') | trans }}</p>
+
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.profDeputyCostsHasInterim, page ~ '.form.profDeputyCostsHasInterim', {
+            'fieldSetClass' : 'inline',
+            'labelParameters': transOptions,
+            'legendClass' : 'text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

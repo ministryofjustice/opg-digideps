@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'breakdown' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <p class="heading-small push-half--bottom  text">
+        {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
+    </p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
+        <div class="{{ profDeputyOtherCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
+            {{ form_input(profDeputyOtherCost.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans,
+                'labelRaw': true
+            }) }}
+
+            {# this is testing the form field is defined. Not the entity property #}
+            {% if profDeputyOtherCost.moreDetails is defined %}
+                <div class="">
+                    {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
+                        'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,
+                        'formGroupClass': 'panel panel-border-narrow',
+                        'labelRaw': true
+                    }) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
