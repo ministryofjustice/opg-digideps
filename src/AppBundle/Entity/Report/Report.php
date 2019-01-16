@@ -40,6 +40,7 @@ class Report implements ReportInterface
     use ReportTraits\MoreInfoTrait;
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
+    use ReportTraits\ReportProfDeputyCostsTrait;
     use ReportTraits\StatusTrait;
 
     /**
@@ -105,9 +106,14 @@ class Report implements ReportInterface
     const SECTION_ACTIONS = 'actions';
     const SECTION_OTHER_INFO = 'otherInfo';
     const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
+
+    // pa only
     const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; //106, AKA Fee and expenses
 
+    // prof only
     const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
+    const SECTION_PROF_DEPUTY_COSTS = 'profDeputyCosts';
+    const SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
 
     const SECTION_DOCUMENTS = 'documents';
 
@@ -132,6 +138,11 @@ class Report implements ReportInterface
             self::TYPE_104, self::TYPE_103_4, self::TYPE_102_4, // Lay
             self::TYPE_104_6, self::TYPE_103_4_6, self::TYPE_102_4_6, // PA
             self::TYPE_104_5, self::TYPE_103_4_5, self::TYPE_102_4_5 // PA
+        ];
+
+        $allProfReports = [
+            self::TYPE_103_5, self::TYPE_102_5, self::TYPE_104_5,
+            self::TYPE_103_4_5, self::TYPE_102_4_5
         ];
 
         return [
@@ -160,6 +171,9 @@ class Report implements ReportInterface
             self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
                 self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ] : [],
+            self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
+            // add when ready
+            //self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }
@@ -472,6 +486,8 @@ class Report implements ReportInterface
         $this->currentProfPaymentsReceived = null;
         $this->profServiceFees = new ArrayCollection();
         $this->checklist = null;
+        $this->profDeputyPreviousCosts = new ArrayCollection();
+        $this->profDeputyInterimCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
@@ -533,9 +549,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @todo consider removal
-     *
-     * @param string $section
+     * @param string $section see SECTION_ constants
      *
      * @return bool
      */

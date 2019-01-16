@@ -383,6 +383,76 @@ class ReportStatusService
     /**
      * @JMS\VirtualProperty
      * @JMS\Type("array")
+     * @JMS\Groups({"status", "prof-deputy-costs-state"})
+     *
+     * @return array
+     */
+    public function getProfDeputyCostsState()
+    {
+        if (!$this->report->hasSection(Report::SECTION_PROF_DEPUTY_COSTS)) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+
+        //TODO move to method
+        $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
+            && ! $this->report->getProfDeputyCostsHowChargedAgreed()
+            && ! $this->report->getProfDeputyCostsHowChargedAssessed();
+
+        $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
+            || $this->report->getProfDeputyCostsHowChargedAgreed()
+            || $this->report->getProfDeputyCostsHowChargedAssessed();
+
+        if (!$atLeastOneTicked) {
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
+
+        // remaining costs are valid if answer is "no" or ("Yes" + at least one record)
+        $isRemainingValid = $this->report->getProfDeputyCostsHasPrevious() === 'no' ||
+            ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
+
+        $hasInterim = $this->report->getProfDeputyCostsHasInterim();
+        // interim costs are valid if answer is "no" or ("Yes" + at least one record)
+        $isInterimValid = $onlyFixedTicked
+            || $hasInterim === 'no'
+            || ($hasInterim === 'yes' && count($this->report->getProfDeputyInterimCosts()));
+
+         // skipped if "fixed" is not the only ticked
+        $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
+        $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
+
+        $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
+
+        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
+
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
+     * @JMS\Groups({"status", "prof-deputy-costs-state"})
+     *
+     * @return array
+     */
+    public function getProfDeputyCostsEstimateState()
+    {
+        if (!$this->report->hasSection(Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE)) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        // TODO replace with real logic when implemented
+        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+
+        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Type("array")
      * @JMS\Groups({"status", "action-state"})
      *
      * @return array
@@ -539,10 +609,17 @@ class ReportStatusService
                 return $this->getOtherInfoState();
             case Report::SECTION_DEPUTY_EXPENSES:
                 return $this->getExpensesState();
+            // pa
             case Report::SECTION_PA_DEPUTY_EXPENSES:
                 return $this->getPaFeesExpensesState();
+            // prof
             case Report::SECTION_PROF_CURRENT_FEES:
                 return $this->getProfCurrentFeesState();
+            case Report::SECTION_PROF_DEPUTY_COSTS:
+                return $this->getProfDeputyCostsState();
+            case Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE:
+                return $this->getProfDeputyCostsEstimateState();
+            // documents
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState();
             default:

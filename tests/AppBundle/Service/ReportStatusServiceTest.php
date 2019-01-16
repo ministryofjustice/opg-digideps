@@ -82,6 +82,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 //                'getReasonForNoFees'                => null,
                 'paFeesExpensesNotStarted'      => null,
                 'paFeesExpensesCompleted'       => null,
+                'getProfDeputyCostsHowChargedFixed' => null,
+                'getProfDeputyCostsHowChargedAgreed' => null,
+                'getProfDeputyCostsHowChargedAssessed' => null,
+                'getProfDeputyCostsHasPrevious' => null,
+                'getProfDeputyFixedCost' => null,
+                'getProfDeputyCostsHasInterim' => null,
+                'getProfDeputyCostsAmountToScco' => null,
                 'isMissingMoneyOrAccountsOrClosingBalance' => true,
 //                'hasSection' => false,
                 //'getExpenses'                       => [],
@@ -400,6 +407,61 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $object = new StatusService($report);
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
+    }
+
+    public function profDeputyCostsProvider()
+    {
+
+        $onlyFixedTicked = ['getProfDeputyCostsHowChargedFixed' => true];
+        $twoTicked = ['getProfDeputyCostsHowChargedFixed' => true, 'getProfDeputyCostsHowChargedAgreed' => true];
+
+        $prevNo = ['getProfDeputyCostsHasPrevious' => 'no'];
+        $prevYes = ['getProfDeputyCostsHasPrevious' => 'yes', 'getProfDeputyPreviousCosts' => [1, 2]];
+
+        $interimNo = ['getProfDeputyCostsHasInterim' => 'no'];
+        $interimYes = ['getProfDeputyCostsHasInterim' => 'yes', 'getProfDeputyInterimCosts' => [1, 2]];
+
+        $fixed = ['getProfDeputyFixedCost' => 1];
+        $scco = ['getProfDeputyCostsAmountToScco' => 1];
+
+        return [
+            [[], StatusService::STATE_NOT_STARTED], //no data at all
+
+            [['getProfDeputyCostsHowChargedFixed' => true], StatusService::STATE_INCOMPLETE],
+
+            // only one ticked: all flows
+            [$onlyFixedTicked + $prevNo + $fixed + $scco, StatusService::STATE_DONE],
+            [$onlyFixedTicked + $prevYes + $fixed + $scco, StatusService::STATE_DONE],
+
+            // same as above, but with some missing
+            [$onlyFixedTicked  + $interimNo + $fixed + $scco, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedTicked + $prevNo  + $scco, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedTicked + $prevNo + $interimYes, StatusService::STATE_INCOMPLETE],
+
+            // two ticked (equivalent to all ticked): all flows
+            [$twoTicked + $prevNo + $interimYes + $scco, StatusService::STATE_DONE],
+            [$twoTicked + $prevYes + $interimYes + $scco, StatusService::STATE_DONE],
+            [$twoTicked + $prevNo + $interimNo + $fixed + $scco, StatusService::STATE_DONE],
+
+            // same as above, but with some missing
+            [$twoTicked  + $interimYes + $scco, StatusService::STATE_INCOMPLETE],
+            [$twoTicked + $prevYes  + $scco, StatusService::STATE_INCOMPLETE],
+            [$twoTicked + $prevNo + $interimNo + $scco, StatusService::STATE_INCOMPLETE], // miss fixed
+            [$twoTicked + $prevNo + $interimNo + $fixed, StatusService::STATE_INCOMPLETE],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider profDeputyCostsProvider
+     */
+    public function profDeputyCosts($mocks, $state)
+    {
+        $report = $this->getReportMocked([] + $mocks);
+        $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_DEPUTY_COSTS)->andReturn(true);
+
+        $object = new StatusService($report);
+        $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }
 
     public function giftsProvider()

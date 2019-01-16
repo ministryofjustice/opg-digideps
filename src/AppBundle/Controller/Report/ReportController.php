@@ -160,6 +160,42 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('prof_deputy_other_costs', $data)) {
+            $defaultCostTypeIds = array_column($report->getProfDeputyOtherCostTypeIds(), 'typeId');
+
+            foreach ($data['prof_deputy_other_costs'] as $postedProfDeputyOtherCostType) {
+                if (in_array(
+                    $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
+                        $defaultCostTypeIds
+                    )) {
+                    $profDeputyOtherCost = $report->getProfDeputyOtherCostByTypeId(
+                        $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id']
+                    );
+
+                    // update if exists, or instantiate a new entitys
+                    if ($profDeputyOtherCost instanceof EntityDir\Report\ProfDeputyOtherCost) {
+                        $profDeputyOtherCost->setAmount($postedProfDeputyOtherCostType['amount']);
+                    } else {
+                        $profDeputyOtherCost = new EntityDir\Report\ProfDeputyOtherCost(
+                            $report,
+                            $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
+                            $postedProfDeputyOtherCostType['has_more_details'],
+                            $postedProfDeputyOtherCostType['amount']
+                        );
+                    }
+                    if ($profDeputyOtherCost->getHasMoreDetails()) {
+                        $profDeputyOtherCost->setMoreDetails($postedProfDeputyOtherCostType['more_details']);
+                    }
+
+                    $this->getEntityManager()->persist($profDeputyOtherCost);
+                }
+            }
+            $report->updateSectionsStatusCache([
+                Report::SECTION_PROF_DEPUTY_COSTS
+            ]);
+            $this->getEntityManager()->flush();
+        }
+
         if (array_key_exists('debt_management', $data)) {
             $report->setDebtManagement($data['debt_management']);
             $this->getEntityManager()->flush();
@@ -401,6 +437,94 @@ class ReportController extends RestController
             ]);
         }
 
+        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)) {
+            $report->setProfDeputyCostsHowChargedFixed($data['prof_deputy_costs_how_charged_fixed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (array_key_exists('prof_deputy_costs_how_charged_assessed', $data)) {
+            $report->setProfDeputyCostsHowChargedAssessed($data['prof_deputy_costs_how_charged_assessed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (array_key_exists('prof_deputy_costs_how_charged_agreed', $data)) {
+            $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        // update depending data depending on the selection on the "how charged" checkboxes
+        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)
+            || array_key_exists('prof_deputy_costs_how_charged_assessed', $data)
+            || array_key_exists('prof_deputy_costs_how_charged_agreed', $data)
+        ) {
+            if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+                $report->setProfDeputyCostsHasInterim(null);
+                foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                    $this->getEntityManager()->remove($ic);
+                }
+            } else if ($report->getProfDeputyCostsHasInterim() === 'yes') {
+                $report->setProfDeputyFixedCost(null);
+            }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
+            $report->setProfDeputyCostsHasPrevious($data['prof_deputy_costs_has_previous']);
+            foreach ($report->getProfDeputyPreviousCosts() as $pc) {
+                $this->getEntityManager()->remove($pc);
+            }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
+            $report->setProfDeputyCostsHasInterim($data['prof_deputy_costs_has_interim']);
+            // remove interim if changed to "no"
+            if ($data['prof_deputy_costs_has_interim'] === 'no') {
+                foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                    $this->getEntityManager()->remove($ic);
+                }
+            } else if ($data['prof_deputy_costs_has_interim'] === 'yes') {
+                $report->setProfDeputyFixedCost(null);
+            }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (array_key_exists('prof_deputy_interim_costs', $data)) {
+            // wipe existing interim costs in order to overwrite
+            // TODO consider keeping and updating the existing ones if simpler to implement
+            foreach ($report->getProfDeputyInterimCosts() as $ic) {
+                $this->getEntityManager()->remove($ic);
+            }
+            // add new
+            foreach ($data['prof_deputy_interim_costs'] as $row) {
+                if ($row['date'] && $row['amount']) {
+                    $report->addProfDeputyInterimCosts(
+                        new EntityDir\Report\ProfDeputyInterimCost($report, new \DateTime($row['date']), $row['amount'])
+                    );
+                }
+                if (count($report->getProfDeputyInterimCosts())) {
+                    $report->setProfDeputyCostsHasInterim('yes');
+                }
+            }
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+            $this->getEntityManager()->flush();
+        }
+
+        if (array_key_exists('prof_deputy_fixed_cost', $data)) {
+            $report->setProfDeputyFixedCost($data['prof_deputy_fixed_cost']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (array_key_exists('prof_deputy_costs_amount_to_scco', $data)) {
+            $report->setProfDeputyCostsAmountToScco($data['prof_deputy_costs_amount_to_scco']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
+            $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
         $this->getEntityManager()->flush();
 
         return ['id' => $report->getId()];
@@ -545,9 +669,9 @@ class ReportController extends RestController
         }
 
         // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
-        foreach($reports as $k => $unsubmittedReport) {
+        foreach ($reports as $k => $unsubmittedReport) {
             if ($unsubmittedReport['hasUnsumitDate']) {
-                foreach($reports as $k2 => $currentReport) {
+                foreach ($reports as $k2 => $currentReport) {
                     if (!$currentReport['hasUnsumitDate'] && $currentReport['client']['id'] == $unsubmittedReport['client']['id']) {
                         unset($reports[$k2]);
                     }
