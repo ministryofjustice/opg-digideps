@@ -4,5 +4,4 @@ services:
     class: AppBundle\Controller\Report\ReportController
     arguments:
       -
-        # Add a handler for each Report section that handles updates
         - '@rest_handler.report.deputy_costs_estimate_report_update_handler'
