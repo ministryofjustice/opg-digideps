@@ -534,6 +534,7 @@ class ReportController extends RestController
             $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
+        // todo all above code would be moved into a ReportUpdateHandlerInterface and handled by the following loop
         foreach ($this->updateHandlers as $updateHandler) {
             $updateHandler->handle($report, $data);
         }
