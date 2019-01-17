@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportService;
+use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,6 +19,14 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportController extends RestController
 {
+    /** @var array */
+    private $updateHandlers;
+
+    public function __construct(array $updateHandlers)
+    {
+        $this->updateHandlers = $updateHandlers;
+    }
+
     /**
      * Add a report
      * Currently only used by Lay deputy during registration steps
@@ -523,6 +532,10 @@ class ReportController extends RestController
         if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
             $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);
             $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        }
+
+        foreach ($this->updateHandlers as $updateHandler) {
+            $updateHandler->handle($report, $data);
         }
 
         $this->getEntityManager()->flush();
