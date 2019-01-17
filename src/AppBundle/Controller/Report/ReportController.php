@@ -22,6 +22,9 @@ class ReportController extends RestController
     /** @var array */
     private $updateHandlers;
 
+    /**
+     * @param array $updateHandlers
+     */
     public function __construct(array $updateHandlers)
     {
         $this->updateHandlers = $updateHandlers;
