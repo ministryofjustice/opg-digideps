@@ -2,19 +2,16 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
-use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use AppBundle\Entity\Report\ProfDeputyPreviousCost;
-use AppBundle\Entity\Report\ProfDeputyInterimCost;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportProfDeputyCostsEstimateTrait
 {
     /**
      * @var string
      *
+     * @Assert\NotBlank( message="profDeputyCostsEstimateHowCharged.howCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
      * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsEstimateHowCharged"})
      */

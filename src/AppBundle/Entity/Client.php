@@ -18,7 +18,6 @@ class Client
      */
     private $id;
 
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})

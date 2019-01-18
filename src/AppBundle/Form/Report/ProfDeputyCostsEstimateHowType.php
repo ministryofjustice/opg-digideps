@@ -28,13 +28,13 @@ class ProfDeputyCostsEstimateHowType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-             'validation_groups' => ['prof-deputy-costs-estimate-how-changed'],
+             'validation_groups' => ['prof-deputy-costs-estimate-how-charged'],
              'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
 
     public function getBlockPrefix()
     {
-        return 'deputy_costs_estimates';
+        return 'deputy_costs_estimate';
     }
 }

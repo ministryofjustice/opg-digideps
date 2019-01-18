@@ -506,6 +506,11 @@ profDeputyOtherCost:
     minMessage: The amount must be positive
     maxMessage: The amount must be less than £10,000,000,000
 
+profDeputyCostsEstimateHowCharged:
+  howCharged:
+    notBlank: Please select an option
+
+
 # ====================================================================================================
 #       NDR
 # ====================================================================================================
