@@ -1,0 +1,31 @@
+<?php
+
+namespace AppBundle\Service\RestHandler\Report;
+
+use AppBundle\Entity\Report\Report;
+
+class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInterface
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(Report $report, array $data)
+    {
+        $this->updateHowCharged($report, $data);
+    }
+
+    /**
+     * @param Report $report
+     * @param array $data
+     * @return $this
+     */
+    private function updateHowCharged(Report $report, array $data)
+    {
+        if (array_key_exists('prof_deputy_costs_estimate_how_charged', $data)) {
+            $report->setProfDeputyCostsEstimateHowCharged($data['prof_deputy_costs_estimate_how_charged']);
+            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
+        }
+
+        return $this;
+    }
+}

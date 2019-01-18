@@ -1,0 +1,7 @@
+services:
+  AppBundle\Controller\Report\ReportController:
+    public: true
+    class: AppBundle\Controller\Report\ReportController
+    arguments:
+      -
+        - '@rest_handler.report.deputy_costs_estimate_report_update_handler'

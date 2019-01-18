@@ -118,10 +118,9 @@ class Report implements ReportInterface
 
     const SECTION_DOCUMENTS = 'documents';
 
-    // PROF ESTIMATE COSTS
-    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_FIXED = 'fixed';
-    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_ASSESSED = 'assessed';
-    const PROF_DEPUTY_ESTIMATE_COSTS_TYPE_BOTH = 'both';
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_BOTH = 'both';
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
