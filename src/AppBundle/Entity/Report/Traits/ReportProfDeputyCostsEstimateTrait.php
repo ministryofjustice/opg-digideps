@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
