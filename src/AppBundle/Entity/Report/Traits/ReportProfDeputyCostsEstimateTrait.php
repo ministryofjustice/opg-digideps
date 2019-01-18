@@ -17,6 +17,54 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyCostsEstimateHowCharged;
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $profDeputyEstimateCosts;
+
+    /**
+     * Hold prof deputy estimate costs type
+     * 1st value = id, 2nd value = hasMoreInformation.
+     *
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     *
+     * @var array
+     */
+    public static $profDeputyEstimateCostTypeIds = [
+        ['typeId' => 'appointments', 'hasMoreDetails' => false],
+        ['typeId' => 'annual-reporting', 'hasMoreDetails' => false],
+        ['typeId' => 'conveyancing', 'hasMoreDetails' => false],
+        ['typeId' => 'tax-returns', 'hasMoreDetails' => false],
+        ['typeId' => 'disbursements', 'hasMoreDetails' => false],
+        ['typeId' => 'cost-draftsman', 'hasMoreDetails' => false],
+        ['typeId' => 'other', 'hasMoreDetails' => true],
+    ];
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("prof_deputy_estimate_cost_type_ids")
+     * @JMS\Type("array")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     *
+     * @return array
+     */
+    public static function getProfDeputyEstimateCostTypeIds()
+    {
+        return self::$profDeputyEstimateCostTypeIds;
+    }
+
+    /**
+     * @param $profDeputyEstimateCostTypeIds
+     * @return $this
+     */
+    public static function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds)
+    {
+        self::$profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
+    }
+
+    /**
      * @return string
      */
     public function getProfDeputyCostsEstimateHowCharged()
