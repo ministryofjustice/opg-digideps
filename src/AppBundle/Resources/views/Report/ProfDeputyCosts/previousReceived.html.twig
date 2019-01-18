@@ -48,8 +48,8 @@
 
     {% if form.saveAndAddAnother is defined %}
         {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+        <span class="push-half--sides align--bottom text--center">or</span>
     {% endif %}
-    <span class="push-half--sides align--bottom text--center">or</span>
     {{ macros.saveAndContinueButton(form.saveAndContinue) }}
 
     {{ form_end(form) }}
