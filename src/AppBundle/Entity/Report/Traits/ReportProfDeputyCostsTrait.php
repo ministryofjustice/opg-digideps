@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report\Traits;
 
+use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use AppBundle\Entity\Report\ProfDeputyOtherCost;
 use AppBundle\Entity\Report\ProfDeputyInterimCost;
 use JMS\Serializer\Annotation as JMS;

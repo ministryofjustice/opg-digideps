@@ -41,6 +41,36 @@ trait ReportProfDeputyCostsEstimateTrait
     ];
 
     /**
+     * @return mixed
+     */
+    public function getProfDeputyEstimateCosts()
+    {
+        return $this->profDeputyEstimateCosts;
+    }
+
+    /**
+     * @param $profDeputyEstimateCosts
+     * @return $this
+     */
+    public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
+    {
+        $this->profDeputyEstimateCosts = $profDeputyEstimateCosts;
+        return $this;
+    }
+
+    /**
+     * @param string $typeId
+     *
+     * @return ProfDeputyEstimateCost
+     */
+    public function getProfDeputyEstimateCostByTypeId($typeId)
+    {
+        return $this->getProfDeputyEstimateCosts()->filter(function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId) {
+            return $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId;
+        })->first();
+    }
+
+    /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("prof_deputy_estimate_cost_type_ids")
      * @JMS\Type("array")
