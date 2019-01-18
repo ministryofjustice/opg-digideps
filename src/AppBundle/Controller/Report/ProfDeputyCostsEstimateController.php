@@ -88,7 +88,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         if (empty($report->getProfDeputyEstimateCosts())) {
             // if none set generate other costs manually
-            $otherCosts = $this->generateDefaultOtherCosts($report);
+            $otherCosts = $this->generateDefaultEstimateCosts($report);
 
             $report->setProfDeputyOtherCosts($otherCosts);
         }
@@ -119,7 +119,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
     {
-        $otherCosts = [];
+        $estimateCosts = [];
 
         $defaultEstimateCostTypeIds = $report->getProfDeputyEstimateCostTypeIds();
         foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
@@ -139,6 +139,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     protected function getSectionId()
     {
-        return 'profDeputyCostsEstimate ';
+        return 'profDeputyCostsEstimate';
     }
 }

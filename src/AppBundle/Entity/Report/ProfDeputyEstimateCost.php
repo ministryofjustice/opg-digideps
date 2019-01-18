@@ -11,15 +11,15 @@ class ProfDeputyEstimateCost
      * @JMS\Type("string")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
-    private $profDeputyOtherCostTypeId;
+    private $profDeputyEstimateCostTypeId;
 
     /**
      * @var decimal
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
-     * @Assert\Type(type="numeric", message="profDeputyOtherCost.amount.notNumeric", groups={"prof-deputy-estimate-costs"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "profDeputyOtherCost.amount.minMessage", maxMessage = "profDeputyOtherCost.amount.maxMessage", groups={"prof-deputy-estimate-costs"})
+     * @Assert\Type(type="numeric", message="profDeputyEstimateCost.amount.notNumeric", groups={"prof-deputy-estimate-costs"})
+     * @Assert\Range(min=0, max=100000000, minMessage = "profDeputyEstimateCost.amount.minMessage", maxMessage = "profDeputyEstimateCost.amount.maxMessage", groups={"prof-deputy-estimate-costs"})
      */
     private $amount;
 
@@ -35,7 +35,7 @@ class ProfDeputyEstimateCost
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @JMS\Type("string")
      *
-     * @Assert\NotBlank(message="profDeputyOtherCost.moreDetails.notEmpty", groups={"prof-deputy-estimate-cost-more-details"})
+     * @Assert\NotBlank(message="profDeputyEstimateCost.moreDetails.notEmpty", groups={"prof-deputy-estimate-cost-more-details"})
      */
     private $moreDetails;
 
