@@ -3,7 +3,7 @@ startPage:
   pageTitle: Deputy costs
   pageSectionDescription1: |
     Use this section to tell us how much %client% paid for your professional deputy services
-     in this reporting period (15 March 2017 to 14 March 2018).
+     in this reporting period (%periodStartDate% to %periodEndDate%).
   pageSectionDescription2: This includes money %client% paid you in this reporting period:
   listItem01: for work carried out in previous reporting periods
   listItem02: for work carried out in this reporting period
@@ -35,7 +35,7 @@ previousReceived:
   pageTitle: Deputy costs
   pageSectionDescription01: Costs for earlier reporting periods
   pageSectionDescription02: |
-    Tell us about money John paid you in this reporting period for
+    Tell us about money %client% paid you in this reporting period for
     work you carried out in a previous reporting period
   form:
     startDate:

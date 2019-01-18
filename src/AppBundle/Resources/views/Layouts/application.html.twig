@@ -104,7 +104,10 @@
     {% block helpline %}
     <div class="helpline">
         <h3>Helpline<br/>
-            {% if app.user and app.user.isDeputyPA() %}
+            {% if not app.user %}
+                {{ 'helplineGeneral' | trans({}, 'common') }}<br/>
+                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>  
+            {% elseif app.user and app.user.isDeputyPA() %}
                 {{ 'helplinePA' | trans({}, 'common') }}<br/>
                 <a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
             {% elseif app.user and app.user.isDeputyProf() %}
