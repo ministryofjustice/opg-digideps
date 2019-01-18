@@ -4,9 +4,12 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -18,16 +21,15 @@ class ProfDeputyCostsEstimateController extends AbstractController
 {
     private static $jmsGroups = [
         'status',
-        // TODO
+        'prof-deputy-costs-estimate-how-charged'
     ];
 
     /**
      * @Route("", name="prof_deputy_costs_estimate")
      * @Template()
      *
-     * @param int $reportId
-     *
-     * @return array
+     * @param $reportId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function startAction($reportId)
     {
@@ -44,34 +46,31 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @Route("/how-charged", name="prof_deputy_costs_estimate_how_charged")
      * @Template()
+     *
+     * @param Request $request
+     * @param $reportId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function howChargedAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $from = $request->get('from');
+        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateHowType::class, $report);
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isValid()) {
-            $data = $form->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->persistUpdate($reportId, $form->getData(), ['deputyCostsEstimateHowCharged']);
 
-            $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
-
-            if ($from === 'summary') {
-                $nextRoute = 'prof_deputy_costs_summary';
-            } else {
-                $nextRoute = 'prof_deputy_costs_previous_received_exists';
-            }
-
-            return $this->redirectToRoute($nextRoute, ['reportId'=>$reportId]);
+            return $this->redirectToRoute(
+                $this->determineNextRouteFromHowCharged($request, $form),
+                ['reportId'=>$reportId]
+            );
         }
-
 
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate', ['reportId'=>$reportId])
+            'backLink' => $this->generateUrl('prof_deputy_costs_estimate', ['reportId'=>$reportId])
         ];
     }
 
@@ -132,6 +131,30 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         }
         return $estimateCosts;
+    }
+
+    /**
+     * @param $id
+     * @param Report $report
+     * @param array $groups
+     */
+    private function persistUpdate($id, Report $report, array $groups)
+    {
+        $this->getRestClient()->put('report/' . $id, $report, $groups);
+    }
+
+    /**
+     * @param Request $request
+     * @param FormInterface $form
+     * @return string
+     */
+    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form)
+    {
+        $howCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
+
+        return ($request->get('from') === 'summary' || $howCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
+            'prof_deputy_costs_estimate_summary' :
+            'prof_deputy_costs_estimate_breakdown';
     }
 
     /**
