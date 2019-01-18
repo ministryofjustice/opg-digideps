@@ -97,7 +97,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-estimate-costs']);
+            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs']);
 
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
