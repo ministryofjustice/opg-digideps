@@ -18,8 +18,14 @@
 
 {% block pageContent %}
 
-    COPY FROM OTHER SECTIONS
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' %}
 
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+    'report': report,
+    'sectionId': 'profDeputyEstimateCosts',
+    } %}
 {% endblock %}
 
 

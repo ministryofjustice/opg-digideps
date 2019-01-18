@@ -99,15 +99,16 @@ class ProfDeputyCostsEstimateController extends AbstractController
         if ($form->isValid()) {
             $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs']);
 
-            return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate_summary', ['reportId' => $reportId]));
         }
 
         return [
-            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco', ['reportId'=>$reportId]),
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_how_charged', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
     }
+
 
     /**
      * Retrieves the list of default estimate cost type IDs using virtual property from api
@@ -132,6 +133,26 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         }
         return $estimateCosts;
+    }
+
+    /**
+     * @Route("/summary", name="prof_deputy_costs_estimate_summary")
+     * @Template()
+     *
+     * @param int $reportId
+     *
+     * @return array
+     */
+    public function summaryAction($reportId)
+    {
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+//        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+//            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
+//        }
+        return [
+            'submittedEstimateCosts' => $report->generateActualSubmittedEstimateCosts(),
+            'report' => $report,
+        ];
     }
 
     /**
