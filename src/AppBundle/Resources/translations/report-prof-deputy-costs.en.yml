@@ -35,7 +35,7 @@ previousReceived:
   pageTitle: Deputy costs
   pageSectionDescription01: Costs for earlier reporting periods
   pageSectionDescription02: |
-    Tell us about money John paid you in this reporting period for
+    Tell us about money %client% paid you in this reporting period for
     work you carried out in a previous reporting period
   form:
     startDate:
