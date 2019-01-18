@@ -22,6 +22,27 @@ howCharged:
       fixed: Fixed costs
       assessed: Assessed costs
       both: Both
+
+breakdown:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy cost estimates
+  pageSectionDescription: Give us a breakdown of what you and other fee earners expect to charge %client% during the next reporting period
+  pageHint: ""
+  form:
+    entries:
+      contact-client:
+        label: Contact with the client, their family and friends
+      contact-case-manager-carers:
+        label: Contact with case managers and care providers
+      contact-others:
+        label: Contact with other parties
+      forms-documents:
+        label: Work on forms and other documents
+      other:
+        label: Other
+        more  Information: Details of 'other'
+        moreInformationLabelSummary: Details of other costs
+
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle:  Deputy costs estimates

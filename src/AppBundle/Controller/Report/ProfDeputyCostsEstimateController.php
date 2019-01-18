@@ -21,7 +21,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
 {
     private static $jmsGroups = [
         'status',
-        'prof-deputy-costs-estimate-how-charged'
+        'prof-deputy-costs-estimate-how-charged',
+        'prof-deputy-estimate-costs'
     ];
 
     /**
@@ -87,16 +88,16 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         if (empty($report->getProfDeputyEstimateCosts())) {
             // if none set generate other costs manually
-            $otherCosts = $this->generateDefaultEstimateCosts($report);
+            $estimateCosts = $this->generateDefaultEstimateCosts($report);
 
-            $report->setProfDeputyOtherCosts($otherCosts);
+            $report->setProfDeputyEstimateCosts($estimateCosts);
         }
 
-        $form = $this->createForm(FormDir\Report\ProfDeputyOtherCostsType::class, $report, []);
+        $form = $this->createForm(FormDir\Report\ProfDeputyEstimateCostsType::class, $report, []);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
+            $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-estimate-costs']);
 
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
@@ -109,7 +110,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     }
 
     /**
-     * Retrieves the list of default other cost type IDs using virtual property from api
+     * Retrieves the list of default estimate cost type IDs using virtual property from api
      * Used to generate the page since with no initial data, we cant display form inputs
      * without this list.
      *
