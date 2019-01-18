@@ -1,5 +1,9 @@
 {% extends 'AppBundle:Layouts:application.html.twig'%}
-{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%periodStartDate%': report.startDate | date("j F Y"),
+    '%periodEndDate%': report.endDate | date("j F Y")
+} %}
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
