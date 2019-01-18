@@ -33,12 +33,10 @@ trait ReportProfDeputyCostsEstimateTrait
      * @var array
      */
     public static $profDeputyEstimateCostTypeIds = [
-        ['typeId' => 'appointments', 'hasMoreDetails' => false],
-        ['typeId' => 'annual-reporting', 'hasMoreDetails' => false],
-        ['typeId' => 'conveyancing', 'hasMoreDetails' => false],
-        ['typeId' => 'tax-returns', 'hasMoreDetails' => false],
-        ['typeId' => 'disbursements', 'hasMoreDetails' => false],
-        ['typeId' => 'cost-draftsman', 'hasMoreDetails' => false],
+        ['typeId' => 'contact-client', 'hasMoreDetails' => false],
+        ['typeId' => 'contact-case-manager-carers', 'hasMoreDetails' => false],
+        ['typeId' => 'contact-others', 'hasMoreDetails' => false],
+        ['typeId' => 'forms-documents', 'hasMoreDetails' => false],
         ['typeId' => 'other', 'hasMoreDetails' => true],
     ];
 
