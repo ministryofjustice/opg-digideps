@@ -27,7 +27,7 @@
     <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
 
     <div class="text">
-        <p>{{ (page ~ '.pageSectionDescription02') | trans }}</p>
+        <p>{{ (page ~ '.pageSectionDescription02') | trans(transOptions, translationDomain) }}</p>
     </div>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
