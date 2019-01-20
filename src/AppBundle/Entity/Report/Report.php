@@ -493,6 +493,7 @@ class Report implements ReportInterface
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
+        $this->profDeputyEstimateCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];

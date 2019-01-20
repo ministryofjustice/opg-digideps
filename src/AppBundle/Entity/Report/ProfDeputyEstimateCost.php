@@ -11,7 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ProfDeputyEstimateCost
 {
-
     /**
      * @var int
      *
@@ -71,26 +70,6 @@ class ProfDeputyEstimateCost
     private $moreDetails;
 
     /**
-     * @param Report $report
-     * @param string $profDeputyEstimateCostTypeId
-     * @param bool   $hasMoreDetails
-     * @param float  $amount
-     */
-    public function __construct(Report $report,
-                                $profDeputyEstimateCostTypeId,
-                                $hasMoreDetails,
-                                $amount
-    ) {
-        $this->report = $report;
-        /** @todo implement this methood without pulling in the trait containing the method */
-        //$report->addProfDeputyEstimateCost($this);
-
-        $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
-        $this->hasMoreDetails = $hasMoreDetails;
-        $this->amount = $amount;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -116,10 +95,13 @@ class ProfDeputyEstimateCost
 
     /**
      * @param Report $report
+     * @return ProfDeputyEstimateCost
      */
     public function setReport($report)
     {
         $this->report = $report;
+
+        return $this;
     }
 
     /**
@@ -137,6 +119,7 @@ class ProfDeputyEstimateCost
     public function setProfDeputyEstimateCostTypeId($profDeputyEstimateCostTypeId)
     {
         $this->profDeputyEstimateCostTypeId = $profDeputyEstimateCostTypeId;
+
         return $this;
     }
 
@@ -150,10 +133,13 @@ class ProfDeputyEstimateCost
 
     /**
      * @param string $amount
+     * @return ProfDeputyEstimateCost
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     /**
@@ -166,10 +152,13 @@ class ProfDeputyEstimateCost
 
     /**
      * @param string $moreDetails
+     * @return ProfDeputyEstimateCost
      */
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
+
+        return $this;
     }
 
     /**
@@ -182,9 +171,12 @@ class ProfDeputyEstimateCost
 
     /**
      * @param bool $hasMoreDetails
+     * @return ProfDeputyEstimateCost
      */
     public function setHasMoreDetails($hasMoreDetails)
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
+        return $this;
     }
 }

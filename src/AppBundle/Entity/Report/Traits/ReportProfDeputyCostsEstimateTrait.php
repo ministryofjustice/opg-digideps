@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,6 +19,8 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyCostsEstimateHowCharged;
 
     /**
+     * @var ArrayCollection
+     *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyEstimateCost>")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
@@ -50,12 +53,13 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @param $profDeputyEstimateCosts
+     * @param ProfDeputyEstimateCost $profDeputyEstimateCost
      * @return $this
      */
-    public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
+    public function addProfDeputyEstimateCost(ProfDeputyEstimateCost $profDeputyEstimateCost)
     {
-        $this->profDeputyEstimateCosts = $profDeputyEstimateCosts;
+        $this->profDeputyEstimateCosts->add($profDeputyEstimateCost);
+
         return $this;
     }
 
@@ -66,9 +70,11 @@ trait ReportProfDeputyCostsEstimateTrait
      */
     public function getProfDeputyEstimateCostByTypeId($typeId)
     {
-        return $this->getProfDeputyEstimateCosts()->filter(function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId) {
-            return $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId;
-        })->first();
+        return $this->getProfDeputyEstimateCosts()->filter(
+            function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId) {
+                return $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId;
+            }
+        )->first();
     }
 
     /**

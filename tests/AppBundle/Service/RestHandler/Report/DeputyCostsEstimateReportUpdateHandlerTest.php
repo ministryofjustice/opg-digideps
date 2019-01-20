@@ -3,14 +3,19 @@
 namespace Tests\AppBundle\Service\RestHandler\Report;
 
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
 class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
     /** @var DeputyCostsEstimateReportUpdateHandler */
     private $sut;
+
+    /** @var EntityManager | \PHPUnit_Framework_MockObject_MockObject */
+    private $em;
 
     /** @var Report | \PHPUnit_Framework_MockObject_MockObject */
     private $report;
@@ -21,20 +26,72 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     public function setUp()
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->disableOriginalConstructor()
+            ->setConstructorArgs([new Client, Report::TYPE_102, new \DateTime, new \DateTime])
             ->setMethods(['updateSectionsStatusCache'])
             ->getMock();
 
-        $this->sut = new DeputyCostsEstimateReportUpdateHandler();
+        $this->em = $this->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->sut = new DeputyCostsEstimateReportUpdateHandler($this->em);
     }
 
-    public function testUpdatesHowChargedField()
+    public function testUpdatesHowCharged()
     {
         $data['prof_deputy_costs_estimate_how_charged'] = 'new-value';
 
         $this->ensureSectionStatusCacheWillBeUpdated();
         $this->invokeHandler($data);
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHowCharged', 'new-value');
+    }
+
+    /**
+     * @dataProvider getInvalidCostEstimateInputs
+     * @expectedException \InvalidArgumentException
+     */
+    public function testThrowsExceptionUpdatingCostEstimatesWithInsufficientData($data)
+    {
+        $this->invokeHandler($data);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidCostEstimateInputs()
+    {
+        return [
+            [['prof_deputy_estimate_costs' => [['amount' => '21', 'has_more_details' => false]]]],
+            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'amount' => '21']]]],
+            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'has_more_details' => false]]]],
+            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'amount' => '21', 'has_more_details' => true]]]],
+        ];
+    }
+
+    public function testUpdatesExistingOrCreatesNewProfDeputyEstimateCost()
+    {
+        $existing = new ProfDeputyEstimateCost();
+        $existing
+            ->setReport($this->report)
+            ->setProfDeputyEstimateCostTypeId('other')
+            ->setAmount('22.99')
+            ->setHasMoreDetails(true)
+            ->setMoreDetails('extra-details');
+
+        $this->report->addProfDeputyEstimateCost($existing);
+
+        $data['prof_deputy_estimate_costs'] = [
+            ['prof_deputy_estimate_cost_type_id' => 'contact-client', 'amount' => '30.32', 'has_more_details' => false],
+            ['prof_deputy_estimate_cost_type_id' => 'other', 'amount' => '33.98', 'has_more_details' => true, 'more_details' => 'updated-details']
+        ];
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->ensureEachProfDeputyEstimateCostWillBePersisted(count($data['prof_deputy_estimate_costs']));
+        $this->invokeHandler($data);
+
+        $this->assertCount(2, $this->report->getProfDeputyEstimateCosts());
+        $this->assertExistingProfDeputyEstimateCostIsUpdated();
+        $this->assertNewProfDeputyEstimateCostIsCreated();
     }
 
     private function ensureSectionStatusCacheWillBeUpdated()
@@ -44,6 +101,17 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
             ->expects($this->once())
             ->method('updateSectionsStatusCache')
             ->with([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
+    }
+
+    /**
+     * @param $count
+     */
+    private function ensureEachProfDeputyEstimateCostWillBePersisted($count)
+    {
+        $this
+            ->em
+            ->expects($this->exactly($count))
+            ->method('persist');
     }
 
     /**
@@ -62,5 +130,24 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     {
         $getter = sprintf('get%s', ucfirst($field));
         $this->assertEquals($expected, $this->report->$getter());
+    }
+
+    private function assertExistingProfDeputyEstimateCostIsUpdated()
+    {
+        $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('other');
+
+        $this->assertSame($this->report, $profDeputyEstimateCost->getReport());
+        $this->assertEquals('33.98', $profDeputyEstimateCost->getAmount());
+        $this->assertEquals(true, $profDeputyEstimateCost->getHasMoreDetails());
+        $this->assertEquals('updated-details', $profDeputyEstimateCost->getMoreDetails());
+    }
+
+    private function assertNewProfDeputyEstimateCostIsCreated()
+    {
+        $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('contact-client');
+        $this->assertSame($this->report, $profDeputyEstimateCost->getReport());
+        $this->assertEquals('30.32', $profDeputyEstimateCost->getAmount());
+        $this->assertEquals(false, $profDeputyEstimateCost->getHasMoreDetails());
+        $this->assertEquals(null, $profDeputyEstimateCost->getMoreDetails());
     }
 }
