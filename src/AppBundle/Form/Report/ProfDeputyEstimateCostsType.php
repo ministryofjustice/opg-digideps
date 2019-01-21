@@ -26,7 +26,7 @@ class ProfDeputyEstimateCostsType extends AbstractType
             'data_class' => 'AppBundle\Entity\Report\Report',
             'validation_groups' => ['prof-deputy-estimate-costs'],
             'constraints' => new Valid(),
-            'translation_domain' => 'report-prof-deputy-costs',
+            'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
 

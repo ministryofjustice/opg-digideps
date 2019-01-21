@@ -40,7 +40,7 @@ breakdown:
         label: Work on forms and other documents
       other:
         label: Other
-        more  Information: Details of 'other'
+        moreInformation: Details of 'other'
         moreInformationLabelSummary: Details of other costs
 
 summaryPage:
@@ -49,12 +49,6 @@ summaryPage:
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
   checkTheyreCorrect: Check they're correct and edit them where necessary.
-  breakdownOfAdditionalCosts: |
-      Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
-  item: Item
-  amount: Amount
-  questionLabel:
-    paidThisPeriod: Paid for this reporting period
-    totaPaidThisPeriod: Total costs paid this reporting period
+  totalEstimatedCosts: Total estimated costs
 
 

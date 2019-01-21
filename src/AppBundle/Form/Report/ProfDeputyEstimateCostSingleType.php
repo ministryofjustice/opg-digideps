@@ -51,7 +51,7 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
 
                 return $validationGroups;
             },
-            'translation_domain' => 'report-prof-deputy-costs',
+            'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
 
