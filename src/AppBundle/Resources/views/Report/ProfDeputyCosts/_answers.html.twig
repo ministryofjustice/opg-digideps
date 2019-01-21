@@ -5,11 +5,15 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
-
-<p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
-
-<a href="{{path('org_dashboard')}}" class="right behat-link-return-to-org-dashboard">{{ (page ~ '.returnToClientProfile') | trans }}</a>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
+        <p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+    </div>
+    <div class="column-third">
+        {{ macros.relatedSections(report, 'profDeputyCosts') }}
+    </div>
+</div>
 
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}
