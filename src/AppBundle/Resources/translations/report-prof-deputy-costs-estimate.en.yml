@@ -40,7 +40,7 @@ breakdown:
         label: Work on forms and other documents
       other:
         label: Other
-        more  Information: Details of 'other'
+        moreInformation: Details of 'other'
         moreInformationLabelSummary: Details of other costs
 
 summaryPage:
