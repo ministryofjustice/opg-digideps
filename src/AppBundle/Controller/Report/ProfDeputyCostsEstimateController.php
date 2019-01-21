@@ -149,8 +149,12 @@ class ProfDeputyCostsEstimateController extends AbstractController
 //        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
 //            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
 //        }
+
+        $costBreakdown = Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED === $report->getProfDeputyCostsEstimateHowCharged() ?
+            null : $report->generateActualSubmittedEstimateCosts();
+
         return [
-            'submittedEstimateCosts' => $report->generateActualSubmittedEstimateCosts(),
+            'submittedEstimateCosts' => $costBreakdown,
             'report' => $report,
         ];
     }
