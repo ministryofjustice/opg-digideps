@@ -117,5 +117,19 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this;
     }
 
+    /**
+     * @return float
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     */
+    public function getProfDeputyEstimateCostsTotal()
+    {
+        $total = 0;
 
+        foreach ($this->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
+            $total += $profDeputyEstimateCost->getAmount();
+        }
+
+        return $total;
+    }
 }
