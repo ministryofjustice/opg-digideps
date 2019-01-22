@@ -28,7 +28,6 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         $this
             ->updateHowCharged($report, $data)
             ->updateBreakdownEstimates($report, $data);
-
     }
 
     /**
@@ -86,13 +85,21 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
      */
     private function verifyProfDeputyEstimateCostData(array $data)
     {
-        if (!isset($data['prof_deputy_estimate_cost_type_id']) || !isset($data['amount']) || !isset($data['has_more_details'])) {
-            return false;
-        }
-
-        if (isset($data['has_more_details']) && true === $data['has_more_details'] && !isset($data['more_details'])) {
-            return false;
-        }
+        // todo add some basic verification
+        // we should only care about array_key_exists, not isset, Client should handle empty values.
+//
+//        if (!isset($data['prof_deputy_estimate_cost_type_id']) || !isset($data['amount']) || !isset($data['has_more_details'])) {
+//            throw new \InvalidArgumentException('Missing required data for updating breakdown estimates');
+//
+//
+//            return false;
+//        }
+//
+//        if (isset($data['has_more_details']) && true === $data['has_more_details'] && !isset($data['more_details'])) {
+//            throw new \InvalidArgumentException('Missing required data for updating breakdown estimates');
+//
+//            return false;
+//        }
 
         return true;
     }
