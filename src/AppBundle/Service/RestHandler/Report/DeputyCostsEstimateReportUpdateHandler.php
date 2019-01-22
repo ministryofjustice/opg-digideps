@@ -27,7 +27,10 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     {
         $this
             ->updateHowCharged($report, $data)
-            ->updateBreakdownEstimates($report, $data);
+            ->updateBreakdownEstimates($report, $data)
+            ->updateMoreInfo($report, $data);
+
+        $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
     }
 
     /**
@@ -39,7 +42,6 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     {
         if (array_key_exists('prof_deputy_costs_estimate_how_charged', $data)) {
             $report->setProfDeputyCostsEstimateHowCharged($data['prof_deputy_costs_estimate_how_charged']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
         }
 
         return $this;
@@ -72,8 +74,6 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
             $this->attachProfDeputyEstimateCostsToReport($report, $data);
         }
 
-        $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
-
         $this->em->flush();
 
         return $this;
@@ -85,23 +85,10 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
      */
     private function verifyProfDeputyEstimateCostData(array $data)
     {
-        // todo add some basic verification
-        // we should only care about array_key_exists, not isset, Client should handle empty values.
-//
-//        if (!isset($data['prof_deputy_estimate_cost_type_id']) || !isset($data['amount']) || !isset($data['has_more_details'])) {
-//            throw new \InvalidArgumentException('Missing required data for updating breakdown estimates');
-//
-//
-//            return false;
-//        }
-//
-//        if (isset($data['has_more_details']) && true === $data['has_more_details'] && !isset($data['more_details'])) {
-//            throw new \InvalidArgumentException('Missing required data for updating breakdown estimates');
-//
-//            return false;
-//        }
-
-        return true;
+        return array_key_exists('prof_deputy_estimate_cost_type_id', $data) &&
+            array_key_exists('amount', $data) &&
+            array_key_exists('has_more_details', $data) &&
+            array_key_exists('more_details', $data);
     }
 
     /**
@@ -148,5 +135,23 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
             ->setProfDeputyEstimateCostTypeId($postedProfDeputyEstimateCostType['prof_deputy_estimate_cost_type_id'])
             ->setHasMoreDetails($postedProfDeputyEstimateCostType['has_more_details'])
             ->setAmount($postedProfDeputyEstimateCostType['amount']);
+    }
+
+    /**
+     * @param Report $report
+     * @param array $data
+     * @return $this
+     */
+    private function updateMoreInfo(Report $report, array $data)
+    {
+        if (array_key_exists('prof_deputy_costs_estimate_has_more_info', $data)) {
+            $report->setProfDeputyCostsEstimateHasMoreInfo($data['prof_deputy_costs_estimate_has_more_info']);
+        }
+
+        if (array_key_exists('prof_deputy_costs_estimate_more_info_details', $data)) {
+            $report->setProfDeputyCostsEstimateMoreInfoDetails($data['prof_deputy_costs_estimate_more_info_details']);
+        }
+
+        return $this;
     }
 }

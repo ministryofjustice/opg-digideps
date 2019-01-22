@@ -61,10 +61,10 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     public function getInvalidCostEstimateInputs()
     {
         return [
-            [['prof_deputy_estimate_costs' => [['amount' => '21', 'has_more_details' => false]]]],
-            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'amount' => '21']]]],
-            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'has_more_details' => false]]]],
+            [['prof_deputy_estimate_costs' => [['amount' => '21', 'has_more_details' => false, 'more_details' => null]]]],
+            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'has_more_details' => false, 'more_details' => null]]]],
             [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'amount' => '21', 'has_more_details' => true]]]],
+            [['prof_deputy_estimate_costs' => [['prof_deputy_estimate_cost_type_id' => 'foo', 'amount' => '21', 'more_details' => 'info']]]],
         ];
     }
 
@@ -81,7 +81,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->report->addProfDeputyEstimateCost($existing);
 
         $data['prof_deputy_estimate_costs'] = [
-            ['prof_deputy_estimate_cost_type_id' => 'contact-client', 'amount' => '30.32', 'has_more_details' => false],
+            ['prof_deputy_estimate_cost_type_id' => 'contact-client', 'amount' => '30.32', 'has_more_details' => false, 'more_details' => null],
             ['prof_deputy_estimate_cost_type_id' => 'other', 'amount' => '33.98', 'has_more_details' => true, 'more_details' => 'updated-details']
         ];
 
@@ -92,6 +92,17 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertCount(2, $this->report->getProfDeputyEstimateCosts());
         $this->assertExistingProfDeputyEstimateCostIsUpdated();
         $this->assertNewProfDeputyEstimateCostIsCreated();
+    }
+
+    public function testUpdatesMoreInformation()
+    {
+        $data['prof_deputy_costs_estimate_has_more_info'] = 'yes';
+        $data['prof_deputy_costs_estimate_more_info_details'] = 'more info';
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->invokeHandler($data);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', 'yes');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info');
     }
 
     private function ensureSectionStatusCacheWillBeUpdated()

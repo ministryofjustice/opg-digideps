@@ -29,6 +29,20 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyEstimateCosts;
 
     /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
+     * @ORM\Column(name="prof_dc_estimate_more_info", type="string", length=3, nullable=true)
+     */
+    private $profDeputyCostsEstimateHasMoreInfo;
+
+    /**
+     * @var string
+     * @JMS\Groups({"prof-deputy-costs-estimate-more-info"})
+     * @ORM\Column(name="prof_dc_estimate_more_info_details", type="text", nullable=true)
+     */
+    private $profDeputyCostsEstimateMoreInfoDetails;
+
+    /**
      * Hold prof deputy estimate costs type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
@@ -114,6 +128,41 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged)
     {
         $this->profDeputyCostsEstimateHowCharged = $profDeputyCostsEstimateHowCharged;
+        return $this;
+    }
+
+    public function getProfDeputyCostsEstimateHasMoreInfo()
+    {
+        return $this->profDeputyCostsEstimateHasMoreInfo;
+    }
+
+    /**
+     * @param string $profDeputyCostsEstimateHasMoreInfo
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo)
+    {
+        $this->profDeputyCostsEstimateHasMoreInfo = $profDeputyCostsEstimateHasMoreInfo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfDeputyCostsEstimateMoreInfoDetails()
+    {
+        return $this->profDeputyCostsEstimateMoreInfoDetails;
+    }
+
+    /**
+     * @param mixed $profDeputyCostsEstimateMoreInfoDetails
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails)
+    {
+        $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
+
         return $this;
     }
 
