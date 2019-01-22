@@ -11,7 +11,7 @@ alerts:
     gifts sections, you can use this page to check that %client%'s accounts
     balance
   notStarted-PROF: |
-    Once you've added a bank account and started the money in and out and gifts sections,
+    Once you've added a bank account and started the money in and out, gifts, and deputy costs sections,
     you can use this page to check that %client%'s accounts balance
   balanced: Accounts balanced
   notBalanced: Accounts not balanced
