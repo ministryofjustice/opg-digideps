@@ -8,7 +8,6 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -55,6 +54,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function howChargedAction(Request $request, $reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
+        $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged();
 
         $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateHowType::class, $report);
         $form->handleRequest($request);
@@ -63,7 +63,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
             $this->persistUpdate($reportId, $form->getData(), ['deputyCostsEstimateHowCharged']);
 
             return $this->redirectToRoute(
-                $this->determineNextRouteFromHowCharged($request, $form),
+                $this->determineNextRouteFromHowCharged($request, $form, $currentHowChargedValue),
                 ['reportId'=>$reportId]
             );
         }
@@ -172,15 +172,31 @@ class ProfDeputyCostsEstimateController extends AbstractController
     /**
      * @param Request $request
      * @param FormInterface $form
+     * @param $originalHowChargedValue
      * @return string
      */
-    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form)
+    private function determineNextRouteFromHowCharged(Request $request, FormInterface $form, $originalHowChargedValue)
     {
-        $howCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
+        $updatedHowCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
 
-        return ($request->get('from') === 'summary' || $howCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
+        if ($this->answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)) {
+            return 'prof_deputy_costs_estimate_breakdown';
+        }
+
+        return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
             'prof_deputy_costs_estimate_summary' :
             'prof_deputy_costs_estimate_breakdown';
+    }
+
+    /**
+     * @param $originalHowChargedValue
+     * @param $updatedHowCharged
+     * @return bool
+     */
+    private function answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)
+    {
+        return $originalHowChargedValue === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED &&
+            $updatedHowCharged !== Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED;
     }
 
     /**
