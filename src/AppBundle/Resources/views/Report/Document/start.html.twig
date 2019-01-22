@@ -16,9 +16,7 @@
 
     <p class="text">{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
 
-    {% if app.user.isDeputyProf() %}
-        {{ macros.notification('info', 'startPage.profReminder' | trans) }}
-    {% else %}
+    {% if not app.user.isDeputyProf() %}
         {{ macros.notification('info', 'startPage.notice' | trans) }}
     {% endif %}
 
