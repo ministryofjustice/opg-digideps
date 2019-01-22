@@ -52,6 +52,9 @@ moreInfo:
       label: "Do you have any information that will help explain your estimated costs for the next reporting period?"
     profDeputyCostsEstimateMoreInfoDetails:
       label: "Details"
+    profDeputyCostsEstimateHasMoreInfoSummary:
+      yesno: "More information"
+      details: "More information details"
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"

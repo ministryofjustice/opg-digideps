@@ -80,5 +80,37 @@
             </tr>
 
         {% endif %}
+
+        {# More information #}
+        {% if report.profDeputyCostsEstimateHasMoreInfo is not null %}
+            <tr class="behat-region-more-info">
+                <td>
+                    {{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.yesno' | trans }}
+                </td>
+                <td>
+                    {{ report.profDeputyCostsEstimateHasMoreInfo | capitalize | trans }}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+            {% if 'yes' == report.profDeputyCostsEstimateHasMoreInfo %}
+                <tr class="behat-region-more-info">
+                    <td>
+                        {{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.details' | trans }}
+                    </td>
+                    <td>
+                        {{ report.profDeputyCostsEstimateMoreInfoDetails | capitalize | trans }}
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="change-answer">
+                            <a href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+        {% endif %}
     </tbody>
 </table>
