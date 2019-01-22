@@ -24,7 +24,7 @@ howCharged:
       both: Both
 
 breakdown:
-  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle: Deputy cost estimates
   pageSectionDescription: Give us a breakdown of what you and other fee earners expect to charge %client% during the next reporting period
   pageHint: ""
@@ -42,6 +42,16 @@ breakdown:
         label: Other
         moreInformation: Details of 'other'
         moreInformationLabelSummary: Details of other costs
+
+moreInfo:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy cost estimates
+  pageHeader: More Information
+  form:
+    profDeputyCostsEstimateHasMoreInfo:
+      label: "Do you have any information that will help explain your estimated costs for the next reporting period?"
+    profDeputyCostsEstimateMoreInfoDetails:
+      label: "Details"
 
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"

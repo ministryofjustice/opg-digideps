@@ -510,6 +510,9 @@ profDeputyCostsEstimateHowCharged:
   howCharged:
     notBlank: Please select an option
 
+profDeputyCostsEstimateMoreInfo:
+  details:
+    notBlank: Please provide information in the box provided
 
 # ====================================================================================================
 #       NDR
