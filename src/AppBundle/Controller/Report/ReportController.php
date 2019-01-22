@@ -197,17 +197,10 @@ class ReportController extends AbstractController
         /** @var EntityDir\Report\Report $report */
         $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
+        $jms = $this->determineJmsGroups($user);
+
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', [
-            'client',
-            'client-users', 'user',
-            'client-reports',
-            'report', //needed ?
-            'client-clientcontacts',
-            'clientcontact',
-            'client-notes',
-            'notes',
-        ]);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', $jms);
 
         $activeReportId = null;
         if ($this->getUser()->isDeputyOrg()) {
@@ -232,8 +225,32 @@ class ReportController extends AbstractController
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
+    }
 
+    /**
+     * Method to return JMS groups required for overview page.
+     *
+     * @param EntityDir\User $user
+     * @return array
+     */
+    private function determineJmsGroups(EntityDir\User $user)
+    {
+        $jms = [
+            'client',
+            'user',
+            'client-reports',
+            'report', //needed ?
+            'client-clientcontacts',
+            'clientcontact',
+            'client-notes',
+            'notes',
+        ];
 
+        if ($user->isLayDeputy()) {
+            $jms[] = 'client-users';
+        }
+
+        return $jms;
     }
 
     /**
