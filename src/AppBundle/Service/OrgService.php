@@ -88,6 +88,8 @@ class OrgService
             $row = array_map('trim', $row);
             try {
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
+                $this->log('NAMED USER -> ' . $userOrgNamed->getId() . ' with ROLE ' . $userOrgNamed->getRoleName());
+
                 $client = $this->upsertClientFromCsv($row, $userOrgNamed);
                 $this->upsertReportFromCsv($row, $client, $userOrgNamed);
             } catch (\Exception $e) {
@@ -116,17 +118,24 @@ class OrgService
     private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
         $depType = $csvRow['Dep Type'];
+
         $userEmail = strtolower($csvRow['Email']);
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
+        $this->log('Processing row for deputy ' . $deputyNo . ', dep type ' . $depType . ' with email ' . $userEmail);
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
+
         $user = $this->userRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
         ]);
-
+        if ($user instanceof EntityDir\User) {
+            $this->log('Found user ' . $user->getId() . ', dep type ' . $depType . ', dep No ' . $user->getDeputyNo() . ', with role ' . $user->getRoleName());
+        } else {
+            $this->log('Could not match with user');
+        }
         // Notify email change
         if ($user && $user->getEmail() !== $userEmail) {
             $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
@@ -209,14 +218,17 @@ class OrgService
      */
     private function upsertClientFromCsv(array $row, EntityDir\User $userOrgNamed)
     {
+        $this->log('PROCESSING CLIENT');
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
         /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
+
         if ($client) {
+            $this->log('FOUND client ' . $client->getId());
             $client->setUsers(new ArrayCollection());
-//            foreach ($cu as $c) {
-//                $cu-> removeElement($c);
+//            foreach ($client->getUsers() as $cu) {
+//                $client->getUsers()->removeElement($cu);
 //            }
         } else {
             $this->log('Creating client');
@@ -408,6 +420,6 @@ class OrgService
      */
     private function log($message)
     {
-        $this->logger->debug(__CLASS__ . ':' . $message);
+        $this->logger->warning(__CLASS__ . ':' . $message);
     }
 }
