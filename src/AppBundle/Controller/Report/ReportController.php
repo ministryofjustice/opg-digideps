@@ -30,13 +30,6 @@ class ReportController extends AbstractController
         'expenses',
         'fee',
         'gifts',
-        'prof-deputy-other-costs',
-        'prof-deputy-costs-how-charged',
-        'report-prof-deputy-costs',
-        'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
-        'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
-        'report-prof-deputy-costs-scco',
-        'report-prof-deputy-fixed-cost',
         'action',
         'action-more-info',
         'asset',
@@ -68,7 +61,7 @@ class ReportController extends AbstractController
         'report-prof-service-fees',
         'prof-service-fees',
         'client-named-deputy',
-        'unsubmitted-reports-count',
+        'unsubmitted-reports-count'
     ];
 
     /**
@@ -197,10 +190,8 @@ class ReportController extends AbstractController
         /** @var EntityDir\Report\Report $report */
         $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-        $jms = $this->determineJmsGroups($user);
-
         /** @var $client EntityDir\Client */
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', $jms);
+        $client = $this->generateClient($user, $clientId);
 
         $activeReportId = null;
         if ($this->getUser()->isDeputyOrg()) {
@@ -225,6 +216,33 @@ class ReportController extends AbstractController
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
+    }
+
+    /**
+     * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
+     * the list. Its needed for a permissions check on add client contact (logged in user has to be associated)
+     *
+     * @param EntityDir\User $user
+     * @param $clientId
+     * @return mixed
+     */
+    private function generateClient(EntityDir\User $user, $clientId)
+    {
+        $jms = $this->determineJmsGroups($user);
+
+        /* Get client with all other JMS groups required */
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', $jms);
+
+        if ($user->isDeputyOrg()) {
+            /*
+            Separate call to get client Users as query taking too long for some profs with many deputies attached.
+            We only need the user id for the add client contact permission check
+             */
+            $clientWithUsers = $this->getRestClient()->get('client/' . $clientId, 'Client', ['user-id', 'client-users']);
+            $client->setUsers($clientWithUsers->getUsers());
+        }
+
+        return $client;
     }
 
     /**
