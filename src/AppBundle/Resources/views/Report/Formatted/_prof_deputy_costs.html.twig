@@ -3,10 +3,10 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 
 <div class="section break-before" id="prof-deputy-costs-section">
-    <h2 class="section-heading">{{ 'startPage.pageTitle'|trans }}</h2>
+    <h2 class="section-heading">{{ 'startPage.pageTitle'|trans(transOptions) }}</h2>
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-how-charged>
-            <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsHow.label'|trans }}</h3>
+            <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsHow.label'|trans(transOptions) }}</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">{% if report.profDeputyCostsHowChargedFixed == true %}X{% else %}&nbsp;{% endif %}</td>
@@ -22,7 +22,7 @@
 
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-has-previous>
-            <h3 class="label question bold">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label'|trans }}</h3>
+            <h3 class="label question bold">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label'|trans(transOptions) }}</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">{% if report.profDeputyCostsHasPrevious == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -70,7 +70,7 @@
             </div>
         {% else %}
             <div class="box" data-prof-deputy-costs-has-interim>
-                <h3 class="label question bold">{{ 'interimExists.form.profDeputyCostsHasInterim.label'|trans }}</h3>
+                <h3 class="label question bold">{{ 'interimExists.form.profDeputyCostsHasInterim.label'|trans(transOptions) }}</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">{% if report.profDeputyCostsHasInterim == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -120,11 +120,11 @@
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-amount-scco>
             <dl class="labelvalue push--bottom">
-                <dt class="label bold">{{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}</dt>
+                <dt class="label bold">{{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans(transOptions) }}</dt>
                 <dd class="value">£{{ report.profDeputyCostsAmountToScco | money_format }}</dd>
             </dl>
             <dl class="labelvalue">
-                <dt class="label">{{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.label' | trans }}</dt>
+                <dt class="label">{{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.label' | trans(transOptions) }}</dt>
                 <dd class="value">{{ report.profDeputyCostsReasonBeyondEstimate | nl2br }}</dd>
             </dl>
         </div>
@@ -132,17 +132,17 @@
 
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-breakdown>
-            <h3 class="label question bold">{{ 'breakdown.pageSectionDescription'|trans }}</h3>
+            <h3 class="label question bold">{{ 'breakdown.pageSectionDescription'|trans(transOptions) }}</h3>
             <table class="labelvalue money">
             {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
                 {% set costRow = report.generateActualSubmittedOtherCosts[otherCostTypeId.typeId] %}
                 <tr>
-                    <td class="label">{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}</td>
+                    <td class="label">{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans(transOptions) }}</td>
                     <td class="value total width-fifth">£{{ costRow['amount'] | money_format }}</td>
                 </tr>
                 {% if costRow.hasMoreDetails and costRow.moreDetails %}
                 <tr>
-                    <td class="label" data-prof-deputy-costs-breakdown-more-details>{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}</td>
+                    <td class="label" data-prof-deputy-costs-breakdown-more-details>{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans(transOptions) }}</td>
                     <td class="value total width-half">{{ costRow['moreDetails'] | nl2br }}</td>
                 </tr>
                 {% endif %}
