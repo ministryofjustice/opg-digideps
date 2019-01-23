@@ -5,6 +5,7 @@ namespace AppBundle\Form\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfDeputyCostsEstimateMoreInfoType extends AbstractType
@@ -23,7 +24,15 @@ class ProfDeputyCostsEstimateMoreInfoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['prof-deputy-costs-estimate-more-info'],
+            'validation_groups' => function (FormInterface $form) {
+                $validationGroups = ['prof-deputy-costs-estimate-more-info'];
+
+                if ($form->getData()->getProfDeputyCostsEstimateHasMoreInfo() == 'yes') {
+                    $validationGroups[] = 'prof-deputy-costs-estimate-more-info-details';
+                }
+
+                return $validationGroups;
+            },
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
