@@ -65,6 +65,7 @@ class ProfDeputyCostsController extends AbstractController
             $this->getRestClient()->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
             if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else {
                 $nextRoute = 'prof_deputy_costs_previous_received_exists';
@@ -108,6 +109,7 @@ class ProfDeputyCostsController extends AbstractController
                     $this->getRestClient()->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
 
                     if ($from =='summary') {
+                        $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                         $nextRoute = 'prof_deputy_costs_summary';
                     } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                         $nextRoute = 'prof_deputy_costs_received';
@@ -167,6 +169,7 @@ class ProfDeputyCostsController extends AbstractController
             if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
                 $nextRoute = 'prof_deputy_costs_previous_received';
             } else if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                 $nextRoute = 'prof_deputy_costs_received';
@@ -237,6 +240,7 @@ class ProfDeputyCostsController extends AbstractController
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from'=>$from]);
                 case 'no':
                     if ($from === 'summary') {
+                        $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                         $nextRoute = 'prof_deputy_costs_summary';
                         // TODO consider going to fixed costs adding from=summmary if not set
                     } else {
@@ -275,6 +279,7 @@ class ProfDeputyCostsController extends AbstractController
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
 
             if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else { // saveAndContinue
                 $nextRoute = 'prof_deputy_costs_amount_scco';
@@ -306,7 +311,12 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
 
-            $nextRoute = ($from === 'summary') ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco';
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else {
+                $nextRoute = 'prof_deputy_costs_amount_scco';
+            }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
@@ -335,7 +345,12 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->getRestClient()->put('/report/' . $reportId, $report, ['profDeputyCostsScco']);
 
-            $nextRoute = ($from === 'summary') ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_breakdown';
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+                $nextRoute = 'prof_deputy_costs_summary';
+            } else {
+                $nextRoute = 'prof_deputy_costs_breakdown';
+            }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
@@ -369,6 +384,10 @@ class ProfDeputyCostsController extends AbstractController
 
         if ($form->isValid()) {
             $this->getRestClient()->put('report/' . $report->getId(), $form->getData(), ['prof-deputy-other-costs']);
+
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+            }
 
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
