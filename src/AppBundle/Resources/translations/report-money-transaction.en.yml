@@ -38,7 +38,8 @@ startPage:
       deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription2-PROF: |
       There are different sections for you to tell us about <a href="%moneyTransfersPath%">
-      money transfers</a> between %client%'s accounts and <a href="%giftsPath%">gifts</a>.
+      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
+      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
     pageSectionDescription3: |
       Make sure you only enter each payment in one place, so we don't count it twice.
     totalOrIndividualHeading: |
