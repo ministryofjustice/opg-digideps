@@ -212,8 +212,9 @@ class OrgService
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
         if ($client) {
-            foreach ($client->getUsers() as $cu) {
-                $client->getUsers()->removeElement($cu);
+            $cu = $client->getUsers();
+            foreach ($cu as $c) {
+                $cu->removeElement($c);
             }
         } else {
             $this->log('Creating client');
@@ -263,12 +264,16 @@ class OrgService
 
         // Add client to named user (will be done later anyway)
         $userOrgNamed->addClient($client);
+//        $client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
-        foreach ($userOrgNamed->getTeams() as $team) {
-            foreach ($team->getMembers() as $member) {
+        $teams = $userOrgNamed->getTeams();
+        foreach ($teams as $team) {
+            $members = $team->getMembers();
+            foreach ($members as $member) {
                 $member->addClient($client);
+//                $client->addUser($member);
             }
         }
 
