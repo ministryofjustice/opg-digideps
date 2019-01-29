@@ -37,8 +37,10 @@ class Client
     private $id;
 
     /**
+     * @var ArrayCollection
+     *
      * @JMS\Groups({"client-users"})
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\User>")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -513,11 +515,21 @@ class Client
     /**
      * Get users.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @param $users
+     * @return $this
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+        return $this;
     }
 
     /**
