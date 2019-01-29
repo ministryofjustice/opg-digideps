@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -172,7 +173,7 @@ class OrgService
 
         // update user address, if not set
         // the following could be moved to line 154 if no update is needed (DDPB-2262)
-        if (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1()) {
+        if ($user instanceof EntityDir\User && (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1())) {
             $user
                 ->setAddress1($csvRow['Dep Adrs1'])
                 ->setAddress2($csvRow['Dep Adrs2'])
@@ -185,7 +186,7 @@ class OrgService
         // update team name, if not set
         // can be removed if there is not need to update PA names after DDPB-1718
         // is released and one PA CSV upload is done
-        if ($user->getTeams()->count()
+        if ($user instanceof EntityDir\User && $user->getTeams()->count()
             && ($team = $user->getTeams()->first())
             && $team->getTeamName() != $csvRow['Dep Surname']
         ) {
@@ -210,12 +211,13 @@ class OrgService
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+        /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
         if ($client) {
-            $cu = $client->getUsers();
-            foreach ($cu as $c) {
-                $cu->removeElement($c);
-            }
+            $client->setUsers(new ArrayCollection());
+//            foreach ($cu as $c) {
+//                $cu-> removeElement($c);
+//            }
         } else {
             $this->log('Creating client');
             $client = new EntityDir\Client();
@@ -258,24 +260,27 @@ class OrgService
             }
 
             $this->added['clients'][] = $client->getCaseNumber();
-            $this->em->persist($client);
+
         }
         $client->setNamedDeputy($userOrgNamed);
 
         // Add client to named user (will be done later anyway)
-        $userOrgNamed->addClient($client);
+//        $userOrgNamed->addClient($client);
 //        $client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
+
         $teams = $userOrgNamed->getTeams();
         foreach ($teams as $team) {
             $members = $team->getMembers();
             foreach ($members as $member) {
-                $member->addClient($client);
-//                $client->addUser($member);
+//                $member->addClient($client);
+                $client->addUser($member);
             }
         }
+
+        $this->em->persist($client);
 
         $this->em->flush();
 
@@ -321,7 +326,7 @@ class OrgService
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
         $this->em->persist($report);
         $this->em->flush();
-
+        $this->em->clear();
         return $report;
     }
 
