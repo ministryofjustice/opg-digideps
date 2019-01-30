@@ -53,7 +53,7 @@ class User implements UserInterface
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"user", "report-submitted-by", "user-id"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-id", "user-list"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -81,7 +81,7 @@ class User implements UserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -92,7 +92,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({ "user", "report-submitted-by", "user-name"})
+     * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
      */
     private $lastname;
 
@@ -105,7 +105,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     * @JMS\Groups({"user", "report-submitted-by", "user-email"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-email", "user-list"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
@@ -115,7 +115,7 @@ class User implements UserInterface
     /**
      * @var bool
      * @JMS\Type("boolean")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "user-list"})
      *
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
@@ -159,7 +159,7 @@ class User implements UserInterface
      *             see roles in Role class
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "report-submitted-by", "user-rolename"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list"})
      *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
@@ -179,7 +179,7 @@ class User implements UserInterface
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "report-submitted-by"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-list"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;
@@ -231,7 +231,7 @@ class User implements UserInterface
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user"})
+     * @JMS\Groups({"user", "user-list"})
      * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
      *
      * @var string
@@ -556,7 +556,7 @@ class User implements UserInterface
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("team_names")
-     * @JMS\Groups({"team-names"})
+     * @JMS\Groups({"team-names", "user-list"})
      *
      * @return mixed
      */
