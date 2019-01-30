@@ -13,7 +13,7 @@
     '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
     '%giftsPath%': path('gifts', {reportId: report.id}),
     '%accountsPath%': path('bank_accounts', {reportId: report.id}),
-    {#'%deputyCostsPath%': path('prof_deputy_costs', {reportId: report.id})#}
+    '%deputyCostsPath%': path('prof_deputy_costs', {reportId: report.id})
 } %}
 
 {% block htmlTitle %}{{ 'startPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
