@@ -14,11 +14,13 @@
 {% endblock %}
 
 {% set showTeamMembershipInUserRow = app.user.isDeputyProf() %}
+{% set hasRoleOrgNamed = app.user.hasRoleOrgNamed() %}
+{% set hasRoleOrgAdmin = app.user.hasRoleOrgAdmin() %}
 
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {% if app.user.hasRoleOrgNamed() or app.user.hasRoleOrgAdmin() %}
+        {% if hasRoleOrgNamed or hasRoleOrgAdmin %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
             {{ 'listPage.introPara' | trans }}
@@ -61,7 +63,7 @@
                         <br/>(Signed in)
                         {% endif %}
                     </p>
-                    {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
+                    {% if hasRoleOrgNamed or hasRoleOrgAdmin %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
