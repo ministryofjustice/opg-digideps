@@ -92,12 +92,20 @@ class OrgService
                 $this->log('---------------------------------------------------------------');
                 $this->log('PROCESSING csv DEPUTY');
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
-                $this->log('NAMED deputy IDENTIFIED in database with id: ' . $userOrgNamed->getId() . ' with ROLE ' . $userOrgNamed->getRoleName());
+                if ($userOrgNamed instanceof EntityDir\User) {
+                    $this->log('NAMED deputy IDENTIFIED in database with id: ' . $userOrgNamed->getId() . ' with ROLE ' . $userOrgNamed->getRoleName());
 
-                $this->log('PROCESSING csv CLIENT');
-                $client = $this->upsertClientFromCsv($row, $userOrgNamed);
-                $this->log('PROCESSING csv REPORT');
-                $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+                    $this->log('PROCESSING csv CLIENT');
+                    $client = $this->upsertClientFromCsv($row, $userOrgNamed);
+                    if ($client instanceof EntityDir\Client) {
+                        $this->log('PROCESSING csv REPORT');
+                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+                    } else {
+                        $this->log('Client could not be identified or created');
+                    }
+                } else {
+                    $this->log('Deputy could not be identified or created');
+                }
 
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
@@ -224,9 +232,10 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
-
-        $this->em->persist($user);
-        $this->em->flush($user);
+        if ($user instanceof EntityDir\User) {
+            $this->em->persist($user);
+            $this->em->flush($user);
+        }
 
         return $user;
     }
@@ -299,7 +308,7 @@ class OrgService
 
         // Add client to named user (will be done later anyway)
 //        $userOrgNamed->addClient($client);
-//        $client->addUser($userOrgNamed);
+        $client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
@@ -314,7 +323,7 @@ class OrgService
                 $depCount++;
             }
         }
-        $this->log('Assigned ' . $depCount . 'additional deputies to client');
+        $this->log('Assigned ' . $depCount . ' additional deputies to client');
 
         $this->em->persist($client);
 
