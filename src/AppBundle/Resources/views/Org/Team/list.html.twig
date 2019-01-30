@@ -14,8 +14,6 @@
 {% endblock %}
 
 {% set showTeamMembershipInUserRow = app.user.isDeputyProf() %}
-{% set hasRoleOrgNamed = app.user.hasRoleOrgNamed() %}
-{% set hasRoleOrgAdmin = app.user.hasRoleOrgAdmin() %}
 
 {% block pageContent %}
     {# Introduction text #}
@@ -55,6 +53,8 @@
 
         <tbody>
         {% for user in teamMembers %}
+            {% set hasRoleOrgNamed = user.hasRoleOrgNamed() %}
+            {% set hasRoleOrgAdmin = user.hasRoleOrgAdmin() %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
