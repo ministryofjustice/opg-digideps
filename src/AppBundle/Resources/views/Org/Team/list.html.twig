@@ -15,7 +15,7 @@
 
 {% set showTeamMembershipInUserRow = app.user.isDeputyProf() %}
 {% set hasRoleOrgNamed = app.user.hasRoleOrgNamed() %}
-{% set hasRoleOrgNamed = app.user.hasRoleOrgNamed() %}
+{% set hasRoleOrgAdmin = app.user.hasRoleOrgAdmin() %}
 
 {% block pageContent %}
     {# Introduction text #}
