@@ -23,7 +23,7 @@ class TeamController extends AbstractController
      */
     public function listAction(Request $request)
     {
-        $teamMembers = $this->getRestClient()->get('team/members', 'User[]');
+        $teamMembers = $this->getRestClient()->get('team/members', 'User[]', ['user-list']);
 
         return [
             'teamMembers' => $teamMembers
