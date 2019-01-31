@@ -159,7 +159,7 @@ class User implements UserInterface
      *             see roles in Role class
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list"})
+     * @JMS\Groups({"user", "report-submitted-by", "user-rolename", "user-list", "team-users"})
      *
      * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
      */
