@@ -18,7 +18,7 @@
 {% block pageContent %}
     {# Introduction text #}
     <p class="text">
-        {% if hasRoleOrgNamed or hasRoleOrgAdmin %}
+        {% if app.user.hasRoleOrgNamed() or app.user.hasRoleOrgAdmin() %}
             {{ 'listPage.introParaAdmin' | trans }}
         {% else %}
             {{ 'listPage.introPara' | trans }}
@@ -53,8 +53,6 @@
 
         <tbody>
         {% for user in teamMembers %}
-            {% set hasRoleOrgNamed = user.hasRoleOrgNamed() %}
-            {% set hasRoleOrgAdmin = user.hasRoleOrgAdmin() %}
             <tr class="behat-region-team-user-{{ user.email | behat_namify }}">
                 <td valign="top" class="width-third">
                     <p class="flush--ends">
@@ -63,7 +61,7 @@
                         <br/>(Signed in)
                         {% endif %}
                     </p>
-                    {% if hasRoleOrgNamed or hasRoleOrgAdmin %}
+                    {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
                         <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
