@@ -49,6 +49,7 @@ Feature: admin / admin
     And I click on "submit-and-download"
     And the response status code should be 200
     And the response should have the "Content-Type" header containing "application/octet-stream"
+    And the response should have the "Content-Disposition" header containing "cwsdigidepsopg00001"
     And the response should have the "Content-Disposition" header containing ".dat"
 
   Scenario Outline: Downloading Report Submissions with start and end dates
