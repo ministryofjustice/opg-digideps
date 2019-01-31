@@ -34,6 +34,11 @@
                         <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
                     {% endif %}
                 </tr>
+            {% else %}
+                <tr>
+                    <td>Deputy costs:</td>
+                    <td class="grey numeric">&pound;{{ report.profDeputyTotalCosts | money_format }}</td>
+                </tr>                
             {% endif %}
             <tr>
                 <td>Gifts:</td>
