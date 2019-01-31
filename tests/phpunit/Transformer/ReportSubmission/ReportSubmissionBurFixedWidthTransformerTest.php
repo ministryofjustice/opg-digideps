@@ -93,7 +93,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
 
     private function formatResultIntoTestable()
     {
-        $this->formattedResult = explode("\n", $this->result);
+        $this->formattedResult = explode("\r\n", $this->result);
         array_pop($this->formattedResult);
     }
 

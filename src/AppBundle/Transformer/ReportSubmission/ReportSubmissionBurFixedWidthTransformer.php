@@ -61,13 +61,13 @@ class ReportSubmissionBurFixedWidthTransformer
     private function buildFileString(array $data)
     {
         $fileContents = [];
-        $fileContents[] = "00000000\n";
+        $fileContents[] = "00000000\r\n";
 
         foreach ($data as $dataLine) {
-            $fileContents[] = implode("", $dataLine) . "\n";
+            $fileContents[] = implode("", $dataLine) . "\r\n";
         }
 
-        $fileContents[] = "99999999\n";
+        $fileContents[] = "99999999\r\n";
 
         return implode("", $fileContents);
     }
