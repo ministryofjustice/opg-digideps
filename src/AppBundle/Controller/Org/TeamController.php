@@ -38,7 +38,11 @@ class TeamController extends AbstractController
     {
         $this->denyAccessUnlessGranted('add-user', null, 'Access denied');
 
-        $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
+        $team = $this->getRestClient()->get(
+            'user/' . $this->getUser()->getId() . '/team',
+            'Team',
+            ['team', 'team-users']
+        );
         $validationGroups = $team->canAddAdmin() ? ['org_team_add', 'org_team_role_name'] : ['org_team_add'];
         // PA also require users to have the same domain address. PROF don't as they allow cross-team members
         if ($this->getUser()->isDeputyPa()) {
@@ -125,7 +129,12 @@ class TeamController extends AbstractController
             throw $this->createNotFoundException('User cannot edit their own account at this URL');
         }
 
-        $team = $this->getRestClient()->get('user/' . $this->getUser()->getId() . '/team', 'Team');
+        $team = $this->getRestClient()->get(
+            'user/' . $this->getUser()->getId() . '/team',
+            'Team',
+            ['team', 'team-users']
+        );
+
         $validationGroups = $team->canAddAdmin() ? ['user_details_org', 'org_team_role_name'] : ['user_details_org'];
 
         $form = $this->createForm(FormDir\Org\TeamMemberAccountType::class, $user, ['team' => $team, 'loggedInUser' => $this->getUser(), 'targetUser' => $user, 'validation_groups' => $validationGroups
