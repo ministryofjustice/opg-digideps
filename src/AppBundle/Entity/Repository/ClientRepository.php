@@ -50,4 +50,25 @@ class ClientRepository extends EntityRepository
 
         return $clients;
     }
+
+    public function findAllClientIdsByUser(User $user)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->executeQuery(
+            'select deputy_case.client_id FROM deputy_case WHERE deputy_case.user_id = ?',
+            [$user->getId()]
+        );
+
+        return array_map('current', $stmt->fetchAll());
+    }
+
+    public function saveUserToClient(User $user, $clientId)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $conn->executeQuery(
+            'INSERT INTO deputy_case (client_id, user_id) VALUES (?, ?)',
+            [$clientId, $user->getId()]
+        );
+    }
 }

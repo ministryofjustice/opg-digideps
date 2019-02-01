@@ -340,15 +340,8 @@ class OrgService
     }
 
     /**
-     * Adds a new Org user and
-     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
-     * - Add this new user to the logged user's team
-     * - Copy clients from logged in user into the this new user
-     * Needs a flush at the end
-     *
-     * @param User $loggedInUser
-     * @param User $userToAdd
-     * @param $data
+     * @param EntityDir\User $loggedInUser
+     * @param EntityDir\User $userToAdd
      */
     public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
@@ -357,9 +350,9 @@ class OrgService
             $userToAdd->addTeam($team);
         }
 
-        // copy clients from logged user into this new user
-        foreach ($loggedInUser->getClients() as $client) {
-            $userToAdd->addClient($client);
+        $clientIds = $this->em->getRepository('AppBundle\Entity\Client')->findAllClientIdsByUser($loggedInUser);
+        foreach ($clientIds as $clientId) {
+            $this->em->getRepository('AppBundle\Entity\Client')->saveUserToClient($userToAdd, $clientId);
         }
     }
 

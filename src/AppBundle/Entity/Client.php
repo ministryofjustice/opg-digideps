@@ -39,7 +39,7 @@ class Client
     /**
      * @JMS\Groups({"client-users"})
      * @JMS\Type("array")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
      *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
