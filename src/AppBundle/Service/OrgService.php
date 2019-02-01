@@ -345,9 +345,9 @@ class OrgService
      */
     public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
     {
-        // add to creator's teams
-        foreach ($loggedInUser->getTeams() as $team) {
-            $userToAdd->addTeam($team);
+        $teamIds = $this->em->getRepository('AppBundle\Entity\Team')->findAllTeamIdsByUser($loggedInUser);
+        foreach ($teamIds as $teamId) {
+            $this->em->getRepository('AppBundle\Entity\Client')->saveUserToTeam($userToAdd, $teamId);
         }
 
         $clientIds = $this->em->getRepository('AppBundle\Entity\Client')->findAllClientIdsByUser($loggedInUser);
