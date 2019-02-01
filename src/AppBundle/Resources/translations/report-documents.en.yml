@@ -49,6 +49,7 @@ startPage:
   notice: |
     You do not need to attach a copy of this report. When you submit your report it will be
     sent to OPG automatically.
+  profReminder: Remember to attach the <a href="https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/537796/OPG105-Professional-fees-insert.pdf" target="_blank">professional deputy fees form (OPG105)</a>
   startButton: Start
 
 stepPage:
