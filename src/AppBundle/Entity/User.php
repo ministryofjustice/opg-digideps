@@ -65,14 +65,14 @@ class User implements UserInterface
     /**
      * @JMS\Groups({"user-clients"})
      * @JMS\Type("array")
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $clients;
 
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Team>")
      * @JMS\Groups({"user-teams"})
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Team", inversedBy="members", cascade={"persist"}, fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
      */

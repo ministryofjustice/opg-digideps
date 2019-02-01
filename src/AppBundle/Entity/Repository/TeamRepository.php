@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -12,4 +13,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class TeamRepository extends EntityRepository
 {
+    /**
+     * @param User $user
+     * @return array
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findAllTeamIdsByUser(User $user)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->executeQuery(
+            'select user_team.team_id FROM user_team WHERE user_team.user_id = ?',
+            [$user->getId()]
+        );
+
+        return array_map('current', $stmt->fetchAll());
+    }
 }
