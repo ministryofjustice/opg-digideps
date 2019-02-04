@@ -10,11 +10,11 @@
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">{% if report.profDeputyCostsHowChargedFixed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedFixed.label' | trans }}</td>
+                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedFixed.label' | trans(transOptions) }}</td>
                     <td class="value checkbox">{% if report.profDeputyCostsHowChargedAssessed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAssessed.label' | trans }}</td>
+                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAssessed.label' | trans(transOptions) }}</td>
                     <td class="value checkbox">{% if report.profDeputyCostsHowChargedAgreed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAgreed.label' | trans }}</td>
+                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAgreed.label' | trans(transOptions) }}</td>
                 </tr>
             </table>
         </div>
