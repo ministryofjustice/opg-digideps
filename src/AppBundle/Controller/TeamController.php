@@ -54,9 +54,8 @@ class TeamController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $userId, 'User not found');
         /* @var $user EntityDir\User */
 
-        $this->orgService()->copyTeamAndClientsFrom($this->getUser(), $user);
-
-        $this->getEntityManager()->flush();
+        $this->orgService()->addUserToUsersClients($this->getUser(), $user);
+        $this->orgService()->addUserToUsersTeams($this->getUser(), $user);
 
         return ['id' => $user->getId()];
     }
