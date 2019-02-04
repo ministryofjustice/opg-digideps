@@ -51,13 +51,8 @@ class CoDeputyController extends RestController
         $newUser->setEmail($data['email']);
         $newUser->recreateRegistrationToken();
         $newUser->setRoleName(EntityDir\User::ROLE_LAY_DEPUTY);
-        foreach ($loggedInUser->getClients() as $client) {
-            $newUser->addClient($client);
-        }
 
-        $userService = $this->get('user_service');
-
-        $userService->addUser($loggedInUser, $newUser, $data);
+        $this->get('user_service')->addUser($loggedInUser, $newUser, $data);
 
         $this->setJmsSerialiserGroups(['user']);
 

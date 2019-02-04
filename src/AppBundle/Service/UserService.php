@@ -59,8 +59,10 @@ class UserService
         $this->em->persist($userToAdd);
         $this->em->flush();
 
+        $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd);
+
         if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
-            $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd);
+            $this->orgService->addUserToUsersTeams($loggedInUser, $userToAdd);
         }
     }
 
