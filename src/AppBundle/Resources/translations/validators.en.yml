@@ -517,6 +517,11 @@ profDeputyEstimateCost:
     maxMessage: The amount must be less than £10,000,000,000
   moreDetails:
       notBlank: Please give us some more information
+
+profDeputyCostsEstimateMoreInfo:
+  details:
+    notBlank: Please provide information in the box provided
+
 # ====================================================================================================
 #       NDR
 # ====================================================================================================

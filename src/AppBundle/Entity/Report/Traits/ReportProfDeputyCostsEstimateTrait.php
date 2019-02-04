@@ -33,6 +33,22 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyEstimateCostTypeIds;
 
     /**
+     * @var string yes/no
+     *
+     * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"prof-deputy-costs-estimate-more-info"})
+     * @JMS\Type("string")
+     * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
+     */
+    private $profDeputyCostsEstimateHasMoreInfo;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"deputyCostsEstimateMoreInfo"})
+     * @Assert\NotBlank(message="profDeputyCostsEstimateMoreInfo.details.notBlank", groups={"prof-deputy-costs-estimate-more-info-details"})
+     */
+    private $profDeputyCostsEstimateMoreInfoDetails;
+
+    /**
      * @var float
      *
      * @JMS\Type("double")
@@ -117,6 +133,44 @@ trait ReportProfDeputyCostsEstimateTrait
                 return $submittedCost;
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsEstimateHasMoreInfo()
+    {
+        return $this->profDeputyCostsEstimateHasMoreInfo;
+    }
+
+    /**
+     * @param string $profDeputyCostsEstimateHasMoreInfo
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo)
+    {
+        $this->profDeputyCostsEstimateHasMoreInfo = $profDeputyCostsEstimateHasMoreInfo;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfDeputyCostsEstimateMoreInfoDetails()
+    {
+        return $this->profDeputyCostsEstimateMoreInfoDetails;
+    }
+
+    /**
+     * @param mixed $profDeputyCostsEstimateMoreInfoDetails
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails)
+    {
+        $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
+
+        return $this;
     }
 
     /**

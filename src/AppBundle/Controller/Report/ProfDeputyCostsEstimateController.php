@@ -21,7 +21,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
     private static $jmsGroups = [
         'status',
         'prof-deputy-costs-estimate-how-charged',
-        'prof-deputy-estimate-costs'
+        'prof-deputy-estimate-costs',
+        'prof-deputy-costs-estimate-more-info'
     ];
 
     /**
@@ -75,13 +76,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
         ];
     }
 
-
-
     /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
      * @Template()
      */
-    public function breakdown(Request $request, $reportId)
+    public function breakdownAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -96,10 +95,17 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $form = $this->createForm(FormDir\Report\ProfDeputyEstimateCostsType::class, $report, []);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs']);
 
-            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate_summary', ['reportId' => $reportId]));
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+                $nextRoute = 'prof_deputy_costs_estimate_summary';
+            } else {
+                $nextRoute = 'prof_deputy_costs_estimate_more_info';
+            }
+
+            return $this->redirect($this->generateUrl($nextRoute, ['reportId' => $reportId]));
         }
 
         return [
@@ -109,6 +115,34 @@ class ProfDeputyCostsEstimateController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/more-info", name="prof_deputy_costs_estimate_more_info")
+     * @Template()
+     */
+    public function moreInfoAction(Request $request, $reportId)
+    {
+        $from = $request->get('from');
+        $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-more-info']);
+
+        $form = $this->createForm(FormDir\Report\ProfDeputyCostsEstimateMoreInfoType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->persistUpdate($reportId, $form->getData(), ['deputyCostsEstimateMoreInfo']);
+
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+            }
+
+            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate_summary', ['reportId' => $reportId]));
+        }
+
+        return [
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_breakdown', ['reportId'=>$reportId]),
+            'form' => $form->createView(),
+            'report' => $report,
+        ];
+    }
 
     /**
      * Retrieves the list of default estimate cost type IDs using virtual property from api
