@@ -4,6 +4,7 @@ namespace AppBundle\Service\RestHandler\Report;
 
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use AppBundle\Entity\Report\Report;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInterface
@@ -37,11 +38,29 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
      * @param Report $report
      * @param array $data
      * @return $this
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     private function updateHowCharged(Report $report, array $data)
     {
         if (array_key_exists('prof_deputy_costs_estimate_how_charged', $data)) {
             $report->setProfDeputyCostsEstimateHowCharged($data['prof_deputy_costs_estimate_how_charged']);
+
+            if (Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
+                return $this;
+            }
+
+            $report
+                ->setProfDeputyCostsEstimateHasMoreInfo(null)
+                ->setProfDeputyCostsEstimateMoreInfoDetails(null);
+
+            if (!$report->getProfDeputyEstimateCosts()->isEmpty()) {
+                foreach ($report->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
+                    $report->getProfDeputyEstimateCosts()->removeElement($profDeputyEstimateCost);
+                    $this->em->remove($profDeputyEstimateCost);
+                }
+
+                $this->em->flush();
+            }
         }
 
         return $this;
@@ -150,6 +169,10 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
 
         if (array_key_exists('prof_deputy_costs_estimate_more_info_details', $data)) {
             $report->setProfDeputyCostsEstimateMoreInfoDetails($data['prof_deputy_costs_estimate_more_info_details']);
+        }
+
+        if ('no' === $report->getProfDeputyCostsEstimateHasMoreInfo()) {
+            $report->setProfDeputyCostsEstimateMoreInfoDetails(null);
         }
 
         return $this;

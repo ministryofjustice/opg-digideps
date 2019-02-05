@@ -6,6 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
@@ -44,6 +45,40 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->ensureSectionStatusCacheWillBeUpdated();
         $this->invokeHandler($data);
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHowCharged', 'new-value');
+    }
+
+    public function testResetsAssessedAnswersWhenFixedCostIsSet()
+    {
+        $data['prof_deputy_costs_estimate_how_charged'] = 'fixed';
+
+        $this->report
+            ->setProfDeputyCostsEstimateHasMoreInfo('yes')
+            ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]));
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->invokeHandler($data);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHowCharged', 'fixed');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', null);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', null);
+        $this->assertTrue($this->report->getProfDeputyEstimateCosts()->isEmpty());
+    }
+
+    public function testPreservesAssessedAnswersWhenAssessedCostIsSet()
+    {
+        $data['prof_deputy_costs_estimate_how_charged'] = 'assessed';
+
+        $this->report
+            ->setProfDeputyCostsEstimateHasMoreInfo('yes')
+            ->setProfDeputyCostsEstimateMoreInfoDetails('more info')
+            ->setProfDeputyEstimateCosts(new ArrayCollection([new ProfDeputyEstimateCost()]));
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->invokeHandler($data);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHowCharged', 'assessed');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', 'yes');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info');
+        $this->assertFalse($this->report->getProfDeputyEstimateCosts()->isEmpty());
     }
 
     /**
@@ -103,6 +138,35 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->invokeHandler($data);
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', 'yes');
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info');
+    }
+
+    public function testRemovesMoreInfoDetailsWhenNoLongerHasMoreInfo()
+    {
+        $data['prof_deputy_costs_estimate_has_more_info'] = 'no';
+
+        $this->report
+            ->setProfDeputyCostsEstimateHasMoreInfo('yes')
+            ->setProfDeputyCostsEstimateMoreInfoDetails('more info');
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->invokeHandler($data);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', 'no');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', null);
+    }
+
+    public function testPreservesMoreInfoDetailsWhenHasMoreInfo()
+    {
+        $data['prof_deputy_costs_estimate_has_more_info'] = 'yes';
+        $data['prof_deputy_costs_estimate_more_info_details'] = 'more info updated';
+
+        $this->report
+            ->setProfDeputyCostsEstimateHasMoreInfo('yes')
+            ->setProfDeputyCostsEstimateMoreInfoDetails('more info');
+
+        $this->ensureSectionStatusCacheWillBeUpdated();
+        $this->invokeHandler($data);
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateHasMoreInfo', 'yes');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info updated');
     }
 
     private function ensureSectionStatusCacheWillBeUpdated()

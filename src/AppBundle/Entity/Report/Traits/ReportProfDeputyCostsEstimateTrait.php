@@ -67,6 +67,17 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
+     * @param ArrayCollection $collection
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyEstimateCosts(ArrayCollection $collection)
+    {
+        $this->profDeputyEstimateCosts = $collection;
+
+        return $this;
+    }
+
+    /**
      * @param ProfDeputyEstimateCost $profDeputyEstimateCost
      * @return $this
      */
@@ -128,6 +139,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged)
     {
         $this->profDeputyCostsEstimateHowCharged = $profDeputyCostsEstimateHowCharged;
+
         return $this;
     }
 
