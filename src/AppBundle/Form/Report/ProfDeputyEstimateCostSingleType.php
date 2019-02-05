@@ -46,7 +46,7 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
                 $validationGroups = ['prof-deputy-estimate-costs'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {
-                    $validationGroups[] = 'prof-deputy-estimate-costs-more-details';
+                    $validationGroups[] = 'prof-deputy-estimate-cost-more-details';
                 }
 
                 return $validationGroups;
