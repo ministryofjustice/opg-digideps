@@ -45,7 +45,7 @@
                     </td>
                     {% if not hideEditLink %}
                         <td class="change-answer width-sixth soft-half--left hard--right">
-                            <a href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
+                            <a href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
                                class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
                         </td>
                     {% endif %}
