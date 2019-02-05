@@ -54,6 +54,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     public function howChargedAction(Request $request, $reportId)
     {
+        $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, ['prof-deputy-costs-estimate-how-charged']);
         $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged();
 
@@ -62,6 +63,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->persistUpdate($reportId, $form->getData(), ['deputyCostsEstimateHowCharged']);
+
+            if ($from === 'summary') {
+                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+            }
 
             return $this->redirectToRoute(
                 $this->determineNextRouteFromHowCharged($request, $form, $currentHowChargedValue),
@@ -180,9 +185,10 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function summaryAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-//        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
-//            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
-//        }
+
+        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == EntityDir\Report\Status::STATE_NOT_STARTED) {
+            return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
+        }
 
         $costBreakdown = Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED === $report->getProfDeputyCostsEstimateHowCharged() ?
             null : $report->generateActualSubmittedEstimateCosts();
