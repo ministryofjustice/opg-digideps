@@ -263,7 +263,54 @@ Feature: Prof deputy costs estimate
     And I should not see "More information"
     And I should not see "More information details"
 
-  # Form validation
-  # Entering a partially completed Assessed Cost route
   # Entering a completed section
-  
+  Scenario: Entering a completed Fixed Cost route takes me to summary
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000019" region
+    And I click on "edit-prof_deputy_costs_estimate"
+    When I click on "start"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | fixed |
+    When I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs_estimate"
+    Then I should be on "/report/12/prof-deputy-costs-estimate/summary"
+
+  Scenario: Entering a completed Assessed Cost route takes me to summary
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000020" region
+    And I click on "edit-prof_deputy_costs_estimate"
+    When I click on "start"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    And I click on "save-and-continue"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0 | no |
+    When I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs_estimate"
+    Then I should be on "/report/13/prof-deputy-costs-estimate/summary"
+
+  # Entering a partially completed section
+  Scenario: Entering a partially completed non Fixed Costs route up to breakdown takes me to breakdown page
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000021" region
+    And I click on "edit-prof_deputy_costs_estimate"
+    When I click on "start"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    And I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs_estimate"
+    Then I should be on "/report/14/prof-deputy-costs-estimate/breakdown"
+
+  Scenario: Entering a partially completed non Fixed Costs route up to more info takes me to more info page
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000022" region
+    And I click on "edit-prof_deputy_costs_estimate"
+    When I click on "start"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    When I click on "save-and-continue"
+    And I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs_estimate"
+    Then I should be on "/report/15/prof-deputy-costs-estimate/more-info"
+
+  # Form validation

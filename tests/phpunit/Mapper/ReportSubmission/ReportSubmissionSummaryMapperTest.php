@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Mapper\ReportSubmission;
+namespace AppBundle\Mapper\ReportSubmission;
 
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;

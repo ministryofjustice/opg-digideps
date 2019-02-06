@@ -35,8 +35,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
-            return $this->redirectToRoute('prof_deputy_costs_estimate_summary', ['reportId' => $reportId]);
+        $state = $report->getStatus()->getProfDeputyCostsEstimateState()['state'];
+
+        $routeResolver = $this->get('resolver.prof_costs_estimate_subsection_route_resolver');
+        if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
+            return $this->redirectToRoute($forwardRoute, ['reportId' => $reportId]);
         }
 
         return [

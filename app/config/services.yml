@@ -1,5 +1,6 @@
 imports:
     - { resource: services/mappers.yml }
+    - { resource: services/resolvers.yml }
     - { resource: services/transformers.yml }
     - { resource: services/twig.yml }
     - { resource: services_mail.yml }
