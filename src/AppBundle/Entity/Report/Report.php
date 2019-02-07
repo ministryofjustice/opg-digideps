@@ -171,9 +171,9 @@ class Report implements ReportInterface
             self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
                 self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ] : [],
-            //self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
+            self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
-            //self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
+            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }
