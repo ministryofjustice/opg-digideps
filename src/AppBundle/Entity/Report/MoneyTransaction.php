@@ -103,7 +103,6 @@ class MoneyTransaction
         ['deputy-security-bond', false, 'fees', 'out'],
         ['opg-fees', false, 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, 'fees', 'out'],
-        ['deputy-fees-and-expenses', true, 'fees', 'out', [User::ROLE_PROF]],
 
         ['investment-bonds-purchased', true, 'major-purchases', 'out'],
         ['investment-account-purchased', true, 'major-purchases', 'out'],
