@@ -19,6 +19,7 @@
             <directory>Form</directory>
             <directory>Mapper</directory>
             <directory>Resources</directory>
+            <directory>Resolver</directory>
             <directory>Service</directory>
             <directory>Transformer</directory>
             <directory>Twig</directory>

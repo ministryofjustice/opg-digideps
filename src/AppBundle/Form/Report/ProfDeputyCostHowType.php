@@ -2,7 +2,6 @@
 
 namespace AppBundle\Form\Report;
 
-use AppBundle\Entity\Report\MoneyShortCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

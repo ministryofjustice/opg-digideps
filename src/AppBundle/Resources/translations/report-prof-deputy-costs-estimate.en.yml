@@ -1,0 +1,67 @@
+startPage:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy costs estimates
+  pageSectionDescription1: |
+    Tell us about the costs that you and other fee earners expect to charge the client during
+    the next reporting period (%nextStartDate% - %nextEndDate%).
+    You must submit this insert to the SCCO at the end of the next reporting period along with
+    your bill of costs. This will help the SCCO understand whether the professional deputy costs
+    charged to the client are reasonable and proportionate to the client’s estate and the work done on their behalf.
+  pageSectionDescription2: |
+    OPG will review your estimate for the next reporting period looking at a number of factors,
+    for example the estimate in relation to the size of the estate and previous costs in the case.
+  startButton: Start
+
+howCharged:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy costs estimates
+  form:
+    profDeputyCostsEstimateHowCharged:
+      label: "How will you be charging for your services?"
+    options:
+      fixed: Fixed costs
+      assessed: Assessed costs
+      both: Both
+
+breakdown:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy cost estimates
+  pageSectionDescription: Give us a breakdown of what you and other fee earners expect to charge %client% during the next reporting period
+  pageHint: ""
+  form:
+    entries:
+      contact-client:
+        label: Contact with the client, their family and friends
+      contact-case-manager-carers:
+        label: Contact with case managers and care providers
+      contact-others:
+        label: Contact with other parties
+      forms-documents:
+        label: Work on forms and other documents
+      other:
+        label: Other
+        moreInformation: Details of 'other'
+        moreInformationLabelSummary: Details of other costs
+
+moreInfo:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle: Deputy cost estimates
+  pageHeader: More Information
+  form:
+    profDeputyCostsEstimateHasMoreInfo:
+      label: "Do you have any information that will help explain your estimated costs for the next reporting period?"
+    profDeputyCostsEstimateMoreInfoDetails:
+      label: "Details"
+    profDeputyCostsEstimateHasMoreInfoSummary:
+      yesno: "More information"
+      details: "More information details"
+
+summaryPage:
+  htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
+  pageTitle:  Deputy costs estimates
+  returnToClientProfile: Return to client profile
+  weveListedYourAnswers: We've listed your saved answers below
+  checkTheyreCorrect: Check they're correct and edit them where necessary.
+  totalEstimatedCosts: Total estimated costs
+
+

@@ -1,0 +1,49 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs-estimate" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'moreInfo' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <h3 class="heading-small push-half--bottom">
+        {{ (page ~ '.form.profDeputyCostsEstimateHasMoreInfo.label') | trans }}
+    </h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+
+        <div class="form-group push--bottom {% if not form.profDeputyCostsEstimateHasMoreInfo.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.profDeputyCostsEstimateHasMoreInfo, 'form.profDeputyCostsEstimateHasMoreInfo', {
+                'useFormGroup': false,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold',
+                'items': [
+                    {'dataTarget': 'more-info-textarea' }
+                ]
+            }) }}
+
+            <div id="more-info-textarea" class="panel panel-border-narrow js-hidden">
+                {{ form_input(form.profDeputyCostsEstimateMoreInfoDetails, 'moreInfo.form.profDeputyCostsEstimateMoreInfoDetails') }}
+            </div>
+        </div>
+
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
