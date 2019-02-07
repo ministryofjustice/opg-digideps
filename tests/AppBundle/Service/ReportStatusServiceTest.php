@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Action;
 use AppBundle\Entity\Report\Debt;
 use AppBundle\Entity\Report\Document;
@@ -14,6 +15,9 @@ use Mockery as m;
 
 class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Report | \PHPUnit_Framework_MockObject_MockObject */
+    private $report;
+
     /**
      * @return Report mock
      */
@@ -462,6 +466,103 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
         $object = new StatusService($report);
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
+    }
+
+    /**
+     * @test
+     * @dataProvider getProfDeputyCostsEstimateStateVariations
+     * @param $howCharged
+     * @param $hasMoreInfo
+     * @param $expectedStatus
+     */
+    public function getProfDeputyCostsEstimateStateReturnsCurrentState($howCharged, $hasMoreInfo, $expectedStatus)
+    {
+        $this
+            ->initReport()
+            ->setProfDeputyCostsEstimateHowCharged($howCharged)
+            ->setProfDeputyCostsEstimateHasMoreInfo($hasMoreInfo);
+
+        $sut = new StatusService($this->report);
+        $this->assertEquals($expectedStatus, $sut->getProfDeputyCostsEstimateState()['state']);
+    }
+
+    /**
+     * @return array
+     */
+    public function getProfDeputyCostsEstimateStateVariations()
+    {
+        return [
+            [
+                'howCharged' => null,
+                'hasMoreInfo' => null,
+                'expectedStatus' => ReportStatusService::STATE_NOT_STARTED
+            ],
+            [
+                'howCharged' => 'fixed',
+                'hasMoreInfo' => null,
+                'expectedStatus' => ReportStatusService::STATE_DONE
+            ],
+            [
+                'howCharged' => 'assessed',
+                'hasMoreInfo' => null,
+                'expectedStatus' => ReportStatusService::STATE_INCOMPLETE
+            ],
+            [
+                'howCharged' => 'both',
+                'hasMoreInfo' => null,
+                'expectedStatus' => ReportStatusService::STATE_INCOMPLETE
+            ],
+            [
+                'howCharged' => 'assessed',
+                'hasMoreInfo' => 'yes',
+                'expectedStatus' => ReportStatusService::STATE_DONE
+            ],
+            [
+                'howCharged' => 'both',
+                'hasMoreInfo' => 'yes',
+                'expectedStatus' => ReportStatusService::STATE_DONE
+            ]
+        ];
+    }
+
+    /**
+     * @return $this
+     */
+    private function initReport()
+    {
+        $this->report = $this->getMockBuilder(Report::class)
+            ->setConstructorArgs([new Client, Report::TYPE_102, new \DateTime, new \DateTime])
+            ->setMethods(['hasSection'])
+            ->getMock();
+
+        $this->report
+            ->method('hasSection')
+            ->with(Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE)
+            ->willReturn(true);
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    private function setProfDeputyCostsEstimateHowCharged($value)
+    {
+        $this->report->setProfDeputyCostsEstimateHowCharged($value);
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    private function setProfDeputyCostsEstimateHasMoreInfo($value)
+    {
+        $this->report->setProfDeputyCostsEstimateHasMoreInfo($value);
+
+        return $this;
     }
 
     public function giftsProvider()

@@ -444,10 +444,26 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        // TODO replace with real logic when implemented
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        if (null == $this->report->getProfDeputyCostsEstimateHowCharged()) {
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
 
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        if (Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED === $this->report->getProfDeputyCostsEstimateHowCharged()) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        return (null == $this->report->getProfDeputyCostsEstimateHasMoreInfo()) ?
+            ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0] :
+            ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+    }
+
+    private function profDeputyCostEstimateIsAssessedOrBoth()
+    {
+        $howCharged = $this->report->getProfDeputyCostsEstimateHowCharged();
+
+        return
+            Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_ASSESSED === $howCharged ||
+            Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_BOTH === $howCharged;
     }
 
     /**

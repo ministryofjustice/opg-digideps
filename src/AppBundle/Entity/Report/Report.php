@@ -41,6 +41,7 @@ class Report implements ReportInterface
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
     use ReportTraits\ReportProfDeputyCostsTrait;
+    use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\StatusTrait;
 
     /**
@@ -116,6 +117,10 @@ class Report implements ReportInterface
     const SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
 
     const SECTION_DOCUMENTS = 'documents';
+
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_BOTH = 'both';
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
@@ -488,6 +493,7 @@ class Report implements ReportInterface
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
+        $this->profDeputyEstimateCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];

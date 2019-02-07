@@ -1,3 +1,7 @@
+imports:
+    - { resource: services/controllers.yml }
+    - { resource: services/rest_handlers.yml }
+
 services:
     kernel.listener.responseConverter:
         class: AppBundle\EventListener\RestInputOuputFormatter
