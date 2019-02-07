@@ -194,18 +194,18 @@
                             } %}
                         {% endif %}
 
-                        {#{% if report.hasSection('profDeputyCostsEstimate') %}#}
-                            {#{% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {#}
-                                {#transDomain: translationDomain,#}
-                                {#subSection: 'prof_deputy_costs_estimate',#}
-                                {#sectionId: 'profDeputyCostsEstimate',#}
-                                {#linkToSubSection: path('prof_deputy_costs_estimate', {reportId: report.id}),#}
-                                {#report: report,#}
-                                {#info: true,#}
-                                {#description: true,#}
-                                {#state: reportStatus.profDeputyCostsEstimateState,#}
-                            {#} %}#}
-                        {#{% endif %}#}
+                        {% if report.hasSection('profDeputyCostsEstimate') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'prof_deputy_costs_estimate',
+                                sectionId: 'profDeputyCostsEstimate',
+                                linkToSubSection: path('prof_deputy_costs_estimate', {reportId: report.id}),
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.profDeputyCostsEstimateState,
+                            } %}
+                        {% endif %}
 
                     </ul>
                 </div>
