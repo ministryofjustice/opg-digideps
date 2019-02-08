@@ -32,14 +32,16 @@ class ProfDeputyCostsController extends AbstractController
      * @Template()
      *
      * @param int $reportId
-     *
-     * @return array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function startAction($reportId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ($report->getStatus()->getProfDeputyCostsState()['state'] != EntityDir\Report\Status::STATE_NOT_STARTED) {
-            return $this->redirectToRoute('prof_deputy_costs_summary', ['reportId' => $reportId]);
+        $state = $report->getStatus()->getProfDeputyCostsState()['state'];
+        $routeResolver = $this->get('resolver.prof_costs_subsection_route_resolver');
+
+        if (null !== ($forwardRoute = $routeResolver->resolve($report, $state))) {
+            return $this->redirectToRoute($forwardRoute, ['reportId' => $reportId]);
         }
 
         return [
