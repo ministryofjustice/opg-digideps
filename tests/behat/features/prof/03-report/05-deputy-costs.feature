@@ -131,26 +131,7 @@ Feature: PROF deputy costs
       | £475.50                              | total-cost              |
     And I should not see the "fixed-cost-amount" region
 
-  # Entering a completed section
-  Scenario: Entering a completed Fixed Cost route takes me to summary
-    Given I load the application status from "pre-deputy-costs"
-    And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
-    And I click on "edit-prof_deputy_costs, start"
-    And the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedFixed | 1 |
-    And the step with the following values CAN be submitted:
-      | yes_no_profDeputyCostsHasPrevious_1 | no |
-    And the step with the following values CAN be submitted:
-      | deputy_costs_received_profDeputyFixedCost | 1000 |
-    And the step with the following values CAN be submitted:
-      | deputy_costs_scco_profDeputyCostsAmountToScco | 0 |
-    And I click on "save-and-continue"
-    When I click on "breadcrumbs-report-overview"
-    And I click on "edit-prof_deputy_costs"
-    Then the url should match "/report/\d+/prof-deputy-costs/summary"
-
-  # Entering a partially completed section
+  # Entering the section at the correct subsection
   Scenario: Entering partially completed sections with Fixed costs
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"

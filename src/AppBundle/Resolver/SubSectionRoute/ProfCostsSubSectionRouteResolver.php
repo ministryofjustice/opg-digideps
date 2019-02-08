@@ -92,6 +92,27 @@ class ProfCostsSubSectionRouteResolver
 
     /**
      * @param Report $report
+     * @return string
+     */
+    private function determineCurrentNonFixedCostSection(Report $report)
+    {
+        if ($this->interimExistsSubsectionIsIncomplete($report)) {
+            return self::INTERIM_EXISTS_ROUTE;
+        }
+
+        if ($this->interimExists($report) && $this->interimSubsectionIsIncomplete($report)) {
+            return self::INTERIM_ROUTE;
+        }
+
+        if (!$this->interimExists($report) && $this->fixedCostsSubsectionIsIncomplete($report)) {
+            return self::COSTS_RECEIVED_ROUTE;
+        }
+
+        return $this->amountSccoSubsectionIsIncomplete($report) ? self::SCCO_AMOUNT_ROUTE : self::SUMMARY_ROUTE;
+    }
+
+    /**
+     * @param Report $report
      * @return bool
      */
     private function fixedCostsSubsectionIsIncomplete(Report $report)
@@ -106,23 +127,6 @@ class ProfCostsSubSectionRouteResolver
     private function amountSccoSubsectionIsIncomplete(Report $report)
     {
         return !$report->getProfDeputyCostsAmountToScco();
-    }
-
-    /**
-     * @param Report $report
-     * @return string
-     */
-    private function determineCurrentNonFixedCostSection(Report $report)
-    {
-        if ($this->interimExistsSubsectionIsIncomplete($report)) {
-            return self::INTERIM_EXISTS_ROUTE;
-        }
-
-        if ($this->interimExists($report) && $this->interimSubsectionIsIncomplete($report)) {
-            return self::INTERIM_ROUTE;
-        }
-
-        return $this->determineCurrentFixedCostSection($report);
     }
 
     /**
