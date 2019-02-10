@@ -18,16 +18,20 @@ Feature: PROF deputy costs
       | deputy_costs_scco_profDeputyCostsAmountToScco         | 100         |
       | deputy_costs_scco_profDeputyCostsReasonBeyondEstimate | scco reason |
     # other costs breakdown
-    And I click on "save-and-continue"
+    Then the step with the following values CANNOT be submitted:
+      | deputy_other_costs_profDeputyOtherCosts_6_amount      | 30.03 |
+      | deputy_other_costs_profDeputyOtherCosts_6_moreDetails |       |
+    When the step with the following values CAN be submitted:
+      | deputy_other_costs_profDeputyOtherCosts_6_amount      | 30.03 |
+      | deputy_other_costs_profDeputyOtherCosts_6_moreDetails | info  |
     #check summary
-    And each text should be present in the corresponding region:
+    Then each text should be present in the corresponding region:
       | Fixed       | how-changed            |
       | No          | has-previous           |
       | 1,000.00    | fixed-cost-amount      |
-      | 1,000       | total-cost             |
+      | 1,030.03    | total-cost             |
       | £100.00     | scco-assessment-amount |
       | scco reason | scco-assessment-reason |
-
 
   Scenario: all ticked, no previous, no interim, empty breakdown
     Given I load the application status from "pre-deputy-costs"

@@ -4,7 +4,11 @@ namespace AppBundle\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(callback="moreDetailsValidate", groups={"prof-deputy-other-costs"})
+ */
 class ProfDeputyOtherCost
 {
     /**
@@ -34,8 +38,6 @@ class ProfDeputyOtherCost
      * @var string
      * @JMS\Groups({"prof-deputy-other-costs"})
      * @JMS\Type("string")
-     *
-     * @Assert\NotBlank(message="profDeputyOtherCost.moreDetails.notEmpty", groups={"prof-deputy-other-cost-more-details"})
      */
     private $moreDetails;
 
@@ -117,5 +119,21 @@ class ProfDeputyOtherCost
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
+    }
+
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function moreDetailsValidate(ExecutionContextInterface $context)
+    {
+        if (!$this->getHasMoreDetails()) {
+            return;
+        }
+
+        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
+
+        if ($this->getAmount() && !$hasMoreDetails) {
+            $context->buildViolation('profDeputyOtherCost.moreDetails.notBlank')->atPath('moreDetails')->addViolation();
+        }
     }
 }
