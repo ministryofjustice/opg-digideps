@@ -112,6 +112,10 @@
             {% include 'AppBundle:Report/Formatted:_prof_deputy_costs.html.twig' %}
         {% endif %}
 
+        {% if report.hasSection('profDeputyCostsEstimate') %}
+            {% include 'AppBundle:Report/Formatted:_prof_deputy_costs_estimate.html.twig' %}
+        {% endif %}        
+
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
 
         {% if report.hasSection('balance') %}

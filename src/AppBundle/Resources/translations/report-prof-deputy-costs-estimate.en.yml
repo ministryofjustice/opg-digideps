@@ -21,7 +21,7 @@ howCharged:
     options:
       fixed: Fixed costs
       assessed: Assessed costs
-      both: Both
+      both: Both fixed and assessed costs
 
 breakdown:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
@@ -56,6 +56,8 @@ moreInfo:
       yesno: "More information"
       details: "More information details"
 
+totalEstimatedCosts: Total estimated costs
+
 summaryPage:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle:  Deputy costs estimates
@@ -67,5 +69,3 @@ summaryPage:
     <br><br>
     Please note: the SCCO may still query the information you've provided in their assessment of your costs.
   totalEstimatedCosts: Total estimated costs
-
-

@@ -1,0 +1,76 @@
+{% set translationDomain = "report-prof-deputy-costs-estimate" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+<div class="section break-before" id="prof-deputy-costs-estimate-section">
+    <h2 class="section-heading">{{ 'startPage.pageTitle'|trans }}</h2>
+    <div class="dont-break">
+        <div class="box" data-prof-deputy-costs-how-charged>
+            <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label'|trans }}</h3>
+            <div class="value">
+                {{ ('howCharged.form.options.' ~
+                report.profDeputyCostsEstimateHowCharged) | trans }}
+            </div>
+        </div>
+    </div>
+
+    {% if report.profDeputyCostsEstimateHowCharged != 'fixed' %}
+    <div class="dont-break">
+        <div class="box" data-prof-deputy-costs-breakdown>
+            <h3 class="label question bold">{{ 'breakdown.pageSectionDescription'|trans(transOptions) }}</h3>
+            <table class="labelvalue money">
+            {% for costRow in report.profDeputyEstimateCosts %}
+                <tr>
+                    <td class="label">
+                        {{ ('breakdown.form.entries.' ~ costRow.
+                        profDeputyEstimateCostTypeId ~ '.label') | trans }}
+                    </td>
+                    <td class="value total width-fifth">
+                        £{{ costRow.amount | money_format }}
+                    </td>
+                </tr>
+                {% if costRow.hasMoreDetails and costRow.moreDetails %}
+                <tr>
+                    <td class="label" data-prof-deputy-cost-estimtaes-breakdown-more-details>
+                        {{ ('breakdown.form.entries.' ~ costRow.
+                        profDeputyEstimateCostTypeId ~ 
+                        '.moreInformationLabelSummary') | trans }}</td>
+                    <td class="value total width-half">
+                        {{ costRow.moreDetails | nl2br }}
+                    </td>
+                </tr>
+                {% endif %}
+
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="dont-break">
+        <div class="box" data-prof-deputy-costs-total>
+            <h3 class="label question bold">{{ ('totalEstimatedCosts') | trans }}</h3>
+            <div class="value">
+                £{{ report.profDeputyEstimateCostsTotal | money_format }}
+            </div>
+        </div>
+    </div>    
+
+    <div class="dont-break">
+        <div class="box" data-prof-deputy-costs-estimate-has-more-info>
+            <h3 class="label question bold">{{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.yesno'|trans }}</h3>
+            <table class="checkboxes labelvalue inline">
+                <tr>                
+                    <td class="value checkbox">{% if report.profDeputyCostsEstimateHasMoreInfo == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common') }}</td>
+                    <td class="value checkbox">{% if report.profDeputyCostsEstimateHasMoreInfo == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common') }}</td>
+                </tr>
+            </table>
+            {% if report.profDeputyCostsEstimateHasMoreInfo == 'yes' %}
+            <div class="labelvalue push-half--top">
+                <div class="value">{{ report.profDeputyCostsEstimateMoreInfoDetails | capitalize | trans }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
