@@ -19,7 +19,7 @@
                     {{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label' | trans(transOptions) }}
                 </td>
                 <td>
-                    {{ howCharged(report.profDeputyCostsEstimateHowCharged) }}
+                    {{ ('howCharged.form.options.' ~  report.profDeputyCostsEstimateHowCharged) | trans }}
                 </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">

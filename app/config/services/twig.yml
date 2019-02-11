@@ -19,10 +19,3 @@ services:
         arguments: [  "%kernel.root_dir%" ]
         tags:
             - { name: twig.extension }
-
-    twig.prof_deputy_costs_estimate_how_charged:
-        class: AppBundle\Twig\ProfDeputyCostsEstimateHowChargedExtension
-        public: false
-        arguments: ['@translator']
-        tags:
-            - { name: twig.extension }
