@@ -20,14 +20,12 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
             ->add('amount', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
-                'error_bubbling' => false, // keep (and show) the error (Default behaviour). if true, error is lost
+                'error_bubbling' => false,
                 'invalid_message' => 'profDeputyEstimateCost.amount.notNumeric',
             ]);
 
-        // add textarea to debts that has more details flag set to true
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $profDeputyEstimateCost = $event->getData();
-            /* @var $profDeputyEstimateCost ProfDeputyEstimateCost */
             $form = $event->getForm();
 
             if ($profDeputyEstimateCost->getHasMoreDetails()) {
@@ -40,17 +38,7 @@ class ProfDeputyEstimateCostSingleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => ProfDeputyEstimateCost::class,
-            'validation_groups' => function (FormInterface $form) {
-                $data = $form->getData();
-                /* @var $data \AppBundle\Entity\Report\ProfDeputyEstimateCost */
-                $validationGroups = ['prof-deputy-estimate-costs'];
-
-                if ($data->getAmount() && $data->getHasMoreDetails()) {
-                    $validationGroups[] = 'prof-deputy-estimate-cost-more-details';
-                }
-
-                return $validationGroups;
-            },
+            'validation_groups' => ['prof-deputy-estimate-costs'],
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }

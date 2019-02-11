@@ -91,11 +91,12 @@ Feature: Prof deputy costs estimate
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
-      | deputy_estimate_costs_profDeputyEstimateCosts_0_amount | 10.01 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_1_amount | 20.02 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_2_amount | 30.03 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_3_amount | 40.04 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount | 50.05 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_0_amount      | 10.01 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_1_amount      | 20.02 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_2_amount      | 30.03 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_3_amount      | 40.04 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 50.05 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes        |
@@ -175,7 +176,8 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-other"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount | 50.05 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 50.05 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "Answer edited"
     And I should see "£150.15" in the "total-estimate-cost" region
@@ -314,3 +316,21 @@ Feature: Prof deputy costs estimate
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
 
   # Form validation
+  Scenario: Submitting form with missing data
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "pa-report-open" in the "client-01000023" region
+    And I click on "edit-prof_deputy_costs_estimate"
+    When I click on "start"
+    Then the step cannot be submitted without making a selection
+    When the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    Then the step with the following values CANNOT be submitted:
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
+    When the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
+    Then the step cannot be submitted without making a selection
+    And the step with the following values CANNOT be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes |
+      | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |     |
