@@ -62,6 +62,10 @@ summaryPage:
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
   checkTheyreCorrect: Check they're correct and edit them where necessary.
+  informationMessage: |
+    If your bill of costs is 20% or more above the amount you’ve given here, you will need to give an explanation to the SCCO when you submit your bill to them at the end of the next reporting period.
+    <br><br>
+    Please note: the SCCO may still query the information you've provided in their assessment of your costs.
   totalEstimatedCosts: Total estimated costs
 
 
