@@ -89,22 +89,17 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                $this->log('---------------------------------------------------------------');
-                $this->log('PROCESSING csv DEPUTY');
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
                 if ($userOrgNamed instanceof EntityDir\User) {
-                    $this->log('NAMED deputy IDENTIFIED in database with id: ' . $userOrgNamed->getId() . ' with ROLE ' . $userOrgNamed->getRoleName());
 
-                    $this->log('PROCESSING csv CLIENT');
                     $client = $this->upsertClientFromCsv($row, $userOrgNamed);
                     if ($client instanceof EntityDir\Client) {
-                        $this->log('PROCESSING csv REPORT');
                         $this->upsertReportFromCsv($row, $client, $userOrgNamed);
                     } else {
-                        $this->log('Client could not be identified or created');
+                        throw new \RuntimeException('Client could not be identified or created');
                     }
                 } else {
-                    $this->log('Deputy could not be identified or created');
+                    throw new \RuntimeException('Named deputy could not be identified or created');
                 }
 
             } catch (\Exception $e) {
@@ -134,30 +129,21 @@ class OrgService
     {
         $depType = $csvRow['Dep Type'];
 
-        $userEmail = strtolower($csvRow['Email']);
+        $csvEmail = strtolower($csvRow['Email']);
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
-        $this->log('Checking row contains valid deputy := deputy no: ' . $deputyNo . ', dep type: ' . $depType . ' with email ' . $userEmail);
+        $this->log('Processing row:  deputy := deputy no: ' . $deputyNo . ', dep type: ' . $depType . ' with email ' . $csvEmail);
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
 
-        $this->log('Querying database for deputyNo ' . $deputyNo . ' and role ' . $roleName);
         $user = $this->userRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
         ]);
-        if ($user instanceof EntityDir\User) {
-            $this->log('Found deputy in database with id: ' . $user->getId() . ', Dep type: ' . $depType . ', Dep No: ' . $user->getDeputyNo() . ', with role ' . $user->getRoleName());
-        } else {
-            $this->log('Could not match deputy in database');
-        }
 
         // Notify email change
-        $this->log('Checking deputy email address matches CSV');
-        if ($user && $user->getEmail() !== $userEmail) {
-            $this->log('Checking deputy email address matches...');
-            $this->log('Email mismatch: CSV: ' . $userEmail . 'Database: ' . $user->getEmail());
+        if ($user && $user->getEmail() !== $csvEmail) {
             $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
                 ' has changed their email to ' . $user->getEmail() . '. ' .
                 'Please update the CSV to reflect the new email address.<br />';
@@ -165,18 +151,16 @@ class OrgService
 
         // create user if not existing
         if (!$user) {
-            $this->log('Creating deputy');
             // check for duplicate email address
-            $this->log('Checking deputy email address doesn\'t already exist...');
 
-            $userWithSameEmail = $this->userRepository->findOneBy(['email' => $userEmail]);
+            $userWithSameEmail = $this->userRepository->findOneBy(['email' => $csvEmail]);
             if ($userWithSameEmail) {
                 $this->log('Deputy email address already exists ');
                 $this->warnings[] = 'Deputy ' . $deputyNo .
-                    ' cannot be added with email ' . $userEmail .
+                    ' cannot be added with email ' . $csvEmail .
                     '. Email already taken by Deputy No: ' . $userWithSameEmail->getDeputyNo();
             } else {
-                $this->log('Email address checks OK, setting up new deputy');
+                $this->log('Creating new deputy ' . $deputyNo);
 
                 $user = new EntityDir\User();
                 $user
@@ -209,9 +193,7 @@ class OrgService
 
         // update user address, if not set
         // the following could be moved to line 154 if no update is needed (DDPB-2262)
-        $this->log('Checking for deputy address change');
         if ($user instanceof EntityDir\User && (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1())) {
-            $this->log('Updating deputy address');
             $user
                 ->setAddress1($csvRow['Dep Adrs1'])
                 ->setAddress2($csvRow['Dep Adrs2'])
@@ -251,7 +233,6 @@ class OrgService
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
 
-        $this->log('Querying database for client with case number ' . $caseNumber);
         /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
 
@@ -259,7 +240,6 @@ class OrgService
             $this->log('FOUND client in database with id: ' . $client->getId());
             $client->setUsers(new ArrayCollection());
         } else {
-            $this->log('Client not found in database');
             $this->log('Creating client');
             $client = new EntityDir\Client();
             $client
@@ -307,7 +287,6 @@ class OrgService
         $client->setNamedDeputy($userOrgNamed);
 
         // Add client to named user (will be done later anyway)
-//        $userOrgNamed->addClient($client);
         $client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
@@ -315,7 +294,6 @@ class OrgService
 
         $teams = $userOrgNamed->getTeams();
         $depCount = 0;
-        $this->log('Assigning named deputy teams to client');
         foreach ($teams as $team) {
             $members = $team->getMembers();
             foreach ($members as $member) {
@@ -349,28 +327,22 @@ class OrgService
             throw new \RuntimeException("Cannot parse date {$csvRow['Last Report Day']}");
         }
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
-        $this->log('CSV report type indicates type should be ' . $reportType);
-        $this->log('Searching for clients report by end date (?) ' . $reportEndDate->format('d/m/Y'));
         $report = $client->getReportByEndDate($reportEndDate);
 
         // already existing, just change type
         if ($report) {
-            $this->log('FOUND report with id: ' . $report->getId());
-            $this->log('Checking current report type: ' . $report->getType() . ' still matches CSV type: ' . $reportType);
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
                 $this->log('Changing report type from ' . $report->getType() . ' to ' . $reportType);
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
-            } else {
-                $this->log('Report type unchanged from ' . $report->getType());
             }
 
             return $report;
         }
 
-        $this->log('Creating report');
+        $this->log('Creating new report');
         $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
         $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
         $client->addReport($report);   //double link for testing reasons
