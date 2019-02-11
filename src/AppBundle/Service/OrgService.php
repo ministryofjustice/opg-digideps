@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -33,6 +34,8 @@ class OrgService
      * @var array
      */
     protected $warnings = [];
+
+    private $debug = false;
 
     /**
      * @param EntityManager   $em
@@ -87,8 +90,18 @@ class OrgService
             $row = array_map('trim', $row);
             try {
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
-                $client = $this->upsertClientFromCsv($row, $userOrgNamed);
-                $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+                if ($userOrgNamed instanceof EntityDir\User) {
+
+                    $client = $this->upsertClientFromCsv($row, $userOrgNamed);
+                    if ($client instanceof EntityDir\Client) {
+                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+                    } else {
+                        throw new \RuntimeException('Client could not be identified or created');
+                    }
+                } else {
+                    throw new \RuntimeException('Named deputy could not be identified or created');
+                }
+
             } catch (\Exception $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
@@ -115,19 +128,22 @@ class OrgService
     private function upsertOrgNamedUserFromCsv(array $csvRow)
     {
         $depType = $csvRow['Dep Type'];
-        $userEmail = strtolower($csvRow['Email']);
+
+        $csvEmail = strtolower($csvRow['Email']);
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
+        $this->log('Processing row:  deputy := deputy no: ' . $deputyNo . ', dep type: ' . $depType . ' with email ' . $csvEmail);
         if (!isset(EntityDir\User::$depTypeIdToUserRole[$depType])) {
             throw new \RuntimeException('Dep Type not recognised');
         }
         $roleName = EntityDir\User::$depTypeIdToUserRole[$depType];
+
         $user = $this->userRepository->findOneBy([
             'deputyNo' => $deputyNo,
             'roleName' => $roleName
         ]);
 
         // Notify email change
-        if ($user && $user->getEmail() !== $userEmail) {
+        if ($user && $user->getEmail() !== $csvEmail) {
             $this->warnings[$user->getDeputyNo()] = 'Deputy ' . $user->getDeputyNo() .
                 ' has changed their email to ' . $user->getEmail() . '. ' .
                 'Please update the CSV to reflect the new email address.<br />';
@@ -135,14 +151,17 @@ class OrgService
 
         // create user if not existing
         if (!$user) {
-            $this->log('Creating user');
             // check for duplicate email address
-            $userWithSameEmail = $this->userRepository->findOneBy(['email' => $userEmail]);
+
+            $userWithSameEmail = $this->userRepository->findOneBy(['email' => $csvEmail]);
             if ($userWithSameEmail) {
+                $this->log('Deputy email address already exists ');
                 $this->warnings[] = 'Deputy ' . $deputyNo .
-                    ' cannot be added with email ' . $userEmail .
+                    ' cannot be added with email ' . $csvEmail .
                     '. Email already taken by Deputy No: ' . $userWithSameEmail->getDeputyNo();
             } else {
+                $this->log('Creating new deputy ' . $deputyNo);
+
                 $user = new EntityDir\User();
                 $user
                     ->setRegistrationDate(new \DateTime())
@@ -154,6 +173,8 @@ class OrgService
 
                 // create team (if not already existing)
                 if ($user->getTeams()->isEmpty()) {
+                    $this->log('Creating new team: ' . $csvRow['Dep Surname']);
+
                     // Dep Surname in the CSV is actually the PA team name
                     $team = new EntityDir\Team($csvRow['Dep Surname']);
                     $user->addTeam($team);
@@ -172,7 +193,7 @@ class OrgService
 
         // update user address, if not set
         // the following could be moved to line 154 if no update is needed (DDPB-2262)
-        if (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1()) {
+        if ($user instanceof EntityDir\User && (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1())) {
             $user
                 ->setAddress1($csvRow['Dep Adrs1'])
                 ->setAddress2($csvRow['Dep Adrs2'])
@@ -185,7 +206,7 @@ class OrgService
         // update team name, if not set
         // can be removed if there is not need to update PA names after DDPB-1718
         // is released and one PA CSV upload is done
-        if ($user->getTeams()->count()
+        if ($user instanceof EntityDir\User && $user->getTeams()->count()
             && ($team = $user->getTeams()->first())
             && $team->getTeamName() != $csvRow['Dep Surname']
         ) {
@@ -193,9 +214,10 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
-
-        $this->em->persist($user);
-        $this->em->flush($user);
+        if ($user instanceof EntityDir\User) {
+            $this->em->persist($user);
+            $this->em->flush($user);
+        }
 
         return $user;
     }
@@ -210,11 +232,13 @@ class OrgService
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+
+        /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
+
         if ($client) {
-            foreach ($client->getUsers() as $cu) {
-                $client->getUsers()->removeElement($cu);
-            }
+            $this->log('FOUND client in database with id: ' . $client->getId());
+            $client->setUsers(new ArrayCollection());
         } else {
             $this->log('Creating client');
             $client = new EntityDir\Client();
@@ -257,20 +281,29 @@ class OrgService
             }
 
             $this->added['clients'][] = $client->getCaseNumber();
-            $this->em->persist($client);
+
         }
+        $this->log('Setting named deputy on client to deputy id:' . $userOrgNamed->getId());
         $client->setNamedDeputy($userOrgNamed);
 
         // Add client to named user (will be done later anyway)
-        $userOrgNamed->addClient($client);
+        $client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
-        foreach ($userOrgNamed->getTeams() as $team) {
-            foreach ($team->getMembers() as $member) {
-                $member->addClient($client);
+
+        $teams = $userOrgNamed->getTeams();
+        $depCount = 0;
+        foreach ($teams as $team) {
+            $members = $team->getMembers();
+            foreach ($members as $member) {
+                $client->addUser($member);
+                $depCount++;
             }
         }
+        $this->log('Assigned ' . $depCount . ' additional deputies to client');
+
+        $this->em->persist($client);
 
         $this->em->flush();
 
@@ -300,7 +333,7 @@ class OrgService
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                $this->log('Changing report type');
+                $this->log('Changing report type from ' . $report->getType() . ' to ' . $reportType);
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
@@ -309,14 +342,14 @@ class OrgService
             return $report;
         }
 
-        $this->log('Creating report');
+        $this->log('Creating new report');
         $reportStartDate = ReportUtils::generateReportStartDateFromEndDate($reportEndDate);
         $report = new EntityDir\Report\Report($client, $reportType, $reportStartDate, $reportEndDate, true);
         $client->addReport($report);   //double link for testing reasons
         $this->added['reports'][] = $client->getCaseNumber() . '-' . $reportEndDate->format('Y-m-d');
         $this->em->persist($report);
         $this->em->flush();
-
+        $this->em->clear();
         return $report;
     }
 
@@ -406,6 +439,8 @@ class OrgService
      */
     private function log($message)
     {
-        $this->logger->debug(__CLASS__ . ':' . $message);
+        if ($this->debug) {
+            $this->logger->warning(__CLASS__ . ':' . $message);
+        }
     }
 }
