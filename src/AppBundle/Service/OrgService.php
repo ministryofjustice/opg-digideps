@@ -373,26 +373,34 @@ class OrgService
     }
 
     /**
-     * Adds a new Org user and
-     * - Sets the team name for the current logged user (using `pa_team_name` from the $data)
-     * - Add this new user to the logged user's team
-     * - Copy clients from logged in user into the this new user
-     * Needs a flush at the end
-     *
-     * @param User $loggedInUser
-     * @param User $userToAdd
-     * @param $data
+     * @param EntityDir\User $userWithTeams
+     * @param EntityDir\User $userBeingAdded
      */
-    public function copyTeamAndClientsFrom(EntityDir\User $loggedInUser, EntityDir\User $userToAdd)
+    public function addUserToUsersTeams(EntityDir\User $userWithTeams, EntityDir\User $userBeingAdded)
     {
-        // add to creator's teams
-        foreach ($loggedInUser->getTeams() as $team) {
-            $userToAdd->addTeam($team);
-        }
+        $teamIds = $this->em->getRepository('AppBundle\Entity\Team')->findAllTeamIdsByUser($userWithTeams);
 
-        // copy clients from logged user into this new user
-        foreach ($loggedInUser->getClients() as $client) {
-            $userToAdd->addClient($client);
+        foreach ($teamIds as $teamId) {
+            $this
+                ->em
+                ->getRepository('AppBundle\Entity\Client')
+                ->saveUserToTeam($userBeingAdded, $teamId);
+        }
+    }
+
+    /**
+     * @param EntityDir\User $userWithClients
+     * @param EntityDir\User $userBeingAdded
+     */
+    public function addUserToUsersClients(EntityDir\User $userWithClients, EntityDir\User $userBeingAdded)
+    {
+        $clientIds = $this->em->getRepository('AppBundle\Entity\Client')->findAllClientIdsByUser($userWithClients);
+
+        foreach ($clientIds as $clientId) {
+            $this
+                ->em
+                ->getRepository('AppBundle\Entity\Client')
+                ->saveUserToClient($userBeingAdded, $clientId);
         }
     }
 

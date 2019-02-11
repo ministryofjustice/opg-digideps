@@ -54,16 +54,16 @@ class UserService
             $this->getTeams()->first()->setTeamName($data['pa_team_name']);
         }
 
-        if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
-            $this->orgService->copyTeamAndClientsFrom($loggedInUser, $userToAdd);
-        }
-
         $userToAdd->setRegistrationDate(new \DateTime());
-
         $userToAdd->recreateRegistrationToken();
-
         $this->em->persist($userToAdd);
         $this->em->flush();
+
+        $this->orgService->addUserToUsersClients($loggedInUser, $userToAdd);
+
+        if ($loggedInUser->isOrgNamedOrAdmin() && $userToAdd->isDeputyOrg()) {
+            $this->orgService->addUserToUsersTeams($loggedInUser, $userToAdd);
+        }
     }
 
     /**
