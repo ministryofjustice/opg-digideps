@@ -17,11 +17,7 @@
             <tr>
                 <td>Money out:</td>
                 <td class="grey numeric">
-                    {% if report.hasSection('profDeputyCosts') %}
-                        &pound;{{ (report.moneyOutTotal + report.profDeputyTotalCosts) | money_format}}
-                    {% else %}
-                        &pound;{{ report.moneyOutTotal | money_format}}
-                    {% endif %}
+                    &pound;{{ report.moneyOutTotal | money_format}}
                 </td>
             </tr>
             {% if not app.user.isDeputyProf() %}
@@ -34,6 +30,11 @@
                         <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
                     {% endif %}
                 </tr>
+            {% else %}
+                <tr>
+                    <td>Deputy costs:</td>
+                    <td class="grey numeric">&pound;{{ report.profDeputyTotalCosts | money_format }}</td>
+                </tr>                
             {% endif %}
             <tr>
                 <td>Gifts:</td>

@@ -17,7 +17,7 @@
         {# How did you charge for your costs? #}
         <tr class="behat-region-how-charged">
                 <td>
-                    {{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label' | trans(transOptions) }}
+                    {{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label' | trans }}
                 </td>
                 <td>
                     {{ ('howCharged.form.options.' ~  report.profDeputyCostsEstimateHowCharged) | trans }}
@@ -72,7 +72,7 @@
 
             <tr class="behat-region-total-estimate-cost">
                 <td>
-                    <strong class="bold">{{ (page ~ '.totalEstimatedCosts') | trans(transOptions) }}</strong>
+                    <strong class="bold">{{ ('totalEstimatedCosts') | trans }}</strong>
                 </td>
                 <td>
                     <strong class="bold">£{{ report.profDeputyEstimateCostsTotal | money_format }}</strong>
