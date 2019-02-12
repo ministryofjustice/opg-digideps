@@ -7,8 +7,12 @@
         <div class="box" data-prof-deputy-costs-how-charged>
             <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label'|trans }}</h3>
             <div class="value">
+            {% if report.profDeputyCostsEstimateHowCharged %}
                 {{ ('howCharged.form.options.' ~
                 report.profDeputyCostsEstimateHowCharged) | trans }}
+            {% else %}
+                &nbsp;
+            {% endif %}
             </div>
         </div>
     </div>
