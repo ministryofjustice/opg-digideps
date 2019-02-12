@@ -521,6 +521,16 @@ class Client
     }
 
     /**
+     * @param $users
+     * @return $this
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    /**
      * @return array $userIds
      */
     public function getUserIds()
