@@ -13,10 +13,6 @@ Feature: PROF deputy costs
     # fixed cost
     And the step with the following values CAN be submitted:
       | deputy_costs_received_profDeputyFixedCost | 1000 |
-    # SCCO
-    And the step with the following values CAN be submitted:
-      | deputy_costs_scco_profDeputyCostsAmountToScco         | 100         |
-      | deputy_costs_scco_profDeputyCostsReasonBeyondEstimate | scco reason |
     # other costs breakdown
     Then the step with the following values CANNOT be submitted:
       | deputy_other_costs_profDeputyOtherCosts_6_amount      | 30.03 |
@@ -30,8 +26,6 @@ Feature: PROF deputy costs
       | No          | has-previous           |
       | 1,000.00    | fixed-cost-amount      |
       | 1,030.03    | total-cost             |
-      | £100.00     | scco-assessment-amount |
-      | scco reason | scco-assessment-reason |
 
   Scenario: all ticked, no previous, no interim, empty breakdown
     Given I load the application status from "pre-deputy-costs"
@@ -65,6 +59,8 @@ Feature: PROF deputy costs
       | No       | has-previous      |
       | No       | has-interim       |
       | 1,000.00 | fixed-cost-amount |
+      | £100.00     | scco-assessment-amount |
+
 
   # Entering the section at the correct subsection
   Scenario: Entering partially completed sections with Fixed costs
