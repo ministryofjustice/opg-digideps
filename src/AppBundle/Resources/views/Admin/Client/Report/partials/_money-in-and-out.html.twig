@@ -135,15 +135,15 @@
     </details>
 </div>
 
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set paAppend = 'PA' %}
+{% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts')%}
+    {% set nonLayAppend = 'NonLay' %}
 {% else %}
-    {% set paAppend = '' %}
+    {% set nonLayAppend = '' %}
 {% endif %}
 
 <div class="form-section push--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ paAppend), {
+        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
             'fieldSetClass' : 'inline',
             'formGroupClass': 'push-half--bottom'
         }) }}
