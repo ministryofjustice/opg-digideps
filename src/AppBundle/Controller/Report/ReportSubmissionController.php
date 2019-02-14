@@ -150,8 +150,6 @@ class ReportSubmissionController extends RestController
         $repo = $this->getRepository(EntityDir\Report\ReportSubmission::class);
 
         $ret = $repo->findAllReportSubmissions(
-            $request->get('offset', 0),
-            $request->get('limit', 100),
             $this->convertDateArrayToDateTime($request->get('fromDate', [])),
             $this->convertDateArrayToDateTime($request->get('toDate', [])),
             $request->get('orderBy', 'createdOn'),

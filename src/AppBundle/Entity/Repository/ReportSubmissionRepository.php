@@ -121,8 +121,6 @@ class ReportSubmissionRepository extends EntityRepository
      * @return array
      */
     public function findAllReportSubmissions(
-        $offset,
-        $limit,
         \DateTime $fromDate = null,
         \DateTime $toDate = null,
         $orderBy = 'createdOn',
@@ -149,9 +147,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL')
             ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
-            ->orderBy('rs.' . $orderBy, $order)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
+            ->orderBy('rs.' . $orderBy, $order);
 
         return $qbSelect->getQuery()->getResult();
     }
