@@ -304,6 +304,7 @@ class ProfDeputyCostsController extends AbstractController
     public function fixedCostAction(Request $request, $reportId)
     {
         $from = $request->get('from');
+        /** @var EntityDir\Report\Report $report */
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $form = $this->createForm(FormDir\Report\ProfDeputyFixedCostType::class, $report);
@@ -318,6 +319,9 @@ class ProfDeputyCostsController extends AbstractController
                 $nextRoute = 'prof_deputy_costs_summary';
             } else {
                 $nextRoute = 'prof_deputy_costs_amount_scco';
+                if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+                    $nextRoute = 'prof_deputy_costs_breakdown';
+                }
             }
 
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);

@@ -149,25 +149,27 @@
         </tr>
         {% endif %}
 
-
-        {# SCCO assessment #}
-        <tr class="behat-region-scco-assessment-amount">
-            <td>
-                {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
-            </td>
-            <td>
-                {% if report.profDeputyCostsAmountToScco is null %}
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                {% else %}
-                    £{{ report.profDeputyCostsAmountToScco | money_format }}
-                {% endif %}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+        {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
+            {# SCCO assessment #}
+            <tr class="behat-region-scco-assessment-amount">
+                <td>
+                    {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
                 </td>
-            {% endif %}
-        </tr>
+                <td>
+                    {% if report.profDeputyCostsAmountToScco is null %}
+                        <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                    {% else %}
+                        £{{ report.profDeputyCostsAmountToScco | money_format }}
+                    {% endif %}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endif %}
+
         {% if report.profDeputyCostsAmountToScco is not null %}
             <tr class="behat-region-scco-assessment-reason">
                 <td>
