@@ -56,12 +56,12 @@
             <div class="panel-body soft-half--top soft-half--sides">
                 {% if app.user.isDeputyProf %}
                     {% include 'AppBundle:Org/ClientProfile:_reportDetail-Prof.html.twig' with {
-                    'report': report,
+                    'report': activeReport,
                     'incomplete': false
                     } %}
                 {% else %}
                     {% include 'AppBundle:Org/ClientProfile:_reportDetail-PA.html.twig' with {
-                    'report': report,
+                    'report': activeReport,
                     'incomplete': false
                     } %}
                 {% endif %}
