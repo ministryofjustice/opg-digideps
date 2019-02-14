@@ -57,12 +57,12 @@
                 {% if app.user.isDeputyProf %}
                     {% include 'AppBundle:Org/ClientProfile:_reportDetail-Prof.html.twig' with {
                     'report': report,
-                    'incomplete': activeReport ? true : false
+                    'incomplete': false
                     } %}
                 {% else %}
                     {% include 'AppBundle:Org/ClientProfile:_reportDetail-PA.html.twig' with {
                     'report': report,
-                    'incomplete': activeReport ? true : false
+                    'incomplete': false
                     } %}
                 {% endif %}
             </div>
