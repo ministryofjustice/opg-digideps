@@ -1,0 +1,330 @@
+{# @param report AppBundle\Entity\Report #}
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+{% set reportStatus = report.status %}
+{% set incompleteAppend = '' %}
+{% if incomplete %}
+    {% set incompleteAppend = '_incomplete' %}
+{% endif %}
+
+<div class="grid-row">
+    <div class="column-one-half">
+        <dl class="push--bottom">
+            <dt>
+                <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                <span class="status status-large {{ report.isUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
+                    {{ ('status.' ~ reportStatus.status) | trans() }}
+                </span>
+            </dd>
+
+            <dt class="visually-hidden">
+                <strong class="bold">{{ 'reportOptions' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
+                    <p class="push--top">
+                        <a class="behat-link-edit-report_submit button" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a>
+                    </p>
+                {% else %}
+                    <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+
+    <div class="column-one-half">
+        <dl class="push--bottom">
+            <dt>
+                <strong class="bold">{{ 'reportingPeriod' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
+                <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
+            </dd>
+
+            <dt>
+                <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>
+            </dt>
+            <dd class="push--bottom">
+                {{ report.dueDate | date(" j F Y") }}<br>
+                {% if report.dueDateDiffDays < 0 %}
+                    <span class="font-xsmall bold text-red">Overdue by {{ report.dueDateDiffDays|abs }} days</span>
+                {% elseif report.dueDateDiffDays == 0 %}
+                    <span class="font-xsmall bold">Due today</span>
+                {% elseif report.dueDateDiffDays <= 30 %}
+                    <span class="font-xsmall">Due in {{ report.dueDateDiffDays }} days</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+
+</div>
+
+<p>
+    <strong class="bold">{{ 'reportSectionsToComplete' | trans() }}</strong>
+</p>
+
+<div id="overview-sections{{ incompleteAppend }}" class="push--bottom">
+
+            <div class="grid-row">
+                <div class="column-one-half">
+                    <ul>
+
+                        {% if report.hasSection('decisions') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'decisions',
+                                sectionId: 'decisions',
+                                report: report,
+                                description: true,
+                                state: reportStatus.decisionsState,
+                                list: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('contacts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'contacts',
+                                sectionId: 'contacts',
+                                report: report,
+                                description: true,
+                                list: true,
+                                info: true,
+                                state: reportStatus.contactsState
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('visitsCare') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'visits_care',
+                                sectionId: 'visitsCare',
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.visitsCareState
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('bankAccounts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'bank_accounts',
+                            sectionId: 'bankAccounts',
+                            report: report,
+                            state: reportStatus.bankAccountsState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyIn') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'money_in',
+                            sectionId: 'moneyIn',
+                            report: report,
+                            state: reportStatus.moneyInState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyInShort') and report.hasSection('moneyOutShort') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'money_in_short',
+                            sectionId: 'moneyInShort',
+                            report: report,
+                            state: reportStatus.MoneyInShortState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyTransfers') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'money_transfers',
+                            sectionId: 'moneyTransfers',
+                            report: report,
+                            state: reportStatus.moneyTransferState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyOut') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'money_out',
+                            sectionId: 'moneyOut',
+                            report: report,
+                            state: reportStatus.moneyOutState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('moneyOutShort') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'money_out_short',
+                            sectionId: 'moneyOutShort',
+                            report: report,
+                            state: reportStatus.MoneyOutShortState,
+                            warning: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('lifestyle') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'lifestyle',
+                                sectionId: 'lifestyle',
+                                report: report,
+                                info: true,
+                                description: true,
+                                state: reportStatus.lifestyleState
+                                } %}
+                        {%  endif %}
+
+
+                        {% if report.hasSection('gifts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'gifts',
+                                sectionId: 'gifts',
+                                report: report,
+                                state: reportStatus.giftsState,
+                                linkToSubSection: path('gifts', {'reportId': report.id}),
+                                description: true
+                            } %}
+                        {% endif %}
+
+                    </ul>
+                </div>
+
+                <div class="column-one-half">
+                    <ul>
+
+                        {% if report.hasSection('assets') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'assets',
+                            sectionId: 'assets',
+                            report: report,
+                            state: reportStatus.assetsState,
+                            list: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('debts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'debts',
+                            sectionId: 'debts',
+                            report: report,
+                            state: reportStatus.debtsState,
+                            list: true,
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('profCurrentFees') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'prof_current_fees',
+                            sectionId: 'profCurrentFees',
+                            report: report,
+                            state: reportStatus.profCurrentFeesState,
+                            linkToSubSection: path('prof_current_fees', {'reportId': report.id}),
+                            description: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('profDeputyCosts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'prof_deputy_costs',
+                            sectionId: 'profDeputyCosts',
+                            linkToSubSection: path('prof_deputy_costs', {reportId: report.id}),
+                            report: report,
+                            info: true,
+                            description: true,
+                            state: reportStatus.profDeputyCostsState,
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('profDeputyCostsEstimate') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'prof_deputy_costs_estimate',
+                            sectionId: 'profDeputyCostsEstimate',
+                            linkToSubSection: path('prof_deputy_costs_estimate', {reportId: report.id}),
+                            report: report,
+                            info: true,
+                            description: true,
+                            state: reportStatus.profDeputyCostsEstimateState,
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('balance') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'balance',
+                                sectionId: 'balance',
+                                report: report,
+                                state: reportStatus.balanceState,
+                                warning: true,
+                                description: true,
+                                customiseAllLabels: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('actions') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'actions',
+                            sectionId: 'actions',
+                            report: report,
+                            description: true,
+                            state: reportStatus.actionsState,
+                            list: true
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('otherInfo') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'other_info',
+                            sectionId: 'otherInfo',
+                            linkToSubSection: path('other_info', {reportId: report.id}),
+                            report: report,
+                            info: true,
+                            description: true,
+                            state: reportStatus.otherInfoState,
+                            } %}
+                        {% endif %}
+
+                        {% if report.hasSection('documents') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                                transDomain: translationDomain,
+                                subSection: 'documents',
+                                sectionId: 'documents',
+                                report: report,
+                                state: reportStatus.documentsState,
+                                list: true,
+                                description: true
+                            } %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
