@@ -109,6 +109,18 @@
                             } %}
                         {% endif %}
 
+                        {% if report.hasSection('lifestyle') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'lifestyle',
+                            sectionId: 'lifestyle',
+                            report: report,
+                            info: true,
+                            description: true,
+                            state: reportStatus.lifestyleState
+                            } %}
+                        {%  endif %}
+
                         {% if report.hasSection('bankAccounts') %}
                             {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
                             transDomain: translationDomain,
@@ -181,28 +193,15 @@
                             } %}
                         {% endif %}
 
-                        {% if report.hasSection('lifestyle') %}
+                        {% if report.hasSection('documents') %}
                             {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'lifestyle',
-                                sectionId: 'lifestyle',
-                                report: report,
-                                info: true,
-                                description: true,
-                                state: reportStatus.lifestyleState
-                                } %}
-                        {%  endif %}
-
-
-                        {% if report.hasSection('gifts') %}
-                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'gifts',
-                                sectionId: 'gifts',
-                                report: report,
-                                state: reportStatus.giftsState,
-                                linkToSubSection: path('gifts', {'reportId': report.id}),
-                                description: true
+                            transDomain: translationDomain,
+                            subSection: 'documents',
+                            sectionId: 'documents',
+                            report: report,
+                            state: reportStatus.documentsState,
+                            list: true,
+                            description: true
                             } %}
                         {% endif %}
 
@@ -211,6 +210,18 @@
 
                 <div class="column-one-half">
                     <ul>
+
+                        {% if report.hasSection('gifts') %}
+                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
+                            transDomain: translationDomain,
+                            subSection: 'gifts',
+                            sectionId: 'gifts',
+                            report: report,
+                            state: reportStatus.giftsState,
+                            linkToSubSection: path('gifts', {'reportId': report.id}),
+                            description: true
+                            } %}
+                        {% endif %}
 
                         {% if report.hasSection('assets') %}
                             {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
@@ -312,17 +323,6 @@
                             } %}
                         {% endif %}
 
-                        {% if report.hasSection('documents') %}
-                            {% include 'AppBundle:Org/ClientProfile:_subsection.html.twig' with {
-                                transDomain: translationDomain,
-                                subSection: 'documents',
-                                sectionId: 'documents',
-                                report: report,
-                                state: reportStatus.documentsState,
-                                list: true,
-                                description: true
-                            } %}
-                        {% endif %}
                     </ul>
                 </div>
             </div>
