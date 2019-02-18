@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -293,11 +295,7 @@ class UserController extends RestController
 
         $this->setJmsSerialiserGroups(['user']);
 
-        $users = $qb->getQuery()->getResult();
-        /* @var $reports Report[] */
-
-        return $users;
-        //$this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
+        return $this->fetchUsersWithLeftJoinPagination($qb);
     }
 
     /**
@@ -454,5 +452,22 @@ class UserController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         return $user->getTeams()->first();
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @return array
+     */
+    private function fetchUsersWithLeftJoinPagination(QueryBuilder $qb)
+    {
+        $users = [];
+        $paginator = new Paginator($qb);
+        count($paginator);
+
+        foreach ($paginator as $page) {
+            $users[] = $page;
+        }
+
+        return $users;
     }
 }
