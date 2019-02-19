@@ -293,9 +293,11 @@ class UserController extends RestController
             }
         }
 
+        $qb->groupBy('u.id');
+
         $this->setJmsSerialiserGroups(['user']);
 
-        return $this->fetchUsersWithLeftJoinPagination($qb);
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -452,22 +454,5 @@ class UserController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         return $user->getTeams()->first();
-    }
-
-    /**
-     * @param QueryBuilder $qb
-     * @return array
-     */
-    private function fetchUsersWithLeftJoinPagination(QueryBuilder $qb)
-    {
-        $users = [];
-        $paginator = new Paginator($qb);
-        count($paginator);
-
-        foreach ($paginator as $page) {
-            $users[] = $page;
-        }
-
-        return $users;
     }
 }
