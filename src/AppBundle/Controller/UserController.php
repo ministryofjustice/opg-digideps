@@ -3,8 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -294,7 +292,6 @@ class UserController extends RestController
         }
 
         $qb->groupBy('u.id');
-
         $this->setJmsSerialiserGroups(['user']);
 
         return $qb->getQuery()->getResult();
