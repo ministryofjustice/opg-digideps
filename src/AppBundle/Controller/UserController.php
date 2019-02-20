@@ -291,13 +291,10 @@ class UserController extends RestController
             }
         }
 
+        $qb->groupBy('u.id');
         $this->setJmsSerialiserGroups(['user']);
 
-        $users = $qb->getQuery()->getResult();
-        /* @var $reports Report[] */
-
-        return $users;
-        //$this->getRepository(EntityDir\User::class)->findBy($criteria, [$order_by => $sort_order], $limit, $offset);
+        return $qb->getQuery()->getResult();
     }
 
     /**
