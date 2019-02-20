@@ -125,10 +125,16 @@ checklistPage:
       label: Are you satisfied with the deputy's declaration?
     paymentsMatchCostCertificate:
       label: |
-        Do the payments received for previous billing periods (a billing period started
-        during an earlier reporting period), plus interim payments made during this reporting
-        period from the same billing period, match the figure on the cost certificate for that
-        billing period?
+        Do the payments received for previous billing periods (a billing period started during an earlier reporting
+        period), plus interim payments made during this reporting period from the same billing period, match the
+        figure on the cost certificate for that billing period?
+    profCostsReasonableAndProportionate:
+      label: |
+        Do the total costs for work carried out during the current billing period (The new billing period started
+        during this reporting period) appear to be reasonable and proportionate compared to the client's assets?
+    hasDeputyOverchargedFromPreviousEstimates:
+      label: |
+        Has the deputy charged 20% or more than last years estimated costs for this billing period?
     lodgingSummary:
       label: Lodging summary concerns and decisions
     finalDecision:
