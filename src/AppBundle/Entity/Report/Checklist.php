@@ -193,7 +193,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-prof-checklist"})
+     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $paymentsMatchCostCertificate;
 
@@ -202,7 +202,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-prof-checklist"})
+     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $profCostsReasonableAndProportionate;
 
@@ -211,7 +211,7 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-prof-checklist"})
+     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 
