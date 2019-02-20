@@ -20,8 +20,63 @@
 
                 {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
                     'report': report,
+                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
                     'transDomain': translationDomain,
                     'hideEditLink' : true
+                } %}
+
+            </div>
+        </div>
+    </details>
+
+</div>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.profCostsReasonableAndProportionate, (page ~ '.form.profCostsReasonableAndProportionate'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
+                'report': report,
+                'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                'transDomain': translationDomain,
+                'hideEditLink' : true
+                } %}
+
+            </div>
+        </div>
+    </details>
+
+</div>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.hasDeputyOverchargedFromPreviousEstimates, (page ~ '.form.hasDeputyOverchargedFromPreviousEstimates'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
+                'report': report,
+                'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                'transDomain': translationDomain,
+                'hideEditLink' : true
                 } %}
 
             </div>
