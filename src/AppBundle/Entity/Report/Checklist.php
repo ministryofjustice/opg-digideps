@@ -193,6 +193,33 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-prof-checklist"})
+     */
+    private $paymentsMatchCostCertificate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-prof-checklist"})
+     */
+    private $profCostsReasonableAndProportionate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-prof-checklist"})
+     */
+    private $hasDeputyOverchargedFromPreviousEstimates;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
      */
     private $lodgingSummary;
@@ -611,6 +638,61 @@ class Checklist
     public function setCaseWorkerSatisified($caseWorkerSatisified)
     {
         $this->caseWorkerSatisified = $caseWorkerSatisified;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentsMatchCostCertificate()
+    {
+        return $this->paymentsMatchCostCertificate;
+    }
+
+    /**
+     * @param string $paymentsMatchCostCertificate
+     * @return $this
+     */
+    public function setPaymentsMatchCostCertificate($paymentsMatchCostCertificate)
+    {
+        $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfCostsReasonableAndProportionate()
+    {
+        return $this->profCostsReasonableAndProportionate;
+    }
+
+    /**
+     * @param $profCostsReasonableAndProportionate
+     * @return $this
+     */
+    public function setProfCostsReasonableAndProportionate($profCostsReasonableAndProportionate)
+    {
+        $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasDeputyOverchargedFromPreviousEstimates()
+    {
+        return $this->hasDeputyOverchargedFromPreviousEstimates;
+    }
+
+    /**
+     * @param $hasDeputyOverchargedFromPreviousEstimates
+     * @return $this
+     */
+    public function setHasDeputyOverchargedFromPreviousEstimates(
+        $hasDeputyOverchargedFromPreviousEstimates
+    ) {
+        $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
         return $this;
     }
 
