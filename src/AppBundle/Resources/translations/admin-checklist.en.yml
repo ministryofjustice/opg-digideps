@@ -15,6 +15,7 @@ checklistPage:
     declaration: Declaration
     healthAndLifestyle: Health and lifestyle
     contents: Checklist contents
+    profDeputyCosts: Deputy costs
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
@@ -55,6 +56,8 @@ checklistPage:
     giftsSummary: View gifts summary
     deputyExpensesSummary: View deputy expenses
     lifestyleResponses: View health and lifestyle responses
+    profDeputyCosts: View deputies responses
+    profDeputyCostEstimates: View deputies responses
   noTransferToShow: No money transfers to view
   form:
     save:
@@ -120,6 +123,12 @@ checklistPage:
       label: Does the deputy raise any concerns about their deputyship?
     caseWorkerSatisified:
       label: Are you satisfied with the deputy's declaration?
+    paymentsMatchCostCertificate:
+      label: |
+        Do the payments received for previous billing periods (a billing period started
+        during an earlier reporting period), plus interim payments made during this reporting
+        period from the same billing period, match the figure on the cost certificate for that
+        billing period?
     lodgingSummary:
       label: Lodging summary concerns and decisions
     finalDecision:

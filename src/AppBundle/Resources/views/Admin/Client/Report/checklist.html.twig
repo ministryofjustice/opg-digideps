@@ -137,6 +137,11 @@
                 {% endif %}
             {% endif %}
 
+            {# Deputy costs #}
+            {% if report.hasSection('deputyCosts') %}
+                {% include 'AppBundle:Admin/Client/Report/partials:_prof-deputy-costs.html.twig' %}
+            {% endif %}
+
             {# Next reporting period #}
             {% include 'AppBundle:Admin/Client/Report/partials:_next-reporting-period.html.twig' %}
 
