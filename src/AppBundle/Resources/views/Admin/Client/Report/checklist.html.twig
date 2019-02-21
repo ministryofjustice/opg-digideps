@@ -248,6 +248,9 @@
                             <li><a href="#bonds">{{ (page ~ '.heading.bonds') | trans }}</a></li>
                         {% endif %}
                     {% endif %}
+                    {% if report.hasSection('profDeputyCosts') %}
+                        <li><a href="#profDeputyCosts">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
+                    {% endif %}
                     <li><a href="#nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
                     <li><a href="#declaration">{{ (page ~ '.heading.declaration') | trans }}</a></li>
                     <li><a href="#lodgingSummary">{{ (page ~ '.lodgingSummary.heading') | trans }}</a></li>
