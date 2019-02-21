@@ -1,6 +1,7 @@
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
 
 <h3 class="heading-medium underline" id="paFeesExpenses">{{ (page ~ '.heading.profDeputyCosts') | trans }}</h3>
 
@@ -18,12 +19,16 @@
         <div class="panel panel-border-narrow">
             <div>
 
-                {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>
+                {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
                     'report': report,
-                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
-                    'transDomain': translationDomain,
-                    'hideEditLink' : true
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : hideEditLink
                 } %}
+                    </tbody>
+                </table>
 
             </div>
         </div>
@@ -45,11 +50,11 @@
         <div class="panel panel-border-narrow">
             <div>
 
-                {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
-                'report': report,
-                'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
-                'transDomain': translationDomain,
-                'hideEditLink' : true
+                {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
                 } %}
 
             </div>
@@ -72,11 +77,11 @@
         <div class="panel panel-border-narrow">
             <div>
 
-                {% include 'AppBundle:Report/ProfDeputyCosts:_answers.html.twig' with {
-                'report': report,
-                'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
-                'transDomain': translationDomain,
-                'hideEditLink' : true
+                {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
                 } %}
 
             </div>
