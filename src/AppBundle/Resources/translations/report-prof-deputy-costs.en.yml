@@ -123,5 +123,6 @@ summaryPage:
   questionLabel:
     paidThisPeriod: Paid for this reporting period
     totaPaidThisPeriod: Total costs paid this reporting period
+    totalCosts: Total costs
 
 

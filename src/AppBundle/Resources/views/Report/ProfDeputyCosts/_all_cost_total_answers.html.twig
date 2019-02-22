@@ -177,6 +177,18 @@
         {# Total cost this period#}
         <tr class="behat-region-total-cost">
             <td>
+                <strong class="bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
+            </td>
+            <td>
+                <strong class="bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
+            </td>
+            {% if not hideEditLink %}
+                <td></td>
+            {% endif %}
+        </tr>
+        {# Total cost taken from client #}
+        <tr class="behat-region-total-cost-taken-from-client">
+            <td>
                 <strong class="bold">{{ (page ~ '.questionLabel.totaPaidThisPeriod') | trans(transOptions) }}</strong>
             </td>
             <td>
