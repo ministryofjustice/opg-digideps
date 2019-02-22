@@ -73,11 +73,11 @@ class ReportSectionsLinkService
 
 
         // defined order for Client profile page (PROF or PA)
-        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profDeputyCosts')) {
+        if ($report->hasSection('paDeputyExpenses')) { // PAs
+            // PAs
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'paDeputyExpenses', //PA
-                'profCurrentFees', // PROF
+                'paDeputyExpenses',
                 'gifts',
                 'actions', 'otherInfo',
                 'profDeputyCosts',
@@ -88,6 +88,20 @@ class ReportSectionsLinkService
                 'assets', 'debts',
                 'documents'
             ];
+        } elseif ($report->hasSection('profDeputyCosts')) { // Professionals
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare',
+                'bankAccounts',
+                'moneyIn', 'moneyInShort', 'moneyTransfers', 'moneyOut','moneyOutShort',
+                'lifestyle',
+                'gifts',
+                'assets', 'debts',
+                'profCurrentFees',
+                'profDeputyCosts',
+                'profDeputyCostsEstimate',
+                'actions', 'otherInfo',
+                'documents'
+                ];
         } else { // Lay
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
