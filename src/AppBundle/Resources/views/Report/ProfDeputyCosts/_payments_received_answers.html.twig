@@ -41,14 +41,12 @@
 {% endfor %}
 
 {# add another link #}
-{% if report.profDeputyPreviousCosts | length %}
+{% if report.profDeputyPreviousCosts | length and not hideEditLink %}
     <tr class="behat-region-prev-costs">
         <td colspan="2">
         </td>
-        {% if not hideEditLink  %}
-            <td class="change-answer width-sixth soft-half--left hard--right">
-                <a href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">Add another</a>
-            </td>
-        {% endif %}
+        <td class="change-answer width-sixth soft-half--left hard--right">
+            <a href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">Add another</a>
+        </td>
     </tr>
 {% endif %}

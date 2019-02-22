@@ -3,9 +3,7 @@
 
 {% if report.profDeputyCostsAmountToScco is not null %}
 
-    <table class="check-your-answers columns-2 push--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
+
         <tr class="behat-region-scco-assessment-reason">
             <td>
                 {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.labelSummary' | trans }}
@@ -23,6 +21,5 @@
                 </td>
             {% endif %}
         </tr>
-    </tbody>
-</table>
+
 {% endif %}

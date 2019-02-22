@@ -22,6 +22,7 @@
                 <table class="check-your-answers columns-2 push--bottom">
                     {{ macros.summaryTableHeaderQA(hideEditLink) }}
                     <tbody>
+
                 {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
                     'report': report,
                     'transDomain': "report-prof-deputy-costs",
@@ -49,14 +50,48 @@
         </summary>
         <div class="panel panel-border-narrow">
             <div>
-
-                {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>                
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+                        'report': report,
+                        'transDomain': 'report-prof-deputy-costs',
+                        'hideEditLink' : true
+                    } %}
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+                        'report': report,
+                        'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                        'transDomain': "report-prof-deputy-costs",
+                        'hideEditLink' : true
+                    } %}                    
+                    </tbody>
+                </table>
+                {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
                     'report': report,
                     'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
                     'transDomain': "report-prof-deputy-costs",
                     'hideEditLink' : true
                 } %}
-
+                <table class="check-your-answers columns-2 push--bottom">
+                    <tbody>
+                        {# empty line to have border. fix with CSS if simpler#}
+                        <tr>
+                            <td colspan="2"></td>
+                        </tr>
+                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
+                            'report': report,
+                            'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                            'transDomain': "report-prof-deputy-costs",
+                            'hideEditLink' : true
+                        } %}
+                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+                            'report': report,
+                            'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                            'transDomain': "report-prof-deputy-costs",
+                            'hideEditLink' : true
+                        } %}
+                    </tbody>
+                </table>                
             </div>
         </div>
     </details>
@@ -76,14 +111,17 @@
         </summary>
         <div class="panel panel-border-narrow">
             <div>
-
-                {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
-                    'report': report,
-                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
-                    'transDomain': "report-prof-deputy-costs",
-                    'hideEditLink' : true
-                } %}
-
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+                        'report': report,
+                        'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                        'transDomain': "report-prof-deputy-costs",
+                        'hideEditLink' : true
+                    } %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </details>
