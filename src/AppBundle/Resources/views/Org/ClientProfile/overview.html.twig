@@ -33,10 +33,17 @@
           {% endif %}
         </div>
         <div class="panel-body soft-half">
-        {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
-            'report': report,
-            'incomplete': activeReport ? true : false
-        } %}
+            {% if app.user.isDeputyProf %}
+                {% include 'AppBundle:Org/ClientProfile:_reportDetail-Prof.html.twig' with {
+                'report': report,
+                'incomplete': activeReport ? true : false
+                } %}
+            {% else %}
+                {% include 'AppBundle:Org/ClientProfile:_reportDetail-PA.html.twig' with {
+                'report': report,
+                'incomplete': activeReport ? true : false
+                } %}
+            {% endif %}
         </div>
     </div>
 
@@ -47,10 +54,17 @@
                 <span class="summary heading-medium">{{ ('currentReport') | trans }}</span>
             </summary>
             <div class="panel-body soft-half--top soft-half--sides">
-                {% include 'AppBundle:Org/ClientProfile:_reportDetail.html.twig' with {
+                {% if app.user.isDeputyProf %}
+                    {% include 'AppBundle:Org/ClientProfile:_reportDetail-Prof.html.twig' with {
                     'report': activeReport,
                     'incomplete': false
-                } %}
+                    } %}
+                {% else %}
+                    {% include 'AppBundle:Org/ClientProfile:_reportDetail-PA.html.twig' with {
+                    'report': activeReport,
+                    'incomplete': false
+                    } %}
+                {% endif %}
             </div>
         </details>
     {% endif %}
