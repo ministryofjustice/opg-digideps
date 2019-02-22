@@ -418,6 +418,22 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
+     * @return float
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"report-prof-deputy-costs"})
+     */
+    public function getProfDeputyTotalCostsTakenFromClient()
+    {
+        $total = $this->getProfDeputyTotalCosts();
+
+        foreach ($this->getProfDeputyPreviousCosts() as $previousCost) {
+            $total -= (float) $previousCost->getAmount();
+        }
+
+        return $total;
+    }
+
+    /**
      * @return boolean
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
