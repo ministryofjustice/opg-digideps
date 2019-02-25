@@ -25,7 +25,7 @@ Feature: PROF deputy costs
       | Fixed       | how-changed            |
       | No          | has-previous           |
       | 1,000.00    | fixed-cost-amount      |
-      | 1,030.03    | total-cost             |
+      | 1,030.03    | total-cost-taken-from-client |
 
   Scenario: all ticked, no previous, no interim, empty breakdown
     Given I load the application status from "pre-deputy-costs"
@@ -220,5 +220,5 @@ Feature: PROF deputy costs
       | £10.00                               | breakdown-appointments  |
       | £55.50                               | breakdown-other         |
       | breakdown other details              | breakdown-other-details |
-      | £475.50                              | total-cost              |
+      | £475.50                              | total-cost-taken-from-client |
     And I should not see the "fixed-cost-amount" region
