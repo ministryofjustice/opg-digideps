@@ -56,8 +56,8 @@ checklistPage:
     giftsSummary: View gifts summary
     deputyExpensesSummary: View deputy expenses
     lifestyleResponses: View health and lifestyle responses
-    profDeputyCosts: View deputies responses
-    profDeputyCostEstimates: View deputies responses
+    profDeputyCosts: View deputy's responses
+    profDeputyCostEstimates: View deputy's responses
   noTransferToShow: No money transfers to view
   form:
     save:

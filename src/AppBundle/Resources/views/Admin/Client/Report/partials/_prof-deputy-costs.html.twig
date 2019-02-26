@@ -2,6 +2,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 {% set hideEditLink = true %}
+{% set actualOtherCosts = report.generateActualSubmittedOtherCosts %}
 
 <h3 class="heading-medium underline" id="profDeputyCosts">{{ (page ~ '.heading.profDeputyCosts') | trans }}</h3>
 
@@ -60,7 +61,7 @@
                     } %}
                     {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
                         'report': report,
-                        'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                        'submittedOtherCosts': actualOtherCosts,
                         'transDomain': "report-prof-deputy-costs",
                         'hideEditLink' : true
                     } %}                    
@@ -68,7 +69,7 @@
                 </table>
                 {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
                     'report': report,
-                    'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                    'submittedOtherCosts': actualOtherCosts,
                     'transDomain': "report-prof-deputy-costs",
                     'hideEditLink' : true
                 } %}
@@ -80,13 +81,13 @@
                         </tr>
                         {% include 'AppBundle:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
                             'report': report,
-                            'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                            'submittedOtherCosts': actualOtherCosts,
                             'transDomain': "report-prof-deputy-costs",
                             'hideEditLink' : true
                         } %}
                         {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
                             'report': report,
-                            'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                            'submittedOtherCosts': actualOtherCosts,
                             'transDomain': "report-prof-deputy-costs",
                             'hideEditLink' : true
                         } %}
@@ -116,7 +117,7 @@
                     <tbody>
                     {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
                         'report': report,
-                        'submittedOtherCosts': report.generateActualSubmittedOtherCosts,
+                        'submittedOtherCosts': actualOtherCosts,
                         'transDomain': "report-prof-deputy-costs",
                         'hideEditLink' : true
                     } %}
