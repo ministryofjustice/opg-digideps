@@ -30,6 +30,17 @@
     {% endif %}
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
 
+    {# client NDR #}
+
+    {% if client.ndr is not empty %}
+        {% include 'AppBundle:Admin/Client/Client/partials:_ndr-details.html.twig' with {
+            ndr : client.ndr,
+            client: client
+        } %}
+    {% endif %}
+
+    <br />
+
     <h2 class="heading-medium flush--ends">{{ (page ~ '.reportsTitle') | trans }}</h2>
 
     {# client report list #}
