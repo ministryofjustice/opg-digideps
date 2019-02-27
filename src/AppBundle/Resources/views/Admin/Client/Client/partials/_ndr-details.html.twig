@@ -6,7 +6,7 @@
 <table class="check-your-answers">
     <thead>
     <tr>
-        <th scope="col">{{ 'start' | trans({}, 'common') }}</th>
+        <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
         <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
         <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
         <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
@@ -18,7 +18,7 @@
         {% set behatRegionPrefix = 'behat-region-ndr-' ~ (ndr.getStartDate() | date("j F Y")) %}
         <tr class="{{ behatRegionPrefix }}">
             <td>
-                {{ ndr.startDate  | date("j F Y")}}
+                {{ 'ndr' | trans({}, 'common') }}
             </td>
             <td class="{{ behatRegionPrefix }}-due-date">
                 {{ ndr.dueDate | date("j F Y") }}

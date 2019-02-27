@@ -85,6 +85,7 @@ totalAmount: Total amount
 firstNames: First names
 lastName: Last name
 reportType: Report type
+ndr: NDR
 
 # Statuses
 notCreated: Not created
