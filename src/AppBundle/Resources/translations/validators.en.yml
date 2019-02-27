@@ -725,6 +725,12 @@ checklist:
     notBlank: Please choose an option
   bondOrderMatchCasrec:
     notBlank: Please choose an option
+  paymentsMatchCostCertificate:
+    notBlank: Please select 'Yes' or 'No'
+  profCostsReasonableAndProportionate:
+    notBlank: Please select 'Yes' or 'No'
+  hasDeputyOverchargedFromPreviousEstimates:
+    notBlank: Please select 'Yes' or 'No'
   futureSignificantDecisions:
     notBlank: Please choose an option
   hasDeputyRaisedConcerns:
