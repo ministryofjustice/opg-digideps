@@ -135,15 +135,15 @@
     </details>
 </div>
 
-{% if report.hasSection('paDeputyExpenses') %}
-    {% set paAppend = 'PA' %}
+{% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts')%}
+    {% set nonLayAppend = 'NonLay' %}
 {% else %}
-    {% set paAppend = '' %}
+    {% set nonLayAppend = '' %}
 {% endif %}
 
 <div class="form-section push--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ paAppend), {
+        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
             'fieldSetClass' : 'inline',
             'formGroupClass': 'push-half--bottom'
         }) }}
@@ -224,11 +224,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
+                {% if report.hasSection('moneyIn') %}
                     {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
+                {% elseif report.hasSection('moneyInShort') %}
                     {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
@@ -244,11 +244,11 @@
         <div class="panel panel-border-narrow">
             <div>
                 {# Questions and answers table #}
-                {% if report.type in ['102', '102-4', '102-6', '102-4-6'] %}
+                {% if report.hasSection('moneyOut') %}
                     {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
                         hideEditLink: true
                     } %}
-                {% elseif report.type in ['103', '103-4', '103-6', '103-4-6'] %}
+                {% elseif report.hasSection('moneyOutShort') %}
                     {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
                         hideEditLink: true
                     } %}
