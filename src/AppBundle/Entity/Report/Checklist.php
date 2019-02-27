@@ -202,6 +202,33 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
+     *
+     * @ORM\Column(name="payments_match_cost_certificate", type="string", length=3, nullable=true)
+     */
+    private $paymentsMatchCostCertificate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     *
+     * @ORM\Column(name="prof_costs_reasonable_and_proportionate", type="string", length=3, nullable=true)
+     */
+    private $profCostsReasonableAndProportionate;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     *
+     * @ORM\Column(name="has_deputy_overcharged_from_previous_estimates", type="string", length=3, nullable=true)
+     */
+    private $hasDeputyOverchargedFromPreviousEstimates;
+
+    /**
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist"})
      * @ORM\Column(name="lodging_summary", type="text", nullable=true)
@@ -641,6 +668,60 @@ class Checklist
     public function setCaseWorkerSatisified($caseWorkerSatisified)
     {
         $this->caseWorkerSatisified = $caseWorkerSatisified;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentsMatchCostCertificate()
+    {
+        return $this->paymentsMatchCostCertificate;
+    }
+
+    /**
+     * @param string $paymentsMatchCostCertificate
+     * @return $this
+     */
+    public function setPaymentsMatchCostCertificate($paymentsMatchCostCertificate)
+    {
+        $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfCostsReasonableAndProportionate()
+    {
+        return $this->profCostsReasonableAndProportionate;
+    }
+
+    /**
+     * @param string $profCostsReasonableAndProportionate
+     * @return $this
+     */
+    public function setProfCostsReasonableAndProportionate($profCostsReasonableAndProportionate)
+    {
+        $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasDeputyOverchargedFromPreviousEstimates()
+    {
+        return $this->hasDeputyOverchargedFromPreviousEstimates;
+    }
+
+    /**
+     * @param $hasDeputyOverchargedFromPreviousEstimates
+     * @return $this
+     */
+    public function setHasDeputyOverchargedFromPreviousEstimates($hasDeputyOverchargedFromPreviousEstimates)
+    {
+        $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
         return $this;
     }
 

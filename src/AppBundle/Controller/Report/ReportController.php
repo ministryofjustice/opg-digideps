@@ -811,6 +811,9 @@ class ReportController extends RestController
             'future_significant_decisions' => 'setFutureSignificantDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
+            'payments_match_cost_certificate' => 'setPaymentsMatchCostCertificate',
+            'prof_costs_reasonable_and_proportionate' => 'setProfCostsReasonableAndProportionate',
+            'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision',
             'button_clicked' => 'setButtonClicked'
