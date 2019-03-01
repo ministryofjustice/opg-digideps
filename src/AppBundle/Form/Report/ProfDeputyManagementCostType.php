@@ -21,15 +21,5 @@ class ProfDeputyManagementCostType extends AbstractType
                 'error_bubbling' => false,
                 'invalid_message' => 'profDeputyManagementCost.amount.notNumeric',
             ]);
-
-        // Look at removing this - only for options that have more details to add?
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
-            $profDeputyManagementCost = $event->getData();
-            $form = $event->getForm();
-
-            if ($profDeputyManagementCost->getHasMoreDetails()) {
-                $form->add('moreDetails', FormTypes\TextareaType::class, []);
-            }
-        });
     }
 }
