@@ -103,12 +103,12 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
+                $nextRoute = 'prof_deputy_costs_estimate_summary';
+            } else {
+                $nextRoute = 'prof_deputy_costs_estimate_breakdown';
             }
 
-            return $this->redirectToRoute(
-                $this->determineNextRouteFromHowCharged($request, $form, $currentManagementCostValue),
-                ['reportId'=>$reportId]
-            );
+            return $this->redirect($this->generateUrl($nextRoute, ['reportId' => $reportId]));
         }
 
         return [

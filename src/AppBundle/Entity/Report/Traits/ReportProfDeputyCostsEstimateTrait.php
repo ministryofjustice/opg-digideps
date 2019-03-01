@@ -28,7 +28,7 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyEstimateCosts;
 
     /**
-     * @var ProfDeputyManagementCost[]
+     * @var float
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyManagementCost>")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
@@ -119,7 +119,10 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @return ProfDeputyManagementCost[]
+     * @var float
+     *
+     * @JMS\Type("double")
+     * @return float
      */
     public function getProfDeputyManagementCosts()
     {
