@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
+use AppBundle\Entity\Report\ProfDeputyManagementCost;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,6 +26,14 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
     private $profDeputyEstimateCosts;
+
+    /**
+     * @var ProfDeputyManagementCost[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyManagementCost>")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     */
+    private $profDeputyManagementCost;
 
     /**
      * @JMS\Type("array")
@@ -107,6 +116,14 @@ trait ReportProfDeputyCostsEstimateTrait
     public function getProfDeputyEstimateCosts()
     {
         return $this->profDeputyEstimateCosts;
+    }
+
+    /**
+     * @return ProfDeputyManagementCost[]
+     */
+    public function getProfDeputyManagementCosts()
+    {
+        return $this->profDeputyManagementCost;
     }
 
     /**

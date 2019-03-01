@@ -83,6 +83,7 @@ Feature: Prof deputy costs estimate
     When I click on "breadcrumbs-report-overview"
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
+    @tdd
   Scenario: Completing the Assessed Costs route with costs and more info and viewing the status overview
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
@@ -90,6 +91,9 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    And the URL should match "/report/\d+/prof-deputy-costs-estimate/management-costs"
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyManagementCosts_amount      | 4.99  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
       | deputy_estimate_costs_profDeputyEstimateCosts_0_amount      | 10.01 |
