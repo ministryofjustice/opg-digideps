@@ -3,7 +3,7 @@
 
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
-{% set translationDomain = "report-prof-deputy-costs-estimate" %}
+{% set translationDomain = "report-prof-deputy-management-costs" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'managementCosts' %}
 
@@ -25,21 +25,21 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {% for profDeputyEstimateCost in form.profDeputyEstimateCosts %}
-        <div class="{{ profDeputyEstimateCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
-            {{ form_row(profDeputyEstimateCost.profDeputyEstimateCostTypeId) }}
-            {{ form_input(profDeputyEstimateCost.amount, 'amount', {
+    {% for profDeputyManagementCost in form.profDeputyManagementCosts %}
+        <div class="{{ profDeputyManagementCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {{ form_row(profDeputyManagementCost.profDeputyManagementCostTypeId) }}
+            {{ form_input(profDeputyManagementCost.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'form-control-1-4 js-format-currency',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
+                'labelText': (page ~ '.form.entries.' ~ profDeputyManagementCost.profDeputyManagementCostTypeId.vars.value ~ '.label') | trans,
                 'labelRaw': true
             }) }}
 
             {# this is testing the form field is defined. Not the entity property #}
-            {% if profDeputyEstimateCost.moreDetails is defined %}
+            {% if profDeputyManagementCost.moreDetails is defined %}
                 <div class="">
-                    {{ form_input(profDeputyEstimateCost.moreDetails, 'moreDetails', {
-                        'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.moreInformation') | trans,
+                    {{ form_input(profDeputyManagementCost.moreDetails, 'moreDetails', {
+                        'labelText': (page ~ '.form.entries.' ~ profDeputyManagementCost.profDeputyManagementCostTypeId.vars.value ~ '.moreInformation') | trans,
                         'formGroupClass': 'panel panel-border-narrow',
                         'labelRaw': true
                     }) }}

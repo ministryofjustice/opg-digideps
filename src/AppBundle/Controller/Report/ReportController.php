@@ -38,6 +38,7 @@ class ReportController extends AbstractController
         'report-prof-deputy-costs-scco',
         'report-prof-deputy-fixed-cost',
         'prof-deputy-costs-estimate-how-charged',
+        'prof-deputy-management-costs',
         'prof-deputy-estimate-costs',
         'prof-deputy-costs-estimate-more-info',
         'action',

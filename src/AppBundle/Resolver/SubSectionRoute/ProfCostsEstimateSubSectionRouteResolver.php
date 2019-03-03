@@ -65,7 +65,7 @@ class ProfCostsEstimateSubSectionRouteResolver
      */
     private function managementCostsSubsectionIsIncomplete(Report $report, $state)
     {
-        return Status::STATE_INCOMPLETE === $state && empty($report->getProfDeputyGeneralManagementCosts());
+        return Status::STATE_INCOMPLETE === $state && empty($report->getProfDeputyManagementCosts());
     }
 
     /**
