@@ -125,7 +125,7 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @return ProfDeputyManagementCost[]
+     * @return float
      */
     public function getProfDeputyManagementCosts()
     {
@@ -133,7 +133,7 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @param ProfDeputyEstimateCost[] $profDeputyEstimateCosts
+     * @param float $profDeputyEstimateCosts
      *
      * @return $this
      */
