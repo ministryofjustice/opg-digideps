@@ -98,7 +98,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistUpdate($reportId, $form->getData(), ['deputyCostsEstimateManagementCosts']);
+            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-management-costs']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');

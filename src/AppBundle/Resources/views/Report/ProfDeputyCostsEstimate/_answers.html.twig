@@ -36,7 +36,7 @@
                 {{ 'managementCosts.form.profDeputyCostsEstimateManagementCosts.label' | trans }}
             </td>
             <td>
-                {{ (report.profDeputyManagementCosts) | trans }}
+                £{{ (report.profDeputyManagementCosts) | money_format }}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
@@ -44,7 +44,6 @@
                 </td>
             {% endif %}
         </tr>
-
 
 
         {# Breakdown of estimated costs #}
