@@ -247,11 +247,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $managementCosts = [];
 
         $defaultManagementCostTypeIds = $report->getProfDeputyManagementCostTypeIds();
-        foreach ($defaultManagementCostTypeIds as $defaultEstimateCostType) {
+        foreach ($defaultManagementCostTypeIds as $defaultManagementCostType) {
             $managementCosts[] = new EntityDir\Report\ProfDeputyManagementCost(
-                $defaultEstimateCostType['typeId'],
+                $defaultManagementCostType['typeId'],
                 null,
-                $defaultEstimateCostType['hasMoreDetails'],
+                $defaultManagementCostType['hasMoreDetails'],
                 null
             );
 
