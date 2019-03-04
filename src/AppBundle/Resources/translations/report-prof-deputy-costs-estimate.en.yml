@@ -27,12 +27,11 @@ howCharged:
 managementCosts:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle: Deputy cost estimates
-  pageSectionDescription: General management costs
+  pageSectionDescription: How much do you expect to charge %client% for the general management of this case in the next reporting period?
   pageHint: ""
   form:
-    entries:
-      general-management-costs:
-        label: How much do you expect to charge %client% for the general management of this case in the next reporting period?
+    profDeputyCostsEstimateManagementCosts:
+      label: General management costs
 
 breakdown:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"

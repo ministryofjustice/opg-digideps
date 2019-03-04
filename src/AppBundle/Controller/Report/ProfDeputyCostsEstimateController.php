@@ -94,13 +94,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (empty($report->getProfDeputyManagementCosts())) {
-            // if none set generate other costs manually
-            $managementCosts = $this->generateDefaultManagementCosts($report);
-
-            $report->setProfDeputyManagementCosts($managementCosts);
-        }
-
         $form = $this->createForm(FormDir\Report\ProfDeputyManagementCostType::class, $report);
         $form->handleRequest($request);
 
@@ -240,23 +233,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         }
         return $estimateCosts;
-    }
-
-    private function generateDefaultManagementCosts(EntityDir\Report\Report $report)
-    {
-        $managementCosts = [];
-
-        $defaultManagementCostTypeIds = $report->getProfDeputyManagementCostTypeIds();
-        foreach ($defaultManagementCostTypeIds as $defaultManagementCostType) {
-            $managementCosts[] = new EntityDir\Report\ProfDeputyManagementCost(
-                $defaultManagementCostType['typeId'],
-                null,
-                $defaultManagementCostType['hasMoreDetails'],
-                null
-            );
-
-        }
-        return $managementCosts;
     }
 
     /**

@@ -29,6 +29,24 @@
             {% endif %}
         </tr>
 
+
+        {# General Management Costs #}
+        <tr class="behat-region-management-costs">
+            <td>
+                {{ 'managementCosts.form.profDeputyCostsEstimateManagementCosts.label' | trans }}
+            </td>
+            <td>
+                {{ (report.profDeputyManagementCosts) | trans }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_management_costs', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-management-costs">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+
+
+
         {# Breakdown of estimated costs #}
         {% if submittedEstimateCosts is not null %}
             {% for estimateCostTypeId in report.getProfDeputyEstimateCostTypeIds %}
