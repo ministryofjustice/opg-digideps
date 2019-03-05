@@ -33,10 +33,10 @@
         {# General Management Cost #}
         <tr class="behat-region-management-cost">
             <td>
-                {{ 'managementCosts.form.profDeputyCostsEstimateManagementCost.label' | trans }}
+                {{ 'managementCost.form.profDeputyCostsEstimateManagementCost.label' | trans }}
             </td>
             <td>
-                £{{ (report.profDeputyManagementCost) | money_format }}
+                £{{ (report.profDeputyManagementCostAmount) | money_format }}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
