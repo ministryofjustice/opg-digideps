@@ -508,6 +508,10 @@ profDeputyOtherCost:
   moreDetails:
     notBlank: Please give us some more information
 
+profDeputyCostsEstimateManagementCost:
+  amount:
+    notBlank: Please enter an amount
+
 profDeputyCostsEstimateHowCharged:
   howCharged:
     notBlank: Please select an option

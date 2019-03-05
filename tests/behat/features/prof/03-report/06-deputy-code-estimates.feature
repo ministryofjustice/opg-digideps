@@ -330,6 +330,10 @@ Feature: Prof deputy costs estimate
     Then the step cannot be submitted without making a selection
     When the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+    And the step with the following values CANNOT be submitted:
+      | deputy_management_cost_profDeputyManagementCostAmount       |       |
+    And the step with the following values CAN be submitted:
+      | deputy_management_cost_profDeputyManagementCostAmount       | 4.99  |
     Then the step with the following values CANNOT be submitted:
       | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
@@ -337,8 +341,6 @@ Feature: Prof deputy costs estimate
       | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     Then the step cannot be submitted without making a selection
-    And the step with the following values CANNOT be submitted:
-      | deputy_management_cost_profDeputyManagementCostAmount       |       |
     And the step with the following values CANNOT be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes |
       | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |     |
