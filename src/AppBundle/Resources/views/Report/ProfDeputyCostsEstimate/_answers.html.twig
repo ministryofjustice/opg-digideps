@@ -30,17 +30,17 @@
         </tr>
 
 
-        {# General Management Costs #}
-        <tr class="behat-region-management-costs">
+        {# General Management Cost #}
+        <tr class="behat-region-management-cost">
             <td>
-                {{ 'managementCosts.form.profDeputyCostsEstimateManagementCosts.label' | trans }}
+                {{ 'managementCosts.form.profDeputyCostsEstimateManagementCost.label' | trans }}
             </td>
             <td>
-                £{{ (report.profDeputyManagementCosts) | money_format }}
+                £{{ (report.profDeputyManagementCost) | money_format }}
             </td>
             {% if not hideEditLink  %}
                 <td class="change-answer">
-                    <a href="{{ path('prof_deputy_management_costs', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-management-costs">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('prof_deputy_management_cost', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-management-cost">{{ 'edit' | trans({}, 'common' ) }}</a>
                 </td>
             {% endif %}
         </tr>

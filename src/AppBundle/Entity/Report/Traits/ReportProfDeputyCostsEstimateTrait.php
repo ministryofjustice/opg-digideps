@@ -3,7 +3,6 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\ProfDeputyEstimateCost;
-use AppBundle\Entity\Report\ProfDeputyManagementCost;
 use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -39,13 +38,7 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Type("double")
      * @JMS\Groups({"prof-deputy-management-costs"})
      */
-    private $profDeputyManagementCosts;
-
-    /**
-     * @JMS\Type("array")
-     * @JMS\Groups({"prof-deputy-management-costs"})
-     */
-    private $profDeputyManagementCostTypeIds;
+    private $profDeputyManagementCostAmount;
 
     /**
      * @var string yes/no
@@ -125,16 +118,7 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @return float
-     */
-    public function getProfDeputyManagementCosts()
-    {
-        return $this->profDeputyManagementCosts;
-    }
-
-    /**
-     * @param float $profDeputyEstimateCosts
-     *
+     * @param ProfDeputyEstimateCost[] $profDeputyEstimateCosts
      * @return $this
      */
     public function setProfDeputyEstimateCosts($profDeputyEstimateCosts)
@@ -234,28 +218,22 @@ trait ReportProfDeputyCostsEstimateTrait
     }
 
     /**
-     * @return array
+     * @return float
      */
-    public function getProfDeputyManagementCostTypeIds()
+    public function getProfDeputyManagementCostAmount()
     {
-        return $this->profDeputyManagementCostTypeIds;
+        return $this->profDeputyManagementCostAmount;
     }
 
     /**
-     * @param array $profDeputyManagementCostTypeIds
+     * @param float $profDeputyManagementCostAmount
      * @return ReportProfDeputyCostsEstimateTrait
      */
-    public function setProfDeputyManagementCostTypeIds($profDeputyManagementCostTypeIds)
+    public function setProfDeputyManagementCostAmount($profDeputyManagementCostAmount)
     {
-        $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
+        $this->profDeputyManagementCostAmount = $profDeputyManagementCostAmount;
+
         return $this;
     }
 
-    /**
-     * @param ProfDeputyManagementCost[] $profDeputyManagementCosts
-     */
-    public function setProfDeputyManagementCosts($profDeputyManagementCosts)
-    {
-        $this->profDeputyManagementCosts = $profDeputyManagementCosts;
-    }
 }

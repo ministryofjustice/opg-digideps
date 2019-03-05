@@ -91,9 +91,9 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
-    And the URL should match "/report/\d+/prof-deputy-costs-estimate/management-costs"
+    And the URL should match "/report/\d+/prof-deputy-costs-estimate/management-cost"
     And the step with the following values CAN be submitted:
-      | deputy_costs_estimate_profDeputyManagementCosts_amount      | 4.99  |
+      | deputy_management_cost_profDeputyManagementCostAmount      | 4.99  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
       | deputy_estimate_costs_profDeputyEstimateCosts_0_amount      | 10.01 |
@@ -321,6 +321,7 @@ Feature: Prof deputy costs estimate
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
 
   # Form validation
+  @tdd
   Scenario: Submitting form with missing data
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000023" region
@@ -336,6 +337,8 @@ Feature: Prof deputy costs estimate
       | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     Then the step cannot be submitted without making a selection
+    And the step with the following values CANNOT be submitted:
+      | deputy_management_cost_profDeputyManagementCostAmount       |       |
     And the step with the following values CANNOT be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes |
       | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |     |

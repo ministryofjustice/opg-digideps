@@ -24,13 +24,13 @@ howCharged:
       both: Both fixed and assessed costs
 
 #General management here
-managementCosts:
+managementCost:
   htmlTitle: "Deputy report - Deputy costs estimate | GOV.UK"
   pageTitle: Deputy cost estimates
   pageSectionDescription: How much do you expect to charge %client% for the general management of this case in the next reporting period?
   pageHint: ""
   form:
-    profDeputyCostsEstimateManagementCosts:
+    profDeputyCostsEstimateManagementCost:
       label: General management costs
 
 breakdown:

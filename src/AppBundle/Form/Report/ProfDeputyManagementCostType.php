@@ -16,7 +16,7 @@ class ProfDeputyManagementCostType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('profDeputyManagementCosts', FormTypes\NumberType::class, [
+            ->add('profDeputyManagementCostAmount', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
                 'error_bubbling' => false,
@@ -27,7 +27,7 @@ class ProfDeputyManagementCostType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['prof-deputy-management-costs'],
+            'validation_groups' => ['prof-deputy-estimate-costs'],
             'constraints' => new Valid(),
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
@@ -35,6 +35,6 @@ class ProfDeputyManagementCostType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'deputy_management_costs';
+        return 'deputy_management_cost';
     }
 }

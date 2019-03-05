@@ -21,7 +21,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
     private static $jmsGroups = [
         'status',
         'prof-deputy-costs-estimate-how-charged',
-        'prof-deputy-management-costs',
         'prof-deputy-estimate-costs',
         'prof-deputy-costs-estimate-more-info'
     ];
@@ -86,10 +85,13 @@ class ProfDeputyCostsEstimateController extends AbstractController
     }
 
     /**
-     * @Route("/management-costs", name="prof_deputy_management_costs")
+     * @Route("/management-cost", name="prof_deputy_management_cost")
      * @Template()
+     * @param Request $request
+     * @param string $reportId
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function managementCostsAction(Request $request, $reportId)
+    public function managementCostAction(Request $request, $reportId)
     {
         $from = $request->get('from');
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -98,7 +100,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-management-costs']);
+            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -150,7 +152,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         }
 
         return [
-            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_management_costs', ['reportId'=>$reportId]),
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_management_cost', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -261,7 +263,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
 
         return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
             'prof_deputy_costs_estimate_summary' :
-            'prof_deputy_management_costs';
+            'prof_deputy_management_cost';
     }
 
     /**
