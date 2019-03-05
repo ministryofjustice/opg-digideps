@@ -508,7 +508,7 @@ profDeputyOtherCost:
   moreDetails:
     notBlank: Please give us some more information
 
-profDeputyCostsEstimateManagementCost:
+profDeputyManagementCostAmount:
   amount:
     notBlank: Please enter an amount
 

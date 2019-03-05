@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Constraints;
+use Symfony\Component\Validator\Constraints\Valid;
 
 class ProfDeputyManagementCostType extends AbstractType
 {
@@ -16,7 +16,8 @@ class ProfDeputyManagementCostType extends AbstractType
             ->add('profDeputyManagementCostAmount', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,
-                'error_bubbling' => false
+                'error_bubbling' => false,
+                'constraints' => new Valid(),
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
@@ -25,7 +26,6 @@ class ProfDeputyManagementCostType extends AbstractType
     {
         $resolver->setDefaults([
             'validation_groups' => ['prof-deputy-estimate-costs'],
-            'constraints' => [new Constraints\NotBlank(['message' => 'profDeputyCostsEstimateManagementCost.amount.notBlank'])],
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
