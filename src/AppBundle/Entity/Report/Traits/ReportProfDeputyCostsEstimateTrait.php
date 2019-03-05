@@ -42,6 +42,12 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyManagementCostAmount;
 
     /**
+     * @JMS\Type("array")
+     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     */
+    private $profDeputyManagementCostTypeIds;
+
+    /**
      * @var string yes/no
      *
      * @Assert\NotBlank(message="common.yesnochoice.notBlank", groups={"prof-deputy-costs-estimate-more-info"})
@@ -237,4 +243,21 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getProfDeputyManagementCostTypeIds()
+    {
+        return $this->profDeputyManagementCostTypeIds;
+    }
+
+    /**
+     * @param array $profDeputyManagementCostTypeIds
+     * @return ReportProfDeputyCostsEstimateTrait
+     */
+    public function setProfDeputyManagementCostTypeIds($profDeputyManagementCostTypeIds)
+    {
+        $this->profDeputyManagementCostTypeIds = $profDeputyManagementCostTypeIds;
+        return $this;
+    }
 }

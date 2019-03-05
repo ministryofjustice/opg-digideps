@@ -1,3 +1,4 @@
+@pd-cost-estimate
 Feature: Prof deputy costs estimate
 
   # Happy paths and Overview status checks
@@ -83,7 +84,6 @@ Feature: Prof deputy costs estimate
     When I click on "breadcrumbs-report-overview"
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
-    @tdd
   Scenario: Completing the Assessed Costs route with costs and more info and viewing the status overview
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
@@ -321,7 +321,6 @@ Feature: Prof deputy costs estimate
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
 
   # Form validation
-  @tdd
   Scenario: Submitting form with missing data
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000023" region
