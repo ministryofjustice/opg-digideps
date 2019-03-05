@@ -258,7 +258,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $updatedHowCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
 
         if ($this->answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)) {
-            return 'prof_deputy_management_costs';
+            return 'prof_deputy_management_cost';
         }
 
         return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
