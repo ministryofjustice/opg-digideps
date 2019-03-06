@@ -23,7 +23,7 @@ class ProfDeputyManagementCostType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => ['prof-deputy-management-cost'],
+            'validation_groups' => ['prof-deputy-estimate-management-costs'],
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);
     }
