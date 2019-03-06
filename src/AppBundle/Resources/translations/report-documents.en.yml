@@ -49,6 +49,8 @@ startPage:
   notice: |
     You do not need to attach a copy of this report. When you submit your report it will be
     sent to OPG automatically.
+  deputyProfNotice: |
+    Send your final cost certificate for the previous reporting period.
   startButton: Start
 
 stepPage:
