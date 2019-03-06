@@ -34,10 +34,9 @@ trait ReportProfDeputyCostsEstimateTrait
 
     /**
      * @var float
-     * @Assert\NotBlank( message="profDeputyCostsEstimateManagementCost.managementCost.notBlank", groups={"prof-deputy-management-cost"} )
      *
      * @JMS\Type("double")
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
+     * @JMS\Groups({"prof-deputy-estimate-management-costs"})
      */
     private $profDeputyManagementCostAmount;
 
