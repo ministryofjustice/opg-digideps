@@ -70,7 +70,7 @@ Feature: ndr / report submit
             # assert submission and download
         Given each text should be present in the corresponding region:
             | Cly3 Hent3 | report-submission-1 |
-            | behat003 | report-submission-1 |
+            | 33333333 | report-submission-1 |
             | Report | report-submission-1 |
         When I check "cb1"
         Then I click on "download"
@@ -86,7 +86,7 @@ Feature: ndr / report submit
         Then I should see the "report-submission" region exactly 1 times
         And each text should be present in the corresponding region:
             | Cly3 Hent3| report-submission-1 |
-            | behat003 | report-submission-1 |
+            | 33333333 | report-submission-1 |
             | Report | report-submission-1 |
             | AU | report-submission-1 |
 
