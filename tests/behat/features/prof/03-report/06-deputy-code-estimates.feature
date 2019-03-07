@@ -91,11 +91,9 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
-    And the URL should match "/report/\d+/prof-deputy-costs-estimate/management-cost"
-    And the step with the following values CAN be submitted:
-      | deputy_management_cost_profDeputyManagementCostAmount      | 4.99  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_0_amount      | 10.01 |
       | deputy_estimate_costs_profDeputyEstimateCosts_1_amount      | 20.02 |
       | deputy_estimate_costs_profDeputyEstimateCosts_2_amount      | 30.03 |
@@ -330,9 +328,9 @@ Feature: Prof deputy costs estimate
     When the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
     And the step with the following values CANNOT be submitted:
-      | deputy_management_cost_profDeputyManagementCostAmount       |       |
+      | deputy_estimate_costs_profDeputyManagementCostAmount        |       |
     And the step with the following values CAN be submitted:
-      | deputy_management_cost_profDeputyManagementCostAmount       | 4.99  |
+      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
     Then the step with the following values CANNOT be submitted:
       | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
