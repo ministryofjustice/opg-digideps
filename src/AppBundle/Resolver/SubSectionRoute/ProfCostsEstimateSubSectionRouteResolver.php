@@ -8,7 +8,6 @@ use AppBundle\Entity\Report\Status;
 class ProfCostsEstimateSubSectionRouteResolver
 {
     const SUMMARY_ROUTE = 'prof_deputy_costs_estimate_summary';
-    const MANAGEMENT_COST_ROUTE = 'prof_deputy_management_cost';
     const BREAKDOWN_ROUTE = 'prof_deputy_costs_estimate_breakdown';
     const MORE_INFO_ROUTE = 'prof_deputy_costs_estimate_more_info';
 
@@ -25,10 +24,6 @@ class ProfCostsEstimateSubSectionRouteResolver
 
         if ($this->sectionIsComplete($state)) {
             return self::SUMMARY_ROUTE;
-        }
-
-        if ($this->managementCostSubsectionIsIncomplete($report, $state)) {
-            return self::MANAGEMENT_COST_ROUTE;
         }
 
         if ($this->breakdownSubsectionIsIncomplete($report, $state)) {
@@ -56,16 +51,6 @@ class ProfCostsEstimateSubSectionRouteResolver
     private function sectionIsComplete($state)
     {
         return Status::STATE_DONE === $state;
-    }
-
-    /**
-     * @param Report $report
-     * @param $state
-     * @return bool
-     */
-    private function managementCostSubsectionIsIncomplete(Report $report, $state)
-    {
-        return Status::STATE_INCOMPLETE === $state && empty($report->getProfDeputyManagementCostAmount());
     }
 
     /**

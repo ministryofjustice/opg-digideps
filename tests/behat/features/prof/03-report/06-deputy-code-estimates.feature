@@ -59,10 +59,11 @@ Feature: Prof deputy costs estimate
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
-    When I click on "save-and-continue"
+    And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount       | 4.99  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
     And the step with the following values CAN be submitted:
-      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0 | no |
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0 | no    |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "How will you be charging for your services?" in the "how-charged" region
     And I should see "Assessed costs" in the "how-charged" region
@@ -72,7 +73,7 @@ Feature: Prof deputy costs estimate
     And I should see "£0.00" in the "breakdown-contact-case-manager-carers" region
     And I should see "Contact with other parties" in the "breakdown-contact-others" region
     And I should see "£0.00" in the "breakdown-contact-others" region
-    And I should see "Work on forms and other documents" in the "breakdown-forms-documents" region
+    And I should see "Work on forms and other documents" in the "breakdown-forms-documents" regionƒ
     And I should see "£0.00" in the "breakdown-forms-documents" region
     And I should see "Other" in the "breakdown-other" region
     And I should see "£0.00" in the "breakdown-other" region
@@ -143,7 +144,8 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
-    Then I click on "save-and-continue"
+    And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount       | 4.99  |
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes        |
       | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails | Extra text |
@@ -151,6 +153,7 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-contact-client"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_0_amount | 10.01 |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "Answer edited"
@@ -158,6 +161,7 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-contact-case-manager-carers"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_1_amount | 20.02 |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "Answer edited"
@@ -165,6 +169,7 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-contact-others"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_2_amount | 30.03 |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "Answer edited"
@@ -172,6 +177,7 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-forms-documents"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_3_amount | 40.04 |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
     And I should see "Answer edited"
@@ -179,6 +185,7 @@ Feature: Prof deputy costs estimate
     When I click on "edit-breakdown-other"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 50.05 |
       | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/summary"
@@ -219,6 +226,7 @@ Feature: Prof deputy costs estimate
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/breakdown"
     When the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_2_amount | 30.03 |
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes        |
@@ -249,6 +257,7 @@ Feature: Prof deputy costs estimate
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
     And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount   | 4.99  |
       | deputy_estimate_costs_profDeputyEstimateCosts_2_amount | 30.03 |
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0 | no |
@@ -287,7 +296,8 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
-    And I click on "save-and-continue"
+    And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount       | 4.99  |
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0 | no |
     When I click on "breadcrumbs-report-overview"
@@ -313,7 +323,8 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
-    When I click on "save-and-continue"
+    And the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount       | 4.99  |
     And I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs_estimate"
     And the URL should match "/report/\d+/prof-deputy-costs-estimate/more-info"
@@ -331,13 +342,18 @@ Feature: Prof deputy costs estimate
       | deputy_estimate_costs_profDeputyManagementCostAmount        |       |
     And the step with the following values CAN be submitted:
       | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
-    Then the step with the following values CANNOT be submitted:
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
-    When the step with the following values CAN be submitted:
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
     Then the step cannot be submitted without making a selection
     And the step with the following values CANNOT be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes |
       | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |     |
+    And the step with the following values CAN be submitted:
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0  | no    |
+    When I click on "edit-breakdown-contact-others"
+    Then the step with the following values CANNOT be submitted:
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
+    When the step with the following values CAN be submitted:
+      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
+
