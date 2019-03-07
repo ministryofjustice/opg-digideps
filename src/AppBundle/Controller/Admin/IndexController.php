@@ -119,12 +119,11 @@ class IndexController extends AbstractController
      */
     public function editUserAction(Request $request)
     {
-        $what = $request->get('what');
         $filter = $request->get('filter');
 
         try {
             /* @var $user EntityDir\User */
-            $user = $this->getRestClient()->get("user/get-one-by/{$what}/{$filter}", 'User', ['user', 'user-clients', 'client', 'client-reports', 'ndr']);
+            $user = $this->getRestClient()->get("v2/deputy/{$filter}", 'User');
         } catch (\Exception $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
@@ -179,7 +178,7 @@ class IndexController extends AbstractController
 
                     $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
 
-                    $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $user->getId()]));
+                    $this->redirect($this->generateUrl('admin_editUser', ['filter' => $user->getId()]));
                 } catch (\Exception $e) {
                     switch ((int) $e->getCode()) {
                         case 422:
@@ -233,7 +232,7 @@ class IndexController extends AbstractController
         $client = $ndr->getClient();
         $users = $client->getUsers();
 
-        return $this->redirect($this->generateUrl('admin_editUser', ['what' => 'user_id', 'filter' => $users[0]->getId()]));
+        return $this->redirect($this->generateUrl('admin_editUser', ['filter' => $users[0]->getId()]));
     }
 
     /**
