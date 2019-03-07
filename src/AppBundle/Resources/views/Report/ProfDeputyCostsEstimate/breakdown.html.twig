@@ -19,11 +19,24 @@
 
 {% block pageContent %}
 
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    <p class="heading-small push-half--bottom  text">
+        {{ (page ~ '.form.profDeputyCostsEstimateManagementCost.sectionDescription') | trans(transOptions) }}
+    </p>
+
+    <div>
+        {{ form_input(form.profDeputyManagementCostAmount, 'amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans,
+            'labelRaw': true
+        }) }}
+    </div>
+
     <p class="heading-small push-half--bottom  text">
         {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
     </p>
-
-    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for profDeputyEstimateCost in form.profDeputyEstimateCosts %}
         <div class="{{ profDeputyEstimateCost.moreDetails is defined ? ' js-details-expander ' : '' }}">

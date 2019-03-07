@@ -13,6 +13,11 @@ class ProfDeputyEstimateCostsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('profDeputyManagementCostAmount', FormTypes\NumberType::class, [
+                'scale' => 2,
+                'error_bubbling' => false,
+                'constraints' => new Valid(),
+            ])
             ->add('profDeputyEstimateCosts', FormTypes\CollectionType::class, [
                 'entry_type' => ProfDeputyEstimateCostSingleType::class,
                 'constraints' => new Valid(),
@@ -24,7 +29,7 @@ class ProfDeputyEstimateCostsType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Report\Report',
-            'validation_groups' => ['prof-deputy-estimate-costs'],
+            'validation_groups' => ['prof-deputy-estimate-costs', 'prof-deputy-estimate-management-costs'],
             'constraints' => new Valid(),
             'translation_domain' => 'report-prof-deputy-costs-estimate',
         ]);

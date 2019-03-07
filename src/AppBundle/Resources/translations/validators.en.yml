@@ -508,15 +508,10 @@ profDeputyOtherCost:
   moreDetails:
     notBlank: Please give us some more information
 
-profDeputyManagementCostAmount:
-  amount:
-    notBlank: Please enter an amount
-
-profDeputyCostsEstimateHowCharged:
-  howCharged:
-    notBlank: Please select an option
-
 profDeputyEstimateCost:
+  profDeputyManagementCostAmount:
+    amount:
+      notBlank: Please enter an amount
   amount:
     notNumeric: Amount not valid
     minMessage: The amount must be more than £{{ limit }}
