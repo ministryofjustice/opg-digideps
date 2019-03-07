@@ -85,41 +85,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
     }
 
     /**
-     * @Route("/management-cost", name="prof_deputy_management_cost")
-     * @Template()
-     * @param Request $request
-     * @param string $reportId
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function managementCostAction(Request $request, $reportId)
-    {
-        $from = $request->get('from');
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(FormDir\Report\ProfDeputyManagementCostType::class, $report);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-management-costs']);
-
-            if ($from === 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
-                $nextRoute = 'prof_deputy_costs_estimate_summary';
-            } else {
-                $nextRoute = 'prof_deputy_costs_estimate_breakdown';
-            }
-
-            return $this->redirect($this->generateUrl($nextRoute, ['reportId' => $reportId]));
-        }
-
-        return [
-            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_how_charged', ['reportId'=>$reportId]),
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    /**
      * @Route("/breakdown", name="prof_deputy_costs_estimate_breakdown")
      * @Template()
      */
@@ -152,7 +117,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         }
 
         return [
-            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_management_cost', ['reportId'=>$reportId]),
+            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_how_charged', ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -258,12 +223,12 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $updatedHowCharged = $form->getData()->getProfDeputyCostsEstimateHowCharged();
 
         if ($this->answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)) {
-            return 'prof_deputy_management_cost';
+            return 'prof_deputy_costs_estimate_breakdown';
         }
 
         return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
             'prof_deputy_costs_estimate_summary' :
-            'prof_deputy_management_cost';
+            'prof_deputy_costs_estimate_breakdown';
     }
 
     /**
