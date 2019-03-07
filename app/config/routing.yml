@@ -2,4 +2,8 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
     prefix:   /
-    
+
+app_v2:
+    resource: "@AppBundle/v2/Controller/"
+    type:     annotation
+    prefix:   /v2

@@ -1,0 +1,6 @@
+services:
+  AppBundle\v2\Controller\DeputyController:
+    class: AppBundle\v2\Controller\DeputyController
+    arguments:
+      - '@AppBundle\v2\Repository\DeputyRepository'
+    public: true

@@ -1,12 +1,17 @@
+imports:
+    - { resource: services/assemblers.yml }
+    - { resource: services/controllers.yml }
+    - { resource: services/repositories.yml }
+
 services:
     kernel.listener.responseConverter:
         class: AppBundle\EventListener\RestInputOuputFormatter
         arguments: [ "@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
         public: true
         tags:
-            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     em:
         alias: doctrine.orm.entity_manager
         public: true
