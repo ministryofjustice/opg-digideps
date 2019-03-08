@@ -420,8 +420,7 @@ class FormattedTest extends WebTestCase
         $this
             ->report
             ->setProfDeputyCostsHowChargedFixed(null)
-            ->setProfDeputyCostsHowChargedAssessed(null)
-            ->setProfDeputyCostsHowChargedAgreed(null);
+            ->setProfDeputyCostsHowChargedAssessed(null);
     }
 
     /**
@@ -432,8 +431,7 @@ class FormattedTest extends WebTestCase
         $this
             ->report
             ->setProfDeputyCostsHowChargedFixed(true)
-            ->setProfDeputyCostsHowChargedAssessed(false)
-            ->setProfDeputyCostsHowChargedAgreed(false);
+            ->setProfDeputyCostsHowChargedAssessed(false);
     }
 
     private function ensureDeputyCostsWithNonFixedAndInterimEqualTo($interim)
@@ -454,7 +452,6 @@ class FormattedTest extends WebTestCase
             ->report
             ->setProfDeputyCostsHowChargedFixed(true)
             ->setProfDeputyCostsHowChargedAssessed(true)
-            ->setProfDeputyCostsHowChargedAgreed(false)
             ->setProfDeputyCostsHasInterim(null);
     }
 
