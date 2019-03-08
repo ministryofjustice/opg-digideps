@@ -21,7 +21,6 @@ howCharged:
     profDeputyCostsHow.hint: "Select all that apply"
     profDeputyCostsHowChargedFixed.label: "Fixed costs"
     profDeputyCostsHowChargedAssessed.label: "Assessed costs"
-    profDeputyCostsHowChargedAgreed.label: "Agreed"
 
 previousReceivedExists:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"

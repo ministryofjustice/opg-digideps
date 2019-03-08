@@ -14,7 +14,6 @@ class ProfDeputyCostHowType extends AbstractType
         $builder
             ->add('profDeputyCostsHowChargedFixed', FormTypes\CheckboxType::class)
             ->add('profDeputyCostsHowChargedAssessed', FormTypes\CheckboxType::class)
-            ->add('profDeputyCostsHowChargedAgreed', FormTypes\CheckboxType::class)
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 

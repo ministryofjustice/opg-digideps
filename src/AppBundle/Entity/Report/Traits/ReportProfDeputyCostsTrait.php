@@ -28,14 +28,6 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHowChargedAssessed;
 
     /**
-     * @var boolean
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"deputyCostsHowCharged"})
-     */
-    private $profDeputyCostsHowChargedAgreed;
-
-    /**
      * @var string yes/no
      *
      * @JMS\Type("string")
@@ -127,8 +119,7 @@ trait ReportProfDeputyCostsTrait
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
         return $this->profDeputyCostsHowChargedFixed
-            && !$this->profDeputyCostsHowChargedAssessed
-            && !$this->profDeputyCostsHowChargedAgreed;
+            && !$this->profDeputyCostsHowChargedAssessed;
     }
 
     /**
@@ -190,30 +181,12 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return boolean
-     */
-    public function getProfDeputyCostsHowChargedAgreed()
-    {
-        return $this->profDeputyCostsHowChargedAgreed;
-    }
-
-    /**
-     * @param string $profDeputyCostsHowChargedAgreed
-     */
-    public function setProfDeputyCostsHowChargedAgreed($profDeputyCostsHowChargedAgreed)
-    {
-        $this->profDeputyCostsHowChargedAgreed = $profDeputyCostsHowChargedAgreed;
-        return $this;
-    }
-
-    /**
      * @param ExecutionContextInterface $context
      */
     public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
     {
         if (!$this->profDeputyCostsHowChargedFixed
             && !$this->profDeputyCostsHowChargedAssessed
-            && ! $this->profDeputyCostsHowChargedAgreed
         ) {
             $context->buildViolation('profDeputyHowChanged.atLeastOne')
                 ->atPath('profDeputyCostsHowChargedFixed')
