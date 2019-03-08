@@ -52,6 +52,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [new \DateTime('2018-08-15'), 2019, new \DateTime('2018-08-15')],
             [new \DateTime('2018-08-16'), 2019, new \DateTime('2018-08-16')],
             [new \DateTime('2019-08-16'), 2019, new \DateTime('2019-08-16')],
+            [new \DateTime('2016-02-29'), 2020, new \DateTime('2019-03-01')],
+            [new \DateTime('2020-02-29'), 2020, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2021, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2022, new \DateTime('2021-03-01')],
         ];
     }
 
@@ -70,7 +74,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             [new \DateTime('1999-03-01'), 2016, new \DateTime('2016-02-29')],
             [new \DateTime('2018-08-15'), 2019, new \DateTime('2019-08-14')],
             [new \DateTime('2018-08-16'), 2019, new \DateTime('2019-08-15')],
-            [new \DateTime('2017-08-17'), 2019, new \DateTime('2019-08-16')]
+            [new \DateTime('2017-08-17'), 2019, new \DateTime('2019-08-16')],
         ];
     }
 
