@@ -31,6 +31,22 @@
 
         {# Breakdown of estimated costs #}
         {% if submittedEstimateCosts is not null %}
+            {# General Management Cost #}
+            <tr class="behat-region-management-cost">
+                <td>
+                    {{ 'breakdown.form.profDeputyCostsEstimateManagementCost.label' | trans }}
+                </td>
+                <td>
+                    £{{ (report.profDeputyManagementCostAmount) | money_format }}
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="change-answer">
+                        <a href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-breakdown-management-cost">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    </td>
+                {% endif %}
+            </tr>
+
+            {# Detailed entries #}
             {% for estimateCostTypeId in report.getProfDeputyEstimateCostTypeIds %}
                 {% set costRow = submittedEstimateCosts[estimateCostTypeId.typeId] %}
                 <tr class="behat-region-breakdown-{{ estimateCostTypeId.typeId | lower }}">

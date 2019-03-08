@@ -29,6 +29,9 @@ breakdown:
   pageSectionDescription: Give us a breakdown of what you and other fee earners expect to charge %client% during the next reporting period
   pageHint: ""
   form:
+    profDeputyCostsEstimateManagementCost:
+      sectionDescription: How much do you expect to charge %client% for the general management of this case in the next reporting period?
+      label: General management costs
     entries:
       contact-client:
         label: Contact with the client, their family and friends

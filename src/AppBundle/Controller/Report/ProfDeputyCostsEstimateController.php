@@ -104,7 +104,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs']);
+            $this->persistUpdate($reportId, $form->getData(), ['prof-deputy-estimate-costs', 'prof-deputy-estimate-management-costs']);
 
             if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -153,31 +153,6 @@ class ProfDeputyCostsEstimateController extends AbstractController
     }
 
     /**
-     * Retrieves the list of default estimate cost type IDs using virtual property from api
-     * Used to generate the page since with no initial data, we cant display form inputs
-     * without this list.
-     *
-     * @param EntityDir\Report\Report $report
-     * @return array
-     */
-    private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
-    {
-        $estimateCosts = [];
-
-        $defaultEstimateCostTypeIds = $report->getProfDeputyEstimateCostTypeIds();
-        foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
-            $estimateCosts[] = new EntityDir\Report\ProfDeputyEstimateCost(
-                $defaultEstimateCostType['typeId'],
-                null,
-                $defaultEstimateCostType['hasMoreDetails'],
-                null
-            );
-
-        }
-        return $estimateCosts;
-    }
-
-    /**
      * @Route("/summary", name="prof_deputy_costs_estimate_summary")
      * @Template()
      *
@@ -200,6 +175,31 @@ class ProfDeputyCostsEstimateController extends AbstractController
             'submittedEstimateCosts' => $costBreakdown,
             'report' => $report,
         ];
+    }
+
+    /**
+     * Retrieves the list of default estimate cost type IDs using virtual property from api
+     * Used to generate the page since with no initial data, we cant display form inputs
+     * without this list.
+     *
+     * @param EntityDir\Report\Report $report
+     * @return array
+     */
+    private function generateDefaultEstimateCosts(EntityDir\Report\Report $report)
+    {
+        $estimateCosts = [];
+
+        $defaultEstimateCostTypeIds = $report->getProfDeputyEstimateCostTypeIds();
+        foreach ($defaultEstimateCostTypeIds as $defaultEstimateCostType) {
+            $estimateCosts[] = new EntityDir\Report\ProfDeputyEstimateCost(
+                $defaultEstimateCostType['typeId'],
+                null,
+                $defaultEstimateCostType['hasMoreDetails'],
+                null
+            );
+
+        }
+        return $estimateCosts;
     }
 
     /**
