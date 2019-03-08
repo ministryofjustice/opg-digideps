@@ -22,7 +22,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
         'status',
         'prof-deputy-costs-estimate-how-charged',
         'prof-deputy-estimate-costs',
-        'prof-deputy-costs-estimate-more-info'
+        'prof-deputy-costs-estimate-more-info',
+        'prof-deputy-estimate-management-costs'
     ];
 
     /**
