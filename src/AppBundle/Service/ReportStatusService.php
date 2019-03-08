@@ -396,11 +396,9 @@ class ReportStatusService
 
         //TODO move to method
         $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
-            && ! $this->report->getProfDeputyCostsHowChargedAgreed()
             && ! $this->report->getProfDeputyCostsHowChargedAssessed();
 
         $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
-            || $this->report->getProfDeputyCostsHowChargedAgreed()
             || $this->report->getProfDeputyCostsHowChargedAssessed();
 
         if (!$atLeastOneTicked) {

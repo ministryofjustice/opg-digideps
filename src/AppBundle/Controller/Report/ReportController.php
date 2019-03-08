@@ -459,15 +459,9 @@ class ReportController extends RestController
             $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
-        if (array_key_exists('prof_deputy_costs_how_charged_agreed', $data)) {
-            $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
         // update depending data depending on the selection on the "how charged" checkboxes
         if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)
             || array_key_exists('prof_deputy_costs_how_charged_assessed', $data)
-            || array_key_exists('prof_deputy_costs_how_charged_agreed', $data)
         ) {
             if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                 $report->setProfDeputyCostsHasInterim(null);

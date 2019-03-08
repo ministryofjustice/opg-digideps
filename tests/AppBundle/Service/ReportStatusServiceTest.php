@@ -87,7 +87,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'paFeesExpensesNotStarted'      => null,
                 'paFeesExpensesCompleted'       => null,
                 'getProfDeputyCostsHowChargedFixed' => null,
-                'getProfDeputyCostsHowChargedAgreed' => null,
                 'getProfDeputyCostsHowChargedAssessed' => null,
                 'getProfDeputyCostsHasPrevious' => null,
                 'getProfDeputyFixedCost' => null,
@@ -417,7 +416,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
     {
 
         $onlyFixedTicked = ['getProfDeputyCostsHowChargedFixed' => true];
-        $twoTicked = ['getProfDeputyCostsHowChargedFixed' => true, 'getProfDeputyCostsHowChargedAgreed' => true];
+        $twoTicked = ['getProfDeputyCostsHowChargedFixed' => true, 'getProfDeputyCostsHowChargedAssessed' => true];
 
         $prevNo = ['getProfDeputyCostsHasPrevious' => 'no'];
         $prevYes = ['getProfDeputyCostsHasPrevious' => 'yes', 'getProfDeputyPreviousCosts' => [1, 2]];
