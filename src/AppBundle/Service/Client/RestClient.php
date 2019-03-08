@@ -294,7 +294,6 @@ class RestClient
      */
     public function apiCall($method, $endpoint, $data, $expectedResponseType, $options = [], $authenticated = true)
     {
-
         if ($data) {
             $options['body'] = $this->toJson($data, $options);
         }
