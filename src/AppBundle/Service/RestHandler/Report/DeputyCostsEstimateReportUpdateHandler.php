@@ -29,7 +29,9 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         $this
             ->updateHowCharged($report, $data)
             ->updateBreakdownEstimates($report, $data)
-            ->updateMoreInfo($report, $data);
+            ->updateMoreInfo($report, $data)
+            ->updateManagementCost($report, $data)
+        ;
 
         $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
     }
@@ -51,7 +53,8 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
 
             $report
                 ->setProfDeputyCostsEstimateHasMoreInfo(null)
-                ->setProfDeputyCostsEstimateMoreInfoDetails(null);
+                ->setProfDeputyCostsEstimateMoreInfoDetails(null)
+                ->setProfDeputyCostsEstimateManagementCostAmount(null);
 
             if (!$report->getProfDeputyEstimateCosts()->isEmpty()) {
                 foreach ($report->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
@@ -176,5 +179,17 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         }
 
         return $this;
+    }
+
+    /**
+     * @param Report $report
+     * @param array $data
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function updateManagementCost(Report $report, array $data) {
+        if (array_key_exists('prof_deputy_management_cost_amount', $data)) {
+            $report->setProfDeputyCostsEstimateManagementCostAmount($data['prof_deputy_management_cost_amount']);
+            $this->em->flush();
+        }
     }
 }

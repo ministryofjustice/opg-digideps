@@ -441,8 +441,8 @@ class Report implements ReportInterface
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new \DateTime($startDate->format('Y-m-d'));
-        $this->endDate = new \DateTime($endDate->format('Y-m-d'));
+        $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
