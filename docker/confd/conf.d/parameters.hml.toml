@@ -18,5 +18,6 @@ keys = [
     "/frontend/s3/bucketname",
     "/frontend/s3/fakes3",
     "/frontend/filescanner/url",
-    "/frontend/filescanner/sslverify"
+    "/frontend/filescanner/sslverify",
+    "/wkhtmltopdf/address"
  ]
