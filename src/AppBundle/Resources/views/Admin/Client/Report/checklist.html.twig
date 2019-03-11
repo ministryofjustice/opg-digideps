@@ -142,6 +142,11 @@
                 {% include 'AppBundle:Admin/Client/Report/partials:_prof-deputy-costs.html.twig' %}
             {% endif %}
 
+            {# Deputy costs estimates #}
+            {% if report.hasSection('profDeputyCostsEstimate') %}
+                {% include 'AppBundle:Admin/Client/Report/partials:_prof-deputy-costs-estimate.html.twig' %}
+            {% endif %}
+
             {# Next reporting period #}
             {% include 'AppBundle:Admin/Client/Report/partials:_next-reporting-period.html.twig' %}
 
@@ -251,6 +256,9 @@
                     {% if report.hasSection('profDeputyCosts') %}
                         <li><a href="#profDeputyCosts">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
                     {% endif %}
+                    {% if report.hasSection('profDeputyCostsEstimate') %}
+                        <li><a href="#profDeputyCostsEstimate">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
+                    {% endif %}                    
                     <li><a href="#nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
                     <li><a href="#declaration">{{ (page ~ '.heading.declaration') | trans }}</a></li>
                     <li><a href="#lodgingSummary">{{ (page ~ '.lodgingSummary.heading') | trans }}</a></li>

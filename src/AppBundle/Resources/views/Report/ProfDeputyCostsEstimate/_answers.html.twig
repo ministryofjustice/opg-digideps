@@ -4,12 +4,14 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
+{% if not hideEditLink %}
 <h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
 
 <p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
 {{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }}
 
 <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right behat-link-return-to-client-profile">{{ (page ~ '.returnToClientProfile') | trans }}</a>
+{% endif %}
 
 <table class="check-your-answers columns-2 push--bottom">
     {{ macros.summaryTableHeaderQA(hideEditLink) }}

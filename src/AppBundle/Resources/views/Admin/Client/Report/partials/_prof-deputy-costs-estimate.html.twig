@@ -1,0 +1,31 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
+{% set submittedEstimateCosts = 0 %}
+
+<h3 class="heading-medium underline" id="profDeputyCostsEstimate">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.nextBillingEstimatesSatisfactory, (page ~ '.form.satisfiedEstimatesNextBilling'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCostsEstimate') | trans }}</span>
+        </summary>
+        <div class="panel panel-border-narrow">
+            <div>
+                {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' with {
+                    'report': report,
+                    'hideEditLink' : hideEditLink,
+                    'submittedEstimateCosts': submittedEstimateCosts
+                } %}
+            </div>
+        </div>
+    </details>
+
+</div>

@@ -730,6 +730,8 @@ checklist:
     notBlank: Please select 'Yes' or 'No'
   hasDeputyOverchargedFromPreviousEstimates:
     notBlank: Please select 'Yes' or 'No'
+  nextBillingEstimatesSatisfactory:
+    notBlank: Please select 'Yes' or 'No'
   futureSignificantDecisions:
     notBlank: Please choose an option
   hasDeputyRaisedConcerns:

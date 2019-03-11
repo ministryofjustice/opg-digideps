@@ -220,6 +220,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.nextBillingEstimatesSatisfactory.notBlank", groups={"submit-profDeputyCostsEstimate-checklist"})
+     */
+    private $nextBillingEstimatesSatisfactory;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
      */
     private $lodgingSummary;
@@ -693,6 +702,25 @@ class Checklist
         $hasDeputyOverchargedFromPreviousEstimates
     ) {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNextBillingEstimatesSatisfactory()
+    {
+        return $this->nextBillingEstimatesSatisfactory;
+    }
+
+    /**
+     * @param $nextBillingEstimatesSatisfactory
+     * @return $this
+     */
+    public function setNextBillingEstimatesSatisfactory(
+        $nextBillingEstimatesSatisfactory
+    ) {
+        $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
         return $this;
     }
 

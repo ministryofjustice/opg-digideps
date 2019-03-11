@@ -123,6 +123,13 @@ class ReportChecklistType extends AbstractType
             ]);
         }
 
+        if ($this->report->hasSection('profDeputyCostsEstimate')) {
+            $builder->add('nextBillingEstimatesSatisfactory', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+        }
+
         // HW
         if($this->report->hasSection('lifestyle')) {
             // Health and Lifestyle question
