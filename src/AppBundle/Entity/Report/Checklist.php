@@ -229,6 +229,15 @@ class Checklist
     /**
      * @var string
      *
+     * @JMS\Groups({"report-checklist"})
+     *
+     * @ORM\Column(name="next_billing_estimate_satisfactory", type="string", length=3, nullable=true)
+     */
+    private $nextBillingEstimatesSatisfactory;
+
+    /**
+     * @var string
+     *
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist"})
      * @ORM\Column(name="lodging_summary", type="text", nullable=true)
@@ -722,6 +731,24 @@ class Checklist
     public function setHasDeputyOverchargedFromPreviousEstimates($hasDeputyOverchargedFromPreviousEstimates)
     {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNextBillingEstimatesSatisfactory()
+    {
+        return $this->nextBillingEstimatesSatisfactory;
+    }
+
+    /**
+     * @param $nextBillingEstimatesSatisfactory
+     * @return $this
+     */
+    public function setNextBillingEstimatesSatisfactory($nextBillingEstimatesSatisfactory)
+    {
+        $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
         return $this;
     }
 

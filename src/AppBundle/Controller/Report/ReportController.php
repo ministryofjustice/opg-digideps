@@ -808,6 +808,7 @@ class ReportController extends RestController
             'payments_match_cost_certificate' => 'setPaymentsMatchCostCertificate',
             'prof_costs_reasonable_and_proportionate' => 'setProfCostsReasonableAndProportionate',
             'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',
+            'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision',
             'button_clicked' => 'setButtonClicked'
