@@ -15,7 +15,7 @@
     {{ macros.careArrangements(visitsCare) }}
 
     {{ macros.answerYesNo({
-        question: 'If there is a care plan, when was it last reviewed?',
+        question: 'form.doesClientHaveACarePlan.label' | trans(transOptions, 'ndr-visits-care'),
         answer: visitsCare.doesClientHaveACarePlan,
         moreDetails: visitsCare.whenWasCarePlanLastReviewed | date("m / Y"),
         moreDetailsLabel: 'Review date',

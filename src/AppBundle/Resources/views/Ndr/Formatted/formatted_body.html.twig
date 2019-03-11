@@ -1,6 +1,7 @@
 {% set client = ndr.client %}
 {% set team = app.user.teams | first %}
 {% set isEmailAttachment = true %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
 
 <style type="text/css" media="screen, print">
     {% include 'AppBundle:Css:formatted-report.css.twig' %}
