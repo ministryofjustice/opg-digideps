@@ -35,7 +35,7 @@
                 {% if ndr.submitted %}
                     {% set status = 'submitted' %}
                 {% else %}
-                    {% set status = ndr.status.status %}
+                    {% set status = ndr.statusService.status %}
                 {% endif %}
 
                 <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
