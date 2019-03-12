@@ -50,6 +50,7 @@ Feature: ndr / report submit
         And I press "ndr_declaration_save"
         Then the form should be valid
         And the URL should match "/ndr/\d+/submitted"
+        And I save the application status into "ndr-after-submission"
         And the response status code should be 200
         # return to homepage
         When I click on "return-to-reports-page"
@@ -68,8 +69,8 @@ Feature: ndr / report submit
         Then I should see the "report-submission" region exactly 1 times
             # assert submission and download
         Given each text should be present in the corresponding region:
-            | Cly Hent | report-submission-1 |
-            | behat001 | report-submission-1 |
+            | Cly3 Hent3 | report-submission-1 |
+            | 33333333 | report-submission-1 |
             | Report | report-submission-1 |
         When I check "cb1"
         Then I click on "download"
@@ -84,8 +85,8 @@ Feature: ndr / report submit
         When I click on "tab-archived"
         Then I should see the "report-submission" region exactly 1 times
         And each text should be present in the corresponding region:
-            | Cly Hent | report-submission-1 |
-            | behat001 | report-submission-1 |
+            | Cly3 Hent3| report-submission-1 |
+            | 33333333 | report-submission-1 |
             | Report | report-submission-1 |
             | AU | report-submission-1 |
 

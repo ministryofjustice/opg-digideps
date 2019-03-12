@@ -15,6 +15,7 @@ clientDetails:
   supportTitle: Client details
   reportsTitle: Submitted reports
   noResults: No reports found
+  ndrTitle: NDR report
 
 reportManage:
   htmlTitle: Administration - Manage report
