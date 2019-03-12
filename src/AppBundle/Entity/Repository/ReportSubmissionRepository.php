@@ -41,6 +41,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->leftJoin('rs.archivedBy', 'ab')
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c')
+            ->leftJoin('ndr.client', 'nc')
         ;
         // search filter
         if ($q) {
@@ -51,12 +52,18 @@ class ReportSubmissionRepository extends EntityRepository
                 // client names and case number (exact match)
                 'lower(c.firstname) LIKE :qLike',
                 'lower(c.lastname) LIKE :qLike',
+                // separate clause to check ndrs
+                'lower(nc.firstname) LIKE :qLike',
+                'lower(nc.lastname) LIKE :qLike',
                 // case number
-                'c.caseNumber = :q'
+                'c.caseNumber = :q',
+                // separate clause to check ndrs
+                'nc.caseNumber = :q'
             ]));
             $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             $qb->setParameter('q' , strtolower($q));
         }
+
         // role filter
         if ($createdByRole) {
             $qb->andWhere('cb.roleName LIKE :roleNameLikePrefix');
