@@ -15,7 +15,20 @@ class NdrTransformer
         return [
             'id' => $dto->getId(),
             'submitted' => $dto->getSubmitted(),
-            'submitDate' => $dto->getSubmitDate()->format('Y-m-d')
+            'submit_date' => $this->transformDate($dto, 'submitDate', 'Y-m-d\TH:i:sP'),
         ];
     }
+
+    /**
+     * @param NdrDto $dto
+     * @param $property
+     * @return null
+     */
+    private function transformDate(NdrDto $dto, $property, $format)
+    {
+        $getter = sprintf('get%s', ucfirst($property));
+
+        return $dto->{$getter}() instanceof \DateTime ? $dto->{$getter}()->format($format) : null;
+    }
+
 }
