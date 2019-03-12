@@ -8,6 +8,16 @@ class NdrDto
     private $id;
 
     /**
+     * @var bool
+     */
+    private $submitted;
+
+    /**
+     * @var \DateTime
+     */
+    private $submitDate;
+
+    /**
      * @return int
      */
     public function getId()
@@ -23,5 +33,37 @@ class NdrDto
     {
         $this->id = $id;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSubmitted()
+    {
+        return $this->submitted;
+    }
+
+    /**
+     * @param bool $submitted
+     */
+    public function setSubmitted($submitted)
+    {
+        $this->submitted = $submitted;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getSubmitDate()
+    {
+        return $this->submitDate;
+    }
+
+    /**
+     * @param \DateTime $submitDate
+     */
+    public function setSubmitDate($submitDate)
+    {
+        $this->submitDate = $submitDate;
     }
 }

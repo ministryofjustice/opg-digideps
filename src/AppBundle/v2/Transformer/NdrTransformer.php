@@ -13,7 +13,9 @@ class NdrTransformer
     public function transform(NdrDto $dto)
     {
         return [
-            'id' => $dto->getId()
+            'id' => $dto->getId(),
+            'submitted' => $dto->getSubmitted(),
+            'submitDate' => $dto->getSubmitDate()->format('Y-m-d')
         ];
     }
 }
