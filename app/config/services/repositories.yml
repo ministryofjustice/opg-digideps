@@ -1,26 +1,18 @@
 services:
-  ClientRepository:
+  AppBundle\Entity\Repository\ClientRepository:
     class: AppBundle\Entity\Client
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
     - AppBundle\Entity\Client
 
-  AppBundle\v2\Repository\ClientRepository:
-    class: AppBundle\v2\Repository\ClientRepository
-    arguments:
-    - '@doctrine.orm.entity_manager'
-    - '@UserRepository'
-
-  UserRepository:
+  AppBundle\Entity\Repository\UserRepository:
     class: AppBundle\Entity\User
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
       - AppBundle\Entity\User
 
-  AppBundle\v2\Repository\DeputyRepository:
-    class: AppBundle\v2\Repository\DeputyRepository
+  AppBundle\Entity\Repository\ReportRepository:
+    class: AppBundle\Entity\Report\Report
+    factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments:
-      - '@doctrine.orm.entity_manager'
-      - '@UserRepository'
-      - '@AppBundle\v2\Repository\ClientRepository'
-      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - AppBundle\Entity\Report\Report

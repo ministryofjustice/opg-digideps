@@ -2,5 +2,15 @@ services:
   AppBundle\v2\Controller\DeputyController:
     class: AppBundle\v2\Controller\DeputyController
     arguments:
-      - '@AppBundle\v2\Repository\DeputyRepository'
+      - '@AppBundle\Entity\Repository\UserRepository'
+      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
+    public: true
+
+  AppBundle\v2\Controller\ClientController:
+    class: AppBundle\v2\Controller\ClientController
+    arguments:
+    - '@AppBundle\Entity\Repository\ClientRepository'
+    - '@ClientAssemblerFromReportEntity'
+    - '@AppBundle\v2\Transformer\ClientTransformer'
     public: true

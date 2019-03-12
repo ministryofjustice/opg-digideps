@@ -96,4 +96,20 @@ class ClientRepository extends EntityRepository
             [$user->getId(), $teamId]
         );
     }
+
+    /**
+     * @param $id
+     * @return null
+     */
+    public function getArrayById($id)
+    {
+        $query = $this
+            ->getEntityManager()
+            ->createQuery('SELECT c, r, ndr FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr WHERE c.id = ?1')
+            ->setParameter(1, $id);
+
+        $result = $query->getArrayResult();
+
+        return count($result) === 0 ? null : $result[0];
+    }
 }

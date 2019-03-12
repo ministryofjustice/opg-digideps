@@ -2,52 +2,74 @@
 
 namespace AppBundle\v2\Assembler;
 
+use AppBundle\v2\Assembler\Report\ReportAssemblerInterface;
 use AppBundle\v2\DTO\ClientDto;
+use AppBundle\v2\DTO\DtoPropertySetterTrait;
 
 class ClientAssembler
 {
+    use DtoPropertySetterTrait;
+
+    /** @var ReportAssemblerInterface  */
+    private $reportDtoAssembler;
+
+    /** @var NdrAssembler */
+    private $ndrDtoAssembler;
+
+    /**
+     * @param ReportAssemblerInterface $reportDtoAssembler
+     * @param NdrAssembler $ndrDtoAssembler
+     */
+    public function __construct(ReportAssemblerInterface $reportDtoAssembler, NdrAssembler $ndrDtoAssembler)
+    {
+        $this->reportDtoAssembler = $reportDtoAssembler;
+        $this->ndrDtoAssembler = $ndrDtoAssembler;
+    }
+
     /**
      * @param array $data
      * @return ClientDto
      */
     public function assembleFromArray(array $data)
     {
-        $this->throwExceptionIfMissingRequiredData($data);
+        $dto = new ClientDto();
 
-        return new ClientDto(
-            $data['id'],
-            $data['case_number'],
-            $data['firstname'],
-            $data['lastname'],
-            $data['email'],
-            $data['report_count'],
-            $data['ndr_id']
-        );
-    }
+        $exclude = ['ndr', 'reports'];
+        $this->setPropertiesFromData($dto, $data, $exclude);
 
-    /**
-     * @param array $data
-     */
-    private function throwExceptionIfMissingRequiredData(array $data)
-    {
-        if (!$this->dataIsValid($data)) {
-            throw new \InvalidArgumentException(__CLASS__ . ': Missing all data required to build DTO');
+        if (isset($data['ndr']) && is_array($data['ndr'])) {
+            $dto->setNdr($this->assembleClientNdr($data['ndr']));
         }
+
+        if (isset($data['reports'])  && is_array($data['reports'])) {
+            $dto->setReports($this->assembleClientReports($data['reports']));
+            $dto->setReportCount(count($data['reports']));
+        }
+
+        return $dto;
     }
 
     /**
-     * @param array $data
-     * @return bool
+     * @param array $reports
+     * @return array
      */
-    private function dataIsValid(array $data)
+    private function assembleClientReports(array $reports)
     {
-        return
-            array_key_exists('id', $data) &&
-            array_key_exists('case_number', $data) &&
-            array_key_exists('firstname', $data) &&
-            array_key_exists('lastname', $data) &&
-            array_key_exists('email', $data) &&
-            array_key_exists('report_count', $data) &&
-            array_key_exists('ndr_id', $data);
+        $dtos = [];
+
+        foreach ($reports as $report) {
+            $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
+        }
+
+        return $dtos;
+    }
+
+    /**
+     * @param array $ndr
+     * @return
+     */
+    private function assembleClientNdr(array $ndr)
+    {
+        return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 }

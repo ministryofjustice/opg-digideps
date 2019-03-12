@@ -2,6 +2,7 @@ imports:
     - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/repositories.yml }
+    - { resource: services/transformers.yml }
 
 services:
     kernel.listener.responseConverter:
@@ -77,3 +78,6 @@ services:
     app.service.date_time_provider:
         class: AppBundle\Service\DateTimeProvider
         public: true
+
+    AppBundle\Service\ReportStatusServiceFactory:
+        class: AppBundle\Service\ReportStatusServiceFactory

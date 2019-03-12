@@ -2,84 +2,34 @@
 
 namespace AppBundle\v2\DTO;
 
-class DeputyDto implements \JsonSerializable
+class DeputyDto
 {
+    /** @var int */
     private $id;
+
+    /** @var string */
     private $firstName;
+
+    /** @var string */
     private $lastName;
+
+    /** @var string */
     private $email;
+
+    /** @var string */
     private $roleName;
-    private $postcode;
+
+    /** @var string */
+    private $addressPostcode;
+
+    /** @var bool */
     private $ndrEnabled;
+
+    /** @var array */
     private $clients;
 
     /**
-     * @param $id
-     * @param $firstName
-     * @param $lastName
-     * @param $email
-     * @param $roleName
-     * @param $postcode
-     * @param $ndrEnabled
-     */
-    public function __construct($id, $firstName, $lastName, $email, $roleName, $postcode, $ndrEnabled)
-    {
-        $this->id = $id;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->email = $email;
-        $this->roleName = $roleName;
-        $this->postcode = $postcode;
-        $this->ndrEnabled = $ndrEnabled;
-    }
-
-    /**
-     * @return array|mixed
-     */
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'firstname' => $this->firstName,
-            'lastname' => $this->lastName,
-            'email' => $this->email,
-            'role_name' => $this->roleName,
-            'address_postcode' => $this->postcode,
-            'ndr_enabled' => $this->ndrEnabled,
-            'clients' => $this->serializeClients()
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function serializeClients()
-    {
-        if (empty($this->clients)) {
-            return [];
-        }
-
-        $serializedClients = [];
-
-        foreach ($this->clients as $client) {
-            if ($client instanceof ClientDto) {
-                $serializedClients[] = $client->jsonSerialize();
-            }
-        }
-
-        return $serializedClients;
-    }
-
-    /**
-     * @param mixed $clients
-     */
-    public function setClients($clients)
-    {
-        $this->clients = $clients;
-    }
-
-    /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -87,7 +37,7 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getFirstName()
     {
@@ -95,7 +45,7 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getLastName()
     {
@@ -103,7 +53,7 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmail()
     {
@@ -111,7 +61,7 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getRoleName()
     {
@@ -119,15 +69,15 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPostcode()
+    public function getAddressPostcode()
     {
-        return $this->postcode;
+        return $this->addressPostcode;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getNdrEnabled()
     {
@@ -135,11 +85,91 @@ class DeputyDto implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getClients()
     {
         return $this->clients;
+    }
+
+    /**
+     * @param int $id
+     * @return DeputyDto
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @param string $firstName
+     * @return DeputyDto
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @param string $lastName
+     * @return DeputyDto
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @param string $email
+     * @return DeputyDto
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @param string $roleName
+     * @return DeputyDto
+     */
+    public function setRoleName($roleName)
+    {
+        $this->roleName = $roleName;
+        return $this;
+    }
+
+    /**
+     * @param string $addressPostcode
+     * @return DeputyDto
+     */
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+        return $this;
+    }
+
+    /**
+     * @param bool $ndrEnabled
+     * @return DeputyDto
+     */
+    public function setNdrEnabled($ndrEnabled)
+    {
+        $this->ndrEnabled = $ndrEnabled;
+        return $this;
+    }
+
+    /**
+     * @param array $clients
+     * @return DeputyDto
+     */
+    public function setClients(array $clients)
+    {
+        $this->clients = $clients;
+        return $this;
     }
 }
 

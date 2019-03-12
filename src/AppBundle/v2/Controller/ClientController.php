@@ -2,9 +2,9 @@
 
 namespace AppBundle\v2\Controller;
 
-use AppBundle\Entity\Repository\UserRepository;
-use AppBundle\v2\Assembler\DeputyAssembler;
-use AppBundle\v2\Transformer\DeputyTransformer;
+use AppBundle\Entity\Repository\ClientRepository;
+use AppBundle\v2\Assembler\ClientAssembler;
+use AppBundle\v2\Transformer\ClientTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,25 +12,25 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @Route("/deputy")
+ * @Route("/client")
  */
-class DeputyController
+class ClientController
 {
-    /** @var UserRepository  */
+    /** @var ClientRepository  */
     private $repository;
 
-    /** @var DeputyAssembler */
+    /** @var ClientAssembler */
     private $assembler;
 
-    /** @var DeputyTransformer */
+    /** @var ClientTransformer */
     private $transformer;
 
     /**
-     * @param UserRepository $repository
-     * @param DeputyAssembler $assembler
-     * @param DeputyTransformer $transformer
+     * @param ClientRepository $repository
+     * @param ClientAssembler $assembler
+     * @param ClientTransformer $transformer
      */
-    public function __construct(UserRepository $repository, DeputyAssembler $assembler, DeputyTransformer $transformer)
+    public function __construct(ClientRepository $repository, ClientAssembler $assembler, ClientTransformer $transformer)
     {
         $this->repository = $repository;
         $this->assembler = $assembler;
@@ -46,8 +46,8 @@ class DeputyController
      */
     public function getByIdAction($id)
     {
-        if (null === ($data = $this->repository->findUserArrayById($id))) {
-            throw new NotFoundHttpException(sprintf('Deputy id %s not found', $id));
+        if (null === ($data = $this->repository->getArrayById($id))) {
+            throw new NotFoundHttpException(sprintf('Client id %s not found', $id));
         }
 
         $dto = $this->assembler->assembleFromArray($data);

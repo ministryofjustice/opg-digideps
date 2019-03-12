@@ -1,0 +1,23 @@
+services:
+  AppBundle\v2\Transformer\NdrTransformer:
+    class: AppBundle\v2\Transformer\NdrTransformer
+
+  AppBundle\v2\Transformer\StatusTransformer:
+    class: AppBundle\v2\Transformer\StatusTransformer
+
+  AppBundle\v2\Transformer\ReportTransformer:
+    class: AppBundle\v2\Transformer\ReportTransformer
+    arguments:
+      - '@AppBundle\v2\Transformer\StatusTransformer'
+
+  AppBundle\v2\Transformer\ClientTransformer:
+    class: AppBundle\v2\Transformer\ClientTransformer
+    arguments:
+      - '@AppBundle\v2\Transformer\ReportTransformer'
+      - '@AppBundle\v2\Transformer\NdrTransformer'
+
+  AppBundle\v2\Transformer\DeputyTransformer:
+    class: AppBundle\v2\Transformer\DeputyTransformer
+    arguments:
+    - '@AppBundle\v2\Transformer\ClientTransformer'
+
