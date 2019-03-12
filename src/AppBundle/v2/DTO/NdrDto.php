@@ -15,6 +15,11 @@ class NdrDto
     /**
      * @var \DateTime
      */
+    private $startDate;
+
+    /**
+     * @var \DateTime
+     */
     private $submitDate;
 
     /**
@@ -49,6 +54,22 @@ class NdrDto
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param \DateTime $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
     }
 
     /**

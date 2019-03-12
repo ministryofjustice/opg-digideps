@@ -16,6 +16,7 @@ class NdrTransformer
             'id' => $dto->getId(),
             'submitted' => $dto->getSubmitted(),
             'submit_date' => $this->transformDate($dto, 'submitDate', 'Y-m-d\TH:i:sP'),
+            'start_date' => $this->transformDate($dto, 'startDate', 'Y-m-d\TH:i:sP'),
         ];
     }
 
