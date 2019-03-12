@@ -897,8 +897,13 @@ class Client
      * @JMS\Groups({"checklist-information"})
      * @return \DateTime|null
      */
-    public function getExpectedReportStartDate()
+    public function getExpectedReportStartDate($year = NULL)
     {
+        // Default year to current
+        if (!isset($year)) {
+            $year = date('Y');
+        }
+
         // clone datetime object. Do not alter object courtDate property.
         /** @var \DateTime $expectedReportStartDate */
         if (!($this->getCourtDate() instanceof \DateTime)) {
@@ -913,12 +918,12 @@ class Client
         }
 
         // if court Date is this year, just return it as the start date
-        if ($expectedReportStartDate->format('Y') == date('Y')) {
+        if ($expectedReportStartDate->format('Y') == $year) {
             return $this->getCourtDate();
         }
 
         // else make it last year
-        $expectedReportStartDate->setDate(date('Y')-1, $expectedReportStartDate->format('m'), $expectedReportStartDate->format('d'));
+        $expectedReportStartDate->setDate($year-1, $expectedReportStartDate->format('m'), $expectedReportStartDate->format('d'));
 
         return $expectedReportStartDate;
     }
@@ -934,12 +939,12 @@ class Client
      *
      * @return \DateTime|null
      */
-    public function getExpectedReportEndDate()
+    public function getExpectedReportEndDate($year = NULL)
     {
-        if (!($this->getExpectedReportStartDate() instanceof \DateTime)) {
+        if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
         }
-        $expectedReportEndDate = clone $this->getExpectedReportStartDate();
+        $expectedReportEndDate = clone $this->getExpectedReportStartDate($year);
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
