@@ -200,6 +200,8 @@ trait ReportProfDeputyCostsEstimateTrait
             $total += $profDeputyEstimateCost->getAmount();
         }
 
+        $total += $this->getProfDeputyCostsEstimateManagementCostAmount();
+
         return $total;
     }
 
