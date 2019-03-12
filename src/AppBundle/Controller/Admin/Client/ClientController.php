@@ -26,7 +26,7 @@ class ClientController extends AbstractController
      */
     public function detailsAction(Request $request, $id)
     {
-        $client = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
+        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
         return [
             'client'   => $client,
