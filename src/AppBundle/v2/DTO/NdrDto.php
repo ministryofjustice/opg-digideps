@@ -67,7 +67,7 @@ class NdrDto
     /**
      * @param \DateTime $startDate
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = $startDate;
     }
@@ -83,7 +83,7 @@ class NdrDto
     /**
      * @param \DateTime $submitDate
      */
-    public function setSubmitDate($submitDate)
+    public function setSubmitDate(\DateTime $submitDate)
     {
         $this->submitDate = $submitDate;
     }
