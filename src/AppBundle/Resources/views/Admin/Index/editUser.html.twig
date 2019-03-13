@@ -19,8 +19,7 @@
 
     {% set numberOfClients = user.clients | length %}
     {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
-    {% set reports = firstClient ? firstClient.reports : [] %}
-    {% set reportsCount = reports | length %}
+    {% set reportsCount = firstClient ? firstClient.totalReportCount : 0 %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
@@ -69,7 +68,7 @@
                 <tr>
                     <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
                     <td class="numeric-small">{{ client.caseNumber|upper }}</td>
-                    <td class="numeric-small">{{ client.reports | length }}</td>
+                    <td class="numeric-small">{{ client.totalReportCount }}</td>
                 </tr>
             {% endfor %}
         </table>

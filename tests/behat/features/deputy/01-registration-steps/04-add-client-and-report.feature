@@ -66,10 +66,10 @@ Feature: deputy / user / add client and report
     Then I should be on "client/add"
       # right values
     When I set the client details with:
-      | name       | Cly           | Hent         |            |         |    |
-      | caseNumber | behat001       |             |            |         |    |
-      | courtDate  | 1              | 1           | 2016       |         |    |
-      | address    | 1 South Parade | First Floor | Nottingham | NG1 2HT | GB |
+      | name       | Cly2           | Hent2         |            |         |    |
+      | caseNumber | behat002       |             |            |         |    |
+      | courtDate  | 2              | 2           | 2016       |         |    |
+      | address    | 2 South Parade | First Floor | Nottingham | NG1 2HT | GB |
       | phone      | 0123456789     |             |            |         |    |
     # No casrec entry
     And I press "client_save"
@@ -79,13 +79,13 @@ Feature: deputy / user / add client and report
   Scenario: add client (ndr) with no casrec record
     Given I add the following users to CASREC:
       | Case     | Surname       | Deputy No | Dep Surname  | Dep Postcode | Typeofrep |
-      | behat001 | Hent          | D001      | Doe NDR      | p0stc0d3      | OPG102    |
+      | 33333333 | Hent3          | D003      | Doe NDR      | p0stc0d3      | OPG102    |
     And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
       # right values
     When I set the client details with:
-      | name       | Cly           | Hent         |            |         |    |
-      | caseNumber | behat001       |             |            |         |    |
+      | name       | Cly3           | Hent3         |            |         |    |
+      | caseNumber | 33333333       |             |            |         |    |
       | courtDate  | 1              | 1           | 2016       |         |    |
       | address    | 1 South Parade | First Floor | Nottingham | NG1 2HT | GB |
       | phone      | 0123456789     |             |            |         |    |

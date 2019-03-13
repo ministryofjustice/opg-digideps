@@ -150,7 +150,7 @@
                                 {{ report.period | replace({'to': '-'}) }}
                             {% endif %}
                             {% if ndr %}
-                                NDR
+                                {{ 'ndr' | trans({}, 'common') }}
                             {% endif %}
                         </td>
                         <td>

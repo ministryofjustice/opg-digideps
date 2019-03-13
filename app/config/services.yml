@@ -24,7 +24,7 @@ services:
 
     wkhtmltopdf:
         class: AppBundle\Service\WkHtmlToPdfGenerator
-        arguments: [ "http://wkhtmltopdf:80", 30]
+        arguments: [ "%wkhtmltopdf_address%", 30]
 
     step_redirector:
       class: AppBundle\Service\StepRedirector
