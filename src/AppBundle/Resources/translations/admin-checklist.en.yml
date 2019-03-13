@@ -97,6 +97,9 @@ checklistPage:
         Are you satisfied that the money in and money out entries (including transfers), along
         with any comments, are acceptable, appear reasonable, and are inline with the terms of
         the court order?
+    deputyChargeAllowedByCourt:
+        label: |
+        Does the court order allow the deputy to charge for their services
     satisfiedWithPaExpenses:
       label: |
         Are you satisfied that responses have been provided that are in line with the terms of

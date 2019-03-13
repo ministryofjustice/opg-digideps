@@ -235,6 +235,16 @@
                 <table class="checkboxes labelvalue inline">
                     <tbody>
                     <tr>
+                        <td class="checkbox value">{% if checklist.deputyChargeAllowedByCourt == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.deputyChargeAllowedByCourt == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="checkboxes labelvalue inline">
+                    <tbody>
+                    <tr>
                         <td class="checkbox value">{% if checklist.satisfiedWithPaExpenses == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
                         <td class="checkbox value">{% if checklist.satisfiedWithPaExpenses == 'no' %}X{% else %}&nbsp;{% endif %}</td>
@@ -282,7 +292,7 @@
 
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.nextPeriod') | trans({}, 'admin-checklist') }}</h2>
-            
+
             {% if report.hasSection('lifestyle') %}
                 <h3 class="label question bold">{{ (page ~ '.form.futureSignificantChanges.label') | trans({}, 'admin-checklist') }}</h3>
             {%  else %}
