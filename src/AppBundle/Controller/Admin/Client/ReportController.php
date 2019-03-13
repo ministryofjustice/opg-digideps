@@ -162,15 +162,17 @@ class ReportController extends AbstractController
             $checklist->setButtonClicked($buttonClicked->getName());
         }
         if ($form->isValid($buttonClicked)) {
+            $noticeAlreadyThere = $request->getSession()->getFlashBag()->has('notice');
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
-                $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
             } else {
                 $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
                 ]);
+            }
+            if(!$noticeAlreadyThere) {
                 $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
             }
 
