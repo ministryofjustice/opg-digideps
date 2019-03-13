@@ -1,6 +1,9 @@
 imports:
+    - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/rest_handlers.yml }
+    - { resource: services/repositories.yml }
+    - { resource: services/transformers.yml }
 
 services:
     kernel.listener.responseConverter:
@@ -8,9 +11,9 @@ services:
         arguments: [ "@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%" ]
         public: true
         tags:
-            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     em:
         alias: doctrine.orm.entity_manager
         public: true
@@ -76,3 +79,6 @@ services:
     app.service.date_time_provider:
         class: AppBundle\Service\DateTimeProvider
         public: true
+
+    AppBundle\Service\ReportStatusServiceFactory:
+        class: AppBundle\Service\ReportStatusServiceFactory

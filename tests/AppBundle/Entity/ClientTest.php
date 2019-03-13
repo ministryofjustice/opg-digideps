@@ -41,18 +41,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function courtDateExpectedStartDateProvider()
     {
-        $currentYear = date('Y');
-
         return [
-            [new \DateTime('2000-01-01'), new \DateTime(($currentYear-1) . '-01-01')],
-            [new \DateTime('2000-12-31'), new \DateTime(($currentYear-1) . '-12-31')],
-            [new \DateTime('2003-09-30'), new \DateTime(($currentYear-1) . '-09-30')],
-            [new \DateTime('2015-03-31'), new \DateTime(($currentYear-1) . '-03-31')],
-            [new \DateTime('2016-02-29'), new \DateTime(($currentYear-1) . '-03-01')],
-            [new \DateTime('2017-03-01'), new \DateTime(($currentYear-1) . '-03-01')],
-            [new \DateTime('2018-08-15'), new \DateTime(($currentYear-1) . '-08-15')],
-            [new \DateTime('2018-08-16'), new \DateTime(($currentYear-1) . '-08-16')],
-            [new \DateTime('2019-08-16'), new \DateTime(($currentYear) . '-08-16')],
+            [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-01-01')],
+            [new \DateTime('2000-12-31'), 2019, new \DateTime('2018-12-31')],
+            [new \DateTime('2003-09-30'), 2019, new \DateTime('2018-09-30')],
+            [new \DateTime('2015-03-31'), 2019, new \DateTime('2018-03-31')],
+            [new \DateTime('2016-02-29'), 2019, new \DateTime('2018-03-01')],
+            [new \DateTime('2012-02-29'), 2017, new \DateTime('2016-02-29')],
+            [new \DateTime('2017-03-01'), 2019, new \DateTime('2018-03-01')],
+            [new \DateTime('2018-08-15'), 2019, new \DateTime('2018-08-15')],
+            [new \DateTime('2018-08-16'), 2019, new \DateTime('2018-08-16')],
+            [new \DateTime('2019-08-16'), 2019, new \DateTime('2019-08-16')],
+            [new \DateTime('2016-02-29'), 2020, new \DateTime('2019-03-01')],
+            [new \DateTime('2020-02-29'), 2020, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2021, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2022, new \DateTime('2021-03-01')],
         ];
     }
 
@@ -61,42 +64,41 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function courtDateExpectedEndDateProvider()
     {
-        $currentYear = date('Y');
-
         return [
-            [new \DateTime('2000-01-01'), new \DateTime(($currentYear-1) . '-12-31')],
-            [new \DateTime('2000-12-31'), new \DateTime(($currentYear) . '-12-30')],
-            [new \DateTime('2003-09-30'), new \DateTime(($currentYear) . '-09-29')],
-            [new \DateTime('2015-03-31'), new \DateTime(($currentYear) . '-03-30')],
-            [new \DateTime('2016-02-29'), new \DateTime(($currentYear) . '-02-28')],
-            [new \DateTime('2017-03-01'), new \DateTime(($currentYear) . '-02-28')],
-            [new \DateTime('2018-08-15'), new \DateTime(($currentYear) . '-08-14')],
-            [new \DateTime('2018-08-16'), new \DateTime(($currentYear) . '-08-15')],
-            [new \DateTime('2017-08-17'), new \DateTime(($currentYear) . '-08-16')]
+            [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-12-31')],
+            [new \DateTime('2000-12-31'), 2019, new \DateTime('2019-12-30')],
+            [new \DateTime('2003-09-30'), 2019, new \DateTime('2019-09-29')],
+            [new \DateTime('2015-03-31'), 2019, new \DateTime('2019-03-30')],
+            [new \DateTime('2016-02-29'), 2019, new \DateTime('2019-02-28')],
+            [new \DateTime('2017-03-01'), 2019, new \DateTime('2019-02-28')],
+            [new \DateTime('1999-03-01'), 2016, new \DateTime('2016-02-29')],
+            [new \DateTime('2018-08-15'), 2019, new \DateTime('2019-08-14')],
+            [new \DateTime('2018-08-16'), 2019, new \DateTime('2019-08-15')],
+            [new \DateTime('2017-08-17'), 2019, new \DateTime('2019-08-16')],
         ];
     }
 
     /**
      * @dataProvider courtDateExpectedStartDateProvider
      */
-    public function testGetExpectedStartDate($courtDate, $expected)
+    public function testGetExpectedStartDate($courtDate, $year, $expected)
     {
         $this->object->setCourtDate($courtDate);
         $this->assertEquals(
             $expected->format('d/m/Y'),
-            $this->object->getExpectedReportStartDate()->format('d/m/Y')
+            $this->object->getExpectedReportStartDate($year)->format('d/m/Y')
         );
     }
 
     /**
      * @dataProvider courtDateExpectedEndDateProvider
      */
-    public function testGetExpectedEndDate($courtDate, $expected)
+    public function testGetExpectedEndDate($courtDate, $year, $expected)
     {
         $this->object->setCourtDate($courtDate);
         $this->assertEquals(
             $expected->format('d/m/Y'),
-            $this->object->getExpectedReportEndDate()->format('d/m/Y')
+            $this->object->getExpectedReportEndDate($year)->format('d/m/Y')
         );
     }
 }

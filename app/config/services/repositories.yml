@@ -1,0 +1,18 @@
+services:
+  AppBundle\Entity\Repository\ClientRepository:
+    class: AppBundle\Entity\Client
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+    - AppBundle\Entity\Client
+
+  AppBundle\Entity\Repository\UserRepository:
+    class: AppBundle\Entity\User
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\User
+
+  AppBundle\Entity\Repository\ReportRepository:
+    class: AppBundle\Entity\Report\Report
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments:
+      - AppBundle\Entity\Report\Report
