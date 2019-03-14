@@ -16,6 +16,7 @@ class ProfDeputyEstimateCostsType extends AbstractType
             ->add('profDeputyManagementCostAmount', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'error_bubbling' => false,
+                'grouping' => true,
                 'constraints' => new Valid(),
             ])
             ->add('profDeputyEstimateCosts', FormTypes\CollectionType::class, [
