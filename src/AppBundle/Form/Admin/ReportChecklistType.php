@@ -90,10 +90,15 @@ class ReportChecklistType extends AbstractType
 
             // If PA report, add PA deputy Expenses question
             if ($this->report->hasSection('paDeputyExpenses')) {
-                $builder->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-                    'expanded' => true
-                ]);
+                $builder
+                    ->add('satisfiedWithPaExpenses', FormTypes\ChoiceType::class, [
+                        'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
+                        'expanded' => true
+                    ])
+                    ->add('deputyChargeAllowedByCourt', FormTypes\ChoiceType::class, [
+                        'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                        'expanded' => true
+                    ]);
             } else {
                 // Otherwise add Bonds question
                 $builder->add('bondAdequate', FormTypes\ChoiceType::class, [
