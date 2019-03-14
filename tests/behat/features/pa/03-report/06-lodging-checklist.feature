@@ -60,6 +60,8 @@ Feature: Admin report checklist
       | report_checklist_accountsBalance_2                     |
       | report_checklist_moneyMovementsAcceptable_0            |
       | report_checklist_moneyMovementsAcceptable_1            |
+      | report_checklist_deputyChargeAllowedByCourt_0          |
+      | report_checklist_deputyChargeAllowedByCourt_1          |
       | report_checklist_satisfiedWithPaExpenses_0             |
       | report_checklist_satisfiedWithPaExpenses_1             |
       | report_checklist_satisfiedWithPaExpenses_2             |
@@ -123,6 +125,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_accountsBalance_2" with "na"
     And I fill in "report_checklist_moneyMovementsAcceptable_0" with "yes"
     And I fill in "report_checklist_satisfiedWithPaExpenses_1" with "no"
+    And I fill in "report_checklist_deputyChargeAllowedByCourt_0" with "yes"
     And I fill in "report_checklist_futureSignificantDecisions_0" with "yes"
     And I fill in "report_checklist_hasDeputyRaisedConcerns_1" with "no"
     And I fill in "report_checklist_caseWorkerSatisified_0" with "yes"
@@ -145,7 +148,7 @@ Feature: Admin report checklist
       | report_checklist_openClosingBalancesMatch_1            | no                 |
       | report_checklist_accountsBalance_2                     | na                 |
       | report_checklist_moneyMovementsAcceptable_0            | yes                |
-      | report_checklist_satisfiedWithPaExpenses_1             | no                 |
+      | report_checklist_deputyChargeAllowedByCourt_0          | yes                 |
       | report_checklist_satisfiedWithPaExpenses_1             | no                 |
       | report_checklist_futureSignificantDecisions_0 | yes                |
       | report_checklist_hasDeputyRaisedConcerns_1             | no                 |
