@@ -75,7 +75,7 @@ Feature: Prof deputy costs estimate
     And I should see "£0.00" in the "breakdown-contact-case-manager-carers" region
     And I should see "Contact with other parties" in the "breakdown-contact-others" region
     And I should see "£0.00" in the "breakdown-contact-others" region
-    And I should see "Work on forms and other documents" in the "breakdown-forms-documents" regionƒ
+    And I should see "Work on forms and other documents" in the "breakdown-forms-documents" region
     And I should see "£0.00" in the "breakdown-forms-documents" region
     And I should see "Other" in the "breakdown-other" region
     And I should see "£0.00" in the "breakdown-other" region
