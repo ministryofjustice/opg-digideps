@@ -87,7 +87,7 @@ class ProfCostsSubSectionRouteResolver
             return self::COSTS_RECEIVED_ROUTE;
         }
 
-        return $this->amountSccoSubsectionIsIncomplete($report) ? self::SCCO_AMOUNT_ROUTE : self::SUMMARY_ROUTE;
+        return self::SUMMARY_ROUTE;
     }
 
     /**
