@@ -398,8 +398,16 @@ class ProfDeputyCostsController extends AbstractController
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
+        if ($form === 'summary') {
+            $backLink = 'prof_deputy_costs_summary';
+        } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
+            $backLink = 'prof_deputy_costs_received';
+        } else {
+            $backLink = 'prof_deputy_costs_amount_scco';
+        }
+
         return [
-            'backLink' =>$this->generateUrl( $from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_amount_scco', ['reportId'=>$reportId]),
+            'backLink' =>$this->generateUrl( $backLink, ['reportId'=>$reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
