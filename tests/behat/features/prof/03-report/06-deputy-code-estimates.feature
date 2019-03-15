@@ -342,23 +342,23 @@ Feature: Prof deputy costs estimate
     When I click on "start"
     Then the step cannot be submitted without making a selection
     When the step with the following values CAN be submitted:
-      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | assessed |
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0   | assessed |
     And the step with the following values CANNOT be submitted:
-      | deputy_estimate_costs_profDeputyManagementCostAmount        |       |
+      | deputy_estimate_costs_profDeputyManagementCostAmount        |          |
     And the step with the following values CAN be submitted:
-      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
+      | deputy_estimate_costs_profDeputyManagementCostAmount        | 1001.01  |
     Then the step cannot be submitted without making a selection
     And the step with the following values CANNOT be submitted:
-      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes |
-      | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |     |
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | yes     |
+      | deputy_costs_estimate_profDeputyCostsEstimateMoreInfoDetails |         |
     And the step with the following values CAN be submitted:
-      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0  | no    |
+      | deputy_costs_estimate_profDeputyCostsEstimateHasMoreInfo_0   | no      |
     When I click on "edit-breakdown-contact-others"
     Then the step with the following values CANNOT be submitted:
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails |       |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount       | 30.03   |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails  |         |
     When the step with the following values CAN be submitted:
-      | deputy_estimate_costs_profDeputyManagementCostAmount        | 4.99  |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount      | 30.03 |
-      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails | info  |
+      | deputy_estimate_costs_profDeputyManagementCostAmount         | 1001.01 |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_amount       | 30.03   |
+      | deputy_estimate_costs_profDeputyEstimateCosts_4_moreDetails  | info    |
 
