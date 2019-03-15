@@ -162,7 +162,7 @@ class ReportController extends AbstractController
             $checklist->setButtonClicked($buttonClicked->getName());
         }
         if ($form->isValid($buttonClicked)) {
-            $noticeAlreadyThere = $request->getSession()->getFlashBag()->has('notice');
+
             if (!empty($checklist->getId())) {
                 $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
                     'report-checklist', 'checklist-information'
@@ -172,7 +172,9 @@ class ReportController extends AbstractController
                     'report-checklist', 'checklist-information'
                 ]);
             }
-            if(!$noticeAlreadyThere) {
+            if (!$request->getSession()->getFlashBag()->has('notice')) {
+                // the duplicate notice is because the PDF view action doesn't actually refresh the page and therefore the original
+                // 'saved' notice never gets rendered
                 $request->getSession()->getFlashBag()->add('notice', 'Lodging checklist saved');
             }
 
