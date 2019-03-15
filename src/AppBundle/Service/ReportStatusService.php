@@ -419,7 +419,8 @@ class ReportStatusService
         $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
         $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
 
-        $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
+        // If costs are only fixed, SCCO question is not required (DDPB-2506)
+        $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
 
         if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
