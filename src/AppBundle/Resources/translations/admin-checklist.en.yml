@@ -139,6 +139,8 @@ checklistPage:
     satisfiedEstimatesNextBilling:
       label: |
         Are you satisfied with the deputy’s estimated costs for the next billing period?
+    totalEstimatedCosts:
+      label: Total estimated costs
     lodgingSummary:
       label: Lodging summary concerns and decisions
     finalDecision:

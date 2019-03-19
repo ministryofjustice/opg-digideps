@@ -342,7 +342,7 @@
                 </tbody>
             </table>
             <h3>
-                {{ ('totalEstimatedCosts') | trans }}: 
+                {{ (page ~ '.form.totalEstimatedCosts.label') | trans({}, 'admin-checklist') }}: 
                 £{{ report.profDeputyEstimateCostsTotal | money_format }}
             </h3>
         </div>
