@@ -48,6 +48,12 @@ class User implements UserInterface
         21 => self::ROLE_PROF_NAMED,
         26 => self::ROLE_PROF_NAMED,
         63 => self::ROLE_PROF_NAMED,
+        22 => self::ROLE_PROF_NAMED,
+        24 => self::ROLE_PROF_NAMED,
+        25 => self::ROLE_PROF_NAMED,
+        27 => self::ROLE_PROF_NAMED,
+        29 => self::ROLE_PROF_NAMED,
+        50 => self::ROLE_PROF_NAMED
     ];
 
     /**
