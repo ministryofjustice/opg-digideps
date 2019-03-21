@@ -7,25 +7,10 @@
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 {% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
 
 {% block helpline %}{% endblock %}
 
 {% block pageContent %}
-
-    <h1 class="heading-medium">{{ (page ~ '.heading') | trans }}</h1>
-
-    <div class="text">
-        <p>{{ (page ~ '.limitedTo100') | trans }}</p>
-        <p>
-            {{ (page ~ '.downloadCSV') | trans({'%csvFile%': path('admin_stats_csv', {'regenerate': 0 })}) | raw }}
-        </p>
-    </div>
-
-    <h1 class="heading-medium">{{ (page ~ '.reportsHeading') | trans }}</h1>
-
     <div class="text">
         <p>{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
 
