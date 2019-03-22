@@ -49,6 +49,13 @@ class ClientController extends RestController
         ]);
 
         if ($this->getUser()->isLayDeputy()) {
+            //add NDR if not added yet
+            // TODO move to listener or service
+            if (!$client->getNdr()) {
+                $ndr = new EntityDir\Ndr\Ndr($client);
+                $this->getEntityManager()->persist($ndr);
+            }
+
             $client->setCourtDate(new \DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
@@ -61,13 +68,6 @@ class ClientController extends RestController
         }
 
         $this->persistAndFlush($client);
-
-        //add NDR if not added yet
-        // TODO move to listener or service
-        if (!$client->getNdr()) {
-            $ndr = new EntityDir\Ndr\Ndr($client);
-            $this->persistAndFlush($ndr);
-        }
 
         return ['id' => $client->getId()];
     }
