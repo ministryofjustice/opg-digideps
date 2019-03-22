@@ -80,8 +80,8 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     private function buildExpectedUrl()
     {
         return sprintf('/report-submission/casrec_data?%s', http_build_query([
-            'fromDate' => $this->query->getFromDate(),
-            'toDate' => $this->query->getToDate(),
+            'fromDate' => $this->query->getStartDate(),
+            'toDate' => $this->query->getEndDate(),
             'orderBy' => $this->query->getOrderBy(),
             'order' => $this->query->getSortOrder()
         ]));

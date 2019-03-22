@@ -15,7 +15,7 @@ class ReportSubmissionDownloadFilterType extends AbstractType
     {
         $builder
             ->add(
-                'fromDate',
+                'startDate',
                 FormTypes\DateType::class, [
                     'widget' => 'text',
                     'input' => 'datetime',
@@ -24,7 +24,7 @@ class ReportSubmissionDownloadFilterType extends AbstractType
                 ]
             )
             ->add(
-                'toDate',
+                'endDate',
                 FormTypes\DateType::class, [
                     'widget' => 'text',
                     'input' => 'datetime',
@@ -43,9 +43,9 @@ class ReportSubmissionDownloadFilterType extends AbstractType
     {
         $entity = $event->getData();
 
-        if ($entity->getToDate() instanceof \DateTime) {
-            $toDate = $entity->getToDate();
-            $entity->setToDate($toDate->setTime(23, 59, 59));
+        if ($entity->getEndDate() instanceof \DateTime) {
+            $endDate = $entity->getEndDate();
+            $entity->setEndDate($endDate->setTime(23, 59, 59));
         }
     }
 

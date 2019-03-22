@@ -6,20 +6,22 @@ use AppBundle\Entity\Client;
 
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
- * @Assert\Callback(callback="isValidEndDate")
- * @Assert\Callback(callback="isValidDateRange")
+ * @AppAssert\EndDateNotGreaterThanTwelveMonths(groups={"start-end-dates"})
+ * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
  * @Assert\Callback(callback="profCostsHowChangedAtLeastOne", groups={"prof-deputy-costs-how-changed"})
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
-class Report implements ReportInterface
+class Report implements ReportInterface, StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;
@@ -69,8 +71,8 @@ class Report implements ReportInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
      *
-     * @Assert\NotBlank( message="report.startDate.notBlank")
-     * @Assert\Date( message="report.startDate.invalidMessage" )
+     * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
+     * @Assert\Date( message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime
      */
@@ -80,8 +82,8 @@ class Report implements ReportInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
      *
-     * @Assert\NotBlank( message="report.endDate.notBlank" )
-     * @Assert\Date( message="report.endDate.invalidMessage" )
+     * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
+     * @Assert\Date( message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime
      */
@@ -662,42 +664,6 @@ class Report implements ReportInterface
         $this->decisions = $decisions;
 
         return $this;
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-    public function isValidEndDate(ExecutionContextInterface $context)
-    {
-        if ($this->startDate > $this->endDate) {
-            $context
-                ->buildViolation('report.endDate.beforeStart')
-                ->atPath('endDate')->addViolation();
-        }
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     *
-     * @return type
-     */
-    public function isValidDateRange(ExecutionContextInterface $context)
-    {
-        if (!empty($this->endDate) && !empty($this->startDate)) {
-            $dateInterval = $this->startDate->diff($this->endDate);
-        } else {
-            $context
-                ->buildViolation('report.endDate.invalidMessage')
-                ->atPath('endDate')->addViolation();
-
-            return;
-        }
-
-        if ($dateInterval->days > 366) {
-            $context
-                ->buildViolation('report.endDate.greaterThan12Months')
-                ->atPath('endDate')->addViolation();
-        }
     }
 
     /**

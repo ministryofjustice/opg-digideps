@@ -159,6 +159,31 @@ Feature: PROF deputy costs
     # previous=yes
     And the step with the following values CAN be submitted:
       | yes_no_profDeputyCostsHasPrevious_1 | yes |
+    And the step with the following values CANNOT be submitted:
+      | deputy_costs_previous_startDate_day   | 2    |
+      | deputy_costs_previous_startDate_month | 1    |
+      | deputy_costs_previous_startDate_year  | 2015 |
+      | deputy_costs_previous_endDate_day     | 1    |
+      | deputy_costs_previous_endDate_month   | 1    |
+      | deputy_costs_previous_endDate_year    | 2015 |
+      | deputy_costs_previous_amount          | 100  |
+    And I fill in the following:
+      | deputy_costs_previous_startDate_day   | 1    |
+      | deputy_costs_previous_startDate_month | 1    |
+      | deputy_costs_previous_startDate_year  | 2015 |
+      | deputy_costs_previous_endDate_day     | 1    |
+      | deputy_costs_previous_endDate_month   | 1    |
+      | deputy_costs_previous_endDate_year    | 2015 |
+      | deputy_costs_previous_amount          | 100  |
+    And I click on "save-and-add-another"
+    And the step with the following values CANNOT be submitted:
+      | deputy_costs_previous_startDate_day   | 1    |
+      | deputy_costs_previous_startDate_month | 1    |
+      | deputy_costs_previous_startDate_year  | 2015 |
+      | deputy_costs_previous_endDate_day     | 2    |
+      | deputy_costs_previous_endDate_month   | 1    |
+      | deputy_costs_previous_endDate_year    | 2016 |
+      | deputy_costs_previous_amount          | 100  |
     And I fill in the following:
       | deputy_costs_previous_startDate_day   | 1    |
       | deputy_costs_previous_startDate_month | 1    |
@@ -166,20 +191,16 @@ Feature: PROF deputy costs
       | deputy_costs_previous_endDate_day     | 1    |
       | deputy_costs_previous_endDate_month   | 1    |
       | deputy_costs_previous_endDate_year    | 2016 |
-      | deputy_costs_previous_amount          | 100  |
-    And I click on "save-and-add-another"
-    And I fill in the following:
-      | deputy_costs_previous_startDate_day   | 1    |
-      | deputy_costs_previous_startDate_month | 1    |
-      | deputy_costs_previous_startDate_year  | 2015 |
-      | deputy_costs_previous_endDate_day     | 2    |
-      | deputy_costs_previous_endDate_month   | 1    |
-      | deputy_costs_previous_endDate_year    | 2016 |
       | deputy_costs_previous_amount          | 200  |
     And I click on "save-and-continue"
     #interim = yes
     And the step with the following values CAN be submitted:
       | yes_no_profDeputyCostsHasInterim_0 | yes |
+    And the step with the following values CANNOT be submitted:
+      | costs_interims_profDeputyInterimCosts_0_amount     | 50   |
+      | costs_interims_profDeputyInterimCosts_0_date_day   | 1    |
+      | costs_interims_profDeputyInterimCosts_0_date_month | 1    |
+      | costs_interims_profDeputyInterimCosts_0_date_year  | 2100 |
     And the step with the following values CAN be submitted:
       | costs_interims_profDeputyInterimCosts_0_amount     | 50   |
       | costs_interims_profDeputyInterimCosts_0_date_day   | 1    |
@@ -202,7 +223,7 @@ Feature: PROF deputy costs
       | Fixed                                | how-changed             |
       | Assessed                             | how-changed             |
       | Yes                                  | has-previous            |
-      | Received for 01/01/2015 - 01/01/2016 | prev-cost-1             |
+      | Received for 01/01/2015 - 01/01/2015 | prev-cost-1             |
       | £100                                 | prev-cost-1             |
       | £200                                 | prev-cost-2             |
       | Yes                                  | has-interim             |

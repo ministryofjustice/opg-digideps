@@ -36,8 +36,8 @@ class ReportSubmissionSummaryMapper
     private function generateApiUrl(ReportSubmissionSummaryQuery $query)
     {
         return sprintf ('%s?%s', self::API_ENDPOINT, http_build_query([
-                'fromDate' => $query->getFromDate(),
-                'toDate' => $query->getToDate(),
+                'fromDate' => $query->getStartDate(),
+                'toDate' => $query->getEndDate(),
                 'orderBy' => $query->getOrderBy(),
                 'order' => $query->getSortOrder()
             ])

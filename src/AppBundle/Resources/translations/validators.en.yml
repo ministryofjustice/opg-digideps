@@ -490,6 +490,7 @@ profDeputyInterimCost:
   date:
     notBlank: Please enter a date
     notValid: Date not valid
+    notFuture: This date cannot be in the future
   amount:
     notNumeric: Amount not valid
     minMessage: The amount must be more than £{{ limit }}
