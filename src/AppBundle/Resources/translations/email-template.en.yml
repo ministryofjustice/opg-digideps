@@ -11,46 +11,36 @@ default:
         address2: Birmingham B2 2WH
         homepageLinkText: complete-deputy-report.service.gov.uk
 
+paContactUs: &PA_CONTACT_US |
+    To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+    break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
+    opg.publicauthorityteam@publicguardian.gov.uk</a> or call us on 0115 934 2817.
+
+profContactUs: &PROF_CONTACT_US |
+    To contact us, email the Office of the Public Guardian at <a style="word-wrap:
+    break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
+    opg.pro@publicguardian.gov.uk</a> or call us on 0115 934 2819.
+
 ROLE_PA_NAMED:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.publicauthorityteam@publicguardian.gov.uk</a> or call us on 0115 934 2817.
+        toContactUs: *PA_CONTACT_US
 
 ROLE_PA_ADMIN:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.publicauthorityteam@publicguardian.gov.uk</a> or call us on 0115 934 2817.
+        toContactUs: *PA_CONTACT_US
 
 ROLE_PA_TEAM_MEMBER:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.publicauthorityteam@publicguardian.gov.uk</a> or call us on 0115 934 2817.
-
+        toContactUs: *PA_CONTACT_US
 
 ROLE_PROF_NAMED:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.pro@publicguardian.gov.uk</a> or call us on 0115 934 2819.
+        toContactUs: *PROF_CONTACT_US
 
 ROLE_PROF_ADMIN:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.pro@publicguardian.gov.uk</a> or call us on 0115 934 2819.
+        toContactUs: *PROF_CONTACT_US
 
 ROLE_PROF_TEAM_MEMBER:
     footer:
-        toContactUs: |
-            To contact us, email the Office of the Public Guardian at <a style="word-wrap:
-            break-word;" href="mailto:opg.publicauthorityteam@publicguardian.gov.uk">
-            opg.pro@publicguardian.gov.uk</a> or call us on 0115 934 2819.
-
+        toContactUs: *PROF_CONTACT_US

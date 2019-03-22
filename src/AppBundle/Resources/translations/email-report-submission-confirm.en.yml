@@ -1,6 +1,6 @@
 default:
     htmlHeaderTitle: Deputy report service - Annual deputy report submitted
-    dear: Dear %deputyFirstName%
+    dear: Dear %fullDeputyName%
     thanksForSubmitting: |
         <strong>Thank you for submitting your annual deputy report</strong> for
         %startDate% to %endDate%.
@@ -22,57 +22,46 @@ default:
         We'll send you a reminder about your next report nearer the due date (your due date
         is the anniversary of your court order).
 
+caseDetails: |
+    <strong>Client</strong>: %fullClientName% <br>
+    <strong>Case number</strong>: %caseNumber%
+
+thanksForSubmitting: &THANKS_FOR_SUBMITTING |
+    Thank you for submitting your deputy report for %fullClientName% covering
+    the period %startDate% to %endDate%.
+
+reportAccess: &REPORT_ACCESS You can view your submitted reports on your client profile page.
+
+startNextReport: &START_NEXT_REPORT |
+    If you like, you can start working on the next annual deputy report (for %newStartDate%
+    to %newEndDate%) right away.
+
 ROLE_PA_NAMED:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT
 
 ROLE_PA_ADMIN:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT
 
 ROLE_PA_TEAM_MEMBER:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
-
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT
 
 ROLE_PROF_NAMED:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT
 
 ROLE_PROF_ADMIN:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT
 
 ROLE_PROF_TEAM_MEMBER:
-    thanksForSubmitting: |
-        <strong>Thank you for submitting the annual deputy report</strong> for
-        %startDate% to %endDate%.
-    reportAccess: You can view your submitted reports on your client profile page.
-    startNextReport: |
-        If you like, you can start working on the next annual deputy report (for %newStartDate%
-        to %newEndDate%) right away.
+    thanksForSubmitting: *THANKS_FOR_SUBMITTING
+    reportAccess: *REPORT_ACCESS
+    startNextReport: *START_NEXT_REPORT

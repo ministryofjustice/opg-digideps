@@ -164,7 +164,9 @@
             </ul>
 
             <div class="form-section push--bottom">
-                {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary')) }}
+                {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary'), {
+                    'formGroupClass': 'explanation js-auto-size',
+                }) }}
             </div>
 
             <div class="form-section push--bottom">

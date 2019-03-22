@@ -4,17 +4,25 @@
 {% trans_default_domain translationDomain %}
 
 {% set transOptions = {
-    '%deputyFirstName%': deputyFirstName,
+    '%fullDeputyName%': fullDeputyName,
     '%startDate%': submittedReport.startDate | date("d/m/Y"),
     '%endDate%': submittedReport.endDate | date("d/m/Y"),
     '%newStartDate%': newReport.startDate | date("d/m/Y"),
     '%newEndDate%': newReport.endDate | date("d/m/Y"),
-    '%homepageUrl%': homepageUrl
+    '%homepageUrl%': homepageUrl,
+    '%fullClientName%': fullClientName,
+    '%caseNumber%': caseNumber
 } %}
 
 {% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans }}{% endblock %}
 
 {% block content %}
+
+    {% if recipientRole != 'default' %}
+        <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('caseDetails') | trans(transOptions) | raw }}
+        </p>
+    {% endif %}
 
     <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
         {{ ('default.dear') | trans(transOptions) }}

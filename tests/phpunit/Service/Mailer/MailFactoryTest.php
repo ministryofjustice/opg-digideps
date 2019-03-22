@@ -84,6 +84,7 @@ class MailFactoryTest extends \PHPUnit_Framework_TestCase
 
         $client = m::mock('AppBundle\Entity\Client', [
             'getCaseNumber' => '1234567t',
+            'getFullname' => 'FN'
         ]);
         $report = m::mock('AppBundle\Entity\Report\Report', [
             'getClient' => $client,

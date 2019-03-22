@@ -80,16 +80,11 @@ editUserForm:
 
 statsPage:
   htmlTitle: Administration - Statistics
-  pageTitle: Admin
-  supportTitle: Download statistics
-  heading: Lay deputy's stats
-  limitedTo100: Based on CASREC file + additional columns (instantly added on CASREC upload, and updated every hour on weekdays)
+  pageTitle: Report Submissions
   reportSubmissionsPara: Today's report submissions file for uploading into CASREC
-  downloadCSV: <a href="%csvFile%">Download</a>
   pleaseWait: Please wait ...
   dataGenerated: |
     Data is being generated, Click here to <a href="%csvFile%">download</a>
-  reportsHeading: Report submissions
   form:
     fromDate:
       header: Start date

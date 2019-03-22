@@ -13,7 +13,7 @@ ndrSubmission:
     fromName: Digital deputy secure email service
     toName: Deputyship Service
 reportSubmissionConfirmation:
-    subject: Complete the deputy report - new deputy report ready
+    subject: We’re reviewing your deputy report for %clientFullname%
     fromName: Office of the Public Guardian
 ndrSubmissionConfirmation:
     subject: Complete the deputy report - new deputy report submitted
