@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use AppBundle\Entity as EntityDir;
 use Doctrine\ORM\EntityManager;
 

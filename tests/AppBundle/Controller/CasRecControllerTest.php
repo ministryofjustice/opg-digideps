@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\CasRec;
+use Tests\Fixtures;
 
 class CasRecControllerTest extends AbstractTestController
 {
@@ -121,7 +122,7 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
-        \Fixtures::deleteReportsData(['casrec']);
+        Fixtures::deleteReportsData(['casrec']);
         $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count

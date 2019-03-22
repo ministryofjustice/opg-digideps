@@ -67,7 +67,8 @@ class ClientController extends RestController
             $client->setDateOfBirth($dob);
         }
 
-        $this->persistAndFlush($client);
+        $this->getEntityManager()->persist($client);
+        $this->getEntityManager()->flush();
 
         return ['id' => $client->getId()];
     }

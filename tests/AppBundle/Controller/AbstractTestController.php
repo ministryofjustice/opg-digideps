@@ -2,14 +2,15 @@
 
 namespace Tests\AppBundle\Controller;
 
-use Fixtures;
+
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
     /**
-     * @var \Fixtures
+     * @var Fixtures
      */
     protected static $fixtures;
 

@@ -166,6 +166,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('p', $client->getPhone());
         $this->assertEquals('1947-01-31', $client->getDateOfBirth()->format('Y-m-d'));
         $this->assertEquals('pa000001', $client->getCaseNumber()); //assert not changed
+        $this->assertNull($client->getNdr());
     }
 
     public function testfindByIdAuth()
