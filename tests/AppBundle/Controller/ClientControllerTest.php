@@ -2,8 +2,6 @@
 
 namespace Tests\AppBundle\Controller;
 
-use AppBundle\Entity\User;
-
 class ClientControllerTest extends AbstractTestController
 {
     private static $deputy1;
