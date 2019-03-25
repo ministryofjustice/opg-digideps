@@ -28,7 +28,7 @@ class EndDateNotBeforeStartDateValidator extends ConstraintValidator
             $this
                 ->context
                 ->buildViolation($constraint->message)
-                ->addViolation();
+                ->atPath('endDate')->addViolation();
         }
     }
 }
