@@ -5,11 +5,11 @@ namespace Tests\AppBundle\Service;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
-use Fixtures;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Fixtures;
 
 class OrgServiceTest extends WebTestCase
 {
