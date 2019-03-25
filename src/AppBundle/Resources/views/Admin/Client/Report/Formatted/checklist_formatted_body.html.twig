@@ -187,13 +187,13 @@
                     </tbody>
                 </table>
 
-                {% if report.hasSection('paDeputyExpenses') %}
-                    {% set paAppend = 'PA' %}
+                {% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts') %}
+                    {% set nonLayAppend = 'NonLay' %}
                 {% else %}
-                    {% set paAppend = '' %}
+                    {% set nonLayAppend = '' %}
                 {% endif %}
 
-                <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ paAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ nonLayAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
