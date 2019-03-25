@@ -49,7 +49,7 @@ abstract class AbstractTestController extends WebTestCase
     }
 
     /**
-     * @return \Fixtures
+     * @return Fixtures
      */
     public static function fixtures()
     {

@@ -3,7 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
-use Fixtures;
+
 use Tests\AppBundle\Service\OrgServiceTest;
 
 class PaControllerTest extends AbstractTestController
