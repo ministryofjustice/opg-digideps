@@ -49,8 +49,6 @@ class ClientController extends RestController
         ]);
 
         if ($this->getUser()->isLayDeputy()) {
-            //add NDR if not added yet
-            // TODO move to listener or service
             if (!$client->getNdr()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
                 $this->getEntityManager()->persist($ndr);
