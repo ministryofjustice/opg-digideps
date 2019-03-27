@@ -20,13 +20,13 @@ Feature: Report submit
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
         # assert I cannot access the submitted page directly
-        And the URL "/report/1/submitted" should not be accessible
+        And the URL "/report/5/submitted" should not be accessible
         # assert I cannot access the submit page from declaration page
-        When I go to "/report/1/declaration"
-        Then the URL "/report/1/submitted" should not be accessible
+        When I go to "/report/5/declaration"
+        Then the URL "/report/5/submitted" should not be accessible
         And I click on "reports, report-start"
         # submit without ticking "agree"
-        When I go to "/report/1/declaration"
+        When I go to "/report/5/declaration"
         And I press "report_declaration_save"
         #
         # empty form
@@ -164,19 +164,19 @@ Feature: Report submit
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
-        Then the URL "/report/1/overview" should not be accessible
-        And the URL "/report/1/decisions/summary" should not be accessible
-        And the URL "/report/1/contacts/summary" should not be accessible
-        And the URL "/report/1/visits-care/summary" should not be accessible
-        And the URL "/report/1/bank-accounts/summary" should not be accessible
-        And the URL "/report/1/money-transfers/summary" should not be accessible
-        And the URL "/report/1/money-in/summary" should not be accessible
-        And the URL "/report/1/money-out/summary" should not be accessible
-        And the URL "/report/1/balance" should not be accessible
-        And the URL "/report/1/assets/summary" should not be accessible
-        And the URL "/report/1/debts/summary" should not be accessible
-        And the URL "/report/1/actions" should not be accessible
-        And the URL "/report/1/declaration" should not be accessible
+        Then the URL "/report/5/overview" should not be accessible
+        And the URL "/report/5/decisions/summary" should not be accessible
+        And the URL "/report/5/contacts/summary" should not be accessible
+        And the URL "/report/5/visits-care/summary" should not be accessible
+        And the URL "/report/5/bank-accounts/summary" should not be accessible
+        And the URL "/report/5/money-transfers/summary" should not be accessible
+        And the URL "/report/5/money-in/summary" should not be accessible
+        And the URL "/report/5/money-out/summary" should not be accessible
+        And the URL "/report/5/balance" should not be accessible
+        And the URL "/report/5/assets/summary" should not be accessible
+        And the URL "/report/5/debts/summary" should not be accessible
+        And the URL "/report/5/actions" should not be accessible
+        And the URL "/report/5/declaration" should not be accessible
 
     @deputy
     Scenario: deputy report download
