@@ -119,7 +119,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
-        $this->assertInstanceOf('AppBundle\Entity\Ndr\Ndr', $client->getNdr());
     }
 
     public function testupsertPut()
