@@ -2,6 +2,8 @@
 
 namespace Tests\AppBundle\Controller;
 
+use AppBundle\Entity\Ndr\Ndr;
+
 class ClientControllerTest extends AbstractTestController
 {
     private static $deputy1;
@@ -121,7 +123,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testupsertPut()
+    public function testupsertPut_lay_deputy()
     {
         $url = '/client/upsert';
 
@@ -145,6 +147,30 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(null, $client->getDateOfBirth());
         $this->assertEquals('2015-12-31', $client->getCourtDate()->format('Y-m-d'));
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+    }
+
+    public function testupsertPut_lay_deputy_ndr_enabled()
+    {
+        $url = '/client/upsert';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+
+        // Lay deputy
+        $return = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
+        ]);
+        self::fixtures()->clear();
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
+        $this->assertInstanceOf(Ndr::class, $client->getNdr());
+    }
+
+    public function testupsertPut_PA()
+    {
+        $url = '/client/upsert';
+
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
         // PA
         $return = $this->assertJsonRequest('PUT', $url, [
