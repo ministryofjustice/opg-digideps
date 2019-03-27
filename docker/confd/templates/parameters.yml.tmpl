@@ -21,6 +21,7 @@ parameters:
             lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
             password: {{ getv (printf "/fixtures/%s/password" .) }}
             {{ if exists (printf "/fixtures/%s/rolename" . ) }}roleName: {{ getv (printf "/fixtures/%s/rolename" .) }}{{ end }}
+            {{ if exists (printf "/fixtures/%s/teamname" . ) }}teamName: {{ getv (printf "/fixtures/%s/teamname" .) }}{{ end }}
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
             ndrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
             {{ if exists (printf "/fixtures/%s/deputyno" . ) }}deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}{{ end }}
