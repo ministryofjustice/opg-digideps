@@ -134,7 +134,7 @@ class SettingsController extends AbstractController
 
                 if ($user->isLayDeputy()) {
                     $groups = ['user-clients', 'client'];
-                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups));
+                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups), 'deputy');
                     $this->getMailSender()->send($addressUpdateEmail, ['html']);
                 }
 

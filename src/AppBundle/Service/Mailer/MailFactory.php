@@ -251,9 +251,10 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createAddressUpdateEmail($response, EntityDir\User $user)
+    public function createAddressUpdateEmail($response, EntityDir\User $user, $type)
     {
         $viewParams = [
+            'type' => $type,
             'response' => $response,
             'caseNumber' => $user->getClients()[0]->getCaseNumber(),
             'userRole' => $user->getRoleFullName()
