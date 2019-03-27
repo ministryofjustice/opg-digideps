@@ -7,6 +7,7 @@ use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Router;
 
 class MailFactory
@@ -253,8 +254,17 @@ class MailFactory
      */
     public function createAddressUpdateEmail($response, EntityDir\User $user, $type)
     {
+        if ($type === 'deputy') {
+            $countryCode = $response->getAddressCountry();
+        } else {
+            $countryCode = $response->getCountry();
+        }
+
+        $countryName = Intl::getRegionBundle()->getCountryName($countryCode);
+
         $viewParams = [
             'response' => $response,
+            'countryName' => $countryName,
             'caseNumber' => $user->getClients()[0]->getCaseNumber(),
             'userRole' => $user->getRoleFullName()
         ];
