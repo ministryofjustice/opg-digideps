@@ -46,7 +46,7 @@ Feature: Codeputy Self Registration
       | client_postcode        | SW1 1RH  |
     And I press "client_save"
     And I set the report start date to "1/1/2016"
-    And I set the report end date to "1/1/2017"
+    And I set the report end date to "31/12/2016"
     Then the URL should match "/lay"
     Then I go to "/logout"
     Given I am logged in as "behat-jack.goodby+noncodep@digital.justice.gov.uk" with password "Abcd1234"
@@ -133,7 +133,7 @@ Feature: Codeputy Self Registration
     And I press "client_save"
     Then the URL should match "/report/create/\d+"
     And I set the report start date to "7/7/2016"
-    And I set the report end date to "7/7/2017"
+    And I set the report end date to "6/7/2017"
     Then the URL should match "/lay"
     Then I go to "/logout"
 

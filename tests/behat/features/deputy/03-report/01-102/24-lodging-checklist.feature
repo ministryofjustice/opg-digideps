@@ -6,7 +6,7 @@ Feature: Admin report checklist
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | 8 clients | client-search-count |
+      | 12 clients | client-search-count |
     Then each text should be present in the corresponding region:
       | Cly Hent | client-behat001 |
     When I fill in the following:
