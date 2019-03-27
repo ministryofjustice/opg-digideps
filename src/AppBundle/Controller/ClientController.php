@@ -49,11 +49,6 @@ class ClientController extends RestController
         ]);
 
         if ($this->getUser()->isLayDeputy()) {
-            if (!$client->getNdr()) {
-                $ndr = new EntityDir\Ndr\Ndr($client);
-                $this->getEntityManager()->persist($ndr);
-            }
-
             $client->setCourtDate(new \DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
@@ -65,8 +60,7 @@ class ClientController extends RestController
             $client->setDateOfBirth($dob);
         }
 
-        $this->getEntityManager()->persist($client);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($client);
 
         return ['id' => $client->getId()];
     }
