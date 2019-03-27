@@ -254,11 +254,12 @@ class MailFactory
     public function createAddressUpdateEmail($response, EntityDir\User $user, $type)
     {
         $viewParams = [
-            'type' => $type,
             'response' => $response,
             'caseNumber' => $user->getClients()[0]->getCaseNumber(),
             'userRole' => $user->getRoleFullName()
         ];
+
+        $template = 'AppBundle:Email:address-update-' . $type . '.html.twig';
 
         $email = new ModelDir\Email();
         $email
@@ -267,7 +268,7 @@ class MailFactory
             ->setToEmail($this->container->getParameter('email_update_send')['to_email'])
             ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
             ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
-            ->setBodyHtml($this->templating->render('AppBundle:Email:address-update.html.twig', $viewParams));
+            ->setBodyHtml($this->templating->render($template, $viewParams));
 
         return $email;
     }
