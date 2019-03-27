@@ -255,6 +255,7 @@ class MailFactory
     {
         $viewParams = [
             'response' => $response,
+            'caseNumber' => $user->getClients()[0]->getCaseNumber(),
             'userRole' => $user->getRoleFullName()
         ];
 
