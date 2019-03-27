@@ -51,7 +51,7 @@ class ClientController extends RestController
         ]);
 
         if ($user && $user->isLayDeputy()) {
-            if (!$client->getNdr() && $user->getNdrEnabled()) {
+            if (array_key_exists('ndr_enabled', $data) && $data['ndr_enabled'] && !$client->getNdr()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
                 $em->persist($ndr);
             }

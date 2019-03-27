@@ -159,7 +159,7 @@ class ClientControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
+            'data' => ['id' => self::$client1->getId(), 'ndr_enabled' => true] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
         $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
