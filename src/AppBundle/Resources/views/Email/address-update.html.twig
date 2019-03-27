@@ -1,25 +1,18 @@
-<p>The deputy address has been updated for the following deputy:</p>
+<p>The contact details of the following {{ type }} have been updated:</p>
 
 <p><strong>Case number:</strong> {{ caseNumber }}</p>
 
 <p><strong>Name:</strong> {{ response.fullName }}</p>
 
-<p>
-    <strong>Address line 1:</strong> {{ response.address1 }} <br />
-    <strong>Address line 2:</strong> {{ response.address2 }} <br />
-    <strong>Address line 3:</strong> {{ response.address3 }} <br />
-    <strong>Postcode:</strong> {{ response.addressPostcode }} <br />
-    <strong>Country:</strong> {{ response.addressCountry }}
-</p>
-
-<p>
-    <strong>Phone number:</strong> {{ response.phoneMain }} <br />
-    <strong>Alternative phone number:</strong> {{ response.phoneAlternative }}
-</p>
-
-<p>
-    <strong>Email:</strong> {{ response.email }}
-</p>
+{% if type == 'client' %}
+    {% include 'AppBundle:Email:address-update-details-client.html.twig' with {
+        'response': response
+    } %}
+{% else %}
+    {% include 'AppBundle:Email:address-update-details-deputy.html.twig' with {
+        'response': response
+    } %}
+{% endif %}
 
 <p>Please update Casrec with this information</p>
 
