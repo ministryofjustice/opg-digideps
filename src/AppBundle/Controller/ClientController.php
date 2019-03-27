@@ -24,9 +24,10 @@ class ClientController extends RestController
     public function upsertAction(Request $request)
     {
         $data = $this->deserializeBodyContent($request);
+        /** @var EntityDir\User $user */
+        $user = $this->getUser();
 
         if ($request->getMethod() == 'POST') {
-            $user = $this->getUser();
             $client = new EntityDir\Client();
             $client->addUser($user);
         } else {
@@ -48,14 +49,19 @@ class ClientController extends RestController
             'email'       => 'setEmail',
         ]);
 
-        if ($this->getUser()->isLayDeputy()) {
+        if ($user && $user->isLayDeputy()) {
+            if (!$client->getNdr() && $user->getNdrEnabled()) {
+                $ndr = new EntityDir\Ndr\Ndr($client);
+                $this->getEntityManager()->persist($ndr);
+            }
+
             $client->setCourtDate(new \DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
             ]);
         }
 
-        if (array_key_exists('date_of_birth', $data)) {
+        if (array_key_exists('date_of_birth', $data['ndrActivated'])) {
             $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
             $client->setDateOfBirth($dob);
         }
