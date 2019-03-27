@@ -26,7 +26,7 @@ class FixturesCommand extends AddSingleUserCommand
         // user and roles
         $fixtures = (array) $this->getContainer()->getParameter('fixtures');
         foreach ($fixtures as $email => $data) {
-            $this->addSingleUser($output, ['email' => $email] + $data, ['flush' => false]);
+            $this->addSingleUser($output, ['email' => $email] + $data, ['flush' => true]);
         }
         $em->flush();
     }
