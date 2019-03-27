@@ -263,10 +263,10 @@ class MailFactory
         $email = new ModelDir\Email();
         $email
             ->setFromEmail($this->container->getParameter('email_update_send')['from_email'])
-            ->setFromName($this->translate('addressUpdateForm.fromName'))
+            ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
             ->setToEmail($this->container->getParameter('email_update_send')['to_email'])
-            ->setToName($this->translate('addressUpdateForm.toName'))
-            ->setSubject($this->translate('addressUpdateForm.subject'))
+            ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
+            ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:address-update.html.twig', $viewParams));
 
         return $email;
