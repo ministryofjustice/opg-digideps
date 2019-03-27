@@ -26,6 +26,7 @@ class ClientController extends RestController
         $data = $this->deserializeBodyContent($request);
         /** @var EntityDir\User $user */
         $user = $this->getUser();
+        $em = $this->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
             $client = new EntityDir\Client();
@@ -52,7 +53,7 @@ class ClientController extends RestController
         if ($user && $user->isLayDeputy()) {
             if (!$client->getNdr() && $user->getNdrEnabled()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
-                $this->getEntityManager()->persist($ndr);
+                $em->persist($ndr);
             }
 
             $client->setCourtDate(new \DateTime($data['court_date']));
@@ -66,7 +67,8 @@ class ClientController extends RestController
             $client->setDateOfBirth($dob);
         }
 
-        $this->persistAndFlush($client);
+        $em->persist($client);
+        $em->flush();
 
         return ['id' => $client->getId()];
     }
