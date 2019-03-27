@@ -79,11 +79,11 @@
 {# =================================================================== #}
 {# Visits and care #}
 
-{% macro careArrangements(visitsCare) %}
+{% macro careArrangements(visitsCare, transOptions) %}
 <div class="dont-break">
     <h3>Care arrangements</h3>
     <div class="box" id="care-arrangements-subsection">
-        <h3 class="label question bold">Does the client receive care which is paid for?</h3>
+        <h3 class="label question bold">{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions, 'report-visits-care') }}</h3>
 
         <table class="checkboxes labelvalue inline">
             <tr>
@@ -103,7 +103,7 @@
                             {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
-                    <td class="label soft-half--bottom">Client pays for all their own care</td>
+                    <td class="label soft-half--bottom">{{ 'form.howIsCareFunded.choices.client_pays_for_all' | trans(transOptions, 'report-visits-care') }}</td>
                 </tr>
                 <tr>
                     <td class="clean-cell">
@@ -111,7 +111,7 @@
                             {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
-                    <td class="label soft-half--bottom">Client gets some financial help (for example, from the local authority or council, or NHS)</td>
+                    <td class="label soft-half--bottom">{{ 'form.howIsCareFunded.choices.client_gets_financial_help' | trans(transOptions, 'report-visits-care') }}</td>
                 </tr>
                 <tr>
                     <td class="clean-cell">
@@ -119,7 +119,7 @@
                             {% if visitsCare.doesClientReceivePaidCare == 'yes' and visitsCare.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}
                         </span>
                     </td>
-                    <td class="label hard--ends">All care is paid for by someone else (for example, by the local authority or council, or NHS)</td>
+                    <td class="label hard--ends">{{ 'form.howIsCareFunded.choices.all_care_is_paid_by_someone_else' | trans(transOptions, 'report-visits-care') }}</td>
                 </tr>
             </table>
         </div>

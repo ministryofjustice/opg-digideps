@@ -4,14 +4,14 @@
     <h2 class="section-heading">Visits and care</h2>
 
     {{ macros.answerYesNo({
-        question: 'Do you live with the client',
+        question: 'form.doYouLiveWithClient.label' | trans(transOptions, 'report-visits-care'),
         answer: visitsCare.doYouLiveWithClient,
         moreDetails: visitsCare.howOftenDoYouContactClient,
-        moreDetailsLabel: 'How often do you contact the client and how do you make sure others are looking after the client\'s needs if you can\'t ?',
+        moreDetailsLabel: 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions, 'report-visits-care'),
         showMoreDetailsWith: 'no'
     }) }}
 
-    {{ macros.careArrangements(visitsCare) }}
+    {{ macros.careArrangements(visitsCare, transOptions) }}
 
     {{ macros.answerYesNo({
         question: 'form.doesClientHaveACarePlan.label' | trans(transOptions, 'report-visits-care'),

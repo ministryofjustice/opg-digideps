@@ -26,18 +26,17 @@ form:
     label: |
       Please tell us how often you have contact with %client% and how you make sure others are looking
       after %client%'s needs when you're not able to.
-    labelShort: Please tell us how often you have contact with %client%.
-    hint: ""
+    labelShort: How often you have contact with %client% and how you make sure others are looking after %client%'s needs when you're not able to
   doesClientReceivePaidCare:
-    label: Does %client% get care that is paid for?
+    label: Does %client% receive care that is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
   howIsCareFunded:
     label: How is the care funded?
     hint: ""
     choices:
       client_pays_for_all: %client% pays for all the care
-      client_gets_financial_help: %client% gets some financial help (for example, from the local authority or NHS)
-      all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority or NHS)
+      client_gets_financial_help: %client% gets some financial help (for example, from the local authority, council or NHS)
+      all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority, council or NHS)
   whoIsDoingTheCaring:
     label: Who is doing the caring?
     hint: For example, local authority or private residential care workers, live-in or visiting care workers, family members
