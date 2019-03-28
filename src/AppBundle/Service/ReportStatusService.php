@@ -282,7 +282,7 @@ class ReportStatusService
      */
     public function isReadyToSubmit()
     {
-        return count($this->getRemainingSections()) === 0;
+        return count($this->getRemainingSections()) === 0 && $this->report->isDue();
     }
 
     /**
@@ -687,7 +687,7 @@ class ReportStatusService
     public function getSubmitState()
     {
         return [
-            'state'  => $this->isReadyToSubmit() && $this->report->isDue()
+            'state'  => $this->isReadyToSubmit()
                 ? self::STATE_DONE
                 : self::STATE_NOT_STARTED,
             'nOfRecords' => 0,
@@ -723,15 +723,19 @@ class ReportStatusService
      * @JMS\Type("string")
      * @JMS\Groups({"status", "report-status"})
      *
-     * @return string notStarted|readyToSubmit|notFinished
+     * @return string notStarted|readyToSubmit|notFinished|changesNeeded
      */
     public function getStatus()
     {
         if (!$this->hasStarted()) {
-            return 'notStarted';
+            return Report::STATUS_NOT_STARTED;
         }
 
-        return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        if ($this->isUnsubmitted()) {
+            return Report::STATUS_CHANGES_NEEDED;
+        }
+
+        return $this->isReadyToSubmit() ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
     }
 
     /**
@@ -743,10 +747,19 @@ class ReportStatusService
     public function getStatusIgnoringDueDate()
     {
         if (!$this->hasStarted()) {
-            return 'notStarted';
+            return Report::STATUS_NOT_STARTED;
         }
 
-        return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        if ($this->isUnsubmitted()) {
+            return Report::STATUS_CHANGES_NEEDED;
+        }
+
+        return count($this->getRemainingSections()) === 0 ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
+    }
+
+    private function isUnsubmitted()
+    {
+        return $this->report->getUnSubmitDate() && !$this->report->getSubmitted();
     }
 
 }
