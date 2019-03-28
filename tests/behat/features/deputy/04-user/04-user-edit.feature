@@ -1,5 +1,5 @@
 Feature: deputy / report / edit user
-    
+
     @deputy
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
@@ -48,8 +48,32 @@ Feature: deputy / report / edit user
         And I should be on "/deputyship-details/your-details"
         And I should see "Paul Jamie" in the "profile-name" region
         And I should see "SW1H 9AA" in the "profile-address" region
-     
-  
+
+    @deputy
+    Scenario: Notification email sent for lay deputy changes
+        Given emails are sent from "deputy" area
+        And I reset the email log
+        And I am logged in as "laydeputy@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "user-account, profile-show, profile-edit"
+        When I fill in the following:
+           | profile_firstname | Maruxita |
+           | profile_lastname | Alvarez |
+           | profile_address1 | 1 Scotland Street |
+           | profile_address2 | Edinburgh |
+           | profile_address3 | Midlothian |
+           | profile_addressPostcode | EH1 1AA |
+           | profile_addressCountry | NL |
+           | profile_phoneMain | 0131 111 1111 |
+           | profile_phoneAlternative | 0131 222 2222 |
+        And I press "profile_save"
+        Then I should be on "/deputyship-details/your-details"
+        And the last email should have been sent to "behat-digideps+update-contact@digital.justice.gov.uk"
+        And the last email should contain "The contact details of the following deputy have been updated:"
+        And the last email should contain "Maruxita Alvarez"
+        And the last email should contain "1 Scotland Street"
+        And the last email should contain "Netherlands"
+        And the last email should contain "0131 111 1111"
+
     @deputy
     Scenario: change user password
         Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
@@ -67,7 +91,7 @@ Feature: deputy / report / edit user
           | change_password_plain_password_second | 2 |
         And I press "change_password_save"
         Then the following fields should have an error:
-              | change_password_plain_password_first |      
+              | change_password_plain_password_first |
         # unmatching new passwords
         When I fill in the following:
           | change_password_current_password | Abcd1234 |

@@ -40,6 +40,15 @@ Feature: PROF settings
     And I should see "AB1 2CD" in the "profile-address" region
     And I should see "United Kingdom" in the "profile-address" region
 
+  Scenario: Notification email not sent for professional deputy changes
+    Given emails are sent from "deputy" area
+    And I reset the email log
+    And I am logged in as "behat-prof-user@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "org-settings, profile-show, profile-edit"
+    When I press "profile_save"
+    Then I should be on "/org/settings/your-details"
+    And no email should have been sent
+
   Scenario: PROF Admin logs in and updates profile and sees removeAdmin field but does not
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
