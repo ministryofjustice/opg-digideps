@@ -1,20 +1,21 @@
+{% set translationDomain = "report-visits-care" %}
 {% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
 
 <div class="section" id="safeguarding-section">
     <h2 class="section-heading">Visits and care</h2>
 
     {{ macros.answerYesNo({
-        question: 'form.doYouLiveWithClient.label' | trans(transOptions, 'report-visits-care'),
+        question: 'form.doYouLiveWithClient.label' | trans(transOptions, translationDomain),
         answer: visitsCare.doYouLiveWithClient,
         moreDetails: visitsCare.howOftenDoYouContactClient,
-        moreDetailsLabel: 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions, 'report-visits-care'),
+        moreDetailsLabel: 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions, translationDomain),
         showMoreDetailsWith: 'no'
     }) }}
 
-    {{ macros.careArrangements(visitsCare, transOptions) }}
+    {{ macros.careArrangements(visitsCare, transOptions, translationDomain) }}
 
     {{ macros.answerYesNo({
-        question: 'form.doesClientHaveACarePlan.label' | trans(transOptions, 'report-visits-care'),
+        question: 'form.doesClientHaveACarePlan.label' | trans(transOptions, translationDomain),
         answer: visitsCare.doesClientHaveACarePlan,
         moreDetails: visitsCare.whenWasCarePlanLastReviewed | date("m / Y"),
         moreDetailsLabel: 'Review date',

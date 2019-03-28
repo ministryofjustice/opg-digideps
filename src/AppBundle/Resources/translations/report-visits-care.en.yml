@@ -24,9 +24,9 @@ form:
     hint: ""
   howOftenDoYouContactClient:
     label: |
-      Please tell us how often you have contact with %client% and how you make sure others are looking
+      Please tell us how often do you have contact with %client% and how do you make sure others are looking
       after %client%'s needs when you're not able to.
-    labelShort: How often you have contact with %client% and how you make sure others are looking after %client%'s needs when you're not able to
+    labelShort: How often do you have contact with %client% and how do you make sure others are looking after %client%'s needs when you're not able to
   doesClientReceivePaidCare:
     label: Does %client% receive care that is paid for?
     hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
