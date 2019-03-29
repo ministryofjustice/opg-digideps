@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Report;
 
+use AppBundle\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,12 +12,14 @@ class ProfDeputyCostHowType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $transPrefix = 'howCharged.form.options.';
+
         $builder
-            ->add('profDeputyCostsEstimateHowCharged', FormTypes\ChoiceType::class, [
+            ->add('profDeputyCostsHowCharged', FormTypes\ChoiceType::class, [
                 'choices'  => [
-                    $transPrefix . 'fixed' => Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED,
-                    $transPrefix . 'assessed' => Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_ASSESSED,
-                    $transPrefix . 'both' => Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_BOTH],
+                    $transPrefix . 'fixed' => Report::PROF_DEPUTY_COSTS_TYPE_FIXED,
+                    $transPrefix . 'assessed' => Report::PROF_DEPUTY_COSTS_TYPE_ASSESSED,
+                    $transPrefix . 'both' => Report::PROF_DEPUTY_COSTS_TYPE_BOTH],
                 'expanded' => true
             ])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);

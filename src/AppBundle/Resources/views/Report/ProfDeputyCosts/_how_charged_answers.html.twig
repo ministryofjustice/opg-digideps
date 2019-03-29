@@ -6,13 +6,12 @@
 {% set page = 'summaryPage' %}
 
 {# How did you charge for your costs? #}
-    <tr class="behat-region-how-changed">
+    <tr class="behat-region-how-charged">
         <td>
             {{ 'howCharged.form.profDeputyCostsHow.label' | trans(transOptions) }}
         </td>
         <td>
-            {{ report.profDeputyCostsHowChargedFixed ? 'Fixed<br>' : '' | raw }}
-            {{ report.profDeputyCostsHowChargedAssessed ? 'Assessed<br>' : '' | raw }}
+            {{ ('howCharged.form.options.' ~  report.profDeputyCostsHowCharged) | trans }}
         </td>
         {% if not hideEditLink  %}
             <td class="change-answer">
