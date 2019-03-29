@@ -162,7 +162,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
-        $this->report->setProfDeputyCostsHowChargedFixed(true);
+        $this->report->setProfDeputyCostsHowCharged('fixed');
         $this->report->setProfDeputyCostsHasPrevious('yes');
         $this->report->setProfDeputyPreviousCosts(new ArrayCollection([
             (new ProfDeputyPreviousCost($this->report, 1)),
