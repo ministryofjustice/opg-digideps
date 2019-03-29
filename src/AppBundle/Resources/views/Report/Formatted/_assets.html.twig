@@ -1,14 +1,15 @@
+{% set translationDomain = "report-assets" %}
 {% if assets | length > 0 or report.noAssetToAdd == true %}
     <div class="section break-before" id="assets-section">
-        <h2 class="section-heading">Client's assets</h2>
+        <h2 class="section-heading">{{ 'form.clientAssets.label' | trans(transOptions, translationDomain) }}</h2>
 
         {% if report.assets | length == 0 %}
             <div class="box">
-                <h3 class="label question bold">Does the client have any assets?</h3>
+                <h3 class="label question bold">{{ 'form.doesClientHaveAssets.label' | trans(transOptions, translationDomain) }}</h3>
                 <table class="checkboxes labelvalue inline">
                     <tr>
                         <td class="value checkbox">X</td>
-                        <td class="label">My client has no assets</td>
+                        <td class="label">{{ 'form.doesClientHaveAssets.noAssets.label' | trans(transOptions, translationDomain) }}</td>
                     </tr>
                 </table>
             </div>

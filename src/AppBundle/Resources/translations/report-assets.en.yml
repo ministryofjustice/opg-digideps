@@ -64,6 +64,10 @@ summaryPage:
   totalValueOfAssets: Total value of assets
 
 form:
+  clientAssets.label: %client%'s assets
+  doesClientHaveAssets: 
+    label: Does %client% own any assets?
+    noAssets.label: %client% has no assets
   titleSave.label: Save and continue
   title:
     label: What sort of asset is it?

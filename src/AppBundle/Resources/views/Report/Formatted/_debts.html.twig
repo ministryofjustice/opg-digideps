@@ -3,15 +3,15 @@
 {% trans_default_domain translationDomain %}
 
 <div class="section break-before" id="debts-section">
-    <h2 class="section-heading">Client's debts</h2>
+    <h2 class="section-heading">{{ 'form.clientsDebts.label' | trans(transOptions, translationDomain) }}</h2>
 
     {% if report.hasDebts == 'no' %}
         <div class="box">
-            <h3 class="label question bold">Does the client have any debts?</h3>
+            <h3 class="label question bold">{{ 'form.doesClientHaveDebts.label' | trans(transOptions, translationDomain) }}</h3>
             <table class="checkboxes labelvalue inline">
                 <tr>
                     <td class="value checkbox">X</td>
-                    <td class="label">My client has no debts</td>
+                    <td class="label">{{ 'form.doesClientHaveDebts.noDebts.label' | trans(transOptions, translationDomain) }}</td>
                 </tr>
             </table>
         </div>
