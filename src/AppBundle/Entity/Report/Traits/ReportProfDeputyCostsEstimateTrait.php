@@ -113,7 +113,7 @@ trait ReportProfDeputyCostsEstimateTrait
      */
     public function hasProfDeputyCostsEstimateHowChargedFixedOnly()
     {
-        return strtolower($this->getProfDeputyCostsEstimateHowCharged()) == Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED;
+        return strtolower($this->getProfDeputyCostsEstimateHowCharged()) == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**
@@ -139,7 +139,7 @@ trait ReportProfDeputyCostsEstimateTrait
      *
      * @return ProfDeputyEstimateCost
      */
-    private function getProfDeputyEstimateCostByTypeId($typeId)
+    protected function getProfDeputyEstimateCostByTypeId($typeId)
     {
         foreach ($this->getProfDeputyEstimateCosts() as $submittedCost) {
 
