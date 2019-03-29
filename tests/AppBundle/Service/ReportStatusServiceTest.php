@@ -87,6 +87,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
                 'paFeesExpensesNotStarted'      => null,
                 'paFeesExpensesCompleted'       => null,
                 'getProfDeputyCostsHowCharged' => null,
+                'hasProfDeputyCostsHowChargedFixedOnly' => null,
                 'getProfDeputyCostsHasPrevious' => null,
                 'getProfDeputyFixedCost' => null,
                 'getProfDeputyCostsHasInterim' => null,
@@ -413,9 +414,14 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
 
     public function profDeputyCostsProvider()
     {
-
-        $onlyFixedTicked = ['getProfDeputyCostsHowChargedFixed' => true];
-        $twoTicked = ['getProfDeputyCostsHowChargedFixed' => true, 'getProfDeputyCostsHowChargedAssessed' => true];
+        $onlyFixedCosts = [
+            'getProfDeputyCostsHowCharged' => 'fixed',
+            'hasProfDeputyCostsHowChargedFixedOnly' => true
+        ];
+        $bothFixedAndAssessed = [
+            'getProfDeputyCostsHowCharged' => 'both',
+            'hasProfDeputyCostsHowChargedFixedOnly' => false
+        ];
 
         $prevNo = ['getProfDeputyCostsHasPrevious' => 'no'];
         $prevYes = ['getProfDeputyCostsHasPrevious' => 'yes', 'getProfDeputyPreviousCosts' => [1, 2]];
@@ -429,27 +435,29 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         return [
             [[], StatusService::STATE_NOT_STARTED], //no data at all
 
-            [['getProfDeputyCostsHowChargedFixed' => true], StatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'fixed'], StatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'assessed'], StatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'both'], StatusService::STATE_INCOMPLETE],
 
-            // only one ticked: all flows
-            [$onlyFixedTicked + $prevNo + $fixed + $scco, StatusService::STATE_DONE],
-            [$onlyFixedTicked + $prevYes + $fixed + $scco, StatusService::STATE_DONE],
+            // fixed costs: all flows
+            [$onlyFixedCosts + $prevNo + $fixed + $scco, StatusService::STATE_DONE],
+            [$onlyFixedCosts + $prevYes + $fixed + $scco, StatusService::STATE_DONE],
 
             // same as above, but with some missing
-            [$onlyFixedTicked  + $interimNo + $fixed + $scco, StatusService::STATE_INCOMPLETE],
-            [$onlyFixedTicked + $prevNo  + $scco, StatusService::STATE_INCOMPLETE],
-            [$onlyFixedTicked + $prevNo + $interimYes, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts  + $interimNo + $fixed + $scco, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $prevNo  + $scco, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $prevNo + $interimYes, StatusService::STATE_INCOMPLETE],
 
             // two ticked (equivalent to all ticked): all flows
-            [$twoTicked + $prevNo + $interimYes + $scco, StatusService::STATE_DONE],
-            [$twoTicked + $prevYes + $interimYes + $scco, StatusService::STATE_DONE],
-            [$twoTicked + $prevNo + $interimNo + $fixed + $scco, StatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevNo + $interimYes + $scco, StatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevYes + $interimYes + $scco, StatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed + $scco, StatusService::STATE_DONE],
 
             // same as above, but with some missing
-            [$twoTicked  + $interimYes + $scco, StatusService::STATE_INCOMPLETE],
-            [$twoTicked + $prevYes  + $scco, StatusService::STATE_INCOMPLETE],
-            [$twoTicked + $prevNo + $interimNo + $scco, StatusService::STATE_INCOMPLETE], // miss fixed
-            [$twoTicked + $prevNo + $interimNo + $fixed, StatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed  + $interimYes + $scco, StatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevYes  + $scco, StatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $scco, StatusService::STATE_INCOMPLETE], // miss fixed
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed, StatusService::STATE_INCOMPLETE],
         ];
     }
 
@@ -457,7 +465,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider profDeputyCostsProvider
      */
-    public function profDeputyCosts($mocks, $state)
+        public function profDeputyCosts($mocks, $state)
     {
         $report = $this->getReportMocked([] + $mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_DEPUTY_COSTS)->andReturn(true);

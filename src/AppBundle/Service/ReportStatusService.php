@@ -395,9 +395,7 @@ class ReportStatusService
 
         $onlyFixedTicked = $this->report->hasProfDeputyCostsHowChargedFixedOnly();
 
-        $atLeastOneTicked = !empty($this->report->getProfDeputyCostsHowCharged()    );
-
-        if (!$atLeastOneTicked) {
+        if (empty($this->report->getProfDeputyCostsHowCharged())) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -418,7 +416,7 @@ class ReportStatusService
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
         $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
 
-        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
+        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
