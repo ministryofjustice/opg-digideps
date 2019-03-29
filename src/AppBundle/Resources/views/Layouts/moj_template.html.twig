@@ -83,7 +83,7 @@
     <!--end global-cookie-message-->
 
 
-    <header role="banner" id="global-header" class="with-proposition {% block headerClass %}{% endblock %}">
+    <header id="global-header" class="with-proposition {% block headerClass %}{% endblock %}">
       <div class="header-wrapper {% if env == 'admin' %}wider{% endif %}">
         <div class="header-global">
           <div class="header-logo">
@@ -120,8 +120,7 @@
     {% block beforeContent %}{% endblock %}
 
     <div id="wrapper" class="group">
-      <a name="content"></a>
-      <main id="content" role="main" class="{% if env == 'admin' %}wider{% endif %}">
+      <main id="content" class="{% if env == 'admin' %}wider{% endif %}">
        {% block content %}{% endblock %}
    </main>
     </div>
