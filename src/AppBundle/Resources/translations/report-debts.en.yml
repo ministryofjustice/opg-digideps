@@ -37,6 +37,10 @@ summaryPage:
   moreAbout: %client%'s other debts of £%amount%
 
 form:
+  clientsDebts.label: %client%'s debts
+  doesClientHaveDebts:
+    label: Does %client% have any debts?
+    noDebts.label: %client% has no debts
   entries:
     care-fees:
       label: Outstanding care home fees
