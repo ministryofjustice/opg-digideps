@@ -298,6 +298,6 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
 
-        $this->assertCount(9, $data);
+        $this->assertCount(4, $data);
     }
 }

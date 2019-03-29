@@ -5,7 +5,9 @@ namespace AppBundle\Command;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
+use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Role;
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -62,6 +64,8 @@ class AddSingleUserCommand extends ContainerAwareCommand
     {
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
+        $teamRepo = $em->getRepository('AppBundle\Entity\Team');
+        $clientRepo = $em->getRepository('AppBundle\Entity\Client');
         $email = $data['email'];
 
         $output->write("User $email: ");
@@ -116,7 +120,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
          * Deputy user::
          * Add CASREC entry + Client
          */
-        if (!in_array($data['roleName'], [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_CASE_MANAGER])) {
+        if (!in_array($data['roleName'], [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_CASE_MANAGER]) && isset($data['clientSurname'])) {
             $casRecEntity = $casRecEntity = new CasRec($this->extractDataToRow($data));
             $em->persist($casRecEntity);
 
@@ -137,8 +141,51 @@ class AddSingleUserCommand extends ContainerAwareCommand
                 $ndr = new Ndr($client);
                 $em->persist($ndr);
             }
+        } else if (isset($data['caseNumber'])) {
+            // If client already exists, just assign user
+            $client = $clientRepo->findOneBy(['caseNumber' => CasRec::normaliseCaseNumber($data['caseNumber'])]);
+            if ($client instanceof Client) {
+                $user->addClient($client);
+            }
         }
 
+        /**
+         * Prof/PA team members:
+         * Assign to team (creating team if necessary)
+        */
+        if (isset($data['teamName'])) {
+            $team = $teamRepo->findOneBy(['teamName' => $data['teamName']]);
+
+            if (!$team) {
+                $team = new Team($data['teamName']);
+                $em->persist($team);
+            }
+
+            $user->addTeam($team);
+        }
+
+        /**
+         * Create report
+         */
+        $hierarchy = $this->getContainer()->getParameter('security.role_hierarchy.roles');
+        $roles = isset($hierarchy[$user->getRoleName()]) ? $hierarchy[$user->getRoleName()] : [$user->getRoleName()];
+        if ((in_array(User::ROLE_PROF, $roles) || in_array(User::ROLE_PA, $roles)) && isset($data['typeOfReport'])) {
+            try {
+                $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['typeOfReport'], $data['corref'], $user->getRoleName());
+            } catch (\Exception $e) {
+                if (in_array(User::ROLE_PROF, $roles)) {
+                    $type = $data['typeOfReport'] === 'OPG102' ? Report::TYPE_102_5 : Report::TYPE_103_5;
+                } else if (in_array(User::ROLE_PA, $roles)) {
+                    $type = $data['typeOfReport'] === 'OPG102' ? Report::TYPE_102_6 : Report::TYPE_103_6;
+                }
+            }
+
+            $startDate = $client->getExpectedReportStartDate();
+            $endDate = $client->getExpectedReportEndDate();
+
+            $report = new Report($client, $type, $startDate, $endDate);
+            $em->persist($report);
+        }
 
         if ($options['flush']) {
             $em->flush();
