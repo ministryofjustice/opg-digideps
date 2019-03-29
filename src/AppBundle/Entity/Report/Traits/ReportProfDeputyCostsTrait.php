@@ -15,7 +15,7 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var string
      *
-     * @Assert\NotBlank( message="profDeputyCostsHowCharged.howCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
+     * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
      * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsHowCharged"})
      */
