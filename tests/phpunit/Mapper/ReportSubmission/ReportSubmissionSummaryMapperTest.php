@@ -43,8 +43,8 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     public function testReturnsReportSubmissionsByCustomParameters()
     {
         $this->query = (new ReportSubmissionSummaryQuery())
-            ->setFromDate(new \DateTime('01-01-2001'))
-            ->setToDate(new \DateTime('02-01-2001'))
+            ->setStartDate(new \DateTime('01-01-2001'))
+            ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')
             ->setSortOrder('bar');
 
