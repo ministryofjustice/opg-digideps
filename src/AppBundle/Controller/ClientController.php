@@ -51,7 +51,11 @@ class ClientController extends RestController
         ]);
 
         if ($user && $user->isLayDeputy()) {
-            if (array_key_exists('ndr_enabled', $data) && $data['ndr_enabled'] && !$client->getNdr()) {
+            // We come to this route from either editing or creating a client - need to support
+            // both routes as an NDR needs to exist for the add client route for Lays
+            $ndrRequired = ((array_key_exists('ndr_enabled', $data) && $data['ndr_enabled']) || $user->getNdrEnabled());
+
+            if ($ndrRequired && !$client->getNdr()) {
                 $ndr = new EntityDir\Ndr\Ndr($client);
                 $em->persist($ndr);
             }
