@@ -17,7 +17,6 @@ use AppBundle\Validator\Constraints as AppAssert;
  * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
- * @Assert\Callback(callback="profCostsHowChangedAtLeastOne", groups={"prof-deputy-costs-how-changed"})
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */

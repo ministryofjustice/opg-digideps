@@ -156,21 +156,6 @@ trait ReportProfDeputyCostsTrait
         return $this;
     }
 
-
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-    public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
-    {
-        if (!empty($this->getProfDeputyCostsHowCharged))
-        {
-            $context->buildViolation('profDeputyHowChanged.atLeastOne')
-                ->atPath('profDeputyCostsHowCharged')
-                ->addViolation();
-        }
-    }
-
     /**
      * @param ExecutionContextInterface $context
      */
