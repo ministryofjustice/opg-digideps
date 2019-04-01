@@ -1,5 +1,4 @@
-    <?php
-
+<?php
 namespace AppBundle\Resources\views\Report;
 
 use AppBundle\Entity\Client;
