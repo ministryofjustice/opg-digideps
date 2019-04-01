@@ -24,6 +24,10 @@
 
     <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ client.caseNumber }}</p>
 
+    {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
+    '   client': client
+    } %}
+
     <div class="panel panel-admin hard">
         <div class="panel-heading">
           {% if report.isUnsubmitted %}
@@ -68,10 +72,6 @@
     {% include 'AppBundle:Org/ClientProfile:_reports.html.twig' with {
         'reports': client.submittedReports,
 			  'client': client
-    } %}
-
-    {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
-    '   client': client
     } %}
 
 {% endblock %}
