@@ -96,7 +96,7 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testupsertAuth()
+    public function testUpsertAuth()
     {
         $url = '/client/upsert';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -106,7 +106,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testupsertPostLayDeputy()
+    public function testUpsertPostLayDeputy()
     {
         $url = '/client/upsert';
 
@@ -123,7 +123,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testupsertPutLayDeputy()
+    public function testUpsertPutLayDeputy()
     {
         $url = '/client/upsert';
 
@@ -149,7 +149,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testupsertPutLayDeputyNDREnabled()
+    public function testUpsertPutLayDeputyNDREnabled()
     {
         $url = '/client/upsert';
 
@@ -166,7 +166,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf(Ndr::class, $client->getNdr());
     }
 
-    public function testupsertPutPA()
+    public function testUpsertPutPA()
     {
         $url = '/client/upsert';
 
