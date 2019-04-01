@@ -20,6 +20,10 @@ class SettingsController extends AbstractController
      **/
     public function indexAction()
     {
+        if ($this->getUser()->isDeputyOrg()) {
+            return [];
+        };
+
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'account_settings')) {
