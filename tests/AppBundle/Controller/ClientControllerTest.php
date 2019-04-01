@@ -123,7 +123,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testupsertPut_lay_deputy()
+    public function testupsertPutLayDeputy()
     {
         $url = '/client/upsert';
 
@@ -149,7 +149,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testupsertPut_lay_deputy_ndr_enabled()
+    public function testupsertPutLayDeputyNDREnabled()
     {
         $url = '/client/upsert';
 
@@ -166,7 +166,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf(Ndr::class, $client->getNdr());
     }
 
-    public function testupsertPut_PA()
+    public function testupsertPutPA()
     {
         $url = '/client/upsert';
 
