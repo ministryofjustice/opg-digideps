@@ -30,7 +30,7 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
         $this
             ->updateHowCharged($report, $data)
             ->updateInterimCosts($report, $data)
-            ->updatePreviousCosts($report, $data)
+            ->updateHasPreviousCosts($report, $data)
             ->updateFixedCostAmount($report, $data)
             ->updateAmountToScco($report, $data)
             ->updateReasonBeyondEstimate($report, $data);
@@ -108,7 +108,7 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
      * @param array $data
      * @return $this
      */
-    private function updatePreviousCosts(Report $report, array $data)
+    private function updateHasPreviousCosts(Report $report, array $data)
     {
         if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
             $report->setProfDeputyCostsHasPrevious($data['prof_deputy_costs_has_previous']);

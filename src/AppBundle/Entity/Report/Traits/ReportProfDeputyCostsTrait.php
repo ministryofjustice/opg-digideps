@@ -289,14 +289,6 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return string
-     */
-    public function getProfDeputyCostsBeyondEstimateReason()
-    {
-        return $this->profDeputyCostsReasonBeyondEstimate;
-    }
-
-    /**
      * @param string $profDeputyCostsReasonBeyondEstimate
      * @return ReportProfDeputyCostsTrait
      */
@@ -304,6 +296,14 @@ trait ReportProfDeputyCostsTrait
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfDeputyCostsReasonBeyondEstimate()
+    {
+        return $this->profDeputyCostsReasonBeyondEstimate;
     }
 
     /**
