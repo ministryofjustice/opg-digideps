@@ -418,8 +418,7 @@ class FormattedTest extends WebTestCase
     {
         $this
             ->report
-            ->setProfDeputyCostsHowChargedFixed(null)
-            ->setProfDeputyCostsHowChargedAssessed(null);
+            ->setProfDeputyCostsHowCharged(null);
     }
 
     /**
