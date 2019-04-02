@@ -12,7 +12,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var string
      *
-     * @Assert\NotBlank( message="profDeputyCostsEstimateHowCharged.howCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
+     * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
      * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsEstimateHowCharged"})
      */

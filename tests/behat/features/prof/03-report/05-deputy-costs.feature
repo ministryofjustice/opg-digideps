@@ -4,6 +4,12 @@ Feature: PROF deputy costs
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_deputy_costs, start"
+    And I submit the step
+    Then the following fields should have an error:
+      | deputy_costs_profDeputyCostsHowCharged_0 |
+      | deputy_costs_profDeputyCostsHowCharged_1 |
+      | deputy_costs_profDeputyCostsHowCharged_2 |
+    And I should see an "#error-summary" element
     # how charged: fixed only
     Then the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_0 | fixed |
