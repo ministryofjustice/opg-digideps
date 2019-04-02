@@ -510,7 +510,7 @@ profDeputyOtherCost:
     notBlank: Please give us some more information
 
 profDeputyEstimateCost:
-  profDeputyCostsEstimateHowCharged :
+  profDeputyCostsEstimateHowCharged:
     notBlank: Please select an option
   profDeputyManagementCostAmount:
     amount:
