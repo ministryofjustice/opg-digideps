@@ -7,6 +7,7 @@ use AppBundle\Entity\User;
 use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Routing\Router;
 
 class MailFactory
@@ -241,6 +242,43 @@ class MailFactory
             ->setToName($this->translate('feedbackForm.toName'))
             ->setSubject($this->translate('feedbackForm.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:feedback.html.twig', $viewParams));
+
+        return $email;
+    }
+
+
+    /**
+     * @param string $response
+     *
+     * @return ModelDir\Email
+     */
+    public function createAddressUpdateEmail($response, EntityDir\User $user, $type)
+    {
+        if ($type === 'deputy') {
+            $countryCode = $response->getAddressCountry();
+        } else {
+            $countryCode = $response->getCountry();
+        }
+
+        $countryName = Intl::getRegionBundle()->getCountryName($countryCode);
+
+        $viewParams = [
+            'response' => $response,
+            'countryName' => $countryName,
+            'caseNumber' => $user->getClients()[0]->getCaseNumber(),
+            'userRole' => $user->getRoleFullName()
+        ];
+
+        $template = 'AppBundle:Email:address-update-' . $type . '.html.twig';
+
+        $email = new ModelDir\Email();
+        $email
+            ->setFromEmail($this->container->getParameter('email_update_send')['from_email'])
+            ->setFromName($this->translate('addressUpdateForm.' . $type . '.fromName'))
+            ->setToEmail($this->container->getParameter('email_update_send')['to_email'])
+            ->setToName($this->translate('addressUpdateForm.' . $type . '.toName'))
+            ->setSubject($this->translate('addressUpdateForm.' . $type . '.subject'))
+            ->setBodyHtml($this->templating->render($template, $viewParams));
 
         return $email;
     }

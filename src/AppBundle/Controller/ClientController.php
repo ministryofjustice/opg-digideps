@@ -49,6 +49,13 @@ class ClientController extends AbstractController
             $this->getRestClient()->put('client/upsert', $clientUpdated, ['edit']);
             $request->getSession()->getFlashBag()->add('notice', htmlentities($client->getFirstname()) . "'s data edited");
 
+            $user = $this->getUserWithData(['user-clients', 'client']);
+
+            if ($user->isLayDeputy()) {
+                $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $user, 'client');
+                $this->getMailSender()->send($addressUpdateEmail, ['html']);
+            }
+
             return $this->redirect($this->generateUrl('client_show'));
         }
 

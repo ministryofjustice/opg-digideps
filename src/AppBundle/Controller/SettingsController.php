@@ -20,6 +20,10 @@ class SettingsController extends AbstractController
      **/
     public function indexAction()
     {
+        if ($this->getUser()->isDeputyOrg()) {
+            return [];
+        };
+
         // redirect if user has missing details or is on wrong page
         $user = $this->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
         if ($route = $this->get('redirector_service')->getCorrectRouteIfDifferent($user, 'account_settings')) {
@@ -131,6 +135,12 @@ class SettingsController extends AbstractController
 
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
+
+                if ($user->isLayDeputy()) {
+                    $groups = ['user-clients', 'client'];
+                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups), 'deputy');
+                    $this->getMailSender()->send($addressUpdateEmail, ['html']);
+                }
 
                 return $this->redirectToRoute($redirectRoute);
             } catch (\Exception $e) {
