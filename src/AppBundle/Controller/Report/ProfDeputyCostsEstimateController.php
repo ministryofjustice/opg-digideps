@@ -169,7 +169,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
             return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
         }
 
-        $costBreakdown = Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED === $report->getProfDeputyCostsEstimateHowCharged() ?
+        $costBreakdown = Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $report->getProfDeputyCostsEstimateHowCharged() ?
             null : $report->generateActualSubmittedEstimateCosts();
 
         return [
@@ -227,7 +227,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
             return 'prof_deputy_costs_estimate_breakdown';
         }
 
-        return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED) ?
+        return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_TYPE_FIXED) ?
             'prof_deputy_costs_estimate_summary' :
             'prof_deputy_costs_estimate_breakdown';
     }
@@ -239,8 +239,8 @@ class ProfDeputyCostsEstimateController extends AbstractController
      */
     private function answerHasChangedFromFixedToNonFixed($originalHowChargedValue, $updatedHowCharged)
     {
-        return $originalHowChargedValue === Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED &&
-            $updatedHowCharged !== Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED;
+        return $originalHowChargedValue === Report::PROF_DEPUTY_COSTS_TYPE_FIXED &&
+            $updatedHowCharged !== Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**

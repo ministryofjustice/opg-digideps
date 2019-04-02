@@ -14,6 +14,12 @@ Feature: Prof deputy costs estimate
     And I click on "edit-prof_deputy_costs_estimate"
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate"
     When I click on "start"
+    And I submit the step
+    Then the following fields should have an error:
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 |
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_1 |
+      | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_2 |
+    And I should see an "#error-summary" element
     Then the URL should match "/report/\d+/prof-deputy-costs-estimate/how-charged"
     And the step with the following values CAN be submitted:
       | deputy_costs_estimate_profDeputyCostsEstimateHowCharged_0 | fixed |

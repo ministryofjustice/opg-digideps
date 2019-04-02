@@ -439,7 +439,7 @@ lifestyle:
 
 feedbackAfterReport:
     satisfactionLevel:
-        notEmpty: Please selection an option
+        notEmpty: Please select an option
 
 profServiceFee:
     assessedOrFixed:
@@ -465,8 +465,8 @@ profServiceFee:
         profFeesEstimateSccoReason:
             notBlank: Please provide an explanation
 
-profDeputyHowChanged:
-  atLeastOne: Please select at least one option
+profDeputyCostsHowCharged:
+  notBlank: Please select an option
 
 profDeputyPreviousCost:
   startDate:
@@ -510,6 +510,8 @@ profDeputyOtherCost:
     notBlank: Please give us some more information
 
 profDeputyEstimateCost:
+  profDeputyCostsEstimateHowCharged:
+    notBlank: Please select an option
   profDeputyManagementCostAmount:
     amount:
       notBlank: Please enter an amount

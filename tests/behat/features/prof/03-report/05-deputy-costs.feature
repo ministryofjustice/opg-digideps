@@ -4,9 +4,15 @@ Feature: PROF deputy costs
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_deputy_costs, start"
+    And I submit the step
+    Then the following fields should have an error:
+      | deputy_costs_profDeputyCostsHowCharged_0 |
+      | deputy_costs_profDeputyCostsHowCharged_1 |
+      | deputy_costs_profDeputyCostsHowCharged_2 |
+    And I should see an "#error-summary" element
     # how charged: fixed only
     Then the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedFixed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_0 | fixed |
     # has previous: no
     And the step with the following values CAN be submitted:
       | yes_no_profDeputyCostsHasPrevious_1 | no |
@@ -22,7 +28,7 @@ Feature: PROF deputy costs
       | deputy_other_costs_profDeputyOtherCosts_6_moreDetails | info  |
     #check summary
     Then each text should be present in the corresponding region:
-      | Fixed       | how-changed            |
+      | Fixed costs | how-charged            |
       | No          | has-previous           |
       | 1,000.00    | fixed-cost-amount      |
       | 1,030.03    | total-cost-taken-from-client |
@@ -34,8 +40,7 @@ Feature: PROF deputy costs
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedFixed    | 1 |
-      | deputy_costs_profDeputyCostsHowChargedAssessed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_2    | both |
     # previous = no
     And the step with the following values CAN be submitted:
       | yes_no_profDeputyCostsHasPrevious_1 | no |
@@ -52,8 +57,7 @@ Feature: PROF deputy costs
     And I click on "save-and-continue"
     # check summary
     And each text should be present in the corresponding region:
-      | Fixed    | how-changed       |
-      | Assessed | how-changed       |
+      | Both fixed and assessed costs     | how-charged       |
       | No       | has-previous      |
       | No       | has-interim       |
       | 1,000.00 | fixed-cost-amount |
@@ -67,7 +71,7 @@ Feature: PROF deputy costs
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedFixed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_0 | fixed |
     When I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/previous-received-exists"
@@ -88,7 +92,7 @@ Feature: PROF deputy costs
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedAssessed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
     When I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/previous-received-exists"
@@ -122,7 +126,7 @@ Feature: PROF deputy costs
     And I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedAssessed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
     When I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/previous-received-exists"
@@ -154,8 +158,7 @@ Feature: PROF deputy costs
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:
-      | deputy_costs_profDeputyCostsHowChargedFixed    | 1 |
-      | deputy_costs_profDeputyCostsHowChargedAssessed | 1 |
+      | deputy_costs_profDeputyCostsHowCharged_2    | both |
     # previous=yes
     And the step with the following values CAN be submitted:
       | yes_no_profDeputyCostsHasPrevious_1 | yes |
@@ -220,8 +223,7 @@ Feature: PROF deputy costs
       | deputy_other_costs_profDeputyOtherCosts_6_moreDetails | breakdown other details |
     # check summary page
     And each text should be present in the corresponding region:
-      | Fixed                                | how-changed             |
-      | Assessed                             | how-changed             |
+      | Both fixed and assessed costs         | how-charged             |
       | Yes                                  | has-previous            |
       | Received for 01/01/2015 - 01/01/2015 | prev-cost-1             |
       | £100                                 | prev-cost-1             |

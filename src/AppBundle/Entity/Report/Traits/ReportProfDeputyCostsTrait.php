@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Report\Traits;
 
 use AppBundle\Entity\Report\ProfDeputyOtherCost;
+use AppBundle\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Report\ProfDeputyPreviousCost;
@@ -12,20 +13,13 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportProfDeputyCostsTrait
 {
     /**
-     * @var boolean
+     * @var string
      *
-     * @JMS\Type("boolean")
+     * @Assert\NotBlank(message="profDeputyCostsHowCharged.notBlank", groups={"prof-deputy-costs-how-charged"} )
+     * @JMS\Type("string")
      * @JMS\Groups({"deputyCostsHowCharged"})
      */
-    private $profDeputyCostsHowChargedFixed;
-
-    /**
-     * @var boolean
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"deputyCostsHowCharged"})
-     */
-    private $profDeputyCostsHowChargedAssessed;
+    private $profDeputyCostsHowCharged;
 
     /**
      * @var string yes/no
@@ -118,8 +112,7 @@ trait ReportProfDeputyCostsTrait
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
-        return $this->profDeputyCostsHowChargedFixed
-            && !$this->profDeputyCostsHowChargedAssessed;
+        return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**
@@ -147,51 +140,20 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function getProfDeputyCostsHowChargedFixed()
+    public function getProfDeputyCostsHowCharged()
     {
-        return $this->profDeputyCostsHowChargedFixed;
+        return $this->profDeputyCostsHowCharged;
     }
 
     /**
-     * @param string $profDeputyCostsHowChargedFixed
+     * @param string $profDeputyCostsHowCharged
      */
-    public function setProfDeputyCostsHowChargedFixed($profDeputyCostsHowChargedFixed)
+    public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
     {
-        $this->profDeputyCostsHowChargedFixed = $profDeputyCostsHowChargedFixed;
+        $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
         return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getProfDeputyCostsHowChargedAssessed()
-    {
-        return $this->profDeputyCostsHowChargedAssessed;
-    }
-
-    /**
-     * @param string $profDeputyCostsHowChargedAssessed
-     */
-    public function setProfDeputyCostsHowChargedAssessed($profDeputyCostsHowChargedAssessed)
-    {
-        $this->profDeputyCostsHowChargedAssessed = $profDeputyCostsHowChargedAssessed;
-        return $this;
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-    public function profCostsHowChangedAtLeastOne(ExecutionContextInterface $context)
-    {
-        if (!$this->profDeputyCostsHowChargedFixed
-            && !$this->profDeputyCostsHowChargedAssessed
-        ) {
-            $context->buildViolation('profDeputyHowChanged.atLeastOne')
-                ->atPath('profDeputyCostsHowChargedFixed')
-                ->addViolation();
-        }
     }
 
     /**
@@ -409,7 +371,7 @@ trait ReportProfDeputyCostsTrait
      *
      * @return ProfDeputyOtherCost
      */
-    private function getProfDeputyOtherCostByTypeId($typeId)
+    protected function getProfDeputyOtherCostByTypeId($typeId)
     {
         foreach ($this->getProfDeputyOtherCosts() as $submittedCost) {
 

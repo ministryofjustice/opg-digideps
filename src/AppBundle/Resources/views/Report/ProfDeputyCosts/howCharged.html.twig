@@ -29,19 +29,12 @@
         {#{{ (page ~ '.profDeputyCostsHow.label') | trans(transOptions) }}#}
     {#</p>#}
 
-    <div class="form-section push--bottom">
-        <p class="form-hint">{{ (page ~ '.form.profDeputyCostsHow.hint') | trans }}</p>
-
-        {{ form_checkbox(form.profDeputyCostsHowChargedFixed, page ~ '.form.profDeputyCostsHowChargedFixed', {
-            'useFormGroup': false,
-            'formGroupClass': 'form-group-compound',
-        }) }}
-
-        {{ form_checkbox(form.profDeputyCostsHowChargedAssessed, page ~ '.form.profDeputyCostsHowChargedAssessed', {
-            'useFormGroup': false,
-            'formGroupClass': 'form-group-compound',
-        }) }}
-    </div>
+        <div class="form-group push--bottom {% if not form.profDeputyCostsHowCharged.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.profDeputyCostsHowCharged, 'report.form.profDeputyCostsHowCharged', {
+                'legendClass' : 'form-label-bold',
+                'useFormGroup': false,
+            }) }}
+        </div>
 
     {{ macros.saveAndContinueButton(form.save) }}
 

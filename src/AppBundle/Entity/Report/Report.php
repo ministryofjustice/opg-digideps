@@ -17,7 +17,6 @@ use AppBundle\Validator\Constraints as AppAssert;
  * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
- * @Assert\Callback(callback="profCostsHowChangedAtLeastOne", groups={"prof-deputy-costs-how-changed"})
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
@@ -39,9 +38,10 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\ReportUnsubmittedSections;
 
-    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED = 'fixed';
-    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_ASSESSED = 'assessed';
-    const PROF_DEPUTY_COSTS_ESTIMATE_TYPE_BOTH = 'both';
+    // Applies to both costs and estimate costs
+    const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
     /**
      * @JMS\Type("integer")
