@@ -57,4 +57,27 @@ Feature: deputy / report / edit client
         When I click on "client-edit"
         Then the following fields should have the corresponding values:
             | client_firstname | Nolan |
-        
+
+    # @deputy
+    # Scenario: edit client details
+    #     Given emails are sent from "deputy" area
+    #     And I reset the email log
+    #     And I am logged in as "laydeputy@publicguardian.gov.uk" with password "Abcd1234"
+    #     And I click on "user-account, client-show, client-edit"
+    #     When I fill in the following:
+    #         | client_firstname | Ulrich |
+    #         | client_lastname | Wentz |
+    #         | client_address |  17 South Parade |
+    #         | client_address2 | Second Floor |
+    #         | client_county | Nottingham |
+    #         | client_postcode | NG1 2HT |
+    #         | client_country | VE |
+    #         | client_phone | 0987654321 |
+    #     And I press "client_save"
+    #     Then I should be on "/deputyship-details/your-client"
+    #     And the last email should have been sent to "digideps+update-contact@digital.justice.gov.uk"
+    #     And the last email should contain "The contact details of the following client have been updated:"
+    #     And the last email should contain "Ulrich Wentz"
+    #     And the last email should contain "17 South Parade"
+    #     And the last email should contain "Venezuela"
+    #     And the last email should contain "0987654321"

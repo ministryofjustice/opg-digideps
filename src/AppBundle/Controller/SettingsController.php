@@ -136,6 +136,12 @@ class SettingsController extends AbstractController
             try {
                 $this->getRestClient()->put('user/' . $user->getId(), $formData, $jmsPutGroups);
 
+                if ($user->isLayDeputy()) {
+                    $groups = ['user-clients', 'client'];
+                    $addressUpdateEmail = $this->getMailFactory()->createAddressUpdateEmail($form->getData(), $this->getUserWithData($groups), 'deputy');
+                    $this->getMailSender()->send($addressUpdateEmail, ['html']);
+                }
+
                 return $this->redirectToRoute($redirectRoute);
             } catch (\Exception $e) {
                 $translator = $this->get('translator');
