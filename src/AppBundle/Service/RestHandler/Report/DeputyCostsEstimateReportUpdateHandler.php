@@ -47,7 +47,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         if (array_key_exists('prof_deputy_costs_estimate_how_charged', $data)) {
             $report->setProfDeputyCostsEstimateHowCharged($data['prof_deputy_costs_estimate_how_charged']);
 
-            if (Report::PROF_DEPUTY_COSTS_ESTIMATE_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
+            if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
                 return $this;
             }
 

@@ -5,6 +5,8 @@ services:
     arguments:
       -
         - '@rest_handler.report.deputy_costs_estimate_report_update_handler'
+        - '@rest_handler.report.deputy_costs_report_update_handler'
+
 
   AppBundle\v2\Controller\DeputyController:
     class: AppBundle\v2\Controller\DeputyController

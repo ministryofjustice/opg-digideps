@@ -3,3 +3,7 @@ services:
     class: AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
     arguments: [ "@em" ]
 
+  rest_handler.report.deputy_costs_report_update_handler:
+    class: AppBundle\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+    arguments: [ "@em" ]
+
