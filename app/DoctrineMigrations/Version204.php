@@ -19,6 +19,12 @@ class Version204 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE checklist ADD deputy_charge_allowed_by_court VARCHAR(3) DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec DROP registration_date');
+        $this->addSql('ALTER TABLE casrec DROP last_logged_in');
+        $this->addSql('ALTER TABLE casrec DROP reports_submitted');
+        $this->addSql('ALTER TABLE casrec DROP last_report_submitted_at');
+        $this->addSql('ALTER TABLE casrec DROP ndr_submitted_at');
+        $this->addSql('ALTER TABLE casrec DROP reports_active');
     }
 
     /**
@@ -31,5 +37,11 @@ class Version204 extends AbstractMigration
 
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE checklist DROP deputy_charge_allowed_by_court');
+        $this->addSql('ALTER TABLE casrec ADD registration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD last_logged_in TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD reports_submitted VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD last_report_submitted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD ndr_submitted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
+        $this->addSql('ALTER TABLE casrec ADD reports_active VARCHAR(4) DEFAULT NULL');
     }
 }

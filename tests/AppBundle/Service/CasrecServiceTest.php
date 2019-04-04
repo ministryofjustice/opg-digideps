@@ -114,38 +114,6 @@ class CasrecServiceTest extends WebTestCase
         $this->assertEquals('sw1ah3', $record1->getDeputyPostCode());
         $this->assertEquals('opg102', $record1->getTypeOfReport());
         $this->assertEquals('l2', $record1->getCorref());
-
-        // record1
-        $casrecArray = $record1->toArray();
-        $this->assertContains(date('d/m/Y'), $casrecArray['Uploaded at']);
-        $this->assertContains(date('d/m/Y'), $casrecArray['Stats updated at']);
-        $this->assertContains('01/11/2017', $casrecArray['Deputy registration date']);
-        $this->assertContains('02/11/2017', $casrecArray['Deputy last logged in']);
-        $this->assertEquals(2, $casrecArray['Reports submitted']);
-        $this->assertContains('05/06/2017', $casrecArray['Last report submitted at']);
-        $this->assertContains('04/06/2016', $casrecArray['NDR submitted at']);
-        $this->assertEquals(1, $casrecArray['Reports active']);
-        $this->assertContains('c1', $casrecArray['custom1']); // custom data is kepy
-        $this->assertContains('DN1', $casrecArray['Deputy No']);
-        $this->assertContains('1234567T', $casrecArray['Case']);
-        $this->assertEquals('1', $casrecArray['NDR']);
-
-        // record 2 (no match at all in the DB)
-        $casrecArray = $record2->toArray();
-        $this->assertContains(date('d/m/Y'), $casrecArray['Uploaded at']);
-        $this->assertContains(date('d/m/Y'), $casrecArray['Stats updated at']);
-        $this->assertContains('n.a.', $casrecArray['Deputy registration date']);
-        $this->assertContains('n.a.', $casrecArray['Deputy last logged in']);
-        $this->assertEquals('n.a.', $casrecArray['Reports submitted']);
-        $this->assertEquals('n.a.', $casrecArray['Last report submitted at']);
-        $this->assertEquals('n.a.', $casrecArray['NDR submitted at']);
-        $this->assertEquals('n.a.', $casrecArray['Reports active']);
-        $this->assertEquals('', $casrecArray['NDR']);
-
-        // test CSV
-        $file ='/tmp/dd_stats.unittest.csv';
-        $this->object->saveCsv($file);
-        $this->assertCount(3, file($file));
     }
 
     public function tearDown()

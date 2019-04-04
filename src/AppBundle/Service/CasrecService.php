@@ -12,8 +12,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CasrecService
 {
-    const STATS_NOT_OLDER_THAN = '-60 minutes';
-
     /**
      * @var EntityManager
      */
@@ -48,107 +46,6 @@ class CasrecService
         $this->logger = $logger;
         $this->reportService = $reportService;
         $this->validator = $validator;
-    }
-
-    /**
-     * Updates a single CASREC record, with stats
-     * Called when records are uploaded, or "updateAllCasrecRecordsWithStats" is called via cron
-     *
-     * @param CasRec $casrec
-     */
-    private function updateCasrecStatsSingle(CasRec $casrec)
-    {
-        // add user info, by matching DeputyNo
-        $deputyNo = $casrec->getDeputyNo();
-        $results = $this->em->createQuery('SELECT u FROM ' . User::class . ' u WHERE u.deputyNo = :d1 OR u.deputyNo = :d2')
-            ->setParameter('d1', strtoupper($deputyNo))
-            ->setParameter('d2', strtolower($deputyNo))
-            ->getResult();
-        if ($results && $results[0] instanceof User) {
-            $casrec->setLastLoggedIn($results[0]->getLastLoggedIn())->setRegistrationDate($results[0]->getRegistrationDate());
-        }
-
-        // add report info, by matching case number
-        $caseNumber = $casrec->getCaseNumber();
-        $results = $this->em->createQuery('SELECT c FROM ' . Client::class . ' c WHERE c.caseNumber = :c1 OR c.caseNumber = :c2')
-            ->setParameter('c1', strtoupper($caseNumber))
-            ->setParameter('c2', strtolower($caseNumber))
-            ->getResult();
-        if ($results && $results[0] instanceof Client) {
-            $client = $results[0]; /* @var $client Client */
-            // last report is currently ordered
-            $submittedReports = $client->getSubmittedReports();
-            $lastReport = count($submittedReports) > 0  ? $submittedReports->first() : null;
-
-            $casrec
-                ->setNOfReportsSubmitted(count($submittedReports))
-                ->setLastReportSubmittedAt($lastReport ? $lastReport->getSubmitDate() : null)
-                ->setNdrSubmittedAt($client->getNdr() && $client->getNdr()->getSubmitted() ? $client->getNdr()->getSubmitDate() : null)
-                ->setNOfReportsActive(count($results[0]->getUnsubmittedReports()));
-        }
-
-        $casrec->setUpdatedAt(new \DateTime());
-    }
-
-    /**
-     * Launched from cron
-     *
-     * @return int number of changed records
-     */
-    public function updateAllCasrecRecordsWithStats()
-    {
-        $chunkSize = 50;
-        $nOfRecordsUpdated = 0;
-
-        while ($records = $this->em
-            ->createQuery('SELECT c from ' . CasRec::class . ' c WHERE  (c.updatedAt < :d OR c.updatedAt IS NULL) ORDER BY c.updatedAt ASC')
-            ->setParameter('d', new \DateTime(self::STATS_NOT_OLDER_THAN))
-            ->setMaxResults($chunkSize)->getResult()) {
-            foreach ($records as $record) {
-                /* @var $nextRecordToUpdate CasRec */
-                $this->updateCasrecStatsSingle($record);
-                $nOfRecordsUpdated++;
-            }
-            $this->em->flush();
-            $this->em->clear();
-        }
-
-        return $nOfRecordsUpdated;
-    }
-
-    /**
-     * @param string $filePath
-     * @param int    $maxResults
-     *
-     * @return string
-     */
-    public function saveCsv($filePath)
-    {
-        $filePathTmp = $filePath . '.tmp';
-        $linesWritten = 0;
-
-        /* @var $it IterableResult */
-        // http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/batch-processing.html
-        $it = $this->em->createQuery('SELECT c FROM ' . CasRec::class . ' c')->iterate();
-
-        $f = fopen($filePathTmp, 'w');
-        foreach ($it as $itRow) {
-            $row = $itRow[0]->toArray();
-            if ($it->key() === 0) { // write header (only for first row)
-                fputcsv($f, array_keys($row));
-            }
-            fputcsv($f, $row);
-            $linesWritten++;
-        }
-        fclose($f);
-
-        // replace file instantly
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-        rename($filePathTmp, $filePath);
-
-        return $linesWritten;
     }
 
     /**
@@ -191,7 +88,7 @@ class CasrecService
                     $retErrors[] = 'ERROR IN LINE ' . ($dataIndex + 2) . ' :' . str_replace('Object(AppBundle\Entity\CasRec).', '', (string) $errors);
                     unset($casRecEntity);
                 } else {
-                    $this->updateCasrecStatsSingle($casRecEntity);
+                    $casRecEntity->setUpdatedAt(new \DateTime());
                     $this->em->persist($casRecEntity);
 
                     if (($added++ % $persistEvery) === 0) {
