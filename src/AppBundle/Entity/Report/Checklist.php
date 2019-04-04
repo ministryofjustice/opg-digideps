@@ -130,6 +130,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
+     * @Assert\NotBlank(message="checklist.deputyChargeAllowedByCourt.notBlank", groups={"submit-paDeputyExpenses-checklist"})
+     */
+    protected $deputyChargeAllowedByCourt;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-paDeputyExpenses-checklist"})
      */
     protected $satisfiedWithPaExpenses;
@@ -491,6 +500,24 @@ class Checklist
     /**
      * @return string
      */
+    public function getDeputyChargeAllowedByCourt()
+    {
+        return $this->deputyChargeAllowedByCourt;
+    }
+
+    /**
+     * @param string $deputyChargeAllowedByCourt
+     * @return $this
+     */
+    public function setDeputyChargeAllowedByCourt($deputyChargeAllowedByCourt)
+    {
+        $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getSatisfiedWithPaExpenses()
     {
         return $this->satisfiedWithPaExpenses;
@@ -515,7 +542,7 @@ class Checklist
     }
 
     /**
-     * @param string $satisfiedWithPaExpenses
+     * @param string $satisfiedWithHealthAndLifestyle
      * @return $this
      */
     public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)

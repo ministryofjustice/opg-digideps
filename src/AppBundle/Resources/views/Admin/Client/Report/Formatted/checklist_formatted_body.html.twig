@@ -187,13 +187,13 @@
                     </tbody>
                 </table>
 
-                {% if report.hasSection('paDeputyExpenses') %}
-                    {% set paAppend = 'PA' %}
+                {% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts') %}
+                    {% set nonLayAppend = 'NonLay' %}
                 {% else %}
-                    {% set paAppend = '' %}
+                    {% set nonLayAppend = '' %}
                 {% endif %}
 
-                <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ paAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
+                <h3 class="label question bold">{{ (page ~ '.form.accountsBalance' ~ nonLayAppend ~ '.label') | trans({}, 'admin-checklist') }}</h3>
 
                 <table class="checkboxes labelvalue inline">
                     <tbody>
@@ -229,6 +229,19 @@
             <div class="section">
             {% if report.hasSection('paDeputyExpenses') %}
                 <h2 class="section-heading">{{ (page ~ '.heading.paFeeExpenses') | trans({}, 'admin-checklist') }}</h2>
+
+                <h3 class="label question bold">{{ (page ~ '.form.deputyChargeAllowedByCourt.label') | trans({}, 'admin-checklist') }}</h3>
+
+                <table class="checkboxes labelvalue inline">
+                    <tbody>
+                    <tr>
+                        <td class="checkbox value">{% if checklist.deputyChargeAllowedByCourt == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                        <td class="checkbox value">{% if checklist.deputyChargeAllowedByCourt == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                        <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
 
                 <h3 class="label question bold">{{ (page ~ '.form.satisfiedWithPaExpenses.label') | trans({}, 'admin-checklist') }}</h3>
 
@@ -282,7 +295,7 @@
 
         <div class="section">
             <h2 class="section-heading">{{ (page ~ '.heading.nextPeriod') | trans({}, 'admin-checklist') }}</h2>
-            
+
             {% if report.hasSection('lifestyle') %}
                 <h3 class="label question bold">{{ (page ~ '.form.futureSignificantChanges.label') | trans({}, 'admin-checklist') }}</h3>
             {%  else %}

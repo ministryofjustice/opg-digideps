@@ -719,6 +719,8 @@ checklist:
     notBlank: Please enter all your concerns and decisions
   satisfiedWithPaExpenses:
     notBlank: Please choose an option
+  deputyChargeAllowedByCourt:
+    notBlank: Please choose an option
     
 #       COMMON ELEMENTS
 # ====================================================================================================
