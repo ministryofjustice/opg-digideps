@@ -6,11 +6,11 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Service\CasrecService;
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
-use Fixtures;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Fixtures;
 
 class CasrecServiceTest extends WebTestCase
 {
