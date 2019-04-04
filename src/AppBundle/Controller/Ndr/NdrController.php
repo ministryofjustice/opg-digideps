@@ -3,7 +3,6 @@
 namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
