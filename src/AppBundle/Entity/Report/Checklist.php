@@ -141,6 +141,15 @@ class Checklist
      *
      * @JMS\Groups({"report-checklist"})
      *
+     * @ORM\Column(name="deputy_charge_allowed_by_court", type="string", length=3, nullable=true)
+     */
+    private $deputyChargeAllowedByCourt;
+
+    /**
+     * @var string
+     *
+     * @JMS\Groups({"report-checklist"})
+     *
      * @ORM\Column(name="satisfied_with_pa_expenses", type="string", length=3, nullable=true)
      */
     private $satisfiedWithPaExpenses;
@@ -518,6 +527,22 @@ class Checklist
     /**
      * @return string
      */
+    public function getDeputyChargeAllowedByCourt()
+    {
+        return $this->deputyChargeAllowedByCourt;
+    }
+
+    /**
+     * @param string $deputyChargeAllowedByCourt
+     */
+    public function setDeputyChargeAllowedByCourt($deputyChargeAllowedByCourt)
+    {
+        $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
+    }
+
+    /**
+     * @return string
+     */
     public function getSatisfiedWithPaExpenses()
     {
         return $this->satisfiedWithPaExpenses;
@@ -540,7 +565,7 @@ class Checklist
     }
 
     /**
-     * @param string $satisfiedWithPaExpenses
+     * @param string $satisfiedWithHealthAndLifestyle
      * @return $this
      */
     public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)

@@ -788,6 +788,7 @@ class ReportController extends RestController
             'open_closing_balances_match' => 'setOpenClosingBalancesMatch',
             'accounts_balance' => 'setAccountsBalance',
             'money_movements_acceptable' => 'setMoneyMovementsAcceptable',
+            'deputy_charge_allowed_by_court' => 'setDeputyChargeAllowedByCourt',
             'satisfied_with_pa_expenses' => 'setSatisfiedWithPaExpenses',
             'bond_adequate' => 'setBondAdequate',
             'satisfied_with_health_and_lifestyle' => 'setSatisfiedWithHealthAndLifestyle',
