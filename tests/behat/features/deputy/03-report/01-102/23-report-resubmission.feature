@@ -1,6 +1,6 @@
 Feature: Admin unsubmit report (from client page)
 
-  @deputy 
+  @deputy
   Scenario: Admin client page + search
     Given I load the application status from "more-documents-added"
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -70,6 +70,15 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_endDate_month               |  11      |
       | unsubmit_report_endDate_year                |  2016    |
     And I press "unsubmit_report_save"
+    Then I should see "2 March 2016" in the "report-review" region
+    And I should see "Decisions, Deputy expenses" in the "report-review" region
+    And I should see "30 April 2022" in the "report-review" region
+    When I press "unsubmit_report_confirm_save"
+    Then the following fields should have an error:
+      | unsubmit_report_confirm_confirm_0   |
+      | unsubmit_report_confirm_confirm_1   |
+    When I fill in "unsubmit_report_confirm_confirm_0" with "yes"
+    And I press "unsubmit_report_confirm_save"
     Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
     When I click on "admin-documents"

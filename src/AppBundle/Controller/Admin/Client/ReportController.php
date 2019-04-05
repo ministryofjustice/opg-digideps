@@ -9,6 +9,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
+use AppBundle\Form\Admin\UnsubmitReportConfirmType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -95,28 +96,79 @@ class ReportController extends AbstractController
         $form = $this->createForm(UnsubmitReportType::class, $report);
         $form->handleRequest($request);
 
-        // edit client form
-        if ($form->isValid()) {
-            $report
-                ->setUnSubmitDate(new \DateTime())
-                ->setUnsubmittedSectionsList(implode(',', $report->getUnsubmittedSectionsIds()))
-            ;
+        $confirmForm = $this->createForm(UnsubmitReportConfirmType::class);
+        $confirmForm->handleRequest($request);
 
-            $dueDateChoice = $form['dueDateChoice']->getData();
-            if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
-                $report->setDueDate($form['dueDateCustom']->getData());
-            } elseif (preg_match('/^\d+$/', $dueDateChoice)) {
-                $dd = new \DateTime();
-                $dd->modify("+{$dueDateChoice} weeks");
-                $report->setDueDate($dd);
+        // edit client form
+        if ($confirmForm->isValid()) {
+            if ($confirmForm['confirm']->getData() === 'yes') {
+                // User confirmed, complete unsubmission
+                $report
+                    ->setUnSubmitDate(new \DateTime())
+                    ->setUnsubmittedSectionsList($confirmForm['unsubmittedSection']->getData())
+                    ->setStartDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['startDate']->getData()))
+                    ->setEndDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['endDate']->getData()))
+                    ->setDueDate(\DateTime::createFromFormat(\DateTime::ISO8601, $confirmForm['dueDate']->getData()))
+                ;
+
+                $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
+                    'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date', 'startEndDates'
+                ]);
+
+                $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
+
+                return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+            } else {
+                // User cancelled
+                return $this->redirect($this->generateUrl('admin_report_manage', ['id'=>$id]));
+            }
+        } else if ($form->isValid() || $confirmForm->isSubmitted()) {
+            if (!$confirmForm->isSubmitted()) {
+                // Populate confirmation form for the first time
+                $dueDateChoice = $form['dueDateChoice']->getData();
+                if ($dueDateChoice == UnsubmitReportType::DUE_DATE_OPTION_CUSTOM) {
+                    $newDueDate = $form['dueDateCustom']->getData();
+                } elseif (preg_match('/^\d+$/', $dueDateChoice)) {
+                    $newDueDate = new \DateTime();
+                    $newDueDate->modify("+{$dueDateChoice} weeks");
+                } else {
+                    $newDueDate = $report->getDueDate();
+                }
+
+                $confirmForm['startDate']->setData($form->getData()->getStartDate()->format(\DateTime::ISO8601));
+                $confirmForm['endDate']->setData($form->getData()->getEndDate()->format(\DateTime::ISO8601));
+                $confirmForm['dueDate']->setData($newDueDate->format(\DateTime::ISO8601));
+                $confirmForm['unsubmittedSection']->setData(implode(',', $report->getUnsubmittedSectionsIds()));
             }
 
-            $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date', 'startEndDates'
+            // Render confirmation form view
+            return $this->render('AppBundle:Admin/Client/Report:manageConfirm.html.twig', [
+                'report' => $report,
+                'form' => $confirmForm->createView(),
+                'urlData' => [
+                    'startDate' => $form['startDate']->getData()->format('Y-m-d'),
+                    'endDate' => $form['endDate']->getData()->format('Y-m-d'),
+                    'dueDateChoice' => $form['dueDateChoice']->getData(),
+                    'dueDateCustom' => $form['dueDateCustom']->getData() !== null ? $form['dueDateCustom']->getData()->format('Y-m-d') : null,
+                    'unsubmittedSection' => $report->getUnsubmittedSectionsIds(),
+                ],
             ]);
-            $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
+        }
 
-            return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
+        // Use URL data
+        $dataFromUrl = $request->get('data') ?: [];
+        isset($dataFromUrl['startDate']) && $form['startDate']->setData(new \DateTime($dataFromUrl['startDate']));
+        isset($dataFromUrl['endDate']) && $form['endDate']->setData(new \DateTime($dataFromUrl['endDate']));
+        isset($dataFromUrl['dueDateChoice']) && $form['dueDateChoice']->setData($dataFromUrl['dueDateChoice']);
+        isset($dataFromUrl['dueDateCustom']) && $form['dueDateCustom']->setData(new \DateTime($dataFromUrl['dueDateCustom']));
+        if (isset($dataFromUrl['unsubmittedSection'])) {
+            $unsubmittedSections = $form['unsubmittedSection']->getData();
+            foreach ($unsubmittedSections as $section) {
+                if (in_array($section->getId(), $dataFromUrl['unsubmittedSection'])) {
+                    $section->setPresent(true);
+                }
+            }
+            $form['unsubmittedSection']->setData($unsubmittedSections);
         }
 
         return [
