@@ -728,10 +728,10 @@ class ReportStatusService
     public function getStatus()
     {
         if (!$this->hasStarted()) {
-            return 'notStarted';
+            return Report::STATUS_NOT_STARTED;
         }
 
-        return $this->report->isDue() && $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        return $this->report->isDue() && $this->isReadyToSubmit() ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
     }
 
     /**
@@ -743,10 +743,10 @@ class ReportStatusService
     public function getStatusIgnoringDueDate()
     {
         if (!$this->hasStarted()) {
-            return 'notStarted';
+            return Report::STATUS_NOT_STARTED;
         }
 
-        return $this->isReadyToSubmit() ? 'readyToSubmit' : 'notFinished';
+        return $this->isReadyToSubmit() ? Report::STATUS_READY_TO_SUBMIT : Report::STATUS_NOT_FINISHED;
     }
 
 }

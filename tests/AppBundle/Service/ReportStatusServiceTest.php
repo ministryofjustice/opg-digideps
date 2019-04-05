@@ -722,4 +722,66 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('readyToSubmit', $object->getStatus());
     }
+
+    public function testGetStatus_ready_to_submit()
+    {
+        $report = $this->prophesize(Report::class);
+
+        $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
+        $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
+        $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
+        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+        
+        $report->isDue()->shouldBeCalled()->willReturn(true);
+
+        $sut = new ReportStatusService($report->reveal());
+        $status = $sut->getStatus();
+        self::assertEquals(Report::STATUS_READY_TO_SUBMIT, $status);
+    }
+
+    public function testGetStatus_not_finished()
+    {
+        $report = $this->prophesize(Report::class);
+
+        $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
+        $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
+        $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
+        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+        
+        $report->isDue()->shouldBeCalled()->willReturn(false);
+
+        $sut = new ReportStatusService($report->reveal());
+        $status = $sut->getStatus();
+        self::assertEquals(Report::STATUS_NOT_FINISHED, $status);
+    }
+
+    public function testGetStatus_not_started()
+    {
+        $report = $this->prophesize(Report::class);
+
+        $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
+        $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
+        $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(false);
+
+        $sut = new ReportStatusService($report->reveal());
+        $status = $sut->getStatus();
+        self::assertEquals(Report::STATUS_NOT_STARTED, $status);
+    }
+
+    /**
+     * @group acs
+     */
+    public function testGetStatusIgnoringDueDate_ready_to_submit()
+    {
+        $report = $this->prophesize(Report::class);
+
+        $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
+        $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
+        $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
+        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+
+        $sut = new ReportStatusService($report->reveal());
+        $status = $sut->getStatusIgnoringDueDate();
+        self::assertEquals(Report::STATUS_READY_TO_SUBMIT, $status);
+    }
 }

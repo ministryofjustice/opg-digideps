@@ -628,7 +628,7 @@ class ReportController extends RestController
 
         // Calculate missing report statuses. Needed for the following code
         $this->updateReportStatusCache($userId);
-
+        
         // calculate counts, and apply limit/offset
         $counts = [
             Report::STATUS_NOT_STARTED => $repo->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
