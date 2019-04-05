@@ -21,6 +21,7 @@ status:
   notStarted: "Not started"
   notFinished: "Not finished"
   readyToSubmit: "Ready to submit"
+  changesNeeded: "Changes needed"
 reportDueDate: "Report due date"
 currentReport: "Current report"
 incompleteReport: "Incomplete report"

@@ -77,4 +77,8 @@
         color: $white;
     }
 
+    &.changesNeeded {
+        border-color: $error-colour;
+        color: $error-colour;
+    }
 }

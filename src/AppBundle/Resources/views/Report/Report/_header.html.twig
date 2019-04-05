@@ -11,7 +11,11 @@
 
 {% if reportStatus.isReadyToSubmit and report.isDue %}
     <div id="header-report-submit" class="hero behat-region-report-ready-banner">
-        <h2 class="heading-large flush--ends">{{ 'reportIsReady' | trans() }}</h2>
+        {% if report.unSubmitDate and report.submitted == false %}
+            <h2 class="status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</h2>
+        {% else %}
+            <h2 class="heading-large flush--ends">{{ 'reportIsReady' | trans() }}</h2>
+        {% endif %}
         <a class="button push-half--top behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
     </div>
 {% endif %}
