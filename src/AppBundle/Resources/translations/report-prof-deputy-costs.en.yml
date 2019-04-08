@@ -93,7 +93,7 @@ breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   pageSectionDescription: Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period.
-  pageHint: ""
+  pageHint: "These are any costs that are not classed as 'general management'."
   form:
     entries:
       appointments:
