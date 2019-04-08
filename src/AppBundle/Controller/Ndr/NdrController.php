@@ -211,7 +211,7 @@ class NdrController extends AbstractController
 
             $pdfBinaryContent = $this->getPdfBinaryContent($ndr);
             $reportEmail = $this->getMailFactory()->createNdrEmail($this->getUser(), $ndr, $pdfBinaryContent);
-            $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
+            $this->getMailSender()->send($reportEmail, ['html']);
 
             //send confirmation email
             $reportConfirmEmail = $this->getMailFactory()->createNdrSubmissionConfirmationEmail($this->getUser(), $ndr);

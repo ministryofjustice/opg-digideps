@@ -72,7 +72,6 @@ class ManageController extends AbstractController
         ];
         if (!$this->getParameter('kernel.debug')) {
             $services[] = new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.default');
-            $services[] = new ServiceAvailability\SmtpAvailability($this->container, 'mailer.transport.smtp.secure');
         }
         if ($this->getParameter('env') !== 'admin') {
             $services[] = new ServiceAvailability\WkHtmlToPdfAvailability($this->container);
