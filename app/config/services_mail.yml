@@ -17,7 +17,6 @@ services:
         arguments: [ "@validator", "@logger", "@snc_redis.default" ]
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
-            - [ addSwiftMailer, [ "secure-smtp" , "@mailer.swift_mailers.secure"] ]
 
     mail_factory:
         class: AppBundle\Service\Mailer\MailFactory
