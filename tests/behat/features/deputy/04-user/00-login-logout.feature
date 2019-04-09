@@ -1,5 +1,9 @@
 Feature: deputy / login and logout functionalities
-    
+    @infra
+    Scenario: manual login
+      Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
+      Then the URL should match "report/create/\d+"
+
     @deputy
     Scenario: manual logout
       Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
@@ -16,7 +20,3 @@ Feature: deputy / login and logout functionalities
       Then the response should have the "Cache-Control" header containing "no-store"
       Then the response should have the "Cache-Control" header containing "must-revalidate"
       Then the response should have the "Pragma" header containing "no-cache"
-
-     
-
-        
