@@ -1295,5 +1295,4 @@ class Report implements ReportInterface
 
         return $titleTranslationKeys[$this->getType()];
     }
-
 }

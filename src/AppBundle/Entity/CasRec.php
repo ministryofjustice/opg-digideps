@@ -13,8 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CasRec
 {
-    const STATS_FILE_PATH = '/tmp/dd_stats.csv';
-
     /**
      * Holds the mapping rules to define the report type based on the CSV file (CASREC)
      * Used by both PA and Lay
@@ -163,64 +161,6 @@ class CasRec
     private $updatedAt;
 
     /**
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="registration_date", type="datetime", nullable=true)
-     */
-    private $registrationDate;
-
-    /**
-     * Filled from cron
-     *
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
-     */
-    private $lastLoggedIn;
-
-    /**
-     * Filled from cron
-     *
-     * @var int
-     *
-     * @JMS\Type("string")
-     * @ORM\Column(name="reports_submitted", type="string", length=4, nullable=true)
-     */
-    private $nOfReportsSubmitted;
-
-    /**
-     * Filled from cron
-     *
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="last_report_submitted_at", type="datetime", nullable=true)
-     */
-    private $lastReportSubmittedAt;
-
-    /**
-     * Filled from cron
-     *
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @ORM\Column(name="ndr_submitted_at", type="datetime", nullable=true)
-     */
-    private $ndrSubmittedAt;
-
-    /**
-     * Filled from cron
-     *
-     * @var int
-     *
-     * @JMS\Type("string")
-     * @ORM\Column(name="reports_active", type="string", length=4, nullable=true)
-     */
-    private $nOfReportsActive;
-
-    /**
      * Filled from cron
      *
      * @var array
@@ -248,11 +188,7 @@ class CasRec
 
         $this->otherColumns = serialize($row);
         $this->createdAt = new \DateTime();
-        $this->registrationDate = null;
         $this->updatedAt = null;
-        $this->lastLoggedIn = null;
-        $this->nOfReportsSubmitted = 'n.a.';
-        $this->nOfReportsActive = 'n.a.';
     }
 
     private static function normaliseCorrefAndTypeOfRep($value)
@@ -402,24 +338,6 @@ class CasRec
         return isset($row[$key]) ? $row[$key] : null;
     }
 
-    public function toArray()
-    {
-        $dateFormat = function ($date, $default) {
-            return $date instanceof \DateTime ? $date->format('d/m/Y H:m') : $default;
-        };
-
-        return [
-                'Uploaded at'              => $dateFormat($this->createdAt, 'n.a.'),
-                'Stats updated at'         => $dateFormat($this->updatedAt, '-'),
-                'Deputy registration date' => $dateFormat($this->registrationDate, 'n.a.'),
-                'Deputy last logged in'    => $dateFormat($this->lastLoggedIn, 'n.a.'),
-                'Reports submitted'        => $this->nOfReportsSubmitted ?: 'n.a.',
-                'Last report submitted at' => $dateFormat($this->lastReportSubmittedAt, 'n.a.'),
-                'NDR submitted at'         => $dateFormat($this->ndrSubmittedAt, 'n.a.'),
-                'Reports active'           => $this->nOfReportsActive ?: 'n.a.',
-            ] + $this->getOtherColumns();
-    }
-
     /**
      * @param \DateTime $updatedAt
      *
@@ -428,78 +346,6 @@ class CasRec
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $registrationDate
-     *
-     * @return CasRec
-     */
-    public function setRegistrationDate($registrationDate)
-    {
-        $this->registrationDate = $registrationDate;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $lastLoggedIn
-     *
-     * @return CasRec
-     */
-    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
-    {
-        $this->lastLoggedIn = $lastLoggedIn;
-
-        return $this;
-    }
-
-    /**
-     * @param int $nOfReportsSubmitted
-     *
-     * @return CasRec
-     */
-    public function setNOfReportsSubmitted($nOfReportsSubmitted)
-    {
-        $this->nOfReportsSubmitted = $nOfReportsSubmitted;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $lastReportSubmittedAt
-     *
-     * @return CasRec
-     */
-    public function setLastReportSubmittedAt(\DateTime $lastReportSubmittedAt = null)
-    {
-        $this->lastReportSubmittedAt = $lastReportSubmittedAt;
-
-        return $this;
-    }
-
-    /**
-     * @param \DateTime $ndrSubmittedAt
-     *
-     * @return CasRec
-     */
-    public function setNdrSubmittedAt($ndrSubmittedAt)
-    {
-        $this->ndrSubmittedAt = $ndrSubmittedAt;
-
-        return $this;
-    }
-
-    /**
-     * @param int $nOfReportsActive
-     *
-     * @return CasRec
-     */
-    public function setNOfReportsActive($nOfReportsActive)
-    {
-        $this->nOfReportsActive = $nOfReportsActive;
 
         return $this;
     }

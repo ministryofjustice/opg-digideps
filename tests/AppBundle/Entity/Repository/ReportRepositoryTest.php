@@ -4,11 +4,12 @@ namespace Tests\AppBundle\Entity\Repository;
 
 use AppBundle\Entity\Report\Report;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Fixtures;
 
 class ReportRepositoryTest extends WebTestCase
 {
     /**
-     * @var \Fixtures
+     * @var Fixtures
      */
     private static $fixtures;
     private static $repo;
@@ -19,7 +20,7 @@ class ReportRepositoryTest extends WebTestCase
                                                'debug' => false, ]);
 
         $em = $client->getContainer()->get('em');
-        self::$fixtures = new \Fixtures($em);
+        self::$fixtures = new Fixtures($em);
         self::$fixtures->deleteReportsData();
 
         $em->clear();

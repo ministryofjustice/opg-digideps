@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\CasRec;
+use Tests\Fixtures;
 
 class CasRecControllerTest extends AbstractTestController
 {
@@ -121,7 +122,7 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
-        \Fixtures::deleteReportsData(['casrec']);
+        Fixtures::deleteReportsData(['casrec']);
         $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count
@@ -132,21 +133,5 @@ class CasRecControllerTest extends AbstractTestController
         ])['data'];
 
         $this->assertEquals(1, $data);
-    }
-
-    public function testGetStatsCsv()
-    {
-        $url = '/casrec/stats.csv';
-
-        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => 'WRONG']);
-        $this->assertEquals(419, self::$frameworkBundleClient->getResponse()->getStatusCode());
-
-        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenDeputy]);
-        $this->assertEquals(403, self::$frameworkBundleClient->getResponse()->getStatusCode());
-
-        ob_start();
-        self::$frameworkBundleClient->request('GET', $url, [], [], ['HTTP_AuthToken' => self::$tokenAdmin]);
-        ob_clean(); //delete readfile out
-        $this->assertEquals(200, self::$frameworkBundleClient->getResponse()->getStatusCode());
     }
 }

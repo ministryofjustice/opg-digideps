@@ -46,7 +46,6 @@ class CasRecController extends RestController
         $data = CsvUploader::decompressData($request->getContent());
 
         $ret = $casrecService->addBulk($data);
-        $casrecService->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
 
         return $ret;
     }
@@ -83,24 +82,5 @@ class CasRecController extends RestController
         $count = $qb->getQuery()->getSingleScalarResult();
 
         return $count;
-    }
-
-    /**
-     * Return CSV file created on the fly
-     *
-     * @Route("/stats.csv")
-     * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function getStatsCsv(Request $request)
-    {
-        // create CSV if not added by the cron, or the "regenerated" param is true
-        if (!file_exists(EntityDir\CasRec::STATS_FILE_PATH) || $request->get('regenerate')) {
-            $this->get('casrec_service')->saveCsv(EntityDir\CasRec::STATS_FILE_PATH);
-        }
-
-        $response = new BinaryFileResponse(EntityDir\CasRec::STATS_FILE_PATH);
-
-        return $response;
     }
 }

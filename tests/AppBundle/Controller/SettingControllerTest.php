@@ -3,7 +3,7 @@
 namespace Tests\AppBundle\Controller;
 
 use AppBundle\Entity\Setting;
-use Fixtures;
+use Tests\Fixtures;
 
 class SettingControllerTest extends AbstractTestController
 {
