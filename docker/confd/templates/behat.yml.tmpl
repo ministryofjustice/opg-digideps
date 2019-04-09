@@ -73,6 +73,18 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
 
+        infra:
+            description: Minimal test suite to check infrastructure
+            paths: [ %paths.base%/features ]
+            filters:
+                tags: "@infra"
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
+            {{ end }}
+
         components:
             description: Tests related to textareas
             paths:    [ %paths.base%/features/components ]
