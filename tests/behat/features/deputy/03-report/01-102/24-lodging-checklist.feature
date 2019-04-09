@@ -38,7 +38,6 @@ Feature: Admin report checklist
       | 163,010                                             | asset-total                  |
       | £3.00                                               | debt-loans                   |
       | 200 per month payment plan                          | debt-management-details      |
-      | £0.00 | checklist-closing-balance-previous-report |
       | £335.40   | checklist-accounts-opening-total |
       | £243.39   | calculated-balance               |
       | £193.11   | balance-difference               |
@@ -51,6 +50,7 @@ Feature: Admin report checklist
       | 102 Petty France  | checklist-deputy-address   |
       | 020 3334 3555     | checklist-deputy-phone     |
       | behat-user@publicguardian.gov.uk | checklist-deputy-email |
+    And I should see the "checklist-no-previous-reports" region exactly "1" times
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |

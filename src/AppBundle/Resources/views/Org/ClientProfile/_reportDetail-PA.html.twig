@@ -14,9 +14,11 @@
                 <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
-                <span class="status status-large {{ report.isUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
-                    {{ ('status.' ~ reportStatus.status) | trans() }}
-                </span>
+                {% if report.unSubmitDate != null and report.submitted == false %}
+                    <span class="status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                {% else %}
+                    <span class="status status-large {{ reportStatus.getState() }} flush--bottom">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                {% endif %}
             </dd>
 
             <dt class="visually-hidden">

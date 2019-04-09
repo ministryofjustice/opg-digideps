@@ -25,7 +25,6 @@
                 <li>{{ 'reportingPeriod' | trans() }}:
                     <span class="bold-small">{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</span>
                 </li>
-                {# @biggs to style #}
                 <li class="{{ report.unSubmitDate ? 'orangeWarning' : '' }}">{{ 'dueDate' | trans() }}:
                     <span class="bold-small">{{ report.dueDate | date("j F Y") }}</span>
                 </li>

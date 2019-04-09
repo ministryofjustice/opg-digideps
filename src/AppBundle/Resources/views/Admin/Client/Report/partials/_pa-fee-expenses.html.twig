@@ -6,6 +6,11 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
+        {{ form_checkbox_group(form.deputyChargeAllowedByCourt, (page ~ '.form.deputyChargeAllowedByCourt'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+    <div class="form-group-outer">
         {{ form_checkbox_group(form.satisfiedWithPaExpenses, (page ~ '.form.satisfiedWithPaExpenses'), {
             'fieldSetClass' : 'inline'
         }) }}

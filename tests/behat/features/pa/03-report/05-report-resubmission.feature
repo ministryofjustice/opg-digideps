@@ -18,6 +18,8 @@ Feature: Admin unsubmit and client re-submit
       | unsubmit_report_unsubmittedSection_13_present | 1    |
       | unsubmit_report_dueDateChoice_0               | keep |
     And I press "unsubmit_report_save"
+    And I fill in "unsubmit_report_confirm_confirm_0" with "yes"
+    And I press "unsubmit_report_confirm_save"
     Then I should see "Unsubmitted" in the "report-2016-to-2017" region
 
   @deputy

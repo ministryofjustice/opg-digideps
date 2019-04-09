@@ -66,28 +66,4 @@ class StatsController extends AbstractController
 
         return $response;
     }
-
-    /**
-     * @Route("/dd-stats.csv", name="admin_stats_csv")
-     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template
-     */
-    public function statsCsvAction(Request $request)
-    {
-        try {
-            $regenerate = $request->get('regenerate') ? 1 : 0;
-            $rawCsv = (string) $this->getRestClient()->get("casrec/stats.csv?regenerate=$regenerate", 'raw');
-        } catch (\Exception $e) {
-            throw new DisplayableException($e);
-        }
-        $response = new Response();
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'plain/text');
-        $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats.' . date('Y-m-d') . '.csv";');
-        $response->sendHeaders();
-        $response->setContent($rawCsv);
-
-        return $response;
-    }
 }

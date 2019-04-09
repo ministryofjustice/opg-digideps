@@ -21,7 +21,7 @@ reportManage:
   htmlTitle: Administration - Manage report
   pageTitle: Admin
   supportTitle: Manage report
-  currentDueDate: Current due date:
+  currentDueDate: "Current due date:"
   overdueBy: Overdue by %overdueDays% days
   form:
     dueDateChoice:
@@ -36,9 +36,20 @@ reportManage:
       legend: Specify a custom report due date
     markSections:
       legend: Mark sections as incomplete
+      label: Sections marked incomplete
     unsubmit:
-      label: Update and mark as incomplete
+      label: Continue
     startDate:
       label: Reporting start
     endDate:
       label: Reporting end
+    confirmation:
+      option: Option
+      selection: Selection
+      edit: Edit
+      guidance: |
+        Please read through and confirm the options you have selected
+        before marking this report as incomplete.
+      label: Are you sure you want to mark this report as incomplete?
+      warning: Once you have made the report incomplete you will not be able to undo this action.
+

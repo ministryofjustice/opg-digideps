@@ -27,7 +27,9 @@ startPage:
 
 stepPage:
   htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageTitle: Add an account
+  pageTitle:
+    add: Add an account
+    edit: Edit an account
   supportTitle: Accounts
   pageSectionDescription:
     step1: Start by selecting one type of account. We'll then ask you for the details of that account. You can go back and add more accounts if you need to.

@@ -160,6 +160,7 @@ Feature: Report submit
             | HSBC - saving account | account-02ca |
             | Saving account        | account-02ca |
             | 445566                | account-02ca |
+            | Balance for 31 December 2017 required | account-02ca |
 
     @deputy
     Scenario: assert report is not editable after submission
