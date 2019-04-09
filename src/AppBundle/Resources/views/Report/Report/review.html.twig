@@ -89,7 +89,7 @@
         </a>
     {% endif %}
 
-    <a class="button-link js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
+    <a class="button-link behat-link-download-pdf js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
         <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
     </a>
 
