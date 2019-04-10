@@ -29,6 +29,7 @@ Feature: Admin unsubmit and client re-submit
     And I press "search_submit"
     Then I should see the "client" region exactly 1 times
     And I click on "pa-report-open" in the "client-01000014" region
+    And I should see "Changes needed" in the "report-detail-status_incomplete" region
     And I should see the "section-decisions-needs-attention" region
     And I should see the "section-paDeputyExpenses-needs-attention" region
     # submit
