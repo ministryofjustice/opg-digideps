@@ -72,14 +72,14 @@ Feature: ndr / report submit
             | Cly3 Hent3 | report-submission-1 |
             | 33333333 | report-submission-1 |
             | Report | report-submission-1 |
-        When I check "cb1"
+        When I check "Select 33333333"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
             | NdrRep.*.zip | regexpName+sizeAtLeast | 38000 |
         # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
-        Then I check "cb1"
+        Then I check "Select 33333333"
         When I click on "archive"
         Then I should see the "report-submission" region exactly 0 times
         When I click on "tab-archived"
