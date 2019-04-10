@@ -8,8 +8,11 @@ Feature: Infrastructure document tests
     And I click on "report-start, edit-documents, start"
     And I fill in "document_wishToProvideDocumentation_0" with "yes"
     And I click on "save-and-continue"
-    And I attach the file "empty-file.pdf" to "report_document_upload_file"
-    And I attach the file "good.pdf" to "report_document_upload_file"
+    And I attach the file "not-a-pdf.pdf" to "report_document_upload_file"
+    And I click on "attach-file"
+    Then the following fields should have an error:
+      | report_document_upload_file   |
+    When I attach the file "good.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
