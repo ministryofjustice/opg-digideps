@@ -8,7 +8,7 @@ Feature: Infrastructure document tests
     And I click on "report-start, edit-documents, start"
     And I fill in "document_wishToProvideDocumentation_0" with "yes"
     And I click on "save-and-continue"
-    And I attach the file "not-a-pdf.pdf" to "report_document_upload_file"
+    And I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
     And I click on "attach-file"
     Then the following fields should have an error:
       | report_document_upload_file   |
