@@ -8,6 +8,10 @@ page:
   returnToHomepage: Return to reports page
   returnToClientProfile: Return to client profile
   returnToDashboard: Return to dashboard
+  professionalDeputyListItems:
+    item1: If %client%’s net assets are now below £16,000, your fees for the next reporting period must not exceed 4.5% of these assets. See Practice Direction 19b for more information.
+    item2: If you charged assessed costs in your %reportName% report, you must send a copy of this deputy report to the Senior Courts Costs Office.
+    item3: If your billing period and reporting period are different, please contact us. We may be able to change the reporting period to make reporting easier.
   feedback:
     title: Give us your feedback
 thanksForFeedback:
