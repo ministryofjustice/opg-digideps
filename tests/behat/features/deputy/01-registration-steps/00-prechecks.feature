@@ -1,6 +1,6 @@
 Feature: pre checks
 
-    @deputy @ndr
+    @deputy @ndr @infra
     Scenario: check app status
         Given the deputy area works properly
         And the admin area works properly
