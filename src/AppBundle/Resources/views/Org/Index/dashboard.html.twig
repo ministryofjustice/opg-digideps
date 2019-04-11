@@ -69,11 +69,10 @@
                 '%overdueDays%': report.dueDateDiffDays|abs,
                 '%dueDays%': report.dueDateDiffDays
             } %}
+            {# condition for setting an appendum for reports that are identified as changes needed #}
             {% set clientRegionAppend = "" %}
-            {% if report.status.status == 'readyToSubmit' %}
-                {% if report.unSubmitDate is not empty and report.submitted == false %}
-                    {% set clientRegionAppend = "-changes-needed" %}
-                {% endif %}
+            {% if report.status.status == 'readyToSubmit' and report.unSubmitDate is not empty and report.submitted == false %}
+                {% set clientRegionAppend = "-changes-needed" %}
             {% endif %}
 
             {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
