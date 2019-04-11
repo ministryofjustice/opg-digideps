@@ -653,7 +653,8 @@ class ReportController extends RestController
             $reports[] = [
                 'id' => $reportArray['id'],
                 'type' => $reportArray['type'],
-                'hasUnsumitDate' => $reportArray['unSubmitDate'] ? true : false,
+                'un_submit_date' => $reportArray['unSubmitDate'] instanceof \DateTime ?
+                    $reportArray['unSubmitDate']->format('Y-m-d') : null,
                 'status' => [
                     // adjust report status cached using end date
                     'status' => $rs->adjustReportStatus($reportArray['reportStatusCached'], $reportArray['endDate'])
@@ -668,16 +669,23 @@ class ReportController extends RestController
             ];
         }
 
-        // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
-        foreach ($reports as $k => $unsubmittedReport) {
-            if ($unsubmittedReport['hasUnsumitDate']) {
-                foreach ($reports as $k2 => $currentReport) {
-                    if (!$currentReport['hasUnsumitDate'] && $currentReport['client']['id'] == $unsubmittedReport['client']['id']) {
-                        unset($reports[$k2]);
-                    }
-                }
-            }
-        }
+        /**
+         * @to-do the code below is intended to remove all other reports for a given client in the event that their last
+         * report is rejected by a case manager. We need to check that this is still required since currently a client
+         * will show 2 reports in the dashboard for a given client. The one that has been rejected and the current one.
+         * This may be desirable if a deputy is waiting for something before being able to re-submit a previously
+         *  rejected report.
+         */
+//        // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
+//        foreach ($reports as $k => $unsubmittedReport) {
+//            if (!empty($unsubmittedReport['un_submit_date'])) {
+//                foreach ($reports as $k2 => $currentReport) {
+//                    if (($currentReport['client']['id'] == $unsubmittedReport['client']['id'])) {
+//                        unset($reports[$k2]);
+//                    }
+//                }
+//            }
+//        }
 
         return [
             'counts' => $counts,
