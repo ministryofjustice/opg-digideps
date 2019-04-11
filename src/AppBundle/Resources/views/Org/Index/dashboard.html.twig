@@ -98,7 +98,7 @@
                     {% elseif report.status.status == 'notFinished' %}
                         <span class="status status-large incomplete">{{ 'notFinished' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'readyToSubmit' %}
-                        {% if report.unSubmitDate != null and report.submitted == false %}
+                        {% if report.unSubmitDate is not empty and report.submitted == false %}
                             <span class="status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</span>
                         {% else  %}
                             <span class="status status-large done'}}">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
