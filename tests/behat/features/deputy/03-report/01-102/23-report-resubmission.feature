@@ -6,8 +6,6 @@ Feature: Admin unsubmit report (from client page)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | 12 clients | client-search-count |
-    Then each text should be present in the corresponding region:
       | Cly Hent | client-behat001 |
     When I fill in the following:
       | search_clients_q | hent |

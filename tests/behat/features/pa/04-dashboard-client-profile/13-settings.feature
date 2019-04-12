@@ -60,7 +60,7 @@ Feature: PA settings
   Scenario: Notification email not sent for PA deputy changes
     Given emails are sent from "deputy" area
     And I reset the email log
-    And I am logged in as "behat-pa-user@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-pa-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "org-settings, profile-show, profile-edit"
     When I press "profile_save"
     Then I should be on "/org/settings/your-details"

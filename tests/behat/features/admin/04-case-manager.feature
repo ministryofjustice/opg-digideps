@@ -26,7 +26,7 @@ Feature: admin / case manager
     # assert client search and client page return 200
     When I should be on "/admin/client/search"
     Then the response status code should be 200
-    When I click on "client-detail-test1024"
+    When I click on "client-detail-102-4"
     Then the response status code should be 200
     # assert user and password edit work
     When I click on "user-account, profile-show, profile-edit, save"
