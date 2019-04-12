@@ -2,13 +2,16 @@
 
 {% set translationDomain = "report-submitted" %}
 {% trans_default_domain translationDomain %}
-
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%reportName%' : report.getPeriod()
+} %}
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
 
 {% block pageContent %}
 
-    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()})) }}
+    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans(transOptions)) }}
 
     <div class="text push--top">
         <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
@@ -16,8 +19,16 @@
     </div>
 
     <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-download-report">
-        {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
+        {{ 'page.downloadLink' | trans(transOptions) }}
     </a>
+
+    {% if report.hasSection('profDeputyCosts') %}
+        <ul class="list list-bullet push--top">
+            <li>{{ ('page.professionalDeputyListItems.item1') | trans(transOptions) }}</li>
+            <li>{{ ('page.professionalDeputyListItems.item2') | trans(transOptions) }}</li>
+            <li>{{ ('page.professionalDeputyListItems.item3') | trans }}</li>
+        </ul>
+    {% endif %}
 
     {# feedback form #}
     <h2 class="heading-medium">{{ 'page.feedback.title' | trans }}</h2>

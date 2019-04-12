@@ -10,6 +10,8 @@ startPage:
   pageSectionDescription2: |
     OPG will review your estimate for the next reporting period looking at a number of factors,
     for example the estimate in relation to the size of the estate and previous costs in the case.
+  pageSectionDescription3: |
+    Any work done should be done by the appropriate fee earner.
   startButton: Start
 
 howCharged:
