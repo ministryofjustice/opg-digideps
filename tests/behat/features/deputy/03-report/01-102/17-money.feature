@@ -39,10 +39,10 @@ Feature: Report money 102
     # add transaction n.3
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else |
+    And I select "HSBC - saving account - Savings account (****02ca)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description   | money found on the road |
       | account_amount        | 50                      |
-      | account_bankAccountId | 1                       |
     # add another: no
     And I choose "no" when asked for adding another record
     # check record in summary page
@@ -69,7 +69,7 @@ Feature: Report money 102
     Then the following fields should have the corresponding values:
       | account_description   | money found on the road |
       | account_amount        | 50.00                   |
-      | account_bankAccountId | 1                       |
+    And I should see "HSBC - saving account - Savings account (****02ca)" in the "#account_bankAccountId" element
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                           |
@@ -112,10 +112,10 @@ Feature: Report money 102
       # add transaction n.3
     And the step with the following values CAN be submitted:
       | account_category_0 | anything-else-paid-out |
+    And I select "HSBC - saving account - Savings account (****02ca)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description   | money found on the road |
       | account_amount        | 50                      |
-      | account_bankAccountId | 1                       |
       # add another: no
     And I choose "no" when asked for adding another record
       # check record in summary page
@@ -143,7 +143,7 @@ Feature: Report money 102
     Then the following fields should have the corresponding values:
       | account_description   | money found on the road |
       | account_amount        | 50.00                   |
-      | account_bankAccountId | 1                       |
+    And I should see "HSBC - saving account - Savings account (****02ca)" in the "#account_bankAccountId" element
     And the step with the following values CAN be submitted:
       | account_description | Some money found on the road |
       | account_amount      | 51                           |
@@ -158,12 +158,10 @@ Feature: Report money 102
     And I click on "report-start, edit-money_out, add"
     And the step with the following values CAN be submitted:
       | account_category_5 | food |
+    And I select "TEMP account - Current account (****03ta)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description   | coffee |
       | account_amount        | 2              |
-      # 3rd bank account has ID=4. update if that feature is changed
-      | account_bankAccountId | 4                |
-      # add another: yes
     And I choose "no" when asked for adding another record
     And each text should be present in the corresponding region:
       | 03ta | transaction-coffee |
