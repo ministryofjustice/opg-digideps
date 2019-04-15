@@ -25,7 +25,7 @@ Feature: Report deputy expenses
       | expenses_single_amount      | invalid number | [ERR] |
     And the step with the following values CANNOT be submitted:
       | expenses_single_explanation |                | [ERR] |
-      | expenses_single_amount      | 10000000.01 | [ERR] |
+      | expenses_single_amount      | 100000000000.01 | [ERR] |
     And the "#error-summary" element should contain "100,000,000,000"
     And the step with the following values CANNOT be submitted:
       | expenses_single_explanation |                | [ERR] |

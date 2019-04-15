@@ -29,7 +29,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Complete and submit report
-    Given I am logged in as "behat-lay-deputy-103@  @publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"
