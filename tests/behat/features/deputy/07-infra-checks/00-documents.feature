@@ -2,7 +2,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can upload documents
-    Given I am logged in as "laydeputy103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start, edit-documents, start"
@@ -20,7 +20,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can generate report PDF
-    Given I am logged in as "laydeputy103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "report-start, edit-report-preview, download-pdf"
     Then the response status code should be 200
     And the response should have the "Content-Type" header containing "application/pdf"
@@ -29,7 +29,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Complete and submit report
-    Given I am logged in as "laydeputy103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103@  @publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"
