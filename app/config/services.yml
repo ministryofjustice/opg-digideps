@@ -85,4 +85,4 @@ services:
     AppBundle\DataFixtures\:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
-        arguments: ['@security.password_encoder', '%fixtures%']
+        arguments: ['@security.password_encoder']

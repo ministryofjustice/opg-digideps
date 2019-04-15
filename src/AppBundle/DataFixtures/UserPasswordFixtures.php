@@ -9,12 +9,10 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixtureInterface
 {
     private $encoder;
-    private $config;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, $config)
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
-        $this->config = $config;
     }
 
     public function doLoad(ObjectManager $manager)
@@ -23,8 +21,10 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         $userRepository = $manager->getRepository(User::class);
         $users = $userRepository->findAll('');
 
+        $password = $this->container->getParameter('fixtures')['account_password'];
+
         foreach ($users as $user) {
-            $user->setPassword($this->encoder->encodePassword($user, $this->config['account_password']));
+            $user->setPassword($this->encoder->encodePassword($user, $password));
             $manager->persist($user);
         }
 
