@@ -82,3 +82,8 @@ services:
 
     AppBundle\Service\ReportStatusServiceFactory:
         class: AppBundle\Service\ReportStatusServiceFactory
+
+    AppBundle\DataFixtures\:
+        resource: '../../src/AppBundle/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+        arguments: ['@security.password_encoder']

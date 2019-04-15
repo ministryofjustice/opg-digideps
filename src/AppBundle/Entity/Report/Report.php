@@ -291,7 +291,7 @@ class Report implements ReportInterface
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Accessor(getter="getUnSubmitDate")
      * @JMS\Groups({"report"})
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="un_submit_date", type="datetime", nullable=true)

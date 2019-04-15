@@ -327,7 +327,7 @@ class OrgService
             throw new \RuntimeException("Cannot parse date {$csvRow['Last Report Day']}");
         }
         $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
-        $report = $client->getReportByEndDate($reportEndDate);
+        $report = $client->getCurrentReport();
 
         // already existing, just change type
         if ($report) {

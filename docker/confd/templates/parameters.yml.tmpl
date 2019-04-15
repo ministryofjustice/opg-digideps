@@ -15,22 +15,7 @@ parameters:
     redis_dsn: '{{getv "/redis/dsn" }}'
 {{ if lsdir "/fixtures" }}
     fixtures:
-{{ range lsdir "/fixtures" }}
-        {{ getv (printf "/fixtures/%s/email" .) }}:
-            firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
-            lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
-            password: {{ getv (printf "/fixtures/%s/password" .) }}
-            {{ if exists (printf "/fixtures/%s/rolename" . ) }}roleName: {{ getv (printf "/fixtures/%s/rolename" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/teamname" . ) }}teamName: {{ getv (printf "/fixtures/%s/teamname" .) }}{{ end }}
-            activated: {{ getv (printf "/fixtures/%s/activated" .) }}
-            ndrEnabled: {{ getv (printf "/fixtures/%s/odr" .) }}
-            {{ if exists (printf "/fixtures/%s/deputyno" . ) }}deputyNo: {{ getv (printf "/fixtures/%s/deputyno" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/deputypostcode" . ) }}deputyPostcode: {{ getv (printf "/fixtures/%s/deputypostcode" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/casenumber" . ) }}caseNumber: {{ getv (printf "/fixtures/%s/casenumber" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/clientsurname" . ) }}clientSurname: {{ getv (printf "/fixtures/%s/clientsurname" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/typeofreport" . ) }}typeOfReport: {{ getv (printf "/fixtures/%s/typeofreport" .) }}{{ end }}
-            {{ if exists (printf "/fixtures/%s/corref" . ) }}corref: {{ getv (printf "/fixtures/%s/corref" .) }}{{ end }}
-{{ end }}
+        account_password: {{ getv "/fixtures/accountpassword" }}
 {{ end }}
 
 {{ if lsdir "/secrets" }}
