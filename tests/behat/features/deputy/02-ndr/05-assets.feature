@@ -23,7 +23,7 @@ Feature: NDR assets
       | ndr_asset_value       |  | [ERR] |
       | ndr_asset_description |  | [ERR] |
     And the step with the following values CANNOT be submitted:
-      | ndr_asset_value               | 1000000000001      | [ERR] |
+      | ndr_asset_value               | 100000000001      | [ERR] |
       | ndr_asset_description         | Alfa Romeo 156 JTD | [OK]  |
       | ndr_asset_valuationDate_day   | 99                 | [ERR] |
       | ndr_asset_valuationDate_month |                    | [ERR] |

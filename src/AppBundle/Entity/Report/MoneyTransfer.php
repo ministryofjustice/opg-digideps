@@ -20,7 +20,7 @@ class MoneyTransfer
     /**
      * @var string
      * @Assert\NotBlank(message="transfer.amount.notBlank", groups={"money-transfer-amount"})
-     * @Assert\Range(min=0, max=10000000000, minMessage = "transfer.amount.minMessage", maxMessage = "transfer.amount.maxMessage", groups={"money-transfer-amount"})
+     * @Assert\Range(min=0, max=100000000000, minMessage = "transfer.amount.minMessage", maxMessage = "transfer.amount.maxMessage", groups={"money-transfer-amount"})
      *
      * @JMS\Type("string")
      * @JMS\Groups({"money-transfer"})

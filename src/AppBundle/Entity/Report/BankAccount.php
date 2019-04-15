@@ -48,7 +48,7 @@ class BankAccount implements BankAccountInterface
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.accountType.notBlank", groups={"bank-account-type"})
-     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"bank-account-type"})
+     * @Assert\Length(max=100, maxMessage="account.accountType.maxMessage", groups={"bank-account-type"})
      *
      * @JMS\Groups({"account"})
      *
@@ -101,7 +101,7 @@ class BankAccount implements BankAccountInterface
      *
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"bank-account-opening-balance"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"bank-account-opening-balance"})
-     * @Assert\Range(max=1000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
+     * @Assert\Range(max=100000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
      *
      * @var decimal
      */
@@ -110,7 +110,7 @@ class BankAccount implements BankAccountInterface
     /**
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
-     * @Assert\Range(max=1000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
+     * @Assert\Range(max=100000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
      * @JMS\Groups({"account"})
      *
      * @var decimal

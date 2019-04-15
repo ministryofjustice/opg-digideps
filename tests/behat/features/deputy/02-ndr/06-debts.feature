@@ -25,7 +25,7 @@ Feature: NDR debts
     And the step with the following values CANNOT be submitted:
       | debt_debts_0_amount      | abc                        | [ERR] |
       | debt_debts_1_amount      | 76235746253746253746253746 | [ERR] |
-      | debt_debts_1_amount      | 100000000.01 | [ERR] |
+      | debt_debts_1_amount      | 100000000000.01          | [ERR] |
       | debt_debts_2_amount      | -1                         | [ERR] |
       | debt_debts_3_amount      | 1                          | [OK]  |
       | debt_debts_3_moreDetails |                            | [ERR] |
