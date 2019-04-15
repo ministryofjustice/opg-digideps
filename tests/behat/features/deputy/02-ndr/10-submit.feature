@@ -62,46 +62,36 @@ Feature: ndr / report submit
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "ndr-admin-documents-list-new"
-            # test filters
-        When I click on "tab-archived"
-        Then I should see the "report-submission" region exactly 0 times
-        When I click on "tab-new"
-        Then I should see the "report-submission" region exactly 1 times
             # assert submission and download
-        Given each text should be present in the corresponding region:
-            | Cly3 Hent3 | report-submission-1 |
-            | 33333333 | report-submission-1 |
-            | Report | report-submission-1 |
-        When I check "cb1"
+        Then I should see "Cly3 Hent3"
+        And I should see "33333333"
+        When I check "Select 33333333"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
             | NdrRep.*.zip | regexpName+sizeAtLeast | 38000 |
         # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
-        Then I check "cb1"
+        Then I check "Select 33333333"
         When I click on "archive"
-        Then I should see the "report-submission" region exactly 0 times
-        When I click on "tab-archived"
+        And I click on "tab-archived"
         Then I should see the "report-submission" region exactly 1 times
-        And each text should be present in the corresponding region:
-            | Cly3 Hent3| report-submission-1 |
-            | 33333333 | report-submission-1 |
-            | Report | report-submission-1 |
-            | AU | report-submission-1 |
+        Then I should see "Cly3 Hent3"
+        And I should see "33333333"
 
 
-    @ndr
+    # Magic: uses report ID number
+    @ndr @magic
     Scenario: check NDR report not accessible after submission
         Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
-        And the URL "/ndr/5/visits-care/summary" should not be accessible
-        And the URL "/ndr/5/deputy-expenses/summary" should not be accessible
-        And the URL "/ndr/5/income-benefits/summary" should not be accessible
-        And the URL "/ndr/5/bank-accounts/summary" should not be accessible
-        And the URL "/ndr/5/assets/summary" should not be accessible
-        And the URL "/ndr/5/debts/summary" should not be accessible
-        And the URL "/ndr/5/actions/summary" should not be accessible
-        And the URL "/ndr/5/any-other-info/summary" should not be accessible
+        And the URL "/ndr/13/visits-care/summary" should not be accessible
+        And the URL "/ndr/13/deputy-expenses/summary" should not be accessible
+        And the URL "/ndr/13/income-benefits/summary" should not be accessible
+        And the URL "/ndr/13/bank-accounts/summary" should not be accessible
+        And the URL "/ndr/13/assets/summary" should not be accessible
+        And the URL "/ndr/13/debts/summary" should not be accessible
+        And the URL "/ndr/13/actions/summary" should not be accessible
+        And the URL "/ndr/13/any-other-info/summary" should not be accessible
 
     @ndr
     Scenario: NDR homepage and create new report

@@ -34,44 +34,45 @@ Feature: deputy / acl / security on pages
     And I press "report_save"
     And the form should be valid
 
-  @deputy
+  # Magic: uses report ID numbers
+  @deputy @magic
   Scenario: Malicious User cannot access other's pages
     # behat-user can access report n.2
     Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I save the application status into "deputy-acl-before"
     Then the following "client" pages should return the following status:
-      | /report/5/overview         | 200 |
+      | /report/13/overview         | 200 |
       # decisions
-      | /report/5/decisions        | 200 |
+      | /report/13/decisions        | 200 |
       # contacts
-      | /report/5/contacts         | 200 |
-      | /report/5/contacts/add     | 200 |
+      | /report/13/contacts         | 200 |
+      | /report/13/contacts/add     | 200 |
       # assets
-      | /report/5/assets           | 200 |
-      | /report/5/assets/step-type | 200 |
+      | /report/13/assets           | 200 |
+      | /report/13/assets/step-type | 200 |
       # accounts
-      | /report/5/bank-accounts    | 200 |
+      | /report/13/bank-accounts    | 200 |
     # behat-malicious CANNOT access the same URLs
     Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     # reload the status (as some URLs calls might have deleted data)
     And I load the application status from "deputy-acl-before"
     Then the following "client" pages should return the following status:
-      | /report/6/overview                | 200 |
-      | /report/5/overview                | 500 |
+      | /report/14/overview                | 200 |
+      | /report/13/overview                | 500 |
       # decisions
-      | /report/6/decisions               | 200 |
-      | /report/5/decisions               | 500 |
+      | /report/14/decisions               | 200 |
+      | /report/13/decisions               | 500 |
       # contacts
-      | /report/6/contacts                | 200 |
-      | /report/5/contacts                | 500 |
+      | /report/14/contacts                | 200 |
+      | /report/13/contacts                | 500 |
       # assets
-      | /report/6/assets                  | 200 |
-      | /report/5/assets                  | 500 |
+      | /report/14/assets                  | 200 |
+      | /report/13/assets                  | 500 |
       # accounts
-      | /report/5/bank-accounts           | 500 |
+      | /report/13/bank-accounts           | 500 |
       # submit
-      | /report/5/declaration             | 500 |
-      | /report/5/submitted               | 500 |
+      | /report/13/declaration             | 500 |
+      | /report/13/submitted               | 500 |
     And I load the application status from "deputy-acl-before"
 
-    
+

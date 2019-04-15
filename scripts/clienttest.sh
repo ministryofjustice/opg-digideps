@@ -2,6 +2,7 @@
 set -e
 #let's configure environment
 run-parts /etc/my_init.d
+/sbin/setuser app mkdir -p /tmp/behat
 chown app:app /tmp/behat
 chown app:app /tmp
 
@@ -10,7 +11,6 @@ mkdir -p /var/log/app
 chown app:app /var/log/app
 
 cd /app
-/sbin/setuser app mkdir -p /tmp/behat
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
@@ -21,8 +21,4 @@ rm -rf app/cache/*
 /sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/
 
 # behat
-export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"selenium2\" : { \"wd_host\" : \"$WD_HOST\" }, \"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}"
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=lay --profile=${PROFILE:=headless} --stop-on-failure
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=ndr --profile=${PROFILE:=headless} --stop-on-failure
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=pa --profile=${PROFILE:=headless} --stop-on-failure
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml --suite=prof --profile=${PROFILE:=headless} --stop-on-failure
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml --profile=${PROFILE:=headless} --stop-on-failure

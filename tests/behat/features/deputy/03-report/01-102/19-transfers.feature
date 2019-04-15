@@ -17,12 +17,14 @@ Feature: Report account transfers
       | yes_no_noTransfersToAdd_0 | 0 |
       # add transfer n.1 (and validate form)
     And the step cannot be submitted without making a selection
-    And the step with the following values CANNOT be submitted:
-      | money_transfers_type_accountFromId | 1 | |
-      | money_transfers_type_accountToId   | 1 | [ERR] |
-    And the step with the following values CAN be submitted:
-      | money_transfers_type_accountFromId | 1 |
-      | money_transfers_type_accountToId   | 2 |
+    When I select "HSBC - saving account - Savings account (****02ca)" from "money_transfers_type_accountFromId"
+    And I select "HSBC - saving account - Savings account (****02ca)" from "money_transfers_type_accountToId"
+    And I submit the step
+    Then the form should be invalid
+    When I select "HSBC - saving account - Savings account (****02ca)" from "money_transfers_type_accountFromId"
+    And I select "Court Funds Office account (****11cf)" from "money_transfers_type_accountToId"
+    And I submit the step
+    Then the form should be valid
     And the step cannot be submitted without making a selection
     And the step with the following values CANNOT be submitted:
       | money_transfers_type_amount | asasd |
@@ -31,9 +33,10 @@ Feature: Report account transfers
       # add another: yes
     And I choose "yes" when asked for adding another record
       # add transfer n.2
-    And the step with the following values CAN be submitted:
-      | money_transfers_type_accountFromId | 1 |
-      | money_transfers_type_accountToId   | 2 |
+    When I select "HSBC - saving account - Savings account (****02ca)" from "money_transfers_type_accountFromId"
+    And I select "Court Funds Office account (****11cf)" from "money_transfers_type_accountToId"
+    And I submit the step
+    Then the form should be valid
     And the step with the following values CAN be submitted:
       | money_transfers_type_amount | 98.76 |
       # add another: no
@@ -51,12 +54,12 @@ Feature: Report account transfers
     When I go back from the step
       # edit transfer n.1
     When I click on "edit" in the "transfer-02ca-11cf-123456" region
-    Then the following fields should have the corresponding values:
-      | money_transfers_type_accountFromId | 1 |
-      | money_transfers_type_accountToId   | 2 |
-    And the step with the following values CAN be submitted:
-      | money_transfers_type_accountFromId | 2 |
-      | money_transfers_type_accountToId   | 1 |
+    Then I should see "HSBC - saving account - Savings account (****02ca)" in the "#money_transfers_type_accountFromId" element
+    And I should see "Court Funds Office account (****11cf)" in the "#money_transfers_type_accountToId" element
+    When I select "Court Funds Office account (****11cf)" from "money_transfers_type_accountFromId"
+    And I select "HSBC - saving account - Savings account (****02ca)" from "money_transfers_type_accountToId"
+    And I submit the step
+    Then the form should be valid
     Then the following fields should have the corresponding values:
       | money_transfers_type_amount | 1,234.56 |
     And the step with the following values CAN be submitted:

@@ -6,8 +6,6 @@ Feature: Admin unsubmit report (from client page)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | 12 clients | client-search-count |
-    Then each text should be present in the corresponding region:
       | Cly Hent | client-behat001 |
     When I fill in the following:
       | search_clients_q | hent |
@@ -81,9 +79,7 @@ Feature: Admin unsubmit report (from client page)
     And I press "unsubmit_report_confirm_save"
     Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
-    When I click on "admin-documents"
-    Then I should see the "report-submission" region exactly 2 times
-    And I go to the URL previously saved as "admin-client-search-client-behat001"
+    When I go to the URL previously saved as "admin-client-search-client-behat001"
     And I click on "checklist" in the "report-2016" region
     And the response status code should be 200
 
@@ -122,7 +118,8 @@ Feature: Admin unsubmit report (from client page)
     But I should not see the "report-unsubmitted" region
 
 
-  @deputy
+  # Magic: Expects reports to be submitted from previous tests
+  @deputy @magic
   Scenario: admin sees new submission and client page updated
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
@@ -130,7 +127,7 @@ Feature: Admin unsubmit report (from client page)
     Then I should see "SUBMITTED" in the "report-2016-label" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"
-    Then I should see the "report-submission" region exactly 3 times
+    Then I should see the "report-submission" region exactly 4 times
 
 
 

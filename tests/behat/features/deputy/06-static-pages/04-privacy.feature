@@ -8,7 +8,7 @@ Feature: Privacy
 
     @deputy
     Scenario: The footer provides a link to the privacy page when logged in
-        Given I am logged in as "laydeputy102@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         Then the "Privacy notice" link, in the footer, url should contain "/privacy"
         And I go to "/privacy"
         And the response status code should be 200

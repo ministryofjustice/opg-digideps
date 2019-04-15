@@ -29,7 +29,7 @@ Feature: PROF settings
       | profile_phoneMain  | 10000000011                           |
       | profile_address1         | 123 Streetname |
       | profile_addressPostcode  | AB1 2CD        |
-      | profile_addressCountry   | GB             |
+        | profile_addressCountry   | GB             |
     And I press "profile_save"
     Then the form should be valid
     Then I should see "John Named Chap Greenish" in the "profile-name" region
@@ -43,7 +43,7 @@ Feature: PROF settings
   Scenario: Notification email not sent for professional deputy changes
     Given emails are sent from "deputy" area
     And I reset the email log
-    And I am logged in as "behat-prof-user@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "org-settings, profile-show, profile-edit"
     When I press "profile_save"
     Then I should be on "/org/settings/your-details"

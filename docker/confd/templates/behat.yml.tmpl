@@ -4,6 +4,17 @@ default:
     autoload:
         '': %paths.base%/bootstrap
     suites:
+        infra:
+            description: Minimal test suite to check infrastructure
+            paths: [ %paths.base%/features ]
+            filters:
+                tags: "@infra"
+            contexts:
+            {{ if exists "/api/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
+            {{ else }}
+                - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
+            {{ end }}
 
         admin:
             description: End to end journey for Admin user

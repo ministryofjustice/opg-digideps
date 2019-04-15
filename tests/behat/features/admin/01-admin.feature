@@ -1,4 +1,8 @@
 Feature: admin / admin
+  @infra
+  Scenario: login as admin
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Then I should be on "/admin/"
 
   Scenario: login and add admin user
     Given emails are sent from "admin" area

@@ -12,7 +12,8 @@ Feature: Report submit
         And I click on "declaration-page"
         Then the URL should match "/report/\d+/declaration"
 
-    @deputy
+    # Magic: uses report ID number
+    @deputy @magic
     Scenario: report submission
         Given emails are sent from "deputy" area
         And I reset the email log
@@ -20,13 +21,13 @@ Feature: Report submit
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
         # assert I cannot access the submitted page directly
-        And the URL "/report/5/submitted" should not be accessible
+        And the URL "/report/13/submitted" should not be accessible
         # assert I cannot access the submit page from declaration page
-        When I go to "/report/5/declaration"
-        Then the URL "/report/5/submitted" should not be accessible
+        When I go to "/report/13/declaration"
+        Then the URL "/report/13/submitted" should not be accessible
         And I click on "reports, report-start"
         # submit without ticking "agree"
-        When I go to "/report/5/declaration"
+        When I go to "/report/13/declaration"
         And I press "report_declaration_save"
         #
         # empty form
@@ -107,11 +108,6 @@ Feature: Report submit
         And I click on "admin-documents"
         Then I should be on "/admin/documents/list"
         And I save the current URL as "admin-documents-list-new"
-        # test filters
-        When I click on "tab-archived"
-        Then I should see the "report-submission" region exactly 0 times
-        When I click on "tab-new"
-        Then I should see the "report-submission" region exactly 1 times
         # test search
         When I fill in the following:
             | search | behat001 |
@@ -128,19 +124,17 @@ Feature: Report submit
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
             | Report + docs | report-submission-1 |
-        When I check "cb1"
+        When I check "Select behat001"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
             | Report_behat001_2016_2016_.*.zip | regexpName+sizeAtLeast | 70000 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
-        Then I check "cb1"
+        Then I check "Select behat001"
         When I click on "archive"
-        Then I should see the "report-submission" region exactly 0 times
-        When I click on "tab-archived"
-        Then I should see the "report-submission" region exactly 1 times
-        And each text should be present in the corresponding region:
+        And I click on "tab-archived"
+        Then each text should be present in the corresponding region:
             | Cly Hent | report-submission-1 |
             | behat001 | report-submission-1 |
             | Report + docs | report-submission-1 |
@@ -162,22 +156,23 @@ Feature: Report submit
             | 445566                | account-02ca |
             | Balance for 31 December 2017 required | account-02ca |
 
-    @deputy
+    # Magic: uses report ID number
+    @deputy @magic
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
-        Then the URL "/report/5/overview" should not be accessible
-        And the URL "/report/5/decisions/summary" should not be accessible
-        And the URL "/report/5/contacts/summary" should not be accessible
-        And the URL "/report/5/visits-care/summary" should not be accessible
-        And the URL "/report/5/bank-accounts/summary" should not be accessible
-        And the URL "/report/5/money-transfers/summary" should not be accessible
-        And the URL "/report/5/money-in/summary" should not be accessible
-        And the URL "/report/5/money-out/summary" should not be accessible
-        And the URL "/report/5/balance" should not be accessible
-        And the URL "/report/5/assets/summary" should not be accessible
-        And the URL "/report/5/debts/summary" should not be accessible
-        And the URL "/report/5/actions" should not be accessible
-        And the URL "/report/5/declaration" should not be accessible
+        Then the URL "/report/13/overview" should not be accessible
+        And the URL "/report/13/decisions/summary" should not be accessible
+        And the URL "/report/13/contacts/summary" should not be accessible
+        And the URL "/report/13/visits-care/summary" should not be accessible
+        And the URL "/report/13/bank-accounts/summary" should not be accessible
+        And the URL "/report/13/money-transfers/summary" should not be accessible
+        And the URL "/report/13/money-in/summary" should not be accessible
+        And the URL "/report/13/money-out/summary" should not be accessible
+        And the URL "/report/13/balance" should not be accessible
+        And the URL "/report/13/assets/summary" should not be accessible
+        And the URL "/report/13/debts/summary" should not be accessible
+        And the URL "/report/13/actions" should not be accessible
+        And the URL "/report/13/declaration" should not be accessible
 
     @deputy
     Scenario: deputy report download

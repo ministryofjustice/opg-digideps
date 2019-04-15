@@ -18,6 +18,7 @@ Feature: Report submit (client 01000014)
         # log in as team member to submit the report and test that named deputy details are displayed
         And I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000014" region
+        And I should see "Ready to submit" in the "report-detail-status" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
             | John Named                                      | deputy-firstname |
