@@ -117,7 +117,7 @@ Feature: Infrastructure document tests
   Scenario: Can download submitted documents
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "admin-documents"
-    And I check "Select test1030"
+    And I check "Select 103"
     And I click on "download"
     Then the page content should be a zip file containing files with the following files:
-        | Report_test1030_2016_2016-* | regexpName+sizeAtLeast | 30000 |
+        | Report_103_2016_2016-* | regexpName+sizeAtLeast | 30000 |

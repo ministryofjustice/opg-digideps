@@ -30,10 +30,10 @@ Feature: Report deputy expenses
     And the step with the following values CANNOT be submitted:
       | expenses_single_explanation |                | [ERR] |
       | expenses_single_amount      | 0.0 | [ERR] |
+    And I select "HSBC - saving account - Savings account (****02ca)" from "expenses_single_bankAccountId"
     And the step with the following values CAN be submitted:
       | expenses_single_explanation | taxi from hospital on 3 november |
       | expenses_single_amount      | 35                               |
-      | expenses_single_bankAccountId       | 1                                |
         # add expense n.2
     And I choose "yes" when asked for adding another record
     And the step with the following values CAN be submitted:
@@ -60,11 +60,11 @@ Feature: Report deputy expenses
     Then the following fields should have the corresponding values:
       | expenses_single_explanation | taxi from hospital on 3 november |
       | expenses_single_amount      | 35.00                            |
-      | expenses_single_bankAccountId       | 1                                |
+    And I should see "HSBC - saving account - Savings account (****02ca)" in the "#expenses_single_bankAccountId" element
+    And I select "Court Funds Office account (****11cf)" from "expenses_single_bankAccountId"
     And the step with the following values CAN be submitted:
       | expenses_single_explanation | taxi from hospital on 4 november |
       | expenses_single_amount      | 45                               |
-      | expenses_single_bankAccountId       | 2                                |
     And each text should be present in the corresponding region:
       | taxi from hospital on 4 november | expense-taxi-from-hospital-on-4-november |
       | £45.00                           | expense-taxi-from-hospital-on-4-november |
