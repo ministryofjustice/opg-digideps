@@ -70,6 +70,7 @@ class MoneyTransaction implements MoneyTransactionInterface
 
         ['broadband', false, 'household-bills', 'out'],
         ['council-tax', false, 'household-bills', 'out'],
+        ['dual-fuel', false, 'household-bills', 'out'],
         ['electricity', false, 'household-bills', 'out'],
         ['food', false, 'household-bills', 'out'],
         ['gas', false, 'household-bills', 'out'],
