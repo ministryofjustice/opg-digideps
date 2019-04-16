@@ -6,6 +6,7 @@ use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportService;
+use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,6 +19,17 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ReportController extends RestController
 {
+    /** @var array */
+    private $updateHandlers;
+
+    /**
+     * @param array $updateHandlers
+     */
+    public function __construct(array $updateHandlers)
+    {
+        $this->updateHandlers = $updateHandlers;
+    }
+
     /**
      * Add a report
      * Currently only used by Lay deputy during registration steps
@@ -437,92 +449,8 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)) {
-            $report->setProfDeputyCostsHowChargedFixed($data['prof_deputy_costs_how_charged_fixed']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (array_key_exists('prof_deputy_costs_how_charged_assessed', $data)) {
-            $report->setProfDeputyCostsHowChargedAssessed($data['prof_deputy_costs_how_charged_assessed']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (array_key_exists('prof_deputy_costs_how_charged_agreed', $data)) {
-            $report->setProfDeputyCostsHowChargedAgreed($data['prof_deputy_costs_how_charged_agreed']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        // update depending data depending on the selection on the "how charged" checkboxes
-        if (array_key_exists('prof_deputy_costs_how_charged_fixed', $data)
-            || array_key_exists('prof_deputy_costs_how_charged_assessed', $data)
-            || array_key_exists('prof_deputy_costs_how_charged_agreed', $data)
-        ) {
-            if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
-                $report->setProfDeputyCostsHasInterim(null);
-                foreach ($report->getProfDeputyInterimCosts() as $ic) {
-                    $this->getEntityManager()->remove($ic);
-                }
-            } else if ($report->getProfDeputyCostsHasInterim() === 'yes') {
-                $report->setProfDeputyFixedCost(null);
-            }
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
-            $report->setProfDeputyCostsHasPrevious($data['prof_deputy_costs_has_previous']);
-            foreach ($report->getProfDeputyPreviousCosts() as $pc) {
-                $this->getEntityManager()->remove($pc);
-            }
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
-            $report->setProfDeputyCostsHasInterim($data['prof_deputy_costs_has_interim']);
-            // remove interim if changed to "no"
-            if ($data['prof_deputy_costs_has_interim'] === 'no') {
-                foreach ($report->getProfDeputyInterimCosts() as $ic) {
-                    $this->getEntityManager()->remove($ic);
-                }
-            } else if ($data['prof_deputy_costs_has_interim'] === 'yes') {
-                $report->setProfDeputyFixedCost(null);
-            }
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (array_key_exists('prof_deputy_interim_costs', $data)) {
-            // wipe existing interim costs in order to overwrite
-            // TODO consider keeping and updating the existing ones if simpler to implement
-            foreach ($report->getProfDeputyInterimCosts() as $ic) {
-                $this->getEntityManager()->remove($ic);
-            }
-            // add new
-            foreach ($data['prof_deputy_interim_costs'] as $row) {
-                if ($row['date'] && $row['amount']) {
-                    $report->addProfDeputyInterimCosts(
-                        new EntityDir\Report\ProfDeputyInterimCost($report, new \DateTime($row['date']), $row['amount'])
-                    );
-                }
-                if (count($report->getProfDeputyInterimCosts())) {
-                    $report->setProfDeputyCostsHasInterim('yes');
-                }
-            }
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-            $this->getEntityManager()->flush();
-        }
-
-        if (array_key_exists('prof_deputy_fixed_cost', $data)) {
-            $report->setProfDeputyFixedCost($data['prof_deputy_fixed_cost']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (array_key_exists('prof_deputy_costs_amount_to_scco', $data)) {
-            $report->setProfDeputyCostsAmountToScco($data['prof_deputy_costs_amount_to_scco']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
-        }
-
-        if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
-            $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);
-            $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
+        foreach ($this->updateHandlers as $updateHandler) {
+            $updateHandler->handle($report, $data);
         }
 
         $this->getEntityManager()->flush();
@@ -804,6 +732,10 @@ class ReportController extends RestController
             'future_significant_decisions' => 'setFutureSignificantDecisions',
             'has_deputy_raised_concerns' => 'setHasDeputyRaisedConcerns',
             'case_worker_satisified' => 'setCaseWorkerSatisified',
+            'payments_match_cost_certificate' => 'setPaymentsMatchCostCertificate',
+            'prof_costs_reasonable_and_proportionate' => 'setProfCostsReasonableAndProportionate',
+            'has_deputy_overcharged_from_previous_estimates' => 'setHasDeputyOverchargedFromPreviousEstimates',
+            'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision',
             'button_clicked' => 'setButtonClicked'

@@ -393,17 +393,9 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
+        $onlyFixedTicked = $this->report->hasProfDeputyCostsHowChargedFixedOnly();
 
-        //TODO move to method
-        $onlyFixedTicked = $this->report->getProfDeputyCostsHowChargedFixed()
-            && ! $this->report->getProfDeputyCostsHowChargedAgreed()
-            && ! $this->report->getProfDeputyCostsHowChargedAssessed();
-
-        $atLeastOneTicked = $this->report->getProfDeputyCostsHowChargedFixed()
-            || $this->report->getProfDeputyCostsHowChargedAgreed()
-            || $this->report->getProfDeputyCostsHowChargedAssessed();
-
-        if (!$atLeastOneTicked) {
+        if (empty($this->report->getProfDeputyCostsHowCharged())) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -421,9 +413,10 @@ class ReportStatusService
         $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
         $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
 
-        $isSccoValid = $this->report->getProfDeputyCostsAmountToScco();
+        // If costs are only fixed, SCCO question is not required (DDPB-2506)
+        $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
 
-        if ($atLeastOneTicked && $isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
+        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
@@ -444,10 +437,17 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        // TODO replace with real logic when implemented
-        return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        if (null == $this->report->getProfDeputyCostsEstimateHowCharged()) {
+            return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        }
 
-        return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
+        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $this->report->getProfDeputyCostsEstimateHowCharged()) {
+            return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
+        }
+
+        return (null == $this->report->getProfDeputyCostsEstimateHasMoreInfo()) ?
+            ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0] :
+            ['state' => self::STATE_DONE, 'nOfRecords' => 0];
     }
 
     /**

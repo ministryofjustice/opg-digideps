@@ -153,41 +153,40 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
     }
 
-//    public function testGetCalculatedBalanceProfDeputy()
-//    {
-//        $this->validReportCtorArgs = [$this->client, Report::TYPE_102_5, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
-//        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
-//
-//        $this->report->shouldReceive('has106Flag')->andReturn(false);
-//
-//        $this->assertEquals(0, $this->report->getCalculatedBalance());
-//
-//        $this->report->setProfDeputyCostsHowChargedFixed(true);
-//        $this->report->setProfDeputyCostsHasPrevious('yes');
-//        $this->report->setProfDeputyPreviousCosts(new ArrayCollection([
-//            (new ProfDeputyPreviousCost($this->report, 1)),
-//            (new ProfDeputyPreviousCost($this->report, 1))
-//        ]));
-//        $this->report->setProfDeputyCostsHasInterim('no');
-//        $this->report->setProfDeputyFixedCost(3);
-//        $this->report->setProfDeputyOtherCosts(new ArrayCollection([
-//            (new ProfDeputyOtherCost($this->report, 'id1', false, 10)),
-//            (new ProfDeputyOtherCost($this->report, 'id2', false, 10)),
-//        ]));
-//
-//        $this->assertEquals(-1 -1 -3 - 10 - 10, $this->report->getCalculatedBalance());
-//
-//        //change interim yes->no
-//        $this->report->setProfDeputyCostsHasInterim('yes');
-//        $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-//            (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
-//            (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
-//        ]));
-//        $this->assertEquals(-1 -1 -11 -11 -10 -10, $this->report->getCalculatedBalance());
-//
-//    }
+    public function testGetCalculatedBalanceProfDeputy()
+    {
+        $this->validReportCtorArgs = [$this->client, Report::TYPE_102_5, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
+        $this->report->shouldReceive('has106Flag')->andReturn(false);
 
+        $this->assertEquals(0, $this->report->getCalculatedBalance());
+
+        $this->report->setProfDeputyCostsHowCharged('fixed');
+        $this->report->setProfDeputyCostsHasPrevious('yes');
+        $this->report->setProfDeputyPreviousCosts(new ArrayCollection([
+            (new ProfDeputyPreviousCost($this->report, 1)),
+            (new ProfDeputyPreviousCost($this->report, 1))
+        ]));
+        $this->report->setProfDeputyCostsHasInterim('no');
+        $this->report->setProfDeputyFixedCost(3);
+        $this->report->setProfDeputyOtherCosts(new ArrayCollection([
+            (new ProfDeputyOtherCost($this->report, 'id1', false, 10)),
+            (new ProfDeputyOtherCost($this->report, 'id2', false, 10)),
+        ]));
+
+        $this->assertEquals(-1 -1 -3 - 10 - 10, $this->report->getCalculatedBalance());
+
+        //change interim yes->no
+        $this->report->setProfDeputyCostsHasInterim('yes');
+        $this->report->setProfDeputyInterimCosts(new ArrayCollection([
+            (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
+            (new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11)),
+        ]));
+        $this->assertEquals(-1 -1 -11 -11 -10 -10, $this->report->getCalculatedBalance());
+
+    }
+    
     /**
      * //TODO consider rewriting, unit testing methods composing the total
      * (see testgetExpensesTotal as an example) and using mocks here

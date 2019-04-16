@@ -41,6 +41,7 @@ class Report implements ReportInterface
     use ReportTraits\DebtTrait;
     use ReportTraits\ProfServiceFeesTrait;
     use ReportTraits\ReportProfDeputyCostsTrait;
+    use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\StatusTrait;
 
     /**
@@ -117,6 +118,11 @@ class Report implements ReportInterface
 
     const SECTION_DOCUMENTS = 'documents';
 
+    // Applies to both costs and estimate costs
+    const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
+
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
      *
@@ -171,9 +177,9 @@ class Report implements ReportInterface
             self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? [
                 self::TYPE_103_5, self::TYPE_102_5, self::TYPE_103_4_5, self::TYPE_102_4_5, // Prof except 104-6
             ] : [],
-            //self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
+            self::SECTION_PROF_DEPUTY_COSTS => $allProfReports,
             // add when ready
-            //self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
+            self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => $allProfReports,
             self::SECTION_DOCUMENTS          => $allReports,
         ];
     }
@@ -436,8 +442,8 @@ class Report implements ReportInterface
         }
         $this->type = $type;
         $this->client = $client;
-        $this->startDate = new \DateTime($startDate->format('Y-m-d'));
-        $this->endDate = new \DateTime($endDate->format('Y-m-d'));
+        $this->startDate = new \DateTime($startDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
+        $this->endDate = new \DateTime($endDate->format('Y-m-d'), new \DateTimeZone('Europe/London'));
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
@@ -488,6 +494,7 @@ class Report implements ReportInterface
         $this->checklist = null;
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
+        $this->profDeputyEstimateCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
