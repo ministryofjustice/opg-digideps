@@ -251,6 +251,8 @@ form:
         label: Gas
       electricity:
         label: Electricity
+      dual-fuel:
+        label: Dual fuel (Combined electricity & gas)
       telephone:
         label: Phone
       council-tax:
