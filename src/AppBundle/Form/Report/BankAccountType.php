@@ -109,7 +109,7 @@ class BankAccountType extends AbstractType
                 return [
                     1 => ['bank-account-type'],
                     2 => $step2Options,
-                    3 => ['bank-account-opening-balance'],
+                    3 => ['bank-account-opening-balance','bank-account-closing-balance'],
                     4 => 'bank-account-is-closed'
                 ][$this->step];
             },
