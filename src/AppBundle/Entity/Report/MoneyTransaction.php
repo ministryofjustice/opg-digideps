@@ -156,7 +156,8 @@ class MoneyTransaction
      * @JMS\Groups({"transaction"})
      *
      * @Assert\NotBlank(message="moneyTransaction.form.amount.notBlank", groups={"transaction-amount"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "moneyTransaction.form.amount.minMessage", maxMessage = "moneyTransaction.form.amount.maxMessage", groups={"transaction-amount"})
+     * @Assert\Range(min=0.01, max=100000000000, minMessage = "moneyTransaction.form.amount.minMessage",
+     *     maxMessage="moneyTransaction.form.amount.maxMessage", groups={"transaction-amount"})
      */
     private $amount;
 

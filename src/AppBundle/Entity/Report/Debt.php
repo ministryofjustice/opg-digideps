@@ -19,7 +19,7 @@ class Debt
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      * @Assert\Type(type="numeric", message="debt.amount.notNumeric", groups={"debts"})
-     * @Assert\Range(min=0, max=100000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
+     * @Assert\Range(min=0, max=100000000000, minMessage = "debt.amount.minMessage", maxMessage = "debt.amount.maxMessage", groups={"debts"})
      */
     private $amount;
 
