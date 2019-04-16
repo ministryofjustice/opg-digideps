@@ -99,7 +99,7 @@ class BankAccount implements BankAccountInterface
      *
      * @Assert\NotBlank(message="ndr.account.balanceOnCourtOrderDate.notBlank", groups={"bank-account-balance-on-cot"})
      * @Assert\Type(type="numeric", message="ndr.account.balanceOnCourtOrderDate.type", groups={"bank-account-balance-on-cot"})
-     * @Assert\Range(max=10000000000, maxMessage="ndr.account.balanceOnCourtOrderDate.outOfRange", groups={"bank-account-balance-on-cot"})
+     * @Assert\Range(max=100000000000, maxMessage="ndr.account.balanceOnCourtOrderDate.outOfRange", groups={"bank-account-balance-on-cot"})
      *
      * @var decimal
      */

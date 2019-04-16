@@ -58,7 +58,7 @@ abstract class Asset
      *
      * @Assert\NotBlank(message="ndr.asset.property.value.notBlank", groups={"property-value"})
      * @Assert\Type( type="numeric", message="ndr.asset.property.value.type", groups={"property-value"})
-     * @Assert\Range(min=0, max=10000000000, maxMessage = "ndr.asset.property.value.outOfRange", groups={"property-value"})
+     * @Assert\Range(min=0, max=100000000000, maxMessage = "ndr.asset.property.value.outOfRange", groups={"property-value"})
      *
      * @JMS\Type("string")
      */
