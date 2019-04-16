@@ -1,0 +1,19 @@
+{% set translationDomain = transDomain %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{# Set page to summary page to allow correct translations to be pulled in#}
+{% set page = 'summaryPage' %}
+        
+        {# Total cost this period#}
+        <tr class="behat-region-total-cost">
+            <td>
+                <strong class="bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
+            </td>
+            <td>
+                <strong class="bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
+            </td>
+            {% if not hideEditLink %}
+                <td></td>
+            {% endif %}
+        </tr>

@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Resources\views\Report;
 
 use AppBundle\Entity\Client;
@@ -419,9 +418,7 @@ class FormattedTest extends WebTestCase
     {
         $this
             ->report
-            ->setProfDeputyCostsHowChargedFixed(null)
-            ->setProfDeputyCostsHowChargedAssessed(null)
-            ->setProfDeputyCostsHowChargedAgreed(null);
+            ->setProfDeputyCostsHowCharged(null);
     }
 
     /**
@@ -431,17 +428,14 @@ class FormattedTest extends WebTestCase
     {
         $this
             ->report
-            ->setProfDeputyCostsHowChargedFixed(true)
-            ->setProfDeputyCostsHowChargedAssessed(false)
-            ->setProfDeputyCostsHowChargedAgreed(false);
+            ->setProfDeputyCostsHowCharged('fixed');
     }
 
     private function ensureDeputyCostsWithNonFixedAndInterimEqualTo($interim)
     {
         $this
             ->report
-            ->setProfDeputyCostsHowChargedFixed(false)
-            ->setProfDeputyCostsHowChargedAssessed(true)
+            ->setProfDeputyCostsHowCharged('assessed')
             ->setProfDeputyCostsHasInterim($interim);
     }
 
@@ -452,9 +446,7 @@ class FormattedTest extends WebTestCase
     {
         $this
             ->report
-            ->setProfDeputyCostsHowChargedFixed(true)
-            ->setProfDeputyCostsHowChargedAssessed(true)
-            ->setProfDeputyCostsHowChargedAgreed(false)
+            ->setProfDeputyCostsHowCharged('both')
             ->setProfDeputyCostsHasInterim(null);
     }
 

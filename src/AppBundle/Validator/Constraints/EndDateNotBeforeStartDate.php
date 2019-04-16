@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Constraint;
 /**
  * @Annotation
  */
-class StartAndEndDateComparison extends Constraint
+class EndDateNotBeforeStartDate extends Constraint
 {
     /**
      * @var string
      */
-    public $message = 'End date cannot be before the start date';
+    public $message = 'report.endDate.beforeStart';
 
     /**
      * @return array|string

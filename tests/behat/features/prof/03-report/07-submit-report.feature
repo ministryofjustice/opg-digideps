@@ -1,5 +1,19 @@
 Feature: Report submit (client 01000010)
 
+    Scenario: balance check and fix
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "pa-report-open" in the "client-01000010" region
+        Then the prof report should not be submittable
+          # check balance mismatch difference
+        When I click on "edit-balance"
+        Then I should see the "balance-bad" region
+        And I should see "£475.50" in the "unaccounted-for" region
+      # add explanation
+        And the step with the following values CAN be submitted:
+            | balance_balanceMismatchExplanation | fix prof balance altered by costs |
+        Then the URL should match "report/\d+/overview"
+        Then the prof report should be submittable
+
     Scenario: PROF 102-5 Report should be submittable
         Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000010" region

@@ -439,7 +439,7 @@ lifestyle:
 
 feedbackAfterReport:
     satisfactionLevel:
-        notEmpty: Please selection an option
+        notEmpty: Please select an option
 
 profServiceFee:
     assessedOrFixed:
@@ -465,8 +465,8 @@ profServiceFee:
         profFeesEstimateSccoReason:
             notBlank: Please provide an explanation
 
-profDeputyHowChanged:
-  atLeastOne: Please select at least one option
+profDeputyCostsHowCharged:
+  notBlank: Please select an option
 
 profDeputyPreviousCost:
   startDate:
@@ -490,6 +490,7 @@ profDeputyInterimCost:
   date:
     notBlank: Please enter a date
     notValid: Date not valid
+    notFuture: This date cannot be in the future
   amount:
     notNumeric: Amount not valid
     minMessage: The amount must be more than £{{ limit }}
@@ -505,6 +506,26 @@ profDeputyOtherCost:
     notNumeric: Please enter a valid amount
     minMessage: The amount must be positive
     maxMessage: The amount must be less than £100,000,000,000
+  moreDetails:
+    notBlank: Please give us some more information
+
+profDeputyEstimateCost:
+  profDeputyCostsEstimateHowCharged:
+    notBlank: Please select an option
+  profDeputyManagementCostAmount:
+    amount:
+      notBlank: Please enter an amount
+  amount:
+    notNumeric: Amount not valid
+    minMessage: The amount must be more than £{{ limit }}
+    maxMessage: The amount must be less than £10,000,000,000
+  moreDetails:
+      notBlank: Please give us some more information
+
+profDeputyCostsEstimateMoreInfo:
+  details:
+    notBlank: Please provide information in the box provided
+
 
 # ====================================================================================================
 #       NDR
@@ -707,6 +728,14 @@ checklist:
     notBlank: Please choose an option
   bondOrderMatchCasrec:
     notBlank: Please choose an option
+  paymentsMatchCostCertificate:
+    notBlank: Please select 'Yes' or 'No'
+  profCostsReasonableAndProportionate:
+    notBlank: Please select 'Yes' or 'No'
+  hasDeputyOverchargedFromPreviousEstimates:
+    notBlank: Please select 'Yes' or 'No'
+  nextBillingEstimatesSatisfactory:
+    notBlank: Please select 'Yes' or 'No'
   futureSignificantDecisions:
     notBlank: Please choose an option
   hasDeputyRaisedConcerns:

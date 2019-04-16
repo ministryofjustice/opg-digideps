@@ -41,6 +41,9 @@ class ReportController extends AbstractController
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
         'report-prof-deputy-costs-scco',
         'report-prof-deputy-fixed-cost',
+        'prof-deputy-estimate-costs',
+        'prof-deputy-costs-estimate-how-charged',
+        'prof-deputy-estimate-management-costs',
         'action',
         'action-more-info',
         'asset',
@@ -243,8 +246,15 @@ class ReportController extends AbstractController
             }
         }
 
+        $costBreakdown = null;
+
+        if ($report->getProfDeputyCostsEstimateHowCharged() !== Report::PROF_DEPUTY_COSTS_TYPE_FIXED) {
+            $costBreakdown = $report->generateActualSubmittedEstimateCosts();
+        }
+
         return [
             'report'   => $report,
+            'submittedEstimateCosts' => $costBreakdown,
             'form'     => $form->createView(),
             'checklist' => $checklist,
             'previousReportData' => $report->getPreviousReportData()

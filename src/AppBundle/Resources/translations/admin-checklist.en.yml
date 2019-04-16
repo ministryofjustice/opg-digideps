@@ -15,6 +15,8 @@ checklistPage:
     declaration: Declaration
     healthAndLifestyle: Health and lifestyle
     contents: Checklist contents
+    profDeputyCosts: Deputy costs
+    profDeputyCostsEstimate: Estimated costs for next reporting period
   lodgingSummary:
     heading: Lodging summary
     listItem1: Document any concerns
@@ -55,6 +57,8 @@ checklistPage:
     giftsSummary: View gifts summary
     deputyExpensesSummary: View deputy expenses
     lifestyleResponses: View health and lifestyle responses
+    profDeputyCosts: View deputy's responses
+    profDeputyCostsEstimate: View deputy's responses
   noTransferToShow: No money transfers to view
   form:
     save:
@@ -123,6 +127,23 @@ checklistPage:
       label: Does the deputy raise any concerns about their deputyship?
     caseWorkerSatisified:
       label: Are you satisfied with the deputy's declaration?
+    paymentsMatchCostCertificate:
+      label: |
+        Do the payments received for previous billing periods (a billing period started during an earlier reporting
+        period), plus interim payments made during this reporting period from the same billing period, match the
+        figure on the cost certificate for that billing period?
+    profCostsReasonableAndProportionate:
+      label: |
+        Do the total costs for work carried out during the current billing period (The new billing period started
+        during this reporting period) appear to be reasonable and proportionate compared to the client's assets?
+    hasDeputyOverchargedFromPreviousEstimates:
+      label: |
+        Has the deputy charged 20% or more than last years estimated costs for this billing period?
+    satisfiedEstimatesNextBilling:
+      label: |
+        Are you satisfied with the deputy’s estimated costs for the next billing period?
+    totalEstimatedCosts:
+      label: Total estimated costs
     lodgingSummary:
       label: Lodging summary concerns and decisions
     finalDecision:
@@ -137,4 +158,4 @@ checklistPage:
           sent an acknowledgment to the deputy(s)
     furtherInformationReceived:
       label: Further information received
-
+    

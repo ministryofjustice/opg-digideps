@@ -74,6 +74,7 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(false)
             ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false)
             ->shouldReceive('hasSection')->with('profDeputyCosts')->andReturn(false)
+            ->shouldReceive('hasSection')->with('profDeputyCostsEstimate')->andReturn(false)
         ;
 
         $actual = $this->sut->getSectionParams($this->report, 'paFeeExpense', +1);
@@ -87,10 +88,11 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasSection')->with('profCurrentFees')->andReturn(false)// currently disabled
             ->shouldReceive('hasSection')->with('profDeputyCosts')->andReturn(true)
             ->shouldReceive('hasSection')->with('deputyExpenses')->andReturn(false)
+            ->shouldReceive('hasSection')->with('profDeputyCostsEstimate')->andReturn(true)
         ;
 
         $actual = $this->sut->getSectionParams($this->report, 'profDeputyCosts', +1);
-        $this->assertEquals('bankAccounts', $actual['section']);
+        $this->assertEquals('profDeputyCostsEstimate', $actual['section']);
     }
 
     public function tearDown()

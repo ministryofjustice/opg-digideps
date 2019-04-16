@@ -63,7 +63,7 @@ class ReportSectionsLinkService
             'moneyOutShort' => ['section' => 'moneyOutShort', 'link' => $this->router->generate('money_out_short', $routeParams)],
             'otherInfo' => ['section' => 'otherInfo', 'link' => $this->router->generate('other_info', $routeParams)],
             'profDeputyCosts' => ['section' => 'profDeputyCosts', 'link' => $this->router->generate('prof_deputy_costs', $routeParams)],
-//            'profDeputyCostsEstimate' => ['section' => 'profDeputyCostsEstimate', 'link' => $this->router->generate('prof_deputy_costs_estimate', $routeParams)],
+            'profDeputyCostsEstimate' => ['section' => 'profDeputyCostsEstimate', 'link' => $this->router->generate('prof_deputy_costs_estimate', $routeParams)],
             'paDeputyExpenses' => ['section' => 'paFeeExpense', 'link' => $this->router->generate('pa_fee_expense', $routeParams)],
             'profCurrentFees' => ['section' => 'profCurrentFees', 'link' => $this->router->generate('prof_current_fees', $routeParams)],
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
@@ -73,21 +73,35 @@ class ReportSectionsLinkService
 
 
         // defined order for Client profile page (PROF or PA)
-        if ($report->hasSection('paDeputyExpenses') || $report->hasSection('profDeputyCosts')) {
+        if ($report->hasSection('paDeputyExpenses')) { // PAs
+            // PAs
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',
-                'paDeputyExpenses', //PA
-                'profCurrentFees', // PROF
+                'paDeputyExpenses',
                 'gifts',
                 'actions', 'otherInfo',
                 'profDeputyCosts',
-//                'profDeputyCostsEstimate',
+                'profDeputyCostsEstimate',
                 'bankAccounts',
                 'moneyTransfers', 'moneyIn', 'moneyOut',
                 'moneyInShort', 'moneyOutShort',
                 'assets', 'debts',
                 'documents'
             ];
+        } elseif ($report->hasSection('profDeputyCosts')) { // Professionals
+            $sectionIdOrder = [
+                'decisions', 'contacts', 'visitsCare',
+                'bankAccounts',
+                'moneyIn', 'moneyInShort', 'moneyTransfers', 'moneyOut','moneyOutShort',
+                'lifestyle',
+                'gifts',
+                'assets', 'debts',
+                'profCurrentFees',
+                'profDeputyCosts',
+                'profDeputyCostsEstimate',
+                'actions', 'otherInfo',
+                'documents'
+                ];
         } else { // Lay
             $sectionIdOrder = [
                 'decisions', 'contacts', 'visitsCare', 'lifestyle',

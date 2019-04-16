@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Mapper\ReportSubmission;
+namespace AppBundle\Mapper\ReportSubmission;
 
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryMapper;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
@@ -43,8 +43,8 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     public function testReturnsReportSubmissionsByCustomParameters()
     {
         $this->query = (new ReportSubmissionSummaryQuery())
-            ->setFromDate(new \DateTime('01-01-2001'))
-            ->setToDate(new \DateTime('02-01-2001'))
+            ->setStartDate(new \DateTime('01-01-2001'))
+            ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')
             ->setSortOrder('bar');
 
@@ -80,8 +80,8 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     private function buildExpectedUrl()
     {
         return sprintf('/report-submission/casrec_data?%s', http_build_query([
-            'fromDate' => $this->query->getFromDate(),
-            'toDate' => $this->query->getToDate(),
+            'fromDate' => $this->query->getStartDate(),
+            'toDate' => $this->query->getEndDate(),
             'orderBy' => $this->query->getOrderBy(),
             'order' => $this->query->getSortOrder()
         ]));

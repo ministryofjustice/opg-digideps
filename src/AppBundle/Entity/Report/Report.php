@@ -6,20 +6,21 @@ use AppBundle\Entity\Client;
 
 use AppBundle\Entity\Report\Traits as ReportTraits;
 use AppBundle\Entity\ReportInterface;
+use AppBundle\Validator\Constraints\StartEndDateComparableInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use AppBundle\Validator\Constraints as AppAssert;
 
 /**
- * @Assert\Callback(callback="isValidEndDate")
- * @Assert\Callback(callback="isValidDateRange")
+ * @AppAssert\EndDateNotGreaterThanTwelveMonths(groups={"start-end-dates"})
+ * @AppAssert\EndDateNotBeforeStartDate(groups={"start-end-dates"})
  * @Assert\Callback(callback="debtsValid", groups={"debts"})
  * @Assert\Callback(callback="feesValid", groups={"fees"})
- * @Assert\Callback(callback="profCostsHowChangedAtLeastOne", groups={"prof-deputy-costs-how-changed"})
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
-class Report implements ReportInterface
+class Report implements ReportInterface, StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;
@@ -34,7 +35,13 @@ class Report implements ReportInterface
     use ReportTraits\ReportPaFeeExpensesTrait;
     use ReportTraits\ReportProfServiceFeesTrait;
     use ReportTraits\ReportProfDeputyCostsTrait;
+    use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\ReportUnsubmittedSections;
+
+    // Applies to both costs and estimate costs
+    const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
     /**
      * @JMS\Type("integer")
@@ -64,8 +71,8 @@ class Report implements ReportInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
      *
-     * @Assert\NotBlank( message="report.startDate.notBlank")
-     * @Assert\Date( message="report.startDate.invalidMessage" )
+     * @Assert\NotBlank( message="report.startDate.notBlank", groups={"start-end-dates"} )
+     * @Assert\Date( message="report.startDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime
      */
@@ -75,8 +82,8 @@ class Report implements ReportInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
      *
-     * @Assert\NotBlank( message="report.endDate.notBlank" )
-     * @Assert\Date( message="report.endDate.invalidMessage" )
+     * @Assert\NotBlank( message="report.endDate.notBlank", groups={"start-end-dates"} )
+     * @Assert\Date( message="report.endDate.invalidMessage", groups={"start-end-dates"} )
      *
      * @var \DateTime
      */
@@ -517,6 +524,60 @@ class Report implements ReportInterface
     }
 
     /**
+     * Generates next reporting period's start date
+     *
+     * @return \DateTime
+     */
+    public function getNextStartDate()
+    {
+        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
+        if (!empty($reportingPeriodInDays)) {
+
+            $nextStart = clone $this->getStartDate();
+            $nextStart = $nextStart->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+            $nextStart->setTime(0,0,0);
+
+            return $nextStart;
+        }
+        return null;
+    }
+
+    /**
+     * Generates next reporting period's end date.
+     * Note: Date diff returns 'difference' and so 1 day needs to be added
+     *
+     * @return \DateTime
+     */
+    public function getNextEndDate()
+    {
+        $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
+        if (!empty($reportingPeriodInDays)) {
+            $nextEnd = clone $this->getEndDate();
+            $nextEnd = $nextEnd->modify('+ ' . ($reportingPeriodInDays + 1) . ' days');
+
+            $nextEnd->setTime(0,0,0);
+            return $nextEnd;
+        }
+        return null;
+    }
+
+    /**
+     * Calculates the Reporting period according to $format
+     *
+     * @param string $format recognised by \DateTime
+     * @return string
+     */
+    private function calculateReportingPeriod($format = '%a')
+    {
+        if ($this->getStartDate() instanceof \DateTime && $this->getEndDate() instanceof \DateTime)
+        {
+            // add one day because difference doesn't include end date itself
+            return $this->getStartDate()->diff($this->getEndDate())->format($format);
+        }
+        return null;
+    }
+
+    /**
      * Return string representation of the start-end date period
      * e.g. 2004 to 2005.
      *
@@ -603,42 +664,6 @@ class Report implements ReportInterface
         $this->decisions = $decisions;
 
         return $this;
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     */
-    public function isValidEndDate(ExecutionContextInterface $context)
-    {
-        if ($this->startDate > $this->endDate) {
-            $context
-                ->buildViolation('report.endDate.beforeStart')
-                ->atPath('endDate')->addViolation();
-        }
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     *
-     * @return type
-     */
-    public function isValidDateRange(ExecutionContextInterface $context)
-    {
-        if (!empty($this->endDate) && !empty($this->startDate)) {
-            $dateInterval = $this->startDate->diff($this->endDate);
-        } else {
-            $context
-                ->buildViolation('report.endDate.invalidMessage')
-                ->atPath('endDate')->addViolation();
-
-            return;
-        }
-
-        if ($dateInterval->days > 366) {
-            $context
-                ->buildViolation('report.endDate.greaterThan12Months')
-                ->atPath('endDate')->addViolation();
-        }
     }
 
     /**

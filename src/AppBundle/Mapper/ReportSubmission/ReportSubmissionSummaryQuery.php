@@ -3,17 +3,18 @@
 namespace AppBundle\Mapper\ReportSubmission;
 
 use AppBundle\Validator\Constraints as AppAssert;
+use AppBundle\Validator\Constraints\StartEndDateComparableInterface;
 
 /**
- * @AppAssert\StartAndEndDateComparison
+ * @AppAssert\EndDateNotBeforeStartDate
  */
-class ReportSubmissionSummaryQuery
+class ReportSubmissionSummaryQuery implements StartEndDateComparableInterface
 {
     /** @var \DateTime */
-    private $fromDate;
+    private $startDate;
 
     /** @var \DateTime */
-    private $toDate;
+    private $endDate;
 
     /** @var string */
     private $orderBy = 'id';
@@ -24,37 +25,37 @@ class ReportSubmissionSummaryQuery
     /**
      * @return \DateTime
      */
-    public function getFromDate()
+    public function getStartDate()
     {
-        return $this->fromDate;
+        return $this->startDate;
     }
 
     /**
      * @return \DateTime
      */
-    public function getToDate()
+    public function getEndDate()
     {
-        return $this->toDate;
+        return $this->endDate;
     }
 
     /**
-     * @param \DateTime $fromDate
+     * @param \DateTime $startDate
      * @return ReportSubmissionSummaryQuery
      */
-    public function setFromDate($fromDate)
+    public function setStartDate($startDate)
     {
-        $this->fromDate = $fromDate;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
     /**
-     * @param \DateTime $toDate
+     * @param \DateTime $endDate
      * @return ReportSubmissionSummaryQuery
      */
-    public function setToDate($toDate)
+    public function setEndDate($endDate)
     {
-        $this->toDate = $toDate;
+        $this->endDate = $endDate;
 
         return $this;
     }

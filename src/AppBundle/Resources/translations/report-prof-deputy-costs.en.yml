@@ -8,9 +8,10 @@ startPage:
   listItem01: for work carried out in previous reporting periods
   listItem02: for work carried out in this reporting period
   pageSectionDescription3: Please include both fixed and assessed costs.
-  pageSectionDescription4: |
-    For more detail, refer to the court’s Practice Directive 19B: Fixed Costs in the
-    Court of Protection, published as part of the Court of Protection (Amendment) Rules 2017."
+  pageSectionDescription4: Your court order provides details of the costs you may charge.
+  pageSectionDescription5: |
+    For more information, refer to the court’s Practice Directive 19B: Fixed Costs in the
+    Court of Protection, published as part of the Court of Protection (Amendment) Rules 2017.
   startButton: Start
 
 howCharged:
@@ -21,7 +22,10 @@ howCharged:
     profDeputyCostsHow.hint: "Select all that apply"
     profDeputyCostsHowChargedFixed.label: "Fixed costs"
     profDeputyCostsHowChargedAssessed.label: "Assessed costs"
-    profDeputyCostsHowChargedAgreed.label: "Agreed"
+    options:
+      fixed: Fixed costs
+      assessed: Assessed costs
+      both: Both fixed and assessed costs
 
 previousReceivedExists:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
@@ -90,7 +94,7 @@ breakdown:
   htmlTitle: "Deputy report - Deputy costs | GOV.UK"
   pageTitle: Deputy costs
   pageSectionDescription: Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period.
-  pageHint: ""
+  pageHint: "These are any costs that are not classed as 'general management'."
   form:
     entries:
       appointments:
@@ -123,5 +127,6 @@ summaryPage:
   questionLabel:
     paidThisPeriod: Paid for this reporting period
     totaPaidThisPeriod: Total costs paid this reporting period
+    totalCosts: Total costs
 
 

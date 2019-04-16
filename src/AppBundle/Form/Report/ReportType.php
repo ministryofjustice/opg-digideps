@@ -29,6 +29,6 @@ class ReportType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['name' => 'report']);
+        $resolver->setDefaults(['name' => 'report', 'validation_groups' => ['start-end-dates']]);
     }
 }

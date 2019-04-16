@@ -7,16 +7,14 @@
     <div class="dont-break">
         <div class="box" data-prof-deputy-costs-how-charged>
             <h3 class="label question bold">{{ 'howCharged.form.profDeputyCostsHow.label'|trans(transOptions) }}</h3>
-            <table class="checkboxes labelvalue inline">
-                <tr>
-                    <td class="value checkbox">{% if report.profDeputyCostsHowChargedFixed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedFixed.label' | trans }}</td>
-                    <td class="value checkbox">{% if report.profDeputyCostsHowChargedAssessed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAssessed.label' | trans }}</td>
-                    <td class="value checkbox">{% if report.profDeputyCostsHowChargedAgreed == true %}X{% else %}&nbsp;{% endif %}</td>
-                    <td class="label">{{ 'howCharged.form.profDeputyCostsHowChargedAgreed.label' | trans }}</td>
-                </tr>
-            </table>
+            <div class="value">
+                {% if report.profDeputyCostsHowCharged %}
+                    {{ ('howCharged.form.options.' ~
+                    report.profDeputyCostsHowCharged) | trans }}
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </div>
         </div>
     </div>
 
@@ -60,7 +58,7 @@
         {% if
             report.hasProfDeputyCostsHowChargedFixedOnly or
             not report.profDeputyCostsHasInterim or
-            (not report.profDeputyCostsHowChargedFixed and not report.profDeputyCostsHowChargedAssessed and not report.profDeputyCostsHowChargedAgreed)
+            (not report.profDeputyCostsHowCharged == 'fixed' and not report.profDeputyCostsHowCharged == 'assessed')
         %}
             <div class="box" data-prof-deputy-costs-fixed-cost>
                 <h3 class="label question bold">{{ 'fixedCost.form.profDeputyFixedCost.label' | trans(transOptions) }}</h3>

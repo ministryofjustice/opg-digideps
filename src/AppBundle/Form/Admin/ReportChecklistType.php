@@ -112,6 +112,29 @@ class ReportChecklistType extends AbstractType
             }
         }
 
+        if ($this->report->hasSection('profDeputyCosts')) {
+            $builder->add('paymentsMatchCostCertificate', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+            $builder->add('profCostsReasonableAndProportionate', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+
+            $builder->add('hasDeputyOverchargedFromPreviousEstimates', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+        }
+
+        if ($this->report->hasSection('profDeputyCostsEstimate')) {
+            $builder->add('nextBillingEstimatesSatisfactory', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true
+            ]);
+        }
+
         // HW
         if($this->report->hasSection('lifestyle')) {
             // Health and Lifestyle question

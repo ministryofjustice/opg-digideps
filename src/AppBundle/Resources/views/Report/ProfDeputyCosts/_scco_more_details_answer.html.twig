@@ -1,0 +1,25 @@
+{% set translationDomain = transDomain %}
+{% trans_default_domain translationDomain %}
+
+{% if report.profDeputyCostsAmountToScco is not null %}
+
+
+        <tr class="behat-region-scco-assessment-reason">
+            <td>
+                {{ 'amountToScco.form.profDeputyCostsReasonBeyondEstimate.labelSummary' | trans }}
+            </td>
+            <td>
+                {% if report.profDeputyCostsReasonBeyondEstimate is null %}
+                    <span>-</span>
+                {% else %}
+                    {{ report.profDeputyCostsReasonBeyondEstimate | nl2br }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+
+{% endif %}
