@@ -38,7 +38,7 @@ class Gift
      *
      * @Assert\NotBlank(message="gifts.amount.notBlank", groups={"gift"})
      * @Assert\Type(type="numeric", message="gifts.amount.type", groups={"gift"})
-     * @Assert\Range(min=0.01, max=10000000, minMessage = "gifts.amount.minMessage", maxMessage = "gifts.amount.maxMessage", groups={"gift"})
+     * @Assert\Range(min=0.01, max=100000000000, minMessage = "gifts.amount.minMessage", maxMessage = "gifts.amount.maxMessage", groups={"gift"})
      *
      * @var string
      */
