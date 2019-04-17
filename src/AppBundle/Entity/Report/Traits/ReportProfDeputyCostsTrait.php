@@ -401,4 +401,15 @@ trait ReportProfDeputyCostsTrait
 
         return $submittedCosts;
     }
+
+    /**
+     * Has at least one other cost been submitted? Used to determine whether section is complete as question is last
+     * to be asked.
+     *
+     * @return bool
+     */
+    public function hasProfDeputyOtherCosts()
+    {
+        return (bool) count($this->getProfDeputyOtherCosts()) > 0;
+    }
 }

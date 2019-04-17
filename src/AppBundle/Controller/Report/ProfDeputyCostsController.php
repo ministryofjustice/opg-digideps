@@ -24,7 +24,8 @@ class ProfDeputyCostsController extends AbstractController
         'report-prof-deputy-costs-prev', 'prof-deputy-costs-prev',
         'report-prof-deputy-costs-interim', 'prof-deputy-costs-interim',
         'report-prof-deputy-costs-scco',
-        'report-prof-deputy-fixed-cost'
+        'report-prof-deputy-fixed-cost',
+        'prof-deputy-other-costs'
     ];
 
     /**
@@ -398,7 +399,7 @@ class ProfDeputyCostsController extends AbstractController
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
-        if ($form === 'summary') {
+        if ($from === 'summary') {
             $backLink = 'prof_deputy_costs_summary';
         } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
             $backLink = 'prof_deputy_costs_received';
