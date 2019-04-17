@@ -84,6 +84,11 @@ Feature: PROF deputy costs
       | deputy_costs_received_profDeputyFixedCost | 1000 |
     And I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
+    Then the url should match "/report/\d+/prof-deputy-costs/breakdown"
+    # submit empty (none) breakdown costs
+    And I click on "save-and-continue"
+    And I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
 
   Scenario: Entering partially completed sections with non Fixed costs and has interim
@@ -118,6 +123,11 @@ Feature: PROF deputy costs
       | deputy_costs_scco_profDeputyCostsAmountToScco | 100 |
     And I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
+    Then the url should match "/report/\d+/prof-deputy-costs/breakdown"
+    # submit empty (none) breakdown costs
+    And I click on "save-and-continue"
+    And I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
 
   Scenario: Entering partially completed sections with non Fixed costs and not interim
@@ -147,6 +157,11 @@ Feature: PROF deputy costs
     Then the url should match "/report/\d+/prof-deputy-costs/amount-scco"
     When the step with the following values CAN be submitted:
       | deputy_costs_scco_profDeputyCostsAmountToScco | 100 |
+    And I click on "breadcrumbs-report-overview"
+    And I click on "edit-prof_deputy_costs"
+    Then the url should match "/report/\d+/prof-deputy-costs/breakdown"
+    # submit empty (none) breakdown costs
+    And I click on "save-and-continue"
     And I click on "breadcrumbs-report-overview"
     And I click on "edit-prof_deputy_costs"
     Then the url should match "/report/\d+/prof-deputy-costs/summary"
