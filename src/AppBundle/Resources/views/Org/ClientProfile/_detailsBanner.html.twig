@@ -1,9 +1,9 @@
 <div class="details-banner">
     {% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined  and report is not null %}
-    <div class="details-content">
+    <div class="details-content behat-region-client-details-banner">
         <p>
-            <span class="bold">Client:</span> Peter Smythe
-            <br><span class="bold">Court order no:</span> 54545681
+            <span class="bold">{{ 'clientName' | trans({}, 'client-profile') }} </span>{{ report.client.fullName | title }}
+            <br><span class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }}</span> {{ report.client.caseNumber }}
         </p>
     </div>
     {% endif %}
