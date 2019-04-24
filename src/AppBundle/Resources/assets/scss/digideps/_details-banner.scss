@@ -1,0 +1,27 @@
+// ==========================================================================
+// DETAILS BANNER
+// Details banner component
+
+//.details-banner {
+//  padding: 6px 0 6px;
+//  border-bottom: 1px solid #bfc1c3;
+//  position: relative;
+//}
+//// to-do the helpline needs position:absolute removing at some point
+//.details-banner .helpline {
+//  top: 0;
+//}
+.details-banner {
+  height: 55px;
+  padding: 20px 0 14px;
+  border-bottom: 1px solid #bfc1c3;
+  position: relative;
+}
+
+.details-banner .helpline {
+  top: 0;
+}
+
+.details-banner p {
+  margin: 0;
+}

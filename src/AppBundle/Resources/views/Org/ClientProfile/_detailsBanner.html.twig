@@ -1,0 +1,26 @@
+<div class="details-banner">
+    {% if app.user and app.user.isDeputyProf() and report is defined  and report is not null %}
+        <p class="small">
+            <span class="bold">{{ 'clientName' | trans({}, 'client-profile') }} </span>{{ report.client.fullName | title }}
+            <br><span class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }}</span> {{ report.client.caseNumber }}
+        </p>
+    {% endif %}
+    <div class="helpline">
+        <h3>Helpline<br/>
+            {% if not app.user %}
+                {{ 'helplineGeneral' | trans({}, 'common') }}<br/>
+                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
+            {% elseif app.user and app.user.isDeputyPA() %}
+                {{ 'helplinePA' | trans({}, 'common') }}<br/>
+                <a href="mailto:{{ 'paSupportEmail' | trans({}, 'common') }}" title="{{ 'paSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
+            {% elseif app.user and app.user.isDeputyProf() %}
+                {{ 'helplineProf' | trans({}, 'common') }}<br/>
+                <a href="mailto:{{ 'profSupportEmail' | trans({}, 'common') }}" title="{{ 'profSupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
+
+            {% else %}
+                {{ 'helpline' | trans({}, 'common') }}<br/>
+                <a href="mailto:{{ 'layDeputySupportEmail' | trans({}, 'common') }}" title="{{ 'layDeputySupportEmail' | trans({}, 'common') }}">{{ 'emailSupport' | trans }}</a>
+            {% endif %}
+        </h3>
+    </div>
+</div>

@@ -1,4 +1,5 @@
-pageTitle: "Client profile:"
+pageTitle: "Client profile"
+clientName: "Client name:"
 courtOrderNo: "Court order no:"
 
 clientDetails:
