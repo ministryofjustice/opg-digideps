@@ -416,7 +416,9 @@ class ReportStatusService
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
         $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
 
-        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid) {
+        $hasSubmittedOtherCostsForm = $this->report->hasProfDeputyOtherCosts();
+
+        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $hasSubmittedOtherCostsForm) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
