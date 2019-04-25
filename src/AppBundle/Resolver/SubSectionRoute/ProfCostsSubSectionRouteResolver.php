@@ -13,6 +13,7 @@ class ProfCostsSubSectionRouteResolver
     const SCCO_AMOUNT_ROUTE = 'prof_deputy_costs_amount_scco';
     const INTERIM_EXISTS_ROUTE = 'prof_deputy_costs_inline_interim_19b_exists';
     const INTERIM_ROUTE = 'prof_deputy_costs_inline_interim_19b';
+    const BREAKDOWN_ROUTE = 'prof_deputy_costs_breakdown';
 
     /**
      * @param Report $report
@@ -35,9 +36,12 @@ class ProfCostsSubSectionRouteResolver
 
         if ($this->routeIsFixedCosts($report)) {
             return $this->determineCurrentFixedCostSection($report);
-        } else {
+        }
+        if (!$this->routeIsFixedCosts($report)) {
             return $this->determineCurrentNonFixedCostSection($report);
         }
+
+        return self::SUMMARY_ROUTE;
     }
 
     /**
@@ -87,7 +91,9 @@ class ProfCostsSubSectionRouteResolver
             return self::COSTS_RECEIVED_ROUTE;
         }
 
-        return self::SUMMARY_ROUTE;
+        if ($this->breakdownCostsIsIncomplete($report)) {
+            return self::BREAKDOWN_ROUTE;
+        }
     }
 
     /**
@@ -108,7 +114,14 @@ class ProfCostsSubSectionRouteResolver
             return self::COSTS_RECEIVED_ROUTE;
         }
 
-        return $this->amountSccoSubsectionIsIncomplete($report) ? self::SCCO_AMOUNT_ROUTE : self::SUMMARY_ROUTE;
+        if ($this->amountSccoSubsectionIsIncomplete($report)) {
+            return self::SCCO_AMOUNT_ROUTE;
+        }
+
+        if ($this->breakdownCostsIsIncomplete($report)) {
+            return self::BREAKDOWN_ROUTE;
+        }
+
     }
 
     /**
@@ -154,5 +167,14 @@ class ProfCostsSubSectionRouteResolver
     private function interimSubsectionIsIncomplete(Report $report)
     {
         return empty($report->getProfDeputyInterimCosts());
+    }
+
+    /**
+     * @param Report $report
+     * @return bool
+     */
+    private function breakdownCostsIsIncomplete(Report $report)
+    {
+        return !$report->hasProfDeputyOtherCosts();
     }
 }
