@@ -91,7 +91,7 @@ class ProfCostsSubSectionRouteResolver
             return self::COSTS_RECEIVED_ROUTE;
         }
 
-        if ($this->breakdownCostsIncomplete($report)) {
+        if ($this->breakdownCostsIsIncomplete($report)) {
             return self::BREAKDOWN_ROUTE;
         }
     }
