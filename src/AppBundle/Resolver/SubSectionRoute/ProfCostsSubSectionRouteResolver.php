@@ -118,7 +118,7 @@ class ProfCostsSubSectionRouteResolver
             return self::SCCO_AMOUNT_ROUTE;
         }
 
-        if ($this->breakdownCostsIncomplete($report)) {
+        if ($this->breakdownCostsIsIncomplete($report)) {
             return self::BREAKDOWN_ROUTE;
         }
 
@@ -173,7 +173,7 @@ class ProfCostsSubSectionRouteResolver
      * @param Report $report
      * @return bool
      */
-    private function breakdownCostsIncomplete(Report $report)
+    private function breakdownCostsIsIncomplete(Report $report)
     {
         return !$report->hasProfDeputyOtherCosts();
     }
