@@ -416,11 +416,9 @@ class ReportStatusService
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
         $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
 
-        // Its possible to submit an empty breakdown of other costs, however this will still persist empty entities
-        // but its presence indicates that the deputy has actively submitted these and therefore seen the summary page
-        $hasOtherCostsSubmitted = $this->report->hasProfDeputyOtherCosts();
+        $hasSubmittedOtherCostsForm = $this->report->hasProfDeputyOtherCosts();
 
-        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $hasOtherCostsSubmitted) {
+        if ($isRemainingValid && $isInterimValid && $isFixedValid && $isSccoValid && $hasSubmittedOtherCostsForm) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
