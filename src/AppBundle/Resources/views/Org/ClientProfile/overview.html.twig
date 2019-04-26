@@ -22,8 +22,6 @@
 
 {% block pageContent %}
 
-    <p class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }} {{ client.caseNumber }}</p>
-
     {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
     '   client': client
     } %}
