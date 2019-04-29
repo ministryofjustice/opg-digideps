@@ -43,6 +43,7 @@ unsubmittedReport: Incomplete deputy report
 # Labels and table headings
 name: Name
 role: Role
+person: Person
 address: Address
 phone: Phone
 alternativePhone: Alternative phone

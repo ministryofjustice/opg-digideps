@@ -63,7 +63,11 @@ class IndexController extends AbstractController
         /** @var $client EntityDir\Client */
         $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'report-id', 'current-report']);
         // PA client profile is ATM relying on report ID, this is a working until next refactor
-        $returnLink = $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+
+        $returnLink = ($request->get('from') === 'declaration') ?
+            $this->generateUrl('report_declaration', ['reportId' => $client->getCurrentReport()->getId()]) :
+            $this->generateUrl('report_overview', ['reportId'=>$client->getCurrentReport()->getId()]);
+
         $form = $this->createForm(FormDir\Org\ClientType::class, $client);
         $form->handleRequest($request);
 

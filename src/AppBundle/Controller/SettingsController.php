@@ -125,12 +125,17 @@ class SettingsController extends AbstractController
                 $newRole = $this->determineNoAdminRole();
                 $user->setRoleName($newRole);
                 $request->getSession()->getFlashBag()->add('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
-                $redirectRoute = 'logout';
+                $redirectRoute = $this->generateUrl('logout');
             } else {
                 $request->getSession()->getFlashBag()->add('notice', 'Your account details have been updated');
-                $redirectRoute = ($user->isDeputyPA() || $user->isDeputyProf())
-                    ? 'org_profile_show'
-                    : 'user_show';
+
+                if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
+                    $redirectRoute = $this->generateUrl('report_declaration', ['reportId' => $request->get('rid')]);
+                } else if ($user->isDeputyPA() || $user->isDeputyProf()) {
+                    $redirectRoute = $this->generateUrl('org_profile_show');
+                } else {
+                    $redirectRoute = $this->generateUrl('user_show');
+                }
             }
 
             try {
@@ -142,7 +147,7 @@ class SettingsController extends AbstractController
                     $this->getMailSender()->send($addressUpdateEmail, ['html']);
                 }
 
-                return $this->redirectToRoute($redirectRoute);
+                return $this->redirect($redirectRoute);
             } catch (\Exception $e) {
                 $translator = $this->get('translator');
                 if ($e->getCode() == 422 && $form->get('email')) {

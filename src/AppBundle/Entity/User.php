@@ -1136,4 +1136,18 @@ class User implements AdvancedUserInterface
         $this->teamNames = $teamNames;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getAddressNotEmptyParts()
+    {
+        return array_filter([
+            $this->address1,
+            $this->address2,
+            $this->address3,
+            $this->addressPostcode,
+            $this->addressCountry
+        ]);
+    }
 }

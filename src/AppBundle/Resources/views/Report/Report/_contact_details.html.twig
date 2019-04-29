@@ -1,0 +1,44 @@
+{% trans_default_domain translationDomain %}
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<div id="contact-details-container">
+    <h2 class="heading-small">{{ 'page.contactDetailsHeader' | trans }}</h2>
+    <p>{{ 'page.contactDetailsIntro' | trans }}</p>
+    <table class="check-your-answers columns-2 push-double--bottom">
+        <thead>
+        <tr>
+            <th>{{ 'person' | trans({}, 'common') }}</th>
+            <th>{{ 'address' | trans({}, 'common') }}</th>
+            {% if not hideEditLink %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for detail in contactDetails %}
+        <tr class="">
+            <td>
+                {{ detail.name }}
+            </td>
+            <td>
+                {% for part in detail.address %}
+                    <span>{{ part }}</span><br>
+                {% endfor %}
+                <span class="bold">Phone: </span><span>{{ detail.phone.main }}</span><br>
+                {% if detail.phone.alternative is defined %}
+                    <span class="bold">Alternative phone: </span><span> {{ detail.phone.alternative }}</span><br>
+                {% endif %}
+                <span class="bold">Email:</span><span> {{ detail.email }}</span><br>
+            </td>
+            {% if not hideEditLink %}
+                <td class="change-answer">
+                    <a href="{{ detail.editUrl }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
