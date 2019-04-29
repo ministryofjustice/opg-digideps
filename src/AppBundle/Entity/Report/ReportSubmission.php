@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportSubmission
 {
-    const REMOVE_FILES_WHEN_OLDER_THAN = '-30 days';
+    const REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
     // createdBy is the user who submitted the report
     // createdOn = date where the report (or documents-only) get submitted
