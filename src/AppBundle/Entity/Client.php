@@ -22,7 +22,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client"})
+     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client"})
      *
      * @var string
@@ -33,7 +33,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy"})
+     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit"})
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy"})
      *
      * @var string
@@ -98,9 +98,9 @@ class Client
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
-     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
-     * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client"})
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
+     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\Date( message="client.courtDate.message", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      *
      * @var DateTime
      */
@@ -110,7 +110,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client"})
+     * @Assert\NotBlank( message="client.address.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
@@ -121,7 +121,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -131,7 +131,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\Length(max=75, maxMessage="client.county.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -141,8 +141,8 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client"})
-     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\NotBlank( message="client.postcode.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
@@ -160,7 +160,7 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client"})
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength", groups={"lay-deputy-client", "pa-client", "lay-deputy-client-edit"})
      *
      * @var string
      */
