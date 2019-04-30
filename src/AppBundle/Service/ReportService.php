@@ -115,16 +115,19 @@ class ReportService
 
         // copy bank accounts (opening balance = closing balance, opening date = closing date)
         foreach ($oldReport->getBankAccounts() as $account) {
-            $newAccount = new ReportBankAccount();
-            $newAccount->setBank($account->getBank());
-            $newAccount->setAccountType($account->getAccountType());
-            $newAccount->setSortCode($account->getSortCode());
-            $newAccount->setAccountNumber($account->getAccountNumber());
-            $newAccount->setOpeningBalance($account->getClosingBalance());
-            $newAccount->setCreatedAt(new \DateTime());
-            $newAccount->setReport($newReport);
+            if (!$account->getIsClosed()) {
+                $newAccount = new ReportBankAccount();
+                $newAccount->setBank($account->getBank());
+                $newAccount->setAccountType($account->getAccountType());
+                $newAccount->setSortCode($account->getSortCode());
+                $newAccount->setAccountNumber($account->getAccountNumber());
+                $newAccount->setOpeningBalance($account->getClosingBalance());
+                $newAccount->setIsJointAccount($account->getIsJointAccount());
+                $newAccount->setCreatedAt(new \DateTime());
+                $newAccount->setReport($newReport);
 
-            $this->_em->persist($newAccount);
+                $this->_em->persist($newAccount);
+            }
         }
 
         $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
