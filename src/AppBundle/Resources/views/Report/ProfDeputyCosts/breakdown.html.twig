@@ -21,8 +21,8 @@
 
     <p class="heading-small push-half--bottom  text">
         {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
-        <span class="form-hint text push-half--bottom">{{ (page ~ '.pageHint') | trans() }}</span>
     </p>
+    <span class="form-hint text push-half--bottom">{{ (page ~ '.pageHint') | trans() }}</span>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 

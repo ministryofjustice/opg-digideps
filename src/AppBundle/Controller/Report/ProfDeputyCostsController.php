@@ -157,22 +157,15 @@ class ProfDeputyCostsController extends AbstractController
 
             if ($previousReceivedId) { // edit
                 $this->getRestClient()->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Cost edited'
-                );
+                $request->getSession()->getFlashBag()->add('notice', 'Cost edited');
             } else {
                 $this->getRestClient()->post('/report/' . $reportId . '/prof-deputy-previous-cost', $pr, ['profDeputyPrevCosts']);
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Cost added'
-                );
+                $request->getSession()->getFlashBag()->add('notice', 'Cost added');
             }
 
             if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
                 $nextRoute = 'prof_deputy_costs_previous_received';
             } else if ($from === 'summary') {
-                $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                 $nextRoute = 'prof_deputy_costs_received';

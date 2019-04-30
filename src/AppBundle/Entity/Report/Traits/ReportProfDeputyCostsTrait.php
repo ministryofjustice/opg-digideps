@@ -162,10 +162,12 @@ trait ReportProfDeputyCostsTrait
     public function profCostsInterimAtLeastOne(ExecutionContextInterface $context)
     {
         $ics = $this->getProfDeputyInterimCosts();
+        $emptyCount = 0;
 
         foreach($ics as $index => $ic) {
             if ($ics[$index]->getDate() === null && $ics[$index]->getAmount() === null) {
-                return;
+                $emptyCount++;
+                continue;
             }
 
             if ($ics[$index]->getDate() === null) {
@@ -173,8 +175,12 @@ trait ReportProfDeputyCostsTrait
             }
 
             if ($ics[$index]->getAmount() === null) {
-                $context->buildViolation('profDeputyInterimCost.atLeastOne')->atPath(sprintf('profDeputyInterimCosts[%s].amount', $index))->addViolation();
+                $context->buildViolation('profDeputyInterimCost.amount.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].amount', $index))->addViolation();
             }
+        }
+
+        if ($emptyCount === count($ics)) {
+            $context->buildViolation('profDeputyInterimCost.atLeastOne')->addViolation();
         }
     }
 
