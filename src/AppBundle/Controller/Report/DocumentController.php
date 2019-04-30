@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
+use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
@@ -249,9 +250,9 @@ class DocumentController extends AbstractController
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
-            $fileUploader = $this->get('file_uploader');
-
-            $fileUploader->removeFileFromS3($document);
+            /** @var DocumentService $documentService */
+            $documentService = $this->get('document_service');
+            $documentService->removeDocumentFromS3($document);
 
             $this->getRestClient()->delete('document/' . $documentId);
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
