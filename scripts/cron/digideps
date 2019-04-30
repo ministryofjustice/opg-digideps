@@ -4,4 +4,4 @@
 # If executed on frontend container, it'll exit immediately
 # It can be launched manually with "--ignore-s3-failures" in order to ignore S3 deletion failure (only in case the S3 files is already deleted)
 #
-*/5 * * * * app php /app/app/console digideps:documents-cleanup --env=prod > /dev/null 2>&1
+#*/5 * * * * app php /app/app/console digideps:documents-cleanup --env=prod > /dev/null 2>&1
