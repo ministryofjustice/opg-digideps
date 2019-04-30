@@ -249,6 +249,10 @@ class DocumentController extends AbstractController
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
+            $fileUploader = $this->get('file_uploader');
+
+            $fileUploader->removeFileFromS3($document);
+
             $this->getRestClient()->delete('document/' . $documentId);
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
@@ -334,7 +338,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user']
+            ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user']
         );
     }
 

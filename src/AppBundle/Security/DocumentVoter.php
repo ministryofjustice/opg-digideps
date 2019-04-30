@@ -76,7 +76,7 @@ class DocumentVoter extends Voter
                 if ($subject instanceof Document) {
                     $report = $subject->getReport();
                     if ($report instanceof Report) {
-                        /** @var Note $subject */
+                        /** @var Document $subject */
                         return $report->getClient()->hasUser($loggedInUser);
                     }
                 }

@@ -98,6 +98,20 @@ class S3Storage implements StorageInterface
     }
 
     /**
+     * Remove an object and all its versions from S3 completely.
+     *
+     * @param  string      $key
+     * @return \Aws\Result
+     */
+    public function removeFromS3($key)
+    {
+        return $this->s3Client->deleteObject([
+            'Bucket' => $this->bucketName,
+            'Key'    => $key
+        ]);
+    }
+
+    /**
      * @param $key
      * @param $body
      * @return \Aws\Result
