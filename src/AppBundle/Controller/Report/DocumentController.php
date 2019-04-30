@@ -75,7 +75,7 @@ class DocumentController extends RestController
     }
 
     /**
-     * Soft Delete document.
+     * Delete document.
      * Accessible only from deputy area
      *
      * @Method({"DELETE"})
@@ -86,7 +86,7 @@ class DocumentController extends RestController
      *
      * @return array
      */
-    public function softDelete($id)
+    public function delete($id)
     {
         /** @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);

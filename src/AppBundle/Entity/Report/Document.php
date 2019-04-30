@@ -18,12 +18,10 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\DocumentRepository")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Document
 {
     use CreationAudit;
-    use IsSoftDeleteableEntity;
 
     /**
      * @var int
