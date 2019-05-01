@@ -108,26 +108,11 @@ class DocumentControllerTest extends AbstractTestController
         $document = $this->repo->find($data['id']);
         $this->assertInstanceOf(Ndr::class, $document->getNdr());
 
-        self::fixtures()->remove($document)->flush();
-        $this->assertJsonRequest('DELETE', '/document/' . $data['id'], [
+        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_ADMIN,
         ]);
-    }
+        self::fixtures()->remove($document)->flush();
 
-
-
-    /**
-     * @depends testAddDocumentForDeputy
-     */
-    public function testDeleteFail($existingDoocId)
-    {
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $existingDoocId, [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ]);
-
-        $this->repo->clear();
-        $this->assertInstanceOf(Document::class, $this->repo->find($existingDoocId));
     }
 }

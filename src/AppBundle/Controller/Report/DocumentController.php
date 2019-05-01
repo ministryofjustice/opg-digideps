@@ -75,6 +75,34 @@ class DocumentController extends RestController
     }
 
     /**
+     * Hard Delete
+     * Currently only accessed by admin area cron (no user login needed)
+     * Throw exception if a non-soft deleted document is asked for deletiong
+     *
+     * @Method({"DELETE"})
+     * @Route("/document/hard-delete/{id}")
+     *
+     * @param int $id
+     */
+    public function hardDelete(Request $request, $id)
+    {
+        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
+            throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
+        }
+
+        /* @var $repo EntityDir\Repository\DocumentRepository */
+        $repo = $this->getRepository(EntityDir\Report\Document::class);
+        /* @var $document EntityDir\Report\Document */
+        $document = $repo->findUnfilteredOneBy(['id'=>$id]);
+
+        $this->getEntityManager()->remove($document);
+        $this->getEntityManager()->flush();
+
+        return $id;
+    }
+
+
+    /**
      * Delete document.
      * Accessible only from deputy area
      *
