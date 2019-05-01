@@ -108,10 +108,13 @@ class DocumentControllerTest extends AbstractTestController
         $document = $this->repo->find($data['id']);
         $this->assertInstanceOf(Ndr::class, $document->getNdr());
 
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ]);
+        $this->assertEquals($data['id'], $document->getId());
+        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
+        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertEquals('s3NdrStorageKey', $document->getStorageReference());
+        $this->assertEquals('ndr.pdf', $document->getFilename());
+        $this->assertEquals(true, $document->isReportPdf());
+
         self::fixtures()->remove($document)->flush();
 
     }
