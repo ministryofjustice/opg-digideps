@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Traits\HasReportTrait;
 use AppBundle\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * @Assert\Callback(callback="isValidForReport", groups={"document"})
  */
-class Document
+class Document implements DocumentInterface
 {
     const FILE_NAME_MAX_LENGTH = 255;
     const MAX_UPLOAD_PER_REPORT = 100;

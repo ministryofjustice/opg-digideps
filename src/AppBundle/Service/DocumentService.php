@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -39,36 +40,6 @@ class DocumentService
     }
 
     /**
-     * Clean up old report submissions (set downloadable = false and set to null the storageReference of the documents)
-     *
-     * @param bool $ignoreS3Failure
-     */
-    public function removeOldReportSubmissions($ignoreS3Failure)
-    {
-        $reportSubmissions = $this->restClient->apiCall('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false);
-        $toDelete = count($reportSubmissions);
-        $this->log('notice', "$toDelete old report submission found");
-        foreach ($reportSubmissions as $reportSubmission) {
-            try {
-                $reportSubmissionId = $reportSubmission->getId();
-                // remove documents from S3
-                foreach ($reportSubmission->getDocuments() as $document) {
-                    $this->deleteFromS3($document, $ignoreS3Failure);
-                }
-                // set report as undownloadable
-                $this->restClient->apiCall('PUT', 'report-submission/' . $reportSubmissionId . '/set-undownloadable', null, 'array', [], false);
-                $this->log('notice', "report submission $reportSubmissionId set undownloadable, and its documents storage ref set to null");
-            } catch (\Exception $e) {
-                $message = "can't cleanup $reportSubmissionId submission. Error: " . $e->getMessage();
-                $this->log('error', $message);
-            }
-        }
-        $this->log('notice', 'Done');
-    }
-
-
-
-    /**
      * @param Document $document
      *
      * @return bool true if deleted from S3 and database
@@ -101,7 +72,7 @@ class DocumentService
      * @return bool       true if delete is successful
      *
      */
-    private function deleteFromS3(Document $document)
+    private function deleteFromS3(DocumentInterface $document)
     {
         $ref = $document->getStorageReference();
         if (!$ref) {

@@ -42,76 +42,41 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
         $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger);
     }
 
-    public function testremoveOldReportSubmissions()
-    {
-        $this->s3Storage
-            ->shouldReceive('delete')->once()->with('r1')
-            ->shouldReceive('delete')->once()->with('r2')
-            ->shouldReceive('delete')->once()->with('r3');
-
-        $this->restClient
-            // 2 submissions, 3 docs in total
-            ->shouldReceive('apiCall')->once()->with('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false)->andReturn([
-                m::mock(ReportSubmission::class, ['getId'=>1, 'getDocuments'=>[
-                    m::mock(Document::class, ['getId'=>1, 'getStorageReference'=>'r1']),
-                    m::mock(Document::class, ['getId'=>1, 'getStorageReference'=>'r2']),
-                ]]),
-                m::mock(ReportSubmission::class, ['getId'=>2, 'getDocuments'=>[
-                    m::mock(Document::class, ['getId'=>1, 'getStorageReference'=>'r3']),
-                ]])
-            ])
-            ->shouldReceive('apiCall')->once()->with('PUT', 'report-submission/1/set-undownloadable', null, 'array', [], false)
-            ->shouldReceive('apiCall')->once()->with('PUT', 'report-submission/2/set-undownloadable', null, 'array', [], false)
-        ;
-
-        $this->object->removeOldReportSubmissions(false);
-    }
-
-    public function testremoveSoftDeleted()
-    {
-        $this->restClient->shouldReceive('apiCall')->once()->with('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false)->andReturn([
-            m::mock(Document::class, ['getId'=>1, 'getStorageReference'=>'r1']),
-            m::mock(Document::class, ['getId'=>2, 'getStorageReference'=>'r2'])
-        ]);
-
-        $this->s3Storage
-            ->shouldReceive('delete')->once()->with('r1')
-            ->shouldReceive('delete')->once()->with('r2');
-
-        $this->restClient
-            ->shouldReceive('apiCall')->with('DELETE', 'document/hard-delete/1', null, 'array', [], false)->once()
-            ->shouldReceive('apiCall')->with('DELETE', 'document/hard-delete/2', null, 'array', [], false)->once();
-
-        $this->object->removeSoftDeleted(false);
-    }
 
     public static function cleanUpDataProvider()
     {
         return [
-            [false, 0], // s3 failures NOT ignored -> hard delete gets called
-            [true, 1], // s3 failures ignored -> hard delete gets called
+            [0], // s3 failures NOT ignored -> hard delete gets called
+            [1], // s3 failures ignored -> hard delete gets called
         ];
     }
 
-    /**
-     * @dataProvider cleanUpDataProvider
-     */
-    public function testremoveSoftDeletedS3FailureFirstFailNotIgnored($ignoreS3Failures, $r1HardDeletedCalledTimes)
+    public function testRemoveDocument()
     {
-        $this->restClient->shouldReceive('apiCall')->once()->with('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false)->andReturn([
-            m::mock(Document::class, ['getId'=>1, 'getStorageReference'=>'r1']),
-            m::mock(Document::class, ['getId'=>2, 'getStorageReference'=>'r2'])
-        ]);
+        $document = new Document();
+        $document->setId(1);
+        $document->setStorageReference('r1');
 
         $this->s3Storage
-            ->shouldReceive('delete')->once()->with('r1')->andThrow(Exception::class)
-            ->shouldReceive('delete')->once()->with('r2');
+            ->shouldReceive('removeFromS3')->once()->with('r1')->andReturn([]);
+
+        $this->object->removeDocumentFromS3($document);
+
+    }
+
+    public function testRemoveDocumentWithS3Failure()
+    {
+        $document = new Document();
+        $document->setId(1);
+        $document->setStorageReference('r1');
+
+        $this->s3Storage
+            ->shouldReceive('removeFromS3')->once()->with('r1')->andThrow(Exception::class);
 
         $this->restClient
-            ->shouldReceive('apiCall')->with('DELETE', 'document/hard-delete/1', null, 'array', [], false)->times($r1HardDeletedCalledTimes)
-            ->shouldReceive('apiCall')->with('DELETE', 'document/hard-delete/2', null, 'array', [], false)->times(1);
+            ->shouldReceive('apiCall')->with('DELETE', 'document/1', null, 'array', [], false);
 
-        $this->object->removeSoftDeleted($ignoreS3Failures);
+        $this->object->removeDocumentFromS3($document);
     }
 
     public function tearDown()
