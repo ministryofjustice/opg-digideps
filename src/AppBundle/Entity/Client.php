@@ -22,7 +22,7 @@ use JMS\Serializer\Annotation as JMS;
  *     )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
  */
-class Client
+class Client implements ClientInterface
 {
     /**
      * @var int

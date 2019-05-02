@@ -6,6 +6,7 @@ use AppBundle\Entity\Report\Debt as ReportDebt;
 use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\ReportInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -51,7 +52,7 @@ class ReportRepository extends EntityRepository
      *
      * @return int changed records
      */
-    public function addFeesToReportIfMissing(Report $report)
+    public function addFeesToReportIfMissing(ReportInterface $report)
     {
         // do not add if there are no PAs associated to this client
         $isPaF = function ($user) {
