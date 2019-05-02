@@ -75,7 +75,7 @@ class DocumentController extends RestController
     }
 
     /**
-     * Soft Delete document.
+     * Delete document.
      * Accessible only from deputy area
      *
      * @Method({"DELETE"})
@@ -86,7 +86,7 @@ class DocumentController extends RestController
      *
      * @return array
      */
-    public function softDelete($id)
+    public function delete($id)
     {
         /** @var $document EntityDir\Report\Document */
         $document = $this->findEntityBy(EntityDir\Report\Document::class, $id);
@@ -107,56 +107,5 @@ class DocumentController extends RestController
         $this->getEntityManager()->flush();
 
         return [];
-    }
-
-    /**
-     * Hard Delete
-     * Currently only accessed by admin area cron (no user login needed)
-     * Throw exception if a non-soft deleted document is asked for deletiong
-     *
-     * @Method({"DELETE"})
-     * @Route("/document/hard-delete/{id}")
-     *
-     * @param int $id
-     */
-    public function hardDelete(Request $request, $id)
-    {
-        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
-        }
-
-        /* @var $repo EntityDir\Repository\DocumentRepository */
-        $repo = $this->getRepository(EntityDir\Report\Document::class);
-        /* @var $document EntityDir\Report\Document */
-        $document = $repo->findUnfilteredOneBy(['id'=>$id]);
-        if (!$document->getDeletedAt()) {
-            throw new \RuntimeException("Can't hard delete document $id, as it's not soft-deleted");
-        }
-
-        $this->getEntityManager()->remove($document);
-        $this->getEntityManager()->flush();
-
-        return $id;
-    }
-
-    /**
-     * GET soft-documents
-     * Currently only accessed by admin area cron (no user login needed)
-     *
-     * @Route("/document/soft-deleted")
-     * @Method({"GET"})
-     */
-    public function getSoftDeletedDocuments(Request $request)
-    {
-        if (!$this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request)) {
-            throw new \RuntimeException('Endpoint only accessible from ADMIN container.', 403);
-        }
-
-        $this->setJmsSerialiserGroups(['document-id', 'document-storage-reference']);
-
-        /* @var $repo EntityDir\Repository\DocumentRepository */
-        $repo = $this->getRepository(EntityDir\Report\Document::class);
-
-        return $repo->retrieveSoftDeleted();
     }
 }
