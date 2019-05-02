@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\ReportInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -83,7 +84,7 @@ class Fee
      * @param bool   $hasMoreDetails
      * @param float  $amount
      */
-    public function __construct(Report $report, $feeTypeId, $amount)
+    public function __construct(ReportInterface $report, $feeTypeId, $amount)
     {
         $this->report = $report;
         $report->addFee($this);
