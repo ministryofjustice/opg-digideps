@@ -108,87 +108,14 @@ class DocumentControllerTest extends AbstractTestController
         $document = $this->repo->find($data['id']);
         $this->assertInstanceOf(Ndr::class, $document->getNdr());
 
+        $this->assertEquals($data['id'], $document->getId());
+        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
+        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertEquals('s3NdrStorageKey', $document->getStorageReference());
+        $this->assertEquals('ndr.pdf', $document->getFilename());
+        $this->assertEquals(true, $document->isReportPdf());
+
         self::fixtures()->remove($document)->flush();
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $data['id'], [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ]);
-    }
 
-    /**
-     * @depends testAddDocumentForDeputy
-     */
-    public function testgetSoftDeletedDocuments()
-    {
-        $this->assertCount(1, $this->repo->findAll()); // only testfile.pdf
-        // add d1 and d2, and soft-delete them
-        $d1 = (new Document(self::$report1))
-            ->setFileName('file1.pdf')->setStorageReference('sr1')
-            ->setReport(null); // failing at flush time, not clear why
-        $d2 = (new Document(self::$report1))
-            ->setFileName('file2.pdf')->setStorageReference('sr2')
-            ->setReport(null); // failing at flush time, not clear why
-        self::fixtures()->persist($d1, $d2)->flush();
-        $this->assertCount(3, $this->repo->findAll());
-        self::fixtures()->remove($d1, $d2)->flush()->clear();
-        $this->assertCount(1, $this->repo->findAll()); // only testfile.pdf
-
-        $this->assertJsonRequest('GET', '/document/soft-deleted', [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-        ]);
-
-        $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ])['data'];
-
-        $this->assertCount(2, $records);
-        $this->assertNotEmpty($records[0]['id']);
-        $this->assertEquals('sr1', $records[0]['storage_reference']);
-        $this->assertNotEmpty($records[1]['id']);
-        $this->assertEquals('sr2', $records[1]['storage_reference']);
-
-        return $d2->getId();
-    }
-
-    /**
-     * @depends testgetSoftDeletedDocuments
-     */
-    public function testHardDelete($d2Id)
-    {
-        // hard delete document1
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
-        ]);
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $d2Id, [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ]);
-
-        // assert one got deleted
-        $records = $this->assertJsonRequest('GET', '/document/soft-deleted', [
-            'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ])['data'];
-
-        $this->assertCount(1, $records);
-        $this->assertNotEmpty($records[0]['id']);
-        $this->assertEquals('sr1', $records[0]['storage_reference']);
-    }
-
-    /**
-     * @depends testAddDocumentForDeputy
-     */
-    public function testHardDeleteFailOnNonSoftDeleteDocument($existingDoocId)
-    {
-        $this->assertJsonRequest('DELETE', '/document/hard-delete/' . $existingDoocId, [
-            'mustFail' => true,
-            'ClientSecret' => API_TOKEN_ADMIN,
-        ]);
-
-        $this->repo->clear();
-        $this->assertInstanceOf(Document::class, $this->repo->find($existingDoocId));
     }
 }
