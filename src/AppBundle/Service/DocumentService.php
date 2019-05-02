@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -39,63 +40,17 @@ class DocumentService
     }
 
     /**
-     * Clean up old report submissions (set downloadable = false and set to null the storageReference of the documents)
-     *
-     * @param bool $ignoreS3Failure
-     */
-    public function removeOldReportSubmissions($ignoreS3Failure)
-    {
-        $reportSubmissions = $this->restClient->apiCall('GET', 'report-submission/old', null, 'Report\ReportSubmission[]', [], false);
-        $toDelete = count($reportSubmissions);
-        $this->log('notice', "$toDelete old report submission found");
-        foreach ($reportSubmissions as $reportSubmission) {
-            try {
-                $reportSubmissionId = $reportSubmission->getId();
-                // remove documents from S3
-                foreach ($reportSubmission->getDocuments() as $document) {
-                    $this->deleteFromS3($document, $ignoreS3Failure);
-                }
-                // set report as undownloadable
-                $this->restClient->apiCall('PUT', 'report-submission/' . $reportSubmissionId . '/set-undownloadable', null, 'array', [], false);
-                $this->log('notice', "report submission $reportSubmissionId set undownloadable, and its documents storage ref set to null");
-            } catch (\Exception $e) {
-                $message = "can't cleanup $reportSubmissionId submission. Error: " . $e->getMessage();
-                $this->log('error', $message);
-            }
-        }
-        $this->log('notice', 'Done');
-    }
-
-    /**
-     * @param bool $ignoreS3Failure
-     */
-    public function removeSoftDeleted($ignoreS3Failure)
-    {
-        $documents = $this->restClient->apiCall('GET', '/document/soft-deleted', null, 'Report\Document[]', [], false);
-        $toDelete = count($documents);
-        $count = 0;
-        /* @var $documents Document[] */
-        $this->log('notice', count($documents) . ' documents to delete:');
-        foreach ($documents as $document) {
-            $count += $this->removeSoftDeleteSingle($document, $ignoreS3Failure) ? 1 : 0;
-        }
-
-        $this->log('notice', "Done. $toDelete to hard-delete, $count deleted");
-    }
-
-    /**
      * @param Document $document
-     * @param $ignoreS3Failure
      *
      * @return bool true if deleted from S3 and database
      */
-    private function removeSoftDeleteSingle(Document $document, $ignoreS3Failure)
+    public function removeDocumentFromS3(Document $document)
     {
         $documentId = $document->getId();
         $storageRef = $document->getStorageReference();
 
         try {
-            $s3Result = $this->deleteFromS3($document, $ignoreS3Failure);
+            $s3Result = $this->deleteFromS3($document);
 
             $endpointResult = $this->restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
             if ($endpointResult) {
@@ -113,31 +68,27 @@ class DocumentService
 
     /**
      * @param  Document   $document
-     * @param  bool       $ignoreS3Failure
      * @throws \Exception if the document doesn't exist (in addition to S3 network/access failures
      * @return bool       true if delete is successful
      *
      */
-    private function deleteFromS3(Document $document, $ignoreS3Failure)
+    private function deleteFromS3(DocumentInterface $document)
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
             $this->log('notice', 'empty file reference for document ' . $document->getId() . ", can't delete");
-
-            return true;
+            throw new \Exception('Document could not be removed. No Reference.');
         }
 
         try {
             $this->log('notice', "Deleting $ref from S3");
-            $this->s3Storage->delete($ref);
+            $this->s3Storage->removeFromS3($ref);
             $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
 
             return true;
         } catch (\Exception $e) {
             $this->log('error', "deleting $ref from S3: exception (" . ($ignoreS3Failure ? '(ignored)' : '') . ' ' . $e->getMessage());
-            if (!$ignoreS3Failure) {
-                throw $e;
-            }
+            throw $e;
         }
     }
 

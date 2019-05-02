@@ -73,4 +73,21 @@ class FileUploader
 
         return $document;
     }
+
+    /**
+     * Removes a file from S3
+     * @param Document $document
+     * @throws \Exception
+     */
+    public function removeFileFromS3(Document $document)
+    {
+        $storageReference = $document->getStorageReference();
+        if (empty($storageReference)) {
+            throw new \Exception('Document could not be removed. No Reference.');
+        }
+
+        $this->storage->removeFromS3($storageReference);
+        $this->logger->debug('FileUploader : Removed ' . $storageReference . ' completely from S3');
+
+    }
 }

@@ -7,6 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
+use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\Checker\Exception\RiskyFileException;
 use AppBundle\Service\File\Checker\Exception\VirusFoundException;
 use AppBundle\Service\File\Checker\FileCheckerInterface;
@@ -249,6 +250,10 @@ class DocumentController extends AbstractController
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
         try {
+            /** @var DocumentService $documentService */
+            $documentService = $this->get('document_service');
+            $documentService->removeDocumentFromS3($document);
+
             $this->getRestClient()->delete('document/' . $documentId);
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
@@ -334,7 +339,7 @@ class DocumentController extends AbstractController
         return $this->getRestClient()->get(
             'document/' . $documentId,
             'Report\Document',
-            ['documents', 'status', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user']
+            ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user']
         );
     }
 
