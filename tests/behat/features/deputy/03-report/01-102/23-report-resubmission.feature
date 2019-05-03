@@ -117,9 +117,7 @@ Feature: Admin unsubmit report (from client page)
     And I should see the "submitted-reports" region
     But I should not see the "report-unsubmitted" region
 
-
-  # Magic: Expects reports to be submitted from previous tests
-  @deputy @magic
+  @deputy
   Scenario: admin sees new submission and client page updated
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
@@ -127,7 +125,7 @@ Feature: Admin unsubmit report (from client page)
     Then I should see "SUBMITTED" in the "report-2016-label" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"
-    Then I should see the "report-submission" region exactly 4 times
+    And I should see "Cly Hent"
 
 
 

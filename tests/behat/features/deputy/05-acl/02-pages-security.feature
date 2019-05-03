@@ -22,7 +22,7 @@ Feature: deputy / acl / security on pages
       | courtDate  | 1              | 1           | 2016       |         |    |
       | address    | 1 South Parade | First Floor | Nottingham | NG1 2HT | GB |
       | phone      | 0123456789     |             |            |         |    |
-    Then I press "client_save"
+    And I press "client_save"
     And the form should be valid
     And I fill in the following:
       | report_startDate_day   | 01   |
@@ -32,47 +32,44 @@ Feature: deputy / acl / security on pages
       | report_endDate_month   | 12   |
       | report_endDate_year    | 2016 |
     And I press "report_save"
-    And the form should be valid
+    Then the form should be valid
+    And I click on "report-start"
+    And I save the report as "malicious user report"
 
-  # Magic: uses report ID numbers
-  @deputy @magic
+  @deputy
   Scenario: Malicious User cannot access other's pages
     # behat-user can access report n.2
     Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I save the application status into "deputy-acl-before"
-    Then the following "client" pages should return the following status:
-      | /report/13/overview         | 200 |
+    Then the following "102 report" report pages should return the following status:
+      | overview         | 200 |
       # decisions
-      | /report/13/decisions        | 200 |
+      | decisions        | 200 |
       # contacts
-      | /report/13/contacts         | 200 |
-      | /report/13/contacts/add     | 200 |
+      | contacts         | 200 |
+      | contacts/add     | 200 |
       # assets
-      | /report/13/assets           | 200 |
-      | /report/13/assets/step-type | 200 |
+      | assets           | 200 |
+      | assets/step-type | 200 |
       # accounts
-      | /report/13/bank-accounts    | 200 |
+      | bank-accounts    | 200 |
     # behat-malicious CANNOT access the same URLs
     Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     # reload the status (as some URLs calls might have deleted data)
     And I load the application status from "deputy-acl-before"
-    Then the following "client" pages should return the following status:
-      | /report/14/overview                | 200 |
-      | /report/13/overview                | 500 |
-      # decisions
-      | /report/14/decisions               | 200 |
-      | /report/13/decisions               | 500 |
-      # contacts
-      | /report/14/contacts                | 200 |
-      | /report/13/contacts                | 500 |
-      # assets
-      | /report/14/assets                  | 200 |
-      | /report/13/assets                  | 500 |
-      # accounts
-      | /report/13/bank-accounts           | 500 |
-      # submit
-      | /report/13/declaration             | 500 |
-      | /report/13/submitted               | 500 |
+    Then the following "102 report" report pages should return the following status:
+      | overview                | 500 |
+      | decisions               | 500 |
+      | contacts                | 500 |
+      | assets                  | 500 |
+      | bank-accounts           | 500 |
+      | declaration             | 500 |
+      | submitted               | 500 |
+    And the following "malicious user report" report pages should return the following status:
+      | overview                | 200 |
+      | decisions               | 200 |
+      | contacts                | 200 |
+      | assets                  | 200 |
     And I load the application status from "deputy-acl-before"
 
 

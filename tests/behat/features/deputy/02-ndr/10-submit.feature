@@ -52,6 +52,15 @@ Feature: ndr / report submit
         And the URL should match "/ndr/\d+/submitted"
         And I save the application status into "ndr-after-submission"
         And the response status code should be 200
+        When I save the report as "submitted NDR report"
+        Then the report URL "visits-care/summary" for "submitted NDR report" should not be accessible
+        And the report URL "deputy-expenses/summary" for "submitted NDR report" should not be accessible
+        And the report URL "income-benefits/summary" for "submitted NDR report" should not be accessible
+        And the report URL "bank-accounts/summary" for "submitted NDR report" should not be accessible
+        And the report URL "assets/summary" for "submitted NDR report" should not be accessible
+        And the report URL "debts/summary" for "submitted NDR report" should not be accessible
+        And the report URL "actions/summary" for "submitted NDR report" should not be accessible
+        And the report URL "any-other-info/summary" for "submitted NDR report" should not be accessible
         # return to homepage
         When I click on "return-to-reports-page"
         Then I should be on "/ndr"
@@ -78,20 +87,6 @@ Feature: ndr / report submit
         Then I should see the "report-submission" region exactly 1 times
         Then I should see "Cly3 Hent3"
         And I should see "33333333"
-
-
-    # Magic: uses report ID number
-    @ndr @magic
-    Scenario: check NDR report not accessible after submission
-        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
-        And the URL "/ndr/13/visits-care/summary" should not be accessible
-        And the URL "/ndr/13/deputy-expenses/summary" should not be accessible
-        And the URL "/ndr/13/income-benefits/summary" should not be accessible
-        And the URL "/ndr/13/bank-accounts/summary" should not be accessible
-        And the URL "/ndr/13/assets/summary" should not be accessible
-        And the URL "/ndr/13/debts/summary" should not be accessible
-        And the URL "/ndr/13/actions/summary" should not be accessible
-        And the URL "/ndr/13/any-other-info/summary" should not be accessible
 
     @ndr
     Scenario: NDR homepage and create new report
