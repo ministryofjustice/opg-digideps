@@ -17,7 +17,7 @@ class Version212 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
+        $this->addSql('DELETE FROM document WHERE deleted_at IS NOT NULL');
         $this->addSql('ALTER TABLE document DROP deleted_at');
     }
 
