@@ -3,7 +3,6 @@ Feature: Add PA users and activate PA user (journey)
   Scenario: add PA users
     Given I load the application status from "init-pa"
     And emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users
     When I click on "admin-upload-pa"
@@ -64,7 +63,6 @@ Feature: Add PA users and activate PA user (journey)
 
   Scenario: Register PA2 user
     Given emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa2publicguardiangovuk" region
     And I go to "/logout"
@@ -91,7 +89,6 @@ Feature: Add PA users and activate PA user (journey)
 
   Scenario: Register PA3 user
     Given emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-pa3publicguardiangovuk" region
     And I go to "/logout"

@@ -5,7 +5,6 @@ Feature: Codeputy Self Registration
     Given I load the application status from "init"
     And I truncate the users from CASREC:
     And emails are sent from "deputy" area
-    And I reset the email log
     Given I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 00000000 | Jones   | D000      | Goodby      | AA1 2BB      | OPG102    |
@@ -17,7 +16,6 @@ Feature: Codeputy Self Registration
   @deputy
   Scenario: absence of co-deputies section for a client without multiple assigned deputies
     Given emails are sent from "deputy" area
-    And I reset the email log
     When I am on "/register"
     And I fill in the following:
       | self_registration_firstname       | Jack                                              |
@@ -55,8 +53,7 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: The first co-deputy of a client is able to self register
-    And emails are sent from "deputy" area
-    And I reset the email log
+    Given emails are sent from "deputy" area
 
     # CORRECT
     When I am on "/register"
@@ -140,7 +137,6 @@ Feature: Codeputy Self Registration
   @deputy
   Scenario: The first co-deputy logs in and sees the deputy area and invites a codeputy
     Given emails are sent from "deputy" area
-    And I reset the email log
     When I am logged in as "behat-jack.goodby+mld1@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/lay"
     And I should see the "codeputies" region

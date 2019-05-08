@@ -3,7 +3,6 @@ Feature: Report submit
     @deputy
     Scenario: submit 104
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start, report-submit, declaration-page"
         And I fill in the following:

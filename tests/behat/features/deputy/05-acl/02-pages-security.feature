@@ -4,7 +4,6 @@ Feature: deputy / acl / security on pages
   Scenario: create another user with client and report with data
     # restore status of first report before submitting
     Given emails are sent from "admin" area
-    And I reset the email log
     Given I load the application status from "report-submit-pre"
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |

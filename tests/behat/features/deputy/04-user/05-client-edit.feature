@@ -61,7 +61,6 @@ Feature: deputy / report / edit client
     # @deputy
     # Scenario: edit client details
     #     Given emails are sent from "deputy" area
-    #     And I reset the email log
     #     And I am logged in as "laydeputy@publicguardian.gov.uk" with password "Abcd1234"
     #     And I click on "user-account, client-show, client-edit"
     #     When I fill in the following:

@@ -7,7 +7,7 @@ Feature: Report 104 start
 
   @deputy
   Scenario: test tabs for 104
-    And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     Then the lay report should not be submittable
     And I should see the "edit-decisions" link

@@ -3,7 +3,6 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: add PROF users
     Given I load the application status from "init-prof"
     And emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PROF users
     When I click on "admin-upload-pa"
@@ -55,7 +54,6 @@ Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Register PROF2 user
     Given emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof2publicguardiangovuk" region
     And I go to "/logout"
@@ -82,7 +80,6 @@ Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: Register PROF3 user
     Given emails are sent from "admin" area
-    And I reset the email log
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "send-activation-email" in the "user-behat-prof3publicguardiangovuk" region
     And I go to "/logout"

@@ -35,7 +35,6 @@ Feature: Report submit (client 01000010)
 
     Scenario: 102-5 report submission
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000010" region
         And I click on "edit-report_submit"

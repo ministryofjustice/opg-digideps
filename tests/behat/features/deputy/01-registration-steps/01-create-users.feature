@@ -27,8 +27,7 @@ Feature: deputy / user / add user
 
   @deputy
   Scenario: add deputy user from registration page
-    And emails are sent from "deputy" area
-    And I reset the email log
+    Given emails are sent from "deputy" area
     When I am on "/register"
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
@@ -49,7 +48,6 @@ Feature: deputy / user / add user
   @ndr
   Scenario: add deputy user (ndr)
     Given emails are sent from "admin" area
-    And I reset the email log
     And I load the application status from "init"
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # assert form OK

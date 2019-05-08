@@ -5,7 +5,6 @@ Feature: User Self Registration
     Given I load the application status from "init"
     And I truncate the users from CASREC:
     And emails are sent from "deputy" area
-    And I reset the email log
       #
       # Form all empty
       #
@@ -156,7 +155,6 @@ Feature: User Self Registration
   Scenario: A user can self register and activate
     Given I load the application status from "init"
     And emails are sent from "deputy" area
-    And I reset the email log
     And I add the following users to CASREC:
       | Case     | Surname      | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
       | 11112222 | Cross-Tolley | D001      | Tolley      | SW1 3RF      | OPG102    |

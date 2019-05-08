@@ -42,7 +42,7 @@ Feature: Admin unsubmit and client re-submit
 
   @deputy
   Scenario: Admin checks report was re-submitted
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to the URL previously saved as "admin-client-01000014.url"
     Then I should see "SUBMITTED" in the "report-2016-to-2017" region
     # restore previous status

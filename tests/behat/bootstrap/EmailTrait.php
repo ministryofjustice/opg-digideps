@@ -26,15 +26,13 @@ trait EmailTrait
         self::$mailSentFrom = $area;
     }
 
-    /**
-     * @param bool $throwExceptionIfNotFound
-     * @param int  $index                    = last (default), 1=second last
-     *
-     * @return array|null
-     */
-    private function getEmailMock($throwExceptionIfNotFound = true, $index = 'last')
+    private function getMockedEmails($area = null)
     {
-        switch (self::$mailSentFrom) {
+        if ($area === null) {
+            $area = self::$mailSentFrom;
+        }
+
+        switch ($area) {
             case 'admin':
                 $this->visitBehatAdminLink('email-get-last');
                 break;
@@ -53,42 +51,21 @@ trait EmailTrait
             $emailsJson = substr($emailsJson, $start, ($end - $start));
         }
 
-        $emailsArray = json_decode($emailsJson, true);
+        return json_decode($emailsJson, true);
+    }
 
-        if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
+    /**
+     * @return array|null
+     */
+    private function getLastEmail($area = null)
+    {
+        $emailsArray = $this->getMockedEmails($area);
+
+        if (empty($emailsArray[0]['to'])) {
             throw new \RuntimeException('No email has been sent. Api returned: ' . $emailsJson);
         }
 
-        // translate index into number
-        $map = ['last' => 0, 'second_last' => 1];
-        if (!isset($map[$index])) {
-            throw new \RuntimeException("position $index not recognised");
-        }
-        $indexNumber = $map[$index];
-
-        return isset($emailsArray[$indexNumber]) ? $emailsArray[$indexNumber] : null;
-    }
-
-    /**
-     * @Given I reset the email log
-     */
-    public function iResetTheEmailLog()
-    {
-        $this->visitBehatLink('email-reset');
-        $this->visitBehatAdminLink('email-reset');
-
-        $this->assertNoEmailShouldHaveBeenSent();
-    }
-
-    /**
-     * @Then no email should have been sent
-     */
-    public function assertNoEmailShouldHaveBeenSent()
-    {
-        $content = $this->getEmailMock(false);
-        if ($content) {
-            throw new \RuntimeException("Found unexpected email with subject '" . $content['subject'] . "'");
-        }
+        return isset($emailsArray[0]) ? $emailsArray[0] : null;
     }
 
     /**
@@ -152,7 +129,7 @@ trait EmailTrait
     {
         $this->getFirstLinkInEmailMatching($partialLink);
 
-        $mail = $this->getEmailMock();
+        $mail = $this->getLastEmail();
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -161,11 +138,11 @@ trait EmailTrait
     }
 
     /**
-     * @Then the :index email should have been sent to :to
+     * @Then the last email should have been sent to :to
      */
-    public function theWhichEmailShouldHaveBeenSentTo($index, $to)
+    public function theLastEmailShouldHaveBeenSentTo($to)
     {
-        $mail = $this->getEmailMock(true, $index);
+        $mail = $this->getLastEmail();
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -174,23 +151,15 @@ trait EmailTrait
     }
 
     /**
-     * @Then the :index email should contain a PDF of at least :minsizekb kb
+     * @Then the last :area email should not have been sent to :to
      */
-    public function theEmailAttachmentShouldContain($index, $minsizekb)
+    public function theLastEmailShouldNotHaveBeenSentTo($area, $to)
     {
-        $mail = $this->getEmailMock(true, $index);
+        $mail = $this->getLastEmail($area);
+        $mailTo = key($mail['to']);
 
-        // find body of the part with the given contentType
-        $part = array_filter($mail['parts'], function ($part) {
-            return $part['contentType'] === 'application/pdf';
-        });
-        if (empty($part)) {
-            throw new \RuntimeException("PDF not found in $index email");
-        }
-        $pdfBody = base64_decode(array_shift($part)['body']);
-        $pdfLen = strlen($pdfBody) / 1024;
-        if ($pdfLen < $minsizekb) {
-            throw new \RuntimeException("found PDF $pdfLen Kb, must be at least $minsizekb Kb");
+        if ($mailTo === $to) {
+            throw new \RuntimeException("Last email unexpectedly sent to $to");
         }
     }
 
@@ -199,7 +168,7 @@ trait EmailTrait
      */
     private function getLinksFromEmailHtmlBody()
     {
-        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
+        $mailContent = base64_decode($this->getLastEmail()['parts'][0]['body']);
 
         preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
 
@@ -211,7 +180,7 @@ trait EmailTrait
      */
     public function mailContainsText($text)
     {
-        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
+        $mailContent = base64_decode($this->getLastEmail()['parts'][0]['body']);
 
         if (strpos($mailContent, $text) === false) {
             throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
@@ -219,14 +188,20 @@ trait EmailTrait
     }
 
     /**
-     * @Then the last email should not contain :text
+     * @Then no :area email should have been sent to :to
      */
-    public function mailNoContainsText($text)
+    public function noEmailShouldHaveBeenSentTo($area, $to)
     {
-        $mailContent = base64_decode($this->getEmailMock()['parts'][0]['body']);
+        $mails = $this->getMockedEmails($area);
 
-        if (strpos($mailContent, $text) !== false) {
-            throw new \Exception("Text: $text unexpected in email. Body: \n $mailContent");
+        if (count($mails)) {
+            foreach ($mails as $mail) {
+                $mailTo = key($mail['to']);
+
+                if ($mailTo === $to) {
+                    throw new \RuntimeException("Unexpected email sent to $to");
+                }
+            }
         }
     }
 }

@@ -15,7 +15,6 @@ Feature: Report submit
     @deputy
     Scenario: report submission
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
@@ -62,9 +61,6 @@ Feature: Report submit
         And the response status code should be 200
         And the last email should contain "Thank you for submitting"
         And the last email should contain "next annual deputy report (for 01/01/2017 to 31/12/2017)"
-        #And the last email should have been sent to "behat-user@publicguardian.gov.uk"
-#        And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
-#        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-reports"
         And the report URL "overview" for "102 report" should not be accessible
         And the report URL "decisions/summary" for "102 report" should not be accessible
@@ -83,7 +79,6 @@ Feature: Report submit
     @deputy
     Scenario: deputy gives feedback after submitting report
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"

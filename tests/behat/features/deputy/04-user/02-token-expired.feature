@@ -1,11 +1,10 @@
 Feature: deputy / Activation link resending
     When the token expires, the user can have the activation link resent and continue from the user activation step
-    
+
     @deputy
     Scenario: Activation link: resend expired link and restart from activation step
         Given emails are sent from "deputy" area
-        And I reset the email log
-        And I load the application status from "report-submit-pre" 
+        And I load the application status from "report-submit-pre"
         And I change the user "behat-user@publicguardian.gov.uk" token to "behatuser123abc" dated last week
         When I go to "/user/activate/behatuser123abc"
         And I click on "ask-us-to-send-new-link"
@@ -19,7 +18,6 @@ Feature: deputy / Activation link resending
     @deputy
     Scenario: Forgotten password page: expired token shows error page and link to go back
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I change the user "behat-user@publicguardian.gov.uk" token to "behatuser123abc" dated last week
         When I go to "/user/password-reset/behatuser123abc"
         And I click on "go-back-to-reset-password"

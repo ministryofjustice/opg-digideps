@@ -52,7 +52,6 @@ Feature: deputy / report / edit user
     # @deputy
     # Scenario: Notification email sent for lay deputy changes
     #     Given emails are sent from "deputy" area
-    #     And I reset the email log
     #     And I am logged in as "laydeputy@publicguardian.gov.uk" with password "Abcd1234"
     #     And I click on "user-account, profile-show, profile-edit"
     #     When I fill in the following:

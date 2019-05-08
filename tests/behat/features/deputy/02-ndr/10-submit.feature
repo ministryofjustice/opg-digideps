@@ -20,7 +20,6 @@ Feature: ndr / report submit
     @ndr
     Scenario: NDR declaration and submission
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "ndr-start, ndr-submit, ndr-declaration-page"
         Then the URL should match "/ndr/\d+/declaration"

@@ -21,19 +21,8 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
     Scenario: A deputy cannot reset password from the admin area
         # check deputy can recover password from deputy site
         Given emails are sent from "deputy" area
-        And I reset the email log
         And I go to "/login"
         When I click on "forgotten-password"
         And I fill in "password_forgotten_email" with "behat-user@publicguardian.gov.uk"
         And I press "password_forgotten_submit"
         Then the last email should have been sent to "behat-user@publicguardian.gov.uk"
-        # heck deputy CANNOT recover password from admin site
-        Given I reset the email log
-        And I am on admin login page
-        When I click on "forgotten-password"
-        And I fill in "password_forgotten_email" with "behat-user@publicguardian.gov.uk"
-        And I press "password_forgotten_submit"
-        #Then the response status code should be 200
-        And no email should have been sent
-
-    

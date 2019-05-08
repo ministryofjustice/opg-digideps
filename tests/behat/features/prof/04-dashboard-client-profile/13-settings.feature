@@ -42,12 +42,11 @@ Feature: PROF settings
 
   Scenario: Notification email not sent for professional deputy changes
     Given emails are sent from "deputy" area
-    And I reset the email log
     And I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "org-settings, profile-show, profile-edit"
     When I press "profile_save"
     Then I should be on "/org/settings/your-details"
-    And no email should have been sent
+    And the last "deputy" email should not have been sent to "behat-digideps+update-contact@digital.justice.gov.uk"
 
   Scenario: PROF Admin logs in and updates profile and sees removeAdmin field but does not
     Given I am logged in as "behat-prof1-admin@publicguardian.gov.uk" with password "Abcd1234"
