@@ -14,7 +14,7 @@ services:
     # mail sender accepting those the above-created swift mailer
     mail_sender:
         class: AppBundle\Service\Mailer\MailSender
-        arguments: [ "@validator", "@logger", "@snc_redis.default" ]
+        arguments: [ "@validator", "@logger" ]
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
 

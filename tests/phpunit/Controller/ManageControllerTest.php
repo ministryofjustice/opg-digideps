@@ -60,7 +60,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         } else {
             $secureSmtpMock->shouldReceive('start')->andThrow(new \RuntimeException('ss-error'));
         }
-        $container->set('mailer.transport.smtp.secure', $secureSmtpMock);
+        $container->set('mailer.transport.smtp.default', $secureSmtpMock);
 
         // pdf mock
         $wkhtmltopdfErrorMock = m::mock('AppBundle\Service\WkHtmlToPdfGenerator')

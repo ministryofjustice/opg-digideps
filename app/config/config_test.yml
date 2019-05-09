@@ -1,37 +1,16 @@
 imports:
-    - { resource: config_dev.yml }
+    - { resource: config_prod.yml }
 
 framework:
     test: ~
     session:
         storage_id: session.storage.mock_file
-    profiler:
-        collect: false
 
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
-
-swiftmailer:
-    disable_delivery: true
-
-twig:
-    cache:  false
-security:
-    firewalls:
-        dev:
-            pattern:  ^/
-            security: false
 services:
     mail_sender:
         class: AppBundle\Service\Mailer\MailSenderMock
-        arguments: ["@service_container" ]
+        arguments: [ "@validator", "@snc_redis.default" ]
+        calls:
+            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
     mailer.transport.smtp.default:
         class: AppBundle\Service\Mailer\Transport\TransportMock
-    mailer.transport.smtp.secure:
-        class: AppBundle\Service\Mailer\Transport\TransportMock
-
-jms_serializer:
-    metadata:
-        cache: none
-        debug: false

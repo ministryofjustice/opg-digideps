@@ -22,7 +22,7 @@ Debug::enable();
 require_once __DIR__ . '/../app/AppKernel.php';
 
 $kernel = file_exists(__DIR__ . '/../.enableProdMode')
-    ? new AppKernel('prod', false)
+    ? new AppKernel('test', false)
     : new AppKernel('dev', true);
 $kernel->loadClassCache();
 $request = Request::createFromGlobals();

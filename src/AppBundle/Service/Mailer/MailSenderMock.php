@@ -3,44 +3,70 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Model\Email;
+use Predis\Client as PredisClient;
 use Swift_Attachment;
+use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class MailSenderMock extends MailSender
+class MailSenderMock implements MailSenderInterface
 {
-    private static $messagesSent = [];
+    /**
+     * REDIS key used to store email mocks
+     */
+    const REDIS_EMAIL_KEY = 'behatEmailMock';
 
     /**
-     * @var Translator
+     * @var Swift_Mailer[]
      */
-    protected $translator;
+    private $mailers = [];
 
     /**
-     * @var Container
+     * @var PredisClient
      */
-    protected $container;
+    private $redis;
 
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Routing\Router
+     * @var Symfony\Component\Validator\Validator
      */
-    protected $router;
-
     protected $validator;
 
     /**
+     * @param ValidatorInterface $validator
      * @param \AppBundle\Mailer\MailerService $apiClient
-     * @param Translator                      $translator
      */
-    public function __construct(Container $container)
+    public function __construct(ValidatorInterface $validator, PredisClient $redis)
     {
-        $this->container = $container;
+        $this->mailers = [];
+        $this->validator = $validator;
+        $this->redis = $redis;
+    }
 
-        $this->translator = $container->get('translator');
-        $this->router = $container->get('router');
-        $this->validator = $container->get('validator');
+    /**
+     * @param string       $name
+     * @param Swift_Mailer $mailer
+     */
+    public function addSwiftMailer($name, Swift_Mailer $mailer)
+    {
+        $this->mailers[$name] = $mailer;
+    }
+
+    /**
+     * @param Swift_Message $swiftMessage
+     * @param Email         $email
+     */
+    private function fillSwiftMessageWithEmailData(\Swift_Message $swiftMessage, Email $email)
+    {
+        $swiftMessage->setTo($email->getToEmail(), $email->getToName())
+            ->setFrom($email->getFromEmail(), $email->getFromName())
+            ->setSubject($email->getSubject())
+            ->setBody($email->getBodyText());
+
+        $swiftMessage->addPart($email->getBodyHtml(), 'text/html');
+
+        foreach ($email->getAttachments() as $attachment) {
+            $swiftMessage->attach(new Swift_Attachment($attachment->getContent(), $attachment->getFilename(), $attachment->getContentType()));
+        }
     }
 
     /**
@@ -61,48 +87,46 @@ class MailSenderMock extends MailSender
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
-        $ret = $this->doSend($transport, $email);
 
-        return $ret;
-    }
-
-    public function doSend($transport, Email $email)
-    {
-        $mailTransport = 'mailer.transport.smtp.default';
-        if ($transport == 'secure-smtp') {
-            $mailTransport = 'mailer.transport.smtp.secure';
+        if (!isset($this->mailers[$transport])) {
+            throw new \InvalidArgumentException("Email tranport $transport not found.");
         }
+
+        $mailerService = $this->mailers[$transport];
 
         // convert Email->Swift_Message
-        //TODO move to helper/factory class
-        $mailerService = new \Swift_Mailer($this->container->get($mailTransport));
-        $message = $mailerService->createMessage(); /* @var $message Swift_Message */
-        $message->setTo($email->getToEmail(), $email->getToName());
-        $message->setFrom($email->getFromEmail(), $email->getFromName());
+        $swiftMessage = $mailerService->createMessage();
+        /* @var $swiftMessage Swift_Message */
+        $this->fillSwiftMessageWithEmailData($swiftMessage, $email);
 
-        $message->setSubject($email->getSubject());
-        $message->setBody($email->getBodyText());
-        $message->addPart($email->getBodyHtml(), 'text/html');
+        // read existing emails
+        $emails = json_decode($this->getMockedEmailsRaw(), true) ?: [];
 
-        foreach ($email->getAttachments() as $attachment) {
-            $message->attach(new Swift_Attachment($attachment->getContent(), $attachment->getFilename(), $attachment->getContentType()));
-        }
+        // prepend email into the file
+        $messageArray = MessageUtils::messageToArray($swiftMessage);
 
-        self::$messagesSent[$mailTransport][] = MessageUtils::messageToArray($message);
+        array_unshift($emails, $messageArray);
+
+        $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
 
         return ['result' => true];
     }
 
     /**
-     * @return array
+     * @return string JSON string with all the emails
      */
-    public static function getMessagesSent()
+    public function getMockedEmailsRaw()
     {
-        return self::$messagesSent;
+        return $this->redis->get(self::REDIS_EMAIL_KEY);
     }
 
-    public static function resetessagesSent()
+    /**
+     * reset mail mock (redis key)
+     *
+     * @return mixed
+     */
+    public function resetMockedEmails()
     {
-        self::$messagesSent = [];
+        return $this->redis->set(self::REDIS_EMAIL_KEY, '');
     }
 }

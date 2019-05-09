@@ -50,7 +50,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     {
         $this->validator->shouldReceive('validate')->andReturn([]);
 
-        $this->mailSender->send($this->email, ['text'], 'default');
+        $this->mailSender->send($this->email, ['text']);
     }
 
     public function testSendOk()
@@ -79,7 +79,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->validator->shouldReceive('validate')->andReturn([]);
         $this->logger->shouldReceive('log')->with('info', m::any(), m::any());
 
-        $ret = $this->mailSender->send($this->email, ['text'], 'default');
+        $ret = $this->mailSender->send($this->email, ['text']);
         $this->assertEquals(['result' => 'sent'], $ret);
 
         // assert sent message

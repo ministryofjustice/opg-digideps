@@ -3,7 +3,6 @@
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Model\Email;
-use Predis\Client as PredisClient;
 use Psr\Log\LoggerInterface;
 use Swift_Attachment;
 use Swift_Mailer;
@@ -11,19 +10,8 @@ use Swift_Message;
 use Swift_Mime_Message;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class MailSender
+class MailSender implements MailSenderInterface
 {
-    /**
-     * Emails with "to" matching this expression will be written into redis
-     * rather than using the real SMTP service
-     */
-    const MOCK_EMAILS_REGEXPR = '/^behat-/i';
-
-    /**
-     * REDIS key used to store email mocks
-     */
-    const REDIS_EMAIL_KEY = 'behatEmailMock';
-
     /**
      * @var ValidatorInterface
      */
@@ -40,23 +28,16 @@ class MailSender
     private $logger;
 
     /**
-     * @var PredisClient
-     */
-    private $redis;
-
-    /**
      * MailSender constructor.
      *
      * @param ValidatorInterface $validator
      * @param LoggerInterface    $logger
-     * @param PredisClient       $redis
      */
-    public function __construct(ValidatorInterface $validator, LoggerInterface $logger, PredisClient $redis)
+    public function __construct(ValidatorInterface $validator, LoggerInterface $logger)
     {
         $this->mailers = [];
         $this->validator = $validator;
         $this->logger = $logger;
-        $this->redis = $redis;
     }
 
     /**
@@ -96,12 +77,6 @@ class MailSender
 
         $to = $this->getFirstTo($swiftMessage);
 
-        // write into redis only, if needed
-        if (preg_match(self::MOCK_EMAILS_REGEXPR, $to)) {
-            $result = $this->prependMessageIntoEmailMock($swiftMessage);
-
-            return ['result' => $result];
-        }
         $failedRecipients = [];
         $result = $mailerService->send($swiftMessage, $failedRecipients);
 
@@ -149,41 +124,5 @@ class MailSender
         reset($to);
 
         return key($to);
-    }
-
-    /**
-     * @param Swift_Mime_Message $swiftMessage
-     *
-     * @return string with debug info
-     */
-    private function prependMessageIntoEmailMock(Swift_Message $swiftMessage)
-    {
-        // read existing emails
-        $emails = json_decode($this->getMockedEmailsRaw(), true) ?: [];
-
-        // prepend email into the file
-        $messageArray = MessageUtils::messageToArray($swiftMessage);
-
-        array_unshift($emails, $messageArray);
-
-        return $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
-    }
-
-    /**
-     * @return string JSON string with all the emails
-     */
-    public function getMockedEmailsRaw()
-    {
-        return $this->redis->get(self::REDIS_EMAIL_KEY);
-    }
-
-    /**
-     * reset mail mock (redis key)
-     *
-     * @return mixed
-     */
-    public function resetMockedEmails()
-    {
-        return $this->redis->set(self::REDIS_EMAIL_KEY, '');
     }
 }
