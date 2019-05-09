@@ -104,7 +104,7 @@ class MailSenderMock implements MailSenderInterface
 
         // prepend email into the file
         $messageArray = MessageUtils::messageToArray($swiftMessage);
-
+        $messageArray['time'] = (new \DateTime())->format(\DateTime::ISO8601);
         array_unshift($emails, $messageArray);
 
         $this->redis->set(self::REDIS_EMAIL_KEY, json_encode($emails));
