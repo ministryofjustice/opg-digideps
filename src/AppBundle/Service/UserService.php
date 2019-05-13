@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Client;
+use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Repository\TeamRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\Team;
@@ -67,23 +69,31 @@ class UserService
     }
 
     /**
-     * Update a user. Checks that the email is not in use then persists the entity
-     *
-     * @param User $loggedInUser Original user for comparison checks
      * @param User $originalUser Original user for comparison checks
-     * @param User $userToEdit   The user to edit
+     * @param User $updatedUser
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function editUser(User $loggedInUser, User $originalUser, User $userToEdit)
+    public function editUser(User $originalUser, User $updatedUser)
     {
-        if ($originalUser->getEmail() != $userToEdit->getEmail()) {
-            $this->exceptionIfEmailExist($userToEdit->getEmail());
+        $this
+            ->throwExceptionIfUpdatedEmailExists($originalUser, $updatedUser)
+            ->handleNdrStatusUpdate($updatedUser);
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param User $originalUser
+     * @param User $updatedUser
+     * @return UserService
+     */
+    private function throwExceptionIfUpdatedEmailExists(User $originalUser, User $updatedUser)
+    {
+        if ($originalUser->getEmail() != $updatedUser->getEmail()){
+            $this->exceptionIfEmailExist($updatedUser->getEmail());
         }
 
-//        if ($loggedInUser->isOrgNamedOrAdmin()) {
-//            $this->orgService->addTeamAndClientsFrom($loggedInUser, $userToAdd, $data);
-//        }
-
-        $this->em->flush($userToEdit);
+        return $this;
     }
 
     /**
@@ -94,5 +104,38 @@ class UserService
         if ($this->userRepository->findOneBy(['email' => $email])) {
             throw new \RuntimeException("User with email {$email} already exists.", 422);
         }
+    }
+
+    /**
+     * @param User $updatedUser
+     */
+    private function handleNdrStatusUpdate(User $updatedUser)
+    {
+        $client = $updatedUser->getFirstClient();
+        if (!$updatedUser->isLayDeputy() || !$client instanceof Client) {
+            return;
+        }
+
+        if ($updatedUser->getNdrEnabled() && !$this->clientHasExistingNdr($client)) {
+            $this->createNdrForClient($client);
+        }
+    }
+
+    /**
+     * @param Client $client
+     * @return bool
+     */
+    private function clientHasExistingNdr(Client $client)
+    {
+        return (null !== $client->getNdr()) ? true : false;
+    }
+
+    /**
+     * @param Client $client
+     */
+    private function createNdrForClient(Client $client)
+    {
+        $ndr = new Ndr($client);
+        $this->em->persist($ndr);
     }
 }

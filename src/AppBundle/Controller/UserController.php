@@ -69,7 +69,7 @@ class UserController extends RestController
         $originalUser = clone $user;
         $data = $this->deserializeBodyContent($request);
         $this->populateUser($user, $data);
-        $userService->editUser($loggedInUser, $originalUser, $user);
+        $userService->editUser($originalUser, $user);
 
         return ['id' => $user->getId()];
     }
