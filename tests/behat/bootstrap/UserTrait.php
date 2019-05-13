@@ -254,4 +254,51 @@ trait UserTrait
 
         return $value;
     }
+
+    /**
+     * @Given there is an activated :depType user with NDR :ndrStatus and email :email and password :password
+     */
+    public function iCreateAndActivateUser($depType, $ndrStatus, $email, $password)
+    {
+        $ndrStatus = 'NDR-' . $ndrStatus;
+        $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
+        $this->iActivateTheUserAndSetThePasswordTo($password);
+
+        $this->iAddTheFollowingUsersToCASREC(new TableNode([
+            ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep'],
+            ['12355555', 'Jones', '00213', 'Dep', 'SW11AA', 'OPG102']
+        ]));
+
+        $this->iSetTheUserDetailsTo(new TableNode([
+            ['address', '16 Deputy Road', 'Beeston', 'Notts', 'PREFILLED', 'GB'],
+            ['phone', '07987123123', '', '', '', '']
+        ]));
+
+        $this->iSetTheClientDetailsTo(new TableNode([
+            ['name', 'Client', 'Jones', '', '', ''],
+            ['caseNumber', '12355555', '', '', '', ''],
+            ['address', '16 Client Road', 'Beeston', 'Notts', 'NG12LK', 'GB'],
+            ['courtDate', 1, 11, 2018, '', ''],
+            ['phone', '07987123122', '', '', '', '']
+        ]));
+
+        $this->iSetTheReportStartDateToAndEndDateTo('1/11/2018');
+        $this->iSetTheReportEndDateToAndEndDateTo('1/10/2019');
+    }
+
+    /**
+     * @Given I :action NDR for user :email
+     */
+    public function iEnableNdrForUser($action, $email)
+    {
+        $this->clickOnBehatLink('user-' . $email);
+
+        strtolower($action) === 'enable' ?
+            $this->checkOption('admin_ndrEnabled') :
+            $this->uncheckOption('admin_ndrEnabled');
+
+        $this->clickOnBehatLink('save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
 }
