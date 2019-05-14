@@ -22,8 +22,8 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
-     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client"})
+     * @Assert\NotBlank( message="client.firstname.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit", "pa-client"})
+     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
      * @var string
      */
@@ -33,8 +33,8 @@ class Client
      * @JMS\Type("string")
      * @JMS\Groups({"edit", "pa-edit"})
      *
-     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit"})
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy"})
+     * @Assert\NotBlank( message="client.lastname.notBlank", groups={"lay-deputy-client", "verify-codeputy", "lay-deputy-client-edit", "pa-client"})
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage", groups={"lay-deputy-client", "verify-codeputy", "pa-client"})
      *
      * @var string
      */

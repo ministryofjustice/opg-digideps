@@ -23,6 +23,9 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
+    {{ form_input(form.firstname, 'form.firstname') }}
+    {{ form_input(form.lastname, 'form.lastname') }}
+
     {{ form_known_date(form.dateOfBirth, 'form.dateOfBirth') }}
 
     <fieldset>

@@ -19,20 +19,22 @@ class ClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-                ->add('dateOfBirth', FormTypes\DateType::class, ['widget' => 'text',
-                        'input' => 'datetime',
-                        'format' => 'dd-MM-yyyy',
-                        'invalid_message' => 'Enter a valid date',
-                ])
-                ->add('email', FormTypes\EmailType::class)
-                ->add('address', FormTypes\TextType::class)
-                ->add('address2', FormTypes\TextType::class)
-                ->add('postcode', FormTypes\TextType::class)
+            ->add('firstname', FormTypes\TextType::class)
+            ->add('lastname', FormTypes\TextType::class)
+            ->add('dateOfBirth', FormTypes\DateType::class, ['widget' => 'text',
+                    'input' => 'datetime',
+                    'format' => 'dd-MM-yyyy',
+                    'invalid_message' => 'Enter a valid date',
+            ])
+            ->add('email', FormTypes\EmailType::class)
+            ->add('address', FormTypes\TextType::class)
+            ->add('address2', FormTypes\TextType::class)
+            ->add('postcode', FormTypes\TextType::class)
 
-                ->add('county', FormTypes\TextType::class)
-                ->add('phone', FormTypes\TextType::class)
-                ->add('id', FormTypes\HiddenType::class)
-                ->add('save', FormTypes\SubmitType::class);
+            ->add('county', FormTypes\TextType::class)
+            ->add('phone', FormTypes\TextType::class)
+            ->add('id', FormTypes\HiddenType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
