@@ -1,9 +1,9 @@
 variable "default_role" {
-  default = "ci"
+  default = "digideps-ci"
 }
 
 variable "management_role" {
-  default = "ci"
+  default = "digideps-ci"
 }
 
 variable "OPG_DOCKER_TAG" {
