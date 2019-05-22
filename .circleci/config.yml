@@ -1,0 +1,34 @@
+terraform: &terraform
+  docker:
+    - image: hashicorp/terraform:full
+
+version: 2
+jobs:
+  build:
+    <<: *terraform
+    steps:
+      - checkout
+      - run:
+          name: Lint Terraform
+          command: |
+            if [[ -n "$(terraform fmt -write=false)" ]]; then
+              echo "Some terraform files need be formatted, run 'terraform fmt' to fix";
+              exit 1;
+            fi
+      - run:
+          name: Terraform Init
+          command: terraform init -input=false
+      - run:
+          name: Terraform Plan
+          command: terraform plan -input=false -parallelism=30 | ./redact_output.sh
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build:
+        filters:
+          branches:
+            ignore:
+            - master
+
