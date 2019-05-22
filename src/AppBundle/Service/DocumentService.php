@@ -87,7 +87,7 @@ class DocumentService
 
             return true;
         } catch (\Exception $e) {
-            $this->log('error', "deleting $ref from S3: exception (" . ($ignoreS3Failure ? '(ignored)' : '') . ' ' . $e->getMessage());
+            $this->log('error', "deleting $ref from S3: exception : " . $e->getMessage());
             throw $e;
         }
     }

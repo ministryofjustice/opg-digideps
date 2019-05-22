@@ -14,7 +14,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        // connect to fakes3 (https://github.com/jubos/fake-s3)
+        // connect to localstack
         // see docker-composer.yml for params
 
         $this->fileContent = 'FILE-CONTENT-' . microtime(1);
@@ -22,7 +22,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         $options =[
             'version'     => 'latest',
             'region'      => 'eu-west-1',
-            'endpoint'    => 'http://fakes3:4569',
+            'endpoint'    => 'http://localstack:4569',
             'validate'    => false,
             'credentials' => [
                 'key'    => 'YOUR_ACCESS_KEY_ID',
@@ -31,9 +31,9 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         ];
 
         // check fake S3 connection. To test why failing on the infrastructure
-        if (!@fsockopen('fakes3', '4569')) {
+        if (!@fsockopen('localstack', '4569')) {
             echo "Can't connect to S3 ({$options['endpoint']})\n";
-            $this->markTestSkipped('fakes3 not responding');
+            $this->markTestSkipped('localstack not responding');
         }
     }
 
