@@ -6,8 +6,10 @@ version: 2
 jobs:
   build:
     <<: *terraform
+    working_directory: "~/terraform/environment"
     steps:
-      - checkout
+      - checkout:
+          path: "~/terraform"
       - run:
           name: Lint Terraform
           command: |
