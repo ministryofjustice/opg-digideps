@@ -63,6 +63,9 @@ class DocumentService
         } catch (\Exception $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
+
+            // rethrow exception to be caught by controller
+            throw($e);
         }
     }
 
