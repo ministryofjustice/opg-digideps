@@ -13,7 +13,7 @@ parameters:
     secret: {{ getv "/secret" }}
     anonymous: {{ getv "/security/anonymous" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
-{{ if lsdir "/fixtures" }}
+{{ if ls "/fixtures" }}
     fixtures:
         account_password: {{ getv "/fixtures/accountpassword" }}
 {{ end }}

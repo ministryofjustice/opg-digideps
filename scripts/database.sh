@@ -2,9 +2,9 @@
 echo "This script is deprecated. Use migrate.sh instead"
 set -e
 #let's configure environment
-run-parts /etc/my_init.d
+confd -onetime -backend env
 
-cd /app
-/sbin/setuser app php app/console doctrine:migrations:status-check
-/sbin/setuser app php app/console doctrine:migrations:migrate --no-interaction -vvv
-/sbin/setuser app php app/console doctrine:fixtures:load --no-interaction
+cd /var/www
+su-exec www-data php app/console doctrine:migrations:status-check
+su-exec www-data php app/console doctrine:migrations:migrate --no-interaction -vvv
+su-exec www-data php app/console doctrine:fixtures:load --no-interaction

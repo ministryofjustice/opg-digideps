@@ -1,39 +1,87 @@
-FROM registry.service.opg.digital/opguk/digi-deps-api-base:nightly
+FROM php:5-fpm-alpine3.8 AS composer
 
-# build app dependencies
+# Install Git for Composer
+RUN apk add --no-cache git
+
+# Install Composer
+RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+RUN  composer self-update
+
 WORKDIR /app
-USER app
-ENV  HOME /app
-COPY composer.json /app/
-COPY composer.lock /app/
-RUN  composer install --prefer-dist --no-interaction --no-scripts
 
-# install remaining parts of app
-ADD  . /app
-USER root
-RUN find . -not -user app -exec chown app:app {} \;
-# crontab
-COPY scripts/cron/digideps /etc/cron.d/digideps
-RUN chmod 0744 /etc/cron.d/digideps
-USER app
-ENV  HOME /app
-RUN  composer run-script post-install-cmd --no-interaction
-RUN  composer dump-autoload --optimize
+# Install composer dependencies
+COPY composer.json .
+COPY composer.lock .
+RUN composer install --prefer-dist --no-interaction --no-scripts
 
-# cleanup
-RUN  rm /app/app/config/parameters.yml
-USER root
-ENV  HOME /root
+COPY app app
+COPY src src
+RUN composer run-script post-install-cmd --no-interaction
+RUN composer dump-autoload --optimize
 
-# app configuration
-ADD docker/confd /etc/confd
 
-# let's make sure they always work
-RUN dos2unix /app/scripts/*
 
-# copy init scripts
-ADD  docker/my_init.d /etc/my_init.d
-RUN  chmod a+x /etc/my_init.d/*
+FROM php:5-fpm-alpine3.8
 
-ENV  OPG_SERVICE api
+# Install postgresql drivers
+RUN apk add --no-cache postgresql-dev postgresql-client \
+  && docker-php-ext-install pdo pdo_pgsql
 
+# Enable Redis driver
+RUN apk add --no-cache autoconf g++ make \
+  && pecl install redis \
+  && docker-php-ext-enable redis
+
+# Add NGINX
+RUN apk add --no-cache nginx
+
+# Route NGINX logs to stdout/stderr
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+  && ln -sf /dev/stderr /var/log/nginx/error.log
+
+# Install openssl for wget and certificate generation
+RUN apk add --update openssl
+
+# Install su-exec to run commands Symfony as www-data
+RUN apk add --no-cache su-exec
+
+# Add Confd to configure parameters on start
+ENV CONFD_VERSION="0.16.0"
+RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
+  && chmod +x /usr/local/bin/confd
+
+# Add Waitforit to wait on db starting
+ENV WAITFORIT_VERSION="v2.4.1"
+RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
+  && chmod +x /usr/local/bin/waitforit
+
+WORKDIR /var/www
+
+# Generate certificate
+RUN mkdir -p /etc/nginx/certs
+RUN openssl req -newkey rsa:4096 -x509 -nodes -keyout /etc/nginx/certs/app.key -new -out /etc/nginx/certs/app.crt -subj "/C=GB/ST=GB/L=London/O=OPG/OU=Digital/CN=default" -sha256 -days "3650"
+
+EXPOSE 80
+EXPOSE 443
+
+# See this page for directories required
+# https://symfony.com/doc/3.4/quick_tour/the_architecture.html
+COPY --from=composer /app/app app
+COPY --from=composer /app/vendor vendor
+COPY src src
+COPY app app
+COPY scripts scripts
+COPY tests tests
+COPY web web
+COPY docker/confd /etc/confd
+ENV TIMEOUT=20
+
+RUN mkdir -p var/cache \
+  && mkdir -p var/logs \
+  && chown -R www-data var
+
+CMD confd -onetime -backend env \
+  && waitforit -address=tcp://$API_DATABASE_HOSTNAME:$API_DATABASE_PORT -timeout=$TIMEOUT \
+  && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
+  && php-fpm -D \
+  && nginx

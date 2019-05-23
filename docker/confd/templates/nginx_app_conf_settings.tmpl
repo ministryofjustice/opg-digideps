@@ -1,7 +1,0 @@
-{{ if exists "/opg/nginx/clientmaxbodysize" }}
-client_max_body_size {{ getv "/opg/nginx/clientmaxbodysize" }};
-{{ end }}
-
-{{ if exists "/opg/nginx/clientbodytimeout" }}
-client_body_timeout {{ getv "/opg/nginx/clientbodytimeout" }};
-{{ end }}

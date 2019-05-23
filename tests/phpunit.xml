@@ -17,6 +17,7 @@
     </testsuites>
     <php>
         <server name="KERNEL_DIR" value="app" />
+        <ini name="memory_limit" value="1024M" />
     </php>
 
     <filter>

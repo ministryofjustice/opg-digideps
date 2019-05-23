@@ -35,6 +35,7 @@ monolog:
    handlers:
        main:
            type: stream
+           path: "%log_path%"
            level: warning
            
 jms_serializer:

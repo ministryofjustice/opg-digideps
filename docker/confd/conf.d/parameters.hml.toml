@@ -1,7 +1,7 @@
 [template]
 prefix = "/api"
 src = "parameters.yml.tmpl"
-dest = "/app/app/config/parameters.yml"
+dest = "/var/www/app/config/parameters.yml"
 keys = [
     "/database",
     "/smtp",

@@ -19,22 +19,17 @@ Repositories
 
 ## Setup
 
-Setup local environment following instructions on the docker repository.
+See the [Docker config](https://github.com/ministryofjustice/opg-digi-deps-docker) repository for instructions on how to set up the API and client containers locally.
 
-`app/config/parameters.yml` is generated via docker init scripts.
-
-If installed locally, use scripts under `/scripts` to recreate db and add initial fixtures
-
+To perform common tasks like resetting the database or installing fixtures, you can either use the `dd-` commands supplied by the Docker config, or run the scripts in the `scripts` directory on the container.
 
 ## Authentication endpoint
-via    `/auth/login`: (
-needs Client token header and credentials, responds with AuthToken to send for subsequent requests).
+Authenticate via `/auth/login`. You will need to set the client token header and provide user credentials, and will be given an AuthToken in the response header.
 
-Some endpoints are open in the firewall for special functionalities without being logged.
-Client secret is required for those.
-
+You will need to use the AuthToken in subsequent requests.
 
 ## API return codes
+
 * 404 not found
 * 403 Missing client secret, or invalid permissions (configuration error) or invalid ACL permissions for logged user
 * 419 AuthToken missing, expired or not matching (runtime error)
@@ -49,7 +44,7 @@ Client secret is required for those.
 
 ## Endpoint conventions
 
-Example with `account` (type) and `ndr`(parent type) entities
+Example with `account` (type) and `ndr` (parent type) entities
 
  * Get account records (ndr ID=1): `GET /ndr/1/account`
  * Add account to Ndr with ID=1: `POST /ndr/1/account`

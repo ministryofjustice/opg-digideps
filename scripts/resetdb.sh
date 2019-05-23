@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 # We need below to create the params file on container start
-run-parts /etc/my_init.d
+confd -onetime -backend env
 
-. /app/scripts/initialize_schema.sh
+. /var/www/scripts/initialize_schema.sh
 
-/sbin/setuser app php app/console doctrine:migrations:status-check
-/sbin/setuser app php app/console doctrine:migrations:migrate --no-interaction -vvv
-/sbin/setuser app php app/console doctrine:fixtures:load --no-interaction
+su-exec www-data php app/console doctrine:migrations:status-check
+su-exec www-data php app/console doctrine:migrations:migrate --no-interaction -vvv
+su-exec www-data php app/console doctrine:fixtures:load --no-interaction

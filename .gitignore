@@ -6,16 +6,15 @@
 .vagrant
 app/SymfonyRequirements.php
 app/bootstrap.php.cache
-app/cache/*
 app/check.php
 app/config/.parameters.yml*
 app/config/parameters.yml
-app/logs/*
 bin/behat
 bin/doctrine
 bin/doctrine.php
 bin/phpunit
 build
+log
 components/*
 composer.phar
 junit.xml
