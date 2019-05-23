@@ -22,7 +22,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         $options =[
             'version'     => 'latest',
             'region'      => 'eu-west-1',
-            'endpoint'    => 'http://localstack:4569',
+            'endpoint'    => 'http://localstack:4572',
             'validate'    => false,
             'credentials' => [
                 'key'    => 'YOUR_ACCESS_KEY_ID',
@@ -30,10 +30,10 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        // check fake S3 connection. To test why failing on the infrastructure
-        if (!@fsockopen('localstack', '4569')) {
-            echo "Can't connect to S3 ({$options['endpoint']})\n";
-            $this->markTestSkipped('localstack not responding');
+        // check localstack connection. To test why failing on the infrastructure
+        if (!@fsockopen('localstack', '4572')) {
+//            $this->markTestSkipped('localstack not responding');
+//            echo "Can't connect to S3 ({$options['endpoint']})\n";
         }
     }
 

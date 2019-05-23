@@ -7,24 +7,18 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\S3Storage;
 use Mockery\Exception;
-use MockeryStub as m;
+use Mockery as m;
 use Psr\Log\LoggerInterface;
 
-class DocumentServiceTest extends \PHPUnit_Framework_TestCase
+class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     /**
      * @var DocumentService
      */
     protected $object;
 
-    /**
-     * @var S3Storage
-     */
     private $s3Storage;
 
-    /**
-     * @var RestClient
-     */
     private $restClient;
 
     /**
@@ -51,14 +45,20 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testRemoveDocument()
+    public function testRemoveDocumentFromS3()
     {
+        $docId = 1;
         $document = new Document();
-        $document->setId(1);
+        $document->setId($docId);
         $document->setStorageReference('r1');
 
         $this->s3Storage
             ->shouldReceive('removeFromS3')->once()->with('r1')->andReturn([]);
+
+        $this->restClient->shouldReceive('apiCall')
+            ->once()
+            ->with('DELETE', 'document/hard-delete/' . $docId, null, 'array', [], false)
+            ->andReturn(true);
 
         $this->object->removeDocumentFromS3($document);
 
@@ -66,17 +66,21 @@ class DocumentServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveDocumentWithS3Failure()
     {
+        $docId = 1;
+
         $document = new Document();
-        $document->setId(1);
+        $document->setId($docId);
         $document->setStorageReference('r1');
 
         $this->s3Storage
             ->shouldReceive('removeFromS3')->once()->with('r1')->andThrow(Exception::class);
 
-        $this->restClient
-            ->shouldReceive('apiCall')->with('DELETE', 'document/1', null, 'array', [], false);
+        $this->restClient->shouldReceive('apiCall')->never()->with('DELETE', 'document/1', null, 'array', [], false);
+
+        $this->setExpectedException('Exception');
 
         $this->object->removeDocumentFromS3($document);
+
     }
 
     public function tearDown()
