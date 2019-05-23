@@ -56,6 +56,7 @@ parameters:
       version: 'latest'
       region: 'eu-west-1'
       endpoint: 'http://localstack:4572'
+      use_path_style_endpoint: true
       validate: false
       credentials:
         key: 'YOUR_ACCESS_KEY_ID'

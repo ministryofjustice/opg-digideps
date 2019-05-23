@@ -43,6 +43,7 @@ parameters:
       region: 'eu-west-1'
   {{ if exists "/frontend/s3/localstack" }}
       endpoint: 'http://localstack:4572'
+      use_path_style_endpoint: true
       validate: false
       credentials:
         key: 'FAKE_ID'
