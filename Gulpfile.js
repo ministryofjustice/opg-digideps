@@ -47,7 +47,12 @@ const lintSass = () => { // sass quality control
     return gulp.src([
         config.sassSrc + '/**/*.scss',
         config.sassSrc + '/*.scss'])
-        .pipe(scsslint());
+        .pipe(scsslint({
+            options: {
+                configFile: '.scss-lint.yml'
+            }
+        }))
+        .pipe(scsslint.format());
 }
 
 const lintJS = () => { // JS quality control
@@ -143,6 +148,8 @@ gulp.task('rebuild-formatted-report-css', gulp.series(CompileFormattedReportSass
 gulp.task('sass', gulp.series(lintSass, buildApplicationCSSFromSass));
 
 gulp.task('app-js', gulp.series(lintJS, concatJSThenMinifyAndCopy));
+
+gulp.task('lint', gulp.series(lintSass, lintJS));
 
 // Prepare and build all assets.
 gulp.task('default', gulp.series(

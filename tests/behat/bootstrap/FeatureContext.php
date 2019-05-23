@@ -107,11 +107,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function theResponseShouldHaveTheHeaderContaining($header, $value)
     {
-        $headers = $this->getSession()->getDriver()->getResponseHeaders();
-        if (empty($headers[$header][0])) {
+        $headers = array_change_key_case($this->getSession()->getDriver()->getResponseHeaders(), CASE_LOWER);
+        if (empty($headers[strtolower($header)][0])) {
             throw new \Exception("Header '{$header}' not found.");
         }
-        if (strpos($headers[$header][0], $value) === false) {
+        if (strpos($headers[strtolower($header)][0], $value) === false) {
             throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
     }

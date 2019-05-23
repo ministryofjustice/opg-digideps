@@ -24,33 +24,25 @@ Complete the deputy report is composed by
 
 ## Setup
 
-Setup local environment following instructions on the `opg-digi-deps-docker` repository.
+See the [Docker config](https://github.com/ministryofjustice/opg-digi-deps-docker) repository for instructions on how to set up the API and client containers locally.
 
-`app/config/parameters.yml` is generated via docker init scripts.
+## Testing
 
-## Architectural notes
-
-### Testing
-see [here](tests/README.md)
+See [here](tests/README.md)
 
 ## Frontend technical notes
 
 ### Gulp
+
 The frontend components rely on Gulp to be built and assembled. The main tasks involved in this part of the build are copying image assets, compiling SASS to CSS and concatinating JS into a single file and then running uglify to minify it.
 
-The Gulp build file has many targets, but the 3 that are of most interest are **default**, **watch** and **development**.
+Assets are automatically rebuilt with Gulp when you build the frontend image. To do so, call `docker-compose up -d --build` in the docker repo folder.
 
-If you use Docker whilst developing the frontend, the best way to work with these assets is to connect to the docker frontend container:
+You can also run one of commands against the NPM image. For example, to lint all files:
 
-    docker exec -it opgdigidepsdocker_frontend_1 bash
-
-Once in the container you can simply enter:
-
-    gulp watch
-
-This will compile all the assets, in development (debug) mode, and will then continue to watch for changes to those files until you stop it with CTRL+C.
-
-Each of the steps in Gulp are documented in the Gulpfile.
+```sh
+docker-compose run --rm npm run lint
+```
 
 ### Browser Testing
 
@@ -58,19 +50,13 @@ There are notes in the readme file in the test folder to describe the best way t
 
 With special thanks to [BrowserStack](https://www.browserstack.com) for providing cross browser testing.
 
-
 ### Dependencies
 
-A brief note about dependencies. First, although we use node 4.x when building containers we also specify NPM version 3. This version of NPM has a number of important improvements over NPM version 2 which is bundled with node 4, the main one being directory structure.
-
-Dependencies are versioned to avoid accidently breaking the build. From time to time new review those dependencies to see if a valid new version is available, the chief of these should be [govuk-elements-sass](https://www.npmjs.com/package/govuk-elements-sass)
-
+Dependencies are versioned to avoid accidently breaking the build. From time to time new review those dependencies to see if a valid new version is available, the chief of these should be [govuk-elements-sass](https://www.npmjs.com/package/govuk-elements-sass).
 
 ## Coding standards
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
-
-Run `php-cs-fixer fix` to format files
 
 ## License
 

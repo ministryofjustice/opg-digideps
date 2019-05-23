@@ -96,6 +96,6 @@ monolog:
    handlers:
        main:
            type: stream
-           path: %log_path%
+           path: php://stderr
            level: %log_level%
            formatter: logstash_formatter
