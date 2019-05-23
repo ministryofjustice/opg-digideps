@@ -105,10 +105,23 @@ class S3Storage implements StorageInterface
      */
     public function removeFromS3($key)
     {
-        return $this->s3Client->deleteObject([
+        $objectVersions = $this->s3Client->listObjectVersions([
             'Bucket' => $this->bucketName,
-            'Key'    => $key
+            'Prefix' => $key
         ]);
+
+        if ($objectVersions instanceof \Aws\Result) {
+            foreach ($objectVersions['Versions'] as $versionData) {
+                $this->s3Client->deleteObject([
+                    'Bucket' => $this->bucketName,
+                    'Key' => $versionData['Key']
+                ]);
+            }
+
+            return true;
+        }
+
+        throw new \RuntimeException('Could not remove from S3: Version data not found');
     }
 
     /**
