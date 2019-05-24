@@ -149,7 +149,7 @@ gulp.task('sass', gulp.series(lintSass, buildApplicationCSSFromSass));
 
 gulp.task('app-js', gulp.series(lintJS, concatJSThenMinifyAndCopy));
 
-gulp.task('lint', gulp.series(lintSass, lintJS));
+gulp.task('lint', gulp.series(lintSass, lintJS, checkCSSAccessibility));
 
 // Prepare and build all assets.
 gulp.task('default', gulp.series(
