@@ -68,6 +68,7 @@ EXPOSE 443
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY --from=composer /app/app app
 COPY --from=composer /app/vendor vendor
+COPY --from=composer /app/composer.lock composer.lock
 COPY src src
 COPY app app
 COPY scripts scripts
