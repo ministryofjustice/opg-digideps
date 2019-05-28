@@ -54,31 +54,15 @@ class NdrController extends AbstractController
 
         $clients = $user->getClients();
         $client = !empty($clients) ? $clients[0] : null;
-        $coDeputies = !empty($client) ? $client->getCoDeputies() : [];
-        $ndr = $client->getNdr();
-
-        $reports = $client ? $client->getReports() : [];
-        arsort($reports);
-
-        $reportActive = null;
-        $reportsSubmitted = [];
-        foreach ($reports as $currentReport) {
-            if ($currentReport->getSubmitted()) {
-                $reportsSubmitted[] = $currentReport;
-            } else {
-                $reportActive = $currentReport;
-            }
-        }
-
-        $ndrStatus = new NdrStatusService($ndr);
+        $coDeputies = !empty($client) ? $this->getCoDeputiesForClient($user) : [];
 
         return [
             'client' => $client,
             'coDeputies' => $coDeputies,
-            'ndr' => $ndr,
-            'reportsSubmitted' => $reportsSubmitted,
-            'reportActive' => $reportActive,
-            'ndrStatus' => $ndrStatus
+            'ndr' => $client->getNdr(),
+            'reportsSubmitted' => $client->getSubmittedReports(),
+            'reportActive' => $client->getActiveReport(),
+            'ndrStatus' => new NdrStatusService($client->getNdr())
         ];
     }
 
@@ -288,5 +272,30 @@ class NdrController extends AbstractController
         return [
             'ndr' => $ndr,
         ];
+    }
+
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    private function getCoDeputiesForClient(User $user)
+    {
+        return $this->hydrateClientWithUsers($user)->getCoDeputies();
+    }
+
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    private function hydrateClientWithUsers(User $user)
+    {
+        $clients = $user->getClients();
+        $clientId = array_shift($clients)->getId();
+
+        return  $this->getRestClient()->get(
+            'client/' . $clientId,
+            'Client',
+            ['client', 'client-users', 'user']
+        );
     }
 }

@@ -239,6 +239,7 @@ trait UserTrait
                 'deputy_lastname'    => $row['Dep Surname'],
                 'deputy_postcode'    => $row['Dep Postcode'],
                 'type_of_report'     => $row['Typeofrep'],
+                'other_columns'      => str_replace('"', '\\"',serialize($row))
             ]);
         }
     }
