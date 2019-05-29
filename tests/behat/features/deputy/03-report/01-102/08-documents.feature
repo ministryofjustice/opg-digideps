@@ -135,6 +135,11 @@ Feature: Report documents
   Scenario: Deleting one of many files doesn't restart process
     Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "reports, report-start, edit-documents"
+    When I click on "add"
+    And I attach the file "file2.pdf" to "report_document_upload_file"
+    And I click on "attach-file, continue"
+    Then I should see "file2.pdf" in the "document-list" region
     When I click on the first "delete-documents-button" in the "document-list" region
     And I click on "document-delete"
     Then the URL should match "/report/\d+/documents/summary"
+    Then I should not see "file2.pdf" in the "document-list" region
