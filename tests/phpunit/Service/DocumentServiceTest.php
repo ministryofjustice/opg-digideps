@@ -55,9 +55,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         $this->s3Storage
             ->shouldReceive('removeFromS3')->once()->with('r1')->andReturn([]);
 
-        $this->restClient->shouldReceive('apiCall')
+        $this->restClient->shouldReceive('delete')
             ->once()
-            ->with('DELETE', 'document/hard-delete/' . $docId, null, 'array', [], false)
+            ->with('document/' . $docId)
             ->andReturn(true);
 
         $this->object->removeDocumentFromS3($document);
