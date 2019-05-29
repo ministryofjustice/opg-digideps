@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6458ebcc40b80a2567cefb02fcf1f892",
+    "content-hash": "768233aa1e7761b5badb43f067f842fe",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2461,7 +2461,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2760,16 +2760,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.24",
+            "version": "v3.4.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4783969de06e5b8787b5e3ad2279f6b8aceeb81b"
+                "reference": "1b89e7baec9891c323bbf1ec81af77d901fc60c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4783969de06e5b8787b5e3ad2279f6b8aceeb81b",
-                "reference": "4783969de06e5b8787b5e3ad2279f6b8aceeb81b",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/1b89e7baec9891c323bbf1ec81af77d901fc60c9",
+                "reference": "1b89e7baec9891c323bbf1ec81af77d901fc60c9",
                 "shasum": ""
             },
             "require": {
@@ -2911,7 +2911,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2019-04-02T13:48:13+00:00"
+            "time": "2019-04-17T15:57:27+00:00"
         },
         {
             "name": "twig/twig",
@@ -3793,6 +3793,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2015-10-02T06:51:40+00:00"
         },
         {
@@ -4229,5 +4230,8 @@
     "platform": {
         "php": ">=5.5.9"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "5.5.9"
+    }
 }

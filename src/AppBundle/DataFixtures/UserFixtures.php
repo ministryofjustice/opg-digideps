@@ -108,6 +108,13 @@ class UserFixtures extends AbstractDataFixture
             'reportVariation' => 'L2',
             'ndr' => true,
         ],
+        [
+            'id' => 'codep',
+            'deputyType' => 'LAY',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'L2',
+            'codeputyEnabled' => true,
+        ],
     ];
 
     public function doLoad(ObjectManager $manager)
@@ -129,6 +136,7 @@ class UserFixtures extends AbstractDataFixture
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(isset($data['ndr']))
+            ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')
@@ -167,7 +175,6 @@ class UserFixtures extends AbstractDataFixture
             $manager->persist($ndr);
         }
 
-
         // Create report for PROF/PA user 2 years ago
         if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
             $type = CasRec::getTypeBasedOnTypeofRepAndCorref($data['reportType'], $data['reportVariation'], $user->getRoleName());
@@ -179,6 +186,16 @@ class UserFixtures extends AbstractDataFixture
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
+        }
+
+        // If codeputy was enabled, add a secondary account
+        if (isset($data['codeputyEnabled'])) {
+            $user2 = clone $user;
+            $user2->setLastname($user2->getLastname() . '-2');
+            $user2->setEmail('behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '-2@publicguardian.gov.uk');
+            $user2->addClient($client);
+
+            $manager->persist($user2);
         }
     }
 
