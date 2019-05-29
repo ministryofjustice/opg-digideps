@@ -165,13 +165,13 @@ trait LinksTrait
      *
      * @When I click on :link in the :region region
      */
-    public function clickLinkInsideElement($link, $region)
+    public function clickLinkInsideElement($link, $region, $theFirst = false)
     {
         $linkSelector = self::behatElementToCssSelector($link, 'link');
 
         $regionSelector = $this->findRegion($region);
         $linksElementsFound = $regionSelector->findAll('css', $linkSelector);
-        if (count($linksElementsFound) > 1) {
+        if (count($linksElementsFound) > 1 && !$theFirst) {
             throw new \RuntimeException("Found more than a $linkSelector element inside $regionSelector . Interrupted");
         }
         if (count($linksElementsFound) === 0) {
@@ -180,6 +180,14 @@ trait LinksTrait
 
         // click on the found link
         $linksElementsFound[0]->click();
+    }
+
+    /**
+     * @When I click on the first :link in the :region region
+     */
+    public function clickFirstLinkInsideElement($link, $region)
+    {
+        $this->clickLinkInsideElement($link, $region, true);
     }
 
     /**
