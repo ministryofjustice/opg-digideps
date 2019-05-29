@@ -1,0 +1,3 @@
+[template]
+src  = "php.ini.tmpl"
+dest = "/usr/local/etc/php/conf.d/app.ini"

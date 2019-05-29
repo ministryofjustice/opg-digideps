@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "gulp",
-    "lint": "gulp lint.js lint.sass",
+    "lint": "npm i && gulp lint",
     "develop": "gulp watch"
   },
   "devDependencies": {

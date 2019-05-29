@@ -154,3 +154,45 @@ Feature: Codeputy Self Registration
   Scenario: Admin logs in and sees placeholder text for the nameless invited codeputy
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     Then I should see "Invited co-deputy" in the "users" region
+
+  @deputy @ndr
+  Scenario: NDR user can see a list of deputies in the codeputy region
+    Given emails are sent from "deputy" area
+    # Set up to a register an NDR client with multiple deputies
+    And I add the following users to CASREC:
+      | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep | NDR  |
+      | 22222222 | Jones   | D000      | NDR         | AA1 2BB      | OPG102    | true |
+      | 22222222 | Jones   | D100      | NDR-2       | AA1 2BB      | OPG102    | true |
+    # Register deputy matching with above casrec
+    When I am on "/register"
+    And I fill in the following:
+      | self_registration_firstname       | Peter                                      |
+      | self_registration_lastname        | NDR                                        |
+      | self_registration_email_first     | behat-user-ndr-codep@publicguardian.gov.uk |
+      | self_registration_email_second    | behat-user-ndr-codep@publicguardian.gov.uk |
+      | self_registration_postcode        | AA1 2BB                                    |
+      | self_registration_clientFirstname | Cly                                        |
+      | self_registration_clientLastname  | JONES                                      |
+      | self_registration_caseNumber      | 22222222                                   |
+    And I press "self_registration_save"
+      # Activate the deputy
+    And I open the "/user/activate/" link from the email
+    And I activate the user with password "Abcd1234"
+    And I go to "/login"
+    And I fill in the following:
+      | login_email     | behat-user-ndr-codep@publicguardian.gov.uk |
+      | login_password  | Abcd1234 |
+    And I press "login_login"
+    When I set the user details to:
+      | name    | Peter         | NDR           |        |         |    |
+      | address | 102           | MOJ           | London | AA1 2BB | GB |
+      | phone   | 020 3334 3555 | 020 1234 5678 |        |         |    |
+    And I set the client details with:
+      | name       | Cly3       | Jones |            |         |    |
+      | caseNumber | 22222222   |       |            |         |    |
+      | courtDate  | 1          | 1     | 2016       |         |    |
+      | address    | 1          | 1     | Nottingham | NG1 2HT | GB |
+      | phone      | 0123456789 |       |            |         |    |
+    And I press "client_save"
+    Then the URL should match "/ndr"
+    And I should see "Peter NDR" in the "codeputies" region

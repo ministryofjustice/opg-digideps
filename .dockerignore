@@ -1,7 +1,4 @@
 .git
-app/cache
 app/config/parameters.yml
-app/logs
-vendor
 .sass-cache
 node_modules
