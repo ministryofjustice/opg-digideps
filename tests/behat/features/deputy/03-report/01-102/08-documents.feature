@@ -76,7 +76,10 @@ Feature: Report documents
     # chose "no documents" to make report submittable
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
-
+    # Confirm document has been deleted by its absence in summary table
+    When I save the report as "document-report"
+    And I go to the report URL "documents/summary" for "document-report"
+    Then I should not see the "document-list" region
 
   @deputy
   Scenario: Upload image documents
