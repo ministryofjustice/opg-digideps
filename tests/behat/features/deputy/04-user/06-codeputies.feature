@@ -158,7 +158,6 @@ Feature: Codeputy Self Registration
   @deputy @ndr
   Scenario: NDR user can see a list of deputies in the codeputy region
     Given emails are sent from "deputy" area
-    And I reset the email log
     # Set up to a register an NDR client with multiple deputies
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep | NDR  |
