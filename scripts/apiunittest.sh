@@ -9,7 +9,7 @@ export PGUSER=${API_DATABASE_USERNAME:=api}
 
 cd /var/www
 # clear cache
-rm -rf var/*
+rm -rf var/cache/*
 
 rm -f /tmp/dd_stats.csv
 rm -f /tmp/dd_stats.unittest.csv

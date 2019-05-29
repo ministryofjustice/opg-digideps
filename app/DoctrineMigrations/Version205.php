@@ -30,7 +30,6 @@ class Version205 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE report DROP prof_dc_estimate_hc');
         $this->addSql('DROP TABLE prof_deputy_estimate_cost');
     }

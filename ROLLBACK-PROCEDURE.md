@@ -24,15 +24,12 @@ From this point onwards, the Jenkins build triggers will push the build through 
 
 ##### Step 2: From the command prompt of the Cloud 9 server `cd` into the `opg-digi-deps-api` directory and run `git pull origin master`.
 
-##### Step 3: Using the integrated IDE, comment out any “CREATE SCHEMA public” commands in the `down()` method of any migration files that will be rolled back
-An unresolved bug in Doctrine inadvertently adds this command in auto generated migrations.
-
-##### Step 4: Run the PHP migration command from the command prompt, using the latest migration that you want to migrate to.
+##### Step 3: Run the PHP migration command from the command prompt, using the latest migration that you want to migrate to.
 For example, if migrations 103 and 102 need rolling back, we want run our migrations back to 101:
 
-`php app/console doctrine:migrations:migrate 101 -n` 
+`php app/console doctrine:migrations:migrate 101 -n`
 
-##### Step 5: Verify status of database and application.
+##### Step 4: Verify status of database and application.
 
 
 

@@ -27,8 +27,6 @@ class Version196 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE checklist RENAME COLUMN future_significant_decisions TO future_significant_financial_decisions');
     }
 }

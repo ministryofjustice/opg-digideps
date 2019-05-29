@@ -34,8 +34,6 @@ class Version204 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE checklist DROP deputy_charge_allowed_by_court');
         $this->addSql('ALTER TABLE casrec ADD registration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE casrec ADD last_logged_in TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');

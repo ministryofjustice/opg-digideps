@@ -28,8 +28,6 @@ class Version208 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE report ADD prof_dc_hc_agreed BOOLEAN DEFAULT NULL');
     }
 }

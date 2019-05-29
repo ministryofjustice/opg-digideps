@@ -30,8 +30,6 @@ class Version207 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE checklist DROP payments_match_cost_certificate');
         $this->addSql('ALTER TABLE checklist DROP prof_costs_reasonable_and_proportionate');
         $this->addSql('ALTER TABLE checklist DROP has_deputy_overcharged_from_previous_estimates');

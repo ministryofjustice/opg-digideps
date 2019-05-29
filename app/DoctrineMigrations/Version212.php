@@ -28,8 +28,6 @@ class Version212 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE document ADD deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 }

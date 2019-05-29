@@ -35,8 +35,6 @@ class Version198 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP TABLE prof_deputy_other_cost');
         $this->addSql('CREATE INDEX created_on_idx ON report_submission (created_on)');
 
