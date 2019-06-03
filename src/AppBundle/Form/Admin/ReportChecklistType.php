@@ -123,7 +123,7 @@ class ReportChecklistType extends AbstractType
             ]);
 
             $builder->add('hasDeputyOverchargedFromPreviousEstimates', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
                 'expanded' => true
             ]);
         }
