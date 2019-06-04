@@ -356,10 +356,13 @@
                     </tr>
                 </tbody>
             </table>
-            <h3>
-                {{ (page ~ '.form.totalEstimatedCosts.label') | trans({}, 'admin-checklist') }}: 
-                £{{ report.profDeputyEstimateCostsTotal | money_format }}
-            </h3>
+
+            {% if report.profDeputyManagementCostAmount is not null %}
+                <h3 class="label question bold">
+                    {{ (page ~ '.form.totalEstimatedCosts.label') | trans({}, 'admin-checklist') }}:
+                    £{{ report.profDeputyManagementCostAmount | money_format }}
+                </h3>
+            {% endif %}
         </div>
         {% endif %}        
 

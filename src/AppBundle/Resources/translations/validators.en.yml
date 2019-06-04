@@ -516,6 +516,7 @@ profDeputyEstimateCost:
   profDeputyManagementCostAmount:
     amount:
       notBlank: Please enter an amount
+    breakdownGreaterThanTotal: The individual breakdown of costs must not exceed the total general management amount
   amount:
     notNumeric: Amount not valid
     minMessage: The amount must be more than £{{ limit }}

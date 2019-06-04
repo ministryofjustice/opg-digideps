@@ -64,13 +64,6 @@ trait ReportProfDeputyCostsEstimateTrait
     private $profDeputyCostsEstimateMoreInfoDetails;
 
     /**
-     * @var float
-     *
-     * @JMS\Type("double")
-     */
-    private $profDeputyEstimateCostsTotal;
-
-    /**
      * @return array
      */
     public function getProfDeputyEstimateCostTypeIds()
@@ -185,22 +178,6 @@ trait ReportProfDeputyCostsEstimateTrait
         $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
 
         return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getProfDeputyEstimateCostsTotal()
-    {
-        return $this->profDeputyEstimateCostsTotal;
-    }
-
-    /**
-     * @param float $profDeputyEstimateCostsTotal
-     */
-    public function setProfDeputyEstimateCostsTotal($profDeputyEstimateCostsTotal)
-    {
-        $this->profDeputyEstimateCostsTotal = $profDeputyEstimateCostsTotal;
     }
 
     /**
