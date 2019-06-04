@@ -124,16 +124,15 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $existing = new ProfDeputyEstimateCost();
         $existing
             ->setReport($this->report)
-            ->setProfDeputyEstimateCostTypeId('other')
+            ->setProfDeputyEstimateCostTypeId('forms-documents')
             ->setAmount('22.99')
-            ->setHasMoreDetails(true)
-            ->setMoreDetails('extra-details');
+            ->setHasMoreDetails(true);
 
         $this->report->addProfDeputyEstimateCost($existing);
 
         $data['prof_deputy_estimate_costs'] = [
             ['prof_deputy_estimate_cost_type_id' => 'contact-client', 'amount' => '30.32', 'has_more_details' => false, 'more_details' => null],
-            ['prof_deputy_estimate_cost_type_id' => 'other', 'amount' => '33.98', 'has_more_details' => true, 'more_details' => 'updated-details']
+            ['prof_deputy_estimate_cost_type_id' => 'forms-documents', 'amount' => '33.98', 'has_more_details' => true, 'more_details' => 'updated-details']
         ];
 
         $this->ensureSectionStatusCacheWillBeUpdated();
@@ -225,7 +224,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     private function assertExistingProfDeputyEstimateCostIsUpdated()
     {
-        $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('other');
+        $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('forms-documents');
 
         $this->assertSame($this->report, $profDeputyEstimateCost->getReport());
         $this->assertEquals('33.98', $profDeputyEstimateCost->getAmount());
