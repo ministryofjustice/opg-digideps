@@ -63,8 +63,7 @@ trait ReportProfDeputyCostsEstimateTrait
         ['typeId' => 'contact-client', 'hasMoreDetails' => false],
         ['typeId' => 'contact-case-manager-carers', 'hasMoreDetails' => false],
         ['typeId' => 'contact-others', 'hasMoreDetails' => false],
-        ['typeId' => 'forms-documents', 'hasMoreDetails' => false],
-        ['typeId' => 'other', 'hasMoreDetails' => true],
+        ['typeId' => 'forms-documents', 'hasMoreDetails' => false]
     ];
 
     /**
@@ -185,24 +184,6 @@ trait ReportProfDeputyCostsEstimateTrait
         $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
 
         return $this;
-    }
-
-    /**
-     * @return float
-     * @JMS\VirtualProperty()
-     * @JMS\Groups({"prof-deputy-estimate-costs"})
-     */
-    public function getProfDeputyEstimateCostsTotal()
-    {
-        $total = 0;
-
-        foreach ($this->getProfDeputyEstimateCosts() as $profDeputyEstimateCost) {
-            $total += $profDeputyEstimateCost->getAmount();
-        }
-
-        $total += $this->getProfDeputyCostsEstimateManagementCostAmount();
-
-        return $total;
     }
 
     /**
