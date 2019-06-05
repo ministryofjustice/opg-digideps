@@ -32,6 +32,13 @@ RUN apk add --no-cache autoconf g++ make \
   && pecl install redis \
   && docker-php-ext-enable redis
 
+# Install Xdebug if directed to with build arg from docker-compose.yml
+ARG REQUIRE_XDEBUG=false
+RUN if [ $REQUIRE_XDEBUG = "true" ] ; then \
+        pecl install xdebug-2.5.5; \
+        docker-php-ext-enable xdebug; \
+    fi ;
+
 # Add NGINX
 RUN apk add --no-cache nginx
 

@@ -62,6 +62,14 @@ Same with entity `Xyz` where properties have the JMS group `xyz`.
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
 
+## Xdebug
+
+Xdebug is installed on the container when your local `.env` file in the `opg-digi-deps-docker` repo contains `REQUIRE_XDEBUG_API=true`. (See the `opg-digi-deps-docker` README for more information).
+
+Once installed, you can set xdebug config values from `api.env`. For the values to take effect, the env file must contain `OPG_PHP_XDEBUG_ENABLED=true`. The default values currently set are those required to step through the PHPSTORM IDE on a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set in the `admin.env` and `frontend.env` files.
+
+Use Postman to hit the API directly when debugging endpoints.
+
 ## License
 
 The OPG Digideps API is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
