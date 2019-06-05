@@ -58,6 +58,12 @@ Dependencies are versioned to avoid accidently breaking the build. From time to 
 
 [PSR-1](http://www.php-fig.org/psr/psr-1/), [PSR-2](http://www.php-fig.org/psr/psr-2/)
 
+## Xdebug
+
+Xdebug is installed on the container when your local `.env` file in the `opg-digi-deps-docker` repo contains `REQUIRE_XDEBUG_FRONTEND=true`. (See the `opg-digi-deps-docker` README for more information).
+
+Once installed, you can set xdebug config values from `admin.env` and `frontend.env`. For the values to take effect, the env file must contain `OPG_PHP_XDEBUG_ENABLED=true`. The default values currently set are those required to step through the PHPSTORM IDE on a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set in the `admin.env` and `frontend.env` files. 
+
 ## License
 
 The OPG Digideps Client is released under the MIT license, a copy of which can be found in [LICENSE](LICENSE).
