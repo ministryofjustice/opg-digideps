@@ -107,8 +107,6 @@
 
     {% block linkBack %}{% endblock %}
 
-    {% block progressBar %}{% endblock %}
-
     {% block validationSummary %}
         {% if form | default(false) %}
             {{ form_errors_list(form) }}
@@ -145,6 +143,8 @@
         {% block pageTitle %} Deputy report {% endblock %}
         {% block supportTitleBottom %}{% endblock %}
     </h1>
+
+    {% block progressBar %}{% endblock %}
 
     {% block pageContent %}{% endblock %}
 
