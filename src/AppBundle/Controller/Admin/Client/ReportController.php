@@ -44,6 +44,7 @@ class ReportController extends AbstractController
         'prof-deputy-estimate-costs',
         'prof-deputy-costs-estimate-how-charged',
         'prof-deputy-estimate-management-costs',
+        'prof-deputy-costs-estimate-more-info',
         'action',
         'action-more-info',
         'asset',

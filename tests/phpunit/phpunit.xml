@@ -23,6 +23,7 @@
             <directory>Service</directory>
             <directory>Transformer</directory>
             <directory>Twig</directory>
+            <directory>Validator</directory>
         </testsuite>
     </testsuites>
 

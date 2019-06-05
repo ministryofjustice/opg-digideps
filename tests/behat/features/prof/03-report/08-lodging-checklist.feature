@@ -75,6 +75,7 @@ Feature: Admin report checklist
       | report_checklist_profCostsReasonableAndProportionate_1 |
       | report_checklist_hasDeputyOverchargedFromPreviousEstimates_0 |
       | report_checklist_hasDeputyOverchargedFromPreviousEstimates_1 |
+      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_2 |
       | report_checklist_nextBillingEstimatesSatisfactory_0    |
       | report_checklist_nextBillingEstimatesSatisfactory_1    |
       | report_checklist_caseWorkerSatisified_0                |
@@ -141,7 +142,7 @@ Feature: Admin report checklist
     And I fill in "report_checklist_bondOrderMatchCasrec_0" with "yes"
     And I fill in "report_checklist_paymentsMatchCostCertificate_0" with "yes"
     And I fill in "report_checklist_profCostsReasonableAndProportionate_0" with "yes"
-    And I fill in "report_checklist_hasDeputyOverchargedFromPreviousEstimates_1" with "no"
+    And I fill in "report_checklist_hasDeputyOverchargedFromPreviousEstimates_2" with "na"
     And I fill in "report_checklist_nextBillingEstimatesSatisfactory_1" with "yes"
     And I fill in "report_checklist_futureSignificantDecisions_0" with "yes"
     And I fill in "report_checklist_hasDeputyRaisedConcerns_1" with "no"
@@ -168,7 +169,7 @@ Feature: Admin report checklist
       | report_checklist_paymentsMatchCostCertificate_0               | yes                 |
       | report_checklist_profCostsReasonableAndProportionate_0        | yes                 |
       | report_checklist_paymentsMatchCostCertificate_0               | yes                 |
-      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_1  | no                  |
+      | report_checklist_hasDeputyOverchargedFromPreviousEstimates_2  | na                  |
       | report_checklist_nextBillingEstimatesSatisfactory_1           | yes                  |
       | report_checklist_futureSignificantDecisions_0          | yes                |
       | report_checklist_hasDeputyRaisedConcerns_1             | no                 |

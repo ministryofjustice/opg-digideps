@@ -36,7 +36,7 @@
             {# General Management Cost #}
             <tr class="behat-region-management-cost">
                 <td>
-                    {{ 'breakdown.form.profDeputyCostsEstimateManagementCost.label' | trans }}
+                    {{ 'breakdown.form.profDeputyCostsEstimateManagementCost.sectionDescription' | trans(transOptions) }}
                 </td>
                 <td>
                     £{{ (report.profDeputyManagementCostAmount) | money_format }}
@@ -47,89 +47,65 @@
                     </td>
                 {% endif %}
             </tr>
-
-            {# Detailed entries #}
-            {% for estimateCostTypeId in report.getProfDeputyEstimateCostTypeIds %}
-                {% set costRow = submittedEstimateCosts[estimateCostTypeId.typeId] %}
-                <tr class="behat-region-breakdown-{{ estimateCostTypeId.typeId | lower }}">
+            {# More information #}
+            {% if report.profDeputyCostsEstimateHasMoreInfo is not empty %}
+                <tr class="behat-region-more-info">
                     <td>
-                        {{ ('breakdown.form.entries.' ~ estimateCostTypeId.typeId ~ '.label') | trans }}
+                        {{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfo.label' | trans }}
                     </td>
-                    <td>
-                        {% if costRow['amount'] is null %}
-                            £{{ 0 | money_format }}
-                        {% else %}
-                            £{{ costRow['amount'] | money_format }}
-                        {% endif %}
-                    </td>
-                    {% if not hideEditLink %}
-                        <td class="change-answer width-sixth soft-half--left hard--right">
-                            <a href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
-                               class="action-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    {% if 'yes' == report.profDeputyCostsEstimateHasMoreInfo %}
+                        <td>
+                            {{ report.profDeputyCostsEstimateMoreInfoDetails | capitalize | trans }}
+                        </td>
+                    {% else %}
+                        <td>
+                            {{ 'summaryPage.noMoreInfo' | trans }}
                         </td>
                     {% endif %}
-                </tr>
-                {# more details ("estimate" only) #}
-                {% if costRow.hasMoreDetails and costRow.moreDetails %}
-                  <tr class="behat-region-breakdown-{{ estimateCostTypeId.typeId | lower }}-details">
-                    <td>
-                        {{ ('breakdown.form.entries.' ~ estimateCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
-                    </td>
-                    <td>
-                        {{  costRow.moreDetails | nl2br }}
-                    </td>
-                    {% if not hideEditLink %}
-                        <td class="change-answer width-sixth soft-half--left hard--right">
-                            <a href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
-                               class="action-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                        </td>
-                    {% endif %}
-                  </tr>
-                {% endif %}
-            {% endfor %}
-
-            <tr class="behat-region-total-estimate-cost">
-                <td>
-                    <strong class="bold">{{ ('totalEstimatedCosts') | trans }}</strong>
-                </td>
-                <td>
-                    <strong class="bold">£{{ report.profDeputyEstimateCostsTotal | money_format }}</strong>
-                </td>
-                <td></td>
-            </tr>
-
-        {% endif %}
-
-        {# More information #}
-        {% if report.profDeputyCostsEstimateHasMoreInfo is not empty %}
-            <tr class="behat-region-more-info">
-                <td>
-                    {{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.yesno' | trans }}
-                </td>
-                <td>
-                    {{ report.profDeputyCostsEstimateHasMoreInfo | capitalize | trans }}
-                </td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer">
-                        <a href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-more-info">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
-                {% endif %}
-            </tr>
-            {% if 'yes' == report.profDeputyCostsEstimateHasMoreInfo %}
-                <tr class="behat-region-more-info-details">
-                    <td>
-                        {{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfoSummary.details' | trans }}
-                    </td>
-                    <td>
-                        {{ report.profDeputyCostsEstimateMoreInfoDetails | capitalize | trans }}
-                    </td>
                     {% if not hideEditLink  %}
                         <td class="change-answer">
-                            <a href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-more-info-details">{{ 'edit' | trans({}, 'common' ) }}</a>
+                            <a href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link behat-link-edit-more-info">{{ 'edit' | trans({}, 'common' ) }}</a>
                         </td>
                     {% endif %}
                 </tr>
             {% endif %}
         {% endif %}
+
+
     </tbody>
 </table>
+
+{% if submittedEstimateCosts is not null %}
+<table class="check-your-answers columns-2 push--bottom">
+    <thead>
+    <tr>
+        <th>{{ 'summaryPage.breakdownHeading' | trans }}</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for estimateCostTypeId in report.getProfDeputyEstimateCostTypeIds %}
+        {% set costRow = submittedEstimateCosts[estimateCostTypeId.typeId] %}
+        <tr class="behat-region-breakdown-{{ estimateCostTypeId.typeId | lower }}">
+            <td>
+                {{ ('breakdown.form.entries.' ~ estimateCostTypeId.typeId ~ '.label') | trans }}
+            </td>
+            <td>
+                {% if costRow['amount'] is null %}
+                    £{{ 0 | money_format }}
+                {% else %}
+                    £{{ costRow['amount'] | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink %}
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
+                       class="action-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
