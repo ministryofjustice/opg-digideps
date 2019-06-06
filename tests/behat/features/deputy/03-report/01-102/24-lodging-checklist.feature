@@ -149,6 +149,8 @@ Feature: Admin report checklist
     And I fill in "report_checklist_debtsManaged_0" with "yes"
     And I fill in "report_checklist_openClosingBalancesMatch_1" with "no"
     And I fill in "report_checklist_accountsBalance_2" with "na"
+    When I click on "back-to-money-in-out"
+    Then the URL should match "/admin/report/\d+/checklist#moneyInOut"
     And I fill in "report_checklist_moneyMovementsAcceptable_0" with "yes"
     And I fill in "report_checklist_bondAdequate_1" with "no"
     And I fill in "report_checklist_bondOrderMatchCasrec_2" with "na"
