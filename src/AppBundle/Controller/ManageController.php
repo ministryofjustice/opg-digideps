@@ -24,6 +24,7 @@ class ManageController extends AbstractController
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
             'services' => $services,
             'errors' => $errors,
+            'environment' => $this->get('kernel')->getEnvironment(),
         ]);
 
         $response->setStatusCode($healthy ? 200 : 500);
