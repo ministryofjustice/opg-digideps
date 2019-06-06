@@ -129,7 +129,7 @@ Feature: Admin report checklist
     Then the URL should match "/admin/report/\d+/checklist"
 
 
-  @deputy @shauns
+  @deputy
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
@@ -149,8 +149,6 @@ Feature: Admin report checklist
     And I fill in "report_checklist_debtsManaged_0" with "yes"
     And I fill in "report_checklist_openClosingBalancesMatch_1" with "no"
     And I fill in "report_checklist_accountsBalance_2" with "na"
-    When I click on "back-to-money-in-out"
-    Then the URL should match "/admin/report/\d+/checklist#moneyInOut"
     And I fill in "report_checklist_moneyMovementsAcceptable_0" with "yes"
     And I fill in "report_checklist_bondAdequate_1" with "no"
     And I fill in "report_checklist_bondOrderMatchCasrec_2" with "na"
@@ -162,6 +160,8 @@ Feature: Admin report checklist
     Then I click on "save-progress"
     And the response status code should be 200
     And the URL should match "/admin/report/\d+/checklist"
+    When I click on "back-to-money-in-out"
+    Then the URL should match "/admin/report/\d+/checklist#moneyInOut"
     And each text should be present in the corresponding region:
       | Admin User, OPG Admin | last-saved-by |
     # Assert form reloads with fields saved
