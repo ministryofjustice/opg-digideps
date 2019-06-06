@@ -20,6 +20,7 @@ class ManageController extends RestController
 
         $data = [
             'healthy' => $dbHealthy,
+            'environment' => $this->get('kernel')->getEnvironment(),
             'errors' => implode("\n", array_filter([$dbError])),
         ];
 
