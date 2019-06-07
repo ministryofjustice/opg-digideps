@@ -105,6 +105,9 @@ class S3Storage implements StorageInterface
      */
     public function removeFromS3($key)
     {
+        /*
+         * ListObjectVersions is permitted by ListBucketVersions in IAM.
+         */
         $objectVersions = $this->s3Client->listObjectVersions([
             'Bucket' => $this->bucketName,
             'Prefix' => $key
@@ -114,7 +117,8 @@ class S3Storage implements StorageInterface
             foreach ($objectVersions['Versions'] as $versionData) {
                 $this->s3Client->deleteObject([
                     'Bucket' => $this->bucketName,
-                    'Key' => $versionData['Key']
+                    'Key' => $versionData['Key'],
+                    'VersionId' => $versionData['VersionId'],
                 ]);
             }
 
