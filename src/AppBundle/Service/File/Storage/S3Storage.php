@@ -115,7 +115,7 @@ class S3Storage implements StorageInterface
 
         if ($objectVersions instanceof \Aws\Result) {
             foreach ($objectVersions['Versions'] as $versionData) {
-                $this->s3Client->deleteObject([
+                $this->s3Client->deleteObjectVersion([
                     'Bucket' => $this->bucketName,
                     'Key' => $versionData['Key'],
                     'VersionId' => $versionData['VersionId'],
