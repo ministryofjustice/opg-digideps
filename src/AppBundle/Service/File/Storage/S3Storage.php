@@ -120,11 +120,13 @@ class S3Storage implements StorageInterface
                 if (array_key_exists('Versions', $objectVersions)) {
                     foreach ($objectVersions['Versions'] as $versionData) {
                         if (!empty($versionData["VersionId"])) {
-                            $this->s3Client->deleteObject([
+                            $response = $this->s3Client->deleteObject([
                                 'Bucket' => $this->bucketName,
                                 'Key' => $versionData['Key'],
                                 'VersionId' => $versionData['VersionId'],
                             ]);
+                            $this->log('info', json_encode($response));
+
                         }
                     }
                 }
@@ -132,11 +134,12 @@ class S3Storage implements StorageInterface
                 if (array_key_exists('DeleteMarkers', $objectVersions)) {
                     // remove any deleteMarkers permanently
                     foreach ($objectVersions['DeleteMarkers'] as $dmData) {
-                        $this->s3Client->deleteObject([
+                        $dmResponse = $this->s3Client->deleteObject([
                             'Bucket' => $this->bucketName,
                             'Key' => $dmData['Key'],
                             'VersionId' => $dmData['VersionId'],
                         ]);
+                        $this->log('info', "Removing deleteMarker: " . $dmData['VersionId'] . json_encode($dmResponse));
                     }
                 }
 
