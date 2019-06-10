@@ -114,24 +114,28 @@ class S3Storage implements StorageInterface
         ]);
 
         if ($objectVersions instanceof \Aws\Result) {
-            foreach ($objectVersions['Versions'] as $versionData) {
-                if (!empty($versionData["VersionId"])) {
-                    $this->s3Client->deleteObject([
-                        'Bucket' => $this->bucketName,
-                        'Key' => $versionData['Key'],
-                        'VersionId' => $versionData['VersionId'],
-                    ]);
+            if (array_key_exists('Versions',$objectVersions)) {
+                foreach ($objectVersions['Versions'] as $versionData) {
+                    if (!empty($versionData["VersionId"])) {
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
+                            'Key' => $versionData['Key'],
+                            'VersionId' => $versionData['VersionId'],
+                        ]);
+                    }
                 }
             }
 
-            // remove any deleteMarkers permanently
-            foreach ($objectVersions['DeleteMarkers'] as $dmData) {
-                if (!empty($dmData["VersionId"])) {
-                    $this->s3Client->deleteObject([
-                        'Bucket' => $this->bucketName,
-                        'Key' => $dmData['Key'],
-                        'VersionId' => $dmData['VersionId'],
-                    ]);
+            if (array_key_exists('DeleteMarkers',$objectVersions)) {
+                // remove any deleteMarkers permanently
+                foreach ($objectVersions['DeleteMarkers'] as $dmData) {
+                    if (!empty($dmData["VersionId"])) {
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
+                            'Key' => $dmData['Key'],
+                            'VersionId' => $dmData['VersionId'],
+                        ]);
+                    }
                 }
             }
             return true;
