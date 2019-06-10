@@ -113,8 +113,7 @@ class S3Storage implements StorageInterface
                 'Bucket' => $this->bucketName,
                 'Prefix' => $key
             ]);
-            var_dump($objectVersions);
-exit;
+
             if ($objectVersions instanceof \Aws\Result) {
                 foreach ($objectVersions['Versions'] as $versionData) {
                     if (!empty($versionData["VersionId"])) {
