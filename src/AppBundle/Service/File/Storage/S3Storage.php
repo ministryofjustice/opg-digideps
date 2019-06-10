@@ -105,7 +105,7 @@ class S3Storage implements StorageInterface
      */
     public function removeFromS3($key)
     {
-        if (!empty($key)) {
+        if (strlen($key) > 0) {
             /*
              * ListObjectVersions is permitted by ListBucketVersions in IAM.
              */
@@ -113,34 +113,27 @@ class S3Storage implements StorageInterface
                 'Bucket' => $this->bucketName,
                 'Prefix' => $key
             ]);
-            $this->log('notice', "listing object versions for $key");
-            $this->log('notice', json_encode($objectVersions));
-
+            var_dump($objectVersions);
+exit;
             if ($objectVersions instanceof \Aws\Result) {
-                if (array_key_exists('Versions', $objectVersions)) {
-                    foreach ($objectVersions['Versions'] as $versionData) {
-                        if (!empty($versionData["VersionId"])) {
-                            $response = $this->s3Client->deleteObject([
-                                'Bucket' => $this->bucketName,
-                                'Key' => $versionData['Key'],
-                                'VersionId' => $versionData['VersionId'],
-                            ]);
-                            $this->log('notice', json_encode($response));
-
-                        }
+                foreach ($objectVersions['Versions'] as $versionData) {
+                    if (!empty($versionData["VersionId"])) {
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
+                            'Key' => $versionData['Key'],
+                            'VersionId' => $versionData['VersionId'],
+                        ]);
                     }
                 }
 
-                if (array_key_exists('DeleteMarkers', $objectVersions)) {
-                    // remove any deleteMarkers permanently
-                    foreach ($objectVersions['DeleteMarkers'] as $dmData) {
-                        $dmResponse = $this->s3Client->deleteObject([
-                            'Bucket' => $this->bucketName,
-                            'Key' => $dmData['Key'],
-                            'VersionId' => $dmData['VersionId'],
-                        ]);
-                        $this->log('notice', "Removing deleteMarker: " . $dmData['VersionId'] . json_encode($dmResponse));
-                    }
+
+                // remove any deleteMarkers permanently
+                foreach ($objectVersions['DeleteMarkers'] as $dmData) {
+                    $this->s3Client->deleteObject([
+                        'Bucket' => $this->bucketName,
+                        'Key' => $dmData['Key'],
+                        'VersionId' => $dmData['VersionId'],
+                    ]);
                 }
 
                 return $objectVersions;
