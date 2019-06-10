@@ -130,17 +130,15 @@ class S3Storage implements StorageInterface
                 if (array_key_exists('DeleteMarkers', $objectVersions)) {
                     // remove any deleteMarkers permanently
                     foreach ($objectVersions['DeleteMarkers'] as $dmData) {
-                        if (!empty($dmData["VersionId"])) {
-                            $this->s3Client->deleteObject([
-                                'Bucket' => $this->bucketName,
-                                'Key' => $dmData['Key'],
-                                'VersionId' => $dmData['VersionId'],
-                            ]);
-                        }
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
+                            'Key' => $dmData['Key'],
+                            'VersionId' => $dmData['VersionId'],
+                        ]);
                     }
                 }
 
-                return true;
+                return $objectVersions;
             }
         }
         throw new \RuntimeException('Could not remove from S3: Version data not found');
