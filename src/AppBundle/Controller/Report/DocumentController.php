@@ -106,6 +106,6 @@ class DocumentController extends RestController
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
 
-        return [];
+        return ['id' => $id];
     }
 }
