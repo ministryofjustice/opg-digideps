@@ -113,6 +113,8 @@ class S3Storage implements StorageInterface
                 'Bucket' => $this->bucketName,
                 'Prefix' => $key
             ]);
+            $this->log('warn', "listing object versions for $key");
+            $this->log('warn', json_encode($objectVersions));
 
             if ($objectVersions instanceof \Aws\Result) {
                 if (array_key_exists('Versions', $objectVersions)) {
