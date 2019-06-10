@@ -113,8 +113,8 @@ class S3Storage implements StorageInterface
                 'Bucket' => $this->bucketName,
                 'Prefix' => $key
             ]);
-            $this->log('info', "listing object versions for $key");
-            $this->log('info', json_encode($objectVersions));
+            $this->log('notice', "listing object versions for $key");
+            $this->log('notice', json_encode($objectVersions));
 
             if ($objectVersions instanceof \Aws\Result) {
                 if (array_key_exists('Versions', $objectVersions)) {
@@ -125,7 +125,7 @@ class S3Storage implements StorageInterface
                                 'Key' => $versionData['Key'],
                                 'VersionId' => $versionData['VersionId'],
                             ]);
-                            $this->log('info', json_encode($response));
+                            $this->log('notice', json_encode($response));
 
                         }
                     }
@@ -139,7 +139,7 @@ class S3Storage implements StorageInterface
                             'Key' => $dmData['Key'],
                             'VersionId' => $dmData['VersionId'],
                         ]);
-                        $this->log('info', "Removing deleteMarker: " . $dmData['VersionId'] . json_encode($dmResponse));
+                        $this->log('notice', "Removing deleteMarker: " . $dmData['VersionId'] . json_encode($dmResponse));
                     }
                 }
 
