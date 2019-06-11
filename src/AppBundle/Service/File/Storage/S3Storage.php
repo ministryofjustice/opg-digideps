@@ -150,8 +150,7 @@ class S3Storage implements StorageInterface
             ];
 
             if (count($objectResult['Deleted']) !== count($objectsToDelete)) {
-                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));  
-                throw new \RuntimeException('Could not remove all versions of file');
+                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));
             }
 
             if (count($objectResult['Errors']) > 0) {
