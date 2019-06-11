@@ -157,7 +157,8 @@ class S3Storage implements StorageInterface
             }
 
             $results = [
-                'objectVersions' => $objectVersions,
+                'objectVersions' => json_encode($objectVersions),
+                'objectVersionsClass' => get_class($objectVersions),
                 'objectsToDelete' => $objectsToDelete,
                 'dmsToDelete' => $dmsToDelete,
                 'results' => [
