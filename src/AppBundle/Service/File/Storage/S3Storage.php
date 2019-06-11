@@ -114,6 +114,7 @@ class S3Storage implements StorageInterface
         ]);
 
         $objectResult = [];
+        $objectsToDelete = [];
         if ($objectVersions instanceof \Aws\Result) {
             if (array_key_exists('Versions', $objectVersions)) {
                 $objectsToDelete = [];
@@ -133,14 +134,15 @@ class S3Storage implements StorageInterface
                 }
             }
 
+            $dmsToDelete = [];
             $dmResult = [];
             // remove any deleteMarkers permanently
             if (array_key_exists('DeleteMarkers', $objectVersions)) {
-                $objectsToDelete = [];
+                $dmsToDelete = [];
 
                 foreach ($objectVersions['DeleteMarkers'] as $dmData) {
                     if (!empty($dmData["VersionId"])) {
-                        $objectsToDelete[] = [
+                        $dmsToDelete[] = [
                             'Key' => $versionData['Key'],
                             'VersionId' => $versionData['VersionId'],
                         ];
@@ -149,12 +151,19 @@ class S3Storage implements StorageInterface
                 if (!empty($objectsToDelete)) {
                     $dmResult = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete]
+                        'Delete' => ['Objects' => $dmsToDelete]
                     ]);
                 }
             }
 
-            $results = ['results' => [$objectResult, $dmResult]];
+            $results = [
+                'objectsToDelete' => $objectsToDelete,
+                'dmsToDelete' => $dmsToDelete,
+                'results' => [
+                    'objectsResult' => $objectResult,
+                    'dmResult' => $dmResult
+                ]
+            ];
 
             $this->log('info', json_encode($results));
             throw new \RuntimeException('Could not remove from S3: ' . json_encode($results));
