@@ -87,10 +87,11 @@ class DocumentService
         }
 
         $this->log('notice', "Deleting $ref from S3");
-        $this->s3Storage->removeFromS3($ref);
+        $result = $this->s3Storage->removeFromS3($ref);
+
         $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
 
-        return true;
+        return $result;
     }
 
     /**

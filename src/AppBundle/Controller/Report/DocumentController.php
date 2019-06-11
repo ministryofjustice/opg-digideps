@@ -243,7 +243,7 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {
-        /** @var EntityDir\Document $document */
+        /** @var EntityDir\Report\Document $document */
         $document = $this->getDocument($documentId);
 
         $report = $document->getReport();
@@ -252,9 +252,11 @@ class DocumentController extends AbstractController
         try {
             /** @var DocumentService $documentService */
             $documentService = $this->get('document_service');
-            $documentService->removeDocumentFromS3($document); // rethrows any exception
+            $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
-            $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            if ($result) {
+                $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            }
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
 
