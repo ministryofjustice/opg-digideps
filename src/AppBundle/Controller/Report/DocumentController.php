@@ -254,7 +254,7 @@ class DocumentController extends AbstractController
             $documentService = $this->get('document_service');
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
-            if ($result)
+            if ($result) {
                 $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
             }
         } catch (\Exception $e) {
