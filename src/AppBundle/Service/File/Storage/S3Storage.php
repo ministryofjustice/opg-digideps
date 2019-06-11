@@ -115,7 +115,7 @@ class S3Storage implements StorageInterface
 
         $objectResult = [];
         $objectsToDelete = [];
-        if ($objectVersions instanceof \Aws\Result) {
+        //if ($objectVersions instanceof \Aws\Result) {
             if (array_key_exists('Versions', $objectVersions)) {
                 $objectsToDelete = [];
                 foreach ($objectVersions['Versions'] as $versionData) {
@@ -157,6 +157,7 @@ class S3Storage implements StorageInterface
             }
 
             $results = [
+                'objectVersions' => $objectVersions,
                 'objectsToDelete' => $objectsToDelete,
                 'dmsToDelete' => $dmsToDelete,
                 'results' => [
@@ -169,7 +170,7 @@ class S3Storage implements StorageInterface
             throw new \RuntimeException('Could not remove from S3: ' . json_encode($results));
 
             return $results;
-        }
+//        }
 
         throw new \RuntimeException('Could not remove from S3: Version data not found');
     }
