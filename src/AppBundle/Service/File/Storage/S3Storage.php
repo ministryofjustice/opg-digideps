@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service\File\Storage;
 
+use Aws\ResultInterface;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;
@@ -115,11 +116,16 @@ class S3Storage implements StorageInterface
 
         $objectResult = [];
         $objectsToDelete = [];
-        //if ($objectVersions instanceof \Aws\Result) {
+        if ($objectVersions instanceof ResultInterface) {
+            /** @var ResultInterface $objectVersions */
+            $objectVersions = $objectVersions->toArray();
+
+            /** @var array $objectVersions */
             if (array_key_exists('Versions', $objectVersions)) {
                 $objectsToDelete = [];
+
                 foreach ($objectVersions['Versions'] as $versionData) {
-                    if (!empty($versionData["VersionId"])) {
+                    if (!empty($versionData['VersionId'])) {
                         $objectsToDelete[] = [
                             'Key' => $versionData['Key'],
                             'VersionId' => $versionData['VersionId'],
@@ -167,13 +173,13 @@ class S3Storage implements StorageInterface
                 ]
             ];
 
-            $this->log('info', json_encode($results));
+            //$this->log('info', json_encode($results));
             throw new \RuntimeException('Could not remove from S3: ' . json_encode($results));
 
             return $results;
-//        }
+        }
 
-        throw new \RuntimeException('Could not remove from S3: Version data not found');
+        throw new \RuntimeException('Could not remove from S3: No results returned');
     }
 
     /**
