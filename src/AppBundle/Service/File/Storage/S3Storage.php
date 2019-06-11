@@ -128,7 +128,7 @@ class S3Storage implements StorageInterface
                 if (!empty($objectsToDelete)) {
                     $objectResult = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
-                        'Delete' => $objectsToDelete
+                        'Delete' => ['Objects' => $objectsToDelete]
                     ]);
                 }
             }
@@ -149,14 +149,14 @@ class S3Storage implements StorageInterface
                 if (!empty($objectsToDelete)) {
                     $dmResult = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
-                        'Delete' => $objectsToDelete
+                        'Delete' => ['Objects' => $objectsToDelete]
                     ]);
                 }
             }
 
             $results = ['results' => [$objectResult, $dmResult]];
 
-            $this->log('debug', json_encode($results));
+            $this->log('info', json_encode($results));
 
             return $results;
         }
