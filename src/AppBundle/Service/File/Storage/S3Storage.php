@@ -101,7 +101,7 @@ class S3Storage implements StorageInterface
      * Remove an object and all its versions from S3 completely.
      *
      * @param  string      $key
-     * @return array
+     * @return \Aws\Result
      */
     public function removeFromS3($key)
     {
@@ -113,52 +113,33 @@ class S3Storage implements StorageInterface
             'Prefix' => $key
         ]);
 
-        $objectResult = [];
         if ($objectVersions instanceof \Aws\Result) {
             if (array_key_exists('Versions', $objectVersions)) {
-                $objectsToDelete = [];
                 foreach ($objectVersions['Versions'] as $versionData) {
                     if (!empty($versionData["VersionId"])) {
-                        $objectsToDelete[] = [
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
                             'Key' => $versionData['Key'],
                             'VersionId' => $versionData['VersionId'],
-                        ];
+                        ]);
                     }
-                }
-                if (!empty($objectsToDelete)) {
-                    $objectResult = $this->s3Client->deleteObjects([
-                        'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete]
-                    ]);
                 }
             }
 
-            $dmResult = [];
             // remove any deleteMarkers permanently
             if (array_key_exists('DeleteMarkers', $objectVersions)) {
-                $objectsToDelete = [];
-
                 foreach ($objectVersions['DeleteMarkers'] as $dmData) {
                     if (!empty($dmData["VersionId"])) {
-                        $objectsToDelete[] = [
-                            'Key' => $versionData['Key'],
-                            'VersionId' => $versionData['VersionId'],
-                        ];
+                        $this->s3Client->deleteObject([
+                            'Bucket' => $this->bucketName,
+                            'Key' => $dmData['Key'],
+                            'VersionId' => $dmData['VersionId'],
+                        ]);
                     }
-                }
-                if (!empty($objectsToDelete)) {
-                    $dmResult = $this->s3Client->deleteObjects([
-                        'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $objectsToDelete]
-                    ]);
                 }
             }
 
-            $results = ['results' => [$objectResult, $dmResult]];
-
-            $this->log('info', json_encode($results));
-
-            return $results;
+            return true;
         }
 
         throw new \RuntimeException('Could not remove from S3: Version data not found');
