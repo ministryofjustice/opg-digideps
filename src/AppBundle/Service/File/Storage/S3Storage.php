@@ -115,7 +115,7 @@ class S3Storage implements StorageInterface
         ]);
 
         $objectResult = [];
-        $objectsToDelete = [];
+        $objectsToDelete = '';
         if ($objectVersions instanceof ResultInterface) {
             /** @var ResultInterface $objectVersions */
             $objectVersions = $objectVersions->toArray();
@@ -141,7 +141,7 @@ class S3Storage implements StorageInterface
             }
 
             $dmsToDelete = [];
-            $dmResult = [];
+            $dmResult = '';
             // remove any deleteMarkers permanently
             if (array_key_exists('DeleteMarkers', $objectVersions)) {
                 $dmsToDelete = [];
@@ -163,8 +163,7 @@ class S3Storage implements StorageInterface
             }
 
             $results = [
-                'objectVersions' => json_encode($objectVersions),
-                'objectVersionsClass' => get_class($objectVersions),
+                'objectVersions' => $objectVersions,
                 'objectsToDelete' => $objectsToDelete,
                 'dmsToDelete' => $dmsToDelete,
                 'results' => [

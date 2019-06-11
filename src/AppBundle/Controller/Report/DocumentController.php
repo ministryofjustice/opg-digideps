@@ -252,7 +252,7 @@ class DocumentController extends AbstractController
         try {
             /** @var DocumentService $documentService */
             $documentService = $this->get('document_service');
-            $documentService->removeDocumentFromS3($document); // rethrows any exception
+            $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
             $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
         } catch (\Exception $e) {
@@ -263,6 +263,7 @@ class DocumentController extends AbstractController
                 'Document could not be removed. Details: ' . $e->getMessage()
             );
         }
+        var_dump($result);exit;
 
         if ($report->isSubmitted()) {
             // if report is submitted, then this remove path has come from adding additional documents so return the user

@@ -55,7 +55,6 @@ class DocumentService
                 $s3Result = $this->deleteFromS3($document);
                 //remove from db
                 $endpointResult = $this->restClient->delete('document/' . $documentId);
-                var_dump($s3Result);exit;
             }
             if ($endpointResult) {
                 $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
