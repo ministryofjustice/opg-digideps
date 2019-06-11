@@ -145,16 +145,25 @@ class S3Storage implements StorageInterface
                 'objectVersions' => $objectVersions,
                 'objectsToDelete' => $objectsToDelete,
                 'results' => [
-                    'objectsResult' => $objectResult,
+                    'objectResult' => $objectResult,
                 ]
             ];
+
+            if (count($objectResult['Deleted']) !== count($objectsToDelete)) {
+                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));  
+                throw new \RuntimeException('Could not remove all versions of file');
+            }
+
+            if (count($objectResult['Errors']) > 0) {
+                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));
+            }
 
             $this->log('info', json_encode($results));
 
             return $results;
         }
 
-        throw new \RuntimeException('Could not remove from S3: No results returned');
+        throw new \RuntimeException('Could not remove file: No results returned');
     }
 
     /**
