@@ -132,6 +132,7 @@ class S3Storage implements StorageInterface
                         ];
                     }
                 }
+
                 if (!empty($objectsToDelete)) {
                     $objectResult = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
@@ -140,35 +141,11 @@ class S3Storage implements StorageInterface
                 }
             }
 
-            $dmsToDelete = [];
-            $dmResult = '';
-            // remove any deleteMarkers permanently
-            if (array_key_exists('DeleteMarkers', $objectVersions)) {
-                $dmsToDelete = [];
-
-                foreach ($objectVersions['DeleteMarkers'] as $dmData) {
-                    if (!empty($dmData["VersionId"])) {
-                        $dmsToDelete[] = [
-                            'Key' => $versionData['Key'],
-                            'VersionId' => $versionData['VersionId'],
-                        ];
-                    }
-                }
-                if (!empty($objectsToDelete)) {
-                    $dmResult = $this->s3Client->deleteObjects([
-                        'Bucket' => $this->bucketName,
-                        'Delete' => ['Objects' => $dmsToDelete]
-                    ]);
-                }
-            }
-
             $results = [
                 'objectVersions' => $objectVersions,
                 'objectsToDelete' => $objectsToDelete,
-                'dmsToDelete' => $dmsToDelete,
                 'results' => [
                     'objectsResult' => $objectResult,
-                    'dmResult' => $dmResult
                 ]
             ];
 

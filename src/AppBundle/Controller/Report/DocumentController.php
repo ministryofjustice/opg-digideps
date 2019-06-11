@@ -243,7 +243,7 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {
-        /** @var EntityDir\Document $document */
+        /** @var EntityDir\Report\Document $document */
         $document = $this->getDocument($documentId);
 
         $report = $document->getReport();
@@ -254,7 +254,9 @@ class DocumentController extends AbstractController
             $documentService = $this->get('document_service');
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
-            $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            if ($result)
+                $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            }
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
 
@@ -263,7 +265,6 @@ class DocumentController extends AbstractController
                 'Document could not be removed. Details: ' . $e->getMessage()
             );
         }
-        var_dump($result);exit;
 
         if ($report->isSubmitted()) {
             // if report is submitted, then this remove path has come from adding additional documents so return the user
