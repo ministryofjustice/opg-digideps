@@ -55,6 +55,7 @@ class DocumentService
                 $s3Result = $this->deleteFromS3($document);
                 //remove from db
                 $endpointResult = $this->restClient->delete('document/' . $documentId);
+                var_dump($s3Result);exit;
             }
             if ($endpointResult) {
                 $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
@@ -87,10 +88,11 @@ class DocumentService
         }
 
         $this->log('notice', "Deleting $ref from S3");
-        $this->s3Storage->removeFromS3($ref);
+        $result = $this->s3Storage->removeFromS3($ref);
+
         $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
 
-        return true;
+        return $result;
     }
 
     /**

@@ -173,8 +173,7 @@ class S3Storage implements StorageInterface
                 ]
             ];
 
-            //$this->log('info', json_encode($results));
-            throw new \RuntimeException('Could not remove from S3: ' . json_encode($results));
+            $this->log('info', json_encode($results));
 
             return $results;
         }
