@@ -479,6 +479,11 @@ class Ndr implements ReportInterface
      */
     public function setAgreedBehalfDeputy($agreedBehalfDeputy)
     {
+        $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
+        if ($agreedBehalfDeputy && !in_array($agreedBehalfDeputy, $acceptedValues)) {
+            throw new \InvalidArgumentException(__METHOD__ . " {$agreedBehalfDeputy} given. Expected value: " . implode(' or ', $acceptedValues));
+        }
+
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;
         return $this;
     }

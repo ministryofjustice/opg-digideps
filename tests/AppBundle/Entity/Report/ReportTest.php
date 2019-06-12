@@ -186,7 +186,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(-1 -1 -11 -11 -10 -10, $this->report->getCalculatedBalance());
 
     }
-    
+
     /**
      * //TODO consider rewriting, unit testing methods composing the total
      * (see testgetExpensesTotal as an example) and using mocks here
@@ -416,5 +416,21 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->setType($reportType);
 
         $this->assertEquals($expected, $this->report->getReportTitle());
+    }
+
+    public function testInvalidAgreedBehalfOption()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->report->setAgreedBehalfDeputy('BAD_VALUE');
+    }
+
+    public function testValidAgreedBehalfOptions()
+    {
+        $values = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
+        foreach ($values as $value) {
+            $this->report->setAgreedBehalfDeputy($value);
+
+            $this->assertEquals($this->report->getAgreedBehalfDeputy(), $value);
+        }
     }
 }
