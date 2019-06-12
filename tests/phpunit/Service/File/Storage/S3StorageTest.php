@@ -284,6 +284,28 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testRemoveFromS3WithNoKey()
+    {
+        $key = '';
+
+        $awsClient = m::mock(\Aws\S3\S3ClientInterface::class);
+
+        $this->setExpectedException('RuntimeException', 'Could not remove file');
+
+        $awsClient->shouldNotReceive('deleteObjects')->never();
+
+        $mockLogger = m::mock(LoggerInterface::class);
+        $mockLogger->shouldReceive('log')->withAnyArgs();
+
+        $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
+
+        $result = $this->object->removeFromS3($key);
+        $this->assertEquals(
+            '',
+            $result['objectsToDelete']
+        );
+    }
+
     public function testRemoveFromS3WhenS3NotWorking()
     {
         $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
