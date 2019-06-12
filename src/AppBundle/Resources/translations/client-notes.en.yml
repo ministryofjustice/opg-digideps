@@ -32,3 +32,4 @@ form:
     label: Description
   save:
     label: Save note
+pageNotice: Notes are for personal reference only, they are not viewable by the OPG

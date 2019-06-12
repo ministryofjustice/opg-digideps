@@ -32,6 +32,7 @@ class NoteController extends AbstractController
         $this->denyAccessUnlessGranted('add-note', $client, 'Access denied');
 
         $report = $client->getCurrentReport();
+        $report->setClient($client);
 
         $note = new EntityDir\Note($client);
 
@@ -90,7 +91,7 @@ class NoteController extends AbstractController
         }
 
         return [
-            'report'  => $note->getClient()->getCurrentReport(),
+            'report'  => $note->getClient()->getCurrentReport()->setClient($note->getClient()),
             'form'  => $form->createView(),
             'client' => $note->getClient(),
             'backLink' => $this->generateClientProfileLink($note->getClient())

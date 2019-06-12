@@ -24,3 +24,9 @@ services:
             - [ setTokenStorage, ["@security.token_storage"] ]
         tags:
             - { name: validator.constraint_validator, alias: email_same_domain }
+
+    app.form.type.report_declaration:
+        class: AppBundle\Form\Report\ReportDeclarationType
+        arguments: ["@security.token_storage"]
+        tags:
+            - { name: form.type }

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
@@ -35,7 +36,7 @@ class LogoutListener implements LogoutSuccessHandlerInterface
 
     public function onLogoutSuccess(Request $request)
     {
-        if ($this->tokenStorage->getToken()) {
+        if ($this->tokenStorage->getToken() instanceof UsernamePasswordToken) {
             $this->restClient->logout();
         }
 

@@ -172,6 +172,6 @@ gulp.task('watch', gulp.series(setDevelopment, function () {
         config.imgSrc + '/**/*',
         config.jsSrc + '/**/*.js',
         config.jsSrc + '/*.js'],
-        { interval: 1000 },
+        { interval: 1000, usePolling: true },
         gulp.series('default'));
 }));

@@ -17,6 +17,9 @@
 {% endblock %}
 
 {% block pageContent %}
+
+    {{ macros.notification('info', ('pageNotice') | trans) }}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.title,'form.title') }}
