@@ -20,6 +20,7 @@ clientReports:
   attachDocuments: Attach documents
 clientNotes:
   heading: Notes
+  notice: Notes are for personal reference only, they are not viewable by the OPG
   noNotes: No notes
   note: Note
   category: Category
