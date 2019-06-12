@@ -132,7 +132,6 @@ class S3Storage implements StorageInterface
                         ];
                     }
                 }
-
                 if (!empty($objectsToDelete)) {
                     $objectResult = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
