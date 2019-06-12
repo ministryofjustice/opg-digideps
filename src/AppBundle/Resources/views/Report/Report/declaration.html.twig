@@ -48,7 +48,15 @@
         <div class="text">
             <p>{{ 'page.declarationTerms01' | trans }}</p>
             <p>{{ 'page.declarationTerms02' | trans }}</p>
-            <p>{{ 'page.declarationTerms03' | trans }}</p>
+            {% if app.user.isLayDeputy %}
+                <p>{{ 'page.declarationTerms03.lay' | trans }}</p>
+            {% else %}
+                <p>{{ 'page.declarationTerms03.nonLay.intro' | trans }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ 'page.declarationTerms03.nonLay.option1' | trans }}</li>
+                    <li>{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
+                </ul>
+            {% endif %}
             <p>{{ 'page.declarationTerms04' | trans }}</p>
         </div>
 

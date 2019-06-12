@@ -6,7 +6,12 @@ page:
   declarationSectionHeader: "Deputy's declaration"
   declarationTerms01: "I confirm the information I have given in this report is true and correct to the best of my knowledge and belief."
   declarationTerms02: "I understand I have obligations to the Court of Protection and the Office of the Public Guardian, and that if I knowingly provide false or misleading information there may be legal consequences."
-  declarationTerms03: "I am submitting this report on behalf of myself and each of the deputies named in the court order (unless I have stated otherwise and provided reasons)."
+  declarationTerms03:
+    lay: "I am submitting this report on behalf of myself and each of the deputies named in the court order (unless I have stated otherwise and provided reasons)."
+    nonLay:
+        intro: "I am submitting this report as either:"
+        option1: "a deputy, and on behalf of any other deputies named in the court order (unless I have stated otherwise and provided reasons)"
+        option2: "someone authorised by the named deputies, and confirm they are aware of the contents of this report"
   declarationTerms04: "I confirm I have had regard to the Mental Capacity Act 2005, its Code of Practice and the court order in this case. I understand the duties and obligations placed on me."
   reportSubmittedFlashMessage: "The report has been submitted."
   goBackLink: "Go back to make changes to the report"
@@ -16,6 +21,7 @@ agree:
 agreedBehalfDeputy:
   label: "Are you agreeing on behalf of all deputies?"
   hint: ""
+  not_deputy: "I am submitting on behalf of the deputy"
   only_deputy: "I am the only deputy"
   more_deputies_behalf: "There is more than one deputy, and I'm signing on everyone's behalf"
   more_deputies_not_behalf: "There is more than one deputy, but I'm not signing on everyone's behalf"

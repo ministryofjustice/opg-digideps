@@ -6,10 +6,19 @@
     <h2 class="section-heading">{{ 'page.pageTitle' | trans }}</h2>
     <div class="box behat-region-deputy-declaration">
 
-        <p class="label">{{ 'page.descriptionPara01' | trans }}</p>
-        <p class="label">{{ 'page.descriptionPara02' | trans }}</p>
-        <p class="label">{{ 'page.descriptionPara03' | trans }}</p>
-        <p class="label">{{ 'page.descriptionPara04' | trans }}</p>
+        <p class="label">{{ 'page.declarationTerms01' | trans }}</p>
+        <p class="label">{{ 'page.declarationTerms02' | trans }}</p>
+
+        {% if submittedBy.isLayDeputy %}
+            <p class="label">{{ 'page.declarationTerms03.lay' | trans }}</p>
+        {% else %}
+            <p class="label">{{ 'page.declarationTerms03.nonLay.intro' | trans }}</p>
+            <ul class="list list-bullet">
+                <li class="label">{{ 'page.declarationTerms03.nonLay.option1' | trans }}</li>
+                <li class="label">{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
+            </ul>
+        {% endif %}
+        <p class="label">{{ 'page.declarationTerms04' | trans }}</p>
 
         <dl class="labelvalue">
             <dt class="label">Declaration</dt>

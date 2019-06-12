@@ -23,7 +23,6 @@
     "gulp-uglify": "^3.0.0",
     "gulp-uglifycss": "^1.1.0",
     "gulp-util": "^3.0.8",
-    "gulp-watch": "^5.0.0",
     "jquery": "^3.4.1",
     "jshint": "^2.9.5",
     "postcss-wcag-contrast": "^2.0.0"
