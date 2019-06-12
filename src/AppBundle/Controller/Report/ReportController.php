@@ -111,6 +111,10 @@ class ReportController extends RestController
             throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
+        if ($data['agreed_behalf_deputy'] === 'not_deputy' && $this->getUser()->isLayDeputy()) {
+            throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
+        }
+
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
         $xplanation = ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf')
             ? $data['agreed_behalf_deputy_explanation'] : null;
@@ -556,7 +560,7 @@ class ReportController extends RestController
 
         // Calculate missing report statuses. Needed for the following code
         $this->updateReportStatusCache($userId);
-        
+
         // calculate counts, and apply limit/offset
         $counts = [
             Report::STATUS_NOT_STARTED => $repo->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
