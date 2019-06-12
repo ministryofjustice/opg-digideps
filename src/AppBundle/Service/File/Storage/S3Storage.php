@@ -148,7 +148,7 @@ class S3Storage implements StorageInterface
                 ]
             ];
 
-            if (count($objectResult['Errors']) > 0) {
+                if (array_key_exists('Errors', $objectResult) && count($objectResult['Errors']) > 0) {
                 foreach($objectResult['Errors'] as $s3Error) {
                     $this->log('error', 'Unable to remove file from S3 - 
                         Key: ' . $s3Error['Key']. ', VersionId: ' .
