@@ -149,12 +149,14 @@ class S3Storage implements StorageInterface
                 ]
             ];
 
-            if (count($objectResult['Deleted']) !== count($objectsToDelete)) {
-                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));
-            }
-
             if (count($objectResult['Errors']) > 0) {
-                throw new \RuntimeException('Could not remove file: ' . json_encode($objectResult['Errors']));
+                foreach($objectResult['Errors'] as $s3Error) {
+                    $this->log('error', 'Unable to remove file from S3 - 
+                        Key: ' . $s3Error['Key']. ', VersionId: ' .
+                        $s3Error['VersionId']. ', Code: ' . $s3Error['Code']. ', Message: ' . $s3Error['Message']);
+                }
+                $this->log('error', 'Unable to remove key: ' . $objectResult['Errors']. '  from S3: ' . json_encode($objectResult['Errors']));
+                throw new \RuntimeException('Could not remove file: ' . $objectResult['Errors']['Message']);
             }
 
             $this->log('info', json_encode($results));
