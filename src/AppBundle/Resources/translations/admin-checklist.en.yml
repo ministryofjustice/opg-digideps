@@ -32,6 +32,7 @@ checklistPage:
     infoProvided: Information provided
     noInfoReceived: No information received
   backToClientDetails: Back to client details
+  backToQuestion: Back to question
   expected: Expected
   submitted: Submitted
   deputysFullName: Deputy's full name
