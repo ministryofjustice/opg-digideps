@@ -106,7 +106,9 @@ class S3Storage implements StorageInterface
      */
     public function removeFromS3($key)
     {
-        if (!empty($key)) {
+        if (empty($key)) {
+            throw new \RuntimeException('Could not remove file: Document not specified');
+        } else {
             /*
              * ListObjectVersions is permitted by ListBucketVersions in IAM.
              */
@@ -115,60 +117,99 @@ class S3Storage implements StorageInterface
                 'Prefix' => $key
             ]);
 
-            $objectResult = [];
-            $objectsToDelete = '';
-            if ($objectVersions instanceof ResultInterface) {
+            if (!$objectVersions instanceof ResultInterface || !(array_key_exists('Versions', $objectVersions))) {
+                throw new \RuntimeException('Could not remove file: No results returned');
+            } else {
                 /** @var ResultInterface $objectVersions */
                 $objectVersions = $objectVersions->toArray();
+                $objectResult = [];
 
-                /** @var array $objectVersions */
-                if (array_key_exists('Versions', $objectVersions)) {
-                    $objectsToDelete = [];
+                $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
 
-                    foreach ($objectVersions['Versions'] as $versionData) {
-                        if (!empty($versionData['VersionId'])) {
-                            $objectsToDelete[] = [
-                                'Key' => $versionData['Key'],
-                                'VersionId' => $versionData['VersionId'],
-                            ];
-                        }
-                    }
-                    if (!empty($objectsToDelete)) {
-                        $objectResult = $this->s3Client->deleteObjects([
-                            'Bucket' => $this->bucketName,
-                            'Delete' => ['Objects' => $objectsToDelete]
-                        ]);
-                        $objectResult = $objectResult->toArray();
-                    }
+                if (empty($objectsToDelete)) {
+                    throw new \RuntimeException('Could not remove file: No objects founds');
+                } else {
+                    $objectResult = $this->s3Client->deleteObjects([
+                        'Bucket' => $this->bucketName,
+                        'Delete' => ['Objects' => $objectsToDelete]
+                    ]);
+                    $objectResult = $objectResult->toArray();
+
+                    $this->handleS3Errors($objectResult);
                 }
 
-                $results = [
-                    'objectVersions' => $objectVersions,
-                    'objectsToDelete' => $objectsToDelete,
-                    'results' => [
-                        'objectResult' => $objectResult,
-                    ]
-                ];
+                $resultsSummary = $this->logS3Results($objectVersions, $objectsToDelete, $objectResult);
 
-                if (array_key_exists('Errors', $objectResult) && count($objectResult['Errors']) > 0) {
-                    foreach ($objectResult['Errors'] as $s3Error) {
-                        $this->log('error', 'Unable to remove file from S3 - 
-                            Key: ' . $s3Error['Key'] . ', VersionId: ' .
-                            $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
-                    }
-                    $this->log('error', 'Unable to remove key: ' . $objectResult['Errors'] . '  from S3: ' . json_encode($objectResult['Errors']));
-                    throw new \RuntimeException('Could not remove file: ' . $objectResult['Errors']['Message']);
+                return $resultsSummary;
+            }
+        }
+    }
+
+    /**
+     * Write results information to log
+     * @param array $objectVersions
+     * @param array $objectsToDelete
+     * @param array $objectResult
+     * @return array
+     */
+    private function logS3Results(array $objectVersions, array $objectsToDelete, array $objectResult) {
+        $resultsSummary = [
+            'objectVersions' => $objectVersions,
+            'objectsToDelete' => $objectsToDelete,
+            'results' => [
+                'objectResult' => $objectResult,
+            ]
+        ];
+
+        $this->log('info', json_encode($resultsSummary));
+
+        return $resultsSummary;
+    }
+
+    /**
+     * Extracts and returns new array structure from AwsResults array detailing objects to remove from S3
+     *
+     * @param array $objectVersions
+     * @return array
+     */
+    private function prepareObjectsToDelete(array $objectVersions)
+    {
+        $objectsToDelete = '';
+
+        /** @var array $objectVersions */
+        if (array_key_exists('Versions', $objectVersions)) {
+            foreach ($objectVersions['Versions'] as $versionData) {
+                if (!empty($versionData['VersionId'])) {
+                    $objectsToDelete[] = [
+                        'Key' => $versionData['Key'],
+                        'VersionId' => $versionData['VersionId'],
+                    ];
                 }
-
-                $this->log('info', json_encode($results));
-
-                return $results;
             }
         }
 
-        throw new \RuntimeException('Could not remove file: No results returned');
+        return $objectsToDelete;
     }
 
+    /**
+     * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
+     * an Errors array reutrned
+     *
+     * @param array $objectResult
+     * @throws \RuntimeException
+     */
+    private function handleS3Errors(array $objectResult)
+    {
+        if (array_key_exists('Errors', $objectResult) && count($objectResult['Errors']) > 0) {
+            foreach ($objectResult['Errors'] as $s3Error) {
+                $this->log('error', 'Unable to remove file from S3 - 
+                            Key: ' . $s3Error['Key'] . ', VersionId: ' .
+                    $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
+            }
+            $this->log('error', 'Unable to remove key: ' . $objectResult['Errors'] . '  from S3: ' . json_encode($objectResult['Errors']));
+            throw new \RuntimeException('Could not remove file: ' . $objectResult['Errors']['Message']);
+        }
+    }
     /**
      * @param $key
      * @param $body
