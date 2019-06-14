@@ -277,6 +277,8 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
+        $this->setExpectedException('RuntimeException', 'Could not remove file: No results returned');
+
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
             '',

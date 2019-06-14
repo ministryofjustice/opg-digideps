@@ -117,7 +117,7 @@ class S3Storage implements StorageInterface
                 'Prefix' => $key
             ]);
 
-            if (!$objectVersions instanceof ResultInterface || !(array_key_exists('Versions', $objectVersions))) {
+            if (!$objectVersions instanceof ResultInterface || !($objectVersions->hasKey('Versions'))) {
                 throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 /** @var ResultInterface $objectVersions */
