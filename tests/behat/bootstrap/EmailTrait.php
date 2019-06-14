@@ -17,6 +17,15 @@ trait EmailTrait
     }
 
     /**
+     * @BeforeScenario @reset-emails
+     */
+    public function resetMailMock(BeforeScenarioScope $scope)
+    {
+        $this->visitBehatLink('email-reset');
+        $this->visitBehatAdminLink('email-reset');
+    }
+
+    /**
      * @Given emails are sent from ":area" area
      */
     public function givenEmailsAreSentFrom($area)
