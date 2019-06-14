@@ -125,7 +125,6 @@ class S3Storage implements StorageInterface
                 $objectResult = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
-
                 if (empty($objectsToDelete)) {
                     throw new \RuntimeException('Could not remove file: No objects founds');
                 } else {
@@ -174,12 +173,11 @@ class S3Storage implements StorageInterface
      */
     private function prepareObjectsToDelete(array $objectVersions)
     {
-        $objectsToDelete = '';
-
+        $objectsToDelete = [];
         /** @var array $objectVersions */
         if (array_key_exists('Versions', $objectVersions)) {
             foreach ($objectVersions['Versions'] as $versionData) {
-                if (!empty($versionData['VersionId'])) {
+                if (strlen($versionData['VersionId']) > 0) {
                     $objectsToDelete[] = [
                         'Key' => $versionData['Key'],
                         'VersionId' => $versionData['VersionId'],
