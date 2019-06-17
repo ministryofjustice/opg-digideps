@@ -243,7 +243,7 @@ class DocumentController extends AbstractController
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {
-        /** @var EntityDir\Document $document */
+        /** @var EntityDir\Report\Document $document */
         $document = $this->getDocument($documentId);
 
         $report = $document->getReport();
@@ -252,16 +252,17 @@ class DocumentController extends AbstractController
         try {
             /** @var DocumentService $documentService */
             $documentService = $this->get('document_service');
-            $documentService->removeDocumentFromS3($document);
+            $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
-            $this->getRestClient()->delete('document/' . $documentId);
-            $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            if ($result) {
+                $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
+            }
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
 
             $request->getSession()->getFlashBag()->add(
                 'error',
-                'Document could not be removed'
+                'Document could not be removed. Details: ' . $e->getMessage()
             );
         }
 
@@ -270,7 +271,7 @@ class DocumentController extends AbstractController
             // to the step 2 page.
             $returnUrl = $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
         } else {
-            $reportDocumentStatus = $document->getReport()->getStatus()->getDocumentsState();
+            $reportDocumentStatus = $report->getStatus()->getDocumentsState();
             if (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
                 $returnUrl = 'summaryPage' == $request->get('from')
                     ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])

@@ -13,15 +13,6 @@ trait DebugTrait
     }
 
     /**
-     * Empty behat log before each step
-     * @BeforeScenario
-     */
-    public function emptyBehatLogBeforeScenario(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope)
-    {
-        $this->visitBehatLink('logs/reset');
-    }
-
-    /**
      * @Then /^debug$/
      */
     public function debug($feature = null, $line = null)
@@ -42,8 +33,6 @@ trait DebugTrait
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         $file = basename($filename);
         echo "- Response: saved into {$file} ({$bytes} bytes). View locally at https://digideps-client.local/behat-debugger.php?frame=page&f={$file} .\n";
-        $this->visitBehatLink('logs/view');
-        echo ' - Log content (scenario only): ' . $this->getSession()->getPage()->getContent();
     }
 
     /**

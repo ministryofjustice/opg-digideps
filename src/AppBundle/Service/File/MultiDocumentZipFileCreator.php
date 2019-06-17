@@ -64,6 +64,7 @@ class MultiDocumentZipFileCreator
                     'filename' => $filename
                 ];
             } catch (\Exception $e) {
+                throw $e;
                 //for now using try/catch to skip reports not downloadable, may want to make this more intelligent later
             }
         }

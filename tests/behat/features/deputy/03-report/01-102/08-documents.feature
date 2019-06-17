@@ -76,7 +76,10 @@ Feature: Report documents
     # chose "no documents" to make report submittable
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
-
+    # Confirm document has been deleted by its absence in summary table
+    When I save the report as "document-report"
+    And I go to the report URL "documents/summary" for "document-report"
+    Then I should not see the "document-list" region
 
   @deputy
   Scenario: Upload image documents
@@ -130,3 +133,16 @@ Feature: Report documents
       Then each text should be present in the corresponding region:
         | file1.pdf        | document-list |
       #  | file2.pdf        | document-list |
+
+  @deputy
+  Scenario: Deleting one of many files doesn't restart process
+    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "reports, report-start, edit-documents"
+    When I click on "add"
+    And I attach the file "file2.pdf" to "report_document_upload_file"
+    And I click on "attach-file, continue"
+    Then I should see "file2.pdf" in the "document-list" region
+    When I click on the first "delete-documents-button" in the "document-list" region
+    And I click on "document-delete"
+    Then the URL should match "/report/\d+/documents/summary"
+    Then I should not see "file2.pdf" in the "document-list" region

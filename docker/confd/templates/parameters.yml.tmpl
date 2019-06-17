@@ -43,12 +43,13 @@ parameters:
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'
-  {{ if exists "/frontend/s3/fakes3" }}
-      endpoint: 'http://fakes3:4569'
+  {{ if exists "/frontend/s3/localstack" }}
+      endpoint: 'http://localstack:4572'
+      use_path_style_endpoint: true
       validate: false
       credentials:
-        key: 'YOUR_ACCESS_KEY_ID'
-        secret: 'YOUR_SECRET_ACCESS_KEY'
+        key: 'FAKE_ID'
+        secret: 'FAKE_KEY'
   {{ else }}
       validate: true
   {{ end }}

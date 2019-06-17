@@ -56,8 +56,6 @@ trait UserTrait
             'token_date' => '-7days',
             'registration_token' => $token,
         ]);
-
-        $this->assertResponseStatus(200);
     }
 
     /**

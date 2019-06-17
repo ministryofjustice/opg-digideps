@@ -50,9 +50,12 @@ class DocumentService
         $storageRef = $document->getStorageReference();
 
         try {
-            $s3Result = $this->deleteFromS3($document);
-
-            $endpointResult = $this->restClient->apiCall('DELETE', 'document/hard-delete/' . $document->getId(), null, 'array', [], false);
+            if (is_numeric($documentId) && !empty($storageRef)) {
+                //Ensure document is removed from s3 and database
+                $s3Result = $this->deleteFromS3($document);
+                //remove from db
+                $endpointResult = $this->restClient->delete('document/' . $documentId);
+            }
             if ($endpointResult) {
                 $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
             } else {
@@ -63,6 +66,9 @@ class DocumentService
         } catch (\Exception $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
+
+            // rethrow exception to be caught by controller
+            throw($e);
         }
     }
 
@@ -80,16 +86,12 @@ class DocumentService
             throw new \Exception('Document could not be removed. No Reference.');
         }
 
-        try {
-            $this->log('notice', "Deleting $ref from S3");
-            $this->s3Storage->removeFromS3($ref);
-            $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
+        $this->log('notice', "Deleting $ref from S3");
+        $result = $this->s3Storage->removeFromS3($ref);
 
-            return true;
-        } catch (\Exception $e) {
-            $this->log('error', "deleting $ref from S3: exception (" . ($ignoreS3Failure ? '(ignored)' : '') . ' ' . $e->getMessage());
-            throw $e;
-        }
+        $this->log('notice', "Deleting for $ref from S3: no exception thrown from deleteObject operation");
+
+        return $result;
     }
 
     /**

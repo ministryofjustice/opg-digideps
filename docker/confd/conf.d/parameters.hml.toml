@@ -16,7 +16,7 @@ keys = [
     "/frontend/smtp",
     "/frontend/url",
     "/frontend/s3/bucketname",
-    "/frontend/s3/fakes3",
+    "/frontend/s3/localstack",
     "/frontend/filescanner/url",
     "/frontend/filescanner/sslverify",
     "/wkhtmltopdf/address"
