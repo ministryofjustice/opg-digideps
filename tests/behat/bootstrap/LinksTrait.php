@@ -27,9 +27,6 @@ trait LinksTrait
         }
     }
 
-    /**
-     * @Given I visit the behat link :link
-     */
     public function visitBehatLink($link)
     {
         $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
@@ -37,9 +34,6 @@ trait LinksTrait
         $this->visit("/behat/{$secret}/{$link}");
     }
 
-    /**
-     * @Given I visit the behat admin link :link
-     */
     public function visitBehatAdminLink($link)
     {
         $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
