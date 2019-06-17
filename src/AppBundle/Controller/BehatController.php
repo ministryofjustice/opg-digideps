@@ -16,7 +16,7 @@ class BehatController extends AbstractController
     private function securityChecks(Request $request)
     {
         if (!$this->container->getParameter('behat_controller_enabled')) {
-            return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
+            throw $this->createNotFoundException();
         }
 
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
