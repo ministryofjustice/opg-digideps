@@ -103,28 +103,4 @@ class BehatController extends AbstractController
             'recipientRole' => MailFactory::getRecipientRole($this->getUser())
         ]);
     }
-
-    /**
-     * @Route("/behat/{secret}/logs/{action}")
-     * @Template()
-     */
-    public function behatLogsResetAction(Request $request, $action)
-    {
-        $this->securityChecks($request);
-
-        $logPath = $this->getParameter('log_path');
-
-        switch ($action) {
-            case 'reset':
-                file_put_contents($logPath, "LOG RESET FROM BEHAT\n");
-                return new Response('reset OK');
-
-            case 'view':
-                $lines = array_filter(array_slice(file($logPath), -500), function ($row) {
-                    return strpos($row, 'translation.WARNING') === false;
-                });
-                $ret = implode("\n", $lines);
-                return new Response($ret);
-        }
-    }
 }
