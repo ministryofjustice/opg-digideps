@@ -20,7 +20,7 @@ class BehatController extends RestController
     private function securityChecks()
     {
         if (!$this->container->getParameter('behat_controller_enabled')) {
-            throw $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
+            throw $this->createNotFoundException();
         }
     }
 
