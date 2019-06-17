@@ -120,24 +120,23 @@ class S3Storage implements StorageInterface
             if (!$objectVersions instanceof ResultInterface || !($objectVersions->hasKey('Versions'))) {
                 throw new \RuntimeException('Could not remove file: No results returned');
             } else {
-                /** @var ResultInterface $objectVersions */
                 $objectVersions = $objectVersions->toArray();
-                $objectResult = [];
+                $s3Result = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
                     throw new \RuntimeException('Could not remove file: No objects founds');
                 } else {
-                    $objectResult = $this->s3Client->deleteObjects([
+                    $s3Result = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
                         'Delete' => ['Objects' => $objectsToDelete]
                     ]);
-                    $objectResult = $objectResult->toArray();
+                    $s3Result = $s3Result->toArray();
 
-                    $this->handleS3Errors($objectResult);
+                    $this->handleS3Errors($s3Result);
                 }
 
-                $resultsSummary = $this->logS3Results($objectVersions, $objectsToDelete, $objectResult);
+                $resultsSummary = $this->logS3Results($objectVersions, $objectsToDelete, $s3Result);
 
                 return $resultsSummary;
             }
@@ -148,15 +147,15 @@ class S3Storage implements StorageInterface
      * Write results information to log
      * @param array $objectVersions
      * @param array $objectsToDelete
-     * @param array $objectResult
+     * @param array $s3Result
      * @return array
      */
-    private function logS3Results(array $objectVersions, array $objectsToDelete, array $objectResult) {
+    private function logS3Results(array $objectVersions, array $objectsToDelete, array $s3Result) {
         $resultsSummary = [
             'objectVersions' => $objectVersions,
             'objectsToDelete' => $objectsToDelete,
             'results' => [
-                'objectResult' => $objectResult,
+                's3Result' => $s3Result,
             ]
         ];
 
@@ -193,21 +192,22 @@ class S3Storage implements StorageInterface
      * Handles any errors returned from S3 SDK. Exceptions that might have been handled by the SDK and converted to
      * an Errors array reutrned
      *
-     * @param array $objectResult
+     * @param array $s3Result
      * @throws \RuntimeException
      */
-    private function handleS3Errors(array $objectResult)
+    private function handleS3Errors(array $s3Result)
     {
-        if (array_key_exists('Errors', $objectResult) && count($objectResult['Errors']) > 0) {
-            foreach ($objectResult['Errors'] as $s3Error) {
+        if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
+            foreach ($s3Result['Errors'] as $s3Error) {
                 $this->log('error', 'Unable to remove file from S3 - 
                             Key: ' . $s3Error['Key'] . ', VersionId: ' .
                     $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
             }
-            $this->log('error', 'Unable to remove key: ' . $objectResult['Errors'] . '  from S3: ' . json_encode($objectResult['Errors']));
-            throw new \RuntimeException('Could not remove file: ' . $objectResult['Errors']['Message']);
+            $this->log('error', 'Unable to remove key: ' . $s3Result['Errors'] . '  from S3: ' . json_encode($s3Result['Errors']));
+            throw new \RuntimeException('Could not remove file: ' . $s3Result['Errors']['Message']);
         }
     }
+
     /**
      * @param $key
      * @param $body
