@@ -1,24 +1,6 @@
 // Bank Sort Code - Application
 
-.form-sort-code {
-
-    .separator {
-        margin: 7px 13px;
-        float: left;
-    }
-
-    .form-group {
-        width: 50px;
-        margin-bottom: 0;
-        float: left;
-        clear: none;
-
-        input.sort-code-part {
-            width: 50px;
-            float: left;
-            text-align: center;
-        }
-
-    }
-
+.opg-sort-code-separator {
+    margin-left: govuk-spacing(2);
+    margin-right: govuk-spacing(2);
 }

@@ -9,7 +9,7 @@ trait FormTrait
 {
     /**
      * Assert the page returs HTTP 200
-     * and contains the ".form-group.form-group-error" or the "#error-summary-heading" elements
+     * and contains the ".form-group.form-group-error", ".govuk-form-group--error" or the "#error-summary-heading" elements
      *
      * @Then the form should be invalid
      */
@@ -18,6 +18,7 @@ trait FormTrait
         $this->assertResponseStatus(200);
 
         if (!$this->getSession()->getPage()->has('css', '.form-group.form-group-error')
+            && !$this->getSession()->getPage()->has('css', '.govuk-form-group--error')
             && !$this->getSession()->getPage()->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('No errors found');
         }
@@ -25,7 +26,7 @@ trait FormTrait
 
     /**
      * Assert the page returs HTTP 200
-     * and does NOT contain the ".form-group.form-group-error" nor the "#error-summary-heading" elements
+     * and does NOT contain the ".form-group.form-group-error", ".govuk-form-group--error" nor the "#error-summary-heading" elements
      *
      * @Then the form should be valid
      */
@@ -36,6 +37,7 @@ trait FormTrait
         $page = $this->getSession()->getPage();
 
         if ($page->has('css', '.form-group.form-group-error') ||
+            $page->has('css', '.govuk-form-group--error') ||
             $page->has('css', '#error-summary-heading')) {
             throw new \RuntimeException('Errors found in elements: '
                 . implode(',', $this->getElementsIdsWithValidationErrors()));
@@ -49,7 +51,10 @@ trait FormTrait
     {
         $ret = [];
 
-        $errorRegions = $this->getSession()->getPage()->findAll('css', '.form-group.form-group-error');
+        $errorRegions = array_merge(
+            $this->getSession()->getPage()->findAll('css', '.form-group.form-group-error'),
+            $this->getSession()->getPage()->findAll('css', '.govuk-form-group--error')
+        );
         foreach ($errorRegions as $errorRegion) {
             $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
             foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */

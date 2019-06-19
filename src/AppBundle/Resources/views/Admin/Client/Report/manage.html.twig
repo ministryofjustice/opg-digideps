@@ -26,11 +26,11 @@
     {{ (page ~ '.form.endDate.label') | trans }}
     {{ form_known_date(form.endDate, 'endDate') }}
 
-    <fieldset class="form-group">
+    <fieldset class="form-group {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
         <legend>
             <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
         </legend>
-        <div class="form-group form-group__checkbox multiple-choice--smaller push-half--bottom {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
+        <div class="govuk-checkboxes govuk-checkboxes--small">
             {% for section in form.unsubmittedSection  %}
                 {{ form_row(section.id) }}
                 {{ form_checkbox(section.present, '', {

@@ -68,7 +68,7 @@ Feature: PA settings
     Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "org-settings, profile-show, profile-edit"
     Then I should see "Give up administrator rights"
-    When I check "profile_removeAdmin_0"
+    When I check "Give up administrator rights"
     And I press "profile_save"
     Then the form should be valid
     And I should be on "/login"

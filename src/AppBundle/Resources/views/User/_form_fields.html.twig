@@ -88,5 +88,6 @@
 {% endif %}
 
 {% if form.removeAdmin is defined %}
-    {{ form_checkbox_group( form.removeAdmin, 'form.editYourDetails.controls.removeAdmin', {'fieldSetClass' : 'inline'}) }}
+    <h3 class="govuk-heading-m">{{ 'form.editYourDetails.controls.removeAdmin.title' | trans({}, translationDomain) }}</h3>
+    {{ form_checkbox( form.removeAdmin, 'form.editYourDetails.controls.removeAdmin' ) }}
 {% endif %}

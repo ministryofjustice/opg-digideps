@@ -26,5 +26,8 @@
     "jquery": "^3.4.1",
     "jshint": "^2.9.5",
     "postcss-wcag-contrast": "^2.0.0"
+  },
+  "dependencies": {
+    "govuk-frontend": "^2.13.0"
   }
 }

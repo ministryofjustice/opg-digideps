@@ -1,6 +1,3 @@
-<!--Component: Resources/popups-->
-<div class="js-popups">
-    {% if app.user %}
-        {% include 'AppBundle:Components/Popups:_timeout.html.twig' with {} %}
-    {% endif %}
-</div>
+{% if app.user %}
+    {% include 'AppBundle:Components/Popups:_timeout.html.twig' with {} %}
+{% endif %}

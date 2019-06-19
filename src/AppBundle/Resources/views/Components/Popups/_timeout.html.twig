@@ -2,12 +2,9 @@
 {% trans_default_domain translationDomain %}
 
 
-<div class="session-timeout-underlay">
-</div>
-<div id="timeoutPopup" data-role="timeout-popup" class="session-timeout js-session-timeout">
-    <div class="session-timeout-dialog">
-
-        <h1 class="heading-large push-half--top">{{ 'component.title' | trans }}</h1>
+<div id="timeoutPopup" class="opg-session-timeout" data-module="app-timeout-popup">
+    <div class="opg-session-timeout__dialog">
+        <h1 class="govuk-heading-l">{{ 'component.title' | trans }}</h1>
 
         <p>{{ 'component.firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
@@ -17,10 +14,9 @@
         <p>{{ 'component.secondLine' | trans }}</p>
 
         <form name="session-timeout-form" action="/logout">
-            <button type="button" name="continue" class="button js-ok-button">{{ 'ok' | trans({}, 'common' ) }}</button>
-            <button type="submit" name="subsmit" class="button-secondary">{{ 'signOut' | trans({}, 'common' ) }}</button>
+            <button type="button" name="continue" class="govuk-button" data-js="ok-button">{{ 'ok' | trans({}, 'common' ) }}</button>
+            <button type="submit" name="subsmit" class="govuk-button govuk-button--secondary">{{ 'signOut' | trans({}, 'common' ) }}</button>
         </form>
-
     </div>
 </div>
 
@@ -34,7 +30,7 @@
                 keepAliveUrl = '{{ path('session-keep-alive') }}';
 
         new SessionTimeoutDialog({
-            'element': $('#timeoutPopup'),
+            'element': $('[data-module="app-timeout-popup"]'),
             'sessionExpiresMs': sessionExpires * 1000,
             'sessionPopupShowAfterMs': sessionShowPopupMs * 1000,
             'keepSessionAliveUrl': keepAliveUrl

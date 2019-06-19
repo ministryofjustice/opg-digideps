@@ -108,28 +108,42 @@
 
         </div>
         <div class="column-third">
-            <aside class="govuk-related-items" role="complementary">
-                <h2 class="heading-medium flush--top">{{ 'relatedLinks.heading' |trans|raw }}</h2>
-                <ul class="list font-xsmall">
-                    <li>
-                        <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link01Text' |trans|raw }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link02Text' |trans|raw }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link03Text' |trans|raw }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link04Text' |trans|raw }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link05Text' |trans|raw }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" target="_blank">{{ 'relatedLinks.link06Text' |trans|raw }}</a>
-                    </li>
-                </ul>
+            <aside class="opg-related-items" role="complementary">
+                <h2 id="related-items-title" class="govuk-heading-m">{{ 'relatedLinks.heading' |trans|raw }}</h2>
+                <nav role="navigation" aria-labelledby="related-items-title">
+                    <ul class="govuk-list govuk-!-font-size-16">
+                        <li>
+                            <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link01Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link02Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link03Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link04Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link05Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link06Text' |trans|raw }}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </aside>
         </div>
     </div>

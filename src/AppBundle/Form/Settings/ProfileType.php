@@ -36,11 +36,7 @@ class ProfileType extends AbstractType
         }
 
         if ($loggedInUser->isOrgAdministrator()) {
-            $builder->add('removeAdmin', FormTypes\ChoiceType::class, [
-                    'choices' => ['Give up administrator rights' => 'remove-admin'],
-                    'expanded' => true,
-                    'multiple' => true,
-                    'required' => false,
+            $builder->add('removeAdmin', FormTypes\CheckboxType::class, [
                     'mapped' => false
                 ]);
         }

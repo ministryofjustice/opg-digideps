@@ -22,21 +22,22 @@
 
     <div class="form-section push--bottom">
         <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}form-group-error{% endif %}">
-            {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
-                'useFormGroup': false,
-                'fieldSetClass' : 'inline',
-                'legendClass' : 'form-label-bold',
-                'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
-                'items': [{'dataTarget': 'has-capacity-changed-details'}]
-            }) }}
-            <div id="has-capacity-changed-details" class="panel panel-border-narrow js-hidden">
+            {% set conditionalCapacityChanged %}
                 {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
                     'labelClass': 'required',
                     'labelParameters': transOptions,
                     'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
                     'labelRaw': true
                 }) }}
-            </div>
+            {% endset %}
+
+            {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
+                'useFormGroup': false,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold',
+                'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
+                'items': [{'conditional': conditionalCapacityChanged}]
+            }) }}
         </div>
     </div>
 

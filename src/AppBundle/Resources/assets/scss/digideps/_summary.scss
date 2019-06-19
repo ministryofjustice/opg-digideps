@@ -16,11 +16,14 @@
   td {
     @include core-19;
     vertical-align: top;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   .change-answer {
     padding-right: 0;
     font-weight: bold;
     text-align: right;
+    white-space: nowrap;
   }
 }

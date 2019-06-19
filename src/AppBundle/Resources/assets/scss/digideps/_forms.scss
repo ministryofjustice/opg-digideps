@@ -12,13 +12,6 @@ input[type=text]::-ms-clear {
     textarea.form-control {
         height: 7em;
     }
-
-    .pre-input-text {
-        @include core-36(1.5);
-        height: 39px;
-        padding-right: 10px;
-        float: left;
-    }
 }
 
 .form-label {
@@ -31,24 +24,34 @@ input[type=text]::-ms-clear {
     }
 }
 
-.input-group-prefix {
+.opg-input-prefix {
     position: absolute;
     z-index: 1;
     width: 10px;
-    margin: 2px 0 0 2px;
-    padding: 5px 9px 4px 8px;
+    margin: 2px;
+    padding: 5px 9px;
     border: 0;
     background: $grey-3;
 
     + input {
-        position: relative;
-        margin: 0;
         padding-left: 2em;
-        background: transparent;
     }
 
-    .form-group-error > & {
-        margin: 4px 0 0 4px;
+    .govuk-form-group--error > & {
+        margin: 4px;
+        padding: 4px 9px 3px;
+    }
+}
+
+.opg-pre-input-text {
+    float: left;
+    padding-right: 10px;
+    font-size: 24px;
+    line-height: 1.04167;
+
+    @include govuk-media-query($from: tablet) {
+        font-size: 36px;
+        line-height: 1.5;
     }
 }
 

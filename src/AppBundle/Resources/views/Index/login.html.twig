@@ -12,26 +12,19 @@
 
 {% block pageContent %}
 
-    <div class="push--bottom">
-        <div class="alert-info panel panel-border-narrow">
-            <span class="icon icon-information"></span>
-            <div class="alert-message">
-                <p>Get help paying deputy fees. Check whether you're eligible to <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">pay a reduced or no fee</a>.</p>
-            </div>
-        </div>
+    {{ macros.notification('info', 'Get help paying deputy fees. Check whether you\'re eligible to <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">pay a reduced or no fee</a>.') }}
 
-        {% if serviceNotificationContent is defined and serviceNotificationContent%}
-            <div class="behat-region-service-notification">
-                {{ macros.notification('info', serviceNotificationContent | nl2br) }}
-            </div>
-        {% endif %}
-    </div>
+    {% if serviceNotificationContent is defined and serviceNotificationContent%}
+        <div class="behat-region-service-notification">
+            {{ macros.notification('info', serviceNotificationContent | nl2br) }}
+        </div>
+    {% endif %}
 
     {# Content gets injected here when manually signing out (login-from-logout) #}
     {% block pageHeader %}
     {% endblock %}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom'}}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {{ form_input(form.email,'signInForm.email', { 'labelRaw': true }) }}
     {{ form_input(form.password,'signInForm.password') }}

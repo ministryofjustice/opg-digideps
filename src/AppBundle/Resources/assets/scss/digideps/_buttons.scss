@@ -2,6 +2,25 @@
 // BUTTONS
 // Buttons and links
 
+.opg-button--link {
+    background-color: transparent;
+    box-shadow: none;
+    color: $govuk-link-colour !important;
+    text-decoration: underline !important;
+
+    &:hover {
+        background-color: transparent;
+        color: $govuk-link-hover-colour !important;
+    }
+
+    &:active, &:focus {
+        top: initial;
+        background-color: transparent;
+        color: $govuk-link-active-colour !important;
+    }
+}
+
+
 .button-secondary {
     @include button($grey-3);
 

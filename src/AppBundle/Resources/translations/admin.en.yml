@@ -87,10 +87,10 @@ statsPage:
     Data is being generated, Click here to <a href="%csvFile%">download</a>
   form:
     fromDate:
-      header: Start date
+      legend: Start date
       hint: For example, 31 3 2015
     toDate:
-      header: End date
+      legend: End date
       hint: For example, 31 3 2016
     submitAndDownload:
       label: Download

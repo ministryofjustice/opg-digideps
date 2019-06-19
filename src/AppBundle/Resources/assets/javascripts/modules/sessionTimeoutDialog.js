@@ -1,6 +1,6 @@
 /* jshint unused: false */
 /* globals $, window, document */
-// SESSION TIMEOUT POPUP LOGIC  
+// SESSION TIMEOUT POPUP LOGIC
 /**
  * @param element
  * @param sessionExpiresMs
@@ -17,8 +17,7 @@ var SessionTimeoutDialog = function (options) {
 
     //debugger;
 
-    var $okButton = that.element.find('.js-ok-button'),
-        $underlay = $('.session-timeout-underlay');
+    var $okButton = that.element.find('[data-js="ok-button"]');
 
     // attach click event
     $okButton.click(function (e) {
@@ -29,12 +28,7 @@ var SessionTimeoutDialog = function (options) {
     this.startCountdown = function () {
 
         this.countDownPopup = window.setInterval(function () {
-            that.element.css('visibility', 'visible');
-            $underlay.css(
-                {
-                    'visibility': 'visible',
-                    'height': $(document).height() + 'px'
-                });
+            that.element.css('display', 'block');
 
         }, this.sessionPopupShowAfterMs);
 

@@ -1,0 +1,15 @@
+rules:
+    class-name-format:
+        - 1
+        -
+            convention: hyphenatedbem
+    indentation:
+        - 2
+        -
+            size: 4
+    property-sort-order:
+        - 2
+        -
+            order: smacss
+    no-vendor-prefixes:
+        - 0

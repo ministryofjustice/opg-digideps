@@ -232,40 +232,42 @@
             {{ form_end(form) }}
         </div>
         <div class="column-third">
-            <aside class="govuk-related-items js-sidebar pull-above-title">
-                <h2 class="heading-small">{{ (page ~ '.heading.contents') | trans }}</h2>
-                <ul class="list font-xsmall">
-                    <li><a href="#deputyAndClientInfo">{{ (page ~ '.heading.info') | trans }}</a></li>
-                    <li><a href="#decisionsMade">{{ (page ~ '.heading.decisions') | trans }}</a></li>
-                    <li><a href="#peopleConsulted">{{ (page ~ '.heading.contacts') | trans }}</a></li>
-                    <li><a href="#visitsAndCare">{{ (page ~ '.heading.visitsAndCare') | trans }}</a></li>
-                    {% if report.hasSection('lifestyle') %}
-                        <li><a href="#lifestyle">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</a></li>
-                    {% endif %}
-                    {% if report.hasSection('assets') or report.hasSection('debts') %}
-                        <li><a href="#assetsAndDebts">{{ (page ~ '.heading.assetsAndDebts') | trans }}</a></li>
-                    {% endif %}
-                    {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
-                        <li><a href="#moneyInOut">{{ (page ~ '.heading.money') | trans }}</a></li>
-                    {% endif %}
-                    {% if report.hasSection('bankAccounts') %}
-                        {% if report.hasSection('paDeputyExpenses') %}
-                            <li><a href="#paFeesExpenses">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
-                        {% else %}
-                            <li><a href="#bonds">{{ (page ~ '.heading.bonds') | trans }}</a></li>
+            <aside class="opg-related-items js-sidebar" role="complementary">
+                <h2 id="related-items-title" class="govuk-heading-m">{{ (page ~ '.heading.contents') | trans }}</h2>
+                <nav role="navigation" aria-labelledby="related-items-title">
+                    <ul class="govuk-list govuk-!-font-size-16">
+                        <li><a href="#deputyAndClientInfo" class="govuk-link">{{ (page ~ '.heading.info') | trans }}</a></li>
+                        <li><a href="#decisionsMade" class="govuk-link">{{ (page ~ '.heading.decisions') | trans }}</a></li>
+                        <li><a href="#peopleConsulted" class="govuk-link">{{ (page ~ '.heading.contacts') | trans }}</a></li>
+                        <li><a href="#visitsAndCare" class="govuk-link">{{ (page ~ '.heading.visitsAndCare') | trans }}</a></li>
+                        {% if report.hasSection('lifestyle') %}
+                            <li><a href="#lifestyle" class="govuk-link">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</a></li>
                         {% endif %}
-                    {% endif %}
-                    {% if report.hasSection('profDeputyCosts') %}
-                        <li><a href="#profDeputyCosts">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
-                    {% endif %}
-                    {% if report.hasSection('profDeputyCostsEstimate') %}
-                        <li><a href="#profDeputyCostsEstimate">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
-                    {% endif %}                    
-                    <li><a href="#nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
-                    <li><a href="#declaration">{{ (page ~ '.heading.declaration') | trans }}</a></li>
-                    <li><a href="#lodgingSummary">{{ (page ~ '.lodgingSummary.heading') | trans }}</a></li>
-                    <li><a href="#furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</a></li>
-                </ul>
+                        {% if report.hasSection('assets') or report.hasSection('debts') %}
+                            <li><a href="#assetsAndDebts" class="govuk-link">{{ (page ~ '.heading.assetsAndDebts') | trans }}</a></li>
+                        {% endif %}
+                        {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
+                            <li><a href="#moneyInOut" class="govuk-link">{{ (page ~ '.heading.money') | trans }}</a></li>
+                        {% endif %}
+                        {% if report.hasSection('bankAccounts') %}
+                            {% if report.hasSection('paDeputyExpenses') %}
+                                <li><a href="#paFeesExpenses" class="govuk-link">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
+                            {% else %}
+                                <li><a href="#bonds" class="govuk-link">{{ (page ~ '.heading.bonds') | trans }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                        {% if report.hasSection('profDeputyCosts') %}
+                            <li><a href="#profDeputyCosts" class="govuk-link">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
+                        {% endif %}
+                        {% if report.hasSection('profDeputyCostsEstimate') %}
+                            <li><a href="#profDeputyCostsEstimate" class="govuk-link">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
+                        {% endif %}
+                        <li><a href="#nextReportingPeriod" class="govuk-link">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
+                        <li><a href="#declaration" class="govuk-link">{{ (page ~ '.heading.declaration') | trans }}</a></li>
+                        <li><a href="#lodgingSummary" class="govuk-link">{{ (page ~ '.lodgingSummary.heading') | trans }}</a></li>
+                        <li><a href="#furtherInformation" class="govuk-link">{{ (page ~ '.furtherInfo.heading') | trans }}</a></li>
+                    </ul>
+                </nav>
             </aside>
         </div>
     </div>

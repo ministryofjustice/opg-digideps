@@ -22,7 +22,6 @@
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
     linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
-    linkClass: 'button-link',
     linkHref: path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show')
     } %}
 

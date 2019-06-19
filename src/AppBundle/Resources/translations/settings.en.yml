@@ -85,7 +85,8 @@ form:
       jobTitle:
         label: Job title
       removeAdmin:
-        label: Administrator access
+        title: Administrator access
+        label: Give up administrator rights
         hint: You are currently an administrator on the Deputy Report Service.
 
   changeYourPassword:

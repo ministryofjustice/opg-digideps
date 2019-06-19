@@ -2,24 +2,28 @@
     {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li>
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
                 {% if isOrgUser %}
-                    <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        {{ 'dashboard' | trans({}, 'common' ) }}
+                    </a>
                 {% else %}
-                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                        {{ 'yourReports' | trans({}, 'common' ) }}
+                    </a>
                 {% endif %}
             </li>
-            <li>
+            <li class="govuk-breadcrumbs__list-item">
                 {% if report.type == 'ndr' %}
-                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="behat-link-breadcrumbs-ndr-overview">
+                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview">
                         {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
                     </a>
 
                 {% else %}
                     <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                       class="behat-link-breadcrumbs-report-overview">
+                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview">
                         {% if isOrgUser %}
                             {{ 'clientProfile' | trans({}, 'common' ) }}
                         {% else %}
@@ -33,61 +37,75 @@
 {% endmacro %}
 
 {% macro homepage() %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li><a href="{{ path('homepage') }}">Your reports</a></li>
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                    Your reports
+                </a>
+            </li>
         </ol>
     </div>
 {% endmacro %}
 
 {% macro breadcrumbsSettings(section) %}
-    <div class="breadcrumbs hard--bottom">
-    <ol class="group">
-        {% if app.user.isDeputyOrg() %}
-            <li>
-                <a href="{{ path('org_dashboard') }}">Dashboard</a>
-            </li>
-            {% if 'settings' in section and section != 'settings' %}
-                <li>
-                    <a href="{{ path('org_settings') }}">Settings</a>
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            {% if app.user.isDeputyOrg() %}
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        Dashboard
+                    </a>
                 </li>
-            {% endif %}
-            {% if 'team' in section and section != 'settings-team' %}
-                <li>
-                    <a href="{{ path('org_team') }}">User accounts</a>
+                {% if 'settings' in section and section != 'settings' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_settings') }}" class="govuk-breadcrumbs__link">
+                            Settings
+                        </a>
+                    </li>
+                {% endif %}
+                {% if 'team' in section and section != 'settings-team' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_team') }}" class="govuk-breadcrumbs__link">
+                            User accounts
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section == 'settings-profile-edit' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_profile_show') }}" class="govuk-breadcrumbs__link">
+                            Your details
+                        </a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('lay_home') }}" class="govuk-breadcrumbs__link">
+                        Deputy reports
+                    </a>
                 </li>
+                {% if 'settings' in section and section != 'settings' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('account_settings') }}" class="govuk-breadcrumbs__link">
+                            Deputyship details
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section == 'settings-profile-edit' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('user_show') }}" class="govuk-breadcrumbs__link">
+                            Your details
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
-            {% if section == 'settings-profile-edit' %}
-                <li>
-                    <a href="{{ path('org_profile_show') }}">Your details</a>
-                </li>
-            {% endif %}
-        {% else %}
-            <li>
-                <a href="{{ path('lay_home') }}">Deputy reports</a>
-            </li>
-            {% if 'settings' in section and section != 'settings' %}
-                <li>
-                    <a href="{{ path('account_settings') }}">Deputyship details</a>
-                </li>
-            {% endif %}
-            {% if section == 'settings-profile-edit' %}
-                <li>
-                    <a href="{{ path('user_show') }}">Your details</a>
-                </li>
-            {% endif %}
-        {% endif %}
-    </ol>
+        </ol>
     </div>
-{% endmacro %}
-
-{% macro linkBack(report) %}
-    <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="link-back behat-link-step-back">{{ 'back' | trans({}, 'common' ) }}</a>
 {% endmacro %}
 
 {% macro linkBackStep(backLink,stepPage) %}
     {% if backLink %}
-        <a href="{{ backLink }}" class="link-back behat-link-step-back">{{ stepPage }}</a>
+        <a href="{{ backLink }}" class="govuk-back-link behat-link-step-back">{{ stepPage }}</a>
     {% endif %}
 {% endmacro %}
 
@@ -118,38 +136,50 @@
 {% macro notification(alertType,message) %}
     {% if alertType is defined %}
         {% if alertType == 'notice' %}
-            <div class="alert-notice panel panel-border-narrow">
-                <span class="icon icon-notification"></span>
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert opg-alert--notice">
+                <span class="opg-alert__icon opg-icon--notification"></span>
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% elseif alertType == 'success' %}
-            <div class="alert-success panel panel-border-narrow">
-                <span class="icon icon-tick"></span>
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert opg-alert--success">
+                <span class="opg-alert__icon opg-icon--tick"></span>
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% elseif alertType == 'error' %}
-            <div class="alert-error panel panel-border-narrow">
-                <span class="icon icon-cross"></span>
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert opg-alert--error">
+                <span class="opg-alert__icon opg-icon--cross"></span>
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% elseif alertType == 'info' %}
-            <div class="alert-info panel panel-border-narrow">
-                <span class="icon icon-information"></span>
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert opg-alert--info">
+                <span class="opg-alert__icon opg-icon--information"></span>
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% elseif alertType == 'important' %}
-            <div class="alert-important panel panel-border-narrow">
-                <span class="icon icon-important-small"></span>
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert opg-alert--important">
+                <span class="opg-alert__icon opg-icon--important-small"></span>
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% else %}
-            <div class="alert panel panel-border-narrow">
-                <div class="behat-region-alert-message alert-message"><p>{{ message | raw }}</p></div>
+            <div class="opg-alert">
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
             </div>
         {% endif %}
     {% else %}
-        <div class="alert panel panel-border-narrow">
-            <div class="behat-region-alert-message alert-message">
+        <div class="opg-alert">
+            <div class="behat-region-alert-message opg-alert__message">
                 <p>{{ message | raw }}</p>
             </div>
         </div>
@@ -160,38 +190,44 @@
 {% macro relatedSections(report,section) %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
-    <aside class="govuk-related-items" role="complementary">
-        <ul class="list font-xsmall">
-            <li>
-                {% if report.type == 'ndr' %}
-                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}">
-                        {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                    </a>
-                {% else %}
-                    <a href="{{ path('report_overview', {'reportId': report.id}) }}">
-                        {% if isOrgUser %}
-                            {{ 'clientProfile' | trans({}, 'common' ) }}
-                        {% else %}
-                            {{ 'deputyReportOverview' | trans({}, 'common' ) }}
-                        {% endif %}
-                    </a>
-                {% endif %}
-            </li>
-            {% if (section_link_params(report, section, +1)) %}
+    <aside class="opg-related-items" role="complementary">
+        <nav role="navigation">
+            <ul class="govuk-list govuk-!-font-size-16">
                 <li>
-                    <a href="{{ section_link_params(report, section, +1).link }}">Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}</a>
+                    {% if report.type == 'ndr' %}
+                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="govuk-link">
+                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-link">
+                            {% if isOrgUser %}
+                                {{ 'clientProfile' | trans({}, 'common' ) }}
+                            {% else %}
+                                {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
                 </li>
-            {% endif %}
-            {% if report.type != 'ndr' %}
-                {% if report.hasSection('balance') %}
-                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
-                        <li>
-                            <a href="{{ path('balance', {'reportId': report.id}) }}">Accounts balance check</a>
-                        </li>
+                {% if (section_link_params(report, section, +1)) %}
+                    <li>
+                        <a href="{{ section_link_params(report, section, +1).link }}" class="govuk-link">
+                            Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if report.type != 'ndr' %}
+                    {% if report.hasSection('balance') %}
+                        {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
+                            <li>
+                                <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
+                                    Accounts balance check
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 {% endif %}
-            {% endif %}
-        </ul>
+            </ul>
+        </nav>
     </aside>
 {% endmacro %}
 

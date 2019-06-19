@@ -1,6 +1,7 @@
 // ====================================================================================
 // INITITALISE ALL MODULES
 
+
 $(document).ready(function() {
 
     // JS induced disabling of elements
@@ -46,3 +47,5 @@ $(document).ready(function() {
     showHideContent.init();
 
 });
+
+GOVUKFrontend.initAll();

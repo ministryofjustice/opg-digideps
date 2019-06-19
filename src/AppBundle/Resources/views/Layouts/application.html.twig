@@ -17,85 +17,129 @@
 {% block htmlTitle %}Deputy Report{% endblock %}
 
 {% block cookieMessage %}
-    <p>
+    <p class="govuk-width-container">
         GOV.UK uses cookies to make the site simpler.
         <a href="https://www.gov.uk/help/cookie-details">Find out more about cookies</a>
     </p>
 {% endblock %}
 
-
-{% block headerClass %}{% endblock %}
-
-{% block insideHeader %}{% endblock %}
-
 {% block proposition_content %}
+    <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
+        {% block proposition_title %}Complete the deputy report{% endblock %}
+    </a>
+
     {% if app.user %}
-        <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+        <button type="button" role="button" class="govuk-header__menu-button js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">
+            Menu
+        </button>
     {% endif %}
-    <nav id="proposition-menu">
-        <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
+    <nav>
         {% if app.user %}
-            <ul id="proposition-links" class="behat-region-navbar">
+            <ul id="navigation" class="govuk-header__navigation behat-region-navbar" aria-label="Top Level Navigation">
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin_homepage') }}"  class="behat-link-admin-homepage">{{ 'nav.adminArea' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_homepage') }}"  class="govuk-header__link behat-link-admin-homepage ">
+                            {{ 'nav.adminArea' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if is_granted('ROLE_CASE_MANAGER') %}
-                    <li><a href="{{ path('admin_client_search') }}"  class="behat-link-admin-client-search">{{ 'nav.adminClients' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_client_search') }}"  class="govuk-header__link behat-link-admin-client-search ">
+                            {{ 'nav.adminClients' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('casrec_upload') }}" class="behat-link-csv-upload">{{ 'nav.adminUploadLay' | trans }}</a></li>
-                    <li><a href="{{ path('admin_org_upload') }}" class="behat-link-admin-upload-pa">{{ 'nav.adminUploadPAProf' | trans }}</a></li>
-                    <li><a href="{{ path('admin_stats') }}">{{ 'nav.adminStats' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('casrec_upload') }}" class="govuk-header__link behat-link-csv-upload ">
+                            {{ 'nav.adminUploadLay' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_org_upload') }}" class="govuk-header__link behat-link-admin-upload-pa ">
+                            {{ 'nav.adminUploadPAProf' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_stats')  }}" class="govuk-header__link">
+                            {{ 'nav.adminStats' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if is_granted('ROLE_CASE_MANAGER') %}
-                    <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account">
+                            {{ 'nav.userAccount' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{ path('admin_documents') }}"  class="behat-link-admin-documents">{{ 'nav.adminDocuments' | trans }}</a></li>
-                    <li><a href="{{ path('admin_setting_service_notifications') }}"  class="behat-link-admin-settings">{{ 'nav.serviceNotification' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_documents') }}" class="govuk-header__link behat-link-admin-documents">
+                            {{ 'nav.adminDocuments' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_setting_service_notifications') }}"  class="govuk-header__link behat-link-admin-settings">
+                            {{ 'nav.serviceNotification' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
 
 
                 {% if is_granted('ROLE_AD') %}
-                    <li><a href="{{ path('ad_homepage') }}">{% trans %}nav.adArea{% endtrans %}</a></li>
-                    <li><a href="{{ path('admin_homepage') }}">{% trans %}nav.adminArea{% endtrans %}</a></li>
-                    <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('ad_homepage')  }}" class="govuk-header__link">{% trans %}nav.adArea{% endtrans %}</a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_homepage')  }}" class="govuk-header__link">{% trans %}nav.adminArea{% endtrans %}</a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account"   >{{ 'nav.userAccount' | trans }}</a>
+                    </li>
                 {% endif %}
 
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
                     {% if adLoggedAsDeputy %}
-                        <li style="color: white">
-                            Logged as {{  adName }} (Assisted Digital)</li>
+                        <li class="govuk-header__navigation-item">
+                            Logged as {{  adName }} (Assisted Digital)
+                        </li>
                     {% endif %}
-                    <li><a href="{{path('homepage')}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
-                    <li><a href="{{path('account_settings')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('homepage')}}" class="govuk-header__link behat-link-reports">
+                            {{ 'nav.reports' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('account_settings')}}" class="govuk-header__link behat-link-user-account">
+                            {{ 'nav.userAccount' | trans }}
+                        </a>
+                    </li>
                 {% endif %}
                 {% if app.user.isDeputyOrg() %}
-                    <li>
-                        <a href="{{path('org_dashboard')}}" class="behat-link-org-dashboard">Dashboard</a>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('org_dashboard')}}" class="govuk-header__link behat-link-org-dashboard">
+                            Dashboard
+                        </a>
                     </li>
-                    <li>
-                        <a href="{{path('org_settings')}}" class="behat-link-org-settings">Settings</a>
+                    <li class="govuk-header__navigation-item">
+                        <a href="{{path('org_settings')}}" class="govuk-header__link behat-link-org-settings">
+                            Settings
+                        </a>
                     </li>
                 {% endif %}
-                <li><a href="{{path('logout')}}" class="behat-link-logout">{{ 'signOut' | trans({}, 'common' ) }}</a></li>
+                <li class="govuk-header__navigation-item">
+                    <a href="{{path('logout')}}" class="govuk-header__link behat-link-logout">
+                        {{ 'signOut' | trans({}, 'common' ) }}
+                    </a>
+                </li>
             </ul>
         {% endif %}
     </nav>
 {% endblock %}
 
-{% block afterHeader %}{% endblock %}
-
-{% block beforeContent %}{% endblock %}
-
 {% block content %}
-
-    <div class="phase-banner-beta">
-        <p>
-            <strong class="phase-tag">BETA</strong>
-            <span>This is a new service – your <a href="{{ feedbackUrl }}">feedback</a> will help us to improve it.</span>
-        </p>
-    </div>
 
     {% block detailsBanner %}
         {% include 'AppBundle:Org/ClientProfile:_detailsBanner.html.twig' with {
@@ -116,15 +160,13 @@
 
     {% block notification %}
         {% for flashMessage in app.session.flashbag.get('notice') %}
-            <div class="push--top">
-                {{ macros.notification('success', flashMessage) }}
-            </div>
+            {{ macros.notification('success', flashMessage) }}
         {% endfor %}
     {% endblock %}
 
     {% block errors %}
         {% for flashMessage in app.session.flashbag.get('error') %}
-            <div class="push--top behat-region-error">
+            <div class="behat-region-error">
                 {{ macros.notification('error', flashMessage) }}
             </div>
         {% endfor %}
@@ -132,16 +174,20 @@
 
     {% block warnings %}
         {% for flashMessage in app.session.flashbag.get('warning') %}
-            <div class="push--top behat-region-error">
+            <div class="behat-region-error">
                 {{ macros.notification('warning', flashMessage) }}
             </div>
         {% endfor %}
     {% endblock %}
 
-    <h1 class="{% block pageTitleClass %}heading-xlarge{% endblock %} text">
-        {% block supportTitleTop %}{% endblock %}
+    <h1 class="govuk-heading-xl">
+        {% if block("supportTitleTop") is defined and block("supportTitleTop") != "" %}
+            <span class="govuk-caption-l">{% block supportTitleTop %}{% endblock %}</span>
+        {% endif %}
         {% block pageTitle %} Deputy report {% endblock %}
-        {% block supportTitleBottom %}{% endblock %}
+        {% if block("supportTitleBottom") is defined and block("supportTitleBottom") != "" %}
+            <span class="govuk-caption-l">{% block supportTitleBottom %}{% endblock %}</span>
+        {% endif %}
     </h1>
 
     {% block progressBar %}{% endblock %}
@@ -150,18 +196,21 @@
 
 {% endblock %}
 
-
-{% block footerTop %}{% endblock %}
-
 {% block footerSupportLinks %}
-    <li>
-        <a href="{{path('terms')}}">Terms of use</a>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('terms')}}" class="govuk-footer__link">
+            Terms of use
+        </a>
     </li>
-    <li>
-        <a href="{{path('privacy')}}">Privacy notice</a>
+    <li class="govuk-footer__inline-list-item">
+        <a href="{{path('privacy')}}" class="govuk-footer__link">
+            Privacy notice
+        </a>
     </li>
-    <li>
-        <a href="https://www.gov.uk/help/cookie-details">Cookies</a>
+    <li class="govuk-footer__inline-list-item">
+        <a href="https://www.gov.uk/help/cookie-details" class="govuk-footer__link">
+            Cookies
+        </a>
     </li>
 {% endblock %}
 

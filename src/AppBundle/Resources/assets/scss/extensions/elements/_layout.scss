@@ -4,7 +4,7 @@
 // Content
 // ==========================================================================
 
-#content {
+.opg-main-wrapper {
 	position: relative;
 }
 
@@ -12,51 +12,27 @@
 
 $wider: 1200px;
 
-@include media(desktop) {
-    #global-header {
-        .header-wrapper {
-            &.wider {
-                max-width: $wider + 30px;
-            }
+.opg-width-container--wider {
+    @include media(desktop) {
+        max-width: $wider;
+
+        .govuk-header__logo {
+            width: 25%;
         }
 
-        &.with-proposition {
-            .header-wrapper {
-                &.wider {
-                    .header-global {
-                        width: 25%;
-                    }
-
-                    .header-proposition {
-                        width: 75%;
-                    }
-                }
-            }
+        .govuk-header__content {
+            width: 75%;
         }
     }
 
-    #footer {
-        .footer-wrapper {
-            &.wider {
-                max-width: $wider;
-            }
-        }
+    @include media($min-width: 1020px) {
+        margin-right: $gutter;
+        margin-left: $gutter;
+    }
+
+    @include media($min-width: 1260px) {
+        margin-right: auto;
+        margin-left: auto;
     }
 }
 
-#global-header-bar,
-#content {
-    &.wider {
-        @include media(desktop) {
-            max-width: $wider;
-        }
-
-        @include media($min-width: 1020px) {
-            margin: 0 $gutter;
-        }
-
-        @include media($min-width: 1260px) {
-            margin: 0 auto;
-        }
-    }
-}

@@ -27,6 +27,7 @@ class FormFieldsExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('form_input', [$this, 'renderFormInput'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_submit', [$this, 'renderFormSubmit'], ['needs_environment' => true]),
+            new \Twig_SimpleFunction('form_errors', [$this, 'renderFormErrors'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_errors_list', [$this, 'renderFormErrorsList'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_select', [$this, 'renderFormDropDown'], ['needs_environment' => true]),
             new \Twig_SimpleFunction('form_known_date', [$this, 'renderFormKnownDate'], ['needs_environment' => true]),
@@ -50,7 +51,10 @@ class FormFieldsExtension extends \Twig_Extension
         //generate input field html using variables supplied
         echo $env->render(
             'AppBundle:Components/Form:_input.html.twig',
-            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+            array_merge(
+                $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
+                ['multiline' => in_array('textarea', $element->vars['block_prefixes'])]
+            )
         );
     }
 
@@ -66,7 +70,10 @@ class FormFieldsExtension extends \Twig_Extension
     {
         echo $env->render(
             'AppBundle:Components/Form:_checkbox.html.twig',
-            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+            array_merge(
+                $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
+                ['type' => in_array('radio', $element->vars['block_prefixes']) ? 'radio' : 'checkbox']
+            )
         );
     }
 
@@ -280,6 +287,21 @@ class FormFieldsExtension extends \Twig_Extension
         }
 
         $html = $env->render('AppBundle:Components/Form:_button.html.twig', $options);
+
+        echo $html;
+    }
+
+    /**
+     * get individual field errors and render them inside the field
+     * Usage: {{ form_errors(element) }}.
+     *
+     * @param $element
+     */
+    public function renderFormErrors(Twig_Environment $env, $element)
+    {
+        $html = $env->render('AppBundle:Components/Form:_errors.html.twig', [
+            'element' => $element,
+        ]);
 
         echo $html;
     }

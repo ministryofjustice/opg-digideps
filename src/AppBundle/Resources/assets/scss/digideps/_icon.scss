@@ -2,19 +2,13 @@
 // ICON
 // Reusable icons
 
-.icon-tick-white {
-    @include icon(icon-tick-white, 30, 25, 'icons');
-    margin-right: 10px;
-    background-size: contain;
-}
-
-.icon-plus {
+.icon-plus, .opg-icon--plus {
     @include icon(icon-plus, 24, 24, 'icons');
     margin-right: 3px;
     background-size: contain;
 }
 
-.icon-notification {
+.icon-notification, .opg-icon--notification {
     @include icon(icon-notification, 22, 22, 'icons');
     @include media(mobile) {
         @include icon(icon-notification, 16, 16, 'icons');
@@ -23,7 +17,7 @@
     }
 }
 
-.icon-tick {
+.icon-tick, .opg-icon--tick {
     @include icon(icon-tick, 22, 22, 'icons');
     @include media(mobile) {
         @include icon(icon-tick, 16, 16, 'icons');
@@ -32,7 +26,7 @@
     }
 }
 
-.icon-cross {
+.icon-cross, .opg-icon--cross {
     @include icon(icon-cross, 22, 22, 'icons');
     @include media(mobile) {
         @include icon(icon-cross, 16, 16, 'icons');
@@ -41,7 +35,7 @@
     }
 }
 
-.icon-information {
+.icon-information, .opg-icon--information {
     @include icon(icon-information, 22, 22, 'icons');
     @include media(mobile) {
         @include icon(icon-information, 16, 16, 'icons');
@@ -50,7 +44,7 @@
     }
 }
 
-.icon-important-small {
+.icon-important-small, .opg-icon--important-small {
     @include icon(icon-important-small, 22, 22, 'icons');
     @include media(mobile) {
         @include icon(icon-important-small, 16, 16, 'icons');
@@ -59,7 +53,7 @@
     }
 }
 
-.icon-loader {
+.icon-loader, .opg-icon--loader {
     width: 22px;
     height: 22px;
     background-image: file-url("icons/icon-loader.gif");
@@ -77,7 +71,7 @@
     }
 }
 
-.icon-pdf {
+.icon-pdf, .opg-icon--pdf {
     @include icon(icon-pdf, 32, 32, 'icons');
     margin-right: 8px;
 
