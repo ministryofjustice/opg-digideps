@@ -162,7 +162,5 @@ Feature: NDR assets
     And each text should be present in the corresponding region:
       | 13 gold house | property-sw11-6tf-address |
     # remove property
-    When I save the application status into "ndr-report-assets-finished"
     And I click on "delete" in the "property-sw11-6tf" region
     Then I should not see the "property-sw11-6tf" region
-    And I load the application status from "ndr-report-assets-finished"

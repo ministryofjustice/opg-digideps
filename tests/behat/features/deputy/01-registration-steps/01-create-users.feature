@@ -48,7 +48,6 @@ Feature: deputy / user / add user
   @ndr
   Scenario: add deputy user (ndr)
     Given emails are sent from "admin" area
-    And I load the application status from "init"
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # assert form OK
     When I create a new "NDR-enabled" "Lay Deputy" user "John NDR" "Doe NDR" with email "behat-user-ndr@publicguardian.gov.uk" and postcode "AB12CD"

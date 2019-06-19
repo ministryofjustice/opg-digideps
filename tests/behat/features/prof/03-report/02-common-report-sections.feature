@@ -156,4 +156,3 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
     # Check document removed
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | no |
-    And I save the application status into "102-5-common-sections-complete"

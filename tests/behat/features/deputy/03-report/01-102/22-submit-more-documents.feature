@@ -31,4 +31,3 @@ Feature: Add more documents after report has been submitted
       | small.jpg        | new-document-list |
     Then I click on "confirm-submit"
     And I go to the URL previously saved as "your-reports"
-    And I save the application status into "more-documents-added"

@@ -87,7 +87,6 @@ Feature: admin / admin
 
   Scenario: change user password on admin area
     Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
-    And I save the application status into "admin-pasword-change-init"
     And I click on "user-account"
     Then the response status code should be 200
     And I click on "password-edit"
@@ -138,7 +137,6 @@ Feature: admin / admin
     And I press "change_password_save"
     Then the form should be valid
     And I should be on "/deputyship-details/your-details/change-password/done"
-    And I load the application status from "admin-pasword-change-init"
 
 
   Scenario: service notification

@@ -1,8 +1,7 @@
 Feature: Admin report checklist
 
   Scenario: Case manager submits empty Prof checklist for the report
-    Given I load the application status from "prof-report-submitted"
-    And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000010"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then the URL should match "/admin/report/\d+/checklist"

@@ -2,8 +2,7 @@ Feature: admin / AD
 
   @ad
   Scenario: Create AD user
-    Given I load the application status from "admin-init"
-    And emails are sent from "admin" area
+    Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "AD" user "Assis" "Ter" with email "behat-ad@publicguardian.gov.uk" and postcode "HA3"
     Then I should see "behat-ad@publicguardian.gov.uk" in the "users" region

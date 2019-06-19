@@ -2,8 +2,7 @@ Feature: Admin unsubmit report (from client page)
 
   @deputy
   Scenario: Admin client page + search
-    Given I load the application status from "more-documents-added"
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
       | Cly Hent | client-behat001 |
@@ -26,10 +25,9 @@ Feature: Admin unsubmit report (from client page)
     # assert active report is not lsited
     But I should not see the "report-2017" region
     And I should see "25 February 2017" in the "report-2016-due-date" region
-    When I save the application status into "report-2016-pre-unsubmission"
-    And I click on "manage" in the "report-2016" region
+    When I click on "manage" in the "report-2016" region
     # unsubmit with custom due date
-    When I fill in the following:
+    And I fill in the following:
       | unsubmit_report_unsubmittedSection_0_present  | 1      |
       | unsubmit_report_unsubmittedSection_13_present | 1      |
       | unsubmit_report_dueDateChoice_4               | custom |

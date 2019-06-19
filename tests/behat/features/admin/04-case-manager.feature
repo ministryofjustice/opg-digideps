@@ -1,8 +1,7 @@
 Feature: admin / case manager
 
   Scenario: Create CM user
-    Given I load the application status from "admin-init"
-    And emails are sent from "admin" area
+    Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "case manager" user "Casero" "Managera" with email "behat-cm@publicguardian.gov.uk" and postcode "HA3"
     Then I should see "behat-cm@publicguardian.gov.uk" in the "users" region

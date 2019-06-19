@@ -39,7 +39,6 @@ Feature: deputy / acl / security on pages
   Scenario: Malicious User cannot access other's pages
     # behat-user can access report n.2
     Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
-    And I save the application status into "deputy-acl-before"
     Then the following "102 report" report pages should return the following status:
       | overview         | 200 |
       # decisions
@@ -55,7 +54,6 @@ Feature: deputy / acl / security on pages
     # behat-malicious CANNOT access the same URLs
     Given I am logged in as "behat-malicious@publicguardian.gov.uk" with password "Abcd1234"
     # reload the status (as some URLs calls might have deleted data)
-    And I load the application status from "deputy-acl-before"
     Then the following "102 report" report pages should return the following status:
       | overview                | 500 |
       | decisions               | 500 |
@@ -69,6 +67,5 @@ Feature: deputy / acl / security on pages
       | decisions               | 200 |
       | contacts                | 200 |
       | assets                  | 200 |
-    And I load the application status from "deputy-acl-before"
 
 

@@ -1,8 +1,7 @@
 Feature: Add PROF users and activate PROF user (journey)
 
   Scenario: add PROF users
-    Given I load the application status from "init-prof"
-    And emails are sent from "admin" area
+    Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PROF users
     When I click on "admin-upload-pa"

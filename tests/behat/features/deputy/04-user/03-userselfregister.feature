@@ -2,8 +2,7 @@ Feature: User Self Registration
 
   @deputy
   Scenario: A user can enter their self registration information
-    Given I load the application status from "init"
-    And I truncate the users from CASREC:
+    Given I truncate the users from CASREC:
     And emails are sent from "deputy" area
       #
       # Form all empty
@@ -153,25 +152,24 @@ Feature: User Self Registration
 
   @deputy
   Scenario: A user can self register and activate
-    Given I load the application status from "init"
-    And emails are sent from "deputy" area
+    Given emails are sent from "deputy" area
     And I add the following users to CASREC:
       | Case     | Surname      | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
-      | 11112222 | Cross-Tolley | D001      | Tolley      | SW1 3RF      | OPG102    |
+      | 11112233 | Cross-Lens   | D001      | Lens      | SW1 3RF      | OPG102    |
     And I am on "/register"
     And I fill in the following:
-      | self_registration_firstname       | Zac                                     |
-      | self_registration_lastname        | Tolley                                  |
-      | self_registration_email_first     | behat-zac.tolley@digital.justice.gov.uk |
-      | self_registration_email_second    | behat-zac.tolley@digital.justice.gov.uk |
+      | self_registration_firstname       | Jenny                                     |
+      | self_registration_lastname        | Lens                                  |
+      | self_registration_email_first     | behat-jenny.lens@digital.justice.gov.uk |
+      | self_registration_email_second    | behat-jenny.lens@digital.justice.gov.uk |
       | self_registration_postcode        | SW1 3RF                                 |
       | self_registration_clientFirstname | John                                    |
-      | self_registration_clientLastname  | Cross-Tolley                            |
-      | self_registration_caseNumber      | 11112222                                |
+      | self_registration_clientLastname  | Cross-Lens                              |
+      | self_registration_caseNumber      | 11112233                                |
     And I press "self_registration_save"
     Then I should see "Please check your email"
-    And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
-    And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
+    And I should see "We've sent you a link to behat-jenny.lens@digital.justice.gov.uk"
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-jenny.lens@digital.justice.gov.uk"
     And I activate the user with password "Abcd1234"
     Then the URL should match "/user/details"
     When I fill in the following:
@@ -195,5 +193,5 @@ Feature: User Self Registration
     And I set the report end date to "1/1/2016"
     Then the URL should match "/lay"
     Then I go to "/logout"
-    And I am logged in as "behat-zac.tolley@digital.justice.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-jenny.lens@digital.justice.gov.uk" with password "Abcd1234"
     Then the URL should match "/lay"

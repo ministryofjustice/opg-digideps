@@ -14,7 +14,6 @@ Feature: ndr / report submit
         And I should see an "#expenses-section" element
         And I should see an "#action-section" element
         And I should see an "#accounts-section" element
-        And I save the application status into "ndr-before-submission"
         # assert pages not accessible
 
     @ndr
@@ -49,7 +48,6 @@ Feature: ndr / report submit
         And I press "ndr_declaration_save"
         Then the form should be valid
         And the URL should match "/ndr/\d+/submitted"
-        And I save the application status into "ndr-after-submission"
         And the response status code should be 200
         When I save the report as "submitted NDR report"
         Then the report URL "visits-care/summary" for "submitted NDR report" should not be accessible

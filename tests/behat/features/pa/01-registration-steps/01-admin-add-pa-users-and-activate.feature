@@ -1,8 +1,7 @@
 Feature: Add PA users and activate PA user (journey)
 
   Scenario: add PA users
-    Given I load the application status from "init-pa"
-    And emails are sent from "admin" area
+    Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
       # upload PA users
     When I click on "admin-upload-pa"

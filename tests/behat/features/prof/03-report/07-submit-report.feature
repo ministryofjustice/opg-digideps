@@ -18,12 +18,10 @@ Feature: Report submit (client 01000010)
         Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "pa-report-open" in the "client-01000010" region
         Then the PROF report should be submittable
-        And I save the application status into "prof-report-completed"
 
 
     Scenario: 102-5 report declaration page
-        Given I load the application status from "prof-report-completed"
-        And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "tab-ready"
         And I click on "pa-report-open" in the "client-01000010" region
         Then I should not see the "download-2016-report" link
@@ -87,5 +85,3 @@ Feature: Report submit (client 01000010)
             | HSBC - main account | account-01ca |
             | Current account     | account-01ca |
             | 112233              | account-01ca |
-        And I save the application status into "prof-report-submitted"
-

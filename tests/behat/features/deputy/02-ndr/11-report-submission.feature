@@ -2,8 +2,7 @@ Feature: Admin NDR submitted
 
   @ndr
   Scenario: Admin client search returns NDR client
-    Given I load the application status from "ndr-after-submission"
-    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
     | Cly3 Hent3 | client-33333333 |

@@ -2,8 +2,7 @@ Feature: Codeputy Self Registration
 
   @deputy
   Scenario: Codeps setup
-    Given I load the application status from "init"
-    And I truncate the users from CASREC:
+    Given I truncate the users from CASREC:
     And emails are sent from "deputy" area
     Given I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
