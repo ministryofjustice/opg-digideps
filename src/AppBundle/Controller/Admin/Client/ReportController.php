@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
@@ -116,11 +117,28 @@ class ReportController extends AbstractController
                 ;
 
                 $this->getRestClient()->put('report/' . $report->getId() . '/unsubmit', $report, [
-                    'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date', 'startEndDates'
+                    'submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'report_due_date',
+                    'startEndDates'
                 ]);
 
                 $request->getSession()->getFlashBag()->add('notice', 'Report marked as incomplete');
 
+                $unsubmitContent = $this->generateChecklistUnsubmitInformationContent($report);
+
+                // Create Checklist and ChecklistInformation content
+                $checklist = $report->getChecklist();
+                $checklist = empty($checklist) ? new Checklist($report) : $checklist;
+                $checklist->setFurtherInformationReceived($unsubmitContent);
+
+                if (!empty($checklist->getId())) {
+                    $this->getRestClient()->put('report/' . $report->getId() . '/checked', $checklist, [
+                        'report-checklist', 'checklist-information'
+                    ]);
+                } else {
+                    $this->getRestClient()->post('report/' . $report->getId() . '/checked', $checklist, [
+                        'report-checklist', 'checklist-information'
+                    ]);
+                }
                 return $this->redirect($this->generateUrl('admin_client_details', ['id'=>$report->getClient()->getId()]));
             } else {
                 // User cancelled
@@ -180,6 +198,19 @@ class ReportController extends AbstractController
             'reportDueDate'   => $reportDueDate,
             'form'     => $form->createView()
         ];
+    }
+
+    /**
+     * Renders the unsubmit information template and returns the content
+     *
+     * @param ReportInterface $report
+     * @return string
+     */
+    private function generateChecklistUnsubmitInformationContent(ReportInterface $report)
+    {
+        return $this->render('AppBundle:Admin/Client/Report/Formatted:unsubmit_information.html.twig', [
+            'report' => $report
+        ])->getContent();
     }
 
     /**
