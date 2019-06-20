@@ -26,7 +26,10 @@
     {{ form_errors(element) }}
 
     {% set inputType = multiline ? 'textarea' : 'input' %}
-    {% set class = element.vars.attr.class | default('') ~ ' govuk-' ~ inputType ~ ' govuk-!-width-one-half ' ~ inputClass | default('') %}
+    {% if 'govuk-!-width' not in inputClass %}
+        {% set inputClass = ' govuk-!-width-one-half' ~ inputClass %}
+    {% endif %}
+    {% set class = element.vars.attr.class | default('') ~ ' govuk-' ~ inputType ~ ' ' ~ inputClass | default('') %}
 
     {% if (preInputText is defined) and (preInputText is not empty) %}
         <span class="opg-pre-input-text">{{ preInputText }}</span>

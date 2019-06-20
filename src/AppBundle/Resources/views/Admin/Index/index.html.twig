@@ -17,22 +17,21 @@
 
     {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
 
-    <div class="form-group form-groups-inline flush--bottom">
+    <div class="govuk-grid-row">
         {{ form_input(form.q, 'Search', {
             'labelRaw': true,
             'labelText':'Search',
-            'inputClass': 'width-full',
-            'formGroupClass': 'width-third'}) }}
+            'inputClass': 'govuk-!-width-full',
+            'formGroupClass': 'govuk-grid-column-one-third'}) }}
 
         {{ form_select(form.role_name, '', {
             'labelText': 'Role',
-            'inputClass': 'width-full',
-            'formGroupClass': 'width-quarter'}) }}
+            'inputClass': 'govuk-!-width-full',
+            'formGroupClass': 'govuk-grid-column-one-third'}) }}
 
         {{ form_checkbox(form.ndr_enabled, '', {
             'labelText': 'NDR enabled',
-            'inputClass': 'width-full',
-            'formGroupClass': 'width-quarter'}) }}
+            'formGroupClass': 'govuk-grid-column-one-third govuk-!-margin-top-6'}) }}
     </div>
 
     <div class="form-group">
