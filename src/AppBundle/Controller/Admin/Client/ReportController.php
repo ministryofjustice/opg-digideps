@@ -91,7 +91,7 @@ class ReportController extends AbstractController
      */
     public function manageAction(Request $request, $id)
     {
-        $report = $this->getReport($id, ['report-checklist']);
+        $report = $this->getReport($id, ['report-checklist', 'action']);
         $reportDueDate = $report->getDueDate();
 
         if (!$report->getSubmitted()) {
@@ -230,7 +230,7 @@ class ReportController extends AbstractController
             array_merge(
                 self::$reportGroupsAll,
                 [
-                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data'
+                    'report-checklist', 'checklist-information', 'last-modified', 'user', 'previous-report-data', 'action'
                 ]
             )
         );

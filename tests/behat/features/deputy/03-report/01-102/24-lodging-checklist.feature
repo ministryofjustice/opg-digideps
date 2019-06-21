@@ -107,7 +107,7 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Not saved yet | last-saved-by |
+      | Admin User, OPG Admin | last-saved-by |
     # Begin scenario
     When I fill in "report_checklist_furtherInformationReceived" with "Some more info 1"
     When I click on "save-further-information"
@@ -118,9 +118,9 @@ Feature: Admin report checklist
       | report_checklist_furtherInformationReceived |  |
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
-      | Case Manager1, Case Manager | last-saved-by            |
-      | Some more info 1            | information-2            |
-      | Case Manager1, Case Manager | information-created-by-2 |
+      | Case Manager1, Case Manager | information-created-by-1 |
+      | Some more info 1            | information-1            |
+      | Case Manager1, Case Manager | information-created-by-1 |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
