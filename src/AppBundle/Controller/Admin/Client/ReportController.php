@@ -91,7 +91,7 @@ class ReportController extends AbstractController
      */
     public function manageAction(Request $request, $id)
     {
-        $report = $this->getReport($id, []);
+        $report = $this->getReport($id, ['report-checklist']);
         $reportDueDate = $report->getDueDate();
 
         if (!$report->getSubmitted()) {
