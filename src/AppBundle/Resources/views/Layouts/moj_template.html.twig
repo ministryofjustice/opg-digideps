@@ -103,8 +103,14 @@
         </p>
     </div>
 
-    <div class="govuk-width-container {% if env == 'admin' %}opg-width-container--wider{% endif %}">
-        <main class="govuk-main-wrapper opg-main-wrapper" role="main">
+    <div class="govuk-width-container opg-main-wrapper {% if env == 'admin' %}opg-width-container--wider{% endif %}">
+        {% block detailsBanner %}
+            {% include 'AppBundle:Org/ClientProfile:_detailsBanner.html.twig' with {
+            'report': report is defined ? report : null
+            } %}
+        {% endblock %}
+
+        <main class="govuk-main-wrapper" role="main">
             {% block content %}{% endblock %}
         </main>
     </div>

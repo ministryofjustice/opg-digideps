@@ -27,7 +27,7 @@
 
     {% set inputType = multiline ? 'textarea' : 'input' %}
     {% if 'govuk-!-width' not in inputClass %}
-        {% set inputClass = ' govuk-!-width-one-half' ~ inputClass %}
+        {% set inputClass = ' govuk-!-width-one-half ' ~ inputClass %}
     {% endif %}
     {% set class = element.vars.attr.class | default('') ~ ' govuk-' ~ inputType ~ ' ' ~ inputClass | default('') %}
 
