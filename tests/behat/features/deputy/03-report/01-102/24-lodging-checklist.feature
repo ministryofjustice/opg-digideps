@@ -19,8 +19,7 @@ Feature: Admin report checklist
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
-      | Not saved yet | last-saved-by |
-      | Not saved yet | last-modified-by |
+      | Admin User, OPG Admin | last-saved-by |
       | 1 Jan 2016 | court-date |
       | Property and affairs: general | report-type-title |
       | 1 Jan 2018 to 31 Dec 2018 | expected-date |
@@ -49,6 +48,13 @@ Feature: Admin report checklist
       | 020 3334 3555     | checklist-deputy-phone     |
       | behat-user@publicguardian.gov.uk | checklist-deputy-email |
     And I should see the "checklist-no-previous-reports" region exactly "1" times
+    # Assert furtherInfo table is populated with unsubmit information
+    And each text should be present in the corresponding region:
+      | Incomplete submitted              | information-1            |
+      | Decisions                         | information-1            |
+      | Deputy expenses                   | information-1            |
+      | Due date set to: 30 April 2022    | information-1            |
+      | Admin User, OPG Admin           | information-created-by-1   |
     # check auto-filled answers
     And the following fields should have the corresponding values:
       | report_checklist_futureSignificantDecisions_0 | yes     |
@@ -113,8 +119,8 @@ Feature: Admin report checklist
     # Assert furtherInfo table is populated
     And each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by            |
-      | Some more info 1            | information-1            |
-      | Case Manager1, Case Manager | information-created-by-1 |
+      | Some more info 1            | information-2            |
+      | Case Manager1, Case Manager | information-created-by-2 |
     Then the URL should match "/admin/report/\d+/checklist"
     And I fill in "report_checklist_furtherInformationReceived" with "Some more info 2"
     When I click on "save-further-information"
