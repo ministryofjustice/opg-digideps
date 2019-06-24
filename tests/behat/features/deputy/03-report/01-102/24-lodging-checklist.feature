@@ -131,7 +131,6 @@ Feature: Admin report checklist
       | Some more info 2            | information-1            |
       | Case Manager1, Case Manager | information-created-by-1 |
       | Some more info 1            | information-2            |
-      | Case Manager1, Case Manager | information-created-by-2 |
     Then the URL should match "/admin/report/\d+/checklist"
 
 
