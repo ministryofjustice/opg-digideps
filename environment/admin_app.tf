@@ -5,47 +5,46 @@ resource "aws_ecs_task_definition" "admin" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.admin_container}]"
-  task_role_arn            = "${aws_iam_role.admin.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.admin.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_service" "admin" {
-  name                    = "${aws_ecs_task_definition.admin.family}"
-  cluster                 = "${aws_ecs_cluster.main.id}"
-  task_definition         = "${aws_ecs_task_definition.admin.arn}"
+  name                    = aws_ecs_task_definition.admin.family
+  cluster                 = aws_ecs_cluster.main.id
+  task_definition         = aws_ecs_task_definition.admin.arn
   desired_count           = 1
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  tags                    = "${local.default_tags}"
+  tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = ["${aws_security_group.admin.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.admin.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = "${aws_lb_target_group.admin.arn}"
+    target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "admin_app"
     container_port   = 443
   }
 
-  depends_on = ["aws_lb_listener.admin"]
+  depends_on = [aws_lb_listener.admin]
 }
 
 # TODO: breakout to individual rules
 resource "aws_security_group" "admin" {
-  name_prefix = "${aws_ecs_task_definition.admin.family}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = aws_ecs_task_definition.admin.family
+  vpc_id      = data.aws_vpc.vpc.id
 
   ingress {
     protocol        = "tcp"
     from_port       = 443
     to_port         = 443
-    security_groups = ["${aws_security_group.admin_elb.id}"]
+    security_groups = [aws_security_group.admin_elb.id]
   }
 
   egress {
@@ -59,10 +58,12 @@ resource "aws_security_group" "admin" {
     create_before_destroy = true
   }
 
-  tags = "${merge(
-      local.default_tags,
-      map("Name", "admin")
-  )}"
+  tags = merge(
+    local.default_tags,
+    {
+      "Name" = "admin"
+    },
+  )
 }
 
 locals {
@@ -101,7 +102,7 @@ locals {
     "environment": [
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "false" },
+      { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "${local.test_enabled ? "true" : "false"}" },
       { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.email_domain}" },
       { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.email_feedback_address}" },
       { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.email_report_address}" },
@@ -137,5 +138,8 @@ locals {
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
-  EOF
+
+EOF
+
 }
+

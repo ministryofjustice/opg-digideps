@@ -17,15 +17,6 @@ jobs:
               echo "Some terraform files need be formatted, run 'terraform fmt' to fix";
               exit 1;
             fi
-      - run:
-          name: Terraform Init
-          command: terraform init -input=false
-      - run:
-          environment:
-            TF_WORKSPACE: "develop"
-            TF_VAR_OPG_DOCKER_TAG: "1.0.1968"
-          name: Terraform Plan
-          command: terraform plan -input=false -parallelism=30
 
 workflows:
   version: 2

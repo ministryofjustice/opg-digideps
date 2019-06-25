@@ -6,7 +6,7 @@ resource "aws_service_discovery_service" "scan" {
   name = "scan"
 
   dns_config {
-    namespace_id = "${aws_service_discovery_private_dns_namespace.private.id}"
+    namespace_id = aws_service_discovery_private_dns_namespace.private.id
 
     dns_records {
       ttl  = 10
@@ -22,9 +22,9 @@ resource "aws_service_discovery_service" "scan" {
 }
 
 resource "aws_iam_role" "scan" {
-  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   name               = "scan.${terraform.workspace}"
-  tags               = "${local.default_tags}"
+  tags               = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "scan" {
@@ -34,46 +34,47 @@ resource "aws_ecs_task_definition" "scan" {
   cpu                      = 1024
   memory                   = 2048
   container_definitions    = "[${local.file_scanner_api_container},${local.file_scanner_worker_container},${local.file_scanner_redis_container}]"
-  task_role_arn            = "${aws_iam_role.scan.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.scan.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_service" "scan" {
-  name                    = "${aws_ecs_task_definition.scan.family}"
-  cluster                 = "${aws_ecs_cluster.main.id}"
-  task_definition         = "${aws_ecs_task_definition.scan.arn}"
+  name                    = aws_ecs_task_definition.scan.family
+  cluster                 = aws_ecs_cluster.main.id
+  task_definition         = aws_ecs_task_definition.scan.arn
   desired_count           = 2
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.scan.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.scan.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = "${aws_service_discovery_service.scan.arn}"
+    registry_arn = aws_service_discovery_service.scan.arn
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 }
 
 resource "aws_security_group" "scan" {
-  name_prefix = "${aws_ecs_task_definition.scan.family}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = aws_ecs_task_definition.scan.family
+  vpc_id      = data.aws_vpc.vpc.id
 
   lifecycle {
     create_before_destroy = true
   }
 
-  tags = "${merge(
-      local.default_tags,
-      map("Name", "scan")
-  )}"
+  tags = merge(
+    local.default_tags,
+    {
+      "Name" = "scan"
+    },
+  )
 }
 
 resource "aws_security_group_rule" "scan_https_in" {
@@ -81,8 +82,8 @@ resource "aws_security_group_rule" "scan_https_in" {
   protocol                 = "tcp"
   from_port                = 8443
   to_port                  = 8443
-  security_group_id        = "${aws_security_group.scan.id}"
-  source_security_group_id = "${aws_security_group.front.id}"
+  security_group_id        = aws_security_group.scan.id
+  source_security_group_id = aws_security_group.front.id
 }
 
 resource "aws_security_group_rule" "scan_out" {
@@ -90,7 +91,7 @@ resource "aws_security_group_rule" "scan_out" {
   protocol          = "-1"
   from_port         = 0
   to_port           = 0
-  security_group_id = "${aws_security_group.scan.id}"
+  security_group_id = aws_security_group.scan.id
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -126,7 +127,9 @@ locals {
         { "name": "REDIS_URL", "value": "redis://localhost:6379/0" }
       ]
   }
-  EOF
+  
+EOF
+
 
   file_scanner_worker_container = <<EOF
   {
@@ -154,9 +157,11 @@ locals {
         { "name": "REDIS_URL", "value": "redis://localhost:6379/0" }
       ]
   }
-  EOF
+  
+EOF
 
-  file_scanner_redis_container = <<EOF
+
+file_scanner_redis_container = <<EOF
   {
       "name": "redis",
       "essential": true,
@@ -173,5 +178,8 @@ locals {
         }
       }
   }
-  EOF
+  
+EOF
+
 }
+

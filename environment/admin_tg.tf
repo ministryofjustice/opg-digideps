@@ -3,9 +3,9 @@ resource "aws_lb_target_group" "admin" {
   port                 = 443
   protocol             = "HTTPS"
   target_type          = "ip"
-  vpc_id               = "${data.aws_vpc.vpc.id}"
+  vpc_id               = data.aws_vpc.vpc.id
   deregistration_delay = 0
-  tags                 = "${local.default_tags}"
+  tags                 = local.default_tags
 
   health_check {
     path     = "/manage/elb"
@@ -17,5 +17,5 @@ resource "aws_lb_target_group" "admin" {
     create_before_destroy = true
   }
 
-  tags = "${local.default_tags}"
 }
+

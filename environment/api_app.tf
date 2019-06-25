@@ -6,7 +6,7 @@ resource "aws_service_discovery_service" "api" {
   name = "api"
 
   dns_config {
-    namespace_id = "${aws_service_discovery_private_dns_namespace.private.id}"
+    namespace_id = aws_service_discovery_private_dns_namespace.private.id
 
     dns_records {
       ttl  = 10
@@ -28,36 +28,36 @@ resource "aws_ecs_task_definition" "api" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.api_container}]"
-  task_role_arn            = "${aws_iam_role.api.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.api.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_service" "api" {
-  name                    = "${aws_ecs_task_definition.api.family}"
-  cluster                 = "${aws_ecs_cluster.main.id}"
-  task_definition         = "${aws_ecs_task_definition.api.arn}"
-  desired_count           = "${local.task_count}"
+  name                    = aws_ecs_task_definition.api.family
+  cluster                 = aws_ecs_cluster.main.id
+  task_definition         = aws_ecs_task_definition.api.arn
+  desired_count           = local.task_count
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  tags                    = "${local.default_tags}"
+  tags                    = local.default_tags
 
   network_configuration {
-    security_groups  = ["${aws_security_group.api_task.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.api_task.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = "${aws_service_discovery_service.api.arn}"
+    registry_arn = aws_service_discovery_service.api.arn
   }
 }
 
 resource "aws_security_group" "api_task" {
-  name_prefix = "${aws_ecs_task_definition.api.family}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = aws_ecs_task_definition.api.family
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = local.default_tags
 
   lifecycle {
     create_before_destroy = true
@@ -70,8 +70,8 @@ resource "aws_security_group_rule" "api_https_admin_in" {
   from_port = 443
   to_port   = 443
 
-  security_group_id        = "${aws_security_group.api_task.id}"
-  source_security_group_id = "${aws_security_group.admin.id}"
+  security_group_id        = aws_security_group.api_task.id
+  source_security_group_id = aws_security_group.admin.id
 }
 
 resource "aws_security_group_rule" "api_https_front_in" {
@@ -80,8 +80,8 @@ resource "aws_security_group_rule" "api_https_front_in" {
   from_port = 443
   to_port   = 443
 
-  security_group_id        = "${aws_security_group.api_task.id}"
-  source_security_group_id = "${aws_security_group.front.id}"
+  security_group_id        = aws_security_group.api_task.id
+  source_security_group_id = aws_security_group.front.id
 }
 
 resource "aws_security_group_rule" "api_out" {
@@ -90,7 +90,7 @@ resource "aws_security_group_rule" "api_out" {
   from_port = 0
   to_port   = 0
 
-  security_group_id = "${aws_security_group.api_task.id}"
+  security_group_id = aws_security_group.api_task.id
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
@@ -126,7 +126,7 @@ locals {
       { "name": "API_SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "${local.test_enabled ? "true" : "false" }" },
+      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "${local.test_enabled ? "true" : "false"}" },
       { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
       { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
@@ -148,5 +148,8 @@ locals {
       { "name": "OPG_STACKNAME", "value": "${terraform.workspace}" }
     ]
   }
-  EOF
+  
+EOF
+
 }
+

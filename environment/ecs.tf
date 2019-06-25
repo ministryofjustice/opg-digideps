@@ -1,16 +1,15 @@
 resource "aws_ecs_cluster" "main" {
-  name = "${terraform.workspace}"
-  tags = "${local.default_tags}"
+  name = terraform.workspace
+  tags = local.default_tags
 }
 
-#TODO: remove ec2 once instances removed
 data "aws_iam_policy_document" "task_role_assume_policy" {
-  "statement" {
+  statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
     principals {
-      identifiers = ["ecs-tasks.amazonaws.com", "ec2.amazonaws.com"]
+      identifiers = ["ecs-tasks.amazonaws.com"]
       type        = "Service"
     }
   }
@@ -18,12 +17,12 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 
 resource "aws_iam_role" "execution_role" {
   name               = "execution_role.${terraform.workspace}"
-  assume_role_policy = "${data.aws_iam_policy_document.execution_role_assume_policy.json}"
-  tags               = "${local.default_tags}"
+  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
+  tags               = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role_assume_policy" {
-  "statement" {
+  statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
 
@@ -35,17 +34,17 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
 }
 
 resource "aws_iam_role_policy" "execution_role" {
-  policy = "${data.aws_iam_policy_document.execution_role.json}"
-  role   = "${aws_iam_role.execution_role.id}"
+  policy = data.aws_iam_policy_document.execution_role.json
+  role   = aws_iam_role.execution_role.id
 }
 
 resource "aws_cloudwatch_log_group" "opg_digi_deps" {
-  name = "${terraform.workspace}"
-  tags = "${local.default_tags}"
+  name = terraform.workspace
+  tags = local.default_tags
 }
 
 data "aws_iam_policy_document" "execution_role" {
-  "statement" {
+  statement {
     effect    = "Allow"
     resources = ["*"]
 
@@ -61,7 +60,7 @@ data "aws_iam_policy_document" "execution_role" {
     ]
   }
 
-  "statement" {
+  statement {
     effect = "Allow"
 
     actions = [
@@ -69,12 +68,13 @@ data "aws_iam_policy_document" "execution_role" {
     ]
 
     resources = [
-      "${data.aws_kms_alias.secretmanager.target_key_arn}",
+      data.aws_kms_alias.secretmanager.target_key_arn,
     ]
   }
 }
 
 resource "aws_service_discovery_private_dns_namespace" "private" {
   name = "${terraform.workspace}.private"
-  vpc  = "${data.aws_vpc.vpc.id}"
+  vpc  = data.aws_vpc.vpc.id
 }
+

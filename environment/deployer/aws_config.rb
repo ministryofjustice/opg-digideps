@@ -2,7 +2,7 @@
 
 ROLE_NAME = ENV['TF_VAR_default_role'] || 'ci'
 TF_WORKSPACE = ENV['TF_WORKSPACE'] || 'development'
-CONFIG = hash_from_file('terraform.tfvars')
+CONFIG = hash_from_file('terraform.tfvars.json')
 ACCOUNT_ID = CONFIG['account_ids'][TF_WORKSPACE]
 
 Aws.config[:region]      = 'eu-west-1'

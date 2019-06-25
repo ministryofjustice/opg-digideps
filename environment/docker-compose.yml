@@ -2,7 +2,7 @@ version: "2"
 
 services:
   terraform:
-    image: hashicorp/terraform:0.11.13
+    image: hashicorp/terraform
     working_dir: /app
     volumes:
     - ${PWD}:/app

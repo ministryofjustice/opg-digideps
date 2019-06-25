@@ -13,7 +13,7 @@ RUBY := docker-compose run --rm ruby
 
 # Build aws config file
 aws-config:
-	@cat terraform.tfvars | $(JQ) -rf aws.jq > .tmp.aws.config
+	@cat terraform.tfvars.json | $(JQ) -rf aws.jq > .tmp.aws.config
 
 # Check style and lint
 style: check-compose check-terraform lint-terraform

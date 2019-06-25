@@ -11,8 +11,8 @@ resource "aws_sns_topic" "notifications_minor" {
 }
 
 resource "aws_sns_topic_policy" "notifications_minor" {
-  arn    = "${aws_sns_topic.notifications_minor.arn}"
-  policy = "${data.aws_iam_policy_document.notifications_minor.json}"
+  arn    = aws_sns_topic.notifications_minor.arn
+  policy = data.aws_iam_policy_document.notifications_minor.json
 }
 
 data "aws_iam_policy_document" "notifications_minor" {
@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "notifications_minor" {
       "SNS:Receive",
     ]
 
-    resources = ["${aws_sns_topic.notifications_minor.arn}"]
+    resources = [aws_sns_topic.notifications_minor.arn]
 
     condition {
       test     = "StringEquals"
@@ -54,8 +54,8 @@ resource "aws_sns_topic" "notifications_major" {
 }
 
 resource "aws_sns_topic_policy" "notifications_major" {
-  arn    = "${aws_sns_topic.notifications_major.arn}"
-  policy = "${data.aws_iam_policy_document.notifications_major.json}"
+  arn    = aws_sns_topic.notifications_major.arn
+  policy = data.aws_iam_policy_document.notifications_major.json
 }
 
 data "aws_iam_policy_document" "notifications_major" {
@@ -82,7 +82,7 @@ data "aws_iam_policy_document" "notifications_major" {
       "SNS:Receive",
     ]
 
-    resources = ["${aws_sns_topic.notifications_major.arn}"]
+    resources = [aws_sns_topic.notifications_major.arn]
 
     condition {
       test     = "StringEquals"
@@ -91,3 +91,4 @@ data "aws_iam_policy_document" "notifications_major" {
     }
   }
 }
+

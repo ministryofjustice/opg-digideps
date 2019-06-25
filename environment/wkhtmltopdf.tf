@@ -6,7 +6,7 @@ resource "aws_service_discovery_service" "wkhtmltopdf" {
   name = "wkhtmltopdf"
 
   dns_config {
-    namespace_id = "${aws_service_discovery_private_dns_namespace.private.id}"
+    namespace_id = aws_service_discovery_private_dns_namespace.private.id
 
     dns_records {
       ttl  = 10
@@ -22,9 +22,9 @@ resource "aws_service_discovery_service" "wkhtmltopdf" {
 }
 
 resource "aws_iam_role" "wkhtmltopdf" {
-  assume_role_policy = "${data.aws_iam_policy_document.task_role_assume_policy.json}"
+  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
   name               = "wkhtmltopdf.${terraform.workspace}"
-  tags               = "${local.default_tags}"
+  tags               = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "wkhtmltopdf" {
@@ -34,46 +34,47 @@ resource "aws_ecs_task_definition" "wkhtmltopdf" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.wkhtmltopdf_container}]"
-  task_role_arn            = "${aws_iam_role.wkhtmltopdf.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.wkhtmltopdf.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_service" "wkhtmltopdf" {
-  name                    = "${aws_ecs_task_definition.wkhtmltopdf.family}"
-  cluster                 = "${aws_ecs_cluster.main.id}"
-  task_definition         = "${aws_ecs_task_definition.wkhtmltopdf.arn}"
+  name                    = aws_ecs_task_definition.wkhtmltopdf.family
+  cluster                 = aws_ecs_cluster.main.id
+  task_definition         = aws_ecs_task_definition.wkhtmltopdf.arn
   desired_count           = 1
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
 
   network_configuration {
-    security_groups  = ["${aws_security_group.wkhtmltopdf.id}"]
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    security_groups  = [aws_security_group.wkhtmltopdf.id]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 
   service_registries {
-    registry_arn = "${aws_service_discovery_service.wkhtmltopdf.arn}"
+    registry_arn = aws_service_discovery_service.wkhtmltopdf.arn
   }
 
-  tags = "${local.default_tags}"
+  tags = local.default_tags
 }
 
 resource "aws_security_group" "wkhtmltopdf" {
-  name_prefix = "${aws_ecs_task_definition.wkhtmltopdf.family}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-  tags        = "${local.default_tags}"
+  name_prefix = aws_ecs_task_definition.wkhtmltopdf.family
+  vpc_id      = data.aws_vpc.vpc.id
 
   lifecycle {
     create_before_destroy = true
   }
 
-  tags = "${merge(
-      local.default_tags,
-      map("Name", "wkhtmltopdf")
-  )}"
+  tags = merge(
+    local.default_tags,
+    {
+      "Name" = "wkhtmltopdf"
+    },
+  )
 }
 
 resource "aws_security_group_rule" "wkhtmltopdf_front_http_in" {
@@ -81,8 +82,8 @@ resource "aws_security_group_rule" "wkhtmltopdf_front_http_in" {
   protocol                 = "tcp"
   from_port                = 80
   to_port                  = 80
-  security_group_id        = "${aws_security_group.wkhtmltopdf.id}"
-  source_security_group_id = "${aws_security_group.front.id}"
+  security_group_id        = aws_security_group.wkhtmltopdf.id
+  source_security_group_id = aws_security_group.front.id
 }
 
 resource "aws_security_group_rule" "wkhtmltopdf_admin_http_in" {
@@ -90,8 +91,8 @@ resource "aws_security_group_rule" "wkhtmltopdf_admin_http_in" {
   protocol                 = "tcp"
   from_port                = 80
   to_port                  = 80
-  security_group_id        = "${aws_security_group.wkhtmltopdf.id}"
-  source_security_group_id = "${aws_security_group.admin.id}"
+  security_group_id        = aws_security_group.wkhtmltopdf.id
+  source_security_group_id = aws_security_group.admin.id
 }
 
 resource "aws_security_group_rule" "wkhtmltopdf_out" {
@@ -100,7 +101,7 @@ resource "aws_security_group_rule" "wkhtmltopdf_out" {
   from_port         = 0
   to_port           = 0
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.wkhtmltopdf.id}"
+  security_group_id = aws_security_group.wkhtmltopdf.id
 }
 
 locals {
@@ -124,5 +125,8 @@ locals {
         }
       }
   }
-  EOF
+  
+EOF
+
 }
+

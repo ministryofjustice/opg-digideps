@@ -1,62 +1,62 @@
 resource "aws_ecs_service" "test" {
-  count                   = "${local.test_enabled}"
+  count                   = local.test_enabled ? 1 : 0
   name                    = "test-${terraform.workspace}"
-  cluster                 = "${aws_ecs_cluster.main.id}"
-  task_definition         = "${aws_ecs_task_definition.reset_database.arn}"
+  cluster                 = aws_ecs_cluster.main.id
+  task_definition         = aws_ecs_task_definition.reset_database[0].arn
   desired_count           = 0
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  tags                    = "${local.default_tags}"
+  tags                    = local.default_tags
 
   network_configuration {
     security_groups = [
-      "${aws_security_group.front.id}",
-      "${aws_security_group.api_task.id}",
+      aws_security_group.front.id,
+      aws_security_group.api_task.id,
     ]
 
-    subnets          = ["${data.aws_subnet.private.*.id}"]
+    subnets          = data.aws_subnet.private.*.id
     assign_public_ip = false
   }
 }
 
 resource "aws_ecs_task_definition" "test_front" {
-  count                    = "${local.test_enabled}"
+  count                    = local.test_enabled ? 1 : 0
   family                   = "test-front-${terraform.workspace}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.test_front_container}]"
-  task_role_arn            = "${aws_iam_role.test.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.test.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "test_api" {
-  count                    = "${local.test_enabled}"
+  count                    = local.test_enabled ? 1 : 0
   family                   = "test-api-${terraform.workspace}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.test_api_container}]"
-  task_role_arn            = "${aws_iam_role.test.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.test.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "reset_database" {
-  count                    = "${local.test_enabled}"
+  count                    = local.test_enabled ? 1 : 0
   family                   = "reset-database-${terraform.workspace}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.reset_database_container}]"
-  task_role_arn            = "${aws_iam_role.test.arn}"
-  execution_role_arn       = "${aws_iam_role.execution_role.arn}"
-  tags                     = "${local.default_tags}"
+  task_role_arn            = aws_iam_role.test.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
 }
 
 locals {
@@ -92,7 +92,9 @@ locals {
       { "name": "API_SECURITY_ANONYMOUS", "value": "true" }
     ]
   }
-  EOF
+  
+EOF
+
 
   test_api_container = <<EOF
   {
@@ -130,9 +132,11 @@ locals {
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
   }
-  EOF
+  
+EOF
 
-  test_front_container = <<EOF
+
+test_front_container = <<EOF
   {
     "name": "test_front",
     "image": "registry.service.opg.digital/opguk/digi-deps-frontend:${var.OPG_DOCKER_TAG}",
@@ -199,5 +203,8 @@ locals {
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
-  EOF
+  
+EOF
+
 }
+
