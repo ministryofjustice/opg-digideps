@@ -1,0 +1,72 @@
+version: "2"
+
+services:
+  terraform:
+    image: hashicorp/terraform
+    working_dir: /app
+    volumes:
+    - ${PWD}:/app
+    environment:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_SESSION_TOKEN
+    - TF_CLI_ARGS_init
+    - TF_CLI_ARGS_plan
+    - TF_CLI_ARGS_apply
+    - TF_WORKSPACE
+    - TF_VAR_default_role
+    - TF_VAR_OPG_DOCKER_TAG
+
+  aws:
+    image: infrastructureascode/aws-cli
+    entrypoint:
+    - aws
+    working_dir: /app
+    volumes:
+    - ${PWD}:/app
+    environment:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_SESSION_TOKEN
+    - AWS_CONFIG_FILE=.tmp.aws.config
+
+  ruby:
+    build:
+      context: .
+      dockerfile: docker/ruby/Dockerfile
+    working_dir: /app
+    volumes:
+      - ${PWD}:/app
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - TF_VAR_default_role
+      - TF_WORKSPACE
+
+  trufflehog:
+    image: mojdigitalstudio/git-secrets-ahoy
+    volumes:
+    - ${PWD}/..:/git
+
+  tflint:
+    image: wata727/tflint
+    volumes:
+    - ${PWD}:/data
+    environment:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - AWS_SESSION_TOKEN
+    - AWS_REGION=eu-west-1
+    - AWS_PROFILE=default
+    - AWS_CONFIG_FILE=.tmp.aws.config
+
+  jq:
+    image: stedolan/jq
+    working_dir: /app
+    volumes:
+    - ${PWD}:/app
+    environment:
+    - TF_WORKSPACE
+    - TF_VAR_default_role
+
