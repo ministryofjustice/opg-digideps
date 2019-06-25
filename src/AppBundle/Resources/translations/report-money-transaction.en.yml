@@ -310,6 +310,9 @@ form:
       professional-fees-eg-solicitor-accountant:
         label: Fees charged by a solicitor, accountant or other professional
         moreInformations: For each fee, please enter the date, the amount and what it was for
+      professional-fees-eg-solicitor-accountant-non-lay:
+        label: Fees charged by a solicitor, accountant or other professional (Do not include deputy costs)
+        moreInformations: For each fee, please enter the date, the amount and what it was for
       deputy-fees-and-expenses:
         label: Deputy fees and expenses
         moreInformations: For each fee, please enter the date, the amount and what it was for

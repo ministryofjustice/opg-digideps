@@ -122,7 +122,7 @@ Feature: PROF user edits 102-5 report sections
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
-      | account_category_26 | professional-fees-eg-solicitor-accountant |
+      | account_category_26 | professional-fees-eg-solicitor-accountant-non-lay |
     And the step with the following values CAN be submitted:
       | account_description | prof general fees |
       | account_amount      | 50.00     |
