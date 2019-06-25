@@ -50,7 +50,7 @@ const lintSass = () => { // sass quality control
 }
 
 const lintJS = () => { // JS quality control
-    return gulp.src([config.jsSrc + '/**/*.js','!'+ config.jsSrc + '/**/details.polyfill.js'])
+    return gulp.src([config.jsSrc + '/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 }
