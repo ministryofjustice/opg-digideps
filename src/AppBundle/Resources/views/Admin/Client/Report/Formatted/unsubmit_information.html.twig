@@ -1,0 +1,11 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{{ 'checklistPage.incompleteSubmitted' | trans }}: {{ report.unSubmitDate | date("j F Y") }}
+
+{{ 'checklistPage.dueDateSetTo' | trans }}: {{ report.dueDate | date("j F Y") }}
+
+{{ 'checklistPage.sectionsMarkedIncomplete' | trans }}:
+{% for section in report.unsubmittedSectionsList | split(',') %}
+    * {{ ('prevNextLinks.sections.' ~ section) | trans({}, 'report-common') }}
+{% endfor %}
