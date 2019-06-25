@@ -94,6 +94,7 @@ class MoneyTransaction implements MoneyTransactionInterface
         ['deputy-security-bond', false, 'fees', 'out'],
         ['opg-fees', false, 'fees', 'out'],
         ['professional-fees-eg-solicitor-accountant', true, 'fees', 'out'],
+        ['professional-fees-eg-solicitor-accountant-non-lay', true, 'fees', 'out'],
         ['deputy-fees-and-expenses', true, 'fees', 'out'],
 
         ['investment-bonds-purchased', true, 'major-purchases', 'out'],
