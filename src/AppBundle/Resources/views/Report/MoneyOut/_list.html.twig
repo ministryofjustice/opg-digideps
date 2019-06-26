@@ -28,7 +28,7 @@
         <tr>
             <th>Type</th>
             <th>Description</th>
-            {% if report.type in ['102','102-4'] %}
+            {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
                 <th>Bank account</th>
             {% endif %}
             <th class="numeric">Amount</th>
@@ -44,7 +44,7 @@
         <tr class="behat-region-transaction-{{ t.description | behat_namify }}">
             <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans(transOptions) }}</td>
             <td class="width-quarter">{{ t.description | nl2br }}</td>
-            {% if report.type in ['102','102-4'] %}
+            {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
                 <td class="width-fifth">
                     {{ (t.bankAccount) ? t.bankAccount.nameOneLine : '-' }}
                 </td>
@@ -63,7 +63,7 @@
             <td colspan="2">
                 <span class="bold-small">Total amount</span>
             </td>
-            {% if report.type in ['102','102-4'] %}
+            {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
                 <td></td>
             {% endif %}
             <td class="text--right">

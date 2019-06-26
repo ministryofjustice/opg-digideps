@@ -9,7 +9,7 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {% if report.bankAccounts is not empty and report.type in ['102','102-4'] %}
+    {% if report.bankAccounts is not empty and report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
         {{ form_select(form.bankAccountId, 'form.bankAccount') }}
     {% endif %}
 
