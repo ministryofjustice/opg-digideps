@@ -39,7 +39,7 @@
             </div>
         </details>
 
-        {% if report.bankAccounts is empty and report.type in ['102', '102-4'] %}
+        {% if report.bankAccounts is empty and report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
             <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
             <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}
