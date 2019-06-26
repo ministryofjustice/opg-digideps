@@ -131,12 +131,15 @@ Feature: PA user edits report sections
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
       | account_category_0 | state-pension |
-    And I should not see an "select#account_bankAccountId" element
+    And I select "HSBC - main account - Current account (****01ca)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description | pension received |
       | account_amount      | 50.00         |
     # add another: no
     And I choose "no" when asked for adding another record
+    # check record in summary page
+    And each text should be present in the corresponding region:
+      | HSBC - main account - Current account (****01ca) | transaction-pension-received |
 
   Scenario: PA 102 money out
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
@@ -145,12 +148,15 @@ Feature: PA user edits report sections
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
       | account_category_0 | broadband |
-    And I should not see an "select#account_bankAccountId" element
+    And I select "HSBC - main account - Current account (****01ca)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description | january bill |
       | account_amount      | 50.00     |
       # add another: no
     And I choose "no" when asked for adding another record
+    # check record in summary page
+    And each text should be present in the corresponding region:
+      | HSBC - main account - Current account (****01ca) | transaction-january-bill |
 
 
   Scenario: PA 102 Report should be submittable
