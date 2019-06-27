@@ -43,7 +43,7 @@
         <thead>
             <tr>
                 <th>Description of expense</th>
-                {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
+                {% if report.canLinkToBankAccounts %}
                     <th>Bank account</th>
                 {% endif %}
                 <th class="text--right">Amount</th>
@@ -60,7 +60,7 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
+                    {% if report.canLinkToBankAccounts %}
                         <td class="width-quarter">
                             {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
                         </td>
@@ -80,7 +80,7 @@
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
-                {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
+                {% if report.canLinkToBankAccounts %}
                     <td></td>
                 {% endif %}
                 <td class="numeric-small">
