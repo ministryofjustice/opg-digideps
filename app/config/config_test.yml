@@ -1,5 +1,5 @@
 imports:
-    - { resource: config_dev.yml }
+    - { resource: config_prod.yml }
 
 framework:
     test: ~
@@ -8,8 +8,8 @@ framework:
 
 doctrine:
     dbal:
-        dbname:   digideps_unit_test
-        
+        dbname: digideps_unit_test
+
 services:
     attemptsInTimeChecker:
         class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
@@ -35,13 +35,8 @@ monolog:
            type: stream
            path: "%log_path%"
            level: warning
-           
+           formatter: line_formatter
+
 jms_serializer:
     metadata:
-        cache: none
-        cache: file
         debug: true
-        
-parameters:
-    fixtures:
-        account_password: Abcd1234
