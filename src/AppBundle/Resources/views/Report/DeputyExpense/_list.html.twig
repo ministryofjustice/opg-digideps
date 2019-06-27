@@ -60,7 +60,7 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    {% if rreport.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
+                    {% if report.type in ['102','102-4','102-5','102-4-5','102-6','102-4-6'] %}
                         <td class="width-quarter">
                             {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
                         </td>
