@@ -97,7 +97,7 @@ class MoneyTransactionType extends AbstractType
 
             $reportType = $options['report']->getType();
 
-            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()))
+            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts())
             {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
