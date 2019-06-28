@@ -122,7 +122,6 @@ security:
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/elements, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # all the rest needs authentication
         - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
