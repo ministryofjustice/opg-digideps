@@ -1139,4 +1139,21 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->reportTitle = $reportTitle;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function canLinkToBankAccounts()
+    {
+        return in_array($this->getType(),
+            [
+                Report::TYPE_102,
+                Report::TYPE_102_4,
+                Report::TYPE_102_5,
+                Report::TYPE_102_4_5,
+                Report::TYPE_102_6,
+                Report::TYPE_102_4_6
+            ]
+        );
+    }
 }

@@ -1,4 +1,4 @@
-{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined  and report is not null %}
+{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined and report.client is not null and report is not null %}
 <div class="details-banner">
     <div class="details-content behat-region-client-details-banner">
         <p>

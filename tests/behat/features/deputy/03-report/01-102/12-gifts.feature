@@ -45,6 +45,7 @@ Feature: Report gifts
     And each text should be present in the corresponding region:
       | birthday gift to daughter | gift-birthday-gift-to-daughter |
       | £35.00                    | gift-birthday-gift-to-daughter |
+      | HSBC - saving account - Savings account (****02ca) | gift-birthday-gift-to-daughter |
       | gift for the dog          | gift-gift-for-the-dog          |
       | £14.00                    | gift-gift-for-the-dog          |
       | £49.00                    | gift-total                     |
