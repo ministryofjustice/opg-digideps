@@ -45,7 +45,7 @@ class ManageController extends RestController
             $this->getDoctrine()->getConnection()->query('select * from migrations LIMIT 1')->fetchAll();
 
             return [true, ''];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // customise error message if possible
             $returnMessage = 'Database generic error';
             if ($e instanceof \PDOException && $e->getCode() === 7) {

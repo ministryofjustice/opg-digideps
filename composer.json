@@ -17,9 +17,9 @@
     }
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.3.5",
     "symfony/symfony": "3.4.*",
-    "doctrine/orm": "2.5.*",
+    "doctrine/orm": "2.*",
     "doctrine/doctrine-bundle": "1.9.*",
     "symfony/monolog-bundle": "2.*",
     "jms/serializer-bundle": "2.1.*",
@@ -52,10 +52,7 @@
     ]
   },
   "config": {
-    "bin-dir": "bin",
-    "platform": {
-      "php": "5.5.9"
-    }
+    "bin-dir": "bin"
   },
   "minimum-stability": "stable",
   "extra": {

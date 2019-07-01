@@ -128,7 +128,7 @@ class UserRegistrationService
 
             // Try and commit the transaction
             $connection->commit();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // Rollback the failed transaction attempt
             $connection->rollback();
             throw $e;

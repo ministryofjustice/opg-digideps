@@ -102,7 +102,7 @@ class OrgService
                     throw new \RuntimeException('Named deputy could not be identified or created');
                 }
 
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
                 $errors[] = $message;
             }

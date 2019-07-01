@@ -42,7 +42,7 @@ class OrgController extends RestController
         try {
             $ret = $pa->addFromCasrecRows($data);
             return $ret;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $added = ['prof_users' => [], 'pa_users' => [], 'clients' => [], 'reports' => []];
             return ['added'=>$added, 'errors' => [$e->getMessage(), 'warnings'=>[]]];
         }

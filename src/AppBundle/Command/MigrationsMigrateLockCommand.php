@@ -53,7 +53,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 
                 return 0;
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             // in case of exception, delete the lock, then re-throw to keep the parent behaviour
             $this->releaseLock($output);
 

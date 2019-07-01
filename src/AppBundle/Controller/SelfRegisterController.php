@@ -38,7 +38,7 @@ class SelfRegisterController extends RestController
         try {
             $user = $this->container->get('user_registration_service')->selfRegisterUser($selfRegisterData);
             $this->get('logger')->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
@@ -73,7 +73,7 @@ class SelfRegisterController extends RestController
         try {
             $coDeputyVerified = $this->container->get('user_registration_service')->validateCoDeputy($selfRegisterData);
             $this->get('logger')->warning('CasRec codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->warning('CasRec codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }

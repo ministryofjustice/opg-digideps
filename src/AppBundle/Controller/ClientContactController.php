@@ -111,7 +111,7 @@ class ClientContactController extends RestController
 
             $this->getEntityManager()->remove($clientContact);
             $this->getEntityManager()->flush($clientContact);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->error('Failed to delete client contact ID: ' . $id . ' - ' . $e->getMessage());
         }
 

@@ -424,7 +424,7 @@ class User implements UserInterface
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken('digideps' . date('dmY') . time(true) . rand(17, 999917));
+        $this->setRegistrationToken('digideps' . date('dmY') . time() . rand(17, 999917));
         $this->setTokenDate(new \DateTime());
 
         return $this;

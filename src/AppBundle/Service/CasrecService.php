@@ -107,7 +107,7 @@ class CasrecService
 
             $this->em->commit();
             $this->em->clear();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return ['added' => $added - 1, 'errors' => [$e->getMessage()]];
         }
 
