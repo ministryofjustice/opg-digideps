@@ -12,7 +12,7 @@
     var detailsExpander = function (containerSelector) {
         var container = $(containerSelector);
         var inputBox = container.find('input[type="text"]');
-        var textareaGroup = container.find('textarea').parents('.form-group');
+        var textareaGroup = container.find('textarea').parents('.form-group, .govuk-form-group');
 
         // more details
         inputBox.on('keyup input paste change', function (event) {
