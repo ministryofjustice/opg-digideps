@@ -44,7 +44,7 @@ class DeputyProvider implements UserProviderInterface
           $this->restClient->setLoggedUserId($user->getId());
 
             return $user;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->info(__METHOD__ . ': ' . $e);
 
             // rethrow 423 (brute-force/locked to grab timestamp)

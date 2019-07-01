@@ -124,7 +124,7 @@ class IndexController extends AbstractController
         try {
             /* @var $user EntityDir\User */
             $user = $this->getRestClient()->get("v2/deputy/{$filter}", 'User');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return $this->render('AppBundle:Admin:error.html.twig', [
                 'error' => 'User not found',
             ]);
@@ -179,7 +179,7 @@ class IndexController extends AbstractController
                     $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
 
                     $this->redirect($this->generateUrl('admin_editUser', ['filter' => $user->getId()]));
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     switch ((int) $e->getCode()) {
                         case 422:
                             $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
@@ -350,7 +350,7 @@ class IndexController extends AbstractController
 
 
                 return $this->redirect($this->generateUrl('casrec_upload', ['nOfChunks' => count($chunks)]));
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
@@ -402,7 +402,7 @@ class IndexController extends AbstractController
                     );
                 }
                 return $this->redirect($this->generateUrl('casrec_mld_upgrade'));
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
@@ -485,7 +485,7 @@ class IndexController extends AbstractController
                     $this->get('snc_redis.default')->set('org_chunk' . $k, $compressedData);
                 }
                 return $this->redirect($this->generateUrl('admin_org_upload', ['nOfChunks' => count($chunks)]));
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $message = $e->getMessage();
                 if ($e instanceof RestClientException && isset($e->getData()['message'])) {
                     $message = $e->getData()['message'];
@@ -513,7 +513,7 @@ class IndexController extends AbstractController
             $resetPasswordEmail = $this->getMailFactory()->createActivationEmail($user);
 
             $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->debug($e->getMessage());
         }
 

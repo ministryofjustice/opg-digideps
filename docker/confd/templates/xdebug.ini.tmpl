@@ -1,6 +1,5 @@
 {{ if exists "/opg/php/xdebug/enabled" }}
 
-    zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20131226/xdebug.so
     xdebug.remote_enable=1
     xdebug.remote_autostart=1
     xdebug.remote_port={{ if exists "/opg/php/xdebug/remote/port" }}{{ getv "/opg/php/xdebug/remote/port" }}{{ end }}

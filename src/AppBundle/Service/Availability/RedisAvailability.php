@@ -20,7 +20,7 @@ class RedisAvailability extends ServiceAvailabilityAbstract
             if ($redis->get(self::TEST_KEY) == 'valueSaved') {
                 $this->isHealthy = true;
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->errors = 'Redis Error: ' . $e->getMessage();
         }
     }

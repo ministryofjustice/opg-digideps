@@ -8,7 +8,7 @@
         "psr-4": {"DigidepsBehat\\": "tests/behat/bootstrap" }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.3.5",
         "symfony/symfony": "3.4.*",
         "twig/extensions": "1.*",
         "symfony/swiftmailer-bundle": "2.3.*",
@@ -17,7 +17,7 @@
         "sensio/distribution-bundle": "5.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "guzzlehttp/guzzle": "6.*",
-        "jms/serializer-bundle": "2.*",
+        "jms/serializer-bundle": "3.*",
         "behat/behat": "3.3.1",
         "behat/common-contexts": "*",
         "behat/mink": "*",
@@ -50,10 +50,7 @@
         ]
     },
     "config": {
-        "bin-dir": "bin",
-        "platform": {
-          "php": "5.5.9"
-        }
+        "bin-dir": "bin"
     },
     "minimum-stability": "stable",
     "extra": {

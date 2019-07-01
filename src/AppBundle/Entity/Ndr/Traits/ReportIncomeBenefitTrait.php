@@ -15,7 +15,7 @@ trait ReportIncomeBenefitTrait
      *
      * @var StateBenefit[]
      */
-    private $stateBenefits;
+    private $stateBenefits = [];
 
     /**
      * @var string
@@ -68,7 +68,7 @@ trait ReportIncomeBenefitTrait
      *
      * @var OneOff[]
      */
-    private $oneOff;
+    private $oneOff = [];
 
     /**
      * @return StateBenefit[]

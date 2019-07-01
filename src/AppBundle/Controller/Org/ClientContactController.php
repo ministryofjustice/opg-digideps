@@ -119,7 +119,7 @@ class ClientContactController extends AbstractController
         try {
             $this->getRestClient()->delete('clientcontacts/' . $id);
             $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->error($e->getMessage());
             $request->getSession()->getFlashBag()->add(
                 'error',

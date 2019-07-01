@@ -62,6 +62,7 @@ class TeamController extends AbstractController
             && $this->getUser()->isProfNamedOrAdmin()
             && ($email = $form->getData()->getEmail())
             && ($userInfo = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User'))
+            && $userInfo->getTeamNames() !== null
             && count($userInfo->getTeamNames()) > 0
         ) {
             if ($userInfo->isDeputyPa()) {
@@ -98,7 +99,7 @@ class TeamController extends AbstractController
                 $this->getMailSender()->send($activationEmail, ['text', 'html']);
 
                 return $this->redirectToRoute('org_team');
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
@@ -158,7 +159,7 @@ class TeamController extends AbstractController
                 }
 
                 return $this->redirectToRoute($redirectRoute);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
@@ -200,7 +201,7 @@ class TeamController extends AbstractController
                 'notice',
                 'An activation email has been sent to the user.'
             );
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->debug($e->getMessage());
             $request->getSession()->getFlashBag()->add(
                 'error',
@@ -245,7 +246,7 @@ class TeamController extends AbstractController
             $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
 
             $request->getSession()->getFlashBag()->add('notice', 'Operation completed');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->debug($e->getMessage());
 
             if ($e instanceof RestClientException && isset($e->getData()['message'])) {

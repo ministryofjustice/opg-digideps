@@ -26,133 +26,133 @@ class Status
      *
      * @var array
      */
-    private $decisionsState;
+    private $decisionsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $contactsState;
+    private $contactsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $visitsCareState;
+    private $visitsCareState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $bankAccountsState;
+    private $bankAccountsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $moneyTransferState;
+    private $moneyTransferState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $moneyInState;
+    private $moneyInState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $moneyOutState;
+    private $moneyOutState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $moneyInShortState;
+    private $moneyInShortState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $moneyOutShortState;
+    private $moneyOutShortState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $balanceState;
+    private $balanceState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $assetsState;
+    private $assetsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $debtsState;
+    private $debtsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $paFeesExpensesState;
+    private $paFeesExpensesState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $actionsState;
+    private $actionsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $otherInfoState;
+    private $otherInfoState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $expensesState;
+    private $expensesState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $giftsState;
+    private $giftsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $documentsState;
+    private $documentsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $lifestyleState;
+    private $lifestyleState = [];
 
     /**
      * @JMS\Type("boolean")
@@ -174,21 +174,21 @@ class Status
      *
      * @var array
      */
-    private $profCurrentFeesState;
+    private $profCurrentFeesState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $profDeputyCostsState;
+    private $profDeputyCostsState = [];
 
     /**
      * @JMS\Type("array")
      *
      * @var array
      */
-    private $profDeputyCostsEstimateState;
+    private $profDeputyCostsEstimateState = [];
 
     /**
      * @return mixed

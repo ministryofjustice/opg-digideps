@@ -51,7 +51,7 @@ class IndexController extends AbstractController
                     '_adLastname' => null,
                     'loggedOutFrom' => null,
                 ]);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $error = $e->getMessage();
 
                 if ($e->getCode() == 423) {

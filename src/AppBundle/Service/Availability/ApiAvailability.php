@@ -21,7 +21,7 @@ class ApiAvailability extends ServiceAvailabilityAbstract
             // API healthy
             $this->isHealthy = $data['healthy'];
             $this->errors = $data['errors'];
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->isHealthy = false;
             $this->errors = 'Error when using RestClient to connect to API . ' . $e->getMessage();
         }

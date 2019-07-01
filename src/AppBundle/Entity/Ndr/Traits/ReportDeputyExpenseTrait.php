@@ -23,7 +23,7 @@ trait ReportDeputyExpenseTrait
      *
      * @var Expense[]
      */
-    private $expenses;
+    private $expenses = [];
 
     /**
      * @return string

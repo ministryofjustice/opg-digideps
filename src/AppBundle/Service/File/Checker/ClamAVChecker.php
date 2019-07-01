@@ -125,7 +125,7 @@ class ClamAVChecker implements FileCheckerInterface
             }
 
             return $statusResponse;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->log(Logger::CRITICAL, 'Scanner exception: ' . $e->getCode() . ' - ' . $e->getMessage());
 
             throw new \RunTimeException($e);

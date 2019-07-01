@@ -258,7 +258,7 @@ class Checklist
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ChecklistInformation>")
      */
-    private $checklistInformation;
+    private $checklistInformation = [];
 
     /**
      * @var string

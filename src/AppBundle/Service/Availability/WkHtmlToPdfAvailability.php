@@ -16,7 +16,7 @@ class WkHtmlToPdfAvailability extends ServiceAvailabilityAbstract
 
             $this->isHealthy = true;
             $this->errors = '';
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->isHealthy = false;
             $this->errors = $e->getMessage();
         }

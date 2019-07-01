@@ -12,7 +12,7 @@ trait ReportTransfersTrait
      *
      * @var MoneyTransfer[]
      */
-    private $moneyTransfers;
+    private $moneyTransfers = [];
 
 
     /**

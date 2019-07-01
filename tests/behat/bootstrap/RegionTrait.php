@@ -100,7 +100,7 @@ trait RegionTrait
         foreach ($fields->getRowsHash() as $text => $region) {
             try {
                 $this->iShouldSeeInTheRegion($text, $region);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $errorMessages[] = $e->getMessage();
             }
         }

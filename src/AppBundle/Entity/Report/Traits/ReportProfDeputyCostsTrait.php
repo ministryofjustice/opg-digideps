@@ -35,7 +35,7 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      */
-    private $profDeputyOtherCosts;
+    private $profDeputyOtherCosts = [];
 
     /**
      * @var array
@@ -47,7 +47,7 @@ trait ReportProfDeputyCostsTrait
      *
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyPreviousCost>")
      */
-    private $profDeputyPreviousCosts;
+    private $profDeputyPreviousCosts = [];
 
     /**
      * @var float
@@ -119,7 +119,7 @@ trait ReportProfDeputyCostsTrait
      * @JMS\Type("array")
      * @JMS\Groups({"prof-deputy-other-costs"})
      */
-    private $profDeputyOtherCostTypeIds;
+    private $profDeputyOtherCostTypeIds = [];
 
     /**
      * @return array
@@ -264,7 +264,7 @@ trait ReportProfDeputyCostsTrait
     {
         return $this->profDeputyOtherCosts;
     }
-    
+
     /**
      * @param $profDeputyOtherCosts
      * @return $this
@@ -431,6 +431,6 @@ trait ReportProfDeputyCostsTrait
      */
     public function hasProfDeputyOtherCosts()
     {
-        return (bool) count($this->getProfDeputyOtherCosts()) > 0;
+        return (bool) count($this->getProfDeputyOtherCosts() ? $this->getProfDeputyOtherCosts() : []) > 0;
     }
 }

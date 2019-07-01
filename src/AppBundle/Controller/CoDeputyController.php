@@ -55,7 +55,7 @@ class CoDeputyController extends AbstractController
                     $user->setCoDeputyClientConfirmed(true);
                     $this->getRestClient()->put('user/' . $user->getId(), $user);
                     return $this->redirect($this->generateUrl('homepage'));
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     $translator = $this->get('translator');
                     switch ((int) $e->getCode()) {
                         case 422:
@@ -129,7 +129,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
 
                 return $this->redirect($backLink);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'co-deputy')));
@@ -176,7 +176,7 @@ class CoDeputyController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
 
                 return $this->redirect($backLink);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'co-deputy')));

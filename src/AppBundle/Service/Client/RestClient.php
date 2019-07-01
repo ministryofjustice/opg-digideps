@@ -377,7 +377,7 @@ class RestClient
 
             try {
                 $data = $e->getResponse() ? $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') : [];
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
@@ -402,7 +402,7 @@ class RestClient
 
         try {
             $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . '. Api responded with invalid JSON. [BODY START]: ' . $response->getBody() . '[END BODY]');
             throw new Exception\JsonDecodeException(self::ERROR_FORMAT . ':' . $response->getBody());
         }

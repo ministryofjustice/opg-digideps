@@ -1,3 +1,5 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
@@ -53,7 +55,7 @@
             <div>
                 <table class="check-your-answers columns-2 push--bottom">
                     {{ macros.summaryTableHeaderQA(hideEditLink) }}
-                    <tbody>                
+                    <tbody>
                     {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
                         'report': report,
                         'transDomain': 'report-prof-deputy-costs',
@@ -64,7 +66,7 @@
                         'submittedOtherCosts': actualOtherCosts,
                         'transDomain': "report-prof-deputy-costs",
                         'hideEditLink' : true
-                    } %}                    
+                    } %}
                     </tbody>
                 </table>
                 {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
@@ -92,7 +94,7 @@
                             'hideEditLink' : true
                         } %}
                     </tbody>
-                </table>                
+                </table>
             </div>
         </div>
     </details>

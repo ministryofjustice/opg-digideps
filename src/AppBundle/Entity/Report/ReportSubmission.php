@@ -35,7 +35,7 @@ class ReportSubmission
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
-    private $documents;
+    private $documents = [];
 
     /**
      * @var User

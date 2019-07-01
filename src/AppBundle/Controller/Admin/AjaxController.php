@@ -29,7 +29,7 @@ class AjaxController extends AbstractController
             $after = $this->getRestClient()->get('casrec/count', 'array');
 
             return new JsonResponse(['before'=>$before, 'after'=>$after]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }
@@ -54,7 +54,7 @@ class AjaxController extends AbstractController
             }
 
             return new JsonResponse($ret);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }
@@ -81,7 +81,7 @@ class AjaxController extends AbstractController
             $redis->del($chunkId);
 
             return new JsonResponse($ret);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }

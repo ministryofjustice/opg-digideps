@@ -24,13 +24,13 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Type("array<AppBundle\Entity\Report\ProfDeputyEstimateCost>")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
-    private $profDeputyEstimateCosts;
+    private $profDeputyEstimateCosts = [];
 
     /**
      * @JMS\Type("array")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
-    private $profDeputyEstimateCostTypeIds;
+    private $profDeputyEstimateCostTypeIds = [];
 
     /**
      * @var float
@@ -45,7 +45,7 @@ trait ReportProfDeputyCostsEstimateTrait
      * @JMS\Type("array")
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */
-    private $profDeputyManagementCostTypeIds;
+    private $profDeputyManagementCostTypeIds = [];
 
     /**
      * @var string yes/no

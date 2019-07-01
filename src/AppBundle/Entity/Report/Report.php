@@ -149,14 +149,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @var Contact[]
      */
-    private $contacts;
+    private $contacts = [];
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Decision>")
      *
      * @var Decision[]
      */
-    private $decisions;
+    private $decisions = [];
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\VisitsCare")
@@ -264,7 +264,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      * @JMS\Groups({"report-documents"})
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
      */
-    private $documents;
+    private $documents = [];
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
@@ -272,7 +272,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @var Document[]
      */
-    private $submittedDocuments;
+    private $submittedDocuments = [];
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Report\Document>")
@@ -280,7 +280,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @var Document[]
      */
-    private $unsubmittedDocuments;
+    private $unsubmittedDocuments = [];
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Status")
@@ -302,7 +302,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Type("array")
      */
-    private $availableSections;
+    private $availableSections = [];
 
     /**
      * @var Checklist
@@ -316,7 +316,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Type("array")
      **/
-    private $previousReportData;
+    private $previousReportData = [];
 
     /**
      * @JMS\Type("string")

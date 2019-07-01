@@ -136,7 +136,7 @@ class NoteController extends AbstractController
             $this->getRestClient()->delete('note/' . $noteId);
 
             $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->error($e->getMessage());
 
             $request->getSession()->getFlashBag()->add(
