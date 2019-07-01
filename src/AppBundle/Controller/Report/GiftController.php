@@ -99,7 +99,11 @@ class GiftController extends AbstractController
 
             $this->getRestClient()->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
 
-            return $this->redirect($this->generateUrl('gifts_add_another', ['reportId' => $reportId]));
+            if ($form->getClickedButton()->getName() === 'saveAndAddAnother') {
+                return $this->redirect($this->generateUrl('gifts_add', ['reportId' => $reportId, 'from' => $request->get('from')]));
+            } else {
+                return $this->redirect($this->generateUrl('gifts_summary', ['reportId' => $reportId]));
+            }
         }
 
         $backLinkRoute = 'gifts_' . $request->get('from');
@@ -109,38 +113,6 @@ class GiftController extends AbstractController
             'backLink' => $backLink,
             'form' => $form->createView(),
             'report' => $report
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/gifts/add_another", name="gifts_add_another")
-     * @Template()
-     */
-    public function addAnotherAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(
-            FormDir\AddAnotherRecordType::class,
-            $report,
-            [
-                'translation_domain' => 'report-gifts'
-            ]
-        );
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('gifts_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
         ];
     }
 

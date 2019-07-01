@@ -1,3 +1,5 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {{ form_input(form.explanation, 'form.explanation', { 'labelRaw': true }) }}
@@ -10,6 +12,12 @@
         {{ form_select(form.bankAccountId, 'form.bankAccount') }}
     {% endif %}
 
-    {{ macros.saveAndContinueButton(form.save) }}
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
+
+    {% if form.saveAndAddAnother is defined %}
+        <span class="push-half--sides text--center">or</span>
+
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
 
 {{ form_end(form) }}

@@ -32,7 +32,9 @@ class GiftType extends AbstractType
             ]);
         }
 
-        $builder ->add('save', FormTypes\SubmitType::class);
+        $builder->add('saveAndContinue', FormTypes\SubmitType::class);
+        $builder->add('saveAndAddAnother', FormTypes\SubmitType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
