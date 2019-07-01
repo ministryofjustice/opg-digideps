@@ -21,6 +21,15 @@ resource "aws_s3_bucket" "pa_uploads" {
   tags = local.default_tags
 }
 
+resource "aws_s3_bucket_public_access_block" "pa_uploads" {
+  bucket = aws_s3_bucket.pa_uploads.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_policy" "pa_uploads" {
   bucket = aws_s3_bucket.pa_uploads.id
   policy = data.aws_iam_policy_document.pa_uploads.json

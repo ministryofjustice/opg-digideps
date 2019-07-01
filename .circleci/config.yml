@@ -6,18 +6,22 @@ version: 2
 jobs:
   build:
     <<: *terraform
-    working_directory: "~/terraform/environment"
     steps:
-      - checkout:
-          path: "~/terraform"
+      - checkout
       - run:
-          name: Lint Terraform
-          command: |
-            if [[ -n "$(terraform fmt -write=false)" ]]; then
-              echo "Some terraform files need be formatted, run 'terraform fmt' to fix";
-              exit 1;
-            fi
-
+          name: terraform lint
+          command: terraform fmt -diff -check -recursive
+      - run:
+          name: terraform init
+          working_directory: environment
+          command: terraform init
+      - run:
+          name: terraform plan
+          working_directory: environment
+          environment:
+            TF_WORKSPACE: master
+            TF_VAR_OPG_DOCKER_TAG: dummy_value
+          command: terraform plan -input=false -lock=false
 workflows:
   version: 2
   build:
