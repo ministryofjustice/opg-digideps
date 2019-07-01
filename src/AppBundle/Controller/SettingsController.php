@@ -148,7 +148,7 @@ class SettingsController extends AbstractController
                 }
 
                 return $this->redirect($redirectRoute);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $translator = $this->get('translator');
                 if ($e->getCode() == 422 && $form->get('email')) {
                     $form->get('email')->addError(new FormError($translator->trans('user.email.alreadyUsed', [], 'validators')));

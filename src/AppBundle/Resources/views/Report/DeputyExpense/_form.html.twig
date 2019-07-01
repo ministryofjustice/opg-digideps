@@ -1,3 +1,5 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
 
     {{ form_input(form.explanation, 'form.explanation', {
@@ -9,7 +11,7 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {% if report.bankAccounts is not empty and report.type in ['102','102-4'] %}
+    {% if report.bankAccounts is not empty and report.canLinkToBankAccounts %}
         {{ form_select(form.bankAccountId, 'form.bankAccount') }}
     {% endif %}
 

@@ -33,7 +33,7 @@ class UserController extends AbstractController
         try {
             $user = $this->getRestClient()->loadUserByToken($token);
             /* @var $user EntityDir\User */
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
 
@@ -204,7 +204,7 @@ class UserController extends AbstractController
                 $sendResult = $this->getMailSender()->send($resetPasswordEmail, ['text', 'html']);
                 $logger->warning('Email sent to ' . $disguisedEmail);
 
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $logger->warning($e->getMessage());
             }
 
@@ -259,7 +259,7 @@ class UserController extends AbstractController
                     'bodyText' => $bodyText,
                     'email'    => $email,
                 ]);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 403:
                         $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));

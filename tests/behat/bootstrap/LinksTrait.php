@@ -9,7 +9,7 @@ trait LinksTrait
      */
     public function linkWithTextContains($text, $expectedLink)
     {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="' . $text . '"]');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {
@@ -20,7 +20,7 @@ trait LinksTrait
             throw new \RuntimeException('Returned multiple elements');
         }
 
-        $href = $linksElementsFound->getAttribute('href');
+        $href = $linksElementsFound[0]->getAttribute('href');
 
         if (strpos($href, $expectedLink) === false) {
             throw new \Exception("Link: $href does not contain $expectedLink");
@@ -117,15 +117,13 @@ trait LinksTrait
     /**
      * Click on element with attribute [behat-link=:link].
      *
-     * @When I click on link with text :text in region :region
-     * @When I press :text in region :region
      * @When I press :text in the :region
      */
     public function clickOnLinkWithTextInRegion($text, $region)
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->find('xpath', '//a[normalize-space(text())="' . $text . '"]');
+        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
         if ($count === 0) {
             throw new \RuntimeException('Element not found');
@@ -136,7 +134,7 @@ trait LinksTrait
         }
 
         // click on the found link
-        $linksElementsFound->click();
+        $linksElementsFound[0]->click();
     }
 
     private function findRegion($region)
@@ -192,7 +190,7 @@ trait LinksTrait
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->find('xpath', '//a[normalize-space(text())="' . $text . '"]');
+        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if ($count === 0) {
@@ -203,7 +201,7 @@ trait LinksTrait
             throw new \RuntimeException('Returned multiple elements');
         }
 
-        $href = $linksElementsFound->getAttribute('href');
+        $href = $linksElementsFound[0]->getAttribute('href');
 
         if (strpos($href, $expectedLink) === false) {
             throw new \Exception("Link: $href does not contain $expectedLink");

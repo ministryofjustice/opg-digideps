@@ -56,6 +56,7 @@ class VisitsCare
     private $whoIsDoingTheCaring;
 
     /**
+     * @JMS\SerializedName("does_client_have_a_care_plan")
      * @JMS\Type("string")
      * @JMS\Groups({"visits-care"})
      * @Assert\NotBlank(message="ndr.visitsCare.doesClientHaveACarePlan.notBlank", groups={"visits-care-have-care-plan"})

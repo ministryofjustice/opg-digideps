@@ -150,7 +150,7 @@ class ReportSubmissionController extends AbstractController
             $zipFileCreator->cleanUp();
 
             return $response;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             if ($zipFileCreator instanceof $zipFileCreator) {
                 $zipFileCreator->cleanUp();
             }

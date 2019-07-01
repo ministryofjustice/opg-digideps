@@ -1,3 +1,5 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-gifts" %}
 {% trans_default_domain translationDomain %}
 
@@ -43,7 +45,7 @@
         <thead>
             <tr>
                 <th>Description of gift</th>
-                {% if report.type in ['102','102-4'] %}
+                {% if report.canLinkToBankAccounts %}
                     <th>Bank account</th>
                 {% endif %}
                 <th class="text--right">Amount</th>
@@ -60,7 +62,7 @@
                     <td class="">
                         {{ gift.explanation }}<br/>
                     </td>
-                    {% if report.type in ['102','102-4'] %}
+                    {% if report.canLinkToBankAccounts %}
                         <td class="width-quarter">
                             {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : '-' }}
                         </td>
@@ -80,7 +82,7 @@
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
-                {% if report.type in ['102','102-4'] %}
+                {% if report.canLinkToBankAccounts %}
                     <td></td>
                 {% endif %}
                 <td class="numeric-small">

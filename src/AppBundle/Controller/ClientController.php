@@ -115,7 +115,7 @@ class ClientController extends AbstractController
                     ? $this->generateUrl('ndr_index')
                     : $this->generateUrl('report_create', ['clientId' => $response['id']]);
                 return $this->redirect($url);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $translator = $this->get('translator');
                 switch ((int) $e->getCode()) {
                     case 400:

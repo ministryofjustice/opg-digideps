@@ -154,7 +154,7 @@ class DocumentController extends AbstractController
                 }
 
                 return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 $errorToErrorTranslationKey = [
                     RiskyFileException::class => 'risky',
                     VirusFoundException::class => 'virusFound',
@@ -257,7 +257,7 @@ class DocumentController extends AbstractController
             if ($result) {
                 $request->getSession()->getFlashBag()->add('notice', 'Document has been removed');
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->get('logger')->error($e->getMessage());
 
             $request->getSession()->getFlashBag()->add(

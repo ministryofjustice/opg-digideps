@@ -1,4 +1,5 @@
-{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined  and report is not null %}
+{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined and report is not null
+   and report.client is not null %}
 <div class="details-banner">
     <div class="details-content behat-region-client-details-banner">
         <p>
@@ -6,7 +7,7 @@
             <br><span class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }}</span> {{ report.client.caseNumber }}
         </p>
     </div>
-    {% endif %}
+ {% endif %}
     <div class="opg-helpline">
         <h3>Helpline<br>
             {% if not app.user %}
@@ -24,6 +25,7 @@
             {% endif %}
         </h3>
     </div>
-{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined  and report is not null %}
+{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined and report is not null
+   and report.client is not null %}
 </div>
 {% endif %}

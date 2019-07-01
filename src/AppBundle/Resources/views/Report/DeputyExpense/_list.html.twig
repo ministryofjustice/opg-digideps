@@ -1,3 +1,5 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
 {% set translationDomain = "report-deputy-expenses" %}
 {% trans_default_domain translationDomain %}
 
@@ -43,7 +45,7 @@
         <thead>
             <tr>
                 <th>Description of expense</th>
-                {% if report.type in ['102','102-4'] %}
+                {% if report.canLinkToBankAccounts %}
                     <th>Bank account</th>
                 {% endif %}
                 <th class="text--right">Amount</th>
@@ -60,7 +62,7 @@
                     <td class="">
                         {{ expense.explanation }}<br/>
                     </td>
-                    {% if report.type in ['102','102-4'] %}
+                    {% if report.canLinkToBankAccounts %}
                         <td class="width-quarter">
                             {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
                         </td>
@@ -80,7 +82,7 @@
                 <td>
                     <span class="bold-small">Total amount</span>
                 </td>
-                {% if report.type in ['102','102-4'] %}
+                {% if report.canLinkToBankAccounts %}
                     <td></td>
                 {% endif %}
                 <td class="numeric-small">

@@ -69,7 +69,7 @@ class Ndr implements ReportInterface
      *
      * @var BankAccount
      */
-    private $bankAccounts;
+    private $bankAccounts = [];
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Ndr\Debt>")
@@ -77,7 +77,7 @@ class Ndr implements ReportInterface
      *
      * @var Debt[]
      */
-    private $debts;
+    private $debts = [];
 
     /**
      * @JMS\Type("string")
@@ -111,7 +111,7 @@ class Ndr implements ReportInterface
      *
      * @var Asset[]
      */
-    private $assets;
+    private $assets = [];
 
     /**
      * @JMS\Type("boolean")

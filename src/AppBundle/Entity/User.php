@@ -145,7 +145,7 @@ class User implements AdvancedUserInterface
      *
      * @var Client[]
      */
-    private $clients;
+    private $clients = [];
 
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
@@ -310,7 +310,7 @@ class User implements AdvancedUserInterface
      *
      * @var ArrayCollection
      */
-    private $teams;
+    private $teams = [];
 
     /**
      * @JMS\Type("boolean")
@@ -331,7 +331,7 @@ class User implements AdvancedUserInterface
      *
      * @JMS\Type("array")
      */
-    private $teamNames;
+    private $teamNames = [];
 
     /**
      * @return int $id

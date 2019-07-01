@@ -203,7 +203,7 @@ trait EmailTrait
     {
         $mails = $this->getMockedEmails($area);
 
-        if (count($mails)) {
+        if ($mails && count($mails)) {
             foreach ($mails as $mail) {
                 $mailTo = key($mail['to']);
 

@@ -38,7 +38,7 @@
         <h3 class="heading-small">{{ 'startPage.totalOrIndividualHeading' | trans(transOptions) }}</h3>
         <p>{{ 'startPage.totalOrIndividualPara' | trans(transOptions) }}</p>
 
-        {% if report.bankAccounts is empty and report.type in ['102', '102-4'] %}
+        {% if report.bankAccounts is empty and report.canLinkToBankAccounts %}
             <h3 class="heading-small">{{ 'startPage.accountLinksHeading' | trans(transOptions) }}</h3>
             <p>{{ 'startPage.accountLinksPara1' | trans(transOptions) | raw }}</p>
         {% endif %}

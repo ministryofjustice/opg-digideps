@@ -44,7 +44,7 @@ class Client
      * @JMS\Type("array<AppBundle\Entity\User>")
      * @var User[]
      */
-    private $users;
+    private $users = [];
 
     /**
      * @JMS\Type("AppBundle\Entity\User")
@@ -58,7 +58,7 @@ class Client
      *
      * @var array
      */
-    private $reports;
+    private $reports = [];
 
     /**
      * @JMS\Type("AppBundle\Entity\Report\Report")

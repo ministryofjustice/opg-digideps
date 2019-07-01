@@ -40,7 +40,7 @@ class StatsController extends AbstractController
 
                 return $this->buildResponse($downloadableData);
 
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }

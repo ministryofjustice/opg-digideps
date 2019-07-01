@@ -19,7 +19,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
             }
 
             $this->isHealthy = true;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->isHealthy = false;
             $this->errors = $e->getMessage();
         }

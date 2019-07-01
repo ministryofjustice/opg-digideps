@@ -63,7 +63,7 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 
