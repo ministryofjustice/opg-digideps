@@ -31,17 +31,17 @@ Feature: Report gifts
       | gifts_single_explanation |     | [ERR] |
       | gifts_single_amount      | 0.0 | [ERR] |
     And I select "HSBC - saving account - Savings account (****02ca)" from "gifts_single_bankAccountId"
-    And the step with the following values CAN be submitted:
+    And I fill in the following:
       | gifts_single_explanation | birthday gift to daughter |
       | gifts_single_amount      | 35                        |
         # add expense n.2
-    And I choose "yes" when asked for adding another record
-    And the step with the following values CAN be submitted:
+    And I click on "save-and-add-another"
+    And I fill in the following:
       | gifts_single_explanation | gift for the dog |
       | gifts_single_amount      | 14               |
         # add another: no
-    And I choose "no" when asked for adding another record
-        # check record in summary page
+    And I click on "save-and-continue"
+    # check record in summary page
     And each text should be present in the corresponding region:
       | birthday gift to daughter | gift-birthday-gift-to-daughter |
       | £35.00                    | gift-birthday-gift-to-daughter |

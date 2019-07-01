@@ -113,7 +113,7 @@
     {{ form_submit(button, '', {
         'labelText': 'saveAndContinue',
         'labelTranslationDomain': 'common',
-        'buttonClass': 'behat-link-save-and-continue',
+        'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
     }) }}
 {% endmacro %}
 
@@ -121,14 +121,14 @@
     {{ form_submit(button, '', {
         'labelText': 'continue',
         'labelTranslationDomain': 'common',
-        'buttonClass': 'behat-link-save-and-continue',
+        'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
     }) }}
 {% endmacro %}
 
 {% macro saveAndAddAnotherSaveButton(button) %}
     {{ form_submit(button, '', {
         'labelText': 'saveAndAddAnother' | trans({}, 'common'),
-        'buttonClass': 'behat-link-save-and-add-another button-secondary',
+        'buttonClass': 'behat-link-save-and-add-another govuk-button govuk-button--secondary',
     }) }}
 {% endmacro %}
 

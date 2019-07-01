@@ -12,6 +12,10 @@
         {{ form_select(form.bankAccountId, 'form.bankAccount') }}
     {% endif %}
 
-    {{ macros.saveAndContinueButton(form.save) }}
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
+
+    {% if form.saveAndAddAnother is defined %}
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
 
 {{ form_end(form) }}
