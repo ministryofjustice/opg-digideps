@@ -1,0 +1,15 @@
+# these buckets are created & managed by #security
+# we just ensure they're not publicly accessible
+
+data "aws_s3_bucket" "cloudformation" {
+  bucket = local.account.cloudformation_bucket
+}
+
+resource "aws_s3_bucket_public_access_block" "cloudformation_bucket" {
+  bucket = data.aws_s3_bucket.cloudformation.bucket
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
