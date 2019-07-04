@@ -157,9 +157,7 @@ test_front_container = <<EOF
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
       { "name": "FRONTEND_GA", "valueFrom": "${data.aws_secretsmanager_secret.google_analytics.arn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.oauth2_client_secret.arn}" },
-      { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" },
-      { "name": "FRONTEND_SMTP_DEFAULT_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.smtp_password.arn}" },
-      { "name": "FRONTEND_SMTP_DEFAULT_USER", "valueFrom": "${data.aws_secretsmanager_secret.smtp_user.arn}" }
+      { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
       { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
@@ -183,6 +181,8 @@ test_front_container = <<EOF
       { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
       { "name": "FRONTEND_SESSION_MEMCACHE", "value": "memcachefront" },
       { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
+      { "name": "FRONTEND_SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
+      { "name": "FRONTEND_SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
       { "name": "FRONTEND_SMTP_DEFAULT_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
       { "name": "FRONTEND_SMTP_DEFAULT_PORT", "value": "587" },
       { "name": "FRONTEND_SMTP_SECURE_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },

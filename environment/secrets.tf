@@ -14,14 +14,6 @@ data "aws_secretsmanager_secret" "registry" {
   name = "${terraform.workspace}/registry"
 }
 
-data "aws_secretsmanager_secret" "smtp_password" {
-  name = "${terraform.workspace}/smtp-password"
-}
-
-data "aws_secretsmanager_secret" "smtp_user" {
-  name = "${terraform.workspace}/smtp-user"
-}
-
 data "aws_secretsmanager_secret" "api_secret" {
   name = "${terraform.workspace}/api-secret"
 }
