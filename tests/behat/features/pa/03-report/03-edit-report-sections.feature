@@ -1,6 +1,6 @@
 Feature: PA user edits report sections
 
-  Scenario: PA 102 deputy expenses (No fees exist)
+  Scenario: PA 102 deputy expenses (with fees)
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-pa_fee_expense, start"
@@ -10,16 +10,24 @@ Feature: PA user edits report sections
       | fee_exist_hasFees_1 | no |
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
-      | fee_exist_reasonForNoFees | Some reason for no fees|
+      | fee_exist_reasonForNoFees | Some reason for no fees |
     # "Fees outside practice direction" question
     Given the step cannot be submitted without making a selection
     And the step with the following values CAN be submitted:
-      | yes_no_paidForAnything_1 | no |
+      | yes_no_paidForAnything_1 | yes |
+    And the step cannot be submitted without making a selection
+    And the step with the following values CAN be submitted:
+      | expenses_single_explanation | Some expense |
+      | expenses_single_amount | 14.00 |
+    And I fill in "add_another_addAnother_1" with "no"
+    And I click on "save-and-continue"
     # check record in summary page
     And each text should be present in the corresponding region:
-      | no                            | no-contacts        |
-      | Some reason for no fees       | reason-no-fees     |
-      | no                            | paid-for-anything  |
+      | no                            | has-fees             |
+      | Some reason for no fees       | reason-no-fees       |
+      | yes                           | paid-for-anything    |
+      | Some expense                  | expense-some-expense |
+      | £14.00                        | expense-some-expense |
 
   Scenario: PA 102 gifts
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
@@ -134,7 +142,7 @@ Feature: PA user edits report sections
     And I select "HSBC - main account - Current account (****01ca)" from "account_bankAccountId"
     And the step with the following values CAN be submitted:
       | account_description | pension received |
-      | account_amount      | 50.00         |
+      | account_amount      | 64.00         |
     # add another: no
     And I choose "no" when asked for adding another record
     # check record in summary page
