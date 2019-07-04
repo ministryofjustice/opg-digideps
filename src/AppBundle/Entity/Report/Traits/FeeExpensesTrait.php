@@ -261,7 +261,7 @@ trait FeeExpensesTrait
 
         $feeComplete = $countValidFees || !empty($this->getReasonForNoFees());
         $expenseComplete = $this->getPaidForAnything() === 'no'
-            || ($this->getPaidForAnything() === 'yes' && count($countExpenses));
+            || ($this->getPaidForAnything() === 'yes' && $countExpenses);
 
         return $feeComplete && $expenseComplete;
     }
