@@ -46,7 +46,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * @JMS\Type("integer")
-     * @JMS\Groups({"visits-care"})
+     * @JMS\Groups({"visits-care", "report-id"})
      *
      * @var int
      */

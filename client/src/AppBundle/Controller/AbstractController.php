@@ -58,15 +58,16 @@ abstract class AbstractController extends Controller
      */
     public function getReportsIndexedById(Client $client, $groups = [])
     {
-        $reportIds = $client->getReports();
+        $reports = $client->getReports();
 
-        if (empty($reportIds)) {
+        if (empty($reports)) {
             return [];
         }
 
         $ret = [];
-        foreach ($reportIds as $id) {
-            $ret[$id] = $this->getReport($id, $groups);
+        foreach ($reports as $report) {
+            $reportId = $report->getId();
+            $ret[$reportId] = $this->getReport($reportId, $groups);
         }
 
         return $ret;
