@@ -1001,5 +1001,11 @@ class Client implements ClientInterface
         return $this->archivedAt;
     }
 
-
+    /**
+     * @return bool
+     */
+    public function hasDeputies()
+    {
+        return !$this->getUsers()->isEmpty();
+    }
 }
