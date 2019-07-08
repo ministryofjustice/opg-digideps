@@ -7,7 +7,7 @@ Feature: Report 103 start
     Given I load the application status from "money-transactions-before"
     And I change the report of the client with case number "behat001" to "103"
     # assert not submittable yet
-    And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    And I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     #test tabs
     Then I should see the "edit-contacts" link
