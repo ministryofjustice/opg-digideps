@@ -22,6 +22,16 @@ Where the GOV.UK Design System does not meet our needs, we _may_ write custom CS
 
 These rules keep our custom CSS close to the GOV.UK Design System, making code easier to review and maintain, and easing our route to new components when they are released.
 
+### Linting
+
+We lint our custom CSS to ensure that it meets our standards. This is reported during the Gulp build process, but it's generally easier to enable linting in your code editor so you get feedback in realtime.
+
+You need to enable a linted which recognises the `.sass-lint.yml` configuration file. Examples:
+
+- [Atom][atom-linter]
+- [Sublime Text][sublime-text-linter]
+- [VS Code][vs-code-linter]
+
 ## Specific cases
 
 ### Radio buttons with revealed content
@@ -52,3 +62,6 @@ This functionality is now properly supported by the GOV.UK Design System, and re
 [govuk-ds-variables]: https://github.com/alphagov/govuk-frontend/tree/master/src/settings
 [bem]: https://css-tricks.com/bem-101/
 [conditional-radios]: https://design-system.service.gov.uk/components/radios/#conditionally-revealing-content
+[atom-linter]: https://atom.io/packages/linter-sass-lint
+[sublime-text-linter]: https://packagecontrol.io/packages/SublimeLinter-contrib-sass-lint
+[vs-code-linter]: https://marketplace.visualstudio.com/items?itemName=glen-84.sass-lint

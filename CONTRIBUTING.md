@@ -42,9 +42,9 @@ You should then move it to the "Review" column to indicate that it is ready for 
 
 Once your work has been suitably reviewed and you've ensured that all tests are passing, it can be tested by the product team.
 
-For your changes to be tested, you need to deploy your branch to a feature environment. You can identify which feature environments are available by looking at pinned messages in the dev Slack channel.
+For your changes to be tested, you need to deploy your branch to a feature environment. You can identify which feature environments are available by looking at prefixes of tickets in JIRA. Prefix your ticket with the environment you're using (e.g. `[F1]`)
 
-You can deploy your changes to a feature environment through Jenkins, under the "Feature" tab of the Digi-Deps project.
+See the [deployment documentation][deployment-docs] for details of how to deploy to a feature environment.
 
 You should then move your JIRA issue into the "OPG Acceptance" column and assign a product manager to test it. If the issue was originally reported by a product manager, you should assign it back to them to test. Otherwise, you may assign it to any product manager and they will pass it on as necessary.
 
@@ -58,4 +58,6 @@ After the pull request has completed, the changes are automatically tested and, 
 
 On a regular basis, the development team will review issues in the "Ready for Release" column and promote them to the production environment. This work is co-ordinated over Slack.
 
-You can deploy your changes to the production environment through Jenkins, under the "Release" tab of the Digi-Deps project.
+See the [deployment documentation][deployment-docs] for details of how to deploy to production.
+
+[deployment-docs]: docs/DEPLOYMENT.md
