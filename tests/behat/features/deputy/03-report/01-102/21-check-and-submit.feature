@@ -3,7 +3,7 @@ Feature: Report submit
     @deputy
     Scenario: report declaration page
         #Given I set the report 1 end date to 3 days ago
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should not see the "report-review" link
         # if not found, it means that the report is not submittable
@@ -15,7 +15,7 @@ Feature: Report submit
     @deputy
     Scenario: report submission
         Given emails are sent from "deputy" area
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
         And I save the report as "102 report"
@@ -80,7 +80,7 @@ Feature: Report submit
     Scenario: deputy gives feedback after submitting report
         Given emails are sent from "deputy" area
         And I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         And I click on "report-submit"
         And I click on "declaration-page"
@@ -147,7 +147,7 @@ Feature: Report submit
 
     @deputy
     Scenario: assert 2nd year report has been created
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -163,7 +163,7 @@ Feature: Report submit
 
     @deputy
     Scenario: deputy report download
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         When I click on "report-review"
         Then the URL should match "report/\d+/review"
         And the response should contain "behat001"

@@ -2,7 +2,7 @@ Feature: Report edit and test tabs
     
     @deputy
     Scenario: edit report dates
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-edit-period"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
@@ -49,7 +49,7 @@ Feature: Report edit and test tabs
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
@@ -63,7 +63,7 @@ Feature: Report edit and test tabs
 
     @deputy
     Scenario: Check 102, 103 sections presence on overview page
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         # assert tabs
         And I should see the "edit-decisions" link

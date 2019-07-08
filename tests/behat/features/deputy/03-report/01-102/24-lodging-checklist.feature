@@ -46,7 +46,7 @@ Feature: Admin report checklist
       | Doe               | checklist-deputy-lastname |
       | 102 Petty France  | checklist-deputy-address   |
       | 020 3334 3555     | checklist-deputy-phone     |
-      | behat-user@publicguardian.gov.uk | checklist-deputy-email |
+      | behat-lay-deputy-102@publicguardian.gov.uk | checklist-deputy-email |
     And I should see the "checklist-no-previous-reports" region exactly "1" times
     # Assert furtherInfo table is populated with unsubmit information
     And each text should be present in the corresponding region:

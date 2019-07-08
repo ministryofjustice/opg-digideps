@@ -2,7 +2,7 @@ Feature: Report any other info
 
   @deputy
   Scenario: any other info
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-other_info, start"
      # step 1
     And the step cannot be submitted without making a selection
