@@ -1,5 +1,19 @@
 Feature: Report edit and test tabs
-    
+
+    @deputy
+    Scenario: Initialise report
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+    # valid values
+        When I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 03 |
+            | report_startDate_year | 2016 |
+            | report_endDate_day | 31 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2016 |
+        And I press "report_save"
+        Then the form should be valid
+
     @deputy
     Scenario: edit report dates
         Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
@@ -46,6 +60,7 @@ Feature: Report edit and test tabs
             | report_edit_endDate_day | 31 |
             | report_edit_endDate_month | 12 |
             | report_edit_endDate_year | 2016 |
+
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
