@@ -43,6 +43,7 @@
         {{ form_widget(element, {
             'attr': {
                 'class': class,
+                'rows': '5',
                 'aria-describedby': element.vars.id ~ '-hint',
             }
         }) }}
@@ -51,6 +52,7 @@
             'attr': {
                 'class': class ~ ' govuk-' ~ inputType ~ '--error',
                 'aria-invalid': 'true',
+                'rows': '5',
                 'aria-describedby': element.vars.id ~ '-hint ' ~ element.vars.id ~ '-error',
             }
         }) }}
