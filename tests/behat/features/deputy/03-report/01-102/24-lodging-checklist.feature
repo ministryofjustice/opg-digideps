@@ -6,26 +6,26 @@ Feature: Admin report checklist
     # Navigate to checklist via search
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
+      | John 102-client | client-102 |
     When I fill in the following:
-      | search_clients_q | hent |
+      | search_clients_q | 102-client |
     And I click on "search_clients_search"
     Then I should see the "client-row" region exactly "1" times
     And each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    And I click on "client-details" in the "client-behat001" region
+      | John 102-client | client-102 |
+    And I click on "client-details" in the "client-102" region
     Then the URL should match "/admin/client/\d+/details"
     # Begin scenario
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
       | Admin User, OPG Admin | last-saved-by |
-      | 1 Jan 2016 | court-date |
+      | 1 Nov 2017 | court-date |
       | Property and affairs: general | report-type-title |
-      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
-      | Cly | checklist-client-firstname |
-      | Hent | checklist-client-lastname |
-      | 0123456789 | checklist-client-phone        |
+      | 1 Nov 2018 to 31 Oct 2019 | expected-date |
+      | John | checklist-client-firstname |
+      | 102-client | checklist-client-lastname |
+      | 022222222222222 | checklist-client-phone        |
       | dd1-changed | decision-1         |
       | Andy Whites | contact-n2-aw2     |
       | December 2015 | care-plan-last-reviewed |
@@ -38,16 +38,15 @@ Feature: Admin report checklist
       | £335.40   | checklist-accounts-opening-total |
       | £243.39   | calculated-balance               |
       | £193.11   | balance-difference               |
-      | Cly               | checklist-client-firstname |
-      | Hent              | checklist-client-lastname |
-      | 1 South Parade    | checklist-client-address   |
-      | 0123456789        | checklist-client-phone     |
-      | John              | checklist-deputy-firstname |
-      | Doe               | checklist-deputy-lastname |
-      | 102 Petty France  | checklist-deputy-address   |
-      | 020 3334 3555     | checklist-deputy-phone     |
+      | John              | checklist-client-firstname |
+      | 102-client        | checklist-client-lastname |
+      | Victoria road     | checklist-client-address   |
+      | 022222222222222   | checklist-client-phone     |
+      | Lay Deputy 102    | checklist-deputy-firstname |
+      | User              | checklist-deputy-lastname |
+      | Victoria Road     | checklist-deputy-address   |
+      | 07911111111111    | checklist-deputy-phone     |
       | behat-lay-deputy-102@publicguardian.gov.uk | checklist-deputy-email |
-    And I should see the "checklist-no-previous-reports" region exactly "1" times
     # Assert furtherInfo table is populated with unsubmit information
     And each text should be present in the corresponding region:
       | Incomplete submitted              | information-1            |
@@ -103,7 +102,7 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager saves further information on checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-behat001"
+    And I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
@@ -138,7 +137,7 @@ Feature: Admin report checklist
   Scenario: Admin completes checklist
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    When I click on "admin-client-search, client-detail-behat001"
+    When I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
@@ -196,7 +195,7 @@ Feature: Admin report checklist
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # Navigate to checklist via search
-    And I click on "admin-client-search, client-detail-behat001"
+    And I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     And each text should be present in the corresponding region:
