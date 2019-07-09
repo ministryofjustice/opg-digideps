@@ -23,7 +23,6 @@
     {% if client.unsubmittedReport %}
         {% set report = client.unsubmittedReport %}
         {% set status = report.status.status %}
-        {% set statusClass = 'incomplete' %}
         {% set behatRegion = 'report-unsubmitted' %}
         {% set buttonText = 'reviewReport' %}
         {% set transOptions = {
@@ -42,7 +41,6 @@
     {% if client.activeReport %}
         {% set report = client.activeReport %}
         {% set status = report.status.status %}
-        {% set statusClass = 'notStarted' == status ? 'not-started' : 'incomplete' %}
         {% set behatRegion = 'report-active' %}
         {% set buttonText = report.status.status != 'notStarted' ? 'continue' : 'startNow' %}
         {% set transOptions = {

@@ -19,40 +19,25 @@
 
 {% block pageContent %}
     {% if not readyToBalance %}
-        <div class="alert-info panel panel-border-narrow" id="alert-not-started">
-            <span class="icon icon-information"></span>
-            <div class="alert-message">
-                <p>
-                    {{ ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions) }}
-                </p>
-            </div>
-        </div>
+        {{ macros.notification('info', ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions)) }}
     {% else %}
         {% if report.isTotalsMatch %}
-            <div class="alert-success panel panel-border-narrow" id="alert-balanced">
-                <span class="icon icon-tick"></span>
-                <div class="alert-message">
-                    <p class="bold">{{ 'alerts.balanced' | trans }}</p>
-                </div>
-            </div>
+            {{ macros.notification('success', 'alerts.balanced' | trans) }}
         {% else %}
-            <div class="alert{% if report.isDue %}-error{% endif %} panel panel-border-narrow behat-region-balance-bad"
-                 id="alert-not-balanced">
-                {% if report.isDue %}
-                    <span class="icon icon-cross"></span>
-                {% endif %}
-                <div class="alert-message">
+            {% set alertMessage %}
+                <div class="behat-region-balance-bad">
                     {% if report.isDue %}
-                        <p class="bold">{{ 'alerts.notBalanced' | trans }}</p>
+                        <h3 class="govuk-heading-m">{{ 'alerts.notBalanced' | trans }}</h3>
                     {% endif %}
                     <div class="data behat-region-unaccounted-for">
-                        <span class="data-item bold-xlarge">
+                        <span class="govuk-heading-xl govuk-!-margin-bottom-0">
                             £{{ report.totalsOffset | abs | money_format }}
                         </span>
-                        <span class="data-item bold-xsmall">{{ 'alerts.notBalancedSupport' | trans(transOptions) }}</span>
+                        {{ 'alerts.notBalancedSupport' | trans(transOptions) }}
                     </div>
                 </div>
-            </div>
+            {% endset %}
+            {{ macros.notification(report.isDue ? 'error' : 'notice', alertMessage) }}
         {% endif %}
     {% endif %}
 
@@ -89,7 +74,7 @@
                 <summary>
                     <span class="summary">{{ 'moreInfo.whatToDo.title' | trans }}</span>
                 </summary>
-                <div class="panel panel-border-narrow">
+                <div class="opg-indented-block">
                     <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
                     <ul class="list list-bullet">
                         <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>

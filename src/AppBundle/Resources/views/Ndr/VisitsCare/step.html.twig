@@ -33,7 +33,7 @@
                     ]
                 }) }}
 
-                <div id="how-often-contact-client-wrapper" class="panel panel-border-narrow js-hidden">
+                <div id="how-often-contact-client-wrapper" class="opg-indented-block js-hidden">
                     {{ form_input(form.howOftenDoYouContactClient, 'form.howOftenDoYouContactClient', {
                         'labelClass': 'required',
                         'labelParameters': transOptions
@@ -58,7 +58,7 @@
                     ]
                 }) }}
 
-                <div id="how-care-funded-wrapper" class="panel panel-border-narrow js-hidden">
+                <div id="how-care-funded-wrapper" class="opg-indented-block js-hidden">
                     {{ form_checkbox_group(form.howIsCareFunded, 'form.howIsCareFunded', {
                         'fieldSetClass': 'text',
                         'legendClass' : 'form-label-bold'
@@ -94,7 +94,7 @@
                     ]
                 }) }}
 
-                <div id="when-care-plan-last-reviewed-wrapper" class="panel panel-border-narrow  js-hidden">
+                <div id="when-care-plan-last-reviewed-wrapper" class="opg-indented-block  js-hidden">
                     {# legendClass is-not-working #}
                     {{ form_known_date(form.whenWasCarePlanLastReviewed, 'form.whenWasCarePlanLastReviewed', {
                         'legendClass' : 'form-label-bold',
@@ -117,7 +117,7 @@
                     {'dataTarget': 'plan-move-residence-details-textarea'},
                     {}]
                 }) }}
-                <div id="plan-move-residence-details-textarea" class="panel panel-border-narrow  js-hidden">
+                <div id="plan-move-residence-details-textarea" class="opg-indented-block  js-hidden">
                     {{ form_input(form.planMoveNewResidenceDetails, 'form.planMoveNewResidenceDetails', {
                         'labelClass': 'required',
                         'labelParameters': transOptions,

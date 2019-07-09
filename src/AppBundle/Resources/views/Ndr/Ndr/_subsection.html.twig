@@ -1,13 +1,21 @@
 {% set translationDomain = "ndr-overview" %}
 {% trans_default_domain translationDomain %}
 
-<div id="{{ subSection }}-sub-section" class="section-list-item">
+<div id="{{ subSection }}-sub-section" class="opg-overview-section">
 
-    <a href="{{ linkToSubSection }}" class="edit-heading-link">
-        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
-    </a>
+    <div class="opg-overview-section__header">
+        <h3 class="govuk-heading-m opg-overview-section__label">
+            <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">
+                {{ (subSection ~ '.subSectionTitle') | trans }}
+            </a>
+        </h3>
 
-    <span class="status flush--bottom {{ state.state }}">
+        {%  if description is defined and description %}
+            <p class="opg-overview-section__description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+        {%  endif %}
+    </div>
+
+    <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }}">
         {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
             {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
         {% else %}
@@ -15,17 +23,11 @@
         {% endif %}
     </span>
 
-    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+    <a href="{{ linkToSubSection }}" class="opg-overview-section__link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
         {% if state.state == 'not-started' %}
             {{ (subSection ~ '.start') | trans({}, translationDomain) }}
         {% else %}
             {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
         {% endif %}
     </a>
-
-    {%  if description is defined and description %}
-        <p class="description text">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
-    {%  endif %}
-
-
 </div>

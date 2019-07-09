@@ -38,7 +38,7 @@
                 <div class="js-hidden">
                     {{ form_input(debt.moreDetails, 'moreDetails', {
                         'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                        'formGroupClass': 'panel panel-border-narrow',
+                        'formGroupClass': 'opg-indented-block',
                         'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions),
                         'labelRaw': true
                     }) }}

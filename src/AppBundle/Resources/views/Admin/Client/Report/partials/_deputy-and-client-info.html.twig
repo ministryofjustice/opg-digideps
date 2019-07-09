@@ -12,7 +12,7 @@
         }) }}
     </div>
 
-    <div class="panel panel-border-narrow push--bottom">
+    <div class="opg-indented-block push--bottom">
         <p class="flush--bottom behat-region-court-date">
             <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong>
             {% if report.client.courtDate is not null %}
@@ -47,7 +47,7 @@
         <summary>
             <span class="summary">{{ (page ~ '.revealTitle.contactDetails') | trans }}</span>
         </summary>
-        <div class="panel panel-border-narrow">
+        <div class="opg-indented-block">
 
             {# CLIENT DETAILS #}
             <h3 class="heading-medium">Client details</h3>
@@ -153,7 +153,7 @@
             'formGroupClass': 'flush--bottom'
         }) }}
     </div>
-    <div class="panel panel-border-narrow push-half--top">
+    <div class="opg-indented-block push-half--top">
         <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}</p>
     </div>
 </div>

@@ -34,7 +34,7 @@
                     'formGroupClass': 'flush--bottom'
                 }) }}
 
-                <div id="reason-for-no-decisions" class="panel panel-border-narrow js-hidden">
+                <div id="reason-for-no-decisions" class="opg-indented-block js-hidden">
                     {{ form_input(form.reasonForNoDecisions, (page ~ '.form.reasonForNoDecisions'), {
                         'labelClass': 'required',
                         'labelParameters': transOptions
@@ -50,7 +50,7 @@
             <summary>
                 <span class="summary">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
             </summary>
-            <div class="text panel panel-border-narrow">
+            <div class="text opg-indented-block">
                 <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
                 <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
                 <ul class="list list-bullet">

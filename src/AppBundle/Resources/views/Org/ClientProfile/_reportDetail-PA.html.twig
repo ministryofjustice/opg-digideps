@@ -15,9 +15,9 @@
             </dt>
             <dd class="push--bottom">
                 {% if report.unSubmitDate != null and report.submitted == false %}
-                    <span class="behat-region-report-detail-status{{ incompleteAppend }} status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                    <span class="behat-region-report-detail-status{{ incompleteAppend }} govuk-tag opg-tag--warning">{{ 'changesNeeded' | trans({}, 'common') }}</span>
                 {% else %}
-                    <span class="behat-region-report-detail-status{{ incompleteAppend }} status status-large {{ reportStatus.getState() }} flush--bottom">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                    <span class="behat-region-report-detail-status{{ incompleteAppend }} govuk-tag {{ reportStatus.state | status_to_tag_css }}">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
                 {% endif %}
             </dd>
 

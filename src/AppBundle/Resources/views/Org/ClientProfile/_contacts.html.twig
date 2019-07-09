@@ -2,13 +2,17 @@
 {% trans_default_domain translationDomain %}
 {% set page = "clientContacts" %}
 
-<details class="panel panel-admin hard behat-region-client-profile-contacts">
+<div class="govuk-accordion__section behat-region-client-profile-contacts">
 
-    <summary class="panel-heading flush--bottom">
-        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
-    </summary>
+    <div class="govuk-accordion__section-header">
+        <h3 class="govuk-accordion__section-heading">
+            <button class="govuk-accordion__section-button">
+                {{ (page ~ '.heading') | trans }}
+            </button>
+        </h3>
+    </div>
 
-    <div class="panel-body soft-half">
+    <div class="govuk-accordion__section-content">
 
         {% if is_granted('add-client-contact', client) %}
         <a href="{{ path('clientcontact_add', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-add-contact-button">
@@ -117,4 +121,4 @@
         {% endif %}
     </div>
 
-</details>
+</div>

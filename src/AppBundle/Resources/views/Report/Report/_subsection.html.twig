@@ -10,12 +10,31 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" class="section-list-item {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
+<div id="{{ subSection }}-sub-section" href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
+    <div class="opg-overview-section__header">
+        <h3 class="govuk-heading-m opg-overview-section__label">
+            <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">
+                {{ (subSection ~ '.subSectionTitle') | trans }}
+            </a>
+        </h3>
 
-    <a href="{{ linkToSubSection }}" class="edit-heading-link">
-        <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans }}</h3>
-    </a>
-    <span class="status flush--bottom {{ state.state }} behat-region-{{ subSection }}-state-{{ state.state }}">
+        {%  if description | default(false) %}
+            <div class="opg-overview-section__description">
+                {% if descriptionRaw | default(false)  %}
+                    {{ descriptionRaw | raw }}
+                {% else %}
+                    {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
+                {% endif %}
+            </div>
+        {%  endif %}
+        {%  if descriptionLink | default(false) %}
+            <div class="opg-overview-section__description">
+                <a href="{{ linkToSubSection }}#cantFindTheProblem">{{ (subSection ~ '.subSectionDescription.' ~ descriptionLinkAction ~ 'Explanation') | trans(transOptions) }}</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
         {% if state.state == 'done' or customiseAllLabels | default(false) %}
             {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
         {% else %}
@@ -23,7 +42,7 @@
         {% endif %}
     </span>
 
-    <a class="edit-link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ linkToSubSection }}">
+    <a href="{{ linkToSubSection }}" class="opg-overview-section__link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}">
         {% if subSection == 'balance' %}
             {{ 'view' | trans({}, 'common') | capitalize }}
         {% else %}
@@ -34,19 +53,4 @@
             {% endif %}
         {% endif %}
     </a>
-
-    {%  if description | default(false) %}
-        <p class="description text flush--bottom">
-            {% if descriptionRaw | default(false)  %}
-                {{ descriptionRaw | raw }}
-            {% else %}
-                {{ (subSection ~ '.subSectionDescription') | trans(transOptions) }}
-            {% endif %}
-        </p>
-    {%  endif %}
-    {%  if descriptionLink | default(false) %}
-        <p class="description">
-            <a href="{{ linkToSubSection }}#cantFindTheProblem">{{ (subSection ~ '.subSectionDescription.' ~ descriptionLinkAction ~ 'Explanation') | trans(transOptions) }}</a>
-        </p>
-    {% endif %}
 </div>

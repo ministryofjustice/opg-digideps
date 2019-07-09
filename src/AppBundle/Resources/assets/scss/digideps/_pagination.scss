@@ -2,129 +2,72 @@
 // PAGINATION
 // Next/Previous component
 
-// guides pagination
-.pagination {
-    display: block;
-    margin: 2em 0 0 0;
-    padding: 2em 0 0 0;
+.opg-pagination {
+    @include govuk-clearfix;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: govuk-spacing(7);
+    list-style: none;
 
-    @include media-down(mobile) {
-        margin: 1em 0 0 0;
-        padding: 1em 0 0 0;
+    // Combined with flex-wrap, this ensures the clearfix ::after element doesn't
+    // affect spacing of the flex elements.
+    &::after {
+        width: 100%;
     }
 
-    li {
-        width: 49%;
-        list-style: none;
-
-        @include media-down(mobile) {
-            &.previous,
-            &.next {
-                width: 100%;
-            }
+    &__item {
+        @include govuk-media-query($until: tablet) {
+            width: 100%;
         }
 
-        a {
+        flex-grow: 1;
+    }
+
+    &__link {
+        display: block;
+        padding: govuk-spacing(3) govuk-spacing(6);
+        text-decoration: none;
+
+        &:hover,
+        &:active {
+            background-color: $canvas-colour;
+        }
+
+        &::before {
             display: block;
-            padding: .75em 3em .75em 0;
-            text-decoration: none;
-
-            &:hover,
-            &:active {
-                background-color: $canvas-colour;
-            }
-
-            &:before {
-                content: " ";
-                display: block;
-                width: 30px;
-                height: 38px;
-                margin: -4px 0 0 0;
-                background: transparent url("/images/arrow-sprite.png") no-repeat;
-            }
-
-            .pagination-label {
-                @include core-27($line-height: (33.75 / 27));
-                display: block;
-                margin-bottom: .08em;
-            }
-
-            .pagination-part-title {
-                text-decoration: underline;
-            }
-        }
-
-        &.next {
-            float: right;
-            text-align: right;
-
-            a {
-
-
-                &:before {
-                    margin-right: -32px;
-                    float: right;
-                    background-position: -102px -11px;
-                }
-            }
-        }
-
-        &.previous {
+            width: 30px;
+            height: 38px;
+            margin-right: -32px;
+            margin-left: -32px;
             float: left;
-            text-align: left;
+            content: ' ';
+        }
 
-            a {
-                padding-left: 3em;
+        &--previous {
+            &::before {
+                background-image: url('/images/arrow-sprite.png');
+                background-position: -20px -11px;
+            }
+        }
 
-                &:before {
-                    margin-left: -32px;
-                    float: left;
-                    background-position: -20px -11px;
+        &--next {
+            @include govuk-media-query($from: tablet) {
+                text-align: right;
+                &::before {
+                    float: right;
                 }
+            }
+
+            &::before {
+                background-image: url('/images/arrow-sprite.png');
+                background-position: -102px -11px;
             }
         }
     }
-}
 
-// Simple pagination styles
-// http://rural-payments-styleguide.herokuapp.com/pagination/
-
-
-.pager-items {
-    display: inline;
-
-    @include media($max_width: 320px) {
-        display: none;
-    }
-
-    li {
-        display: inline;
-        margin: 0 5px;
-
-        &:first-child {
-            margin-left: 0;
-        }
-
-        &:last-child {
-            margin-right: 0;
-
-        }
-    }
-}
-
-.pager-prev {
-    margin-right: 10px;
-}
-
-.pager-next {
-    margin-left: 10px;
-}
-
-.pager-controls {
-    margin-bottom: 8px;
-
-    @include media(tablet) {
-        margin-bottom: 0;
-        float: right;
+    &__link-text {
+        @include govuk-font(27);
+        display: block;
     }
 }

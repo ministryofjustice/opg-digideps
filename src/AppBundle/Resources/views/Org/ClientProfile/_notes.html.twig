@@ -2,13 +2,17 @@
 {% trans_default_domain translationDomain %}
 {% set page = "clientNotes" %}
 
-<details class="panel panel-admin hard behat-region-client-profile-notes">
+<div class="govuk-accordion__section">
 
-    <summary class="panel-heading flush--bottom">
-        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
-    </summary>
+    <div class="govuk-accordion__section-header">
+        <h3 class="govuk-accordion__section-heading">
+            <button class="govuk-accordion__section-button">
+                {{ (page ~ '.heading') | trans }}
+            </button>
+        </h3>
+    </div>
 
-    <div class="panel-body soft-half">
+    <div class="govuk-accordion__section-content behat-region-client-profile-notes">
         <div>{{ (page ~ '.notice') | trans }}</div>
         <a href="{{ path('add_note', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-add-notes-button">
             <span class="icon icon-plus"></span>
@@ -35,7 +39,7 @@
                                     <summary>
                                         <span class="summary">{{ note.title }}</span>
                                     </summary>
-                                    <div class="panel panel-border-narrow dont-break-out">
+                                    <div class="opg-indented-block dont-break-out">
                                         {{ note.content }}
                                     </div>
                                 </details>
@@ -67,4 +71,4 @@
         {% endif %}
     </div>
 
-</details>
+</div>

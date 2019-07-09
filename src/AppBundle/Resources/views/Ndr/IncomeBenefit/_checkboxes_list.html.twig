@@ -14,7 +14,7 @@
     }) }}
     {{ form_row(sbSingleForm.typeId) }}
     {% if hasMoreDetails %}
-        <div id="{{ sbSingleForm.typeId.vars.value }}-more-details" class="panel panel-border-narrow js-hidden">
+        <div id="{{ sbSingleForm.typeId.vars.value }}-more-details" class="opg-indented-block js-hidden">
             {{ form_input(sbSingleForm.moreDetails, '', {
                 'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(transOptions)
             }) }}

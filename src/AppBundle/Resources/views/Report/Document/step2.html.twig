@@ -38,21 +38,18 @@
 
     <h2 class="heading-medium flush--top">{{ (page ~ '.uploadHeading') | trans }}</h2>
 
-    <div class="alert-info panel panel-border-narrow js-hidden">
-        <span class="icon icon-information"></span>
-        <div class="alert-message">
-            <p>{{ (page ~ '.uploadHint') | trans }}</p>
-        </div>
+    <div class="js-hidden">
+        {{ macros.notification('info', (page ~ '.uploadHint') | trans) }}
     </div>
 
     {{ form_submit(form.save, '', {'buttonClass': 'behat-link-attach-file js-uploading', 'labelText': 'form.submitButton' | trans}) }}
 
-    <div class="alert-info panel panel-border-narrow push-half--top hidden" id="upload-progress">
-        <span class="icon icon-loader"></span>
-        <div class="alert-message">
-            <p>{{ (page ~ '.pleaseWait') | trans }}</p>
-            <p>{{ (page ~ '.uploadHint') | trans }}</p>
-        </div>
+    {% set alertMessage %}
+        <p>{{ (page ~ '.pleaseWait') | trans }}</p>
+        <p>{{ (page ~ '.uploadHint') | trans }}</p>
+    {% endset %}
+    <div id="upload-progress" class="hidden">
+        {{ macros.notification('loader', alertMessage) }}
     </div>
 
     {{ form_end(form) }}

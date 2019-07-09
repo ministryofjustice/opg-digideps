@@ -1,0 +1,14 @@
+// ==========================================================================
+// PAGER
+// Multi-page navigation
+
+.opg-pager {
+    @include govuk-media-query($from: tablet) {
+        display: inline;
+    }
+
+    &__item {
+        display: inline;
+        margin: 0 govuk-spacing(1);
+    }
+}

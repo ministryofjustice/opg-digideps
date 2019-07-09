@@ -2,13 +2,17 @@
 {% trans_default_domain translationDomain %}
 {% set page = "clientReports" %}
 
-<details class="panel panel-admin hard">
+<div class="govuk-accordion__section">
 
-    <summary class="panel-heading flush--bottom">
-        <span class="summary heading-medium">{{ (page ~ '.heading') | trans }}</span>
-    </summary>
+    <div class="govuk-accordion__section-header">
+        <h3 class="govuk-accordion__section-heading">
+            <button class="govuk-accordion__section-button">
+                {{ (page ~ '.heading') | trans }}
+            </button>
+        </h3>
+    </div>
 
-    <div class="panel-body soft-half behat-region-client-profile-reports">
+    <div class="govuk-accordion__section-content behat-region-client-profile-reports">
         {% if reports is not empty %}
 
             <table>
@@ -44,4 +48,4 @@
         {% endif %}
     </div>
 
-</details>
+</div>

@@ -1,10 +1,14 @@
 // Shame CSS
 // ==========================================================================
-// Quick dumping ground for exploration
-// SHOULD NOT GO TO PRODUCTION!
-/**
- * Undo the font-size overwrite in govuk-elements. It was to avoid an IE6/7 bug
- * but they're no longer supported and the overwrite made govuk-frontend unusable
- */
+
+// Undo the font-size overwrite in govuk-elements. It was to avoid an IE6/7 bug
+// but they're no longer supported and the overwrite made govuk-frontend unusable
 html { font-size: initial; }
 body { font-size: initial; }
+
+// Undo the font-weight nullification in govuk-elements. It's no longer present in
+// the Design System, but so eager that it's still cascading through.
+b,
+strong {
+    font-weight: 600;
+}

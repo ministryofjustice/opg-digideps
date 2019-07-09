@@ -47,11 +47,10 @@
         </div>
     {% endif %}
 
-
     <ul id="overview-sections" class="push--bottom">
 
-        <li id="planning-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.decisionsContacts' | trans() }}</h2>
+        <li id="planning-section">
+            <h2 class="opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
             {% if report.hasSection('decisions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -77,8 +76,8 @@
             {% endif %}
         </li>
 
-        <li id="welfare-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
+        <li id="welfare-section">
+            <h2 class="opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -103,8 +102,8 @@
             {% endif %}
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
-            <li id="finances-section" class="overview-section">
-                <h2 class="heading">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
+            <li id="finances-section">
+                <h2 class="opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('bankAccounts') %}
                     {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -247,8 +246,8 @@
         {% endif %}
 
 
-        <li id="report-submit-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.other' | trans() }}</h2>
+        <li id="report-submit-section">
+            <h2 class="opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
             {% if report.hasSection('actions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,
@@ -273,8 +272,8 @@
                 } %}
             {% endif %}
 
-        <li id="report-submit-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.caseDocuments' | trans() }}</h2>
+        <li id="report-submit-section">
+            <h2 class="opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
             {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
                     transDomain: translationDomain,

@@ -13,18 +13,18 @@
 {% set prevConfig = section_link_params(report, sectionId, -1) | default(overviewPageConfig) %}
 {% set nextConfig = section_link_params(report, sectionId, 1) | default(overviewPageConfig)%}
 
-<nav class="pagination" role="navigation" aria-label="Pagination">
-  <ul class="group">
-    <li class="previous">
-        <a title="Navigate to previous part" rel="prev" href="{{ prevConfig.link }}">
-            <span class="pagination-label">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
-            <span class="pagination-part-title">{{ ('prevNextLinks.sections.' ~ prevConfig.section) | trans }}</span>
+<nav role="navigation" aria-label="Pagination">
+  <ul class="opg-pagination">
+    <li class="opg-pagination__item">
+        <a href="{{ prevConfig.link }}" class="opg-pagination__link opg-pagination__link--previous" rel="prev" title="Navigate to previous part">
+            <span class="opg-pagination__link-text">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
+            {{ ('prevNextLinks.sections.' ~ prevConfig.section) | trans }}
         </a>
     </li>
-    <li class="next">
-        <a title="Navigate to next part" rel="next" href="{{ nextConfig.link }}">
-            <span class="pagination-label">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
-            <span class="pagination-part-title">{{ ('prevNextLinks.sections.' ~ nextConfig.section) | trans }}</span>
+    <li class="opg-pagination__item">
+        <a href="{{ nextConfig.link }}" class="opg-pagination__link opg-pagination__link--next" rel="next" title="Navigate to next part">
+            <span class="opg-pagination__link-text">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
+            {{ ('prevNextLinks.sections.' ~ nextConfig.section) | trans }}
         </a>
     </li>
   </ul>

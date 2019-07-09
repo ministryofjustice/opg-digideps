@@ -13,12 +13,7 @@
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block notification %}
-    <div class="push--top">
-        <div class="alert-info panel panel-border-narrow">
-            <span class="icon icon-information"></span>
-            <div class="alert-message"><p>{{ 'startPage.notification' | trans }}</p></div>
-        </div>
-    </div>
+    {{ macros.notification('info', 'startPage.notification' | trans)}}
 {% endblock %}
 
 {% block pageContent %}

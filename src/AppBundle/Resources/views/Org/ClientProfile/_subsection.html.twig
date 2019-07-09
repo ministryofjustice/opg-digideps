@@ -10,18 +10,20 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<li id="{{ subSection }}-section{{ incompleteAppend }}" class="section-list-item {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
-    <div id="{{ subSection }}-sub-section{{ incompleteAppend }}">
-        <a class="behat-link-edit-{{ subSection }} link-edit soft-half--ends" id="edit-{{ subSection }}{{ incompleteAppend }}" href="{{ linkToSubSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
-            {{ (subSection ~ '.subSectionTitle') | trans }}
-            <span class="right status flush--bottom {{ state.state }} behat-region-{{ subSection }}-state-{{ state.state }}">
-                {% if state.state == 'done' or customiseAllLabels | default(false) %}
-                    {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
-                {% else %}
-                    {{ ('labels.' ~ state.state) | trans }}
-                {% endif %}
-            </span>
-        </a>
-
-    </div>
+<li id="{{ subSection }}-section{{ incompleteAppend }}" class="opg-overview-section">
+    <a
+        id="edit-{{ subSection }}{{ incompleteAppend }}"
+        class="opg-overview-section__header {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--highlight') : '' }} behat-link-edit-{{ subSection }}"
+        href="{{ linkToSubSection }}"
+        aria-label="{{ (subSection ~ '.edit') | trans }}"
+    >
+        {{ (subSection ~ '.subSectionTitle') | trans }}
+    </a>
+    <span class="opg-overview-section__status govuk-tag opg-tag--small {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+        {% if state.state == 'done' or customiseAllLabels | default(false) %}
+            {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+        {% else %}
+            {{ ('labels.' ~ state.state) | trans }}
+        {% endif %}
+    </span>
 </li>

@@ -2,44 +2,32 @@
 // DETAILS BANNER
 // Details banner component
 
-@import 'shims';
-@import "typography";
+.opg-details-banner {
+    @include govuk-clearfix;
 
-.details-banner{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: govuk-spacing(3) 0;
+    border-bottom: 1px solid $govuk-border-colour;
 
-  padding: 15px 0 14px;
-  border-bottom: 1px solid #bfc1c3;
-  position: relative;
-
-  @extend %contain-floats;
-
-  .details-content{
-
-    float:left;
-    margin-top: 5px;
-
-    p{
-      margin: 0;
+    // Combined with flex-wrap, this ensures the clearfix ::after element doesn't
+    // affect spacing of the flex elements.
+    &::after {
+        width: 100%;
     }
 
-  }
-
-
-  .opg-helpline {
-    position: relative;
-    float:right;
-    top:auto;
-    right: auto;
-    margin-right: 20px;
-
-    h3{
-      margin-top: 0;
-
-      @include media(desktop) {
-        @include bold-16();
-      }
+    &__content {
+        float: left;
     }
-  }
 
+    &__helpline {
+        position: static;
+        float: right;
 
+        h3 {
+            @include govuk-font(16, $weight: bold)
+        }
+    }
 }

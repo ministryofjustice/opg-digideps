@@ -2,14 +2,14 @@
 // ALERT
 .opg-alert {
     @include govuk-responsive-padding(4);
-    @include govuk-responsive-margin(8, "bottom");
+    @include govuk-responsive-margin(8, 'bottom');
     @include govuk-focusable;
     max-width: 30em;
     border-left: 5px solid transparent;
 
     &__icon {
-        float: left;
         margin-right: 10px;
+        float: left;
     }
 
     &__message {
@@ -17,27 +17,27 @@
     }
 
     &--notice {
-        background-color: rgba($border-colour, .1);
+        background-color: fade-out($govuk-border-colour, .9);
     }
 
     &--success {
-        border-color: $turquoise;
-        background-color: rgba($turquoise, .1);
+        border-color: govuk-colour('turquoise');
+        background-color: fade-out(govuk-colour('turquoise'), .9);
     }
 
     &--error {
-        border-color: $error-colour;
-        background-color: rgba($error-colour, .1);
+        border-color: $govuk-error-colour;
+        background-color: fade-out($govuk-error-colour, .9);
     }
 
     &--info {
-        border-color: $light-blue;
-        background-color: rgba($light-blue, .1);
+        border-color: govuk-colour('light-blue');
+        background-color: fade-out(govuk-colour('light-blue'), .9);
     }
 
     &--important {
-        border-color: $black;
-        background-color: rgba($grey-3, .3);
+        border-color: govuk-colour('black');
+        background-color: fade-out(govuk-colour('black'), .9);
     }
 }
 

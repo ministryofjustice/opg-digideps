@@ -97,7 +97,7 @@
                             {% set status = report.status.status %}
                         {% endif %}
 
-                        <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                        <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
                     </td>
                     <td class="change-answer width-tenth">
                         {% if enableChecklistLink %}

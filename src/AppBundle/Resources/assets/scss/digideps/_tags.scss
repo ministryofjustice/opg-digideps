@@ -1,0 +1,21 @@
+.opg-tag {
+    &--small {
+        @include govuk-font(14, $weight: bold);
+    }
+
+    &--not-started {
+        background-color: govuk-colour('grey-1');
+    }
+
+    &--warning {
+        background-color: $govuk-error-colour;
+    }
+
+    &--notice {
+        background-color: darken(govuk-colour('orange'), 17%);
+    }
+
+    &--success {
+        background-color: govuk-colour('green');
+    }
+}

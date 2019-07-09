@@ -132,40 +132,51 @@
     }) }}
 {% endmacro %}
 
+{% macro icon(type, extraClass = '') %}
+    <span class="opg-icon opg-icon--{{ type }} {{ extraClass }}"></span>
+{% endmacro %}
+
 
 {% macro notification(alertType,message) %}
     {% if alertType is defined %}
         {% if alertType == 'notice' %}
             <div class="opg-alert opg-alert--notice">
-                <span class="opg-alert__icon opg-icon--notification"></span>
+                {{ _self.icon('notification', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     {{ message | raw }}
                 </div>
             </div>
         {% elseif alertType == 'success' %}
             <div class="opg-alert opg-alert--success">
-                <span class="opg-alert__icon opg-icon--tick"></span>
+                {{ _self.icon('tick', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     {{ message | raw }}
                 </div>
             </div>
         {% elseif alertType == 'error' %}
             <div class="opg-alert opg-alert--error">
-                <span class="opg-alert__icon opg-icon--cross"></span>
+                {{ _self.icon('cross', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     {{ message | raw }}
                 </div>
             </div>
         {% elseif alertType == 'info' %}
             <div class="opg-alert opg-alert--info">
-                <span class="opg-alert__icon opg-icon--information"></span>
+                {{ _self.icon('information', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     {{ message | raw }}
                 </div>
             </div>
         {% elseif alertType == 'important' %}
             <div class="opg-alert opg-alert--important">
-                <span class="opg-alert__icon opg-icon--important-small"></span>
+                {{ _self.icon('important-small', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'loader' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('loader', 'opg-alert__icon') }}
                 <div class="behat-region-alert-message opg-alert__message">
                     {{ message | raw }}
                 </div>
