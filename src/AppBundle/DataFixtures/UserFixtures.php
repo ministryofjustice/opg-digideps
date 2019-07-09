@@ -164,7 +164,7 @@ class UserFixtures extends AbstractDataFixture
         $client
             ->setCaseNumber($data['id'])
             ->setFirstname('John')
-            ->setLastname($data['id'])
+            ->setLastname($data['id'] . '-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
