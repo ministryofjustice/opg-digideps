@@ -9,49 +9,48 @@
 
 {% block pageContent %}
 
-    <form action="{{ path('org_dashboard') }}" method="GET" class="search-form push--ends">
-        <fieldset>
-            <legend class="visually-hidden">{{ 'search' | trans({}, 'common') }}</legend>
-            <label for="search" class="search-label">{{ 'searchBy' | trans }}</label>
-            <input type="text" id="search" name="q" value="{{ filters.q }}"
-                   class="js-search-focus search-input form-control">
-            <input id="search_submit" class="button flush--bottom push-half--right behat-link-search" type="submit" value="Search">
-            {% if filters.q %}
-                <a href="{{ path('org_dashboard', {'status': filters.status}) }}">{{ 'clearSearch' | trans({}, 'common') }}</a>
-            {% endif %}
-        </fieldset>
+    <form action="{{ path('org_dashboard') }}" method="GET">
+        <div class="govuk-form-group govuk-!-margin-bottom-2">
+            <label for="search" class="govuk-label">{{ 'searchBy' | trans }}</label>
+            <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input">
+        </div>
 
+        <div class="govuk-form-group">
+            <input id="search_submit" class="govuk-button govuk-!-margin-bottom-0 behat-link-search" type="submit" value="Search">
+        </div>
+
+        {% if filters.q %}
+            <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0">{{ 'clearSearch' | trans({}, 'common') }}</a>
+        {% endif %}
     </form>
 
-    <div class="tabs push--ends">
-        <div class="tabs-nav">
-            <ul class="tabs-list" role="tablist">
-                <li class="tab-item clients {{ not filters.status ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0" aria-selected="true">
-                        <span class="data-item bold-large">{{ counts.total }}</span>
-                        <span class="data-item bold-xsmall">{{ 'tabClients' | trans }}</span>
-                    </a>
-                </li>
-                <li class="tab-item unstarted {{ filters.status =='notStarted' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-unstarted">
-                        <span class="data-item bold-large">{{ counts.notStarted }}</span>
-                        <span class="data-item bold-xsmall">{{ 'notStarted' | trans({}, 'common') }}</span>
-                    </a>
-                </li>
-                <li class="tab-item progress {{ filters.status =='notFinished' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0" class="behat-link-tab-in-progress">
-                        <span class="data-item bold-large">{{ counts.notFinished }}</span>
-                        <span class="data-item bold-xsmall">{{ 'inProgress' | trans({}, 'common') }}</span>
-                    </a>
-                </li>
-                <li class="tab-item ready {{ filters.status =='readyToSubmit' ? 'active' : '' }}" role="presentation">
-                    <a href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0"  class="behat-link-tab-ready">
-                        <span class="data-item bold-large">{{ counts.readyToSubmit }}</span>
-                        <span class="data-item bold-xsmall">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <div class="govuk-tabs" data-module="tabs">
+        <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ not filters.status ? 'govuk-tabs__tab--selected' : '' }}" href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'tabClients' | trans }}
+                    <span class="govuk-tag">{{ counts.total }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='notStarted' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-unstarted" href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'notStarted' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--not-started">{{ counts.notStarted }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='notFinished' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-in-progress" href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'inProgress' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--notice">{{ counts.notFinished }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='readyToSubmit' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-ready" href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'readyToSubmit' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--success">{{ counts.readyToSubmit }}</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
     <table class="push--bottom">
@@ -100,14 +99,14 @@
                 </td>
                 <td class="numeric">
                     {% if report.status.status == 'notStarted' %}
-                        <span class="status status-large not-started">{{ 'notStarted' | trans({}, 'common') }}</span>
+                        <span class="govuk-tag opg-tag--not-started">{{ 'notStarted' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'notFinished' %}
-                        <span class="status status-large incomplete">{{ 'notFinished' | trans({}, 'common') }}</span>
+                        <span class="govuk-tag opg-tag--notice">{{ 'notFinished' | trans({}, 'common') }}</span>
                     {% elseif report.status.status == 'readyToSubmit' %}
                         {% if report.unSubmitDate is not empty and report.submitted == false %}
-                            <span class="status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                            <span class="govuk-tag opg-tag--warning">{{ 'changesNeeded' | trans({}, 'common') }}</span>
                         {% else  %}
-                            <span class="status status-large done">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
+                            <span class="govuk-tag opg-tag--success">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
                         {% endif %}
                     {% endif %}
                 </td>

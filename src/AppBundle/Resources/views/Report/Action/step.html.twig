@@ -34,7 +34,7 @@
                     ]
                 }) }}
 
-                <div id="financial-decisions-textarea" class="panel panel-border-narrow js-hidden">
+                <div id="financial-decisions-textarea" class="opg-indented-block js-hidden">
                     {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
                         'labelText': ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, translationDomain),
                         'labelClass': 'required',
@@ -49,7 +49,7 @@
                 <summary>
                     <span class="summary">{{ 'form.doYouExpectFinancialDecisions.hiddenText01.summary' | trans(transOptions) }}</span>
                 </summary>
-                <div class="panel panel-border-narrow">
+                <div class="opg-indented-block">
                     <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para01' |trans(transOptions) }}</p>
                     <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
                     <p>{{ 'form.doYouExpectFinancialDecisions.hiddenText01.content.para03' |trans(transOptions) }}</p>
@@ -76,7 +76,7 @@
                     ]
                 }) }}
 
-                <div id="actions-details-textarea" class="panel panel-border-narrow js-hidden">
+                <div id="actions-details-textarea" class="opg-indented-block js-hidden">
                     {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
                         'labelClass': 'required',
                         'labelParameters': transOptions

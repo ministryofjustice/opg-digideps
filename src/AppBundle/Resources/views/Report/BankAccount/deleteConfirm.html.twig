@@ -46,20 +46,19 @@
         </tbody>
     </table>
 
-    <div class="alert-important panel panel-border-narrow push--bottom">
-        <span class="icon icon-important-small"></span>
-        <div class="alert-message">
-            <p>
-                You have
-                {% set count, total = 1, (dp.transactionsCount) %}
-                {% for key,transaction in dp.transactions %}
-                    {% if transaction > 0 %}{{ key | trans({},'common') | lower  }}{% if count == (total-1) %} and {% elseif count < total %}, {% endif %}
-                        {% set count = count + 1 %}
-                    {% endif %}
-                {% endfor %}
-                payments linked to this bank account. If you remove the account, we'll unlink the payments for you.</p>
-        </div>
-    </div>
+    {% set alertMessage %}
+        You have
+        {% set count, total = 1, (dp.transactionsCount) %}
+        {% for key,transaction in dp.transactions %}
+            {% if transaction > 0 %}
+                {{ key | trans({},'common') | lower  }}
+                {% if count == (total-1) %} and {% elseif count < total %}, {% endif %}
+                {% set count = count + 1 %}
+            {% endif %}
+        {% endfor %}
+        payments linked to this bank account. If you remove the account, we'll unlink the payments for you.
+    {% endset %}
+    {{ macros.notification('important', alertMessage) }}
 
     <a href="{{ path('bank_account_delete', { reportId: report.id, 'accountId': accountId, 'confirm': 1 }) }}" class="button push-half--right behat-link-confirm">{{ 'deletePage.linkButtonLabel' | trans }}</a>
 

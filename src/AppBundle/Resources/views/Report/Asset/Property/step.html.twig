@@ -46,7 +46,7 @@
                         {'dataTarget': 'owned-percentage-textarea' }
                     ]
                 }) }}
-                <div id="owned-percentage-textarea" class="panel panel-border-narrow js-hidden">
+                <div id="owned-percentage-textarea" class="opg-indented-block js-hidden">
                     {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
                         'inputPrefix' : '%',
                         'inputClass' : 'form-control-1-4',
@@ -69,7 +69,7 @@
                         {},
                     ]
                 }) }}
-                <div id="mortgage-outstanding-amount-textarea" class="panel panel-border-narrow js-hidden">
+                <div id="mortgage-outstanding-amount-textarea" class="opg-indented-block js-hidden">
                     {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
                         'inputPrefix' : '£',
                         'inputClass' : 'form-control-1-4 js-format-currency'
@@ -114,7 +114,7 @@
                     ]
                 }) }}
 
-                <div id="rented-out-info" class="panel panel-border-narrow js-hidden">
+                <div id="rented-out-info" class="opg-indented-block js-hidden">
                     {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
                         'showDay': 'false'
                     }) }}

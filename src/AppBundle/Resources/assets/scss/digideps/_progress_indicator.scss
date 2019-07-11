@@ -2,189 +2,81 @@
 // PROGRESS INDICATOR
 // When setting up user and client (registration)
 
-$spacingforchevron: 14px;
-
-@mixin visuallyhide {
-    text-indent: -9999px;
-    overflow: hidden;
-}
-
-ol.progress {
-    display: table;
-    width: 100%;
-    margin: 45px 0 45px 0;
-    padding: 0;
-    list-style-type: none;
-    border: {
-        top: 1px solid $grey-2;
-        bottom: 1px solid $grey-2;
+.opg-progress-bar {
+    @include govuk-media-query($from: tablet) {
+        display: flex;
     }
-    background-color: $grey-4;
+
+    width: 100%;
+    margin: govuk-spacing(7) 0;
+    padding: 0;
+    border-top: 1px solid  $govuk-border-colour;
+    border-bottom: 1px solid  $govuk-border-colour;
+    background-color: govuk-colour('grey-4');
+    list-style-type: none;
     counter-reset: pos;
 
-    @include media(mobile) {
-        margin: 16px 0 0;
-    }
+    &__item {
+        @include govuk-media-query($from: tablet) {
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+        }
 
-    li {
-        display: table-cell;
-        min-width: 40px;
-        height: 53px;
-        margin: 0;
-        font-size: 1.25em;
-        line-height: 1;
-        text-align: center;
-        vertical-align: middle;
+        position: relative;
+        flex: auto;
+        padding: govuk-spacing(3) govuk-spacing(3) govuk-spacing(3) govuk-spacing(8);
+        counter-increment: pos;
 
-        .progress__step {
-            // allows centering and pos:rel/table-cell support for Firefox
-            display: inline-block;
-            position: relative;
-            min-width: 1.334em;
-
-            @include media($max_width: 320px) {
-
-                &:not(.progress--active) {
-                    max-width: 40px;
-                }
-
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 1.334em;
+            height: 1.334em;
+            margin: {
+                top: -.666em;
+                left: 7px;
             }
+            border-radius: 100%;
+            background-color: govuk-colour('grey-3');
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1.5;
+            text-align: center;
+            content: counter(pos);
+        }
+
+        &--completed {
+            color: govuk-colour('turquoise');
 
             &::before {
-
-                @include border-radius(100%);
-
-                content: counter(pos);
-                display: inline-block;
-                position: absolute;
-                top: 50%;
-                left: 0;
-                width: 1.334em;
-                height: 1.334em;
-                margin: {
-                    top: -.666em;
-                    left: 7px;
-                }
-                background-color: $grey-3;
-                font-weight: bold;
-                line-height: 1.5;
-                text-align: center;
-                counter-increment: pos;
-
-                @include media(mobile) {
-                    margin-left: 4px;
-                }
-
-                @include ie(8) {
-                    background: none;
-                }
-
-            }
-
-        }
-
-        .progress__label {
-            display: inline-block;
-
-            margin: {
-                left: 2.474em;
-            }
-
-            font-size: .792em;
-            text-align: left;
-
-            @include media(mobile) {
-                @include visuallyhide;
-                width: 0;
-                margin-left: 0;
-            }
-
-            .lte-8 & {
-                display: inline-block;
-                overflow: visible;
-                text-indent: 0;
+                background: govuk-colour('turquoise') url('/images/progress-tick.png') center center no-repeat;
+                color: govuk-colour('white');
+                content: '';
             }
         }
 
-        a.progress__label {
-
-            text-decoration: underline;
-
-            &:hover {
-                text-decoration: none;
+        &--previous {
+            @include govuk-media-query($from: tablet) {
+                background: url('/images/progress-chevron-end.png') right 50% no-repeat;
             }
-
         }
 
-        span,
-        a {
-            color: $grey-1;
-        }
-
-        &.progress--active {
-            background: $light-blue url("/images/progress-chevron.png") right 50% no-repeat;
-
-            .progress__step,
-            .progress__label {
-                margin-right: $spacingforchevron;
-            }
-
-            .progress__step::before {
-                background-color: $white;
-                color: $light-blue;
-
-                @include ie(8) {
-                    background: none;
-                    color: $white;
-                }
-
-            }
-
-            .progress__label {
-                display: inline-block;
-                width: auto;
-                margin-left: 2.105em;
-                color: $white;
-                text-indent: 0;
-
-                @include media(tablet) {
-                    margin-left: 2.474em;
+        &--active {
+            @include govuk-media-query($from: tablet) {
+                &:not(:last-child) {
+                    background: govuk-colour('light-blue') url('/images/progress-chevron.png') right 50% no-repeat;
                 }
             }
-        }
 
-        &.progress--active:last-child {
-            background-image: none;
-        }
+            background-color: govuk-colour('light-blue');
+            color: govuk-colour('white');
 
-        &.progress--completed {
-
-            span,
-            a {
-                color: $turquoise;
+            &::before {
+                background-color: govuk-colour('white');
+                color: govuk-colour('light-blue');
             }
-
-            .progress__step::before {
-                background: $turquoise url("/images/progress-tick.png") center 3px no-repeat;
-                color: $white;
-                text-indent: -9999px;
-            }
-
         }
-
-        &.progress--previous {
-            // allows left part of chevron to scale
-            background: url("/images/progress-chevron-end.png") right 50% no-repeat;
-
-            .progress__step {
-                margin-right: $spacingforchevron;
-            }
-
-        }
-
-        &:last-child .progress__step {
-            margin-right: $spacingforchevron;
-        }
-
     }
 }

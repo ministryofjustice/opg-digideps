@@ -1,14 +1,24 @@
 {% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined and report is not null
    and report.client is not null %}
-<div class="details-banner">
-    <div class="details-content behat-region-client-details-banner">
-        <p>
-            <span class="bold">{{ 'clientName' | trans({}, 'client-profile') }} </span>{{ report.client.fullName | title }}
-            <br><span class="bold">{{ 'courtOrderNo' | trans({}, 'client-profile') }}</span> {{ report.client.caseNumber }}
-        </p>
+   {% set showDetailsBanner = true %}
+{% else %}
+    {% set showDetailsBanner = false %}
+{% endif %}
+
+{% if showDetailsBanner %}
+<div class="opg-details-banner">
+    <div class="opg-details-banner__content behat-region-client-details-banner">
+        <div>
+            <strong>{{ 'clientName' | trans({}, 'client-profile') }} </strong>
+            {{ report.client.fullName | title }}
+        </div>
+        <div>
+            <strong>{{ 'courtOrderNo' | trans({}, 'client-profile') }}</strong>
+            {{ report.client.caseNumber }}
+        </div>
     </div>
- {% endif %}
-    <div class="opg-helpline">
+    {% endif %}
+    <div class="opg-helpline {% if showDetailsBanner %}opg-details-banner__helpline{% endif %}">
         <h3>Helpline<br>
             {% if not app.user %}
                 {{ 'helplineGeneral' | trans({}, 'common') }}<br/>
@@ -25,7 +35,6 @@
             {% endif %}
         </h3>
     </div>
-{% if app.user and (app.user.isDeputyProf() or app.user.isDeputyPa()) and report is defined and report is not null
-   and report.client is not null %}
+{% if showDetailsBanner %}
 </div>
 {% endif %}

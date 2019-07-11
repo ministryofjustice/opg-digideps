@@ -1,12 +1,8 @@
 <!--Component: progress-indicator-->
-<ol class="progress">
+<ol class="opg-progress-bar">
     {% for stepId, stepOptions in progressSteps %}
-        <li class="{{ stepOptions.class }}">
-            <div class="progress__step {{ stepOptions.class }}">
-                <span class="progress__label">
-                    {{ ('registrationProgressBar.' ~ stepId ~ '.label') | trans({}, 'common') }}
-                </span>
-            </div>
+        <li class="opg-progress-bar__item {{ stepOptions.class }}">
+            {{ ('registrationProgressBar.' ~ stepId ~ '.label') | trans({}, 'common') }}
         </li>
     {% endfor %}
 </ol>

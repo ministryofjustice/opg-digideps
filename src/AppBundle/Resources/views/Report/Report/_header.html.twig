@@ -10,21 +10,15 @@
 {% trans_default_domain translationDomain %}
 
 {% if reportStatus.isReadyToSubmit and report.isDue %}
-    <div id="header-report-submit" class="hero behat-region-report-ready-banner">
+    <div id="header-report-submit" class="govuk-panel govuk-panel--confirmation behat-region-report-ready-banner">
         {% if report.unSubmitDate and report.submitted == false %}
-            <h2 class="status status-large changesNeeded">{{ 'changesNeeded' | trans({}, 'common') }}</h2>
+            <h2 class="govuk-tag opg-tag--warning govuk-!-margin-bottom-6">{{ 'changesNeeded' | trans({}, 'common') }}</h2>
         {% else %}
-            <h2 class="heading-large flush--ends">{{ 'reportIsReady' | trans() }}</h2>
+            <h2 class="govuk-panel__title">{{ 'reportIsReady' | trans() }}</h2>
         {% endif %}
-        <a class="button push-half--top behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+        <div class="govuk-panel__body">
+            <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+        </div>
     </div>
 {% endif %}
-
-{# TODO report.isDue needed here ? #}
-{# @biggs to style #}
-{# {% if report.unSubmitDate %}
-    <div class="hero hero-small orangeWarning behat-region-report-hero-unsubmitted">
-        <h2 class="heading">{{ 'reportIsUnsubmitted' | trans({'%newLine%': '\n'})  | nl2br}}</h2>
-    </div>
-{% endif %} #}
 

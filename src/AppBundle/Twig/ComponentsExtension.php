@@ -84,6 +84,24 @@ class ComponentsExtension extends \Twig_Extension
             'lcfirst' => new \Twig_SimpleFilter('lcfirst', function ($string) {
                 return lcfirst($string);
             }),
+            'status_to_tag_css' => new \Twig_SimpleFilter('status_to_tag_css', function ($status) {
+                switch ($status) {
+                    case 'notStarted':
+                    case 'not-started':
+                        return 'opg-tag--not-started';
+
+                    case 'notFinished':
+                    case 'incomplete':
+                        return 'opg-tag--notice';
+
+                    case 'done':
+                    case 'readyToSubmit':
+                        return 'opg-tag--success';
+
+                    default:
+                        return '';
+                }
+            }),
         ];
     }
 
@@ -196,9 +214,9 @@ class ComponentsExtension extends \Twig_Extension
         // set classes and labels from translation
         foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
             $progressSteps[$availableStepId] = [
-                'class' => (($selectedStepNumber == $currentStepNumber) ? ' progress--active ' : '')
-                    . (($currentStepNumber < $selectedStepNumber) ? ' progress--completed ' : '')
-                    . (($currentStepNumber == $selectedStepNumber - 1) ? ' progress--previous ' : ''),
+                'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
+                    . (($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
+                    . (($currentStepNumber == $selectedStepNumber - 1) ? ' opg-progress-bar__item--previous ' : ''),
             ];
         }
 

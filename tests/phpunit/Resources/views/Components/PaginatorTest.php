@@ -106,10 +106,10 @@ class PaginatorTest extends WebTestCase
 
         // find links
         $actualLinks = [
-            'prev' => $crawler->filter('.pager-prev')->count() ? $crawler->filter('.pager-prev')->eq(0)->attr('href') : null,
-            'next' => $crawler->filter('.pager-next')->count() ? $crawler->filter('.pager-next')->eq(0)->attr('href') : null,
+            'prev' => $crawler->filter('[data-test-id="pager-prev"]')->count() ? $crawler->filter('[data-test-id="pager-prev"]')->eq(0)->attr('href') : null,
+            'next' => $crawler->filter('[data-test-id="pager-next"]')->count() ? $crawler->filter('[data-test-id="pager-next"]')->eq(0)->attr('href') : null,
         ];
-        $crawler->filter('.pager-items li')->each(function ($li) use (&$actualLinks) {
+        $crawler->filter('.opg-pager__item')->each(function ($li) use (&$actualLinks) {
             if ($li->filter('a')->count()) {
                 $a = $li->filter('a')->eq(0);
                 $actualLinks[$a->html()] = $a->attr('href');
@@ -121,6 +121,6 @@ class PaginatorTest extends WebTestCase
         ksort($actualLinks);
 
         $this->assertEquals($expectedLink, $actualLinks);
-        $this->assertContains($expectedText, $crawler->filter('.pager-summary')->eq(0)->html());
+        $this->assertContains($expectedText, $crawler->filter('[data-test-id="pager-summary"]')->eq(0)->html());
     }
 }

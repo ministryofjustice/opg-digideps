@@ -7,8 +7,10 @@
 <h2 class="heading-large flush--top">{{ client.fullname }}</h2>
 
 {% if ndrStatus.isReadyToSubmit %}
-    <div id="header-report-submit" class="hero">
-        <h2 class="heading-large flush--ends">{{ 'ndrReady' | trans }}</h2>
-        <a class="button push-half--top behat-link-ndr-submit" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+    <div id="header-report-submit" class="govuk-panel govuk-panel--confirmation">
+        <h2 class="govuk-panel__title">{{ 'ndrReady' | trans }}</h2>
+        <div class="govuk-panel__body">
+            <a class="govuk-button govuk-!-margin-0  push-half--top behat-link-ndr-submit" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+        </div>
     </div>
 {% endif %}

@@ -185,34 +185,6 @@ class IndexController extends AbstractController
         throw new AccessDeniedException();
     }
 
-    private function initProgressIndicator($array, $currentStep)
-    {
-        $currentStep = $currentStep - 1;
-        $progressSteps_arr = [];
-        if (is_array($array)) {
-            $soa = count($array);
-
-            for ($i = 0; $i < $soa; ++$i) {
-                $item = $array[$i];
-                $classes = [];
-                if ($i == $currentStep) {
-                    $classes[] = 'progress--active';
-                }
-                if ($i < $currentStep) {
-                    $classes[] = 'progress--completed';
-                }
-                if ($i == ($currentStep - 1)) {
-                    $classes[] = 'progress--previous';
-                }
-                $item['class'] = implode(' ', $classes);
-
-                $progressSteps_arr[] = $item;
-            }
-        }
-
-        return $progressSteps_arr;
-    }
-
     /**
      * @Route("/terms", name="terms")
      */

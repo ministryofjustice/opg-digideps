@@ -14,7 +14,7 @@
                 <strong class="bold">{{ 'reportStatus' | trans() }}</strong>
             </dt>
             <dd class="push--bottom">
-                <span class="status status-large {{ report.isUnsubmitted ? 'incomplete' : reportStatus.getState() }} flush--bottom">
+                <span class="govuk-tag {{ (report.isUnsubmitted ? 'notFinished' : reportStatus.state) | status_to_tag_css }}">
                     {{ ('status.' ~ reportStatus.status) | trans() }}
                 </span>
             </dd>

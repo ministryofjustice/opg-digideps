@@ -38,9 +38,8 @@
                     {% set status = ndr.statusService.status %}
                 {% endif %}
 
-                <span class="status flush--ends {{ status }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
             </td>
-
         </tr>
     </tbody>
 </table>

@@ -1,7 +1,7 @@
 ## Purpose
 _Briefly describe the purpose of the change, and/or link to the JIRA ticket for context_
 
-Fixes [DDPB-####](link to JIRA issue)
+Fixes [DDPB-####](https://opgtransform.atlassian.net/browse/DDPB-####)
 
 ## Approach
 _Explain how your code addresses the purpose of the change_

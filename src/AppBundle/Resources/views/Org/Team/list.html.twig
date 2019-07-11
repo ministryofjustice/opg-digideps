@@ -62,7 +62,7 @@
                         {% endif %}
                     </p>
                     {% if user.hasRoleOrgNamed() or user.hasRoleOrgAdmin() %}
-                        <span class="status status-label admin">{{ 'listPage.roleAdmin' | trans }}</span><br>
+                        <span class="govuk-tag">{{ 'listPage.roleAdmin' | trans }}</span><br>
                     {% endif %}
                     {% if user.jobTitle != '' %}
                         <p class="flush--top">{{ user.jobTitle }}</p>
