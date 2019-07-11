@@ -49,7 +49,14 @@ class BehatController extends RestController
                 throw new \RuntimeException('Cannot re-assign client to new deputy: ' . $data['new_deputy_email'] .
                     ' User not found');
             }
-            $client->setUsers(new ArrayCollection());
+            $existingClient = $newDeputy->getFirstClient();
+            $newDeputy->removeClient($existingClient);
+            $existingDeputies = $client->getUsers();
+            foreach ($existingDeputies as $existingDeputy)
+            {
+                $client->removeUser($existingDeputy);
+            }
+
             $client->addUser($newDeputy);
             $this->get('em')->flush($client);
         }
