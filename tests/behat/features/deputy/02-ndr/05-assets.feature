@@ -2,7 +2,7 @@ Feature: NDR assets
 
   @ndr
   Scenario: NDR assets
-    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-assets, start"
       # chose "no records"
     Then the step cannot be submitted without making a selection
@@ -93,7 +93,7 @@ Feature: NDR assets
 
   @ndr
   Scenario: NDR asset property
-    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-assets, add"
     And the step with the following values CAN be submitted:
       | ndr_asset_title_title_0 | Property |

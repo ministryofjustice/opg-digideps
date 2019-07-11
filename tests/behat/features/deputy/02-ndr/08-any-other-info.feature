@@ -2,7 +2,7 @@ Feature: NDR any other info
 
   @ndr
   Scenario: NDR any other info
-    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-other_info, start"
      # step 1
     And the step cannot be submitted without making a selection
