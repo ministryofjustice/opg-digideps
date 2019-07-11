@@ -6,7 +6,6 @@ Feature: Report 104 start
     And I change the report of the client with case number "102" to "104"
     And I change the deputy of the client with case number "102" to "behat-lay-deputy-104@publicguardian.gov.uk"
 
-
   @deputy
   Scenario: test tabs for 104
     Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"

@@ -3,30 +3,27 @@ Feature: Admin report checklist
   @deputy
   Scenario: Case manager submits empty checklist for the report 104
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-behat001"
+    And I click on "admin-client-search, client-detail-102"
     And I click on "checklist" in the "report-2016" region
     Then the URL should match "/admin/report/\d+/checklist"
     # check default values
     And each text should be present in the corresponding region:
       | Not saved yet | last-saved-by |
       | Not saved yet | last-modified-by |
-      | 1 Jan 2016 | court-date |
+      | 1 Nov 2017 | court-date |
       | Health and welfare | report-type-title |
-      | 1 Jan 2018 to 31 Dec 2018 | expected-date |
-      | Cly | checklist-client-firstname |
-      | Hent | checklist-client-lastname |
-      | 0123456789 | checklist-client-phone        |
+      | 1 Nov 2018 to 31 Oct 2019 | expected-date |
       | dd1-changed | decision-1         |
       | Andy Whites | contact-n2-aw2     |
       | December 2015 | care-plan-last-reviewed |
-      | Cly               | checklist-client-firstname |
-      | Hent              | checklist-client-lastname |
-      | 1 South Parade    | checklist-client-address   |
-      | 0123456789        | checklist-client-phone     |
-      | John              | checklist-deputy-firstname |
-      | Doe               | checklist-deputy-lastname |
-      | 102 Petty France  | checklist-deputy-address   |
-      | 020 3334 3555     | checklist-deputy-phone     |
+      | John          | checklist-client-firstname |
+      | 102-client    | checklist-client-lastname |
+      | Victoria road    | checklist-client-address   |
+      | 022222222222222 | checklist-client-phone        |
+      | LAY Deputy 104   | checklist-deputy-firstname |
+      | User             | checklist-deputy-lastname |
+      | Victoria road    | checklist-deputy-address   |
+      | 07911111111111   | checklist-deputy-phone     |
     When I click on "submit-and-download"
     Then the following fields should have an error:
       | report_checklist_reportingPeriodAccurate_0        |
