@@ -2,7 +2,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can upload documents
-    Given I am logged in as "behat-lay-deputy-102-4@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start, edit-documents, start"
@@ -20,7 +20,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can generate report PDF
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "report-start, edit-report-preview, download-pdf"
     Then the response status code should be 200
     And the response should have the "Content-Type" header containing "application/pdf"
@@ -29,7 +29,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Complete and submit report
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     # Decisions
     When I click on "edit-decisions, start"
@@ -55,6 +55,13 @@ Feature: Infrastructure document tests
     And I fill in "visits_care_whoIsDoingTheCaring" with "Family members"
     And I click on "save-and-continue"
     And I fill in "visits_care_doesClientHaveACarePlan_1" with "no"
+    And I click on "save-and-continue, breadcrumbs-report-overview"
+    # Lifestyle
+    And I click on "edit-lifestyle, start"
+    And I fill in "lifestyle_careAppointments" with "John attended two appointments"
+    And I click on "save-and-continue"
+    And I fill in "lifestyle_doesClientUndertakeSocialActivities_0" with "yes"
+    And I fill in "lifestyle_activityDetailsYes" with "swimming"
     And I click on "save-and-continue, breadcrumbs-report-overview"
     # Accounts
     And I click on "edit-bank_accounts, start"
@@ -117,7 +124,7 @@ Feature: Infrastructure document tests
   Scenario: Can download submitted documents
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "admin-documents"
-    And I check "Select 103"
+    And I check "Select 103-4"
     And I click on "download"
     Then the page content should be a zip file containing files with the following files:
-        | Report_103_2016_2016-* | regexpName+sizeAtLeast | 30000 |
+        | Report_103-4_2016_2016-* | regexpName+sizeAtLeast | 30000 |
