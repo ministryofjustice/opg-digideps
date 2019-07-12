@@ -3,19 +3,20 @@ Feature: deputy / report / edit user
     @deputy
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, profile-show, profile-edit"
         Then I should be on "/deputyship-details/your-details/edit"
         Then the following fields should have the corresponding values:
-             | profile_firstname | John |
-             | profile_lastname | Doe |
-             | profile_address1 | 102 Petty France |
-             | profile_address2 | MOJ |
-             | profile_address3 | London |
-             | profile_addressPostcode | P0ST C0D3 |
+             | profile_firstname | LAY Deputy 102 |
+             | profile_lastname | User |
+             | profile_address1 | Victoria road |
+             | profile_address2 |  |
+             | profile_address3 |  |
+             | profile_addressPostcode | SW1 |
              | profile_addressCountry | GB |
-             | profile_phoneMain | 020 3334 3555  |
-             | profile_phoneAlternative | 020 1234 5678  |
+             | profile_phoneMain | 07911111111111   |
+             | profile_phoneAlternative | |
+             | profile_email | behat-lay-deputy-102@publicguardian.gov.uk |
         When I fill in the following:
             | profile_firstname |  |
             | profile_lastname |  |
@@ -23,6 +24,7 @@ Feature: deputy / report / edit user
             | profile_addressPostcode | |
             | profile_addressCountry | |
             | profile_phoneMain |   |
+            | profile_email | |
         And I press "profile_save"
         Then the following fields should have an error:
             | profile_firstname |
@@ -31,7 +33,8 @@ Feature: deputy / report / edit user
             | profile_addressPostcode |
             | profile_addressCountry |
             | profile_phoneMain |
-        And I press "profile_save"
+            | profile_email |
+      And I press "profile_save"
         Then the form should be invalid
         When I fill in the following:
            | profile_firstname | Paul |
@@ -43,7 +46,8 @@ Feature: deputy / report / edit user
            | profile_addressCountry | GB |
            | profile_phoneMain | 020 3334 3556  |
            | profile_phoneAlternative | 020 1234 5679  |
-        And I press "profile_save"
+           | profile_email | behat-lay-deputy-102@publicguardian.gov.uk |
+      And I press "profile_save"
         Then the form should be valid
         And I should be on "/deputyship-details/your-details"
         And I should see "Paul Jamie" in the "profile-name" region
@@ -75,7 +79,7 @@ Feature: deputy / report / edit user
 
     @deputy
     Scenario: change user password
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, password-edit"
         # wrong old password
         When I fill in "change_password_current_password" with "this.is.the.wrong.password"
