@@ -2,7 +2,7 @@ Feature: ndr / report submit
 
     @ndr
     Scenario: NDR review page
-        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
         # go to review page
         When I click on "ndr-start, ndr-submit"
         Then the URL should match "/ndr/\d+/review"
@@ -19,7 +19,7 @@ Feature: ndr / report submit
     @ndr
     Scenario: NDR declaration and submission
         Given emails are sent from "deputy" area
-        And I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "ndr-start, ndr-submit, ndr-declaration-page"
         Then the URL should match "/ndr/\d+/declaration"
         #
@@ -69,25 +69,25 @@ Feature: ndr / report submit
         Then I should be on "/admin/documents/list"
         And I save the current URL as "ndr-admin-documents-list-new"
             # assert submission and download
-        Then I should see "Cly3 Hent3"
-        And I should see "33333333"
-        When I check "Select 33333333"
+        Then I should see "John ndr-client"
+        And I should see "ndr"
+        When I check "Select ndr"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
             | NdrRep.*.zip | regexpName+sizeAtLeast | 38000 |
         # test archive
         When I go to the URL previously saved as "ndr-admin-documents-list-new"
-        Then I check "Select 33333333"
+        Then I check "Select ndr"
         When I click on "archive"
         And I click on "tab-archived"
         Then I should see the "report-submission" region exactly 1 times
-        Then I should see "Cly3 Hent3"
-        And I should see "33333333"
+        Then I should see "John ndr-client"
+        And I should see "ndr"
 
     @ndr
     Scenario: NDR homepage and create new report
-        Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
         Then I should be on "/ndr"
         And I should see the "reports-history" region
         # create report

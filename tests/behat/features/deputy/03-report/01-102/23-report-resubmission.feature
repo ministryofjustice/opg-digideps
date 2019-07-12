@@ -5,20 +5,20 @@ Feature: Admin unsubmit report (from client page)
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     Then each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
+      | John 102-client | client-102 |
     When I fill in the following:
-      | search_clients_q | hent |
+      | search_clients_q | 102-client |
     And I click on "search_clients_search"
     Then I should see the "client-row" region exactly "1" times
     And each text should be present in the corresponding region:
-      | Cly Hent | client-behat001 |
-    And I click on "client-details" in the "client-behat001" region
-    And I save the current URL as "admin-client-search-client-behat001"
+      | John 102-client | client-102 |
+    And I click on "client-details" in the "client-102" region
+    And I save the current URL as "admin-client-search-client-102"
 
   @deputy
   Scenario: Admin unsubmits report and changes report due date and reporting period
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I go to the URL previously saved as "admin-client-search-client-behat001"
+    And I go to the URL previously saved as "admin-client-search-client-102"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
     Then I should see "SUBMITTED" in the "report-2016-label" region
@@ -77,14 +77,14 @@ Feature: Admin unsubmit report (from client page)
     And I press "unsubmit_report_confirm_save"
     Then I should see "Unsubmitted" in the "report-2016-label" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
-    When I go to the URL previously saved as "admin-client-search-client-behat001"
+    When I go to the URL previously saved as "admin-client-search-client-102"
     And I click on "checklist" in the "report-2016" region
     And the response status code should be 200
 
 
   @deputy
   Scenario: Deputy resubmit report
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     Then I should see "30 April 2022" in the "report-unsubmitted" region
     And I should see the "report-active" region
     But I should not see the "submitted-reports" region
@@ -119,11 +119,11 @@ Feature: Admin unsubmit report (from client page)
   Scenario: admin sees new submission and client page updated
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
-    And I go to the URL previously saved as "admin-client-search-client-behat001"
+    And I go to the URL previously saved as "admin-client-search-client-102"
     Then I should see "SUBMITTED" in the "report-2016-label" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"
-    And I should see "Cly Hent"
+    And I should see "John 102-client"
 
 
 

@@ -1,8 +1,22 @@
 Feature: Report edit and test tabs
-    
+
+    @deputy
+    Scenario: Initialise report
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
+    # valid values
+        When I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 03 |
+            | report_startDate_year | 2016 |
+            | report_endDate_day | 31 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2016 |
+        And I press "report_save"
+        Then the form should be valid
+
     @deputy
     Scenario: edit report dates
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-edit-period"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
@@ -47,9 +61,10 @@ Feature: Report edit and test tabs
             | report_edit_endDate_month | 12 |
             | report_edit_endDate_year | 2016 |
 
+
     @deputy
     Scenario: test tabs for "Property and Affairs" report
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should see the "edit-decisions" link
         Then I should see the "edit-contacts" link
@@ -63,7 +78,7 @@ Feature: Report edit and test tabs
 
     @deputy
     Scenario: Check 102, 103 sections presence on overview page
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         # assert tabs
         And I should see the "edit-decisions" link

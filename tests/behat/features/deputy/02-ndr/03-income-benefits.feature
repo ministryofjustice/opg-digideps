@@ -2,7 +2,7 @@ Feature: NDR income benefits
 
   @ndr
   Scenario: NDR income and benefits
-    Given I am logged in as "behat-user-ndr@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-ndr@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "ndr-start, edit-income_benefits, start"
     # State benefits: tick Housing benefit, Universal Credit
     And the step with the following values CANNOT be submitted:

@@ -3,20 +3,20 @@ Feature: deputy / report / edit client
     @deputy
     Scenario: edit client details
         Given I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "user-account, client-show, client-edit"
         Then the following fields should have the corresponding values:
-            | client_firstname | Cly |
-            | client_lastname | Hent |
+            | client_firstname | John |
+            | client_lastname | 102-client |
             | client_courtDate_day | 01 |
-            | client_courtDate_month | 01 |
-            | client_courtDate_year | 2016 |
-            | client_address |  1 South Parade |
-            | client_address2 | First Floor  |
-            | client_county | Nottingham  |
-            | client_postcode | NG1 2HT  |
-            | client_country | GB |
-            | client_phone | 0123456789  |
+            | client_courtDate_month | 11 |
+            | client_courtDate_year | 2017 |
+            | client_address |  Victoria road |
+            | client_address2 | |
+            | client_county | |
+            | client_postcode | |
+            | client_country | |
+            | client_phone | 022222222222222  |
         When I fill in the following:
             | client_firstname | |
             | client_lastname |  |

@@ -3,11 +3,12 @@ Feature: Report 104 start
   @deputy
   Scenario: load app status taken after 102 non-financial sections are completed
     Given I load the application status from "report-decisions-contacts-visitscare-actions-info"
-    And I change the report of the client with case number "behat001" to "104"
+    And I change the report of the client with case number "102" to "104"
+    And I change the deputy of the client with case number "102" to "behat-lay-deputy-104@publicguardian.gov.uk"
 
   @deputy
   Scenario: test tabs for 104
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start"
     Then the lay report should not be submittable
     And I should see the "edit-decisions" link

@@ -2,7 +2,7 @@ Feature: Report accounts
 
   @deputy
   Scenario: add account
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-bank_accounts, start"
     # step 1
     Then the step cannot be submitted without making a selection
@@ -113,7 +113,7 @@ Feature: Report accounts
 
   @deputy
   Scenario: add a 3rd account (it'll be deleted before submission)
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-bank_accounts, add"
     And the step with the following values CAN be submitted:
       | account_accountType_0 | current |

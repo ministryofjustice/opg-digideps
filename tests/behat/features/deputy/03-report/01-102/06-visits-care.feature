@@ -2,7 +2,7 @@ Feature: Report visits and care
 
   @deputy
   Scenario: visits and care steps
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-visits_care, start"
       # step 1 empty
     And the step cannot be submitted without making a selection

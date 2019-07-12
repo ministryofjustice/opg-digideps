@@ -3,7 +3,7 @@ Feature: Report submit
     @deputy
     Scenario: report declaration page
         #Given I set the report 1 end date to 3 days ago
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should not see the "report-review" link
         # if not found, it means that the report is not submittable
@@ -15,7 +15,7 @@ Feature: Report submit
     @deputy
     Scenario: report submission
         Given emails are sent from "deputy" area
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I save the application status into "report-submit-pre"
         And I click on "report-start"
         And I save the report as "102 report"
@@ -80,7 +80,7 @@ Feature: Report submit
     Scenario: deputy gives feedback after submitting report
         Given emails are sent from "deputy" area
         And I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         And I click on "report-submit"
         And I click on "declaration-page"
@@ -115,39 +115,39 @@ Feature: Report submit
         And I save the current URL as "admin-documents-list-new"
         # test search
         When I fill in the following:
-            | search | behat001 |
+            | search | behat102 |
             | created_by_role | ROLE_PA_% |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 0 times
         When I fill in the following:
-            | search | behat001 |
+            | search | 102 |
             | created_by_role | ROLE_LAY_DEPUTY |
         And I press "search_submit"
         Then I should see the "report-submission" region exactly 1 times
         # assert submission and download
         Given each text should be present in the corresponding region:
-            | Cly Hent | report-submission-1 |
-            | behat001 | report-submission-1 |
+            | John 102 | report-submission-1 |
+            | 102 | report-submission-1 |
             | Report + docs | report-submission-1 |
-        When I check "Select behat001"
+        When I check "Select 102"
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
-            | Report_behat001_2016_2016_.*.zip | regexpName+sizeAtLeast | 70000 |
+            | Report_102_2016_2016_.*.zip | regexpName+sizeAtLeast | 70000 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
-        Then I check "Select behat001"
+        Then I check "Select 102"
         When I click on "archive"
         And I click on "tab-archived"
         Then each text should be present in the corresponding region:
-            | Cly Hent | report-submission-1 |
-            | behat001 | report-submission-1 |
+            | John 102 | report-submission-1 |
+            | 102 | report-submission-1 |
             | Report + docs | report-submission-1 |
             | AU | report-submission-1 |
 
     @deputy
     Scenario: assert 2nd year report has been created
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -163,12 +163,12 @@ Feature: Report submit
 
     @deputy
     Scenario: deputy report download
-        Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+        Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         When I click on "report-review"
         Then the URL should match "report/\d+/review"
-        And the response should contain "behat001"
-        And the response should contain "Cly"
-        And the response should contain "Hent"
+        And the response should contain "102"
+        And the response should contain "John"
+        And the response should contain "102-client"
         # assert documents
         And I should see "file1.pdf" in the "document-list" region
         #And I should see "file2.pdf" in the "document-list" region

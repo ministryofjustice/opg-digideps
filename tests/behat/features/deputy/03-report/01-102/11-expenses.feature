@@ -2,7 +2,7 @@ Feature: Report deputy expenses
 
   @deputy
   Scenario: deputy expenses
-    Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-deputy_expenses, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
