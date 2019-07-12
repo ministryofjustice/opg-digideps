@@ -12,16 +12,16 @@ class UserFixtures extends AbstractDataFixture
 {
     private $userData = [
         [
-            'id' => '103',
-            'deputyType' => 'LAY',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'L3',
-        ],
-        [
             'id' => '102',
             'deputyType' => 'LAY',
             'reportType' => 'OPG102',
             'reportVariation' => 'L2',
+        ],
+        [
+            'id' => '103',
+            'deputyType' => 'LAY',
+            'reportType' => 'OPG103',
+            'reportVariation' => 'L3',
         ],
         [
             'id' => '104',
