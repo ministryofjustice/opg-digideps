@@ -2,7 +2,7 @@ Feature: Infrastructure document tests
 
   @infra
   Scenario: Can upload documents
-    Given I am logged in as "behat-lay-deputy-103@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-lay-deputy-102-4@publicguardian.gov.uk" with password "Abcd1234"
     When I set the report start date to "1/1/2016"
     And I set the report end date to "31/12/2016"
     And I click on "report-start, edit-documents, start"
