@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +41,24 @@ class BehatController extends RestController
             $report = $client->getCurrentReport();
             $report->setType($data['current_report_type']);
             $this->get('em')->flush($report);
+        }
+
+        if (array_key_exists('new_deputy_email', $data)) {
+            $newDeputy = $this->findEntityBy(User::class, ['email' => $data['new_deputy_email']]);
+            if (!$newDeputy instanceof User) {
+                throw new \RuntimeException('Cannot re-assign client to new deputy: ' . $data['new_deputy_email'] .
+                    ' User not found');
+            }
+            $existingClient = $newDeputy->getFirstClient();
+            $newDeputy->removeClient($existingClient);
+            $existingDeputies = $client->getUsers();
+            foreach ($existingDeputies as $existingDeputy)
+            {
+                $client->removeUser($existingDeputy);
+            }
+
+            $client->addUser($newDeputy);
+            $this->get('em')->flush($client);
         }
     }
 

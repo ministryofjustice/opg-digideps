@@ -12,16 +12,16 @@ class UserFixtures extends AbstractDataFixture
 {
     private $userData = [
         [
-            'id' => '103',
-            'deputyType' => 'LAY',
-            'reportType' => 'OPG103',
-            'reportVariation' => 'L3',
-        ],
-        [
             'id' => '102',
             'deputyType' => 'LAY',
             'reportType' => 'OPG102',
             'reportVariation' => 'L2',
+        ],
+        [
+            'id' => '103',
+            'deputyType' => 'LAY',
+            'reportType' => 'OPG103',
+            'reportVariation' => 'L3',
         ],
         [
             'id' => '104',
@@ -164,7 +164,7 @@ class UserFixtures extends AbstractDataFixture
         $client
             ->setCaseNumber($data['id'])
             ->setFirstname('John')
-            ->setLastname($data['id'])
+            ->setLastname($data['id'] . '-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
