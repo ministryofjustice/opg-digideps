@@ -2,6 +2,7 @@ imports:
     - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
+    - { resource: services/registration.yml }
     - { resource: services/rest_handlers.yml }
     - { resource: services/repositories.yml }
     - { resource: services/transformers.yml }
@@ -32,11 +33,6 @@ services:
         arguments:  [ "@service_container" ]
         tags:
               - { name: monolog.processor, method: processRecord }
-
-    casrec_service:
-        class: AppBundle\Service\CasrecService
-        arguments: [ "@em", "@logger", "@opg_digideps.report_service", "@validator" ]
-        public: true
 
     opg_digideps.report_service:
         class: AppBundle\Service\ReportService
@@ -74,3 +70,9 @@ services:
         resource: '../../src/AppBundle/DataFixtures'
         tags: ['doctrine.fixture.orm']
         arguments: ['@security.password_encoder']
+
+    AppBundle\Service\DataCompression:
+        class: AppBundle\Service\DataCompression
+
+    AppBundle\Service\DataNormaliser:
+        class: AppBundle\Service\DataNormaliser

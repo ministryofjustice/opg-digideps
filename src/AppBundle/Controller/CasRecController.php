@@ -29,28 +29,6 @@ class CasRecController extends RestController
     }
 
     /**
-     * Bulk insert
-     * To call multiple times in chunks of maximum 10k records, otherwise failing deu to memory reasons.
-     * Currently used from admin area via a ajax uploader and multiple requests (after an initial truncate)
-     *
-     * @Route("/bulk-add")
-     * @Method({"POST"})
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function addBulk(Request $request)
-    {
-        $casrecService = $this->get('casrec_service');
-
-        ini_set('memory_limit', '1024M');
-
-        $data = CsvUploader::decompressData($request->getContent());
-
-        $ret = $casrecService->addBulk($data);
-
-        return $ret;
-    }
-
-    /**
      * Verify Deputy & Client last names, Postcode, and Case Number
      *
      * @Route("/verify")

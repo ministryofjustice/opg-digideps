@@ -87,35 +87,6 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertCount(0, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
     }
 
-    public function testAddBulk()
-    {
-        $this->fixtures()->deleteReportsData(['casrec']);
-
-        $url = '/casrec/bulk-add';
-        $this->assertEndpointNeedsAuth('POST', $url);
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
-
-        // add
-        $ret = $this->assertJsonRequest('POST', $url, [
-            'rawData' => $this->compress([
-                [
-                    'Case' => '11',
-                    'Surname' => 'R1',
-                    'Deputy No' => 'DN1',
-                    'Dep Surname' => 'R2',
-                    'Dep Postcode' => 'SW1 aH3',
-                    'Typeofrep' => 'OPG102',
-                    'Corref' => 'L2',
-                ],
-
-            ]),
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenAdmin,
-        ])['data'];
-        $this->assertEmpty($ret['errors'], print_r($ret, 1));
-        $this->assertEquals(1, $ret['added'], print_r($ret, 1));
-    }
-
     public function testCount()
     {
         $url = '/casrec/count';

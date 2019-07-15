@@ -7,3 +7,8 @@ app_v2:
     resource: "@AppBundle/v2/Controller/"
     type:     annotation
     prefix:   /v2
+
+app_v2_registration:
+    resource: "@AppBundle/v2/Registration/Controller/"
+    type:     annotation
+    prefix:   /v2

@@ -11,6 +11,7 @@ class CsvUploader
      * @param mixed $data
      *
      * @return string
+     * @deprecated Use AppBundle\Service\DataCompression
      */
     public static function compressData($data)
     {
@@ -21,6 +22,7 @@ class CsvUploader
      * @param mixed $data
      *
      * @return string
+     * @deprecated Use AppBundle\Service\DataCompression
      */
     public static function decompressData($data)
     {

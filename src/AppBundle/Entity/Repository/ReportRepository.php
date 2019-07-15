@@ -7,6 +7,7 @@ use AppBundle\Entity\Report\Fee as ReportFee;
 use AppBundle\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -164,5 +165,22 @@ class ReportRepository extends EntityRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * @param array $caseNumbers
+     * @param $role
+     * @return mixed
+     */
+    public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, $role)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->leftJoin('r.client', 'c')
+            ->leftJoin('c.users', 'u')
+            ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (:caseNumbers) AND u.roleName = :roleName')
+            ->setParameter('caseNumbers',$caseNumbers, Connection::PARAM_STR_ARRAY)
+            ->setParameter('roleName', $role);
+
+        return $qb->getQuery()->getResult();
     }
 }

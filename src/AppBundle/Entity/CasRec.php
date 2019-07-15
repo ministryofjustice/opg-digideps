@@ -164,6 +164,7 @@ class CasRec
      * Filled from cron
      *
      * @var array
+     * @deprecated use AppBundle\Service\DataNormaliser
      */
     private static $normalizeChars = [
         'Š' => 'S', 'š' => 's', 'Ð' => 'Dj', 'Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
@@ -196,6 +197,7 @@ class CasRec
         return trim(strtolower($value));
     }
 
+    /** @deprecated use AppBundle\Service\DataNormaliser */
     public static function normaliseSurname($value)
     {
         $value = trim($value);
@@ -209,6 +211,7 @@ class CasRec
         return $value;
     }
 
+    /** @deprecated use AppBundle\Service\DataNormaliser */
     public static function normaliseCaseNumber($value)
     {
         $value = trim($value);
@@ -218,6 +221,7 @@ class CasRec
         return $value;
     }
 
+    /** @deprecated use AppBundle\Service\DataNormaliser */
     public static function normaliseDeputyNo($value)
     {
         $value = trim($value);
@@ -226,6 +230,7 @@ class CasRec
         return $value;
     }
 
+    /** @deprecated use AppBundle\Service\DataNormaliser */
     public static function normalisePostCode($value)
     {
         $value = trim($value);
@@ -348,5 +353,13 @@ class CasRec
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

@@ -4,13 +4,19 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Service\CasrecVerificationService;
 use Mockery as m;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CasrecVerificationServiceTest extends \PHPUnit_Framework_TestCase
+class CasrecVerificationServiceTest extends WebTestCase
 {
     /**
      * @var CasrecVerificationService
      */
     private $casrecVerificationService;
+
+    public static function setUpBeforeClass()
+    {
+        static::createClient(['environment' => 'test', 'debug' => false,]);
+    }
 
     public function setup()
     {

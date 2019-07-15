@@ -137,58 +137,6 @@ class ReportService
     }
 
     /**
-     * Using an array of CasRec entities update any corresponding report type if it has been changed
-     *
-     * @param array $casRecEntities
-     * @param string $userRoleName
-     *
-     * @throws \Exception
-     */
-    public function updateCurrentReportTypes(array $casRecEntities, $userRoleName)
-    {
-        //  Check the contents of the entities array and check the integrity of the components
-        $casRecEntitiesWithKey = [];
-
-        foreach ($casRecEntities as $CasRec) {
-            if (!$CasRec instanceof CasRec) {
-                throw new \Exception('Invalid casrec entity encountered. AppBundle\Entity\CasRec expected');
-            }
-
-            $casRecEntitiesWithKey[$CasRec->getCaseNumber()] = $CasRec;
-        }
-
-        //  Create a case numbers string from the keys
-        $caseNumbersString = '\'' . implode('\',\'', array_keys($casRecEntitiesWithKey)) . '\'';
-
-        //  Use the case numbers to get any existing reports (not submitted)
-        $qb = $this->reportRepository->createQueryBuilder('r');
-
-        $qb->leftJoin('r.client', 'c')
-            ->where('(r.submitted = false OR r.submitted is null) AND r.unSubmitDate IS NULL AND c.caseNumber IN (' . $caseNumbersString . ')');
-
-        $reports = $qb->getQuery()->getResult();
-        /* @var $reports Report[] */
-
-        //  Loop through the reports and update the report type if necessary
-        foreach ($reports as $report) {
-            $reportClientCaseNumber = $report->getClient()->getCaseNumber();
-
-            if (isset($casRecEntitiesWithKey[$reportClientCaseNumber])) {
-                //  Get the report type based on the CasRec record
-                $casRec = $casRecEntitiesWithKey[$reportClientCaseNumber];
-                $casRecReportType = CasRec::getTypeBasedOnTypeofRepAndCorref($casRec->getTypeOfReport(), $casRec->getCorref(), $userRoleName);
-
-                if ($report->getType() != $casRecReportType) {
-                    $report->setType($casRecReportType);
-                    $this->_em->persist($report);
-                }
-            }
-        }
-
-        $this->_em->flush();
-    }
-
-    /**
      * Set report submitted and create a new year report
      *
      * @param Ndr|Report $currentReport

@@ -1,0 +1,31 @@
+services:
+  AppBundle\v2\Registration\Controller\LayDeputyshipUploadController:
+    class: AppBundle\v2\Registration\Controller\LayDeputyshipUploadController
+    arguments:
+      - '@AppBundle\Service\DataCompression'
+      - '@AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler'
+      - '@AppBundle\v2\Registration\Uploader\LayDeputyshipUploader'
+    public: true
+
+  AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler:
+    class: AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler
+    arguments:
+      - '@AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler'
+
+  AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler:
+    class: AppBundle\v2\Registration\Assembler\CasRecToLayDeputyshipDtoAssembler
+    arguments:
+      - '@AppBundle\Service\DataNormaliser'
+
+  AppBundle\v2\Registration\Uploader\LayDeputyshipUploader:
+    class: AppBundle\v2\Registration\Uploader\LayDeputyshipUploader
+    arguments:
+      - '@em'
+      - '@AppBundle\Entity\Repository\ReportRepository'
+      - '@AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory'
+
+  AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory:
+    class: AppBundle\v2\Registration\SelfRegistration\Factory\CasRecFactory
+    arguments:
+      - '@validator'
+      - '@app.service.date_time_provider'
