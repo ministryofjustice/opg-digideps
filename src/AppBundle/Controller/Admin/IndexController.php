@@ -325,7 +325,7 @@ class IndexController extends AbstractController
                     $compressedData = CsvUploader::compressData($data);
 
                     $this->getRestClient()->delete('casrec/truncate');
-                    $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                    $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         sprintf('%d record uploaded, %d error(s)', $ret['added'], count($ret['errors']))

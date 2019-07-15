@@ -47,7 +47,7 @@ class AjaxController extends AbstractController
         try {
             $compressedData = $redis->get($chunkId);
             if ($compressedData) {
-                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add', $compressedData);
+                $ret = $this->getRestClient()->setTimeout(600)->post('v2/lay-deputyship/upload', $compressedData);
                 $redis->del($chunkId); //cleanup for next execution
             } else {
                 $ret['added'] = 0;
