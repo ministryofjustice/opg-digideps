@@ -312,7 +312,7 @@ class UserController extends RestController
         }
 
         /** @var EntityDir\User $user */
-        $user = $this->findEntityBy(EntityDir\User::class, ['email' => $email]);
+        $user = $this->findEntityBy(EntityDir\User::class, ['email' => strtolower($email)]);
 
         $hasAdminSecret = $this->getAuthService()->isSecretValidForRole(EntityDir\User::ROLE_ADMIN, $request);
 
