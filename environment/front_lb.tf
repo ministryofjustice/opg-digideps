@@ -62,6 +62,25 @@ resource "aws_lb_listener" "front_https" {
   }
 }
 
+resource "aws_lb_listener_rule" "front_maintenance" {
+  listener_arn = aws_lb_listener.front_https.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = file("${path.module}/maintenance/maintenance.html")
+      status_code  = "503"
+    }
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/dd-maintenance"]
+  }
+}
+
 resource "aws_lb_listener" "front_http" {
   load_balancer_arn = aws_lb.front.arn
   port              = "80"
