@@ -62,6 +62,7 @@ completeNotice: |
 labels:
     not-started: "Not started"
     incomplete: "Not finished"
+    needs-attention: "Changes needed"
 
 heading.decisionsContacts: "Decisions and contacts"
 decisions:

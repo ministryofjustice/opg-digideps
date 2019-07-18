@@ -15,9 +15,9 @@
         border-top: 1px solid $govuk-border-colour;
     }
 
-    &--highlight {
+    &--error {
         padding-left: govuk-spacing(2);
-        border-left: govuk-spacing(1) solid $orange;
+        border-left: govuk-spacing(1) solid $govuk-error-colour;
     }
 
     &__divider {

@@ -10,7 +10,7 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention highlight') : '' }}">
+<div id="{{ subSection }}-sub-section" href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--error') : '' }}">
     <div class="opg-overview-section__header">
         <h3 class="govuk-heading-m opg-overview-section__label">
             <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">
@@ -34,13 +34,19 @@
         {% endif %}
     </div>
 
-    <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
-        {% if state.state == 'done' or customiseAllLabels | default(false) %}
-            {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
-        {% else %}
-            {{ ('labels.' ~ state.state) | trans }}
-        {% endif %}
-    </span>
+    {% if sectionNeedsAttention %}
+        <span class="opg-overview-section__status govuk-tag {{ 'needs-attention' | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+            {{ 'labels.needs-attention' |  trans }}
+        </span>
+    {% else %}
+        <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }} behat-region-{{ subSection }}-state-{{ state.state }}">
+            {% if state.state == 'done' or customiseAllLabels | default(false) %}
+                {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+            {% else %}
+                {{ ('labels.' ~ state.state) | trans }}
+            {% endif %}
+        </span>
+    {% endif %}
 
     <a href="{{ linkToSubSection }}" class="opg-overview-section__link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}">
         {% if subSection == 'balance' %}

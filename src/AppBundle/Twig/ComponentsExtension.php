@@ -94,6 +94,9 @@ class ComponentsExtension extends \Twig_Extension
                     case 'incomplete':
                         return 'opg-tag--notice';
 
+                    case 'needs-attention':
+                        return 'opg-tag--warning';
+
                     case 'done':
                     case 'readyToSubmit':
                         return 'opg-tag--success';
