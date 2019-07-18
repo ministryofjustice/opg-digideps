@@ -19,7 +19,7 @@ email:
       label: "Your email"
       hint: ""
       existingError: |
-        This email address has already been registered. Please <a href="%login%">sign in</a> or <a href="%passwordForgotten%">reset your password</a>.
+        This email address has already been registered.
       invalid: Enter a valid email address
     second:
       label: "Confirm your email"

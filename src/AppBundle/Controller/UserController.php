@@ -267,10 +267,7 @@ class UserController extends AbstractController
 
                     case 422:
                         $form->addError(new FormError(
-                            $translator->trans('email.first.existingError', [
-                                '%login%' => $this->generateUrl('login'),
-                                '%passwordForgotten%' => $this->generateUrl('password_forgotten')
-                            ], 'register')));
+                            $translator->trans('email.first.existingError', [], 'register')));
                         break;
 
                     case 400:
