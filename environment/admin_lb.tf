@@ -61,7 +61,7 @@ resource "aws_lb_listener" "admin" {
   }
 }
 
-resource "aws_lb_listener_rule" "front_maintenance" {
+resource "aws_lb_listener_rule" "admin_maintenance" {
   listener_arn = aws_lb_listener.admin.arn
 
   action {
