@@ -69,7 +69,7 @@ resource "aws_lb_listener_rule" "admin_maintenance" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = file("maintenance/maintenance.html")
+      message_body = file("${path.module}/maintenance/maintenance.html")
       status_code  = "503"
     }
   }
