@@ -406,7 +406,7 @@ class User implements AdvancedUserInterface
      */
     public function getEmail()
     {
-        return $this->email;
+        return strtolower($this->email);
     }
 
     /**

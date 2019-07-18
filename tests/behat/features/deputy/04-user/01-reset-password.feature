@@ -25,7 +25,7 @@ Feature: deputy / password reset
       # existing email (email is now sent)
       When I go to "/login"
       And I click on "forgotten-password"
-      And I fill in "password_forgotten_email" with "behat-user@publicguardian.gov.uk"
+      And I fill in "password_forgotten_email" with "BEHAT-UsEr@publicguardian.gov.uk"
       And I press "password_forgotten_submit"
       Then the form should be valid
       And I click on "return-to-login"
