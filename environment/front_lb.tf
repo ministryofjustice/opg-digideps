@@ -77,7 +77,7 @@ resource "aws_lb_listener_rule" "front_maintenance" {
 
   condition {
     field  = "path-pattern"
-    values = ["/maintenance"]
+    values = ["/dd-maintenance"]
   }
 }
 
