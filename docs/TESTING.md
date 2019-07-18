@@ -41,4 +41,10 @@ The Behat tests are divided into 6 suites:
 - `prof`: Tests for professional deputy user functionality.
 - `pa`: Tests for public authority deputy user functionality.
 
+## Emails in non-production environments
+
+Non-production environments don't send emails to avoid data leakage, confusion and embarassment. Instead, email is sent to a mock service which stores it for future reference. You can access the emails stored by the mock service at `/behat/emails` in any non-production environment.
+
+Note that the public-facing frontend and the administration area have separate email stores (both accessible at `/behat/emails` of the relevant service URL).
+
 [mockery]: http://docs.mockery.io/en/latest/
