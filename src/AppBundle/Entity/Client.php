@@ -301,7 +301,7 @@ class Client implements ClientInterface
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = strtolower($email);
 
         return $this;
     }
