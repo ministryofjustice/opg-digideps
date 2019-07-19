@@ -18,7 +18,7 @@
         </div>
     </div>
     {% endif %}
-    <div class="opg-helpline {% if showDetailsBanner %}opg-details-banner__helpline{% endif %}">
+    <div class="opg-helpline {% if showDetailsBanner %}opg-details-banner__helpline{% endif %} behat-region-helpline">
         <h3>Helpline<br>
             {% if not app.user %}
                 {{ 'helplineGeneral' | trans({}, 'common') }}<br/>

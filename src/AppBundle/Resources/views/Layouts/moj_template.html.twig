@@ -63,7 +63,7 @@
 
     <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
-    <a href="#content" class="govuk-skip-link">Skip to main content</a>
+    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
     <div class="opg-cookie-banner">
         {% block cookieMessage %}{% endblock %}
@@ -104,13 +104,16 @@
     </div>
 
     <div class="govuk-width-container opg-main-wrapper {% if env == 'admin' %}opg-width-container--wider{% endif %}">
-        {% block detailsBanner %}
-            {% include 'AppBundle:Org/ClientProfile:_detailsBanner.html.twig' with {
-            'report': report is defined ? report : null
-            } %}
-        {% endblock %}
+        {# Only show details banner on public-facing pages, not admin #}
+        {% if env == 'front' %}
+            {% block detailsBanner %}
+                    {% include 'AppBundle:Org/ClientProfile:_detailsBanner.html.twig' with {
+                        'report': report is defined ? report : null
+                    } %}
+            {% endblock %}
+        {% endif %}
 
-        <main class="govuk-main-wrapper" role="main">
+        <main id="main-content" class="govuk-main-wrapper" role="main">
             {% block content %}{% endblock %}
         </main>
     </div>
