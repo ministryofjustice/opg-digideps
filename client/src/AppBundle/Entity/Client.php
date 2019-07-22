@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -10,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Client
 {
+    use IsSoftDeleteableEntity;
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"edit", "pa-edit"})
