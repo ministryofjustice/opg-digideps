@@ -45,7 +45,7 @@ class UserRegistrationService
         $existingClient = $this->em->getRepository('AppBundle\Entity\Client')->findOneByCaseNumber(CasRec::normaliseCaseNumber($selfRegisterData->getCaseNumber()));
 
         // ward off non-fee-paying codeps trying to self-register
-        if ($isMultiDeputyCase && $existingClient instanceof Client && $existingClient->hasDeputies()) {
+        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
             // if client exists with case number, the first codep already registered.
             throw new \RuntimeException('Co-deputy cannot self register.', 403);
         }
@@ -55,22 +55,24 @@ class UserRegistrationService
         if ($existingUser) {
             throw new \RuntimeException("User with email {$existingUser->getEmail()} already exists.", 422);
         }
-        $users = $existingClient->getUsers();
 
         // Check the client is unique and has no deputies attached
-        if ($existingClient instanceof Client && $existingClient->hasDeputies()) {
-            throw new \RuntimeException('User registration: Case number already used', 425);
+        if ($existingClient instanceof Client) {
+            if ($existingClient->hasDeputies()) {
+                throw new \RuntimeException('User registration: Case number already used', 425);
+            } else {
+                // soft delete client
+                $this->em->remove($existingClient);
+                $this->em->flush();
+            }
         }
 
+        // proceed with brand new deputy and client
         $user = new User();
         $user->recreateRegistrationToken();
         $this->populateUser($user, $selfRegisterData);
 
         $client = new Client();
-        if (!$existingClient->hasDeputies()) {
-            // use existing client if this registration is a new deputy against an undeputised Client
-            $client = $existingClient;
-        }
 
         $this->populateClient($client, $selfRegisterData);
 
