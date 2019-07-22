@@ -20,7 +20,8 @@ page:
       deputy: Deputy
       period: Period
       documents: Documents
-      date: Date
+      submitted: Submitted
+      discharged: Discharged
       user: User
     noDocumentsFound: No documents found
   table:
