@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Traits\ActiveAudit;
 use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Client
 {
     use IsSoftDeleteableEntity;
+    use ActiveAudit;
 
     /**
      * @JMS\Type("integer")
@@ -251,7 +253,6 @@ class Client
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $archivedAt;
-
 
     public function __construct()
     {
@@ -938,4 +939,41 @@ class Client
         return $this->archivedAt;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getClientFrom()
+    {
+        return $this->clientFrom;
+    }
+
+    /**
+     * @param \DateTime $clientFrom
+     *
+     * @return $this
+     */
+    public function setClientFrom($clientFrom)
+    {
+        $this->clientFrom = $clientFrom;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getClientTo()
+    {
+        return $this->clientTo;
+    }
+
+    /**
+     * @param \DateTime $clientTo
+     *
+     * @return $this
+     */
+    public function setClientTo($clientTo)
+    {
+        $this->clientTo = $clientTo;
+        return $this;
+    }
 }

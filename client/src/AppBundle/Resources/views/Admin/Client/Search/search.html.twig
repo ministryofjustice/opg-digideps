@@ -45,6 +45,8 @@
                 <tr>
                     <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
                     <th scope="col">{{ 'caseNumber' | trans({}, 'common') }}</th>
+                    <th scope="col">{{ 'clientSearch.clientTable.activeFrom' | trans({}, 'admin-clients') }}</th>
+                    <th scope="col">{{ 'clientSearch.clientTable.discharged' | trans({}, 'admin-clients') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +62,16 @@
                                 {{ client.caseNumber }}
                                 {% if client.archivedAt %}
                                     (Archived)
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if client.activeFrom is not null %}
+                                    {{ client.activeFrom | date('d/m/Y') }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if client.deletedAt is not null %}
+                                    {{ client.deletedAt | date('d/m/Y') }}
                                 {% endif %}
                             </td>
                         </tr>
