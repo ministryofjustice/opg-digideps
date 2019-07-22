@@ -1013,4 +1013,43 @@ class Client implements ClientInterface
     {
         return !$this->getUsers()->isEmpty();
     }
+
+    /**
+     * Get Active From date == earliest report start date for this client
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\SerializedName("active_from")
+     * @JMS\Groups({"active-period"})
+     *
+     * @return \DateTime
+     */
+    public function getActiveFrom()
+    {
+        $reports = $this->getReports();
+        $earliest = new \DateTime('now');
+        foreach ($reports as $report)
+        {
+            if ($report->getStartDate() < $earliest) {
+                $earliest = $report->getStartDate();
+            }
+        }
+
+        return $earliest;
+    }
+
+    /**
+     * Get Active To date
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\SerializedName("active_to")
+     * @JMS\Groups({"active-period"})
+     *
+     * @return \DateTime
+     */
+    public function getActiveTo()
+    {
+        return $this->getDeletedAt();
+    }
 }
