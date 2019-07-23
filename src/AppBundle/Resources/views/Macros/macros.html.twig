@@ -256,3 +256,19 @@
         </tr>
     </thead>
 {% endmacro %}
+
+
+{# Question/Answer header for summary lists #}
+{% macro summaryListHeaderQA(hideEditLink) %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    </div>
+{% endmacro %}
