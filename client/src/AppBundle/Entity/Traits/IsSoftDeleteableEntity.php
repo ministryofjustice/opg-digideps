@@ -13,7 +13,7 @@ trait IsSoftDeleteableEntity
     /**
      * @var \DateTime
      *
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @var \DateTime
      */

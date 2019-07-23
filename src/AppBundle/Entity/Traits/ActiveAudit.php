@@ -12,7 +12,7 @@ trait ActiveAudit
      * Get date that this entity was active from
      *
      * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"active-period"})
      */
     private $activeFrom;
@@ -22,7 +22,7 @@ trait ActiveAudit
      *
      * @var \DateTime
      *
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"active-period"})
      */
     private $activeTo;
@@ -35,16 +35,16 @@ trait ActiveAudit
         return $this->activeFrom;
     }
 
-    /**
-     * @param \DateTime $activeFrom
-     *
-     * @return $this
-     */
-    public function setActiveFrom(\DateTime $activeFrom)
-    {
-        $this->activeFrom = $activeFrom;
-        return $this;
-    }
+//    /**
+//     * @param \DateTime $activeFrom
+//     *
+//     * @return $this
+//     */
+//    public function setActiveFrom(\DateTime $activeFrom)
+//    {
+//        $this->activeFrom = $activeFrom;
+//        return $this;
+//    }
 
     /**
      * @return \DateTime
@@ -54,14 +54,14 @@ trait ActiveAudit
         return $this->activeTo;
     }
 
-    /**
-     * @param \DateTime|null $activeTo
-     *
-     * @return $this
-     */
-    public function setActiveTo(\DateTime $activeTo = null)
-    {
-        $this->activeTo = $activeTo;
-        return $this;
-    }
+//    /**
+//     * @param \DateTime|null $activeTo
+//     *
+//     * @return $this
+//     */
+//    public function setActiveTo(\DateTime $activeTo = null)
+//    {
+//        $this->activeTo = $activeTo;
+//        return $this;
+//    }
 }

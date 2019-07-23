@@ -942,38 +942,16 @@ class Client
     /**
      * @return \DateTime
      */
-    public function getClientFrom()
+    public function getActiveFrom()
     {
-        return $this->clientFrom;
-    }
-
-    /**
-     * @param \DateTime $clientFrom
-     *
-     * @return $this
-     */
-    public function setClientFrom($clientFrom)
-    {
-        $this->clientFrom = $clientFrom;
-        return $this;
+        return $this->activeFrom;
     }
 
     /**
      * @return \DateTime
      */
-    public function getClientTo()
+    public function getActiveTo()
     {
-        return $this->clientTo;
-    }
-
-    /**
-     * @param \DateTime $clientTo
-     *
-     * @return $this
-     */
-    public function setClientTo($clientTo)
-    {
-        $this->clientTo = $clientTo;
-        return $this;
+        return $this->activeTo;
     }
 }
