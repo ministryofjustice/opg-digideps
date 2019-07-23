@@ -10,10 +10,6 @@ data "aws_secretsmanager_secret_version" "database_password" {
   secret_id = data.aws_secretsmanager_secret.database_password.id
 }
 
-data "aws_secretsmanager_secret" "registry" {
-  name = "${terraform.workspace}/registry"
-}
-
 data "aws_secretsmanager_secret" "api_secret" {
   name = "${terraform.workspace}/api-secret"
 }

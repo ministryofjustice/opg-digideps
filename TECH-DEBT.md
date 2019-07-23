@@ -7,9 +7,10 @@
 - remove develop environment
 - rename feature-105 -> feature3
 - scheduled scaling for cost saving
+- wkhtmltopdf uses static version
+- file-scanner uses static version
 
 ## Move off Jenkins
-- migrate images to ecr
 - migrate build to circle
 - deploy feature using circle
 - test feature using circle

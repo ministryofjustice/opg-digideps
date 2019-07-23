@@ -99,10 +99,7 @@ locals {
   {
     "cpu": 0,
     "essential": true,
-    "image": "registry.service.opg.digital/opguk/digi-deps-api:${var.OPG_DOCKER_TAG}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-    },
+    "image": "${local.images.api}",
     "mountPoints": [],
     "name": "api_app",
     "portMappings": [{

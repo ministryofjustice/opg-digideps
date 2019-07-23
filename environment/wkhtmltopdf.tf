@@ -109,10 +109,7 @@ locals {
   {
       "cpu": 0,
       "essential": true,
-      "image": "registry.service.opg.digital/opguk/wkhtmlpdf",
-      "repositoryCredentials": {
-        "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-      },
+      "image": "${local.images.wkhtmltopdf}",
       "mountPoints": [],
       "name": "wkhtmltopdf",
       "volumesFrom": [],

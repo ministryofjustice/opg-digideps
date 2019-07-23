@@ -40,10 +40,7 @@ locals {
   {
     "cpu": 0,
     "essential": true,
-    "image": "registry.service.opg.digital/opguk/digi-deps-frontend:${var.OPG_DOCKER_TAG}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-    },
+    "image": "${local.images.client}",
     "mountPoints": [],
     "name": "front_app",
     "portMappings": [{

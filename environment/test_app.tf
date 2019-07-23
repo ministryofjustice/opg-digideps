@@ -63,10 +63,7 @@ locals {
   reset_database_container = <<EOF
   {
     "name": "reset_database",
-    "image": "registry.service.opg.digital/opguk/digi-deps-api:${var.OPG_DOCKER_TAG}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-    },
+    "image": "${local.images.api}",
     "command": [ "sh", "scripts/resetdb.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -99,10 +96,7 @@ EOF
   test_api_container = <<EOF
   {
     "name": "test_api",
-    "image": "registry.service.opg.digital/opguk/digi-deps-api:${var.OPG_DOCKER_TAG}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-    },
+    "image": "${local.images.api}",
     "command": [ "sh", "scripts/apiunittest.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -139,10 +133,7 @@ EOF
 test_front_container = <<EOF
   {
     "name": "test_front",
-    "image": "registry.service.opg.digital/opguk/digi-deps-frontend:${var.OPG_DOCKER_TAG}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-    },
+    "image": "${local.images.client}",
     "command": [ "sh", "scripts/clienttest.sh" ],
     "logConfiguration": {
       "logDriver": "awslogs",
@@ -207,4 +198,3 @@ test_front_container = <<EOF
 EOF
 
 }
-

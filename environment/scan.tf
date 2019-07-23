@@ -106,10 +106,7 @@ locals {
         "protocol": "tcp"
       }],
       "cpu": 0,
-      "image": "registry.service.opg.digital/opguk/file-scanner-service:master__2018-05-21__26",
-      "repositoryCredentials": {
-        "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-      },
+      "image": "${local.images.file_scanner}",
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
@@ -136,10 +133,7 @@ EOF
       "name": "worker",
       "essential": true,
       "cpu": 0,
-      "image": "registry.service.opg.digital/opguk/file-scanner-service:master__2018-05-21__26",
-      "repositoryCredentials": {
-        "credentialsParameter": "${data.aws_secretsmanager_secret.registry.name}"
-      },
+      "image": "${local.images.file_scanner}",
       "mountPoints": [],
       "volumesFrom": [],
       "logConfiguration": {
