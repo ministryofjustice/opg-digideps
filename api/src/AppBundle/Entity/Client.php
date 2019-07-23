@@ -1018,7 +1018,7 @@ class Client implements ClientInterface
      * Get Active From date == earliest report start date for this client
      *
      * @JMS\VirtualProperty
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("active_from")
      * @JMS\Groups({"active-period"})
      *
@@ -1042,7 +1042,7 @@ class Client implements ClientInterface
      * Get Active To date
      *
      * @JMS\VirtualProperty
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("active_to")
      * @JMS\Groups({"active-period"})
      *
