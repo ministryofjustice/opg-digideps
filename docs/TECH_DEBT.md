@@ -9,3 +9,4 @@ A log of technical debt we're aware of and have accepted. These aren't "problems
 - We define status label translations in `common.en.yml` (twice), `ndr-overview.en.yml` (twice) and `report-overview.en.yml` (twice). Using one, clear definition would make it easier to make changes in the future
 - We should use `bin/phpunit` when running tests (instead of `vendor/phpunit/phpunit/phpunit`)
 - `behat-debugger.php` is a poor way of dealing with test failures: it requires explicit setup in our NGINX configuration files and doesn't always collect useful information (e.g. just showing "Application error" when something crashes)
+- We should move Composer and NPM into separate containers so we can mount the vendor/assets folders first then build onto both the host and container (see DDPB-2732)
