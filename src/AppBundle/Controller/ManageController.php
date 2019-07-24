@@ -15,7 +15,6 @@ class ManageController extends AbstractController
     /**
      * @Route("/availability")
      * @Method({"GET"})
-     * @Template
      */
     public function availabilityAction()
     {
@@ -53,7 +52,7 @@ class ManageController extends AbstractController
     /**
      * @Route("/elb", name="manage-elb")
      * @Method({"GET"})
-     * @Template()
+     * @Template("AppBundle:Manage:elb.html.twig")
      */
     public function elbAction()
     {

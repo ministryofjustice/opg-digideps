@@ -17,7 +17,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets", name="ndr_assets")
-     * @Template()
+     * @Template("AppBundle:Ndr/Asset:start.html.twig")
      *
      * @param int $ndrId
      *
@@ -37,7 +37,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/exist", name="ndr_assets_exist")
-     * @Template()
+     * @Template("AppBundle:Ndr/Asset:exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
     {
@@ -77,7 +77,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/step-type", name="ndr_assets_type")
-     * @Template()
+     * @Template("AppBundle:Ndr/Asset:type.html.twig")
      */
     public function typeAction(Request $request, $ndrId)
     {
@@ -171,7 +171,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/add_another", name="ndr_assets_add_another")
-     * @Template()
+     * @Template("AppBundle:Ndr/Asset:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
     {
@@ -318,7 +318,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/assets/summary", name="ndr_assets_summary")
-     * @Template()
+     * @Template("AppBundle:Ndr/Asset:summary.html.twig")
      *
      * @param int $ndrId
      *

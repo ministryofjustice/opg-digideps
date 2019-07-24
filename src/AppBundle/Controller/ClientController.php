@@ -13,7 +13,7 @@ class ClientController extends AbstractController
 {
     /**
      * @Route("/deputyship-details/your-client", name="client_show")
-     * @Template()
+     * @Template("AppBundle:Client:show.html.twig")
      */
     public function showAction(Request $request)
     {
@@ -33,7 +33,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-client/edit", name="client_edit")
-     * @Template()
+     * @Template("AppBundle:Client:edit.html.twig")
      */
     public function editAction(Request $request)
     {
@@ -77,7 +77,7 @@ class ClientController extends AbstractController
 
     /**
      * @Route("/client/add", name="client_add")
-     * @Template()
+     * @Template("AppBundle:Client:add.html.twig")
      */
     public function addAction(Request $request)
     {

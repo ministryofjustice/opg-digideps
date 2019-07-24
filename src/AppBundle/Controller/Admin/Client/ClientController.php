@@ -20,7 +20,7 @@ class ClientController extends AbstractController
      * @param Request $request
      * @param $id
      *
-     * @Template()
+     * @Template("AppBundle:Admin/Client/Client:details.html.twig")
      *
      * @return array
      */

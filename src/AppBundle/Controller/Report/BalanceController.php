@@ -35,7 +35,7 @@ class BalanceController extends AbstractController
      * @Route("/report/{reportId}/balance", name="balance")
      *
      * @param int $reportId
-     * @Template()
+     * @Template("AppBundle:Report/Balance:balance.html.twig")
      *
      * @return array
      */

@@ -19,7 +19,7 @@ class AdController extends AbstractController
     /**
      * @Route("/", name="ad_homepage")
      * @Security("has_role('ROLE_AD')")
-     * @Template
+     * @Template("AppBundle:Admin/Ad:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -76,7 +76,7 @@ class AdController extends AbstractController
      * @Route("/view-user", name="ad_view_user")
      * @Security("has_role('ROLE_AD')")
      * @Method({"GET", "POST"})
-     * @Template
+     * @Template("AppBundle:Admin/Ad:viewUser.html.twig")
      *
      * @param Request $request
      */

@@ -20,7 +20,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/debts", name="debts")
-     * @Template()
+     * @Template("AppBundle:Report/Debt:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -36,7 +36,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/debts/exist", name="debts_exist")
-     * @Template()
+     * @Template("AppBundle:Report/Debt:exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -71,7 +71,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/edit", name="debts_edit")
-     * @Template()
+     * @Template("AppBundle:Report/Debt:edit.html.twig")
      */
     public function editAction(Request $request, $reportId)
     {
@@ -110,7 +110,7 @@ class DebtController extends AbstractController
      * How debts are managed question.
      *
      * @Route("/report/{reportId}/debts/management", name="debts_management")
-     * @Template()
+     * @Template("AppBundle:Report/Debt:management.html.twig")
      */
     public function managementAction(Request $request, $reportId)
     {
@@ -147,7 +147,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/report/{reportId}/debts/summary", name="debts_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Debt:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

@@ -16,7 +16,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/debts", name="ndr_debts")
-     * @Template()
+     * @Template("AppBundle:Ndr/Debt:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
@@ -32,7 +32,7 @@ class DebtController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/debts/exist", name="ndr_debts_exist")
-     * @Template()
+     * @Template("AppBundle:Ndr/Debt:exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
     {
@@ -67,7 +67,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/ndr/{ndrId}/debts/edit", name="ndr_debts_edit")
-     * @Template()
+     * @Template("AppBundle:Ndr/Debt:edit.html.twig")
      */
     public function editAction(Request $request, $ndrId)
     {
@@ -103,7 +103,7 @@ class DebtController extends AbstractController
      * How debts are managed question.
      *
      * @Route("/ndr/{ndrId}/debts/management", name="ndr_debts_management")
-     * @Template()
+     * @Template("AppBundle:Ndr/Debt:management.html.twig")
      */
     public function managementAction(Request $request, $ndrId)
     {
@@ -141,7 +141,7 @@ class DebtController extends AbstractController
      * List debts.
      *
      * @Route("/ndr/{ndrId}/debts/summary", name="ndr_debts_summary")
-     * @Template()
+     * @Template("AppBundle:Ndr/Debt:summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
     {

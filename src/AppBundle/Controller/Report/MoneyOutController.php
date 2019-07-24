@@ -22,7 +22,7 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out", name="money_out")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyOut:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -38,7 +38,7 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/step{step}/{transactionId}", name="money_out_step", requirements={"step":"\d+"})
-     * @Template()
+     * @Template("AppBundle:Report/MoneyOut:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
@@ -132,7 +132,7 @@ class MoneyOutController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-out/add_another", name="money_out_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyOut:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -160,7 +160,7 @@ class MoneyOutController extends AbstractController
      * @Route("/report/{reportId}/money-out/summary", name="money_out_summary")
      *
      * @param int $reportId
-     * @Template()
+     * @Template("AppBundle:Report/MoneyOut:summary.html.twig")
      *
      * @return array
      */

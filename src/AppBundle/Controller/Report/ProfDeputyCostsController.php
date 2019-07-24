@@ -30,7 +30,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("", name="prof_deputy_costs")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:start.html.twig")
      *
      * @param int $reportId
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
@@ -52,7 +52,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/how-charged", name="prof_deputy_costs_how_charged")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:howCharged.html.twig")
      */
     public function howChargedAction(Request $request, $reportId)
     {
@@ -87,7 +87,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received-exists", name="prof_deputy_costs_previous_received_exists")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:previousReceivedExists.html.twig")
      */
     public function previousReceivedExists(Request $request, $reportId)
     {
@@ -134,7 +134,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received/{previousReceivedId}", name="prof_deputy_costs_previous_received")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:previousReceived.html.twig")
      */
     public function previousReceived(Request $request, $reportId, $previousReceivedId = null)
     {
@@ -185,7 +185,6 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received/{previousReceivedId}/delete", name="prof_deputy_costs_previous_received_delete")
-     * @Template()
      *
      * @param Request $request
      * @param $reportId
@@ -209,7 +208,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/interim-exists", name="prof_deputy_costs_inline_interim_19b_exists")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:interimExists.html.twig")
      */
     public function interimExists(Request $request, $reportId)
     {
@@ -256,7 +255,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/interim", name="prof_deputy_costs_inline_interim_19b")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:interim.html.twig")
      */
     public function interim(Request $request, $reportId)
     {
@@ -293,7 +292,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/costs-received", name="prof_deputy_costs_received")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:fixedCost.html.twig")
      */
     public function fixedCostAction(Request $request, $reportId)
     {
@@ -331,7 +330,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/amount-scco", name="prof_deputy_costs_amount_scco")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:amountToScco.html.twig")
      */
     public function amountToSccoAction(Request $request, $reportId)
     {
@@ -365,7 +364,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/breakdown", name="prof_deputy_costs_breakdown")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:breakdown.html.twig")
      */
     public function breakdown(Request $request, $reportId)
     {
@@ -434,7 +433,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/summary", name="prof_deputy_costs_summary")
-     * @Template()
+     * @Template("AppBundle:Report/ProfDeputyCosts:summary.html.twig")
      *
      * @param int $reportId
      *

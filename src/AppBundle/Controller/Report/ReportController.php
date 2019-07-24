@@ -83,7 +83,7 @@ class ReportController extends AbstractController
      *
      * @Route("/lay", name="lay_home")
      * //TODO we should add Security("has_role('ROLE_LAY_DEPUTY')") here, but not sure as not clear what "getCorrectRouteIfDifferent" does
-     * @Template()
+     * @Template("AppBundle:Report/Report:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -117,7 +117,7 @@ class ReportController extends AbstractController
      * Edit single report
      *
      * @Route("/reports/edit/{reportId}", name="report_edit")
-     * @Template()
+     * @Template("AppBundle:Report/Report:edit.html.twig")
      */
     public function editAction(Request $request, $reportId)
     {
@@ -154,7 +154,7 @@ class ReportController extends AbstractController
      *   defaults={ "action" = "create"},
      *   requirements={ "action" = "(create|add)"}
      * )
-     * @Template()
+     * @Template("AppBundle:Report/Report:create.html.twig")
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
@@ -189,7 +189,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     * @Template()
+     * @Template("AppBundle:Report/Report:overview.html.twig")
      */
     public function overviewAction(Request $request, $reportId)
     {
@@ -287,7 +287,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
-     * @Template()
+     * @Template("AppBundle:Report/Report:declaration.html.twig")
      */
     public function declarationAction(Request $request, $reportId)
     {
@@ -328,7 +328,7 @@ class ReportController extends AbstractController
      * Page displaying the report has been submitted.
      *
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
-     * @Template()
+     * @Template("AppBundle:Report/Report:submitConfirmation.html.twig")
      */
     public function submitConfirmationAction(Request $request, $reportId)
     {
@@ -361,7 +361,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
-     * @Template()
+     * @Template("AppBundle:Report/Report:submitFeedback.html.twig")
      */
     public function submitFeedbackAction($reportId)
     {
@@ -384,7 +384,7 @@ class ReportController extends AbstractController
      * Used for active and archived report.
      *
      * @Route("/report/{reportId}/review", name="report_review")
-     * @Template()
+     * @Template("AppBundle:Report/Report:review.html.twig")
      */
     public function reviewAction($reportId)
     {

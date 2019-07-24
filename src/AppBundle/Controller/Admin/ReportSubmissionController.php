@@ -23,7 +23,7 @@ class ReportSubmissionController extends AbstractController
     /**
      * @Route("/documents/list", name="admin_documents")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template
+     * @Template("AppBundle:Admin/ReportSubmission:index.html.twig")
      */
     public function indexAction(Request $request)
     {

@@ -20,7 +20,7 @@ class StatsController extends AbstractController
     /**
      * @Route("", name="admin_stats")
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Template
+     * @Template("AppBundle:Admin/Stats:stats.html.twig")
      * @param Request $request
      * @return array|Response
      */

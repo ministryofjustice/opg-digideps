@@ -20,7 +20,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care", name="visits_care")
-     * @Template()
+     * @Template("AppBundle:Report/VisitsCare:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -36,7 +36,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
-     * @Template()
+     * @Template("AppBundle:Report/VisitsCare:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step)
     {
@@ -95,7 +95,7 @@ class VisitsCareController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
-     * @Template()
+     * @Template("AppBundle:Report/VisitsCare:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

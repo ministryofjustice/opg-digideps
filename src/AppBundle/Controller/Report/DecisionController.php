@@ -21,7 +21,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:start.html.twig")
      *
      * @param int $reportId
      *
@@ -42,7 +42,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:mentalCapacity.html.twig")
      */
     public function mentalCapacityAction(Request $request, $reportId)
     {
@@ -79,7 +79,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:mentalAssessment.html.twig")
      */
     public function mentalAssessmentAction(Request $request, $reportId)
     {
@@ -117,7 +117,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -152,7 +152,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/add", name="decisions_add")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -184,7 +184,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -210,7 +210,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $decisionId)
     {
@@ -241,7 +241,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Decision:summary.html.twig")
      *
      * @param int $reportId
      *

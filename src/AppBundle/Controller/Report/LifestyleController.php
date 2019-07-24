@@ -19,7 +19,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle", name="lifestyle")
-     * @Template()
+     * @Template("AppBundle:Report/Lifestyle:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -35,7 +35,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle/step/{step}", name="lifestyle_step")
-     * @Template()
+     * @Template("AppBundle:Report/Lifestyle:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step)
     {
@@ -93,7 +93,7 @@ class LifestyleController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/lifestyle/summary", name="lifestyle_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Lifestyle:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

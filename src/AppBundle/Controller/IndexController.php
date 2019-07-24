@@ -31,7 +31,7 @@ class IndexController extends AbstractController
 
     /**
      * @Route("login", name="login")
-     * @Template()
+     * @Template("AppBundle:Index:login.html.twig")
      */
     public function loginAction(Request $request)
     {
@@ -207,7 +207,6 @@ class IndexController extends AbstractController
 
     /**
      * @Route("/logout", name="logout")
-     * @Template
      */
     public function logoutAction(Request $request)
     {

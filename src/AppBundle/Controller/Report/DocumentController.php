@@ -28,7 +28,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents", name="documents")
-     * @Template()
+     * @Template("AppBundle:Report/Document:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -50,7 +50,7 @@ class DocumentController extends AbstractController
     /**
      * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
      * @Route("/report/{reportId}/documents/step/1", name="documents_step")
-     * @Template()
+     * @Template("AppBundle:Report/Document:step1.html.twig")
      */
     public function step1Action(Request $request, $reportId)
     {
@@ -101,7 +101,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/step/2", name="report_documents", defaults={"what"="new"})
-     * @Template()
+     * @Template("AppBundle:Report/Document:step2.html.twig")
      */
     public function step2Action(Request $request, $reportId)
     {
@@ -184,7 +184,7 @@ class DocumentController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Document:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {
@@ -239,7 +239,6 @@ class DocumentController extends AbstractController
      * Removes a document, adds a flash message and redirects to page
      *
      * @Route("/document/{documentId}/delete/confirm", name="delete_document_confirm")
-     * @Template()
      */
     public function deleteConfirmedAction(Request $request, $documentId)
     {

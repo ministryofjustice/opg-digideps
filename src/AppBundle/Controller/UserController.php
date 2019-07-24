@@ -22,7 +22,6 @@ class UserController extends AbstractController
      * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
      *   "action" = "(activate|password-reset)"
      * })
-     * @Template()
      */
     public function activateUserAction(Request $request, $action, $token)
     {
@@ -104,7 +103,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
-     * @Template()
+     * @Template("AppBundle:User:activateLinkSend.html.twig")
      */
     public function activateLinkSendAction(Request $request, $token)
     {
@@ -124,7 +123,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
-     * @Template()
+     * @Template("AppBundle:User:activateLinkSent.html.twig")
      */
     public function activateLinkSentAction(Request $request, $token)
     {
@@ -143,7 +142,7 @@ class UserController extends AbstractController
      * - PA
      *
      * @Route("/user/details", name="user_details")
-     * @Template()
+     * @Template("AppBundle:User:details.html.twig")
      */
     public function detailsAction(Request $request)
     {
@@ -176,7 +175,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password-managing/forgotten", name="password_forgotten")
-     * @Template()
+     * @Template("AppBundle:User:passwordForgotten.html.twig")
      **/
     public function passwordForgottenAction(Request $request)
     {
@@ -219,7 +218,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password-managing/sent", name="password_sent")
-     * @Template()
+     * @Template("AppBundle:User:passwordSent.html.twig")
      **/
     public function passwordSentAction()
     {
@@ -228,7 +227,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/register", name="register")
-     * @Template()
+     * @Template("AppBundle:User:register.html.twig")
      */
     public function registerAction(Request $request)
     {
@@ -302,7 +301,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/agree-terms-use/{token}", name="user_agree_terms_use")
-     * @Template()
      */
     public function agreeTermsUseAction(Request $request, $token)
     {

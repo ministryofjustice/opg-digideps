@@ -22,7 +22,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
-     * @Template()
+     * @Template("AppBundle:Ndr/IncomeBenefit:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
@@ -38,7 +38,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/step/{step}", name="ndr_income_benefits_step")
-     * @Template()
+     * @Template("AppBundle:Ndr/IncomeBenefit:step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step)
     {
@@ -96,7 +96,7 @@ class IncomeBenefitController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/income-benefits/summary", name="ndr_income_benefits_summary")
-     * @Template()
+     * @Template("AppBundle:Ndr/IncomeBenefit:summary.html.twig")
      */
     public function summaryAction(Request $request, $ndrId)
     {

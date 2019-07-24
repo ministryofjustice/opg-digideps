@@ -22,7 +22,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets", name="assets")
-     * @Template()
+     * @Template("AppBundle:Report/Asset:start.html.twig")
      *
      * @param int $reportId
      *
@@ -42,7 +42,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/exist", name="assets_exist")
-     * @Template()
+     * @Template("AppBundle:Report/Asset:exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -82,7 +82,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/step-type", name="assets_type")
-     * @Template()
+     * @Template("AppBundle:Report/Asset:type.html.twig")
      */
     public function typeAction(Request $request, $reportId)
     {
@@ -176,7 +176,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/add_another", name="assets_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/Asset:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -325,7 +325,7 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/summary", name="assets_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Asset:summary.html.twig")
      *
      * @param int $reportId
      *

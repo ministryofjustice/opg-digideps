@@ -58,7 +58,7 @@ class BehatController extends AbstractController
     /**
      * @Route("/behat/emails")
      * @Method({"GET"})
-     * @Template
+     * @Template("AppBundle:Behat:emails.html.twig")
      */
     public function emailsAction(Request $request)
     {
@@ -80,7 +80,6 @@ class BehatController extends AbstractController
      * Login is required
      *
      * @Route("/email-viewer/{action}/{type}", name="email-viewer", defaults={"type"="html"})
-     * @Template()
      */
     public function emailViewerAction($action, $type = 'html')
     {

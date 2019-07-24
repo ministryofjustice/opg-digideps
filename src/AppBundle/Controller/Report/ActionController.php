@@ -20,7 +20,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions", name="actions")
-     * @Template()
+     * @Template("AppBundle:Report/Action:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -36,7 +36,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions/step/{step}", name="actions_step")
-     * @Template()
+     * @Template("AppBundle:Report/Action:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step)
     {
@@ -88,7 +88,7 @@ class ActionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/actions/summary", name="actions_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Action:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

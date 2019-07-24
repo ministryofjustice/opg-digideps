@@ -20,7 +20,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts", name="contacts")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:start.html.twig")
      *
      * @param int $reportId
      *
@@ -41,7 +41,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -76,7 +76,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add", name="contacts_add")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -108,7 +108,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -134,7 +134,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $contactId)
     {
@@ -164,7 +164,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
-     * @Template()
+     * @Template("AppBundle:Report/Contact:summary.html.twig")
      *
      * @param int $reportId
      *

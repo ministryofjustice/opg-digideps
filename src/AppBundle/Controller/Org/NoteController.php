@@ -123,7 +123,6 @@ class NoteController extends AbstractController
      * Removes a note, adds a flash message and redirects to page
      *
      * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
-     * @Template()
      */
     public function deleteConfirmedAction(Request $request, $noteId)
     {

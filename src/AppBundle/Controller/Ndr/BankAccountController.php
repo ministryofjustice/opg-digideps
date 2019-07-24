@@ -17,7 +17,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-accounts", name="ndr_bank_accounts")
-     * @Template()
+     * @Template("AppBundle:Ndr/BankAccount:start.html.twig")
      */
     public function startAction(Request $request, $ndrId)
     {
@@ -33,7 +33,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/step{step}/{accountId}", name="ndr_bank_accounts_step", requirements={"step":"\d+"})
-     * @Template()
+     * @Template("AppBundle:Ndr/BankAccount:step.html.twig")
      */
     public function stepAction(Request $request, $ndrId, $step, $accountId = null)
     {
@@ -154,7 +154,7 @@ class BankAccountController extends AbstractController
      * @Route("/ndr/{ndrId}/bank-accounts/summary", name="ndr_bank_accounts_summary")
      *
      * @param int $ndrId
-     * @Template()
+     * @Template("AppBundle:Ndr/BankAccount:summary.html.twig")
      *
      * @return array
      */

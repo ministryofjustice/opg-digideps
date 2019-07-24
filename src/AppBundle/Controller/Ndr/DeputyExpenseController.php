@@ -18,7 +18,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses", name="ndr_deputy_expenses")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:start.html.twig")
      *
      * @param int $ndrId
      *
@@ -39,7 +39,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/exist", name="ndr_deputy_expenses_exist")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:exist.html.twig")
      */
     public function existAction(Request $request, $ndrId)
     {
@@ -74,7 +74,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add", name="ndr_deputy_expenses_add")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:add.html.twig")
      */
     public function addAction(Request $request, $ndrId)
     {
@@ -106,7 +106,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/add_another", name="ndr_deputy_expenses_add_another")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $ndrId)
     {
@@ -132,7 +132,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/edit/{expenseId}", name="ndr_deputy_expenses_edit")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:edit.html.twig")
      */
     public function editAction(Request $request, $ndrId, $expenseId)
     {
@@ -160,7 +160,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/deputy-expenses/summary", name="ndr_deputy_expenses_summary")
-     * @Template()
+     * @Template("AppBundle:Ndr/DeputyExpense:summary.html.twig")
      *
      * @param int $ndrId
      *

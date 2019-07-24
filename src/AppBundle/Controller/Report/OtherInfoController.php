@@ -20,7 +20,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info", name="other_info")
-     * @Template()
+     * @Template("AppBundle:Report/OtherInfo:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -36,7 +36,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
-     * @Template()
+     * @Template("AppBundle:Report/OtherInfo:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step)
     {
@@ -81,7 +81,7 @@ class OtherInfoController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
-     * @Template()
+     * @Template("AppBundle:Report/OtherInfo:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

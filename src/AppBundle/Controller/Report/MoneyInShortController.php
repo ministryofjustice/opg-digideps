@@ -20,7 +20,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short", name="money_in_short")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -37,7 +37,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/category", name="money_in_short_category")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:category.html.twig")
      */
     public function categoryAction(Request $request, $reportId)
     {
@@ -74,7 +74,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/exist", name="money_in_short_exist")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:exist.html.twig")
      */
     public function existAction(Request $request, $reportId)
     {
@@ -105,7 +105,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add", name="money_in_short_add")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:add.html.twig")
      */
     public function addAction(Request $request, $reportId)
     {
@@ -136,7 +136,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/add_another", name="money_in_short_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -162,7 +162,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/edit/{transactionId}", name="money_in_short_edit")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $transactionId)
     {
@@ -211,7 +211,7 @@ class MoneyInShortController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in-short/summary", name="money_in_short_summary")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyInShort:summary.html.twig")
      */
     public function summaryAction(Request $request, $reportId)
     {

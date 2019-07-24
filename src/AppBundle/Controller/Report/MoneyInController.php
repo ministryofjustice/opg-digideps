@@ -22,7 +22,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in", name="money_in")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyIn:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -38,7 +38,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", name="money_in_step", requirements={"step":"\d+"})
-     * @Template()
+     * @Template("AppBundle:Report/MoneyIn:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step, $transactionId = null)
     {
@@ -136,7 +136,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
-     * @Template()
+     * @Template("AppBundle:Report/MoneyIn:addAnother.html.twig")
      */
     public function addAnotherAction(Request $request, $reportId)
     {
@@ -164,7 +164,7 @@ class MoneyInController extends AbstractController
      * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
      *
      * @param int $reportId
-     * @Template()
+     * @Template("AppBundle:Report/MoneyIn:summary.html.twig")
      *
      * @return array
      */

@@ -9,4 +9,12 @@ A log of technical debt we're aware of and have accepted. These aren't "problems
 - We define status label translations in `common.en.yml` (twice), `ndr-overview.en.yml` (twice) and `report-overview.en.yml` (twice). Using one, clear definition would make it easier to make changes in the future
 - We should use `bin/phpunit` when running tests (instead of `vendor/phpunit/phpunit/phpunit`)
 - `behat-debugger.php` is a poor way of dealing with test failures: it requires explicit setup in our NGINX configuration files and doesn't always collect useful information (e.g. just showing "Application error" when something crashes)
+- We have several duplicated template files (albeit the main content differs) that we could consider making reusable. `start.html.twig` and `add_another.html.twig` are good examples to start with
+- Since version 5.2 of `sensio/framework-extra-bundle`, the `Route` and `Method` annotations have been deprecated and moved into the Symfony routing component. We should deprecate the bundle from using it with:
+```$xslt
+sensio_framework_extra:
+    router:
+        annotations: false
+```
+and replace the annotations `Sensio\Bundle\FrameworkExtraBundle\Configuration\Route` and `Sensio\Bundle\FrameworkExtraBundle\Configuration\Method` with `Symfony\Component\Routing\Annotation\Route`
 - We should move Composer and NPM into separate containers so we can mount the vendor/assets folders first then build onto both the host and container (see DDPB-2732)

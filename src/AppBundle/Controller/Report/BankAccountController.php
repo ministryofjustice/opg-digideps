@@ -19,7 +19,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-accounts", name="bank_accounts")
-     * @Template()
+     * @Template("AppBundle:Report/BankAccount:start.html.twig")
      */
     public function startAction(Request $request, $reportId)
     {
@@ -35,7 +35,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-account/step{step}/{accountId}", name="bank_accounts_step", requirements={"step":"\d+"})
-     * @Template()
+     * @Template("AppBundle:Report/BankAccount:step.html.twig")
      */
     public function stepAction(Request $request, $reportId, $step, $accountId = null)
     {
@@ -172,7 +172,7 @@ class BankAccountController extends AbstractController
      * @Route("/report/{reportId}/bank-accounts/summary", name="bank_accounts_summary")
      *
      * @param int $reportId
-     * @Template()
+     * @Template("AppBundle:Report/BankAccount:summary.html.twig")
      *
      * @return array
      */
@@ -194,7 +194,7 @@ class BankAccountController extends AbstractController
      * @param int $reportId
      * @param int $accountId
      *
-     * @Template()
+     * @Template("AppBundle:Report/BankAccount:deleteConfirm.html.twig")
      */
     public function deleteConfirmAction(Request $request, $reportId, $accountId)
     {

@@ -16,7 +16,7 @@ class SettingsController extends AbstractController
     /**
      * @Route("/deputyship-details", name="account_settings")
      * @Route("/org/settings", name="org_settings")
-     * @Template()
+     * @Template("AppBundle:Settings:index.html.twig")
      **/
     public function indexAction()
     {
@@ -40,7 +40,7 @@ class SettingsController extends AbstractController
     /**
      * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
      * @Route("/org/settings/your-details/change-password", name="org_profile_password_edit")
-     * @Template()
+     * @Template("AppBundle:Settings:passwordEdit.html.twig")
      */
     public function passwordEditAction(Request $request)
     {
@@ -70,7 +70,7 @@ class SettingsController extends AbstractController
 
     /**
      * @Route("/deputyship-details/your-details/change-password/done", name="user_password_edit_done")
-     * @Template()
+     * @Template("AppBundle:Settings:passwordEditDone.html.twig")
      */
     public function passwordEditDoneAction(Request $request)
     {
@@ -82,7 +82,7 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details", name="user_show")
      * @Route("/org/settings/your-details", name="org_profile_show")
-     * @Template()
+     * @Template("AppBundle:Settings:profile.html.twig")
      **/
     public function profileAction()
     {
@@ -96,7 +96,7 @@ class SettingsController extends AbstractController
      *
      * @Route("/deputyship-details/your-details/edit", name="user_edit")
      * @Route("/org/settings/your-details/edit", name="org_profile_edit")
-     * @Template()
+     * @Template("AppBundle:Settings:profileEdit.html.twig")
      * @throw AccessDeniedException
      **/
     public function profileEditAction(Request $request)

@@ -85,7 +85,7 @@ class ReportController extends AbstractController
      * @param Request $request
      * @param $id
      *
-     * @Template()
+     * @Template("AppBundle:Admin/Client/Report:manage.html.twig")
      *
      * @return array
      */
@@ -219,7 +219,7 @@ class ReportController extends AbstractController
      * @param Request $request
      * @param $id
      *
-     * @Template()
+     * @Template("AppBundle:Admin/Client/Report:checklist.html.twig")
      *
      * @return array
      */
