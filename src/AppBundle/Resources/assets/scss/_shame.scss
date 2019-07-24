@@ -1,14 +1,24 @@
 // Shame CSS
 // ==========================================================================
 
-// Undo the font-size overwrite in govuk-elements. It was to avoid an IE6/7 bug
-// but they're no longer supported and the overwrite made govuk-frontend unusable
-html { font-size: 100%; }
-body { font-size: 100%; }
+// Enable standard GDS typography on body elements. Most components automatically
+// apply the typography, but some (including custom ones) don't. This ensures the
+// font is consistently applied anyway.
+body {
+    @include govuk-typography-common;
+}
 
 // Undo the font-weight nullification in govuk-elements. It's no longer present in
 // the Design System, but so eager that it's still cascading through.
 b,
 strong {
     font-weight: 600;
+}
+
+// .hidden is used in a couple of places to manually hide something from the page
+// .js-hidden is used by some of our JavaScript modules to show/hide content
+.hidden,
+.js-enabled .js-hidden {
+    display: none;
+    visibility: hidden;
 }
