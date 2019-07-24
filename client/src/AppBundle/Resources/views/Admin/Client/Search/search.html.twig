@@ -64,12 +64,12 @@
                                     (Archived)
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="behat-region-client-{{ client.caseNumber }}-active-from">
                                 {% if client.activeFrom is not null %}
                                     {{ client.activeFrom | date('d/m/Y') }}
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="behat-region-client-{{ client.caseNumber }}-discharged-on">
                                 {% if client.deletedAt is not null %}
                                     {{ client.deletedAt | date('d/m/Y') }}
                                 {% endif %}

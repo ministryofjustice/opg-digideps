@@ -29,7 +29,7 @@
     {% endif %}
     <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
     {% if client.deletedAt %}
-        <p class="flush--bottom">Discharged on: <span class="bold">{{ client.deletedAt | date("j M Y") }}</span></p>
+        <p class="flush--bottom behat-region-discharged-on">Discharged on: <span class="bold">{{ client.deletedAt | date("j M Y") }}</span></p>
     {% endif %}
 
     {# client NDR #}
