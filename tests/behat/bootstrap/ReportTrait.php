@@ -9,26 +9,6 @@ trait ReportTrait
     private static $reportsCache = [];
 
     /**
-     * @Given I change the report of the client with case number :caseNumber to :reportType
-     */
-    public function iChangeTheReportOfClientWithCNToType($caseNumber, $reportType)
-    {
-        $this->getRestClient()->put('behat/client/' . $caseNumber, [
-            'current_report_type' => $reportType,
-        ]);
-    }
-
-    /**
-     * @Given I change the deputy of the client with case number :caseNumber to :newDeputyEmail
-     */
-    public function iChangeTheDeputyOfTheClientWithCaseNumberTo($caseNumber, $newDeputyEmail)
-    {
-        $this->getRestClient()->put('behat/client/' . $caseNumber, [
-            'new_deputy_email' => $newDeputyEmail,
-        ]);
-    }
-
-    /**
      * @Given I set the report :reportId end date to :days days ago
      */
     public function iSetTheReportDue($reportId, $days)

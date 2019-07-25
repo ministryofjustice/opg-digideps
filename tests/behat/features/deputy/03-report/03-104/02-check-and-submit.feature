@@ -1,6 +1,6 @@
 Feature: Report submit
 
-    @deputy
+    @deputy @deputy-104
     Scenario: submit 104
         Given emails are sent from "deputy" area
         And I am logged in as "behat-lay-deputy-104@publicguardian.gov.uk" with password "Abcd1234"

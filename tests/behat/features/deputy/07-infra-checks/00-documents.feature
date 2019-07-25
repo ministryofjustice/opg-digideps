@@ -91,7 +91,7 @@ Feature: Infrastructure document tests
     And I click on "edit-money_in_short, start, save-and-continue"
     And I fill in "yes_no_moneyTransactionsShortInExist_1" with "no"
     And I click on "save-and-continue, breadcrumbs-report-overview"
-    # Money in
+    # Money out
     And I click on "edit-money_out_short, start, save-and-continue"
     And I fill in "yes_no_moneyTransactionsShortOutExist_1" with "no"
     And I click on "save-and-continue, breadcrumbs-report-overview"

@@ -1,11 +1,6 @@
 Feature: Report money 102
 
   @deputy
-  # save status in order to be reused for 103 later
-  Scenario: save status before starting money 102
-    Given I save the application status into "money-transactions-before"
-
-  @deputy
   Scenario: money in 102
     Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "report-start, edit-money_in, start"
