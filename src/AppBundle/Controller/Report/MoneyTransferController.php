@@ -216,6 +216,7 @@ class MoneyTransferController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}/delete", name="money_transfers_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *
@@ -225,14 +226,33 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Money transfer deleted'
-        );
+        if ($form->isValid()) {
+            $this->getRestClient()->delete("/report/{$reportId}/money-transfers/{$transferId}");
 
-        return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Money transfer deleted'
+            );
+
+            return $this->redirect($this->generateUrl('money_transfers_summary', ['reportId' => $reportId]));
+        }
+
+        $transfer = $report->getMoneyTransferWithId($transferId);
+
+        return [
+            'translationDomain' => 'report-money-transfer',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.accountFrom', 'value' => $transfer->getAccountFrom()->getNameOneLine()],
+                ['label' => 'deletePage.summary.accountTo', 'value' => $transfer->getAccountTo()->getNameOneLine()],
+                ['label' => 'deletePage.summary.amount', 'value' => $transfer->getAmount(), 'format' => 'money'],
+            ],
+            'backLink' => $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]),
+        ];
     }
 
     /**

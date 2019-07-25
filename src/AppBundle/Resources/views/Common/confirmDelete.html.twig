@@ -1,0 +1,73 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain translationDomain %}
+
+{% set subject = 'deletePage.subject' | trans %}
+
+{% block htmlTitle %}
+    {% if ('deletePage.htmlTitle' | trans) != 'deletePage.htmlTitle' %}
+        {{ 'deletePage.htmlTitle' | trans }}
+    {% else %}
+        {{ 'page.htmlTitle' | trans({ '%subject%': subject }, 'delete-page') }}
+    {% endif %}
+{% endblock %}
+
+{% block pageTitle %}{{ 'page.title' | trans({ '%subject%': subject }, 'delete-page') }}{% endblock %}
+
+{% block linkBack %}
+    <a href="{{ backLink }}" class="govuk-back-link behat-link-step-back">{{ 'back' | trans({}, 'common') }}</a>
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form) }}
+
+    <h2 class="govuk-heading-m">
+        {{ 'page.question' | trans({ '%subject%': subject }, 'delete-page') }}
+    </h2>
+
+    <dl class="govuk-summary-list">
+        {% for definition in summary %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ definition.label | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% if definition.value is null %}
+                        -
+                    {% elseif definition.format is defined and definition.format == 'money' %}
+                        £{{ definition.value | money_format }}
+                    {% elseif definition.format is defined and definition.format == 'date' %}
+                        {{ definition.value | date('j F Y') }}
+                    {% elseif definition.format is defined and definition.format == 'translate' %}
+                        {% if definition.translateData is defined %}
+                            {{ definition.value | trans(definition.translateData) }}
+                        {% else %}
+                            {{ definition.value | trans }}
+                        {% endif %}
+                    {% else %}
+                        {{ definition.value | default('-') | nl2br }}
+                    {% endif %}
+                </dd>
+            </div>
+        {% endfor %}
+    </dl>
+
+    {% if warning is defined %}
+        {{ macros.notification('important', warning) }}
+    {% endif %}
+
+    <div class="govuk-form-group">
+        {{ form_submit(form.confirm, '', {
+            'buttonClass': 'behat-link-confirm',
+            'labelText': ('page.linkButtonLabel' | trans({ '%subject%': subject }, 'delete-page'))
+        }) }}
+        <a href="{{ backLink }}" class="govuk-button govuk-button--secondary govuk-!-margin-left-6 behat-link-confirm-cancel">
+            {{ 'cancel' | trans({}, 'common') }}
+        </a>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}

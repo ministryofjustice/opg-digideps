@@ -47,6 +47,7 @@ Feature: Report account transfers
       | £98.76    | transfer-02ca-11cf-9876   |
       # remove transfer n.2
     When I click on "delete" in the "transfer-02ca-11cf-9876" region
+    And I click on "confirm"
     Then I should not see the "transfer-02ca-11cf-9876" region
       # test add link
     When I click on "add"

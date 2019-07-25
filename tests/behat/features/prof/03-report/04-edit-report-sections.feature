@@ -99,8 +99,10 @@ Feature: PROF user edits 102-5 report sections
     When I click on "pa-report-open" in the "client-01000010" region
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
+    And I click on "confirm"
     Then I should see "Bank account deleted"
     When I click on "delete" in the "account-3333" region
+    And I click on "confirm"
     Then I should see "Bank account deleted"
 
   Scenario: PROF 102-5 money in
@@ -119,7 +121,7 @@ Feature: PROF user edits 102-5 report sections
     # check record in summary page
     And each text should be present in the corresponding region:
       | HSBC - main account - Current account (****01ca) | transaction-pension-received |
-    
+
   Scenario: PROF 102-5 money out
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000010" region

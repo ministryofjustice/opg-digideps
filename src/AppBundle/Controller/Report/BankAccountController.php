@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StepRedirector;
+use AppBundle\Service\StringUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -190,11 +191,10 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/bank-account/{accountId}/delete", name="bank_account_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $reportId
      * @param int $accountId
-     *
-     * @Template("AppBundle:Report/BankAccount:deleteConfirm.html.twig")
      */
     public function deleteConfirmAction(Request $request, $reportId, $accountId)
     {
@@ -213,9 +213,11 @@ class BankAccountController extends AbstractController
             return $this->redirect($summaryPageUrl);
         }
 
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
         // delete the bank acount if the confirm button is pushed, or there are no payments. Then go back to summary page
-        if ($request->get('confirm') || $dependentRecords['transactionsCount'] == 0) {
+        if ($form->isValid()) {
             if ($report->getBankAccountById($accountId)) {
                 $this->getRestClient()->delete("/account/{$accountId}");
             }
@@ -228,14 +230,45 @@ class BankAccountController extends AbstractController
             return $this->redirect($summaryPageUrl);
         }
 
+        // Build summary based on information entered
+        $summary = [];
+
+        if ($bankAccount->requiresBankName()) {
+            $summary[] = ['label' => 'deletePage.summary.bank', 'value' => $bankAccount->getBank()];
+        }
+
+        $summary[] = ['label' => 'deletePage.summary.accountType', 'value' => $bankAccount->getAccountTypeText()];
+
+        if ($bankAccount->requiresSortCode()) {
+            $summary[] = ['label' => 'deletePage.summary.sortCode', 'value' => $bankAccount->getDisplaySortCode()];
+        }
+
+        $summary[] = ['label' => 'deletePage.summary.accountNumber', 'value' => '****' . $bankAccount->getAccountNumber()];
+
         // show confirmation page
-        return [
+        $templateData = [
+            'translationDomain' => 'report-bank-accounts',
             'report' => $report,
-            'accountId' => $accountId,
-            'account' => $bankAccount,
-            'dp' => $dependentRecords,
-            'backLink' => $summaryPageUrl
+            'form' => $form->createView(),
+            'summary' => $summary,
+            'backLink' => $summaryPageUrl,
         ];
+
+        // Show a warning if the account has transactions
+        if ($dependentRecords['transactionsCount'] > 0) {
+            $transactionTypes = [];
+            foreach ($dependentRecords['transactions'] as $type => $count) {
+                if ($count > 0) $transactionTypes[] = $translator->trans($type, [], 'common');
+            }
+
+            $templateData['warning'] = $translator->trans(
+                'deletePage.linkedPaymentsWarning',
+                ['%paymentTypes%' => StringUtils::implodeWithDifferentLast($transactionTypes, ', ', ' and ')],
+                'report-bank-accounts'
+            );
+        }
+
+        return $templateData;
     }
 
     /**

@@ -121,7 +121,7 @@ Scenario: PROF delete client contacts
     # actual delete this time
     Then I click on "delete-contact-button" in the "client-profile-contacts" region
     Then the URL should match "/contact/\d+/delete"
-    And I click on "contact-delete"
+    And I click on "confirm"
     Then the form should be valid
     And the response status code should be 200
     Then I go to the URL previously saved as "report-overview"

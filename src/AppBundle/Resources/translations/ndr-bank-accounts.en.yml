@@ -51,6 +51,15 @@ summaryPage:
   weAskAbout: |
     In this section, we ask you about %client%'s bank accounts, building society
     accounts, savings accounts and ISAs.
+
+deletePage:
+  htmlTitle: "Deputy report - remove account | GOV.UK"
+  subject: account
+  summary:
+    accountType: Account type
+    accountNumber: Account number
+    balance: Balance
+
 form:
   accountType:
       label: What type of account is it?

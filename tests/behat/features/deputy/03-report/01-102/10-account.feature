@@ -73,6 +73,7 @@ Feature: Report accounts
       | £235.00                    | account-11cf |
     # remove account
     When I click on "delete" in the "account-temp" region
+    And I click on "confirm"
     Then I should not see the "account-temp" region
     # test add link
     When I click on "add"

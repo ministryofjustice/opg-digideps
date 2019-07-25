@@ -150,7 +150,7 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
     And I click on "delete-documents-button" in the "document-list" region
     Then the response status code should be 200
     # delete this time
-    And I click on "document-delete"
+    And I click on "confirm"
     Then the form should be valid
     And the URL should match "/report/\d+/documents/step/1"
     # Check document removed

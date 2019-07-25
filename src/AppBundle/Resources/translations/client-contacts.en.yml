@@ -6,13 +6,12 @@ editContact:
   htmlTitle: Client profile - edit contact | GOV.UK
   pageTitle: Edit contact
   supportTitle: "Client profile:"
-removeContact:
-  htmlTitle: Client profile - remove contact | GOV.UK
-  pageTitle: Remove contact
-  supportTitle: "Client profile:"
-  question: Are you sure you want to remove this contact?
-  organisation: "Organisation:"
-  linkButtonLabel: Yes, remove contact
+deletePage:
+  htmlTitle: "Client profile - remove contact | GOV.UK"
+  subject: contact
+  summary:
+    name: Name
+    orgName: Organisation
 form:
   contactHeading: Contact details
   firstName:

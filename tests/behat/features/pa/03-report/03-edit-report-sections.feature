@@ -128,8 +128,10 @@ Feature: PA user edits report sections
     When I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
+    And I click on "confirm"
     Then I should see "Bank account deleted"
     When I click on "delete" in the "account-3333" region
+    And I click on "confirm"
     Then I should see "Bank account deleted"
 
   Scenario: PA 102 money in

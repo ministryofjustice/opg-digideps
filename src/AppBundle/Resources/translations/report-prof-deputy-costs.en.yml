@@ -129,4 +129,10 @@ summaryPage:
     totaPaidThisPeriod: Total costs paid this reporting period
     totalCosts: Total costs
 
-
+deletePage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  subject: previous cost
+  summary:
+    startDate: Reporting period start date
+    endDate: Reporting period end date
+    amount: Amount

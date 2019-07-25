@@ -265,6 +265,7 @@ class DecisionController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *
@@ -272,14 +273,32 @@ class DecisionController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $decisionId)
     {
-        $this->getRestClient()->delete("/report/decision/{$decisionId}");
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Decision deleted'
-        );
+        if ($form->isValid()) {
+            $this->getRestClient()->delete("/report/decision/{$decisionId}");
 
-        return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Decision deleted'
+            );
+
+            return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+        }
+
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $decision = $this->getRestClient()->get('report/decision/' . $decisionId, 'Report\\Decision');
+
+        return [
+            'translationDomain' => 'report-decisions',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.description', 'value' => $decision->getDescription()],
+            ],
+            'backLink' => $this->generateUrl('decisions', ['reportId' => $reportId]),
+        ];
     }
 
     /**

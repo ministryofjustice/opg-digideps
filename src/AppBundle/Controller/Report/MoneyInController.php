@@ -182,6 +182,7 @@ class MoneyInController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $reportId
      * @param int $transactionId
@@ -191,20 +192,51 @@ class MoneyInController extends AbstractController
     public function deleteAction(Request $request, $reportId, $transactionId)
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
-            return $t->getId() == $transactionId;
-        });
-        if (!$transaction) {
+
+        foreach ($report->getMoneyTransactionsIn() as $t) {
+            if ($t->getId() === $transactionId) {
+                $transaction = $t;
+                break;
+            }
+        }
+
+        if (!isset($transaction)) {
             throw new \RuntimeException('Transaction not found');
         }
-        $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Entry deleted'
-        );
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
+        if ($form->isValid()) {
+            $this->getRestClient()->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Entry deleted'
+            );
+
+            return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
+        }
+
+        $translator = $this->get('translator');
+        $categoryKey = 'form.category.entries.' . $transaction->getCategory() . '.label';
+        $summary = [
+            ['label' => 'deletePage.summary.category', 'value' => $translator->trans($categoryKey, [], 'report-money-transaction')],
+            ['label' => 'deletePage.summary.description', 'value' => $transaction->getDescription()],
+            ['label' => 'deletePage.summary.amount', 'value' => $transaction->getAmount(), 'format' => 'money'],
+        ];
+
+        if ($report->canLinkToBankAccounts() && $transaction->getBankAccount()) {
+            $summary[] = ['label' => 'deletePage.summary.bankAccount', 'value' => $transaction->getBankAccount()->getNameOneLine()];
+        }
+
+        return [
+            'translationDomain' => 'report-money-in',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => $summary,
+            'backLink' => $this->generateUrl('money_in_summary', ['reportId' => $reportId]),
+        ];
     }
 
     /**

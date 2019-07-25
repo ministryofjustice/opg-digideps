@@ -46,13 +46,17 @@ summaryPage:
   addBalance: Add balance
 
 deletePage:
-  htmlTitle: "Deputy report - Accounts | GOV.UK"
-  pageTitle: Remove account
-  supportTitle: Accounts
-  question: Are you sure you want to remove this account?
-  linkButtonLabel: Yes, remove account
+  htmlTitle: "Deputy report - remove account | GOV.UK"
+  subject: account
+  summary:
+    bank: Bank or building society name
+    accountType: Type of account
+    sortCode: Sort code
+    accountNumber: Account number
   transferPresentError: |
     This bank account cannot be removed because you've added money transfers to or from this account.
+  linkedPaymentsWarning: |
+    You have %paymentTypes% payments linked to this bank account. If you remove the account, we'll unlink the payments for you.
 
 form:
   accountType:

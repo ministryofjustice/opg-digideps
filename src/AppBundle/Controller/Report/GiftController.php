@@ -188,6 +188,7 @@ class GiftController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/gifts/{giftId}/delete", name="gifts_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *
@@ -195,16 +196,34 @@ class GiftController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $giftId)
     {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('report/' . $report->getId() . '/gift/' . $giftId);
+        if ($form->isValid()) {
+            $this->getRestClient()->delete('report/' . $report->getId() . '/gift/' . $giftId);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Gift deleted'
-        );
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Gift deleted'
+            );
 
-        return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
+        }
+
+        $gift = $this->getRestClient()->get('report/' . $reportId . '/gift/' . $giftId, 'Report\\Gift');
+
+        return [
+            'translationDomain' => 'report-gifts',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.explanation', 'value' => $gift->getExplanation()],
+                ['label' => 'deletePage.summary.amount', 'value' => $gift->getAmount(), 'format' => 'money'],
+            ],
+            'backLink' => $this->generateUrl('gifts', ['reportId' => $reportId]),
+        ];
     }
 
     /**

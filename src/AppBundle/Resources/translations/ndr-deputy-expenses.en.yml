@@ -55,6 +55,13 @@ summaryPage:
     court order.
   addButton: Add a deputy expense
 
+deletePage:
+  htmlTitle: "Deputy report - remove deputy expense | GOV.UK"
+  subject: expense
+  summary:
+    explanation: Description
+    amount: Amount
+
 form:
   explanation:
     label: Description of expense

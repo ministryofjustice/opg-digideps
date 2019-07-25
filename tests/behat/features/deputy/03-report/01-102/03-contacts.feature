@@ -53,6 +53,7 @@ Feature: Report contacts
             | I owe him lots of money | contact-sw1-pb1 |
         # remove contact n.2
         When I click on "delete" in the "contact-sw1-pb1" region
+        And I click on "confirm"
         Then I should not see the "contact-sw1-pb1" region
         # test add link
         When I click on "add"

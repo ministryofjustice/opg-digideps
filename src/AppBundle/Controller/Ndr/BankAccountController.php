@@ -172,6 +172,7 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/ndr/{ndrId}/bank-account/{accountId}/delete", name="ndr_bank_account_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $ndrId
      * @param int $accountId
@@ -180,17 +181,35 @@ class BankAccountController extends AbstractController
      */
     public function deleteAction(Request $request, $ndrId, $accountId)
     {
-        $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Bank account deleted'
-        );
+        if ($form->isValid()) {
+            $ndr = $this->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        if ($ndr->hasBankAccountWithId($accountId)) {
-            $this->getRestClient()->delete("/ndr/account/{$accountId}");
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Bank account deleted'
+            );
+
+            if ($ndr->hasBankAccountWithId($accountId)) {
+                $this->getRestClient()->delete("/ndr/account/{$accountId}");
+            }
+
+            return $this->redirect($this->generateUrl('ndr_bank_accounts_summary', ['ndrId' => $ndrId]));
         }
 
-        return $this->redirect($this->generateUrl('ndr_bank_accounts_summary', ['ndrId' => $ndrId]));
+        $account = $this->getRestClient()->get('ndr/account/' . $accountId, 'Ndr\\BankAccount');
+
+        return [
+            'translationDomain' => 'ndr-bank-accounts',
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.accountType', 'value' => $account->getAccountTypeText()],
+                ['label' => 'deletePage.summary.accountNumber', 'value' => '****' . $account->getAccountNumber()],
+                ['label' => 'deletePage.summary.balance', 'value' => $account->getBalanceOnCourtOrderDate(), 'format' => 'money'],
+            ],
+            'backLink' => $this->generateUrl('ndr_bank_accounts_summary', ['ndrId' => $ndrId]),
+        ];
     }
 }

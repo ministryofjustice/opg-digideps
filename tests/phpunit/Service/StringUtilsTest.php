@@ -29,4 +29,24 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($expected, StringUtils::secondsToHoursMinutes($input));
     }
+
+    public static function implodeWithDifferentLastProvider()
+    {
+        return [
+            [[''], ', ', ' and ', ''],
+            [['hook'], ', ', ' and ', 'hook'],
+            [['hook', 'line'], ', ', ' and ', 'hook and line'],
+            [['hook', 'line', 'sinker'], ', ', ' and ', 'hook, line and sinker'],
+            [['£3', '£5', '£8'], '+', '=', '£3+£5=£8'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider implodeWithDifferentLastProvider
+     */
+    public function implodeWithDifferentLast($strings, $joiner, $lastJoiner, $expected)
+    {
+        $this->assertEquals($expected, StringUtils::implodeWithDifferentLast($strings, $joiner, $lastJoiner));
+    }
 }

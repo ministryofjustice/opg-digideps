@@ -213,49 +213,71 @@ class TeamController extends AbstractController
     }
 
     /**
-     * Confirm delete user form
+     * Removes a user, adds a flash message and redirects to page. Asks for confirmation first.
      *
      * @Route("/delete-user/{id}", name="delete_team_member")
-     * @Template("AppBundle:Org/Team:deleteConfirm.html.twig")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            try {
+                $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
+
+                $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
+
+                // delete the user from all the teams the logged user belongs to.
+                // Also removes the user if (after the operation) won't belong to any team any longer
+                $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
+
+                $request->getSession()->getFlashBag()->add('notice', 'User account removed');
+            } catch (\Throwable $e) {
+                $this->get('logger')->debug($e->getMessage());
+
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        'User could not be removed'
+                    );
+                }
+            }
+
+            return $this->redirectToRoute('org_team');
+        }
+
         // The rest call ensures that only team members get returned and permission checks work as expected
         $user = $this->getRestClient()->get('team/member/' . $id, 'User');
 
         $this->denyAccessUnlessGranted('delete-user', $user, 'Access denied');
 
-        return ['user' => $user];
-    }
+        $summary = [
+            ['label' => 'deletePage.summary.fullName', 'value' => $user->getFullName()],
+            ['label' => 'deletePage.summary.email', 'value' => $user->getEmail()],
+            [
+                'label' => 'deletePage.summary.isOrgAdministrator.label',
+                'value' => 'deletePage.summary.isOrgAdministrator.' . ($user->isOrgAdministrator() ? 'yes' : 'no'),
+                'format' => 'translate',
+            ],
+        ];
 
-    /**
-     * Removes a user, adds a flash message and redirects to page
-     *
-     * @Route("/delete-user/{id}/confirm", name="delete_team_member_confirm")
-     */
-    public function deleteConfirmedAction(Request $request, $id)
-    {
-        try {
-            $userToRemove = $this->getRestClient()->get('team/member/' . $id, 'User');
-
-            $this->denyAccessUnlessGranted('delete-user', $userToRemove, 'Access denied');
-
-            // delete the user from all the teams the logged user belongs to.
-            // Also removes the user if (after the operation) won't belong to any team any longer
-            $this->getRestClient()->delete('/team/delete-membership/' . $userToRemove->getId());
-
-            $request->getSession()->getFlashBag()->add('notice', 'Operation completed');
-        } catch (\Throwable $e) {
-            $this->get('logger')->debug($e->getMessage());
-
-            if ($e instanceof RestClientException && isset($e->getData()['message'])) {
-                $request->getSession()->getFlashBag()->add(
-                    'error',
-                    'User could not be removed'
-                );
-            }
+        if (count($user->getTeamNames()) >= 2) {
+            $count = count($user->getTeamNames()) - 1;
+            $summary[] = [
+                'label' => 'deletePage.summary.otherTeams.label',
+                'value' => 'deletePage.summary.otherTeams.value.' . ($count === 1 ? 'singular' : 'plural'),
+                'format' => 'translate',
+                'translateData' => ['%count%' => $count],
+            ];
         }
 
-        return $this->redirectToRoute('org_team');
+        return [
+            'translationDomain' => 'org-team',
+            'form' => $form->createView(),
+            'summary' => $summary,
+            'backLink' => $this->generateUrl('org_team'),
+        ];
     }
 }

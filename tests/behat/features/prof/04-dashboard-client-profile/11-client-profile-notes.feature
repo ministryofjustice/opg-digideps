@@ -73,7 +73,7 @@ Feature: PROF client profile Notes
     Then I go to the URL previously saved as "report-overview"
     Then I click on "delete-notes-button" in the "client-profile-notes" region
     Then the response status code should be 200
-    And I click on "note-delete"
+    And I click on "confirm"
     Then the form should be valid
     Then I go to the URL previously saved as "report-overview"
     And I should not see "test title content" in the "client-profile-notes" region

@@ -50,6 +50,7 @@ Feature: Report money 102
       | £12,344.67              | pensions-total                      |
     # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
+    And I click on "confirm"
     Then I should not see the "transaction-delete-me" region
     # test add link
     When I click on "add"
@@ -123,6 +124,7 @@ Feature: Report money 102
       | £12,344.68              | household-bills-total               |
       # remove transaction n.2
     When I click on "delete" in the "transaction-delete-me" region
+    And I click on "confirm"
     Then I should not see the "transaction-delete-me" region
       # test add link
     When I click on "add"

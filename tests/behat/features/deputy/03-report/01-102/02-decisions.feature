@@ -64,6 +64,7 @@ Feature: Report decisions
             | dcid2 | decision-2 |
         # remove decision n.2
         When I click on "delete" in the "decision-2" region
+        And I click on "confirm"
         Then I should not see the "decision-2" region
         # test add link
         When I click on "add"

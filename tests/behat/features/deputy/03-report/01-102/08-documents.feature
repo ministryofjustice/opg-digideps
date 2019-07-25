@@ -71,7 +71,7 @@ Feature: Report documents
     And I click on "delete-documents-button" in the "document-list" region
     Then the response status code should be 200
     # delete this time
-    And I click on "document-delete"
+    And I click on "confirm"
     Then the URL should match "/report/\d+/documents/step/1"
     # chose "no documents" to make report submittable
     And the step with the following values CAN be submitted:
@@ -143,6 +143,6 @@ Feature: Report documents
     And I click on "attach-file, continue"
     Then I should see "file2.pdf" in the "document-list" region
     When I click on the first "delete-documents-button" in the "document-list" region
-    And I click on "document-delete"
+    And I click on "confirm"
     Then the URL should match "/report/\d+/documents/summary"
     Then I should not see "file2.pdf" in the "document-list" region

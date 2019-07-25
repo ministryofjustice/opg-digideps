@@ -66,6 +66,7 @@ Feature: Report asset with variations
             | £25,010.00 | asset-impressionist-painting |
         # remove asset n.3
         When I click on "delete" in the "asset-temp" region
+        And I click on "confirm"
         Then I should not see the "asset-temp" region
         # test add link
         When I click on "add"
@@ -167,5 +168,6 @@ Feature: Report asset with variations
         # remove property
         When I save the application status into "report-assets-finished"
         And I click on "delete" in the "property-sw11-6tf" region
+        And I click on "confirm"
         Then I should not see the "property-sw11-6tf" region
         And I load the application status from "report-assets-finished"

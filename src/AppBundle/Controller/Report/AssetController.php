@@ -345,19 +345,49 @@ class AssetController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/assets/{assetId}/delete", name="asset_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @return RedirectResponse
      */
     public function deleteAction(Request $request, $reportId, $assetId)
     {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ($report->hasAssetWithId($assetId)) {
-            $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");
-            $request->getSession()->getFlashBag()->add('notice', 'Asset removed');
+        if ($form->isValid()) {
+            if ($report->hasAssetWithId($assetId)) {
+                $this->getRestClient()->delete("/report/{$reportId}/asset/{$assetId}");
+                $request->getSession()->getFlashBag()->add('notice', 'Asset removed');
+            }
+
+            return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
         }
 
-        return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
+        $asset = $this->getRestClient()->get("report/{$reportId}/asset/{$assetId}", 'Report\\Asset');
+
+        if ($asset instanceof EntityDir\Report\AssetProperty) {
+            $summary = [
+                ['label' => 'deletePage.summary.type', 'value' => 'deletePage.summary.property', 'format' => 'translate'],
+                ['label' => 'deletePage.summary.address', 'value' => implode(', ', $asset->getAddressValidLines())],
+                ['label' => 'deletePage.summary.value', 'value' => $asset->getValue(), 'format' => 'money'],
+            ];
+        } else {
+            $summary = [
+                ['label' => 'deletePage.summary.type', 'value' => $asset->getTitle()],
+                ['label' => 'deletePage.summary.description', 'value' => $asset->getDescription()],
+                ['label' => 'deletePage.summary.value', 'value' => $asset->getValue(), 'format' => 'money'],
+                ['label' => 'deletePage.summary.valuationDate', 'value' => $asset->getValuationDate(), 'format' => 'date'],
+            ];
+        }
+
+        return [
+            'translationDomain' => 'report-assets',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => $summary,
+            'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
+        ];
     }
 
     /**

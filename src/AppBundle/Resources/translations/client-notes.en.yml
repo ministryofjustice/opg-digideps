@@ -6,14 +6,12 @@ editNote:
   htmlTitle: Client profile - edit note | GOV.UK
   pageTitle: Edit note
   supportTitle: "Client profile:"
-removeNote:
-  htmlTitle: Client profile - remove note | GOV.UK
-  pageTitle: Remove note
-  supportTitle: "Client profile:"
-  question: Are you sure you want to remove this note?
-  noteTitle: "Title:"
-  dateAdded: "Date added:"
-  linkButtonLabel: Yes, remove note
+deletePage:
+  htmlTitle: "Client profile - remove note | GOV.UK"
+  subject: note
+  summary:
+    title: Title
+    createdOn: Date added
 form:
   category:
     label: Category

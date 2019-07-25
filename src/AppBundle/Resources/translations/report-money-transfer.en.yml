@@ -39,6 +39,14 @@ summaryPage:
   weAskAbout: In this section, we ask you about money you've transferred between %client%'s accounts.
   addButton: Add a transfer
 
+deletePage:
+  htmlTitle: "Deputy report - remove money transfer | GOV.UK"
+  subject: transfer
+  summary:
+    accountFrom: Transferred from
+    accountTo: Transferred to
+    amount: Amount
+
 errorPage:
   htmlTitle: "Deputy report - money transfers | GOV.UK"
   pageTitle: Money transfers

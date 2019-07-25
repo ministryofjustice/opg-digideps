@@ -185,6 +185,7 @@ class ContactController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *
@@ -192,14 +193,34 @@ class ContactController extends AbstractController
      */
     public function deleteAction(Request $request, $reportId, $contactId)
     {
-        $this->getRestClient()->delete("/report/contact/{$contactId}");
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Contact deleted'
-        );
+        if ($form->isValid()) {
+            $this->getRestClient()->delete("/report/contact/{$contactId}");
 
-        return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Contact deleted'
+            );
+
+            return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
+        }
+
+        $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $contact = $this->getRestClient()->get('report/contact/' . $contactId, 'Report\\Contact');
+
+        return [
+            'translationDomain' => 'report-contacts',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.contactName', 'value' => $contact->getContactName()],
+                ['label' => 'deletePage.summary.relationship', 'value' => $contact->getRelationship()],
+                ['label' => 'deletePage.summary.explanation', 'value' => $contact->getExplanation()],
+            ],
+            'backLink' => $this->generateUrl('contacts', ['reportId' => $reportId]),
+        ];
     }
 
     /**

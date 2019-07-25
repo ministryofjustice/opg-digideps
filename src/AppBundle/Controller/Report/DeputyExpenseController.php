@@ -213,6 +213,7 @@ class DeputyExpenseController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/deputy-expenses/{expenseId}/delete", name="deputy_expenses_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param int $id
      *
@@ -222,14 +223,32 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('report/' . $report->getId() . '/expense/' . $expenseId);
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Expense deleted'
-        );
+        if ($form->isValid()) {
+            $this->getRestClient()->delete('report/' . $report->getId() . '/expense/' . $expenseId);
 
-        return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Expense deleted'
+            );
+
+            return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
+        }
+
+        $expense = $this->getRestClient()->get('report/' . $reportId . '/expense/' . $expenseId, 'Report\Expense');
+
+        return [
+            'translationDomain' => 'report-deputy-expenses',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.explanation', 'value' => $expense->getExplanation()],
+                ['label' => 'deletePage.summary.amount', 'value' => $expense->getAmount(), 'format' => 'money'],
+            ],
+            'backLink' => $this->generateUrl('deputy_expenses', ['reportId' => $reportId]),
+        ];
     }
 
     /**

@@ -50,6 +50,7 @@ Feature: Report deputy expenses
       | £49.00                           | expense-total    |
         # remove expense n.2
     When I click on "delete" in the "expense-food-for-client-on-3-november" region
+    And I click on "confirm"
     Then I should not see the "expense-food-for-client-on-3-november" region
         # test add link
     When I click on "add"

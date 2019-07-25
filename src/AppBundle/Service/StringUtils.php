@@ -37,4 +37,18 @@ class StringUtils
         // X hours and Y minutes
         return $hoursString . ' and ' . $minutesString;
     }
+
+    /**
+     * Implodes strings, but with a different joiner between the last two
+     */
+    public static function implodeWithDifferentLast(array $strings, string $joiner, string $lastJoiner)
+    {
+        $last = array_pop($strings);
+
+        if ($strings) {
+          return implode($joiner, $strings) . $lastJoiner . $last;
+        }
+
+        return $last;
+    }
 }

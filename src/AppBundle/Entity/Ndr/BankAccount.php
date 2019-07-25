@@ -13,6 +13,8 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with api.
+     *
+     * @JMS\Exclude
      */
     public static $types = [
         'current',
@@ -24,12 +26,18 @@ class BankAccount implements BankAccountInterface
         'other_no_sortcode',
     ];
 
+    /**
+     * @JMS\Exclude
+     */
     private static $typesNotRequiringSortCode = [
         'postoffice',
         'cfo',
         'other_no_sortcode'
     ];
 
+    /**
+     * @JMS\Exclude
+     */
     private static $typesNotRequiringBankName = [
         'postoffice',
         'cfo'

@@ -207,9 +207,9 @@ class DocumentController extends AbstractController
      * Confirm delete document form
      *
      * @Route("/documents/{documentId}/delete", name="delete_document")
-     * @Template("AppBundle:Report/Document:deleteConfirm.html.twig")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
-    public function deleteConfirmAction(Request $request, $documentId, $confirmed = false)
+    public function deleteConfirmAction(Request $request, $documentId)
     {
         /** @var EntityDir\Document $document */
         $document = $this->getDocument($documentId);
@@ -220,6 +220,13 @@ class DocumentController extends AbstractController
 
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            return $this->deleteDocument($request, $documentId);
+        }
+
         $report = $document->getReport();
         $fromPage = $request->get('from');
 
@@ -228,19 +235,23 @@ class DocumentController extends AbstractController
             : $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
 
         return [
-            'report'   => $report,
-            'document' => $document,
+            'translationDomain' => 'report-documents',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.fileName', 'value' => $document->getFileName()],
+                ['label' => 'deletePage.summary.createdOn', 'value' => $document->getCreatedOn(), 'format' => 'date'],
+            ],
             'backLink' => $backLink,
-            'fromPage' => $fromPage
         ];
     }
 
     /**
      * Removes a document, adds a flash message and redirects to page
      *
-     * @Route("/document/{documentId}/delete/confirm", name="delete_document_confirm")
+     * @return RedirectResponse
      */
-    public function deleteConfirmedAction(Request $request, $documentId)
+    public function deleteDocument(Request $request, $documentId)
     {
         /** @var EntityDir\Report\Document $document */
         $document = $this->getDocument($documentId);

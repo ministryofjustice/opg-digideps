@@ -60,6 +60,17 @@ summaryPage:
   weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
 
+deletePage:
+  htmlTitle: "New deputy report - remove asset | GOV.UK"
+  subject: asset
+  summary:
+    type: Type
+    property: Property
+    address: Address
+    value: Value
+    description: Description
+    valuationDate: Valuation date
+
 form:
   titleSave.label: Save and continue
   title:

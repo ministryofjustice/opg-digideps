@@ -65,6 +65,7 @@ Feature: NDR assets
       | £25,010.00             | asset-impressionist-painting |
       # remove asset n.3
     When I click on "delete" in the "asset-temp" region
+    And I click on "confirm"
     Then I should not see the "asset-temp" region
       # test add link
     When I click on "add"
@@ -163,4 +164,5 @@ Feature: NDR assets
       | 13 gold house | property-sw11-6tf-address |
     # remove property
     And I click on "delete" in the "property-sw11-6tf" region
+    And I click on "confirm"
     Then I should not see the "property-sw11-6tf" region

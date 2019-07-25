@@ -51,6 +51,7 @@ Feature: Report gifts
       | £49.00                    | gift-total                     |
         # remove expense n.2
     When I click on "delete" in the "gift-gift-for-the-dog" region
+    And I click on "confirm"
     Then I should not see the "gift-gift-for-the-dog" region
         # test add link
     When I click on "add"

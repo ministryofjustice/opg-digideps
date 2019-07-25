@@ -102,7 +102,7 @@ class NoteController extends AbstractController
      * Confirm delete user form
      *
      * @Route("{noteId}/delete", name="delete_note")
-     * @Template("AppBundle:Org/ClientProfile:deleteConfirm.html.twig")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, $noteId, $confirmed = false)
     {
@@ -111,40 +111,38 @@ class NoteController extends AbstractController
 
         $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
-        return [
-            'report'  => $note->getClient()->getCurrentReport(),
-            'note' => $note,
-            'client' => $note->getClient(),
-            'backLink' => $this->generateClientProfileLink($note->getClient())
-        ];
-    }
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
 
-    /**
-     * Removes a note, adds a flash message and redirects to page
-     *
-     * @Route("{noteId}/delete/confirm", name="delete_note_confirm")
-     */
-    public function deleteConfirmedAction(Request $request, $noteId)
-    {
-        try {
-            /** @var EntityDir\Note $note */
-            $note = $this->getNote($noteId);
+        if ($form->isValid()) {
+            try {
+                /** @var EntityDir\Note $note */
+                $note = $this->getNote($noteId);
 
-            $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
+                $this->denyAccessUnlessGranted('delete-note', $note, 'Access denied');
 
-            $this->getRestClient()->delete('note/' . $noteId);
+                $this->getRestClient()->delete('note/' . $noteId);
 
-            $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
-        } catch (\Throwable $e) {
-            $this->get('logger')->error($e->getMessage());
+                $request->getSession()->getFlashBag()->add('notice', 'Note has been removed');
+            } catch (\Throwable $e) {
+                $this->get('logger')->error($e->getMessage());
 
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                'Note could not be removed'
-            );
+                $request->getSession()->getFlashBag()->add('error', 'Note could not be removed');
+            }
+
+            return $this->redirect($this->generateClientProfileLink($note->getClient()));
         }
 
-        return $this->redirect($this->generateClientProfileLink($note->getClient()));
+        return [
+            'translationDomain' => 'client-notes',
+            'report' => $note->getClient()->getCurrentReport(),
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.title', 'value' => $note->getTitle()],
+                ['label' => 'deletePage.summary.createdOn', 'value' => $note->getCreatedOn(), 'format' => 'date'],
+            ],
+            'backLink' => $this->generateClientProfileLink($note->getClient()),
+        ];
     }
 
     /**

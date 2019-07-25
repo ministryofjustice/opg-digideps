@@ -107,6 +107,12 @@ summaryPage:
   decisionTableColumnHeading2: Was %client% involved?
   decisionTableColumnHeading3: If not, explain why; if yes, provide detail
 
+deletePage:
+  htmlTitle: "Deputy report - remove decision | GOV.UK"
+  subject: decision
+  summary:
+    description: Decision description
+
 form:
   title:
     label: Title

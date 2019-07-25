@@ -73,6 +73,13 @@ summaryPage:
   deleteDocument: Remove
   setNoAttemptWithDocuments: "Your answer could not be updated to 'No' because you have attached documents. Please remove all attached documents before changing your answer."
 
+deletePage:
+  htmlTitle: "Deputy report - remove supporting document | GOV.UK"
+  subject: document
+  summary:
+    fileName: File name
+    createdOn: Date attached
+
 submitMoreDocumentsConfirm:
   htmlTitle: "Deputy report - supporting documents | GOV.UK"
   supportTitle: Attach documents

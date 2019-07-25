@@ -88,46 +88,44 @@ class ClientContactController extends AbstractController
 
     /**
      * @Route("{id}/delete", name="clientcontact_delete")
-     * @Template("AppBundle:Org/ClientProfile:deleteContactConfirm.html.twig")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
     public function deleteConfirmAction(Request $request, $id, $confirmed = false)
     {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
         $clientContact = $this->getContactById($id);
         $client = $clientContact->getClient();
         $this->denyAccessUnlessGranted('delete-client-contact', $client, 'Access denied');
+
+        if ($form->isValid()) {
+            try {
+                $this->getRestClient()->delete('clientcontacts/' . $id);
+                $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
+            } catch (\Throwable $e) {
+                $this->get('logger')->error($e->getMessage());
+                $request->getSession()->getFlashBag()->add(
+                    'error',
+                    'Client contact could not be removed'
+                );
+            }
+
+            return $this->redirect($this->generateClientProfileLink($clientContact->getClient()));
+        }
 
         $client = $clientContact->getClient();
 
         return [
+            'translationDomain' => 'client-contacts',
             'report'   => $client->getCurrentReport(),
-            'contact'  => $clientContact,
-            'client'   => $client,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.name', 'value' => $clientContact->getFirstname() . ' ' . $clientContact->getLastName()],
+                ['label' => 'deletePage.summary.orgName', 'value' => $clientContact->getOrgName()],
+            ],
             'backLink' => $this->generateClientProfileLink($client)
         ];
-    }
-
-    /**
-     * @Route("{id}/delete/confirm", name="clientcontact_delete_confirm")
-     * @Template("AppBundle:Org/ClientProfile:deleteContactConfirm.html.twig")
-     */
-    public function deleteConfirmedAction(Request $request, $id)
-    {
-        $clientContact = $this->getContactById($id);
-        $client = $clientContact->getClient();
-
-        $this->denyAccessUnlessGranted('delete-client-contact', $client, 'Access denied');
-        try {
-            $this->getRestClient()->delete('clientcontacts/' . $id);
-            $request->getSession()->getFlashBag()->add('notice', 'Contact has been removed');
-        } catch (\Throwable $e) {
-            $this->get('logger')->error($e->getMessage());
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                'Client contact could not be removed'
-            );
-        }
-
-        return $this->redirect($this->generateClientProfileLink($clientContact->getClient()));
     }
 
     /**

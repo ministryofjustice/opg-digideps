@@ -185,6 +185,7 @@ class ProfDeputyCostsController extends AbstractController
 
     /**
      * @Route("/previous-received/{previousReceivedId}/delete", name="prof_deputy_costs_previous_received_delete")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      *
      * @param Request $request
      * @param $reportId
@@ -193,16 +194,35 @@ class ProfDeputyCostsController extends AbstractController
      */
     public function previousCostDelete(Request $request, $reportId, $previousReceivedId)
     {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
         $report = $this->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
+        if ($form->isValid()) {
+            $this->getRestClient()->delete('report/' . $report->getId() . '/prof-deputy-previous-cost/' . $previousReceivedId);
 
-        $request->getSession()->getFlashBag()->add(
-            'notice',
-            'Cost deleted'
-        );
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'Cost deleted'
+            );
 
-        return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
+        }
+
+        $cost = $this->getRestClient()->get('/prof-deputy-previous-cost/' . $previousReceivedId, 'Report\ProfDeputyPreviousCost');
+
+        return [
+            'translationDomain' => 'report-prof-deputy-costs',
+            'report' => $report,
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.startDate', 'value' => $cost->getStartDate(), 'format' => 'date'],
+                ['label' => 'deletePage.summary.endDate', 'value' => $cost->getEndDate(), 'format' => 'date'],
+                ['label' => 'deletePage.summary.amount', 'value' => $cost->getAmount(), 'format' => 'money'],
+            ],
+            'backLink' => $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]),
+        ];
     }
 
 

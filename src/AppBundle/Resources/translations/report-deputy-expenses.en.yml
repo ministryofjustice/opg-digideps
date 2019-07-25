@@ -66,6 +66,13 @@ summaryPage:
     to do to carry out your role as a deputy, such as phone calls, postage and travel costs.
   addButton: Add a deputy expense
 
+deletePage:
+  htmlTitle: "Deputy report - remove deputy expense | GOV.UK"
+  subject: expense
+  summary:
+    explanation: Description of expense
+    amount: Amount
+
 form:
   explanation:
     label: Description of expense
