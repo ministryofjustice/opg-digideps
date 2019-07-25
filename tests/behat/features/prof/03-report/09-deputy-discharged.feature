@@ -180,3 +180,23 @@ Feature: Prof deputy is discharged
       | report_endDate_year    | 2019 |
     And I press "report_save"
     Then the URL should match "/lay"
+
+  Scenario: PROF dashboard check client no longer in view
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
+    And I should see the "client" region exactly 15 times
+    When I click on "paginator-page-2"
+    Then I should see the "client" region exactly 2 times
+  # check search
+    When I fill in "search" with "01000010"
+    And I press "search_submit"
+    Then I should not see the "client-01000010" region
+    And I should see the "client" region exactly 0 times
+
+  Scenario: Admin can see both Clients
+    Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
+    When I should be on "/admin"
+    And I click on "admin-client-search"
+    When I fill in the following:
+      | search_clients_q | 01000010 |
+    And I click on "search_clients_search"
+    Then I should see the "client-row" region exactly "2" times
