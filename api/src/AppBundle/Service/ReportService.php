@@ -104,18 +104,67 @@ class ReportService
             false
         );
 
+        $this->clonePersistentResources($newReport, $oldReport);
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+        $this->_em->persist($newReport);
+
+        return $newReport;
+    }
+
+    /**
+     * Clone resources which cross report periods from one account to another
+     *
+     * @param Ndr|Report $toReport
+     * @param Ndr|Report $fromReport
+     */
+    public function clonePersistentResources($toReport, $fromReport)
+    {
         // copy assets
-        $newReport->setNoAssetToAdd($oldReport->getNoAssetToAdd());
-        foreach ($oldReport->getAssets() as $asset) {
-            $newAsset = clone $asset;
-            $newAsset->setReport($newReport);
-            $this->_em->detach($newAsset);
-            $this->_em->persist($newAsset);
+        $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
+        foreach ($fromReport->getAssets() as $asset) {
+            // Check that the target report doesn't already have a matching asset
+            $assetExists = false;
+            foreach ($toReport->getAssets() as $toAsset) {
+                if ($asset->getType() === 'property') {
+                    if ($toAsset->getType() === 'property'
+                        && $toAsset->getAddress() === $asset->getAddress()
+                        && $toAsset->getAddress2() === $asset->getAddress2()
+                        && $toAsset->getPostcode() === $asset->getPostcode()) {
+                        $assetExists = true;
+                        break;
+                    }
+                } else {
+                    if ($toAsset->getType() === 'other' && $toAsset->getDescription() === $asset->getDescription()) {
+                        $assetExists = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$assetExists) {
+                $newAsset = clone $asset;
+                $newAsset->setReport($toReport);
+                $this->_em->detach($newAsset);
+                $this->_em->persist($newAsset);
+            }
         }
 
         // copy bank accounts (opening balance = closing balance, opening date = closing date)
-        foreach ($oldReport->getBankAccounts() as $account) {
-            if (!$account->getIsClosed()) {
+        foreach ($fromReport->getBankAccounts() as $account) {
+            // Check that the target report doesn't already have a bank account with that account number
+            $accountExists = false;
+            foreach ($toReport->getBankAccounts() as $toAccount) {
+                if ($toAccount->getAccountType() === $account->getAccountType()
+                    && $toAccount->getBank() === $account->getBank()
+                    && $toAccount->getAccountNumber() === $account->getAccountNumber()
+                    && $toAccount->getSortCode() === $account->getSortCode()) {
+                    $accountExists = true;
+                    break;
+                }
+            }
+
+            if (!$account->getIsClosed() && !$accountExists) {
                 $newAccount = new ReportBankAccount();
                 $newAccount->setBank($account->getBank());
                 $newAccount->setAccountType($account->getAccountType());
@@ -124,16 +173,11 @@ class ReportService
                 $newAccount->setOpeningBalance($account->getClosingBalance());
                 $newAccount->setIsJointAccount($account->getIsJointAccount());
                 $newAccount->setCreatedAt(new \DateTime());
-                $newAccount->setReport($newReport);
+                $newAccount->setReport($toReport);
 
                 $this->_em->persist($newAccount);
             }
         }
-
-        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
-        $this->_em->persist($newReport);
-
-        return $newReport;
     }
 
     /**
@@ -170,7 +214,15 @@ class ReportService
             //unsubmitted report
             $currentReport->setUnSubmitDate(null);
             $currentReport->setUnsubmittedSectionsList(null);
-            $newYearReport = null;
+
+            // Find the next report and clone assets/accounts across
+            $calculatedEndDate = clone $currentReport->getEndDate();
+            $calculatedEndDate->modify('+12 months');
+            $newYearReport = $currentReport->getClient()->getReportByEndDate($calculatedEndDate);
+
+            if ($newYearReport) {
+                $this->clonePersistentResources($newYearReport, $currentReport);
+            }
         } else {
             // first-time submission
             $newYearReport = $this->createNextYearReport($currentReport);
