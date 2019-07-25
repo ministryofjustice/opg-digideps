@@ -14,7 +14,7 @@ resource "aws_s3_bucket_public_access_block" "cloudtrail" {
 }
 
 resource "aws_s3_bucket_policy" "cloudtrail" {
-  bucket = aws_s3_bucket.cloudtrail.bucket
+  bucket = aws_s3_bucket_public_access_block.cloudtrail.bucket
   policy = data.aws_iam_policy_document.cloudtrail.json
 }
 
