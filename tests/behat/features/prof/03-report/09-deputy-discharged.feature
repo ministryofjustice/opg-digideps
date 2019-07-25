@@ -1,6 +1,6 @@
 Feature: Prof deputy is discharged
 
-  @shaun
+
   Scenario: Case manager discharges professional deputy from client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I discharge the deputies from case "01000010"
@@ -9,7 +9,7 @@ Feature: Prof deputy is discharged
     And I click on "client-detail-01000010"
     And I should see "24 Jul 2018" in the "discharged-on" region
 
-  @shaun
+
   Scenario: Admin completes Prof checklist against a discharged client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, client-detail-01000010"
@@ -70,7 +70,7 @@ Feature: Prof deputy is discharged
     Then I click on "submit-and-download"
     And the form should be valid
 
-  @shaun
+
   Scenario: add deputy user from registration page
     Given emails are sent from "deputy" area
     When I am on "/register"
@@ -90,7 +90,7 @@ Feature: Prof deputy is discharged
     Then I should see "Please check your email"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user2@publicguardian.gov.uk"
 
-  @shaun
+
   Scenario: login and add user (deputy)
     Given emails are sent from "deputy" area
     Given I am on "/logout"
@@ -127,7 +127,7 @@ Feature: Prof deputy is discharged
       | user_details_phoneMain        | 020 3334 3555    |
       | user_details_phoneAlternative | 020 1234 5678    |
 
-  @shaun
+
   Scenario: update client (client name/case number/postcode already set)
     Given I am logged in as "behat-user2@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
@@ -167,7 +167,7 @@ Feature: Prof deputy is discharged
       | client_country         | GB             |
       | client_phone           | 0123456789     |
 
-  @shaun
+
   Scenario: create report for new lay deputy
     Given I am logged in as "behat-user2@publicguardian.gov.uk" with password "Abcd1234"
     Then the URL should match "report/create/\d+"
@@ -192,10 +192,10 @@ Feature: Prof deputy is discharged
     Then I should not see the "client-01000010" region
     And I should see the "client" region exactly 0 times
 
+    @shaun
   Scenario: Admin can see both Clients
-    Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
-    When I should be on "/admin"
-    And I click on "admin-client-search"
+    Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
+    And I should be on "/admin/client/search"
     When I fill in the following:
       | search_clients_q | 01000010 |
     And I click on "search_clients_search"
