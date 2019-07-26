@@ -7,7 +7,6 @@ use Psr\Log\LoggerInterface;
 use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
-use Swift_Mime_Message;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MailSender implements MailSenderInterface
@@ -97,7 +96,7 @@ class MailSender implements MailSenderInterface
      * @param Swift_Message $swiftMessage
      * @param Email         $email
      */
-    private function fillSwiftMessageWithEmailData(\Swift_Message $swiftMessage, Email $email)
+    private function fillSwiftMessageWithEmailData(Swift_Message $swiftMessage, Email $email)
     {
         $swiftMessage->setTo($email->getToEmail(), $email->getToName())
             ->setFrom($email->getFromEmail(), $email->getFromName())

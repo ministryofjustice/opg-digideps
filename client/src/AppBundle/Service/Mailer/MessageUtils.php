@@ -2,6 +2,9 @@
 
 namespace AppBundle\Service\Mailer;
 
+use Swift_Message;
+use Swift_Mime_SimpleMessage;
+
 /**
  * \Swift_Message utils.
  */
@@ -20,11 +23,11 @@ class MessageUtils
     ];
 
     /**
-     * @param Swift_Mime_Message $message
+     * @param Swift_Mime_SimpleMessage $message
      *
      * @return array
      */
-    public static function messageToArray(\Swift_Mime_Message $message)
+    public static function messageToArray(Swift_Mime_SimpleMessage $message)
     {
         $ret = [];
         foreach (self::$fieldsToSerialize as $field) {
@@ -47,11 +50,11 @@ class MessageUtils
     /**
      * @param array $array
      *
-     * @return \Swift_Mime_Message
+     * @return Swift_Message
      */
     public static function arrayToMessage($array)
     {
-        $message = new \Swift_Message();
+        $message = new Swift_Message();
 
         foreach (self::$fieldsToSerialize as $field) {
             if (!empty($array[$field])) {
@@ -68,11 +71,11 @@ class MessageUtils
     }
 
     /**
-     * @param Swift_Mime_Message $message
+     * @param Swift_Mime_SimpleMessage $message
      *
      * @return string
      */
-    public static function messageToString(\Swift_Mime_Message $message)
+    public static function messageToString(Swift_Mime_SimpleMessage $message)
     {
         $ret = '';
         foreach (self::$fieldsToSerialize as $field) {

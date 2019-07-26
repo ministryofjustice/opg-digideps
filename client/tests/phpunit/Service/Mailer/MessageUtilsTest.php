@@ -2,11 +2,15 @@
 
 namespace AppBundle\Service\Mailer;
 
-class MessageUtilsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Swift_Message;
+
+class MessageUtilsTest extends TestCase
 {
     public function testmessageToArray()
     {
-        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', ['getSubject']);
+        /** @var Swift_Message | \PHPUnit_Framework_MockObject_MockObject $message */
+        $message = $this->getMockBuilder(Swift_Message::class)->disableOriginalConstructor()->getMock();
 
         $child = $this->getMock('stdClass', ['getBody', 'getContentType']);
         $child->expects($this->once())->method('getBody')->will($this->returnValue('b'));
@@ -45,7 +49,8 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
 
     public function testarrayToString()
     {
-        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', ['getSubject']);
+        /** @var Swift_Message | \PHPUnit_Framework_MockObject_MockObject $message */
+        $message = $this->getMockBuilder(Swift_Message::class)->disableOriginalConstructor()->getMock();
 
         $child1 = $this->getMock('stdClass', ['getBody', 'getContentType']);
         $child1->expects($this->once())->method('getBody')->will($this->returnValue('<b>test</b>'));

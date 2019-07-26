@@ -3,7 +3,7 @@
 namespace AppBundle\Service\Mailer\Transport;
 
 use Swift_Events_EventListener;
-use Swift_Mime_Message;
+use Swift_Mime_SimpleMessage;
 use Swift_Transport;
 
 class TransportMock implements Swift_Transport
@@ -29,7 +29,7 @@ class TransportMock implements Swift_Transport
     {
     }
 
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
     {
         $this->sentMessages[] = $message;
 
@@ -44,6 +44,11 @@ class TransportMock implements Swift_Transport
     public function stop()
     {
         $this->stopped = true;
+    }
+
+    public function ping()
+    {
+        return true;
     }
 
     /**
