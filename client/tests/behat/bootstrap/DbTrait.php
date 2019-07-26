@@ -115,7 +115,6 @@ trait DbTrait
      */
     public function iDischargeTheDeputiesFromCase($caseNumber)
     {
-//        $query = "DELETE FROM deputy_case where client_id = (SELECT id FROM client WHERE case_number = '{$caseNumber}'";
         $query = "UPDATE client SET deleted_at = '2018-07-24 14:03:00' WHERE case_number = '{$caseNumber}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);

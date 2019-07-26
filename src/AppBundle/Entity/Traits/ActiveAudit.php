@@ -35,17 +35,6 @@ trait ActiveAudit
         return $this->activeFrom;
     }
 
-//    /**
-//     * @param \DateTime $activeFrom
-//     *
-//     * @return $this
-//     */
-//    public function setActiveFrom(\DateTime $activeFrom)
-//    {
-//        $this->activeFrom = $activeFrom;
-//        return $this;
-//    }
-
     /**
      * @return \DateTime
      */
@@ -53,15 +42,4 @@ trait ActiveAudit
     {
         return $this->activeTo;
     }
-
-//    /**
-//     * @param \DateTime|null $activeTo
-//     *
-//     * @return $this
-//     */
-//    public function setActiveTo(\DateTime $activeTo = null)
-//    {
-//        $this->activeTo = $activeTo;
-//        return $this;
-//    }
 }
