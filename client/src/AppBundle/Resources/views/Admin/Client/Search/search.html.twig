@@ -52,9 +52,13 @@
             <tbody>
                 {% if clients | length %}
                     {% for client in clients %}
-                        <tr class="behat-region-client-row behat-region-client-{{ client.caseNumber }}">
-                            <td >
-                                <a class="behat-link-client-details behat-link-client-detail-{{ client.caseNumber }} bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
+                        {% set discharged = "" %}
+                        {% if client.deletedAt is not null %}
+                            {% set discharged = "discharged-" %}
+                        {% endif %}
+                        <tr class="behat-region-client-row behat-region-{{ discharged }}client-{{ client.caseNumber }}">
+                            <td>
+                                <a class="behat-link-client-details behat-link-{{ discharged }}client-detail-{{ client.caseNumber }} bold" href="{{ path('admin_client_details', {'id' : client.id}) }}">
                                     {{ client.fullName }}
                                 </a>
                             </td>
@@ -64,14 +68,14 @@
                                     (Archived)
                                 {% endif %}
                             </td>
-                            <td class="behat-region-client-{{ client.caseNumber }}-active-from">
+                            <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-active-from">
                                 {% if client.activeFrom is not null %}
-                                    {{ client.activeFrom | date('d/m/Y') }}
+                                    {{ client.activeFrom | date('j M Y') }}
                                 {% endif %}
                             </td>
-                            <td class="behat-region-client-{{ client.caseNumber }}-discharged-on">
+                            <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-discharged-on">
                                 {% if client.deletedAt is not null %}
-                                    {{ client.deletedAt | date('d/m/Y') }}
+                                    {{ client.deletedAt | date('j M Y') }}
                                 {% endif %}
                             </td>
                         </tr>

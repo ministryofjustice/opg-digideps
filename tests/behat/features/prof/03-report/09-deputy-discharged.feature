@@ -1,18 +1,24 @@
 Feature: Prof deputy is discharged
 
-
+  @shaun
   Scenario: Case manager discharges professional deputy from client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I discharge the deputies from case "01000010"
     And I click on "admin-client-search"
-    And I should see "" in the "client-01000010-discharged-on" region
+    And I save the current URL as "pre-discharged-client"
+    Then I should see "" in the "client-01000010-discharged-on" region
+    And I should not see the "discharged-client-01000010-discharged-on" region
     And I click on "client-detail-01000010"
+    And I should not see the "discharged-on" region
+    Then I discharge the deputies from case "01000010"
+    When I go to the URL previously saved as "pre-discharged-client"
+    And I should see "24 Jul 2018" in the "discharged-client-01000010-discharged-on" region
+    And I click on "discharged-client-detail-01000010"
     And I should see "24 Jul 2018" in the "discharged-on" region
 
 
-  Scenario: Admin completes Prof checklist against a discharged client
+  Scenario: Admin can amends Prof checklist against a discharged client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000010"
+    And I click on "admin-client-search, discharged-client-detail-01000010"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by |
@@ -93,7 +99,7 @@ Feature: Prof deputy is discharged
 
   Scenario: login and add user (deputy)
     Given emails are sent from "deputy" area
-    Given I am on "/logout"
+    When I am on "/logout"
   # follow link
     When I open the "/user/activate/" link from the email
     Then the response status code should be 200
@@ -132,7 +138,7 @@ Feature: Prof deputy is discharged
     Given I am logged in as "behat-user2@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "client/add"
 # submit empty form and check errors
-    Then the following hidden fields should have the corresponding values:
+    And the following hidden fields should have the corresponding values:
       | client_firstname  | Cly      |
       | client_lastname   | Hent1     |
       | client_caseNumber | 01000010 |
@@ -183,7 +189,7 @@ Feature: Prof deputy is discharged
 
   Scenario: PROF dashboard check client no longer in view
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I should see the "client" region exactly 15 times
+    Then I should see the "client" region exactly 15 times
     When I click on "paginator-page-2"
     Then I should see the "client" region exactly 2 times
   # check search
@@ -192,11 +198,18 @@ Feature: Prof deputy is discharged
     Then I should not see the "client-01000010" region
     And I should see the "client" region exactly 0 times
 
-    @shaun
-  Scenario: Admin can see both Clients
+  Scenario: Admin can see both Clients one discharged and the new lay deputies client with same case number
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I should be on "/admin/client/search"
+    Then I should be on "/admin/client/search"
     When I fill in the following:
       | search_clients_q | 01000010 |
     And I click on "search_clients_search"
+    And I save the current URL as "discharged-client-search"
     Then I should see the "client-row" region exactly "2" times
+    And I should see "" in the "client-01000010-discharged-on" region
+    And I should see "24 Jul 2018" in the "discharged-client-01000010-discharged-on" region
+    When I click on "client-detail-01000010"
+    Then I should not see the "discharged-on" region
+    When I go to the URL previously saved as "discharged-client-search"
+    And I click on "discharged-client-detail-01000010"
+    And I should see "24 Jul 2018" in the "discharged-on" region
