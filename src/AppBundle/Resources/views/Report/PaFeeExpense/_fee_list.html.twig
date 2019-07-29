@@ -25,47 +25,50 @@
     </div>
 
     {# Items list table #}
-    <table class="check-your-answers push-double--bottom">
-        <thead>
-        <tr>
-            <th>Categories of fees</th>
+    <dl class="govuk-summary-list push-double--bottom">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Categories of fees
+            </dt>
             {% if showDetailsColumn %}
-                <th>Details</th>
+                <dd class="govuk-summary-list__key">
+                    Details
+                </dd>
             {% endif %}
-            <th class="numeric">Amount</th>
-        </tr>
-        </thead>
-        <tbody>
+            <dd class="govuk-summary-list__key">
+                Amount
+            </dd>
+        </div>
 
         {% for fee in report.fees %}
-            <tr class="behat-region-fee-{{ fee.feeTypeId | behat_namify }}">
-                <td>
-                    {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
-                    {{ feeLabel }}
-                </td>
-                {% if showDetailsColumn %}
-                    <td class="width-half">
-                        {% if fee.moreDetails %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
+                {{ feeLabel }}
+            </dt>
+            {% if showDetailsColumn %}
+                <dd class="govuk-summary-list__value">
+                    {% if fee.moreDetails %}
                         {{ fee.moreDetails | nl2br }}
                     {% endif %}
-                    </td>
-                {% endif %}
-                <td class="numeric-small">£{{ fee.amount | money_format }}</td>
-            </tr>
-
-        {% endfor %}
-        <tr class="no-border">
-            <td>
-                <span class="bold-small">Total amount</span>
-            </td>
-            {% if showDetailsColumn %}
-                <td></td>
+                </dd>
             {% endif %}
-            <td class="text--right">
-                <span class="bold-small">£{{ report.feesTotal | money_format }}</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <dd class="govuk-summary-list__value numeric-small">
+                £{{ fee.amount | money_format }}
+            </dd>
+        </div>
+        {% endfor %}
 
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__value">
+                <span class="bold-small">Total amount</span>
+            </dt>
+            {% if showDetailsColumn %}
+            <dd class="govuk-summary-list__value"></dd>
+            {% endif %}
+            <dd class="govuk-summary-list__value">
+                <span class="bold-small">£{{ report.feesTotal | money_format }}</span>
+            </dd>
+        </div>
+    </dl>
 {% endif %}
