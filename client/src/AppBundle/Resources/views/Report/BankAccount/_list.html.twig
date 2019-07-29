@@ -32,28 +32,6 @@
     {% for account in report.bankAccounts %}
         <div class="govuk-summary-list__row behat-region-account-{{ account.accountNumber | behat_namify }}">
             <dt class="govuk-summary-list__value">
-                Name
-            </dt>
-            <dd class="govuk-summary-list__value">
-                Sarah Philips
-            </dd>
-            <dd class="govuk-summary-list__value">
-                Sarah Philips
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="#">
-                    {{ 'edit' | trans({}, 'common') }}
-                </a>
-            </dd>
-        </div>
-    {% endfor %}
-</dl>
-
-<table class="check-your-answers behat-region-list-accounts">
-    <tbody>
-    {% for account in report.bankAccounts %}
-        <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">
-            <td>
                 {% if account.requiresBankName %}
                     {{ account.bank }}<br/>
                 {% endif %}
@@ -66,31 +44,28 @@
                     Joint account: {{ account.isJointAccount | capitalize }}<br/>
                     Closed: {{ account.isClosed ? 'Yes' : 'No' }}
                 </p>
-            </td>
-            <td class="numeric-small">
+            </dt>
+            <dd class="govuk-summary-list__value">
                 £{{ account.openingBalance | money_format }}
-            </td>
+            </dd>
+            <dd class="govuk-summary-list__value numeric-small">
             {% if account.closingBalance == null %}
-                <td class="numeric-small">
-                    <div class="error-message">
-                        {{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}
-                    </div>
-                    <a class="change-answer" href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 3, 'accountId': account.id}) }}">
-                        {{ 'summaryPage.addBalance' | trans }}
-                    </a>
-                </td>
+                <div class="error-message">
+                    {{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}
+                </div>
+                <a class="change-answer" href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 3, 'accountId': account.id}) }}">
+                    {{ 'summaryPage.addBalance' | trans }}
+                </a>
             {% else %}
-                <td class="numeric-small">
-                    £{{ account.closingBalance | money_format }}
-                </td>
+                £{{ account.closingBalance | money_format }}
             {% endif %}
-            <td class="change-answer soft-half--left hard--right">
-                <a class="behat-link-edit action-link"
+            </dd>
+            <dd class="govuk-summary-list__actions soft-half--left hard--right">
+                <a class="behat-link-edit govuk-link"
                    href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                <a class="push-half--left behat-link-delete action-link"
+                <a class="push-half--left behat-link-delete govuk-link"
                    href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+            </dd>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
+</dl>

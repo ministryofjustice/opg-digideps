@@ -39,23 +39,24 @@
 
     {# only show the initial question if it's set to "no" #}
     {#{% if report.currentProfPaymentsReceived == 'no' %}#}
-        <table class="check-your-answers columns-2 push-double--bottom">
-            {{ macros.summaryTableHeaderQA(hideEditLink) }}
-            <tbody>
-            <tr class="behat-region-has-fees">
-                <td>
-                    {{ 'existPage.form.hasFees.label' | trans }}
-                </td>
-                <td>
-                    {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-                       class="behat-link-edit-exist">Edit</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+        <div class="govuk-summary-list__row behat-region-has-fees">
+            <dt class="govuk-summary-list__key">
+                {{ 'existPage.form.hasFees.label' | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
+            </dd>
+            {% if not hideEditLink %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit-exist" href="{{ path('prof_current_fees_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    </dl>
     {#{% endif %}#}
 
     {# yes scenario: show fees and last question #}
