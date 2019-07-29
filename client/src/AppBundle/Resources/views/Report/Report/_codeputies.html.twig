@@ -9,38 +9,42 @@
         </a>
     </div>
 </div>
-<table class="check-your-answers behat-region-codeputies">
-    <thead>
-    <tr>
-        <th>Name or email</th>
-        <th>Status</th>
-        <th>
+<dl class="govuk-summary-list behat-region-codeputies">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Name or email
+        </dt>
+        <dd class="govuk-summary-list__key">
+            Status
+        </dd>
+        <dd class="govuk-summary-list__actions">
             <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
-    {#<tr>#}
-        {#<td>{{ app.user.firstname }} {{ app.user.lastname }}</td>#}
-        {#<td>Registered</td>#}
-        {#<td class="change-answer"></td>#}
-    {#</tr>#}
+        </dd>
+    </div>
+    
     {% for deputy in coDeputies %}
-        {% if deputy.coDeputyClientConfirmed %}
-            <tr>
-                <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
-                <td>Registered</td>
-                <td class="change-answer"></td>
-            </tr>
-        {% else %}
-            <tr>
-                <td>{{ deputy.email }}</td>
-                <td>Awaiting registration</td>
-                <td class="change-answer">
-                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite">Edit/Resend invite</a>
-                </td>
-            </tr>
-        {% endif %}
+        <div class="govuk-summary-list__row">
+            {% if deputy.coDeputyClientConfirmed %}
+                <dt class="govuk-summary-list__key">
+                    {{ deputy.firstname }} {{ deputy.lastname }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Registered
+                </dd>
+                <dd class="govuk-summary-list__actions"></dd>
+            {% else %}
+                <dt class="govuk-summary-list__key">
+                    {{ deputy.email }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    Awaiting registration
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite govuk-link">
+                        Edit/Resend invite
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
     {%  endfor %}
-    </tbody>
-</table>
+</dl>

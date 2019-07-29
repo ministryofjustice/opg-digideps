@@ -6,14 +6,13 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-    <tr class="behat-region-categories">
-        <td>
+<dl class="govuk-summary-list columns-2 push-double--bottom">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-categories">
+        <dt class="govuk-summary-list__key">
             {{ 'form.categoriesIn.label' | trans(transOptions) }}
-        </td>
-        <td>
+        </dt>
+        <dd class="govuk-summary-list__value">
             {% set categories = report.moneyShortCategoriesInPresent %}
             {% if categories | length == 0 %}
                 None
@@ -26,50 +25,47 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-        </td>
+        </dd>
         {% if not hideEditLink  %}
-            <td class="change-answer">
-                <a href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}"
-                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-            </td>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('money_in_short_category', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
         {% endif %}
-    </tr>
+    </div>
+</dl>
 
-    </tbody>
-</table>
-
-
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-    <tr class="behat-region-records-exist">
+<dl class="govuk-summary-list columns-2 push-double--bottom">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-records-exist">
+    
         {% if report.moneyTransactionsShortInExist is null or (report.moneyTransactionsShortInExist == "yes" and report.moneyTransactionsShortIn | length == 0) %}
-            <td>
+            <dt class="govuk-summary-list__key">
                 <span class="error">
                     {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
                 </span>
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-            </td>
+            </dd>
         {% else %}
-            <td>
+            <dt class="govuk-summary-list__key">
                 {{ 'existPage.form.moneyTransactionsShortInExist.label' | trans(transOptions) }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {{ report.moneyTransactionsShortInExist | capitalize }}
-            </td>
+            </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <td class="change-answer">
-                <a href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-            </td>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('money_in_short_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
         {% endif %}
-    </tr>
-    </tbody>
-</table>
-
+    </div>
+</dl>
 
 {% if report.moneyTransactionsShortIn | length > 0 %}
     <div class="grid-row">

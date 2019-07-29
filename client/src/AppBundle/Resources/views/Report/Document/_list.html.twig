@@ -14,21 +14,32 @@
         {% endif %}
     </div>
 </div>
-<table class="check-your-answers">
-    <thead>
-        <th>{{ (page ~ '.filename') | trans }}</th>
-        <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
-        <th><span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span></th>
-    </thead>
-    <tbody class="behat-region-document-list">
+
+<dl class="govuk-summary-list behat-region-document-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ (page ~ '.filename') | trans }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ (page ~ '.dateAttached') | trans }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    </div>
     {% for document in report.deputydocuments %}
-            <tr>
-                <td>{{ document.fileName }}</td>
-                <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
-                <td class="change-answer width-sixth soft-half--left">
-                    <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}" class="behat-link-delete-documents-button action-link">{{ (page ~ '.deleteDocument') | trans }}</a>
-                </td>
-            </tr>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__value">
+                {{ document.fileName }}
+            </dt>
+            <dd class="govuk-summary-list__value numeric-small">
+                {{ document.createdOn | date("j F Y H:i") }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="behat-link-delete-documents-button action-link">
+                    {{ (page ~ '.deleteDocument') | trans }}
+                </a>
+            </dd>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
+</dl>

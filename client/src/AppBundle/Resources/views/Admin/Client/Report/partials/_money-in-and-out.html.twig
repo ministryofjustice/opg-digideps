@@ -172,15 +172,17 @@
 
                     {% if not report.totalsMatch %}
                         <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
-                        <table class="check-your-answers columns-2 push--bottom">
-                            {{ macros.summaryTableHeaderQA(true) }}
-                            <tbody>
-                                <tr>
-                                    <td>{{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}</td>
-                                    <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <dl class="govuk-summary-list columns-2 push--bottom">
+                            {{ macros.summaryListHeaderQA(true) }}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ report.balanceMismatchExplanation | nl2br }}
+                                </dd>
+                            </div>
+                        </dl>
                     {% endif %}
                 </div>
             </div>

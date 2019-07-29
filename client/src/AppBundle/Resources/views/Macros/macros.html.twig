@@ -264,11 +264,13 @@
         <dt class="govuk-summary-list__key">
             {{ 'question' | trans({}, 'common') }}
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__key">
             {{ 'answer' | trans({}, 'common') }}
         </dd>
-        <dd class="govuk-summary-list__actions">
-            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </dd>
+        {% if not hideEditLink %}
+            <dd class="govuk-summary-list__actions">
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+            </dd>
+        {% endif %}
     </div>
 {% endmacro %}

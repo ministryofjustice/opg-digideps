@@ -23,26 +23,27 @@
         </summary>
         <div class="opg-indented-block">
             <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(true) }}
-                    <tbody>
-                        {# step 1 #}
-                        <tr>
-                            <td>
-                                {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
-                            </td>
-                            <td>
-                                {{ report.action.doYouExpectFinancialDecisions | capitalize }}
-                            </td>
-                        </tr>
-                        {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
-                            <tr>
-                                <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}</td>
-                                <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                <dl class="govuk-summary-list columns-2 push--bottom">
+                    {{ macros.summaryListHeaderQA(true) }}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+                        </dd>
+                    </div>
+                    {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}
+                            </dd>
+                        </div>
+                    {% endif %}
+                </dl>
             </div>
         </div>
     </details>
@@ -62,41 +63,45 @@
         </summary>
         <div class="opg-indented-block">
             <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(true) }}
-                    <tbody>
-                        {# Concerns about deputyship? #}
-                        <tr>
-                            <td>
-                                {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
-                            </td>
-                            <td>
-                                {{ report.action.doYouHaveConcerns | capitalize }}
-                            </td>
-                        </tr>
-                        {% if report.action.doYouHaveConcerns == 'yes' %}
-                            <tr>
-                                <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
-                                <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
-                            </tr>
-                        {% endif %}
-                        {# Any other concerns? #}
-                        <tr>
-                            <td>
-                                {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
-                            </td>
-                            <td>
-                                {{ report.actionMoreInfo | capitalize }}
-                            </td>
-                        </tr>
-                        {% if report.actionMoreInfo == 'yes' %}
-                            <tr>
-                                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}</td>
-                                <td>{{ report.actionMoreInfoDetails | nl2br }}</td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
+                <dl class="govuk-summary-list">
+                    {{ macros.summaryListHeaderQA(true) }}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ report.action.doYouHaveConcerns | capitalize }}
+                        </dd>
+                    </div>
+                    {% if report.action.doYouHaveConcerns == 'yes' %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ report.action.doYouHaveConcernsDetails | nl2br }}
+                            </dd>
+                        </div>
+                    {% endif %}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ report.actionMoreInfo | capitalize }}
+                        </dd>
+                    </div>
+                    {% if report.actionMoreInfo == 'yes' %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ report.actionMoreInfoDetails | nl2br }}
+                            </dd>
+                        </div>
+                    {% endif %}
+                </dl>
             </div>
         </div>
     </details>

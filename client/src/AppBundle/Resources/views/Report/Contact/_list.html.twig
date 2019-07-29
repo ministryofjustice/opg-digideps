@@ -5,35 +5,41 @@
 {% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        <tr class="behat-region-has-contacts">
-            <td>
-                {{ 'existPage.form.hasContacts.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.hasContacts | capitalize }}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ url('contacts_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            {% endif %}
-        </tr>
-        {% if report.reasonForNoContacts %}
-            <tr class="behat-region-reason-no-contacts">
-                <td>Reason for no contacts</td>
-                <td>{{ report.reasonForNoContacts | nl2br }}</td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer">
-                        <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                    </td>
-                {% endif %}
-            </tr>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-has-contacts">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.hasContacts.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.hasContacts | capitalize }}
+        </dd>
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a href="{{ url('contacts_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit govuk-link">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
         {% endif %}
-    </tbody>
-</table>
+    </div>
+    {% if report.reasonForNoContacts %}
+        <div class="govuk-summary-list__row behat-region-reason-no-contacts">
+            <dt class="govuk-summary-list__key">
+                Reason for no contacts
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.reasonForNoContacts | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    {% endif %}
+</dl>
 
 {% if report.contacts | length > 0 %}
     <div class="grid-row">
