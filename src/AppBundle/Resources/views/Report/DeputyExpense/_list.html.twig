@@ -5,24 +5,24 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        <tr class="behat-region-paid-for-anything">
-            <td>
-                {{ 'existPage.form.paidForAnything.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.paidForAnything | capitalize }}
-            </td>
-            {% if not hideEditLink %}
-                <td class="change-answer">
-                    <a href="{{ path('deputy_expenses_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            {% endif %}
-        </tr>
-    </tbody>
-</table>
+<dl class="govuk-summary-list columns-2 push-double--bottom">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-paid-for-anything">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.paidForAnything.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.paidForAnything | capitalize }}
+        </dd>
+        {% if not hideEditLink %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('deputy_expenses_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+</dl>
 
 {% if report.expenses | length > 0 %}
     <div class="grid-row">

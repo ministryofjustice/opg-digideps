@@ -20,31 +20,49 @@
         </summary>
         <div class="opg-indented-block">
             <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(true) }}
-                    <tbody>
-                        <tr>
-                            <td>{{ 'declaration' | trans({}, 'report-declaration') }}</td>
-                            <td>{{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}</td>
-                        </tr>
-                        {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
-                            <td>{{ 'partAgreedReason' | trans({}, 'report-declaration') }}</td>
-                            <td>{{ report.agreedBehalfDeputyExplanation | nl2br }}</td>
-                        {% endif %}
-                        <tr>
-                            <td>{{ 'declarationTime' | trans({}, 'report-declaration') }}</td>
-                            <td>{{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ 'deputyName' | trans({}, 'report-declaration') }}</td>
+                <dl class="govuk-summary-list columns-2 push--bottom">
+                    {{ macros.summaryListHeaderQA(true) }}
+
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'declaration' | trans({}, 'report-declaration') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans({}, 'report-declaration') }}
+                        </dd>
+                    </div>
+                    
+                    {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ 'partAgreedReason' | trans({}, 'report-declaration') }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ report.agreedBehalfDeputyExplanation | nl2br }}
+                            </dd>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'declarationTime' | trans({}, 'report-declaration') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{report.submitDate | date("H:i") }} {{report.submitDate | date("d/m/Y") }}
+                        </dd>
+                    </div>
+                    
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'deputyName' | trans({}, 'report-declaration') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
                             {% if report.submittedBy is defined and report.submittedBy is not empty %}
-                                <td>{{ report.submittedBy.fullname }}</td>
-                            {% else %}
-                                <td></td>
+                                {{ report.submittedBy.fullname }}
                             {% endif %}
-                        </tr>
-                    </tbody>
-                </table>
+                        </dd>
+                    </div>
+                </dl>
             </div>
         </div>
     </details>

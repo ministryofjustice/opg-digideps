@@ -14,17 +14,42 @@
     </div>
 </div>
 
-<table class="check-your-answers behat-region-list-accounts">
-    <thead>
-    <tr>
-        <th>Account</th>
-        <th class="text--right">Balance on {{ report.startDate | date("j F Y") }}</th>
-        <th class="text--right">Balance on {{ report.endDate | date("j F Y") }}</th>
-        <th>
+<dl class="govuk-summary-list behat-region-list-accounts">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Account
+        </dt>
+        <dd class="govuk-summary-list__key text--right">
+            Balance on {{ report.startDate | date("j F Y") }}
+        </dd>
+        <dd class="govuk-summary-list__key text--right">
+            Balance on {{ report.endDate | date("j F Y") }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
             <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </th>
-    </tr>
-    </thead>
+        </dd>
+    </div>
+    {% for account in report.bankAccounts %}
+        <div class="govuk-summary-list__row behat-region-account-{{ account.accountNumber | behat_namify }}">
+            <dt class="govuk-summary-list__value">
+                Name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Sarah Philips
+            </dd>
+            <dd class="govuk-summary-list__value">
+                Sarah Philips
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="#">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        </div>
+    {% endfor %}
+</dl>
+
+<table class="check-your-answers behat-region-list-accounts">
     <tbody>
     {% for account in report.bankAccounts %}
         <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">

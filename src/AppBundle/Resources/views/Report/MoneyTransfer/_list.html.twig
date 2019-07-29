@@ -19,24 +19,24 @@
     </p>
 {% endmacro %}
 
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        <tr class="behat-region-no-transfers-to-add">
-            <td>
-                {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-' }}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            {% endif %}
-        </tr>
-    </tbody>
-</table>
+<dl class="govuk-summary-list columns-2 push-double--bottom">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-no-transfers-to-add">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-' }}
+        </dd>
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+</dl>
 
 {% if report.moneyTransfers | length > 0 %}
     <div class="grid-row">
@@ -55,40 +55,52 @@
 {% endif %}
 
 {% if report.moneyTransfers | length > 0 %}
-    <table class="check-your-answers">
-        <thead>
-            <tr>
-                <th>Transferred from</th>
-                <th>Transferred to</th>
-                <th class="text--right">Amount</th>
+    <dl class="govuk-summary-list">
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Transferred from
+            </dt>
+            <dd class="govuk-summary-list__key">
+                Transferred to
+            </dd>
+            <dd class="govuk-summary-list__key text--right">
+                Amount
+            </dd>
+            {% if not hideEditLink %}
+                <dd class="govuk-summary-list__actions">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </dd>
+            {% endif %}
+        </div>
+
+        {% for transfer in report.moneyTransfers %}
+            <div class="govuk-summary-list__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
+                <dt class="govuk-summary-list__value">
+                    {{ _self.accountDetails(transfer.accountFrom) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ _self.accountDetails(transfer.accountTo) }}
+                </dd>
+                <dd class="govuk-summary-list__value numeric-small">
+                    £{{ transfer.amount | money_format }}
+                </dd>
                 {% if not hideEditLink  %}
-                    <th>
-                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
+                    <dd class="govuk-summary-list__actions">
+                        <a 
+                            href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}" 
+                            class="behat-link-edit govuk-link">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                        <a 
+                            href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" 
+                            class="behat-link-delete push-half--left govuk-link">
+                            {{ 'remove' | trans({}, 'common' ) }}
+                        </a>
+                    </dd>
                 {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for transfer in report.moneyTransfers %}
-                <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
-                    <td class="width-quarter">
-                        {{ _self.accountDetails(transfer.accountFrom) }}
-                    </td>
-                    <td class="width-quarter">
-                        {{ _self.accountDetails(transfer.accountTo) }}
-                    </td>
-                    <td class="numeric-small">
-                        £{{ transfer.amount | money_format }}
-                    </td>
-                    {% if not hideEditLink  %}
-                        <td class="change-answer width-sixth soft-half--left hard--right">
-                            <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                            <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </div>
+        {% endfor %}
+    </dl>
 
 {% endif %}
