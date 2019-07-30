@@ -21,60 +21,81 @@
 
 {% for groupId, groupData in report.groupMoneyTransactionsByGroup(report.moneyTransactionsIn) %}
 
-<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
+    <h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
-<table class="check-your-answers behat-region-list-accounts">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Description</th>
+    <dl class="govuk-summary-list behat-region-list-accounts">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Type
+            </dt>
+            <dd class="govuk-summary-list__key">
+                Description
+            </dd>
             {% if report.canLinkToBankAccounts %}
-                <th>Bank account</th>
+                <dd class="govuk-summary-list__key">
+                    Bank account
+                </dd>
             {% endif %}
-            <th class="numeric">Amount</th>
+            <dd class="govuk-summary-list__key numeric">
+                Amount
+            </dd>
             {% if not hideEditLink  %}
-                <th>
+                <dd class="govuk-summary-list__actions">
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
+                </dd>
             {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-    {% for t in groupData.entries %}
-        <tr class="behat-region-transaction-{{ t.description | behat_namify }}">
-            <td class="width-fifth">{{ ('form.category.entries.' ~ t.category ~ '.label') | trans }}</td>
-            <td class="width-quarter">{{ t.description | nl2br }}</td>
+        </div>
+
+        {% for entry in groupData.entries %}
+            <div class="govuk-summary-list__row behat-region-transaction-{{ entry.description | behat_namify }}">
+                <dt class="govuk-summary-list__key width-fifth">
+                    {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value width-quarter">
+                    {{ entry.description | nl2br }}
+                </dd>
+                {% if report.canLinkToBankAccounts %}
+                    <dd class="govuk-summary-list__value width-fifth">
+                        {{ (entry.bankAccount) ? entry.bankAccount.nameOneLine : '-' }}
+                    </dd>
+                {% endif %}
+                <dd class="govuk-summary-list__value numeric-small width-eighth">
+                    £{{ entry.amount | money_format }}
+                </dd>
+                {% if not hideEditLink  %}
+                    <dd class="govuk-summary-list__actions">
+                        <a 
+                            class="behat-link-edit govuk-link"
+                        href="{{ path('money_in_step', {'reportId': report.id, 'step': 2, 'transactionId': entry.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        </a>
+                        <a 
+                            class="behat-link-delete push-half--left govuk-link" 
+                            href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': entry.id}) }}">
+                            {{ 'remove' | trans({}, 'common' ) }}
+                        </a>
+                    
+                    </dd>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                    <span class="bold-small">Total amount</span>
+            </dt>
+            <dd class="govuk-summary-list__value"></dd>
             {% if report.canLinkToBankAccounts %}
-                <td class="width-fifth">
-                    {{ (t.bankAccount) ? t.bankAccount.nameOneLine : '-' }}
-                </td>
+                <dd class="govuk-summary-list__value"></dd>
             {% endif %}
-            <td class="numeric-small width-eighth">£{{ t.amount | money_format }}</td>
+            <dd class="govuk-summary-list__value">
+                    <span class="bold-small behat-region-{{ groupId | behat_namify }}-total">£{{ groupData.amountTotal | money_format }}</span>
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('money_in_step', {'reportId': report.id, 'step': 2, 'transactionId': t.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    <a class="behat-link-delete push-half--left action-link" href="{{ path('money_in_delete', {'reportId': report.id, 'transactionId': t.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions"></dd>
             {% endif %}
-        </tr>
-    {% endfor %}
-        <tr class="no-border">
-            <td colspan="2">
-                <span class="bold-small">Total amount</span>
-            </td>
-            {% if report.canLinkToBankAccounts %}
-                <td></td>
-            {% endif %}
-            <td class="text--right">
-                <span class="bold-small behat-region-{{ groupId | behat_namify }}-total">£{{ groupData.amountTotal | money_format }}</span>
-            </td>
-            {% if not hideEditLink  %}
-                <td></td>
-            {% endif %}
-        </tr>
-    </tbody>
-</table>
+        </div>
+    </dl>
 
 {% endfor %}
 
