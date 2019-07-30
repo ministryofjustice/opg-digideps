@@ -19,153 +19,212 @@
         </div>
     </div>
 
-    <table class="check-your-answers columns-2 behat-region-list-properties">
-        {{ macros.summaryTableHeaderQA(hideEditLink) }}
-        <tbody>
-
+    <dl class="govuk-summary-list columns-2 behat-region-list-properties">
+        {{ macros.summaryListHeaderQA(false) }}
         {# address #}
-        <tr class="behat-region-property-{{ asset.postcode | behat_namify }}-address">
-            <td>{{ 'address' | trans({}, 'common' ) }}</td>
-            <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
+        <div class="govuk-summary-list__row behat-region-property-{{ asset.postcode | behat_namify }}-address">
+            <dt class="govuk-summary-list__key">
+                {{ 'address' | trans({}, 'common' ) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.AddressValidLines | join(', ') | raw  }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 1}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
 
         {# Who lives at this property? #}
-        <tr>
-            <td>{{ 'form.property.occupants.label' | trans(transOptions) }}</td>
-            <td>{{ asset.occupants | nl2br }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.occupants.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.occupants | nl2br }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 2}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actionschange-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 2}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
 
         {#  fully/partly owned + percentage #}
-        <tr>
-            <td>{{ 'form.property.owned.label' | trans(transOptions) }}</td>
-            <td>{{ asset.owned | capitalize }} owned</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.owned.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.owned | capitalize }} owned
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actionschange-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
+
         {% if asset.owned == 'partly' %}
-            <tr>
-                <td>{{ 'form.property.ownedPercentage.label' | trans(transOptions) }}</td>
-                <td>{{ asset.ownedPercentage }}%</td>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'form.property.ownedPercentage.label' | trans(transOptions) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ asset.ownedPercentage }}%
+                </dd>
                 {% if not hideEditLink  %}
-                    <td class="change-answer soft-half--left hard--right width-sixth">
-                        <a class="behat-link-edit action-link"
-                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
+                    <dd class="govuk-summary-list__actionschange-answer soft-half--left hard--right width-sixth">
+                        <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 3}) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
                 {% endif %}
-            </tr>
+            </div>
         {% endif %}
 
         {# mortgage + outstanding amount #}
-        <tr>
-            <td>{{ 'form.property.hasMortgage.label' | trans(transOptions) }}</td>
-            <td>{{ asset.hasMortgage | capitalize }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.hasMortgage.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.hasMortgage | capitalize }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
+
         {% if asset.hasMortgage == 'yes' %}
-            <tr>
-                <td>{{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}</td>
-                <td>£{{ asset.mortgageOutstandingAmount | money_format }}</td>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    £{{ asset.mortgageOutstandingAmount | money_format }}
+                </dd>
                 {% if not hideEditLink  %}
-                    <td class="change-answer soft-half--left hard--right width-sixth">
-                        <a class="behat-link-edit action-link"
-                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
+                    <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                        <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 4}) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
                 {% endif %}
-            </tr>
+            </div>
         {% endif %}
 
         {# Value #}
-        <tr>
-            <td>{{ 'form.property.value.label' | trans(transOptions) }}</td>
-            <td>£{{ asset.value | money_format }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.value.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                £{{ asset.value | money_format }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 5}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 5}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
 
         {# equity release scheme #}
-        <tr>
-            <td>{{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}</td>
-            <td>{{ asset.isSubjectToEquityRelease | capitalize }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.isSubjectToEquityRelease | capitalize }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 6}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 6}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
 
         {# other charges  #}
-        <tr>
-            <td>{{ 'form.property.hasCharges.label' | trans(transOptions) }}</td>
-            <td>{{ asset.hasCharges | capitalize }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.hasCharges.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.hasCharges | capitalize }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 7}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 7}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
 
         {# rented out + rent agreement date + income month #}
-        <tr>
-            <td>{{ 'form.property.isRentedOut.label' | trans(transOptions) }}</td>
-            <td>{{ asset.isRentedOut | capitalize }}</td>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.property.isRentedOut.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ asset.isRentedOut | capitalize }}
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                    <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
             {% endif %}
-        </tr>
-        {% if asset.isRentedOut =='yes' %}
-            <tr>
-                <td>{{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}</td>
-                <td>{{ asset.rentAgreementEndDate | date("m/Y") }}</td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer soft-half--left hard--right width-sixth">
-                        <a class="behat-link-edit action-link"
-                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
-            {% endif %}
-            </tr>
-            <tr>
-                <td>{{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}</td>
-                <td>£{{ asset.rentIncomeMonth | money_format }}</td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer soft-half--left hard--right width-sixth">
-                        <a class="behat-link-edit action-link"
-                           href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
-                {% endif %}
-            </tr>
-        {% endif %}
+        </div>
 
-        </tbody>
-    </table>
+        {% if asset.isRentedOut =='yes' %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ asset.rentAgreementEndDate | date("m/Y") }}
+                </dd>
+                {% if not hideEditLink  %}
+                    <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                        <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
+                {% endif %}
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    £{{ asset.rentIncomeMonth | money_format }}
+                </dd>
+                {% if not hideEditLink  %}
+                    <dd class="govuk-summary-list__actions change-answer soft-half--left hard--right width-sixth">
+                        <a class="govuk-link behat-link-edit" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id, 'step': 8}) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
+                {% endif %}
+            </div>
+        {% endif %}
+    </dl>
 
 {% endfor %}
