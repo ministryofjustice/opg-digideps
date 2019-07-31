@@ -79,13 +79,13 @@
         {% if action == 'edit' %}
             {# only admin are allowed to delete users (except themselves when logged) #}
             {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
-                {% if reportsCount == 0 %}
-                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: 'admin',
-                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',
-                    linkClass: 'button-warning push--top',
-                    linkHref: path('admin_delete_confirm', { id: id })
-                    } %}
+                {% if false and reportsCount == 0 %}
+                    {#{% include 'AppBundle:Components/Link:_link-button.html.twig' with {#}
+                    {#transDomain: 'admin',#}
+                    {#linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',#}
+                    {#linkClass: 'button-warning push--top',#}
+                    {#linkHref: path('admin_delete_confirm', { id: id })#}
+                    {#} %}#}
                 {% else %}
                     <p class="text text-secondary push--top">{{ (page ~ '.deleteDisabled') | trans }}</p>
                 {% endif %}

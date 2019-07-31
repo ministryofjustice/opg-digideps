@@ -66,7 +66,7 @@ editUser:
       client: Client
       caseNumber: Case number
       reports: Number of reports
-  deleteDisabled: Delete is disabled as there is at least one report
+  deleteDisabled: Delete user has been disabled
 
 editUserForm:
   heading: Edit user
