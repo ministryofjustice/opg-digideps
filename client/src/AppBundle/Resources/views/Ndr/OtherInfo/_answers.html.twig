@@ -2,48 +2,47 @@
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': ndr.client.firstname | e } %}
 
-<table class="check-your-answers columns-2 push--bottom">
-    <thead>
-        <tr>
-            <th>{{ 'question' | trans({}, 'common') }}</th>
-            <th>{{ 'answer' | trans({}, 'common') }}</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="behat-region-more-info">
-            {% if ndr.actionMoreInfo is null %}
-                <td>
-                    <span class="error">
-                        {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
-                    </span>
-                </td>
-                <td>
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                </td>
-            {% else %}
-                <td>
-                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ ndr.actionMoreInfo | capitalize }}
-                </td>
-            {% endif %}
-            <td class="change-answer">
-                <a href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
-        {% if ndr.actionMoreInfo == 'yes' %}
-            <tr class="behat-region-more-info-details">
-                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}</td>
-                <td>{{ ndr.actionMoreInfoDetails | nl2br }}</td>
-                <td class="change-answer">
-                    <a href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            </tr>
-        {% endif %}
-    </tbody>
 
-</table>
+<dl class="govuk-summary-list columns-2 push--bottom">
+    {{ macros.summaryListHeaderQA(false) }}
+    <div class="govuk-summary-list__row behat-region-more-info">
+        {% if report.actionMoreInfo is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.actionMoreInfo | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    {% if report.actionMoreInfo == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-more-info-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.actionMoreInfoDetails | nl2br }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        </div>
+    {% endif %}
+</dl>
