@@ -320,6 +320,8 @@ class UserControllerTest extends AbstractTestController
     public function testDelete()
     {
         $deputy3 = self::fixtures()->createUser();
+        $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
+
         self::fixtures()->flush();
         $userToDeleteId = $deputy3->getId();
 
@@ -331,6 +333,53 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $this->assertTrue(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
+    }
+
+    public function testDeleteNotPermittedForPAs()
+    {
+        $deputy4 = self::fixtures()->createUser();
+        $deputy4->setRoleName(User::ROLE_PA_TEAM_MEMBER);
+
+        $deputy5 = self::fixtures()->createUser();
+        $deputy5->setRoleName(User::ROLE_LAY_DEPUTY);
+
+        $client5a = self::fixtures()->createClient($deputy5);
+        $client5b = self::fixtures()->createClient($deputy5);
+
+        self::fixtures()->flush();
+        $userToDeleteId = $deputy4->getId();
+
+        $url = '/user/' . $userToDeleteId;
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+
+        $this->assertFalse(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
+    }
+
+    public function testDeleteNotPermittedForLayWithMultipleClients()
+    {
+        $deputy5 = self::fixtures()->createUser();
+        $deputy5->setRoleName(User::ROLE_LAY_DEPUTY);
+        
+        self::fixtures()->createClient($deputy5);
+        self::fixtures()->createClient($deputy5);
+
+        self::fixtures()->flush();
+        $userToDeleteId = $deputy5->getId();
+
+        $url = '/user/' . $userToDeleteId;
+
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+
+        $this->assertFalse(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
     }
 
     public function testGetAllAuth()
