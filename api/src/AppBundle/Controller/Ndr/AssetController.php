@@ -69,7 +69,9 @@ class AssetController extends RestController
 
         $this->updateEntityWithData($asset, $data);
         $ndr->setNoAssetToAdd(false);
-        $this->persistAndFlush($asset);
+
+        $this->getEntityManager()->persist($asset);
+        $this->getEntityManager()->flush();
 
         return ['id' => $asset->getId()];
     }
