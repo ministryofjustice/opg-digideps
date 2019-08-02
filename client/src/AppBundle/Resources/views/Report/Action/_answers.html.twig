@@ -7,12 +7,12 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<dl class="govuk-summary-list columns-2 push--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
-    
+
     {# step 1 #}
     <div class="govuk-summary-list__row behat-region-expect-financial-decision">
-    
+
         {% if report.action.doYouExpectFinancialDecisions is null %}
             <dt class="govuk-summary-list__key">
                 <span class="error">
@@ -33,13 +33,13 @@
 
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit action-link" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
                 </a>
             </dd>
         {% endif  %}
     </div>
-    
+
     {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
         <div class="govuk-summary-list__row behat-region-expect-financial-decision-details">
             <dt class="govuk-summary-list__key">
@@ -50,17 +50,17 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link behat-link-edit action-link" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                    <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common' ) }}
                     </a>
                 </dd>
             {% endif  %}
         </div>
     {% endif %}
-    
+
     {# step 2 #}
     <div class="govuk-summary-list__row behat-region-have-concerns">
-    
+
         {% if report.action.doYouHaveConcerns is null %}
             <dt class="govuk-summary-list__key">
                 <span class="error">
@@ -81,26 +81,28 @@
 
         {% if not hideEditLink  %}
         <dd class="govuk-summary-list__actions">
-            <a class="govuk-link behat-link-edit action-link" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+            <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
                 {{ 'edit' | trans({}, 'common' ) }}
             </a>
         </dd>
         {% endif  %}
     </div>
-    
-    <div class="govuk-summary-list__row behat-region-have-concerns-details">
-        <dt class="govuk-summary-list__key">
-            {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ report.action.doYouHaveConcernsDetails | nl2br }}
-        </dd>
-        {% if not hideEditLink  %}
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link behat-link-edit action-link" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
-                {{ 'edit' | trans({}, 'common' ) }}
-            </a>
-        </dd>
-        {% endif  %}
-    </div>
+
+    {% if report.action.doYouHaveConcerns == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-have-concerns-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcernsDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+            {% endif  %}
+        </div>
+    {% endif %}
 </dl>

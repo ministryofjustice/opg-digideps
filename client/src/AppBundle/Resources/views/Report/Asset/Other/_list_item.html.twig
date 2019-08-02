@@ -3,17 +3,17 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<h3 class="heading-medium">{{ groupId | trans }}</h3>
+<h3 class="govuk-heading-m">{{ groupId | trans }}</h3>
 
 <dl class="govuk-summary-list behat-region-list-accounts">
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
             {{ 'form.description.label' | trans }}
         </dt>
-        <dd class="govuk-summary-list__key numeric">
+        <dd class="govuk-summary-list__key">
             {{ 'form.valuationDate.label' | trans }}
         </dd>
-        <dd class="govuk-summary-list__key numeric">
+        <dd class="govuk-summary-list__key">
             {{ 'form.value.label' | trans }}
         </dd>
         {% if not hideEditLink  %}
@@ -22,31 +22,32 @@
             </dd>
         {% endif %}
     </div>
-    
+
     {% for asset in assetsInGroup.items %}
     <div class="govuk-summary-list__row behat-region-asset-{{ asset.description | behat_namify }}">
         <dt class="govuk-summary-list__value">
             {{ asset.description | nl2br }}
         </dt>
-        <dd class="govuk-summary-list__value numeric-small">
+        <dd class="govuk-summary-list__value">
             {% if asset.valuationDate %}
                 {{ asset.valuationDate | date('j F Y') }}
             {% else %}
                 -
             {% endif %}
         </dd>
-        <dd class="govuk-summary-list__value numeric">
+        <dd class="govuk-summary-list__value">
             £{{ asset.value | money_format }}
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a 
-                    class="govuk-link behat-link-edit action-link" 
+                <a
+                    class="govuk-link behat-link-edit"
                     href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
                 </a>
-                <a 
-                    class="govuk-link behat-link-delete" 
+                &nbsp;
+                <a
+                    class="govuk-link behat-link-delete"
                     href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">
                     {{ 'remove' | trans({}, 'common' ) }}
                 </a>
@@ -57,11 +58,11 @@
 
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            <span class="bold-small">{{ 'totalAmount' | trans({}, 'common' ) }}</span>
+            {{ 'totalAmount' | trans({}, 'common' ) }}
         </dt>
-        <dd class="govuk-summary-list__key numeric"></dd>
-        <dd class="govuk-summary-list__key numeric">
-            <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
+        <dd class="govuk-summary-list__key"></dd>
+        <dd class="govuk-summary-list__key">
+            £{{ assetsInGroup.total | money_format }}
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions"></dd>
