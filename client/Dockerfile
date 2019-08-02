@@ -101,7 +101,6 @@ COPY tests tests
 COPY web web
 COPY --from=gulp /app/web/assets web/assets
 COPY --from=gulp /app/web/images web/images
-COPY --from=gulp /app/src/AppBundle/Resources/views/Css src/AppBundle/Resources/views/Css
 COPY docker/confd /etc/confd
 ENV TIMEOUT=60
 

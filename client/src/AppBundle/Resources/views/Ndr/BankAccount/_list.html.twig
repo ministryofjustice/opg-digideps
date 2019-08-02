@@ -1,58 +1,63 @@
 {% set translationDomain = "ndr-bank-accounts" %}
 {% trans_default_domain translationDomain %}
 
-<div class="grid-row push--top">
-    <div class="column-half">
-        <h2 class="heading-medium flush--ends">List of accounts</h2>
+<div class="govuk-grid-row push--top">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">List of accounts</h2>
     </div>
-    <div class="column-half text--right">
-        <a href="{{ path('ndr_bank_accounts_step' , {'ndrId': ndr.id, 'step': 1}) }}"
-            class="bold-small move-quarter--up action-link behat-link-add">
-            <span class="icon icon-plus"></span>
-            Add account
-        </a>
+    <div class="govuk-grid-column-one-half text--right">
+        <strong>
+            <a href="{{ path('ndr_bank_accounts_step' , {'ndrId': ndr.id, 'step': 1}) }}"
+                class="behat-link-add">
+                <span class="icon icon-plus"></span>
+                Add account
+            </a>
+        </strong>
     </div>
 </div>
 
-<table class="check-your-answers behat-region-list-accounts">
-    <thead>
-        <tr>
-            <th>Account</th>
-            <th class="text--right">Balance on {{ ndr.client.courtDate | date("j F Y") }}</th>
-            <th>
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+<dl class="govuk-summary-list behat-region-list-accounts">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Account
+        </dt>
+        <dd class="govuk-summary-list__key">
+            Balance on {{ ndr.client.courtDate | date("j F Y") }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+    </div>
+
     {% for account in ndr.bankAccounts %}
-        <tr class="behat-region-account-{{ account.accountNumber | behat_namify }}">
-            <td>
-                {% if account.requiresBankName %}
-                    {{ account.bank }}<br/>
+    <div class="govuk-summary-list__row behat-region-account-{{ account.accountNumber | behat_namify }}">
+        <dt class="govuk-summary-list__key">
+            {% if account.requiresBankName %}
+                {{ account.bank }}
+            {% endif %}
+            <p class="govuk-!-font-size-16">
+                {{ account.accountTypeText }}<br/>
+                {% if account.requiresSortCode %}
+                    Sort code: {{ account.sortCode }}<br/>
                 {% endif %}
-                <p class="font-xsmall flush--ends">
-                    {{ account.accountTypeText }}<br/>
-                    {% if account.requiresSortCode %}
-                        Sort code: {{ account.sortCode }}<br/>
-                    {% endif %}
-                    Account number: ****{{ account.accountNumber }}<br/>
-                    {# property added later, so it could be null. remove the "if" from 2018 #}
-                    {% if account.isJointAccount != '' %}
-                        Joint account: {{ account.isJointAccount | capitalize }}<br/>
-                    {% endif %}
-                </p>
-            </td>
-            <td class="numeric-small">
-                £{{ account.balanceOnCourtOrderDate | money_format }}
-            </td>
-            <td class="change-answer soft-half--left hard--right">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_bank_accounts_step' , {'ndrId': ndr.id, 'step': 1, 'accountId': account.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                <a class="push-half--left behat-link-delete action-link"
-                   href="{{ path('ndr_bank_account_delete' , {'ndrId': ndr.id, 'accountId': account.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+                Account number: ****{{ account.accountNumber }}<br/>
+                {# property added later, so it could be null. remove the "if" from 2018 #}
+                {% if account.isJointAccount != '' %}
+                    Joint account: {{ account.isJointAccount | capitalize }}<br/>
+                {% endif %}
+            </p>
+        </dt>
+        <dd class="govuk-summary-list__value">
+            £{{ account.balanceOnCourtOrderDate | money_format }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_bank_accounts_step' , {'ndrId': ndr.id, 'step': 1, 'accountId': account.id}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> account</span>
+            </a>
+            &nbsp;
+            <a class="govuk-link behat-link-delete" href="{{ path('ndr_bank_account_delete' , {'ndrId': ndr.id, 'accountId': account.id}) }}">
+            {{ 'remove' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> account</span>
+            </a>
+        </dd>
+    </div>
     {% endfor %}
-    </tbody>
-</table>
+</dl>

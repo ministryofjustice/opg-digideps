@@ -59,6 +59,9 @@ summaryPage:
   supportTitle: ""
   weAskAbout: In this section, we ask you about %client%'s assets, including property.
   addButton: Add an asset
+  subtitle:
+    assets: List of assets
+  totalValue: "Total value of assets: £%value%"
 
 deletePage:
   htmlTitle: "New deputy report - remove asset | GOV.UK"

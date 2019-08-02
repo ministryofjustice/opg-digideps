@@ -149,7 +149,7 @@ class FormattedTest extends WebTestCase
      */
     private function renderTemplateAndGetCrawler($additionalVars = [])
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', $additionalVars + [
+        $html = $this->twig->render('AppBundle:Report/Formatted:formatted_body.html.twig', $additionalVars + [
             'report' => $this->report,
             'app' => ['user' => $this->user], //mock twig app.user from the view
         ]);
@@ -162,7 +162,7 @@ class FormattedTest extends WebTestCase
      */
     private function renderTemplateOntoCrawler($additionalVars = [])
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:formatted.html.twig', $additionalVars + [
+        $html = $this->twig->render('AppBundle:Report/Formatted:formatted_body.html.twig', $additionalVars + [
                 'report' => $this->report,
                 'app' => ['user' => $this->user],
             ]);

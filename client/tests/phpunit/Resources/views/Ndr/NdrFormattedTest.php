@@ -79,7 +79,7 @@ class NdrFormattedTest extends WebTestCase
             ->setDebts([$this->debt1])
         ;
 
-        $this->html = $this->twig->render('AppBundle:Ndr/Formatted:formatted.html.twig', [
+        $this->html = $this->twig->render('AppBundle:Ndr/Formatted:formatted_body.html.twig', [
             'ndr' => $this->ndr,
             'app' => ['user'=>$this->user] //mock twig app.user from the view
         ]);

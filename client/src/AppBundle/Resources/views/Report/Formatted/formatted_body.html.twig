@@ -13,9 +13,10 @@
 {# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
 {% set submittedBy = report.submittedBy | default(app.user) %}
 
-<style type="text/css" media="screen, print">
-    {% include 'AppBundle:Css:formatted-report.css.twig' %}
-</style>
+{% block head %}
+    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}"  rel="stylesheet" type="text/css">
+{% endblock %}
+
 <div id="wrapper">
     <div class="formatted-report">
 
@@ -114,7 +115,7 @@
 
         {% if report.hasSection('profDeputyCostsEstimate') %}
             {% include 'AppBundle:Report/Formatted:_prof_deputy_costs_estimate.html.twig' %}
-        {% endif %}        
+        {% endif %}
 
         {% include 'AppBundle:Report/Formatted:_gifts.html.twig' %}
 

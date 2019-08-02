@@ -68,9 +68,7 @@ stepPage:
 
 summaryPage:
   htmlTitle: "New deputy report - actions you plan to take | GOV.UK"
-  supportTitle: Actions you plan to take
   pageTitle: Actions you plan to take
-  supportTitle: ""
   weAskAbout: |
     In this section, we ask you about significant financial decisions you're planning to make on
     behalf of %client%.

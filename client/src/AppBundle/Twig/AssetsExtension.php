@@ -33,6 +33,14 @@ class AssetsExtension extends \Twig_Extension
         return '/assets/' . $this->getTag() . '/' . $originalUrl;
     }
 
+    public function assetSourceFilter($originalUrl)
+    {
+        $tag = $this->getTag();
+        $source = file_get_contents($this->rootDir . '/../web/assets/' . $tag . '/' . $originalUrl);
+
+        return $source;
+    }
+
     /**
      * @return string
      */
@@ -54,6 +62,7 @@ class AssetsExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('assetUrl', [$this, 'assetUrlFilter']),
+            new \Twig_SimpleFilter('assetSource', [$this, 'assetSourceFilter']),
         ];
     }
 
