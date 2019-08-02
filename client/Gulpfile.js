@@ -1,7 +1,6 @@
 'use strict';
 
 const gulp = require('gulp'),
-    gutil = require('gulp-util'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
@@ -10,8 +9,6 @@ const gulp = require('gulp'),
     concat = require('gulp-concat'),
     scsslint = require('gulp-sass-lint'),
     jshint = require('gulp-jshint'),
-    replace = require('gulp-replace'),
-    rename = require('gulp-rename'),
     now = new Date().getTime(),
     postcss = require('gulp-postcss');
 
@@ -25,15 +22,12 @@ var config = {
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
     imgSrc: 'src/AppBundle/Resources/assets/images',
     sassSrc: 'src/AppBundle/Resources/assets/scss',
-    viewsSrc: 'src/AppBundle/Resources/views',
     webAssets: 'web/assets/' + now,
 };
 
-const cleanAssets = () => { // Clear web assets folder and formatted report css folder
+const cleanAssets = () => { // Clear web assets folder
     return del([
-        'web/assets/*',
-        config.viewsSrc + '/Css/*'
-
+        'web/assets/*'
     ]);
 }
 
@@ -55,27 +49,11 @@ const lintJS = () => { // JS quality control
         .pipe(jshint.reporter('default'));
 }
 
-const CompileFormattedReportSassToCSS = () => {
-    return gulp.src(config.sassSrc + '/formatted-report.scss')
-        .pipe(sourcemaps.init())
-        .pipe(sass(config.sass).on('error', sass.logError))
-        .pipe(uglifycss())
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest(config.viewsSrc + '/Css'));
-}
-
-const copyFormattedReportCSSToTwigVersion = () => {
-    return gulp.src(config.viewsSrc + '/Css/formatted-report.css')
-    .pipe(rename(config.viewsSrc + '/Css/formatted-report.css.twig'))
-    .pipe(gulp.dest('./'));
-}
-
-const deleteFormattedReportCSSVersion = () => {
-    return del([config.viewsSrc + '/Css/formatted-report.css']);
-}
-
 const buildApplicationCSSFromSass = () => { // Compile sass files, uglify, copy
-    return gulp.src(config.sassSrc + '/application.scss')
+    return gulp.src([
+            config.sassSrc + '/application.scss',
+            config.sassSrc + '/formatted-report.scss',
+        ])
         .pipe(sourcemaps.init())
         .pipe(sass(config.sass).on('error', sass.logError))
         .pipe(uglifycss())
@@ -124,9 +102,6 @@ const checkCSSAccessibility = () => {
       );
 }
 
-// Compile formatted report CSS and copy to twig, then delete the .css version
-gulp.task('rebuild-formatted-report-css', gulp.series(CompileFormattedReportSassToCSS, copyFormattedReportCSSToTwigVersion, deleteFormattedReportCSSVersion));
-
 gulp.task('sass', gulp.series(lintSass, buildApplicationCSSFromSass));
 
 gulp.task('app-js', gulp.series(lintJS, concatJSThenMinifyAndCopy));
@@ -142,7 +117,6 @@ gulp.task('default', gulp.series(
         copyGovUKFonts,
         'app-js',
         copyJQuery,
-        'rebuild-formatted-report-css'
     ), checkCSSAccessibility));
 
 // Watch sass, images and js and recompile as Development

@@ -422,7 +422,7 @@ class ReportController extends AbstractController
         /** @var EntityDir\Report\Report $report */
         $report = $this->getReport($reportId, self::$reportGroupsAll);
 
-        return $this->render('AppBundle:Report/Formatted:formatted_body.html.twig', [
+        return $this->render('AppBundle:Report/Formatted:formatted_standalone.html.twig', [
             'report' => $report,
             'showSummary' => true
         ]);

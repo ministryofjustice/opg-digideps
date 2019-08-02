@@ -5,147 +5,218 @@
 {% for asset in assetsInGroup.items %}
 {# @var asset \AppBundle\Entity\Report\AssetProperty #}
 
-    <div class="grid-row push--ends behat-region-property-{{ asset.postcode | behat_namify }}">
-        <div class="column-half">
-            <h3 class="heading-medium flush--ends">{{ groupId | trans }} {{ loop.index }}</h3>
+    <div class="govuk-grid-row behat-region-property-{{ asset.postcode | behat_namify }}">
+        <div class="govuk-grid-column-one-half">
+            <h3 class="govuk-heading-m">{{ groupId | trans }} {{ loop.index }}</h3>
         </div>
-        <div class="column-half text--right">
-            <a class="behat-link-delete push-half--left bold-small action-link" href="{{ path('ndr_asset_delete', {'ndrId': ndr.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+        <div class="govuk-grid-column-one-half text--right">
+            <a class="behat-link-delete" href="{{ path('ndr_asset_delete', {'ndrId': ndr.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
         </div>
     </div>
 
-    <table class="check-your-answers columns-2 behat-region-list-properties">
-        <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-        </thead>
+<dl class="govuk-summary-list behat-region-list-properties">
+    {# address #}
+    <div class="govuk-summary-list__row behat-region-property-{{ asset.postcode | behat_namify }}-address">
+        <dt class="govuk-summary-list__key">
+            {{ 'address' | trans({}, 'common' ) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.AddressValidLines | join(', ') | raw  }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 1}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        <tbody>
+    {# Who lives at this property? #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.occupants.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.occupants | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 2}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# address #}
-        <tr class="behat-region-property-{{ asset.postcode | behat_namify }}-address">
-            <td>{{ 'address' | trans({}, 'common' ) }}</td>
-            <td>{{ asset.AddressValidLines | join(', ') | raw  }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 1}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+    {#  fully/partly owned + percentage #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.owned.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.owned | capitalize }} owned
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 3}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# Who lives at this property? #}
-        <tr>
-            <td>{{ 'form.property.occupants.label' | trans(transOptions) }}</td>
-            <td>{{ asset.occupants | nl2br }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 2}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+    {% if asset.owned == 'partly' %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.ownedPercentage.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.ownedPercentage }}%
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 3}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
 
-        {#  fully/partly owned + percentage #}
-        <tr>
-            <td>{{ 'form.property.owned.label' | trans(transOptions) }}</td>
-            <td>{{ asset.owned | capitalize }} owned</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
-        {% if asset.owned == 'partly' %}
-            <tr>
-                <td>{{ 'form.property.ownedPercentage.label' | trans(transOptions) }}</td>
-                <td>{{ asset.ownedPercentage }}%</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 3}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            </tr>
-        {% endif %}
+    {# mortgage + outstanding amount #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.hasMortgage.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.hasMortgage | capitalize }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 4}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# mortgage + outstanding amount #}
-        <tr>
-            <td>{{ 'form.property.hasMortgage.label' | trans(transOptions) }}</td>
-            <td>{{ asset.hasMortgage | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
-        {% if asset.hasMortgage == 'yes' %}
-            <tr>
-                <td>{{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}</td>
-                <td>£{{ asset.mortgageOutstandingAmount | money_format }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 4}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            </tr>
-        {% endif %}
+    {% if asset.hasMortgage == 'yes' %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.mortgageOutstandingAmount.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            £{{ asset.mortgageOutstandingAmount | money_format }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 4}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
 
-        {# Value #}
-        <tr>
-            <td>{{ 'form.property.value.label' | trans(transOptions) }}</td>
-            <td>£{{ asset.value | money_format }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 5}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+    {# Value #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.value.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            £{{ asset.value | money_format }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 5}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# equity release scheme #}
-        <tr>
-            <td>{{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}</td>
-            <td>{{ asset.isSubjectToEquityRelease | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 6}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+    {# Equity Release Scheme #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.isSubjectToEquityRelease.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.isSubjectToEquityRelease | capitalize }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 6}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# other charges  #}
-        <tr>
-            <td>{{ 'form.property.hasCharges.label' | trans(transOptions) }}</td>
-            <td>{{ asset.hasCharges | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 7}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+    {# Other Charges #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.hasCharges.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.hasCharges | capitalize }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 7}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
 
-        {# rented out + rent agreement date + income month #}
-        <tr>
-            <td>{{ 'form.property.isRentedOut.label' | trans(transOptions) }}</td>
-            <td>{{ asset.isRentedOut | capitalize }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
-        {% if asset.isRentedOut =='yes' %}
-            <tr>
-                <td>{{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}</td>
-                <td>{{ asset.rentAgreementEndDate | date("m/Y") }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            </tr>
-            <tr>
-                <td>{{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}</td>
-                <td>£{{ asset.rentIncomeMonth | money_format }}</td>
-                <td class="change-answer soft-half--left hard--right width-sixth">
-                    <a class="behat-link-edit action-link"
-                       href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            </tr>
-        {% endif %}
-
-        </tbody>
-    </table>
-
+    {# Rented Out + Rent Agreement Date + Income Month #}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.isRentedOut.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.isRentedOut | capitalize }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% if asset.isRentedOut =='yes' %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.rentAgreementEndDate.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ asset.rentAgreementEndDate | date("m/Y") }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.property.rentIncomeMonth.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            £{{ asset.rentIncomeMonth | money_format }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a
+            class="behat-link-edit govuk-link"
+            href="{{ path('ndr_assets_property_step', {'ndrId': ndr.id, 'assetId': asset.id, 'step': 8}) }}">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
+</dl>
 {% endfor %}

@@ -22,7 +22,11 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}"  rel="stylesheet" type="text/css">
+{% endblock %}
 
 {% block breadcrumbs %}
     {% if report.submitted == true %}
@@ -65,7 +69,7 @@
     </div>
 
     <div class="push--bottom">
-        {% include 'AppBundle:Report/Formatted:formatted.html.twig' %}
+        {% include 'AppBundle:Report/Formatted:formatted_body.html.twig' %}
     </div>
 
     {% if report.submitted == false %}
