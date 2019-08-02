@@ -58,6 +58,7 @@ Feature: NDR assets
     And I choose "no" when asked for adding another record
       # check record in summary page
     And each text should be present in the corresponding region:
+      | Yes                    | has-assets                   |
       | Alfa Romeo 156 JTD     | asset-alfa-romeo-156-jtd     |
       | £17,000.00             | asset-alfa-romeo-156-jtd     |
       | 12 January 2016        | asset-alfa-romeo-156-jtd     |

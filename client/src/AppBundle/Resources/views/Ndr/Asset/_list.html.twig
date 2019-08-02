@@ -20,7 +20,7 @@
         {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
     </dt>
     <dd class="govuk-summary-list__value">
-        {{ ndr.noAssetToAdd ? 'Yes' : 'No' }}
+        {{ ndr.noAssetToAdd ? 'No' : 'Yes' }}
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link behat-link-edit" href="{{ url('ndr_assets_exist', { 'ndrId': ndr.id, 'from': 'summary' }) }}">
