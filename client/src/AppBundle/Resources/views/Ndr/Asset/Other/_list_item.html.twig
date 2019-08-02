@@ -1,44 +1,59 @@
-<h3 class="heading-medium">{{ groupId | trans }}</h3>
+{% set translationDomain = "ndr-assets" %}
+{% trans_default_domain translationDomain %}
 
-<table class="check-your-answers behat-region-list-accounts">
-    <thead>
-    <tr>
-        <th>Description of asset</th>
-        <th class="numeric">Valuation date</th>
-        <th class="numeric">Value</th>
-        <th>
-            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+<h3 class="govuk-heading-m">{{ groupId | trans }}</h3>
+
+<dl class="govuk-summary-list behat-region-list-accounts">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      {{ 'form.description.label' | trans }}
+    </dt>
+    <dd class="govuk-summary-list__key">
+      {{ 'form.valuationDate.label' | trans }}
+    </dd>
+    <dd class="govuk-summary-list__key">
+      {{ 'form.value.label' | trans }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+    </dd>
+  </div>
+
     {% for asset in assetsInGroup.items %}
-        <tr class="behat-region-asset-{{ asset.description | behat_namify }}">
-            <td>{{ asset.description | nl2br }}</td>
-            <td class="numeric-small width-fifth">
+        <div class="govuk-summary-list__row behat-region-asset-{{ asset.description | behat_namify }}">
+            <dt class="govuk-summary-list__key">
+                {{ asset.description | nl2br }}
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {% if asset.valuationDate %}
                     {{ asset.valuationDate | date('j F Y') }}
                 {% else %}
                     -
                 {% endif %}
-            </td>
-            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
-            <td class="change-answer soft-half--left hard--right width-sixth">
-                <a class="behat-link-edit action-link"
-                   href="{{ path('ndr_asset_other_edit', {'ndrId': ndr.id, 'assetId': asset.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                <a class="behat-link-delete push-half--left action-link" href="{{ path('ndr_asset_delete', {'ndrId': ndr.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
-            </td>
-        </tr>
+            </dd>
+            <dd class="govuk-summary-list__value">
+                £{{ asset.value | money_format }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('ndr_asset_other_edit', {'ndrId': ndr.id, 'assetId': asset.id}) }}">
+                {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+                &nbsp;
+                <a class="govuk-link behat-link-delete" href="{{ path('ndr_asset_delete', {'ndrId': ndr.id, 'assetId': asset.id}) }}">
+                {{ 'remove' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+        </div>
     {% endfor %}
-        <tr class="no-border">
-            <td>
-                <span class="bold-small">Total amount</span>
-            </td>
-            <td></td>
-            <td class="numeric">
-                <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
-            </td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
+
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            Total amount
+        </dt>
+        <dd class="govuk-summary-list__value"></dd>
+        <dd class="govuk-summary-list__key">
+            £{{ assetsInGroup.total | money_format }}
+        </dd>
+        <dd class="govuk-summary-list__actions"></dd>
+    </div>
+</dl>
