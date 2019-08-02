@@ -143,7 +143,7 @@ class NdrController extends AbstractController
 
     private function getPdfBinaryContent($ndr)
     {
-        $html = $this->render('AppBundle:Ndr/Formatted:formatted_body.html.twig', [
+        $html = $this->render('AppBundle:Ndr/Formatted:formatted_standalone.html.twig', [
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD)
         ])->getContent();
 
