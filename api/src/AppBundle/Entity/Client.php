@@ -5,9 +5,11 @@ namespace AppBundle\Entity;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\Status;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Client.
@@ -21,9 +23,12 @@ use JMS\Serializer\Annotation as JMS;
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\ClientRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Client implements ClientInterface
 {
+    use IsSoftDeleteableEntity;
+
     /**
      * @var int
      *
@@ -1001,5 +1006,50 @@ class Client implements ClientInterface
         return $this->archivedAt;
     }
 
+    /**
+     * @return bool
+     */
+    public function hasDeputies()
+    {
+        return !$this->getUsers()->isEmpty();
+    }
 
+    /**
+     * Get Active From date == earliest report start date for this client
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\SerializedName("active_from")
+     * @JMS\Groups({"active-period"})
+     *
+     * @return \DateTime
+     */
+    public function getActiveFrom()
+    {
+        $reports = $this->getReports();
+        $earliest = new \DateTime('now');
+        foreach ($reports as $report)
+        {
+            if ($report->getStartDate() < $earliest) {
+                $earliest = $report->getStartDate();
+            }
+        }
+
+        return $earliest;
+    }
+
+    /**
+     * Get Active To date
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\SerializedName("active_to")
+     * @JMS\Groups({"active-period"})
+     *
+     * @return \DateTime
+     */
+    public function getActiveTo()
+    {
+        return $this->getDeletedAt();
+    }
 }

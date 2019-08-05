@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -81,6 +82,7 @@ class ReportSubmissionRepository extends EntityRepository
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); //disable softdelete for createdBy, needed from admin area
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
         $records = $qbSelect->getQuery()->getResult(); /* @var $records ReportSubmission[] */
         $this->_em->getFilters()->enable('softdeleteable');
 
@@ -179,5 +181,14 @@ class ReportSubmissionRepository extends EntityRepository
     private function determineCreatedToDate(\DateTime $date = null)
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();
+    }
+
+    public function findOneByIdUnfiltered($id)
+    {
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
+        $reportSubmission = $this->find($id);
+        $this->_em->getFilters()->enable('softdeleteable');
+
+        return $reportSubmission;
     }
 }

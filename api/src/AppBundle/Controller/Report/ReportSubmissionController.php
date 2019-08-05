@@ -25,6 +25,7 @@ class ReportSubmissionController extends RestController
         'client-name',
         'client-case-number',
         'client-email',
+        'client-discharged',
         'user-name',
         'user-rolename',
         'user-teamname',
@@ -62,7 +63,7 @@ class ReportSubmissionController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->find($id);
+        $ret = $this->getRepository(EntityDir\Report\ReportSubmission::class)->findOneByIdUnfiltered($id);
 
         $this->setJmsSerialiserGroups(array_merge(self::$jmsGroups, ['document-storage-reference']));
 

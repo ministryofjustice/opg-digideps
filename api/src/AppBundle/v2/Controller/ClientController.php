@@ -40,6 +40,7 @@ class ClientController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
      *
      * @param $id
      * @return JsonResponse
@@ -51,6 +52,7 @@ class ClientController
         }
 
         $dto = $this->assembler->assembleFromArray($data);
+
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
