@@ -1,0 +1,14 @@
+.idea/
+fabfile.pyc
+vendor/
+fixtures/__init__.py
+venv/
+ansible/route53-*.json
+ansible/opg-ansible
+ansible/opg-playbooks
+lib/
+bin/
+**/secrets.json
+**/.tmp.aws.config
+terraform/to_import\.sh
+*.iml

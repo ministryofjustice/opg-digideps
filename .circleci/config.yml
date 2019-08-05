@@ -1,0 +1,44 @@
+terraform: &terraform
+  docker:
+    - image: hashicorp/terraform:full
+
+version: 2
+jobs:
+  build:
+    <<: *terraform
+    environment:
+      TF_CLI_ARGS_plan: -input=false -lock=false
+      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+    steps:
+      - checkout
+      - run:
+          name: terraform lint
+          command: terraform fmt -diff -check -recursive
+      - run:
+          name: init shared
+          command: terraform init shared
+      - run:
+          name: plan shared
+          environment:
+            TF_WORKSPACE: development
+          command: terraform plan -var-file=shared/terraform.tfvars.json shared
+      - run:
+          name: init environment
+          command: terraform init environment
+      - run:
+          name: plan environment
+          environment:
+            TF_WORKSPACE: master
+            TF_VAR_OPG_DOCKER_TAG: dummy_value
+          command: terraform plan -var-file=environment/terraform.tfvars.json environment
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build:
+        filters:
+          branches:
+            ignore:
+            - master
+
