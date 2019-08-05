@@ -56,6 +56,9 @@ jobs:
       VERSION: test
     steps:
       - setup_remote_docker
+      - add_ssh_keys:
+          fingerprints:
+            - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - aws-cli/install
       - checkout
       - run:
