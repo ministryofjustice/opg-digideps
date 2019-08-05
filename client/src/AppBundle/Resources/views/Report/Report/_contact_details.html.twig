@@ -2,46 +2,44 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 <div id="contact-details-container">
-    <h2 class="heading-small">{{ 'page.contactDetailsHeader' | trans }}</h2>
+    <h2 class="govuk-heading-s">{{ 'page.contactDetailsHeader' | trans }}</h2>
     <p>{{ 'page.contactDetailsIntro' | trans }}</p>
 
-    <dl class="govuk-summary-list columns-2 push-double--bottom">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {{ 'person' | trans({}, 'common') }}
-            </dt>
-            <dd class="govuk-summary-list__key">
-                {{ 'address' | trans({}, 'common') }}
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </dd>
-            {% endif %}
-        </div>
-        {% for detail in contactDetails %}
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__value">
-                    {{ detail.name }}
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {% for part in detail.address %}
-                        <span>{{ part }}</span><br>
-                    {% endfor %}
-                    <span class="bold">Phone: </span><span>{{ detail.phone.main }}</span><br>
-                    {% if detail.phone.alternative is defined %}
-                        <span class="bold">Alternative phone: </span><span> {{ detail.phone.alternative }}</span><br>
-                    {% endif %}
-                    <span class="bold">Email:</span><span> {{ detail.email }}</span><br>
-                </dd>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">{{ 'person' | trans({}, 'common') }}</th>
+                <th scope="col" class="govuk-table__header">{{ 'address' | trans({}, 'common') }}</th>
                 {% if not hideEditLink %}
-                    <dd class="govuk-summary-list__actions">
-                        <a class="govuk-link behat-link-edit" href="{{ detail.editUrl }}">
-                            {{ 'edit' | trans({}, 'common') }}
-                        </a>
-                    </dd>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
                 {% endif %}
-            </div>
-        {% endfor %}
-    </dl>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for detail in contactDetails %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        {{ detail.name }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {% for part in detail.address %}
+                            {{ part }}<br>
+                        {% endfor %}
+                        <strong>Phone:</strong> {{ detail.phone.main }}<br>
+                        {% if detail.phone.alternative is defined %}
+                            <strong>Alternative phone:</strong> {{ detail.phone.alternative }}<br>
+                        {% endif %}
+                        <strong>Email:</strong> {{ detail.email }}<br>
+                    </td>
+                    {% if not hideEditLink %}
+                        <td class="govuk-table__cell">
+                            <a href="{{ detail.editUrl }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>

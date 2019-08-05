@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    {% if app.user.getCoDeputyClientConfirmed() or true %}
+    {% if app.user.getCoDeputyClientConfirmed() %}
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
@@ -60,50 +60,45 @@
 
     {% if client.submittedReports %}
 
-        <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
+        <h2 class="govuk-heading-l">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
-        <dl class="govuk-summary-list behat-region-reports-history">
-            <div class="govuk-summary-list__row behat-region-reports-history">
-                <dt class="govuk-summary-list__key">
-                    {{ (page ~ '.reportType') | trans }}
-                </dt>
-                <dd class="govuk-summary-list__key">
-                    {{ (page ~ '.reportingPeriod') | trans }}
-                </dd>
-                <dd class="govuk-summary-list__key">
-                    {{ (page ~ '.submissionDate') | trans }}
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </dd>
-            </div>
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportType') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">{{ (page ~ '.submissionDate') | trans }}</th>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body behat-region-submitted-reports">
             {% for report in client.submittedReports %}
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__value">
-                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="govuk-link">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}">
                             {{ 'annualDeputyReport' | trans({}, 'common') }}
                         </a>
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
-                    </dd>
-                    <dd class="govuk-summary-list__value">
-                        {{ report.submitDate | date("j F Y") }}
-                    </dd>
-                    <dd class="govuk-summary-list__actions">
-                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download govuk-link">
+                    </td>
+                    <td class="govuk-table__cell">{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
+                    <td class="govuk-table__cell">{{ report.submitDate | date("j F Y") }}</td>
+                    <td class="govuk-table__cell text--right">
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download">
                             {{ 'download' | trans({}, 'common') }}
                         </a><br>
-                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review govuk-link">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review">
                             {{ 'view' | trans({}, 'common') }}
                         </a><br>
-                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents govuk-link">
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents">
                             {{ (page ~ '.attachDocuments') | trans }}
                         </a>
-                    </dd>
-                </div>
+                    </td>
+                </tr>
             {% endfor %}
-        </dl>
+            </tbody>
+        </table>
+
     {% endif %}
 
 {% endblock %}
