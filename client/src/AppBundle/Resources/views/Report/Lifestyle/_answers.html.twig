@@ -26,8 +26,8 @@
         {% endif %}
         {% if not hideEditLink %}
             <dd class="govuk-summary-list__actions">
-                <a 
-                href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" 
+                <a
+                href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}"
                 class="behat-link-care-appointments-edit govuk-link">
                     {{ 'edit' | trans({}, 'common')}}
                 </a>
@@ -52,9 +52,7 @@
         {% endif %}
         {% if not hideEditLink %}
             <dd class="govuk-summary-list__actions">
-                <a 
-                href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" 
-                class="govuk-link">
+                <a class="govuk-link" href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common')}}
                 </a>
             </dd>
@@ -62,7 +60,7 @@
     </div>
     {% if report.lifestyle.doesClientUndertakeSocialActivities and (report.lifestyle.activityDetailsYes or report.lifestyle.activityDetailsNo) %}
         <div class="govuk-summary-list__row behat-region-activity-details">
-            {% if report.lifestyle.doesClientUndertakeSocialActivities is null %}
+            {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
                 <dt class="govuk-summary-list__key">
                     {{ 'form.activityDetailsYes.label' | trans(transOptions) }}
                 </dt>
@@ -79,9 +77,7 @@
             {% endif %}
             {% if not hideEditLink %}
                 <dd class="govuk-summary-list__actions">
-                    <a 
-                    href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" 
-                    class="govuk-link">
+                    <a class="govuk-link" href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common')}}
                     </a>
                 </dd>

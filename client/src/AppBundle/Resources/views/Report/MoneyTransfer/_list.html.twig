@@ -9,7 +9,7 @@
     {% if account.requiresBankName %}
         {{ account.bank }}<br/>
     {% endif %}
-    <p class="font-xsmall flush--ends">
+    <p class="govuk-!-font-size-16">
         {{ account.accountTypeText }}<br/>
         {% if account.requiresSortCode %}
             Sort code: {{ account.sortCode }}<br/>
@@ -19,7 +19,7 @@
     </p>
 {% endmacro %}
 
-<dl class="govuk-summary-list columns-2 push-double--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
     <div class="govuk-summary-list__row behat-region-no-transfers-to-add">
         <dt class="govuk-summary-list__key">
@@ -39,15 +39,17 @@
 </dl>
 
 {% if report.moneyTransfers | length > 0 %}
-    <div class="grid-row">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of money transfers</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">List of money transfers</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
+                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="govuk-link behat-link-add">
+                    <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ 'summaryPage.addButton' | trans }}
+                    </strong>
                 </a>
             {% endif %}
         </div>
@@ -55,52 +57,54 @@
 {% endif %}
 
 {% if report.moneyTransfers | length > 0 %}
-    <dl class="govuk-summary-list">
-
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Transferred from
-            </dt>
-            <dd class="govuk-summary-list__key">
-                Transferred to
-            </dd>
-            <dd class="govuk-summary-list__key text--right">
-                Amount
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </dd>
-            {% endif %}
-        </div>
-
-        {% for transfer in report.moneyTransfers %}
-            <div class="govuk-summary-list__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
-                <dt class="govuk-summary-list__value">
-                    {{ _self.accountDetails(transfer.accountFrom) }}
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {{ _self.accountDetails(transfer.accountTo) }}
-                </dd>
-                <dd class="govuk-summary-list__value numeric-small">
-                    £{{ transfer.amount | money_format }}
-                </dd>
-                {% if not hideEditLink  %}
-                    <dd class="govuk-summary-list__actions">
-                        <a 
-                            href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}" 
-                            class="behat-link-edit govuk-link">
-                            {{ 'edit' | trans({}, 'common') }}
-                        </a>
-                        <a 
-                            href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" 
-                            class="behat-link-delete push-half--left govuk-link">
-                            {{ 'remove' | trans({}, 'common' ) }}
-                        </a>
-                    </dd>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Transferred from
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    Transferred to
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
+                {% if not hideEditLink %}
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
                 {% endif %}
-            </div>
-        {% endfor %}
-    </dl>
+            </tr>
+        </thead>
 
+        <tbody class="govuk-table__body">
+            {% for transfer in report.moneyTransfers %}
+                <tr class="govuk-table__row behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
+                    <th scope="row" class="govuk-table__header">
+                        {{ _self.accountDetails(transfer.accountFrom) }}
+                    </th>
+                    <td class="govuk-table__cell">
+                        {{ _self.accountDetails(transfer.accountTo) }}
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        £{{ transfer.amount | money_format }}
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a
+                                href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}"
+                                class="behat-link-edit govuk-link">
+                                {{ 'edit' | trans({}, 'common') }}
+                            </a>
+                            <a
+                                href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}"
+                                class="behat-link-delete govuk-link govuk-!-margin-left-1">
+                                {{ 'remove' | trans({}, 'common' ) }}
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}

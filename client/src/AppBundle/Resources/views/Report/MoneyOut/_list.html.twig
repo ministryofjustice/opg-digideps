@@ -4,111 +4,105 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<div class="grid-row push--top">
-    <div class="column-half">
-        <h2 class="heading-medium flush--ends">Payments you've already told us about</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-l">Payments you've already told us about</h2>
     </div>
-    <div class="column-half text--right">
+    <div class="govuk-grid-column-one-half text--right">
         {% if not hideEditLink  %}
-            <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}"
-                class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                Add a payment
+            <a href="{{ path('money_out_step' , {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <strong>
+                    <span class="icon icon-plus"></span>
+                    Add a payment
+                </strong>
             </a>
         {% endif %}
     </div>
 </div>
 
 {% for groupId, groupData in report.groupMoneyTransactionsByGroup(report.moneyTransactionsOut) %}
+    <h3 class="govuk-heading-m">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
 
-<h3 class="heading-medium">{{ ('form.group.entries.' ~ groupId) | trans(transOptions) }}</h3>
+    <table class="govuk-table behat-region-list-accounts">
+        <thead>
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Type
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    Description
+                </th>
+                {% if report.canLinkToBankAccounts %}
+                    <th scope="col" class="govuk-table__header">
+                        Bank account
+                    </th>
+                {% endif %}
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
+                {% if not hideEditLink  %}
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                        <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                {% endif %}
+            </tr>
+        </thead>
 
-<dl class="govuk-summary-list behat-region-list-accounts">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            Type
-        </dt>
-        <dd class="govuk-summary-list__key">
-            Description
-        </dd>
-        {% if report.canLinkToBankAccounts %}
-            <dd class="govuk-summary-list__key">
-                Bank account
-            </dd>
-        {% endif %}
-        <dd class="govuk-summary-list__key numeric">
-            Amount
-        </dd>
-        {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions">
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </dd>
-        {% endif %}
-    </div>
+        <tbody class="govuk-table__body">
+            {% for entry in groupData.entries %}
+                <tr class="govuk-table__row behat-region-transaction-{{ t.description | behat_namify }}">
+                    <th scope="row" class="govuk-table__header">
+                        {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans(transOptions) }}
+                    </th>
+                    <td class="govuk-table__cell">
+                        {{ entry.description | nl2br }}
+                    </td>
+                    {% if report.canLinkToBankAccounts %}
+                        <td class="govuk-table__cell">
+                            {{ (entry.bankAccount) ? entry.bankAccount.nameOneLine : '-' }}
+                        </td>
+                    {% endif %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        £{{ entry.amount | money_format }}
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a class="behat-link-edit govuk-link" href="{{ path('money_out_step', {'reportId': report.id, 'step': 2, 'transactionId': entry.id, 'from': 'summary'}) }}">
+                                {{ 'edit' | trans({}, 'common' ) }}
+                            </a>
+                            <a class="behat-link-delete govuk-link govuk-!-margin-left-1" href="{{ path('money_out_delete', {'reportId': report.id, 'transactionId': entry.id}) }}">
+                                {{ 'remove' | trans({}, 'common' ) }}
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
 
-    {% for entry in groupData.entries %}
-        <div class="govuk-summary-list__row behat-region-transaction-{{ t.description | behat_namify }}">
-            <dt class="govuk-summary-list__value">
-                {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans(transOptions) }}
-            </dt>
-            <dd class="govuk-summary-list__value">
-                {{ entry.description | nl2br }}
-            </dd>
-            {% if report.canLinkToBankAccounts %}
-                <dd class="govuk-summary-list__value">
-                    {{ (entry.bankAccount) ? entry.bankAccount.nameOneLine : '-' }}
-                </dd>
-            {% endif %}
-            <dd class="govuk-summary-list__value">
-                £{{ entry.amount | money_format }}
-            </dd>
-            {% if not hideEditLink  %}
-                <dd class="govuk-summary-list__actions">
-                    <a 
-                        class="behat-link-edit govuk-link"
-                        href="{{ path('money_out_step', {'reportId': report.id, 'step': 2, 'transactionId': entry.id, 'from': 'summary'}) }}">
-                        {{ 'edit' | trans({}, 'common' ) }}
-                    </a>
-                    <a 
-                        class="behat-link-delete push-half--left govuk-link"
-                        href="{{ path('money_out_delete', {'reportId': report.id, 'transactionId': entry.id}) }}">
-                        {{ 'remove' | trans({}, 'common' ) }}
-                    </a>
-                </dd>
-            {% endif %}
-        </div>
-    {% endfor %}
-
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__value">
-            <span class="bold-small">Total amount</span>
-        </dt>
-        <dd class="govuk-summary-list__value"></dd>
-        {% if report.canLinkToBankAccounts %}
-            <dd class="govuk-summary-list__value"></dd>
-        {% endif %}
-        <dd class="govuk-summary-list__value">
-            <span class="bold-small behat-region-{{ groupId | behat_namify }}-total">£{{ groupData.amountTotal | money_format }}</span>
-        </dd>
-        {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions"></dd>
-        {% endif %}
-    </div>
-</dl>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-summary-list__key">
+                    <span class="bold-small">Total amount</span>
+                </th>
+                <td class="govuk-table__cell"></td>
+                {% if report.canLinkToBankAccounts %}
+                    <td class="govuk-table__cell"></td>
+                {% endif %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong class="behat-region-{{ groupId | behat_namify }}-total">
+                        £{{ groupData.amountTotal | money_format }}
+                    </strong>
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric"></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
 
 {% endfor %}
 
 {# Total money in #}
-<table class="check-your-answers push--top">
-    <tr class="no-border">
-        <td class="text--right">
-            <span class="heading-medium">Total money out:</span>
-        </td>
-        <td class="numeric-small width-eighth">
-            <span class="heading-medium">£{{ report.moneyOutTotal | money_format }}</span>
-        </td>
-        {% if not hideEditLink  %}
-            <td class="width-sixth"></td>
-        {% endif %}
-    </tr>
-</table>
+<div class="govuk-heading-m text--right behat-region-asset-total">
+    {{ 'summaryPage.moneyOut.totalValue' | trans({ '%value%': (report.moneyOutTotal | money_format) }) }}
+</div>

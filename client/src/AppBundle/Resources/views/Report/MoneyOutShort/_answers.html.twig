@@ -17,7 +17,7 @@
             {% if categories | length == 0 %}
                 None
             {% else %}
-                <ul class="list list-bullet flush--ends">
+                <ul class="govuk-list govuk-list--bullet">
                     {% for c in categories %}
                         <li>
                             {{ ('form.categoriesEntries.' ~ c.typeId ~ '.label') | trans(transOptions) }}
@@ -49,12 +49,12 @@
                 <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
             </dd>
         {% else %}
-        <dt class="govuk-summary-list__key">
-            {{ 'existPage.form.moneyTransactionsShortOutExist.label' | trans(transOptions) }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ report.moneyTransactionsShortOutExist | capitalize }}
-        </dd>
+            <dt class="govuk-summary-list__key">
+                {{ 'existPage.form.moneyTransactionsShortOutExist.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.moneyTransactionsShortOutExist | capitalize }}
+            </dd>
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
@@ -68,16 +68,17 @@
 
 
 {% if report.moneyTransactionsShortOut | length > 0 %}
-    <div class="grid-row">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of expenses over £1000</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">List of expenses over £1000</h2>
         </div>
         {% if not hideEditLink  %}
-            <div class="column-half text--right">
-                <a href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}"
-                   class="bold-small move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.moneyOut.addButton' | trans }}
+            <div class="govuk-grid-column-one-half text--right">
+                <a class="govuk-link behat-link-add" href="{{ path('money_out_short_add', { 'reportId': report.id, 'from': 'summary'}) }}">
+                   <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ 'summaryPage.moneyOut.addButton' | trans }}
+                    </strong>
                 </a>
             </div>
         {% endif %}
@@ -85,57 +86,61 @@
 {% endif %}
 
 {% if report.moneyTransactionsShortOut | length > 0 %}
-    <dl class="govuk-summary-list columns-3">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Description
-            </dt>
-            <dd class="govuk-summary-list__key numeric">
-                Date
-            </dd>
-            <dd class="govuk-summary-list__key numeric">
-                Amount
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </dd>
-            {% endif %}
-        </div>
-
-        {% for tr in report.moneyTransactionsShortOut %}
-            <div class="govuk-summary-list__row behat-region-transaction-{{ tr.description | behat_namify }}">
-                <dt class="govuk-summary-list__key">
-                    {{ tr.description }}<br/>
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {{ tr.date ? tr.date | date("j F Y")  : '-' }}
-                </dd>
-                <dd class="govuk-summary-list__value">
-                    £{{ tr.amount | money_format }}
-                </dd>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Description
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    Date
+                </th>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
                 {% if not hideEditLink %}
-                    <dd class="govuk-summary-list__actions">
-                        <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
-                           class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        <a href="{{ path('money_out_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
-                           class="push-half--left govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
-                    </dd>
+                    <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
                 {% endif %}
-            </div>
-        {% endfor %}
+            </tr>
+        </thead>
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                <span class="bold-small">Total money out</span>
-            </dt>
-            <dd class="govuk-summary-list__value"></dd>
-            <dd class="govuk-summary-list__value">
-                <span class="bold-small behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortOut) | money_format }}</span>
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions"></dd>
-            {% endif %}
-        </div>
-    </dl>
+        <tbody class="govuk-table__body">
+            {% for tr in report.moneyTransactionsShortOut %}
+                <tr class="govuk-table__row behat-region-transaction-{{ tr.description | behat_namify }}">
+                    <th scope="row" class="govuk-table__header">
+                        {{ tr.description }}<br/>
+                    </th>
+                    <td class="govuk-table__cell">
+                        {{ tr.date ? tr.date | date("j F Y")  : '-' }}
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        £{{ tr.amount | money_format }}
+                    </td>
+                    {% if not hideEditLink %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
+                            class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('money_out_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
+                            class="govuk-link govuk-!-margin-left-1 behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        <tbody class="govuk-table__body behat-region-transaction-{{ tr.description | behat_namify }}">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Total money out</th>
+                <td class="govuk-table__cell"></td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong class="behat-region-transaction-total">£{{ report.totalValue(report.moneyTransactionsShortOut) | money_format }}</strong>
+                </td>
+                {% if not hideEditLink  %}
+                    <td class="govuk-table__cell"></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
 {% endif %}
