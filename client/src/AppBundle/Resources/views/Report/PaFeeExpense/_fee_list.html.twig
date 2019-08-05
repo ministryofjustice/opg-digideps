@@ -13,62 +13,70 @@
     {% endfor %}
 
     {# Items list heading #}
-    <div class="grid-row behat-region-fees-list">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
+    <div class="govuk-grid-row behat-region-fees-list">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">List of deputy fees and expenses</h2>
         </div>
         {% if not hideEditLink %}
-            <div class="column-half text--right">
-                <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+            <div class="govuk-grid-column-one-half text--right">
+                <strong>
+                    <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </strong>
             </div>
         {% endif %}
     </div>
 
     {# Items list table #}
-    <dl class="govuk-summary-list push-double--bottom">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Categories of fees
-            </dt>
-            {% if showDetailsColumn %}
-                <dd class="govuk-summary-list__key">
-                    Details
-                </dd>
-            {% endif %}
-            <dd class="govuk-summary-list__key">
-                Amount
-            </dd>
-        </div>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Categories of fees
+                </th>
+                {% if showDetailsColumn %}
+                    <th scope="col" class="govuk-table__header">
+                        Details
+                    </th>
+                {% endif %}
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
+            </tr>
+        </thead>
 
-        {% for fee in report.fees %}
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
-                {{ feeLabel }}
-            </dt>
-            {% if showDetailsColumn %}
-                <dd class="govuk-summary-list__value">
-                    {% if fee.moreDetails %}
-                        {{ fee.moreDetails | nl2br }}
+        <tbody class="govuk-table__body">
+            {% for fee in report.fees %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
+                        {{ feeLabel }}
+                    </td>
+                    {% if showDetailsColumn %}
+                        <td class="govuk-table__cell">
+                            {% if fee.moreDetails %}
+                                {{ fee.moreDetails | nl2br }}
+                            {% endif %}
+                        </td>
                     {% endif %}
-                </dd>
-            {% endif %}
-            <dd class="govuk-summary-list__value numeric-small">
-                £{{ fee.amount | money_format }}
-            </dd>
-        </div>
-        {% endfor %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        £{{ fee.amount | money_format }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__value">
-                <span class="bold-small">Total amount</span>
-            </dt>
-            {% if showDetailsColumn %}
-            <dd class="govuk-summary-list__value"></dd>
-            {% endif %}
-            <dd class="govuk-summary-list__value">
-                <span class="bold-small">£{{ report.feesTotal | money_format }}</span>
-            </dd>
-        </div>
-    </dl>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">
+                    Total amount
+                </th>
+                {% if showDetailsColumn %}
+                <td class="govuk-table__cell"></td>
+                {% endif %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong>£{{ report.feesTotal | money_format }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 {% endif %}

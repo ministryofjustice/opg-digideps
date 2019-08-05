@@ -4,16 +4,16 @@
 
 {# Set page to summary page to allow correct translations to be pulled in#}
 {% set page = 'summaryPage' %}
-        
-        {# Total cost this period#}
-        <tr class="behat-region-total-cost">
-            <td>
-                <strong class="bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
-            </td>
-            <td>
-                <strong class="bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
-            </td>
-            {% if not hideEditLink %}
-                <td></td>
-            {% endif %}
-        </tr>
+
+{# Total cost this period#}
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        <strong class="bold">{{ (page ~ '.questionLabel.totalCosts') | trans(transOptions) }}</strong>
+    </dt>
+    <dd class="govuk-summary-list__value text--right">
+        <strong class="bold">£{{ report.profDeputyTotalCostsTakenFromClient | money_format }}</strong>
+    </dd>
+    {% if not hideEditLink %}
+        <dd class="govuk-summary-list__actions"></dd>
+    {% endif %}
+</div>

@@ -7,18 +7,17 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {% if not hideEditLink %}
-<h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
+    <p><strong>{{ (page ~ '.weveListedYourAnswers') | trans }}</strong></p>
 
-<p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
-{{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }}
+    <p>{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
 
-<a href="{{ path('report_overview', {'reportId': report.id}) }}" class="right behat-link-return-to-client-profile">{{ (page ~ '.returnToClientProfile') | trans }}</a>
+    {{ macros.notification('info', (page ~ '.informationMessage') | trans(transOptions)) }}
 {% endif %}
 
 <dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
 
-    {# How did you charge for your costs? #}
+    {# How did you charge   for your costs? #}
     <div class="govuk-summary-list__row behat-region-how-charged">
         <dt class="govuk-summary-list__key">
             {{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label' | trans }}
@@ -28,8 +27,8 @@
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a 
-                    href="{{ path('prof_deputy_costs_estimate_how_charged', {'reportId': report.id, 'from': 'summary'}) }}" 
+                <a
+                    href="{{ path('prof_deputy_costs_estimate_how_charged', {'reportId': report.id, 'from': 'summary'}) }}"
                     class="behat-link-edit govuk-link behat-link-edit-how-charged">
                     {{ 'edit' | trans({}, 'common' ) }}
                 </a>
@@ -49,8 +48,8 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a 
-                        href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}" 
+                    <a
+                        href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
                         class="behat-link-edit govuk-link behat-link-edit-breakdown-management-cost">
                         {{ 'edit' | trans({}, 'common' ) }}
                     </a>
@@ -72,8 +71,8 @@
                 </dd>
                 {% if not hideEditLink  %}
                     <dd class="govuk-summary-list__actions">
-                        <a 
-                            href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}" 
+                        <a
+                            href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}"
                             class="behat-link-edit govuk-link behat-link-edit-more-info">
                             {{ 'edit' | trans({}, 'common' ) }}
                         </a>
@@ -85,19 +84,9 @@
 </dl>
 
 {% if submittedEstimateCosts is not null %}
+<h2 class="govuk-heading-m">{{ 'summaryPage.breakdownHeading' | trans }}</h2>
+
 <dl class="govuk-summary-list columns-2 push--bottom">
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'summaryPage.breakdownHeading' | trans }}
-        </dt>
-        <dd class="govuk-summary-list__key">
-        </dd>
-        {% if not hideEditLink %}
-            <dd class="govuk-summary-list__actions">
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-            </dd>
-        {% endif %}
-    </div>
     {% for estimateCostTypeId in report.getProfDeputyEstimateCostTypeIds %}
         {% set costRow = submittedEstimateCosts[estimateCostTypeId.typeId] %}
         <div class="govuk-summary-list__row behat-region-breakdown-{{ estimateCostTypeId.typeId | lower }}">
@@ -113,8 +102,8 @@
             </dd>
             {% if not hideEditLink %}
             <dd class="govuk-summary-list__actions">
-                <a 
-                    class="govuk-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}" 
+                <a
+                    class="govuk-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}"
                     href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>

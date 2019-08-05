@@ -20,19 +20,15 @@
             <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
         </summary>
         <div class="opg-indented-block">
-            <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-                    <tbody>
+            <dl class="govuk-summary-list">
+                {{ macros.summaryListHeaderQA(hideEditLink) }}
 
                 {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
                     'report': report,
                     'transDomain': "report-prof-deputy-costs",
                     'hideEditLink' : hideEditLink
                 } %}
-                    </tbody>
-                </table>
-            </div>
+            </dl>
         </div>
     </details>
 
@@ -50,50 +46,47 @@
             <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
         </summary>
         <div class="opg-indented-block">
-            <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-                    <tbody>
-                    {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
-                        'report': report,
-                        'transDomain': 'report-prof-deputy-costs',
-                        'hideEditLink' : true
-                    } %}
-                    {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
-                        'report': report,
-                        'submittedOtherCosts': actualOtherCosts,
-                        'transDomain': "report-prof-deputy-costs",
-                        'hideEditLink' : true
-                    } %}
-                    </tbody>
-                </table>
+            <dl class="govuk-summary-list">
+                {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+                    'report': report,
+                    'transDomain': 'report-prof-deputy-costs',
+                    'hideEditLink' : true
+                } %}
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': actualOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
+                } %}
+            </dl>
+
+            <dl class="govuk-summary-list">
                 {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
                     'report': report,
                     'submittedOtherCosts': actualOtherCosts,
                     'transDomain': "report-prof-deputy-costs",
                     'hideEditLink' : true
                 } %}
-                <table class="check-your-answers columns-2 push--bottom">
-                    <tbody>
-                        {# empty line to have border. fix with CSS if simpler#}
-                        <tr>
-                            <td colspan="2"></td>
-                        </tr>
-                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
-                            'report': report,
-                            'submittedOtherCosts': actualOtherCosts,
-                            'transDomain': "report-prof-deputy-costs",
-                            'hideEditLink' : true
-                        } %}
-                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
-                            'report': report,
-                            'submittedOtherCosts': actualOtherCosts,
-                            'transDomain': "report-prof-deputy-costs",
-                            'hideEditLink' : true
-                        } %}
-                    </tbody>
-                </table>
-            </div>
+            </dl>
+
+            <dl class="govuk-summary-list">
+                {% include 'AppBundle:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': actualOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
+                } %}
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': actualOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
+                } %}
+            </dl>
         </div>
     </details>
 
@@ -111,19 +104,16 @@
             <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
         </summary>
         <div class="opg-indented-block">
-            <div>
-                <table class="check-your-answers columns-2 push--bottom">
-                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-                    <tbody>
-                    {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
-                        'report': report,
-                        'submittedOtherCosts': actualOtherCosts,
-                        'transDomain': "report-prof-deputy-costs",
-                        'hideEditLink' : true
-                    } %}
-                    </tbody>
-                </table>
-            </div>
+            <dl class="govuk-summary-list">
+                {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': actualOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
+                } %}
+            </dl>
         </div>
     </details>
 

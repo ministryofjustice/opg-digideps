@@ -1,69 +1,59 @@
 {% set translationDomain = transDomain %}
 {% trans_default_domain translationDomain %}
 {% set transOptions = {'%client%': report.client.firstname | e } %}
-
-{# Set page to summary page to allow correct translations to be pulled in#}
 {% set page = 'summaryPage' %}
 
-<h2 class="heading-medium">{{ (page ~ '.breakdownOfAdditionalCosts') |  trans(transOptions) }}</h2>
+<div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+        {{ (page ~ '.item') |  trans }}
+    </dt>
+    <dd class="govuk-summary-list__key">
+        {{ (page ~ '.amount') |  trans }}
+    </dd>
+    {% if not hideEditLink %}
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    {% endif %}
+</div>
 
-
-<dl class="govuk-summary-list">
-    <div class="govuk-summary-list__row">
+{% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
+    {% set costRow = submittedOtherCosts[otherCostTypeId.typeId] %}
+    <div class="govuk-summary-list__row behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}">
         <dt class="govuk-summary-list__key">
-            {{ (page ~ '.item') |  trans }}
+            {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
         </dt>
-        <dd class="govuk-summary-list__key">
-            {{ (page ~ '.amount') |  trans }}
+        <dd class="govuk-summary-list__value">
+            {% if costRow['amount'] is null %}
+                -
+            {% else %}
+                £{{ costRow['amount'] | money_format }}
+            {% endif %}
         </dd>
         {% if not hideEditLink %}
             <dd class="govuk-summary-list__actions">
-                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
             </dd>
         {% endif %}
     </div>
-    {% for otherCostTypeId in report.getProfDeputyOtherCostTypeIds %}
-        {% set costRow = submittedOtherCosts[otherCostTypeId.typeId] %}
-        <div class="govuk-summary-list__row behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}">
+    {# more details ("other" only) #}
+    {% if costRow.hasMoreDetails and costRow.moreDetails %}
+        <div class="govuk-summary-list__row behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}-details">
             <dt class="govuk-summary-list__key">
-                {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}
+                {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
-                {% if costRow['amount'] is null %}
-                    -
-                {% else %}
-                    £{{ costRow['amount'] | money_format }}
-                {% endif %}
+                {{  costRow.moreDetails | nl2br }}
             </dd>
             {% if not hideEditLink %}
                 <dd class="govuk-summary-list__actions">
-                    <a 
-                        class="govuk-link behat-link-edit change-answer width-sixth soft-half--left hard--right" 
-                        href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
+                    <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
                     </a>
                 </dd>
             {% endif %}
         </div>
-        {# more details ("other" only) #}
-        {% if costRow.hasMoreDetails and costRow.moreDetails %}
-            <div class="govuk-summary-list__row behat-region-breakdown-{{ otherCostTypeId.typeId | lower }}-details">
-                <dt class="govuk-summary-list__key">
-                    {{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    {{  costRow.moreDetails | nl2br }}
-                </dd>
-                {% if not hideEditLink %}
-                    <dd class="govuk-summary-list__actions">
-                        <a 
-                            class="govuk-link behat-link-edit change-answer width-sixth soft-half--left hard--right" 
-                            href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
-                            {{ 'edit' | trans({}, 'common') }}
-                        </a>
-                    </dd>
-                {% endif %}
-            </div>
-        {% endif %}
-    {% endfor %}
-</dl>
+    {% endif %}
+{% endfor %}

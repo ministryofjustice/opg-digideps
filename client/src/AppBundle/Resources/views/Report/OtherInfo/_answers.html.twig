@@ -6,7 +6,7 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<dl class="govuk-summary-list columns-2 push--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(false) }}
     <div class="govuk-summary-list__row behat-region-more-info">
         {% if report.actionMoreInfo is null %}

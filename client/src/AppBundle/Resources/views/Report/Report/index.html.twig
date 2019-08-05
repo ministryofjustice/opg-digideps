@@ -16,7 +16,7 @@
 
 {% block pageContent %}
 
-    {% if app.user.getCoDeputyClientConfirmed() %}
+    {% if app.user.getCoDeputyClientConfirmed() or true %}
         {% include 'AppBundle:Report/Report:_codeputies.html.twig' with {coDeputies: coDeputies} %}
     {% endif %}
 
