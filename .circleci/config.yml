@@ -1,11 +1,26 @@
-terraform: &terraform
-  docker:
-    - image: hashicorp/terraform:full
+version: 2.1
 
-version: 2
+workflows:
+  build:
+    jobs:
+      - build_images:
+          filters:
+            branches:
+              ignore:
+                - master
+      - build:
+          filters:
+            branches:
+              ignore:
+                - master
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+
 jobs:
   build:
-    <<: *terraform
+    docker:
+      - image: hashicorp/terraform:full
     environment:
       TF_CLI_ARGS_plan: -input=false -lock=false
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
@@ -31,14 +46,15 @@ jobs:
             TF_WORKSPACE: master
             TF_VAR_OPG_DOCKER_TAG: dummy_value
           command: terraform plan -var-file=environment/terraform.tfvars.json environment
-
-workflows:
-  version: 2
-  build:
-    jobs:
-    - build:
-        filters:
-          branches:
-            ignore:
-            - master
-
+  build_images:
+    docker:
+      - image: 'circleci/python:2.7'
+    environment:
+      AWS_REGION: eu-west-1
+      AWS_CONFIG_FILE: ~/project/aws_config
+    steps:
+      - aws-cli/install
+      - checkout
+      - run:
+          name: check identity
+          command: aws sts get-caller-identity --profile digideps-ci
