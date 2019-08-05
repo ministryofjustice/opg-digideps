@@ -10,25 +10,22 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
 
 {% block pageContent %}
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
-            <p class="text">
-                 {{ (page ~ '.weAskAbout') | trans(transOptions) }}
-            </p>
+            <p>{{ (page ~ '.weAskAbout') | trans(transOptions) }}</p>
 
             {# Check answers text #}
-            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
-            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+            <p><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p>{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
-        <div class="column-third">
+        <div class="govuk-grid-column-one-third">
             {{ macros.relatedSections(report, 'contacts') }}
         </div>
     </div>

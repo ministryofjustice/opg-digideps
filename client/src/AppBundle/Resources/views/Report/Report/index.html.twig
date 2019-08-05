@@ -62,41 +62,48 @@
 
         <h2 class="heading-large">{{ 'submittedReports' | trans({}, 'common') }}</h2>
 
-        <table class="check-your-answers behat-region-reports-history">
-            <thead>
-                <tr>
-                    <th>{{ (page ~ '.reportType') | trans }}</th>
-                    <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
-                    <th>{{ (page ~ '.submissionDate') | trans }}</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody class="behat-region-submitted-reports">
+        <dl class="govuk-summary-list behat-region-reports-history">
+            <div class="govuk-summary-list__row behat-region-reports-history">
+                <dt class="govuk-summary-list__key">
+                    {{ (page ~ '.reportType') | trans }}
+                </dt>
+                <dd class="govuk-summary-list__key">
+                    {{ (page ~ '.reportingPeriod') | trans }}
+                </dd>
+                <dd class="govuk-summary-list__key">
+                    {{ (page ~ '.submissionDate') | trans }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </dd>
+            </div>
             {% for report in client.submittedReports %}
-                <tr>
-                    <td>
-                        <a href="{{ path('report_review', {reportId: report.id}) }}">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__value">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="govuk-link">
                             {{ 'annualDeputyReport' | trans({}, 'common') }}
                         </a>
-                    </td>
-                    <td>{{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}</td>
-                    <td>{{ report.submitDate | date("j F Y") }}</td>
-                    <td class="width-sixth change-answer">
-                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download">
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
+                    </dd>
+                    <dd class="govuk-summary-list__value">
+                        {{ report.submitDate | date("j F Y") }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="{{ path('report_pdf', {reportId: report.id}) }}" class="behat-link-report-download govuk-link">
                             {{ 'download' | trans({}, 'common') }}
                         </a><br>
-                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review">
+                        <a href="{{ path('report_review', {reportId: report.id}) }}" class="behat-link-report-review govuk-link">
                             {{ 'view' | trans({}, 'common') }}
                         </a><br>
-                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents">
+                        <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents govuk-link">
                             {{ (page ~ '.attachDocuments') | trans }}
                         </a>
-                    </td>
-                </tr>
+                    </dd>
+                </div>
             {% endfor %}
-            </tbody>
-        </table>
-
+        </dl>
     {% endif %}
 
 {% endblock %}

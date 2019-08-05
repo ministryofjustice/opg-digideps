@@ -23,31 +23,29 @@
 
 {% block pageContent %}
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
             {# Introduction text #}
-            <div class="text">
-                <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
-            </div>
+            <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
 
             {# More details (from the start page) #}
-            <details class="push--bottom">
-                <summary>
-                    <span class="summary">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
                 </summary>
-                <div class="opg-indented-block text">
+                <div class="govuk-details__text">
                     <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
                     <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
-                    <h2 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h2>
+                    <p><strong>{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</strong></p>
                     <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
                 </div>
             </details>
 
             {# Check answers text #}
-            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
             <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
         </div>
-        <div class="column-third">
+        <div class="govuk-grid-column-one-third">
             {{ macros.relatedSections(report, 'moneyIn') }}
         </div>
     </div>

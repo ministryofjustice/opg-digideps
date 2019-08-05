@@ -19,48 +19,50 @@
         {% endif %}
     </div>
 
-    <table class="check-your-answers columns-3">
-        <thead>
-        <tr>
-            <th>Description of expense</th>
-            <th class="text--right">Amount</th>
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Description of expense
+            </dt>
+            <dd class="govuk-summary-list__key text--right">
+                Amount
+            </dd>
             {% if not hideEditLink %}
-                <th>
+                <dd class="govuk-summary-list__actions">
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
+                </dd>
             {% endif %}
-        </tr>
-        </thead>
-        <tbody>
+        </div>
+
         {% for expense in report.expenses %}
-            <tr class="behat-region-expense-{{ expense.explanation | behat_namify }}">
-                <td class="">
-                    {{ expense.explanation }}<br/>
-                </td>
-                <td class="numeric-small">
+            <div class="govuk-summary-list__row behat-region-expense-{{ expense.explanation | behat_namify }}">
+                <dt class="govuk-summary-list__value">
+                    {{ expense.explanation }}
+                </dt>
+                <dd class="govuk-summary-list__value">
                     £{{ expense.amount | money_format }}
-                </td>
+                </dd>
                 {% if not hideEditLink %}
-                    <td class="change-answer width-sixth soft-half--left hard--right">
+                    <dd class="govuk-summary-list__actions">
                         <a href="{{ path('pa_fee_expense_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}#pageBody"
-                           class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                           class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
                         <a href="{{ path('pa_fee_expense_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}"
-                           class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
-                    </td>
+                           class="push-half--left govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                    </dd>
                 {% endif %}
-            </tr>
+            </div>
         {% endfor %}
-        <tr class="no-border">
-            <td>
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__value">
                 <span class="bold-small">Total amount</span>
-            </td>
-            <td class="numeric-small">
+            </dt>
+            <dd class="govuk-summary-list__value numeric-small">
                 <span class="bold-small behat-region-expense-total">£{{ report.expensesTotal | money_format }}</span>
-            </td>
+            </dd>
             {% if not hideEditLink %}
-                <td></td>
+                <dd class="govuk-summary-list__actions"></dd>
             {% endif %}
-        </tr>
-        </tbody>
-    </table>
+        </div>
+    </dl>
 {% endif %}

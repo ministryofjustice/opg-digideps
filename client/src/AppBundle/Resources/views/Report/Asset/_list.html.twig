@@ -7,32 +7,32 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {# "client own assets" question #}
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        <tr class="behat-region-has-assets">
-            <td>
-                {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
-            </td>
-            <td>
-                {{ report.noAssetToAdd ? 'No' : 'Yes' }}
-            </td>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-has-assets">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.noAssetToAdd ? 'No' : 'Yes' }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
             {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
+                <a class="govuk-link {{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}" href="behat-link-edit">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
             {% endif %}
-        </tr>
-    </tbody>
-</table>
+        </dd>
+    </div>
+</dl>
 
 {# display title if assets are present #}
 {% if report.assets %}
-    <div class="grid-row">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.listOfAssets') | trans }}</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-l">{{ (page ~ '.listOfAssets') | trans }}</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
                 <a href="{{ path('assets_type', { 'reportId': report.id}) }}" class="bold-small move-quarter--up action-link behat-link-add">
                     <span class="icon icon-plus"></span>
@@ -54,11 +54,7 @@
 
 {# Total #}
 {% if report.assets %}
-    <table class="check-your-answers push--top">
-        <tr class="no-border">
-            <td class="numeric-small hard--right">
-                <span class="heading-medium behat-region-asset-total">{{ (page ~ '.totalValueOfAssets') | trans }}: £{{ report.assetsTotalValue | money_format }}</span>
-            </td>
-        </tr>
-    </table>
+    <div class="govuk-heading-m text--right behat-region-asset-total">
+        {{ (page ~ '.totalValueOfAssets') | trans }}: £{{ report.assetsTotalValue | money_format }}
+    </div>
 {% endif %}

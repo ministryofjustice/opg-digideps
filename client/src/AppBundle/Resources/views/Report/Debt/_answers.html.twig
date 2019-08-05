@@ -7,104 +7,118 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {# Questions and answers table #}
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        <tr class="behat-region-has-debts">
-            <td>
-                {{ 'existPage.form.exist.label' | trans(transOptions) }}
-            </td>
-            <td>
-                {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
-            </td>
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            {% endif %}
-        </tr>
-    </tbody>
-</table>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    <div class="govuk-summary-list__row behat-region-has-debts">
+        <dt class="govuk-summary-list__key">
+            {{ 'existPage.form.exist.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ report.hasDebts == 'yes' ? 'Yes': 'No' }}
+        </dd>
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+</dl>
 
 {% if report.hasDebts == 'yes' %}
 
     {# Items list heading #}
-    <div class="grid-row behat-region-debts-list">
-        <div class="column-half">
+    <div class="govuk-grid-row behat-region-debts-list">
+        <div class="govuk-grid-column-one-half">
             <h2 class="heading-medium flush--ends">List of debts</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit">
+                    <strong>{{ 'edit' | trans({}, 'common' ) }}</strong>
+                </a>
             {% endif %}
         </div>
     </div>
 
     {# Items list table #}
-    <table class="check-your-answers columns-2">
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th class="numeric">Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for debt in report.debts %}
-            <tr class="behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
-                <td> {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}</td>
-                <td class="numeric-small">£{{ debt.amount | money_format }}</td>
-            </tr>
-        {% endfor %}
-        <tr>
-            <td class="no-border">
-                <span class="bold-small">Total amount</span>
-            </td>
-            <td class="no-border text--right">
-                <span class="bold-small">£{{ report.debtsTotalAmount | money_format }}</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Description
+            </dt>
+            <dd class="govuk-summary-list__key">
+                Amount
+            </dd>
+        </div>
 
-    <table class="check-your-answers columns-2 push--top">
-        {{ macros.summaryTableHeaderQA(hideEditLink) }}
-        <tbody>
-            {% set debtOther = report.getDebtById('other') %}
-            {% if debtOther.moreDetails %}
-                <tr class="behat-region-debt-other-more-details">
-                    <td>{{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</td>
-                    <td>{{ debtOther.moreDetails | nl2br }}</td>
-                    {% if not hideEditLink  %}
-                        <td class="change-answer">
-                            <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% endif %}
-            <tr class="behat-region-debt-management-details">
-                {% if report.debtManagement %}
-                    <td>
-                        {{ 'managementPage.form.debtManagement.label' | trans }}
-                    </td>
-                    <td>
-                        {{ report.debtManagement | nl2br }}
-                    </td>
-                {% else %}
-                    <td>
-                        <span class="error">
-                        {{ 'managementPage.form.debtManagement.label' | trans }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                    </td>
-                {% endif %}
+        {% for debt in report.debts %}
+        <div class="govuk-summary-list__row behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
+            <dt class="govuk-summary-list__key">
+                {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                £{{ debt.amount | money_format }}
+            </dd>
+        </div>
+        {% endfor %}
+
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Total amount
+            </dt>
+            <dd class="govuk-summary-list__value">
+                £{{ report.debtsTotalAmount | money_format }}
+            </dd>
+        </div>
+    </dl>
+
+    <dl class="govuk-summary-list">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+        {% set debtOther = report.getDebtById('other') %}
+        {% if debtOther.moreDetails %}
+            <div class="govuk-summary-list__row behat-region-debt-other-more-details">
+                <dt class="govuk-summary-list__key">
+                    {{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ debtOther.moreDetails | nl2br }}
+                </dd>
                 {% if not hideEditLink  %}
-                    <td class="change-answer">
-                        <a href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit-debt-management action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link behat-link-edit" href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
                 {% endif %}
-            </tr>
-        </tbody>
-    </table>
+            </div>
+        {% endif %}
+        <div class="govuk-summary-list__row behat-region-debt-management-details">
+            {% if report.debtManagement %}
+                <dt class="govuk-summary-list__key">
+                    {{ 'managementPage.form.debtManagement.label' | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ report.debtManagement | nl2br }}
+                </dd>
+            {% else %}
+                <dt class="govuk-summary-list__key">
+                    <span class="error">
+                        {{ 'managementPage.form.debtManagement.label' | trans }}
+                    </span>
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </dd>
+            {% endif %}
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit-debt-management" href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    </dl>
 {% endif %}

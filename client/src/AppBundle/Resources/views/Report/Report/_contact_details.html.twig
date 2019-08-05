@@ -4,41 +4,44 @@
 <div id="contact-details-container">
     <h2 class="heading-small">{{ 'page.contactDetailsHeader' | trans }}</h2>
     <p>{{ 'page.contactDetailsIntro' | trans }}</p>
-    <table class="check-your-answers columns-2 push-double--bottom">
-        <thead>
-        <tr>
-            <th>{{ 'person' | trans({}, 'common') }}</th>
-            <th>{{ 'address' | trans({}, 'common') }}</th>
+
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'person' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__key">
+                {{ 'address' | trans({}, 'common') }}
+            </dd>
             {% if not hideEditLink %}
-                <th>
+                <dd class="govuk-summary-list__actions">
                     <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
+                </dd>
             {% endif %}
-        </tr>
-        </thead>
-        <tbody>
+        </div>
         {% for detail in contactDetails %}
-        <tr class="">
-            <td>
-                {{ detail.name }}
-            </td>
-            <td>
-                {% for part in detail.address %}
-                    <span>{{ part }}</span><br>
-                {% endfor %}
-                <span class="bold">Phone: </span><span>{{ detail.phone.main }}</span><br>
-                {% if detail.phone.alternative is defined %}
-                    <span class="bold">Alternative phone: </span><span> {{ detail.phone.alternative }}</span><br>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__value">
+                    {{ detail.name }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {% for part in detail.address %}
+                        <span>{{ part }}</span><br>
+                    {% endfor %}
+                    <span class="bold">Phone: </span><span>{{ detail.phone.main }}</span><br>
+                    {% if detail.phone.alternative is defined %}
+                        <span class="bold">Alternative phone: </span><span> {{ detail.phone.alternative }}</span><br>
+                    {% endif %}
+                    <span class="bold">Email:</span><span> {{ detail.email }}</span><br>
+                </dd>
+                {% if not hideEditLink %}
+                    <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link behat-link-edit" href="{{ detail.editUrl }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
                 {% endif %}
-                <span class="bold">Email:</span><span> {{ detail.email }}</span><br>
-            </td>
-            {% if not hideEditLink %}
-                <td class="change-answer">
-                    <a href="{{ detail.editUrl }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            {% endif %}
-        </tr>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </dl>
 </div>
