@@ -1,0 +1,159 @@
+{% set translationDomain = "ndr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+
+<h2 class="govuk-heading-l">{{ 'stepPage.gifts.pageTitle' | trans(transOptions) }}</h2>
+
+{# step 1 #}
+<dl class="govuk-summary-list columns-2 push--bottom">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions"></dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-give-gifts-client">
+        {% if ndr.actionGiveGiftsToClient is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionGiveGiftsToClient.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.actionGiveGiftsToClient | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit govuk-link">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% if ndr.actionGiveGiftsToClient == 'yes' %}
+    <div class="govuk-summary-list__row behat-region-give-gifts-client-details">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.actionGiveGiftsToClientDetails.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.actionGiveGiftsToClientDetails | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
+</dl>
+
+<h2 class="govuk-heading-l">{{ 'stepPage.property.pageTitle' | trans(transOptions) }}</h2>
+    {# step 2 #}
+<dl class="govuk-summary-list columns-2 push--bottom">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    </div>
+
+    {# step 2 #}
+    <div class="govuk-summary-list__row behat-region-property-maintenance">
+        {% if ndr.actionPropertyMaintenance is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionPropertyMaintenance.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.actionPropertyMaintenance | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a
+            href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 2, 'from': 'summary'}) }}"
+            class="behat-link-edit govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+
+    {# step 3 #}
+    <div class="govuk-summary-list__row behat-region-selling-rent">
+        {% if ndr.actionPropertySellingRent is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionPropertySellingRent.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.actionPropertySellingRent | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a
+            href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 3, 'from': 'summary'}) }}"
+            class="behat-link-edit govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+
+    {# step 4 #}
+    <div class="govuk-summary-list__row behat-region-property-buy">
+        {% if ndr.actionPropertyBuy is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionPropertyBuy.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.actionPropertyBuy | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a
+            href="{{ path('ndr_actions_step', {'ndrId': ndr.id, 'step': 4, 'from': 'summary'}) }}"
+            class="behat-link-edit govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+</dl>

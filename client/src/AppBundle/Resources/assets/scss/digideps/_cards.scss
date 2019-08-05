@@ -1,0 +1,28 @@
+// ==========================================================================
+// CARDS
+// The report card styling on the 'Your reports' page
+
+.opg-card {
+    position: relative;
+    min-height: 120px;
+    padding: govuk-spacing(3);
+    border: 1px solid $govuk-border-colour;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    &__tag {
+        float: right;
+    }
+
+    &__actions {
+        @include govuk-media-query($from: tablet) {
+            position: absolute;
+            right: $govuk-gutter-half;
+            bottom: $govuk-gutter-half;
+        }
+    }
+
+    &.disabled {
+        background-color: govuk-colour('grey-3');
+    }
+}

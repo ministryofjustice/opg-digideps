@@ -1,0 +1,23 @@
+services:
+    mailer.transport.smtp.default:
+        class: Swift_SmtpTransport
+        arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
+        calls:
+            - [ setEncryption, [ "tls"]]
+            - [ setUsername, [ "%smtp_default_user%"]]
+            - [ setPassword, [ "%smtp_default_password%"]]
+
+    mailer.swift_mailers.default:
+        class: Swift_Mailer
+        arguments: [ "@mailer.transport.smtp.default" ]
+
+    # mail sender accepting those the above-created swift mailer
+    mail_sender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments: [ "@validator", "@logger" ]
+        calls:
+            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
+
+    mail_factory:
+        class: AppBundle\Service\Mailer\MailFactory
+        arguments: [ "@service_container" ]

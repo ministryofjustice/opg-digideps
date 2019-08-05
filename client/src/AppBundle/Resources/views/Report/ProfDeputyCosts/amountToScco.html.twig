@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'amountToScco' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_input(form.profDeputyCostsAmountToScco, page ~ '.form.profDeputyCostsAmountToScco', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
+        {{ form_input(form.profDeputyCostsReasonBeyondEstimate, page ~ '.form.profDeputyCostsReasonBeyondEstimate') }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

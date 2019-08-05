@@ -1,0 +1,108 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+{% set isLayDeputy = not user.isDeputyOrg %}
+
+{% if report.submitted == false %}
+    {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+        {% set preview = true %}
+        {% set page = 'preview' %}
+    {% else %}
+        {% set preview = false %}
+        {% set page = 'review' %}
+    {% endif %}
+{% else %}
+    {% set preview = false %}
+    {% set page = 'submitted' %}
+{% endif %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <link href="{{ 'stylesheets/formatted-report.css' | assetUrl }}"  rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if report.submitted == true %}
+        {% if isLayDeputy %}
+            <a id="back-to-reports" href="{{ backLink }}" class="link-back behat-link-back-to-reports">{{ 'back' | trans({}, 'common' ) }}</a>
+        {% else %}
+            <a id="back-to-client" href="{{ backLink }}" class="link-back behat-link-return-to-client-profile">{{ 'page.returnToClientProfile' | trans({}, 'report-submitted') }}</a>
+        {% endif %}
+    {% else %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="push--bottom">
+        {% if report.submitted == false %}
+            <p class="text">{{ (page ~ '.introPara') | trans() }}</p>
+            {% if preview %}
+                <a class="button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                    {{ 'incomplete.backToEditingReport' | trans() }}
+                </a>
+                <a class="button-link js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
+                    <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+                </a>
+            {% endif %}
+        {% else %}
+            <p class="text">{{ (page ~ '.introPara') | trans() }} {{ report.submitDate | date("j F Y") }}.</p>
+            <a class="button" href="{{ backLink }}">
+                {% if isLayDeputy %}
+                    {{ 'backToYourReports' | trans({}, 'common') }}
+                {% else %}
+                    {{ 'backToClientProfile' | trans({}, 'common') }}
+                {% endif %}
+            </a>
+            <a class="button-link js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
+                <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="push--bottom">
+        {% include 'AppBundle:Report/Formatted:formatted_body.html.twig' %}
+    </div>
+
+    {% if report.submitted == false %}
+        {% if preview %}
+            <a class="button" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% else %}
+            <a class="button left behat-link-declaration-page" href="{{ path("report_declaration" , {'reportId': report.id }) }}">
+                {{ 'continue' | trans({}, 'common') }}
+            </a>
+            <a class="button-link" href="{{ path("report_overview" , {'reportId': report.id }) }}">
+                {{ 'incomplete.backToEditingReport' | trans() }}
+            </a>
+        {% endif %}
+    {% else %}
+        <a class="button" href="{{ backLink }}">
+            {% if isLayDeputy %}
+                {{ 'backToYourReports' | trans({}, 'common') }}
+            {% else %}
+                {{ 'backToClientProfile' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+    {% endif %}
+
+    <a class="button-link behat-link-download-pdf js-trackDownloadLink" href="{{ path('report_pdf', {'reportId': report.id}) }}">
+        <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
+    </a>
+
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('.js-trackDownloadLink'));
+        });
+    </script>
+{% endblock %}

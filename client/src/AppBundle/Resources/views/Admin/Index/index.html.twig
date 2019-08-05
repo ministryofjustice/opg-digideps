@@ -1,0 +1,123 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'home' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+    <div class="govuk-grid-row">
+        {{ form_input(form.q, 'Search', {
+            'labelRaw': true,
+            'labelText':'Search',
+            'inputClass': 'govuk-!-width-full',
+            'formGroupClass': 'govuk-grid-column-one-third'}) }}
+
+        {{ form_select(form.role_name, '', {
+            'labelText': 'Role',
+            'inputClass': 'govuk-!-width-full',
+            'formGroupClass': 'govuk-grid-column-one-third'}) }}
+
+        {{ form_checkbox(form.ndr_enabled, '', {
+            'labelText': 'NDR enabled',
+            'formGroupClass': 'govuk-grid-column-one-third govuk-!-margin-top-6'}) }}
+    </div>
+
+    <div class="form-group">
+        {{ form_submit(form.search, '', {
+            'labelText': 'Search'}) }}
+        <a href="{{ path('admin_homepage') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+    </div>
+
+    {{ form_end(form) }}
+
+    <hr>
+
+    {# LIST #}
+
+    <div class="behat-region-users user-list">
+
+        <div class="grid-row">
+            <div class="column-one-half">
+                <h2 id="users-list-title" class="heading-medium flush--ends">{{ (page ~ '.userTable.heading') | trans }}</h2>
+                {% if users | length  == filters.limit %}
+                    <p class="text">{{ (page ~ '.userTable.resultsLimited') | trans|raw }}</p>
+                {% else %}
+                    <p>{{ (page ~ '.userTable.results') | trans({'%numberOfUsers%': users | length }) | raw }}</p>
+                {% endif %}
+            </div>
+            <div class="column-one-half text--right">
+                <a href="{{ path('admin_add_user') }}" class="bold-small move-quarter--up action-link behat-link-user-add-new">
+                    <span class="icon icon-plus"></span>
+                    {{ (page ~ '.addUserButton') | trans }}
+                </a>
+            </div>
+        </div>
+
+        {# user list #}
+        <table class="table-font-xsmall">
+            <thead>
+                <tr>
+                    <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.ndr') | trans }}</th>
+                    <th scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
+                    <th scope="col" class="numeric">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                {% set fullName = (user.isCoDeputy and user.firstname is empty and user.lastname is empty)
+                ? (page ~ '.userTable.codepNameNotSet') | trans
+                : user.firstname ~ ' ' ~ user.lastname
+                %}
+                <tr class="behat-region-user-{{ user.email | behat_namify }}">
+                    <td>
+                        {% if user.roleName != 'ROLE_ADMIN' or is_granted('ROLE_ADMIN') %}
+                            <a href='{{ path('admin_editUser', { filter: user.id }) }}'
+                               class="behat-link-user-{{ user.email | behat_namify }} bold">{{ fullName }}</a><br>
+                        {% endif %}
+                        <div class="text-secondary">
+                            {{ user.roleFullName }}
+                            {% if user.adManaged %} {{ (page ~ '.userTable.assistedState') | trans }}{% endif %}
+                            {% if app.user.id == user.id %} {{ (page ~ '.userTable.loggedInState') | trans }} {% endif %}
+                        </div>
+                        {% if is_granted('ROLE_AD') and user.roleName == 'ROLE_LAY_DEPUTY' %}
+                            <a href="{{ path('ad_view_user', { what: 'user_id', filter: user.id }) }}" class="behat-link-view">{{ 'view' | trans({}, 'common') }}</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.adManaged ? '-' : user.email }}</td>
+                    <td class="behat-region-{{ user.email | behat_namify }}-ndr-enabled">
+                        {{ user.ndrEnabled ? 'Yes' : '-' }}
+                    </td>
+                    <td>
+                        {% if user.active %}
+                            {{ 'yes' | trans({}, 'common') }}
+                        {% else %}
+                            {{ 'no' | trans({}, 'common') }}
+                            <br/><a class="js-return-html behat-link-send-activation-email"
+                                    href="{{ path('admin_send_activation_link', {'email': user.email}) }}">
+                            {{ (page ~ '.userTable.sendEmail') | trans }}
+                        </a>
+                        {% endif %}
+
+                    </td>
+                    <td class="numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

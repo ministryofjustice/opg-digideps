@@ -1,0 +1,55 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<h3 class="heading-medium">{{ groupId | trans }}</h3>
+
+<table class="check-your-answers behat-region-list-accounts">
+    <thead>
+    <tr>
+        <th>{{ 'form.description.label' | trans }}</th>
+        <th class="numeric">{{ 'form.valuationDate.label' | trans }}</th>
+        <th class="numeric">{{ 'form.value.label' | trans }}</th>
+        {% if not hideEditLink  %}
+            <th>
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+            </th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for asset in assetsInGroup.items %}
+        <tr class="behat-region-asset-{{ asset.description | behat_namify }}">
+            <td>{{ asset.description | nl2br }}</td>
+            <td class="numeric-small width-fifth">
+                {% if asset.valuationDate %}
+                    {{ asset.valuationDate | date('j F Y') }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td class="numeric-small width-sixth">£{{ asset.value | money_format }}</td>
+            {% if not hideEditLink  %}
+                <td class="change-answer soft-half--left hard--right width-sixth">
+                    <a class="behat-link-edit action-link"
+                       href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a class="behat-link-delete push-half--left action-link" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+        <tr class="no-border">
+            <td>
+                <span class="bold-small">{{ 'totalAmount' | trans({}, 'common' ) }}</span>
+            </td>
+            <td></td>
+            <td class="text--right">
+                <span class="bold-small">£{{ assetsInGroup.total | money_format }}</span>
+            </td>
+            {% if not hideEditLink  %}
+                <td></td>
+            {% endif %}
+        </tr>
+    </tbody>
+</table>

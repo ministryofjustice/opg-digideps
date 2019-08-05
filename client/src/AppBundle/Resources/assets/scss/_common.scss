@@ -1,0 +1,18 @@
+$path: '/images/';
+$govuk-assets-path: './';
+$govuk-images-path: '/images/';
+$govuk-global-styles: true;
+@import "node_modules/govuk-frontend/all";
+@import "govuk-elements";
+
+//GOV.UK EXTENSIONS
+@import "extensions/elements/forms";
+@import "extensions/elements/layout";
+@import "extensions/elements/elements-typography";
+@import "extensions/elements/tables";
+
+// DIGIDEPS
+@import "digideps";
+
+// SHAME
+@import "shame";

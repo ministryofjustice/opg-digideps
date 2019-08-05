@@ -1,0 +1,128 @@
+services:
+  # Voter on User, used by PA area
+  # http://symfony.com/doc/2.8/security/voters.html
+  app.user_voter:
+    class: AppBundle\Security\UserVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.note_voter:
+    class: AppBundle\Security\NoteVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.client_contact_voter:
+    class: AppBundle\Security\ClientContactVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+  app.document_voter:
+    class: AppBundle\Security\DocumentVoter
+    arguments: ['@security.access.decision_manager']
+    tags:
+        - { name: security.voter }
+    # small performance boost
+    public: false
+
+security:
+    role_hierarchy:
+        ROLE_AD: [ ROLE_AD ]
+        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY, ROLE_CASE_MANAGER ]
+
+        ROLE_LAY_DEPUTY:      ROLE_DEPUTY
+        ROLE_ORG:             ROLE_DEPUTY
+
+        ROLE_PA:              ROLE_ORG
+        ROLE_PROF:            ROLE_ORG
+
+        ROLE_PA_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
+        ROLE_PA_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
+        ROLE_PA_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+
+        ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
+        ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
+        ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
+
+    providers:
+        deputy:
+           id: deputy_provider
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern:  ^/login$
+            security: false
+
+        passwordManaging:
+            pattern:  ^/password-managing*
+            security: false
+
+        userManaging:
+            pattern:  ^/user/(password-reset|activate|agree-terms-use)/*
+            security: false
+
+        behatControllers:
+            pattern:  ^/behat
+            security: false
+
+        manageController:
+            pattern:  ^/manage/*
+            security: false
+
+        error503:
+            pattern:  ^/error-503
+            security: false
+
+        secured_area:
+            form_login:
+                #check_path: /login_check
+                login_path: /login
+                #username_parameter: login[email]
+                #password_parameter: login[password]
+            logout:
+                path:   /logout
+                target: /
+                success_handler: logout_listener
+                # needed to save custom login params
+                invalidate_session: false
+            anonymous: ~
+            switch_user: true
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    access_control:
+        # /admin accessible only from ADMIN, super users and AD users
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
+        # client settings not available to PA users
+        - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER] }
+        - { path: ^/user-account/, roles: [ROLE_DEPUTY, ROLE_ADMIN, ROLE_AD] }
+        - { path: ^/ad, roles: [ROLE_AD] }
+        - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
+        - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
+#        - { path: ^/pa/team, roles: [ROLE_ORG] } # inherited. delete if test pass
+        - { path: ^/pa/, roles: [ROLE_ORG] }
+        # report expenses section access for Lay and PA
+        - { path: ^/report/\d+/pa-fee-expense, roles: [ROLE_ORG] }
+        - { path: ^/report/\d+/deputy-expenses, roles: [ROLE_LAY_DEPUTY] }
+
+        # open URLs
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login-ad, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/manage, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/feedback, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/privacy, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        # all the rest needs authentication
+        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
+

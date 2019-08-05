@@ -1,0 +1,58 @@
+{% set translationDomain = "ndr-homepage" %}
+{% trans_default_domain translationDomain %}
+{% if reportActive %}
+        {% set transOptions = {
+        '%startDate%': reportActive.startDate | date("j F Y"),
+        '%endDate%': reportActive.endDate | date("j F Y")
+    } %}
+{% endif %}
+
+{% if ndr.submitted %}
+    {# CLICKABLE REPORT #}
+    {% set status = reportActive ? reportActive.getStatus().status : 'notCreated' %}
+    <div class="behat-region-report-card opg-card govuk-!-margin-bottom-6">
+        <span class="govuk-tag opg-card__tag {{ status | status_to_tag_css }}">{{ (status) | trans({}, 'common') }}</span>
+        {% if reportActive %}
+            <h3 class="heading-medium flush--ends">
+                <a href="{{ path('report_overview', {'reportId': reportActive.id}) }}">
+                    {{ reportActive.getPeriod() }} report
+                </a>
+            </h3>
+        {% else %}
+            <h3 class="heading-medium flush--ends">{{ client.firstname }} {{ client.lastname }}</h3>
+        {% endif %}
+        <div>
+            {% if reportActive %}
+                <p>
+                    <strong class="bold">Due date: </strong>
+                    {{ reportActive.dueDate | date("j F Y") }}
+                </p>
+                <p class="text flush--bottom">
+                   {{ 'report.editReportingPeriodPara' | trans(transOptions) }} <a href="{{ path('report_edit', {'reportId': reportActive.id}) }}">{{ 'report.editReportingPeriodLink' | trans }}</a>
+                </p>
+            {% endif %}
+        </div>
+        {% set link = reportActive ?
+        path('report_overview', {'reportId': reportActive.id})
+        : path('report_create', {'clientId': client.id, 'action': 'create'}) %}
+        <div class="opg-card__actions">
+            <a href="{{ link }}" class="button behat-link-report-start" >{{ ('status.' ~ status) | trans({}, 'common') }}</a>
+        </div>
+
+    </div>
+{% else %}
+    {# REPORT NOT ACTIVE #}
+    <div class="behat-region-report-card opg-card disabled govuk-!-margin-bottom-6">
+        <span class="govuk-tag opg-tag--not-started opg-card__tag">{{ 'notAvailable' | trans({}, 'common') }}</span>
+        <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+        <div class="govuk-!-padding-top-3">
+            <p class="text flush--bottom">{{ 'report.notAvailableInfo' | trans }}</p>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+
+

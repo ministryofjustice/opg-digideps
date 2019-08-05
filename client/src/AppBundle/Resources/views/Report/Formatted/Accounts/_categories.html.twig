@@ -1,0 +1,22 @@
+<div class="financial-categories" id="{{ moneyType }}-transactions">
+    {% for categoryId, transactionGroup in report.groupMoneyTransactionsByGroup(transactions) %}
+
+        {% include 'AppBundle:Report/Formatted:Accounts/_category.html.twig' with {
+        'categoryId': categoryId,
+        'transactions': transactionGroup.entries,
+        'total': transactionGroup.amountTotal,
+        'moneyType': moneyType
+        } %}
+
+    {% endfor %}
+
+    <div class="category box">
+        {# total value #}
+        <table class="labelvalue money">
+            <tr>
+                <td class="label bold">Money {{ type }} total</td>
+                <td class="value total width-fifth">&pound; {{ total | money_format }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

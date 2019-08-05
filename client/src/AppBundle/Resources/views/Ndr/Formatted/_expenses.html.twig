@@ -1,0 +1,14 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+{% if ndr.paidForAnything %}
+    <div class="section" id="expenses-section">
+        <h2 class="section-heading">Deputy expenses</h2>
+
+        {{ macros.deputyExpenses(true,ndr) }}
+
+    </div>
+{% endif %}
+
+
+
+

@@ -1,0 +1,38 @@
+// ==========================================================================
+// HELPLINE
+// Helpline component
+
+.opg-helpline {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+
+    h3 {
+        @include bold-19();
+        display: inline-block;
+        margin: 7px 0 0 0;
+        padding-left: 50px;
+        background: url("/images/icons/phone.png") top left no-repeat;
+        text-align: left;
+        vertical-align: -webkit-baseline-middle;
+
+        @include media(mobile) {
+            display: none;
+        }
+
+        @include media(tablet) {
+            @include bold-16();
+            padding-left: 33px;
+            background-position: 0 3px;
+            background-size: 27px 31px;
+        }
+
+        @include media(desktop) {
+            @include bold-19();
+            padding-left: 50px;
+            background-position: 0 0;
+            background-size: 35px 44px;
+        }
+    }
+
+}

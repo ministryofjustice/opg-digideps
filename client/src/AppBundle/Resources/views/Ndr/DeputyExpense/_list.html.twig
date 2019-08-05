@@ -1,0 +1,89 @@
+{% set translationDomain = "ndr-deputy-expenses" %}
+{% trans_default_domain translationDomain %}
+
+<dl class="govuk-summary-list">
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      {{ 'question' | trans({}, 'common') }}
+    </dt>
+    <dd class="govuk-summary-list__key">
+      {{ 'answer' | trans({}, 'common') }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+    </dd>
+  </div>
+
+  <div class="govuk-summary-list__row behat-region-paid-for-anything">
+    <dt class="govuk-summary-list__key">
+        {{ 'existPage.form.paidForAnything.label' | trans(transOptions)  }}
+    </dt>
+    <dd class="govuk-summary-list__value">
+        {{ ndr.paidForAnything | capitalize }}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+        <a class="govuk-link behat-link-edit" href="{{ path('ndr_deputy_expenses_exist', { 'ndrId': ndr.id, 'from': 'summary' }) }}">
+            {{ 'edit' | trans({}, 'common') }}<span class="govuk-visually-hidden"> {{ 'existPage.form.paidForAnything.label' | trans(transOptions)  }}</span>
+        </a>
+    </dd>
+  </div>
+</dl>
+
+{% if ndr.expenses | length > 0 %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-l">List of expenses</h2>
+        </div>
+        <div class="govuk-grid-column-one-half text--right">
+            <strong>
+                <a href="{{ path('ndr_deputy_expenses_add', { 'ndrId': ndr.id, 'from': 'summary'}) }}" class="behat-link-add">
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </a>
+            </strong>
+        </div>
+    </div>
+
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+            Description of expense
+            </dt>
+            <dd class="govuk-summary-list__key">
+            Amount
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+
+        {% for expense in ndr.expenses %}
+
+        <div class="govuk-summary-list__row behat-region-expense-{{ expense.explanation | behat_namify }}">
+            <dt class="govuk-summary-list__value">
+                {{ expense.explanation }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                    £{{ expense.amount | money_format }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ url('ndr_deputy_expenses_edit', { 'ndrId': ndr.id, 'expenseId': expense.id }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+                &nbsp;
+                <a class="govuk-link behat-link-delete" href="{{ path('ndr_deputy_expenses_delete', { 'ndrId': ndr.id, 'expenseId': expense.id }) }}">
+                    {{ 'remove' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+        </div>
+        {% endfor %}
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Total amount
+            </dt>
+            <dd class="govuk-summary-list__key behat-region-expense-total">
+                    £{{ ndr.expensesTotalValue | money_format }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            </dd>
+        </div>
+    </dl>
+{% endif %}

@@ -1,0 +1,31 @@
+startPage:
+  htmlTitle: "New deputy report - any other information | GOV.UK"
+  pageTitle: Any other information
+  pageSectionDescription1: |
+    You can use this section to give us information that isn't covered elsewhere in this report.
+  pageSectionDescription2: |
+    You can also raise concerns about your deputyship and get help from the Office of the Public Guardian (OPG).
+  pageSectionDescription3: |
+    OPG is here to support you as a deputy. Our <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on all aspects of your role.
+  startButton: Start any other information
+
+stepPage:
+  htmlTitle: "New deputy report - any other information | GOV.UK"
+  pageTitle: Any other information
+
+summaryPage:
+  htmlTitle: "New deputy report - any other information | GOV.UK"
+  supportTitle: Any other information
+  pageTitle: Any other information
+  supportTitle: ""
+  weAskAbout: |
+    In this section, you can raise concerns about your deputyship and give us any other information
+    you think we should have.
+
+form:
+  save:
+    label: Save
+  actionMoreInfo:
+    label: Is there anything you'd like to tell us that you haven't covered elsewhere in your new deputy report?
+  actionMoreInfoDetails:
+    label: Please give us details of any further information, concerns or questions you may have about your deputyship

@@ -1,0 +1,36 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ ('categoryPage.moneyOut.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ ('categoryPage.moneyOut.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <p class="text">
+        {{ 'form.categoriesOut.label' | trans(transOptions) }}
+    </p>
+    <p class="form-hint">
+        {{ 'form.categoriesOut.hint' | trans(transOptions) }}
+    </p>
+    {% include 'AppBundle:Report/MoneyOutShort:_checkboxes_list.html.twig' with {
+    'elements': form.moneyShortCategoriesOut,
+    } %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

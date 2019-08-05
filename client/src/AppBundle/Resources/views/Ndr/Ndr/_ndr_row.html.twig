@@ -1,0 +1,16 @@
+{% set translationDomain = "ndr-homepage" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': client.firstname} %}
+
+<h2 class="heading-large">New deputy report</h2>
+
+<div class="behat-region-ndr-card opg-card push-double--bottom">
+    <span class="govuk-tag opg-card__tag {{ ndrStatus.status | status_to_tag_css }}">{{ (ndrStatus.status) | trans({}, 'common') }}</span>
+    <h3 class="heading-medium flush--top">{{ client.firstname }} {{ client.lastname }}</h3>
+    <div class="govuk-!-padding-top-3">
+        <p class="text flush--bottom">{{ ('ndr.instructions') | trans(transOptions) }}</p>
+    </div>
+    <div class="opg-card__actions">
+	    <a href="{{ path('ndr_overview', {'ndrId': ndr.id}) }}" class="button right behat-link-ndr-start">{{ ('status.' ~ ndrStatus.status) | trans({}, 'common') }}</a>
+    </div>
+</div>

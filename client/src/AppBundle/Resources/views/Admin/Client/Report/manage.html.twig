@@ -1,0 +1,80 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    {{ (page ~ '.form.startDate.label') | trans }}
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+    {{ (page ~ '.form.endDate.label') | trans }}
+    {{ form_known_date(form.endDate, 'endDate') }}
+
+    <fieldset class="form-group {% if not form.unsubmittedSection.vars.valid %}form-group-error{% endif %}">
+        <legend>
+            <h2 class="heading-small flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>
+        </legend>
+        <div class="govuk-checkboxes govuk-checkboxes--small">
+            {% for section in form.unsubmittedSection  %}
+                {{ form_row(section.id) }}
+                {{ form_checkbox(section.present, '', {
+                    'labelText': ('prevNextLinks.sections.' ~ section.id.vars.value) | trans({}, 'report-common'),
+                    'useFormGroup': false
+                }) }}
+            {% endfor %}
+        </div>
+    </fieldset>
+
+    <p class="heading-small flush--ends">{{  'reportManage.currentDueDate' | trans }}</p>
+    <p>
+        {{ report.dueDate | date("j F Y") }}
+        {% set dueDateDiffDays = report.dueDateDiffDays  %}
+        {% if dueDateDiffDays < 0 %}
+        <br/><span class="font-xsmall bold text-red">{{  'reportManage.overdueBy' | trans ({
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            }) }}
+        </span>
+        {% endif %}
+    </p>
+
+    <div class="form-group push--bottom {% if not form.dueDateChoice.vars.valid %}form-group-error{% endif %}">
+        {{ form_checkbox_group(form.dueDateChoice, 'reportManage.form.dueDateChoice', {
+            'legendClass' : 'form-label-bold',
+            'useFormGroup': false,
+            'items': [
+                {},
+                {},
+                {},
+                {},
+                {'dataTarget': 'due-date-custom' }
+            ]
+        }) }}
+        <div id="due-date-custom" class="opg-indented-block js-hidden">
+            {{ form_known_date(form.dueDateCustom, 'reportManage.form.dueDateCustom') }}
+        </div>
+    </div>
+
+    {{ form_submit(form.save, 'reportManage.form.unsubmit') }}
+
+    <a href="{{ path('admin_client_details', {'id': report.client.id}) }}" class="button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

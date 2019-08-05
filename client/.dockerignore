@@ -1,0 +1,4 @@
+.git
+app/config/parameters.yml
+.sass-cache
+node_modules

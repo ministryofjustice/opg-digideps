@@ -1,0 +1,41 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'stepPage.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if step == 1 %}
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}form-group-error{% endif %}">
+                {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions, translationDomain),
+                }) }}
+
+            </div>
+        </div>
+
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

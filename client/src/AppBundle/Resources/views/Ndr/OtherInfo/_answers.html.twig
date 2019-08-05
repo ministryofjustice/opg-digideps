@@ -1,0 +1,58 @@
+{% set translationDomain = "ndr-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-more-info">
+        {% if ndr.actionMoreInfo is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.actionMoreInfo | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+
+    {% if ndr.actionMoreInfo == 'yes' %}
+    <div class="govuk-summary-list__row behat-region-more-info-details">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.actionMoreInfoDetails | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="{{ path('ndr_other_info_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
+</dl>

@@ -1,0 +1,17 @@
+<div id="form-group-{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+
+    {{ form_label(element, labelText, {'label_attr': {'class': 'govuk-label ' ~ labelClass | default('') }}) }}
+
+    {% if (hintText is defined) and (hintText is not empty) %}
+        <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+    {% endif %}
+
+    {{ form_errors(element) }}
+
+    {% set class = element.vars.attr.class | default('') ~ ' govuk-select ' ~ inputClass | default('') %}
+    {{ form_widget(element, {
+        'attr': {
+            'class': class ~ (element.vars.valid ? '' : ' govuk-select--error')
+        }
+    }) }}
+</div>

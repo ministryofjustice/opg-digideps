@@ -1,0 +1,19 @@
+page:
+  htmlTitle: "Deputy report - report submitted | GOV.UK"
+  pageTitle: "Report submitted"
+  thankYouForsubmitting: Thank you for submitting your %reportName% report
+  yourReportWillBeSent: "Your report has been sent to OPG. You'll get an email shortly to let you know we've received it."
+  weWillSendReminder: "We'll send you a reminder when it's time for you to complete the next report. You can make a start on it at any time from now on."
+  downloadLink: View %reportName% report
+  returnToHomepage: Return to reports page
+  returnToClientProfile: Return to client profile
+  returnToDashboard: Return to dashboard
+  professionalDeputyListItems:
+    item1: If %client%’s net assets are now below £16,000, your fees for the next reporting period must not exceed 4.5% of these assets. See Practice Direction 19b for more information.
+    item2: If you charged assessed costs in your %reportName% report, you must send a copy of this deputy report to the Senior Courts Costs Office.
+    item3: If your billing period and reporting period are different, please contact us. We may be able to change the reporting period to make reporting easier.
+  feedback:
+    title: Give us your feedback
+thanksForFeedback:
+  thankYou: Thank you
+  more: If you want to give us more detailed feedback, use [linkStart]this form[linkEnd] to contact us

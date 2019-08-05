@@ -1,0 +1,212 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-documents" %}
+{% set transOptions = {} %}
+
+{% set baseRoute = 'admin_documents' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ 'page.supportTitle' | trans({'%count%': counts[filters.status ?: 'total']}) }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    {# params #}
+    {% set filtersToPreserveInTabs = {
+        'q': filters.q,
+        'created_by_role': filters.created_by_role
+    } %}
+    {% set filtersToPreserveInPagination = {
+        'status': filters.status,
+        'q': filters.q,
+        'created_by_role': filters.created_by_role,
+    } %}
+    {% set filtersToPreserveAfterArchiving = filtersToPreserveInPagination %}
+
+    {# search form #}
+    <form action="{{ path(baseRoute, {'status': filters.status}) }}" method="GET" class="search push--ends">
+        <fieldset>
+            <legend class="visually-hidden">{{ 'search' | trans({}, 'common') }}</legend>
+            <div class="grid-row push-half--bottom">
+                <div class="column-one-third">
+                    <label for="search" class="form-label text">{{ 'page.searchForm.search.label' | trans }}</label>
+                    <input type="text" id="search" name="q" value="{{ filters.q }}" class="js-search-focus form-control form-control--full">
+                    <input type="hidden" name="status" value="{{ filters.status }}" />
+                </div>
+                <div class="column-one-third">
+                    <label for="created_by_role" class="form-label">{{ 'role' | trans({}, 'common' ) }}</label>
+                    <select name="created_by_role" id="created_by_role" class="search-dropdown form-control width-two-thirds">
+                        <option value="">All</option>
+                        {% for value, label in {
+                            'ROLE_PA_%': 'Public authority',
+                            'ROLE_PROF_%': 'Professional deputy',
+                            'ROLE_LAY_DEPUTY': 'Lay deputy'
+                        } %}
+                            <option value="{{ value }}" {{ filters.created_by_role == value ? 'selected="selected"' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <input id="search_submit" class="button flush--bottom behat-link-search" type="submit" value="Search">
+            {% if filters.q or filters.created_by_role %}
+                <a href="{{ path(baseRoute, {'status': filters.status}) }}" class="button-link">Clear filters</a>
+            {% endif %}
+        </fieldset>
+    </form>
+
+    {# tabs #}
+
+    <div class="govuk-tabs" data-module="tabs">
+        <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {% if isNewPage %}govuk-tabs__tab--selected{% endif %} behat-link-tab-new" href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
+                    {{ 'page.tabs.new.label' | trans }}
+                    <span class="govuk-tag">{{ counts.new }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {% if not isNewPage %}govuk-tabs__tab--selected{% endif %} behat-link-tab-archived" href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0">
+                    {{ 'page.tabs.archived.label' | trans }}
+                    <span class="govuk-tag opg-tag--not-started">{{ counts.archived }}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    {# table with records #}
+    {% if  records | length %}
+    <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
+        {% if nOfdownloadableSubmissions > 0 %}
+            {% for action in postActions %}
+                <input type="submit" id="action-{{ action }}" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled">
+            {% endfor %}
+            <p class="right text--right"><span id="numberOfCases">0 cases</span> selected</p>
+        {% endif %}
+        <table class="check-your-answers table-clickable push--bottom">
+            <thead>
+                <tr>
+                    {% if nOfdownloadableSubmissions > 0 %}
+                      <th class="width-twentieth multiple-choice--smaller">
+                        <div class="multiple-choice">
+                            <input type="checkbox" id="select-all" name="select-all" value="all" class="js-checkbox-all">
+                            <label for="select-all"><span class="visually-hidden">{{ 'page.resultsTable.header.all' | trans }}</span></label>
+                        </div>
+                      </th>
+                    {% endif %}
+                    <th>{{ 'page.resultsTable.header.clientAndCaseNo' | trans }}</th>
+                    <th>{{ 'page.resultsTable.header.deputy' | trans }}</th>
+                    <th>{{ 'period' | trans({}, 'common') }}</th>
+                    <th>{{ 'page.resultsTable.header.documents' | trans }}</th>
+                    <th>{{ 'page.resultsTable.header.date' | trans }}</th>
+                    {% if not isNewPage %}
+                        <th>{{ 'page.resultsTable.header.user' | trans }}</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for reportSubmission in records %}
+                    {% set report = reportSubmission.report %}
+                    {% set ndr = reportSubmission.ndr %}
+                    {% set client = report ? report.client : ndr.client %}
+                    {# Period: report.period #}
+                    {# Type: report.type #}
+                    <tr class="behat-region-report-submission behat-region-report-submission-{{ loop.index }} align--top">
+                        {% if nOfdownloadableSubmissions > 0 %}
+                          <td class="width-twentieth multiple-choice--smaller">
+                            {% if reportSubmission.isDownloadable %}
+                              <div class="multiple-choice">
+                                <input type="checkbox" id="cb{{ reportSubmission.id }}" name="checkboxes[{{ reportSubmission.id }}]"
+                                       class="js-checkbox">
+                                <label for="cb{{ reportSubmission.id }}">
+                                    <span class="visually-hidden">Select {{ client.caseNumber }}</span>
+                                </label>
+                              </div>
+                            {% endif %}
+                          </td>
+                        {% endif %}
+                        <td class="width-fifth">
+                            {{ client.fullname }}<br>
+                            <span class="text-secondary">{{ client.caseNumber }}</span>
+                        </td>
+                        <td class="width-fifth">
+                            {% if reportSubmission.createdBy %}
+                                {% set createdBy = reportSubmission.createdBy %}
+                                {{ createdBy.fullname }}
+                                ({{ createdBy.roleFullName }})
+                                {% if createdBy.isDeputyOrg %}
+                                    <br/>{{ reportSubmission.createdBy.paTeamName }}
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td class="width-eighth">
+                            {% if report %}
+                                {{ report.period | replace({'to': '-'}) }}
+                            {% endif %}
+                            {% if ndr %}
+                                {{ 'ndr' | trans({}, 'common') }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <details class="push--bottom">
+                                <summary>
+                                    <span class="summary">
+                                        {% if reportSubmission.hasReportPdf() %}
+                                            {{ 'page.table.rows.documentsWithReport' | transchoice(reportSubmission.documents | length) }}
+                                        {% else %}
+                                            {{ 'page.table.rows.documents' | transchoice(reportSubmission.documents | length) }}
+                                        {% endif %}
+                                    </span>
+                                </summary>
+                                <div class="opg-indented-block">
+                                    <ul class="list list-group" id="docs">
+                                        {% for document in reportSubmission.documents %}
+                                            <li>{{ document.fileName }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </details>
+                        </td>
+                        <td class="width-tenth">
+                            {% set submissionDate = reportSubmission.createdOn %}
+                            {# shows "Today" or "d/m/Y"e #}
+                            {% if ("now" | date('Y-m-d') == submissionDate | date('Y-m-d')) %}
+                                Today
+                            {% else %}
+                                {{ submissionDate | date('d/m/Y') }}
+                            {% endif %}
+                            <br/>
+                            {# show hour and time #}
+                            {{ submissionDate | date('g:ia') }}
+                        </td>
+                        {% if not isNewPage %}
+                            <td>
+                                <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        {% include 'AppBundle:Components:paginator.html.twig' with {
+            currentOffset: filters.offset,
+            recordsPerPage: filters.limit,
+            totalRecords: counts[filters.status ?: 'total'],
+            routeName: 'admin_documents',
+            routeParams: filtersToPreserveInPagination,
+            messages: {
+                singlePage: '{0} Showing 0 report submissions|{1} Showing 1 report submission|]1,Inf[ Showing %count% report submissions',
+                multiPage: 'Showing %from% &ndash; %to% of %total% report submissions'
+            }
+        } %}
+
+    {% else %}
+        <p>{{ 'page.resultsTable.noDocumentsFound' | trans }}</p>
+    {% endif %}
+
+{% endblock %}

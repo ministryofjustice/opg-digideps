@@ -1,0 +1,24 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
+<h1 class="heading-xlarge flush--bottom behat-region-report-title">
+    {{ report.period }} {{ 'report.header.report' | trans }}
+</h1>
+<h2 class="heading-large flush--top">{{ report.client.fullname }}</h2>
+
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+
+{% if reportStatus.isReadyToSubmit and report.isDue %}
+    <div id="header-report-submit" class="govuk-panel govuk-panel--confirmation behat-region-report-ready-banner">
+        {% if report.unSubmitDate and report.submitted == false %}
+            <h2 class="govuk-tag opg-tag--warning govuk-!-margin-bottom-6">{{ 'changesNeeded' | trans({}, 'common') }}</h2>
+        {% else %}
+            <h2 class="govuk-panel__title">{{ 'reportIsReady' | trans() }}</h2>
+        {% endif %}
+        <div class="govuk-panel__body">
+            <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+        </div>
+    </div>
+{% endif %}
+

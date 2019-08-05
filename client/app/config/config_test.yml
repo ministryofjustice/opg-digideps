@@ -1,0 +1,14 @@
+imports:
+    - { resource: config_prod.yml }
+
+framework:
+    test: ~
+
+services:
+    mail_sender:
+        class: AppBundle\Service\Mailer\MailSenderMock
+        arguments: [ "@validator", "@snc_redis.default" ]
+        calls:
+            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
+    mailer.transport.smtp.default:
+        class: AppBundle\Service\Mailer\Transport\TransportMock

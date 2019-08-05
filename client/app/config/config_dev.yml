@@ -1,0 +1,43 @@
+imports:
+    - { resource: config.yml }
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing_dev.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+    ide: 'phpstorm://open?file=%%f&line=%%l'
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false
+
+services:
+    data_collector.apiCollectorss:
+        class: AppBundle\Service\ApiCollector
+        arguments: ["@rest_client"]
+        tags:
+            - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
+    data_collector.CssClassCollector:
+      class: AppBundle\Service\CssClassCollector
+      tags:
+        - { name: data_collector, template: 'AppBundle:Manage:css-class-collector', id: 'css-class-collector' }
+      public: false
+    mail_sender:
+        class: AppBundle\Service\Mailer\MailSenderMock
+        arguments: [ "@validator", "@snc_redis.default" ]
+        calls:
+            - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
+    mailer.transport.smtp.default:
+        class: AppBundle\Service\Mailer\Transport\TransportMock
+
+monolog:
+   handlers:
+       main:
+           formatter: line_formatter
+           channels: [ "!translation" ]
+
+jms_serializer:
+    metadata:
+        cache: none
+        debug: true

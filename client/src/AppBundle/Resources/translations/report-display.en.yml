@@ -1,0 +1,39 @@
+downloadAsPdf: Download as PDF
+incomplete:
+  backToEditingReport: Back to editing report
+
+submitReport: Submit report
+
+preview:
+  htmlTitle: Preview deputy report | GOV.UK
+  pageTitle: Preview report
+  introPara: |
+    Use this section to check the details of the report are correct. When all sections are
+    completed you will be able to continue the report submission process.
+
+review:
+  htmlTitle: Review deputy report | GOV.UK
+  pageTitle: Review report
+  introPara: Please review all sections of this report before continuing to the deputy declaration.
+
+submitted:
+  htmlTitle: Submitted deputy report | GOV.UK
+  pageTitle: Submitted report
+  introPara: This report was submitted to OPG on
+
+ndr-preview:
+  htmlTitle: Preview new deputy report | GOV.UK
+  pageTitle: Preview report
+  introPara: |
+    Use this section to check the details of the report are correct. When all sections are
+    completed you will be able to continue the report submission process.
+
+ndr-review:
+  htmlTitle: Review new deputy report | GOV.UK
+  pageTitle: Review report
+  introPara: Please review all sections of this report before continuing to the deputy declaration.
+
+ndr-submitted:
+  htmlTitle: Submitted new deputy report | GOV.UK
+  pageTitle: Submitted report
+  introPara: This report was submitted to OPG on

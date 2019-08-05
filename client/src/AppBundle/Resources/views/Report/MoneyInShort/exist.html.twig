@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'existPage.moneyIn.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'existPage.moneyIn.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+    {{ form_checkbox_group(form.moneyTransactionsShortInExist, 'existPage.form.moneyTransactionsShortInExist', {
+        'fieldSetClass' : 'inline',
+        'labelParameters': transOptions,
+        'legendClass' : 'form-label-bold text',
+        'formGroupClass': 'flush--bottom'
+    }) }}
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

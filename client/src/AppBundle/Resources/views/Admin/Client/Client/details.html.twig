@@ -1,0 +1,119 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientDetails' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ client.fullName }}</span></p>
+    {% if client.archivedAt %}
+        <p class="flush--bottom">Archived on: <span class="bold">{{ client.archivedAt | date("j M Y") }}</span></p>
+    {% endif %}
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ client.caseNumber }}</span></p>
+
+    {# client NDR #}
+
+    {% if client.ndr is not empty %}
+        {% include 'AppBundle:Admin/Client/Client/partials:_ndr-details.html.twig' with {
+            ndr : client.ndr,
+            client: client
+        } %}
+    {% endif %}
+
+    <br />
+
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.reportsTitle') | trans }}</h2>
+
+    {# client report list #}
+    {% if client.reportsSubmittedAtLeastOnce | length == 0 %}
+        <p>{{ (page ~ '.noResults') | trans }}</p>
+    {% else %}
+        <table class="check-your-answers">
+            <thead>
+            <tr>
+                <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
+                <th scope="col">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for report in client.reportsSubmittedAtLeastOnce %}
+                {% set isProfReport = report.hasSection('profCurrentFees')  %}
+                {% set enableManageLink = report.submitted %}
+                {% set enableChecklistLink = not isProfReport %}
+
+                {# only show submitted and unsubmitted reports #}
+                {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
+                <tr class="{{ behatRegionPrefix }}">
+                    <td>
+                        {{ report.period | replace({'to': '-'}) }}
+                    </td>
+                    <td class="{{ behatRegionPrefix }}-due-date">
+                        {{ report.dueDate | date("j F Y") }}
+                    </td>
+                    <td>
+                        {# Display submit date regardless of being submitted or not.
+                        # An unsubmitted report still has a submit date from a previous submission
+                        #}
+                        {% if report.submitDate %}
+                            {{ report.submitDate | date("j F Y") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.unSubmitDate %}
+                            {{ report.unSubmitDate | date("j F Y") }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if report.unSubmitDate %}
+                            {% set status = 'unsubmitted' %}
+                        {% elseif report.submitted %}
+                            {% set status = 'submitted' %}
+                        {% else %}
+                            {% set status = report.status.status %}
+                        {% endif %}
+
+                        <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                    </td>
+                    <td class="change-answer width-tenth">
+                        {% if enableChecklistLink %}
+                            <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
+                               class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                            <br />
+                        {% endif %}
+                        {% if enableManageLink %}
+                            <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
+                               class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

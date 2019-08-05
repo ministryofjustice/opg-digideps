@@ -1,0 +1,24 @@
+page:
+  pageSectionDescription:
+htmlTitle: Deputy report - set your password | GOV.UK
+pageTitle: Set your password
+headerTitle: Step 1. Set your password
+email:
+    label: Add your email address
+    hint: Your registration link was sent to this email address.
+password:
+    label: Password
+    hint: "Your password must have:"
+    hintList: |
+        at least 8 characters
+        at least 1 uppercase letter
+        at least 1 lowercase letter
+        at least 1 number
+    validation:
+        passwordMismatch: The passwords you entered don't match.
+password_confirm:
+    label: Confirm password
+terms_conditions:
+    label: I have read and understood the <a href="%link%" target="_blank">terms of use</a>
+submit:
+    label: Submit

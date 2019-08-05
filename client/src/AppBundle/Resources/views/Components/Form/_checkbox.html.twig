@@ -1,0 +1,35 @@
+{% if useFormGroup %}
+    <div id="form-group-{{ element.vars.id }}" class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
+{% endif %}
+
+    {% if (hintText is defined) and (hintText is not empty) %}
+        <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+    {% endif %}
+
+
+    {{ form_errors(element) }}
+
+    {% set classType = type == 'radio' ? 'govuk-radios' : 'govuk-checkboxes' %}
+    {% set class = element.vars.attr.class | default('') ~ ' ' ~ classType ~ '__input ' ~ inputClass | default('') %}
+
+    {% set labelClass = 'govuk-label ' ~ classType ~ '__label ' ~ (labelClass is defined ?  labelClass : '') %}
+    {% set elementClass = elementClass is defined ?  elementClass : '' %}
+
+    <div class="{{ classType }}__item" {% if labelDataTarget  %} data-target="{{ labelDataTarget }}" {% endif %}>
+        {% if element.vars.valid %}
+            {{ form_widget(element, {'attr': {'class': class }}) }}
+        {% else %}
+            {{ form_widget(element, {'attr': {'class': class, 'aria-invalid':'true' }}) }}
+        {% endif %}
+        <label class="{{ labelClass }}" for="{{ element.vars.id }}">
+            {% if labelRaw %}
+                {{ labelText | raw }}
+            {% else %}
+                {{ labelText }}
+            {% endif %}
+        </label>
+    </div>
+
+{% if useFormGroup %}
+    </div>
+{% endif %}

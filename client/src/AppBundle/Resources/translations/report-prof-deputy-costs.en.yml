@@ -1,0 +1,138 @@
+startPage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  pageSectionDescription1: |
+    Use this section to tell us how much %client% paid for your professional deputy services
+     in this reporting period (%periodStartDate% to %periodEndDate%).
+  pageSectionDescription2: This includes money %client% paid you in this reporting period:
+  listItem01: for work carried out in previous reporting periods
+  listItem02: for work carried out in this reporting period
+  pageSectionDescription3: Please include both fixed and assessed costs.
+  pageSectionDescription4: Your court order provides details of the costs you may charge.
+  pageSectionDescription5: |
+    For more information, refer to the court’s Practice Directive 19B: Fixed Costs in the
+    Court of Protection, published as part of the Court of Protection (Amendment) Rules 2017.
+  startButton: Start
+
+howCharged:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  form:
+    profDeputyCostsHow.label: "How did you charge for the services %client% paid you for in this reporting period?"
+    profDeputyCostsHow.hint: "Select all that apply"
+    profDeputyCostsHowChargedFixed.label: "Fixed costs"
+    profDeputyCostsHowChargedAssessed.label: "Assessed costs"
+    options:
+      fixed: Fixed costs
+      assessed: Assessed costs
+      both: Both fixed and assessed costs
+
+previousReceivedExists:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  form:
+    profDeputyCostsHasPrevious:
+      label: "Has %client% paid you in this reporting period for work carried out in a previous reporting period?"
+
+previousReceived:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  pageSectionDescription01: Costs for earlier reporting periods
+  pageSectionDescription02: |
+    Tell us about money %client% paid you in this reporting period for
+    work you carried out in a previous reporting period
+  form:
+    startDate:
+      label: Previous reporting period start
+      hint: For example, 31 3 2015
+    endDate:
+      label: Previous reporting period end
+      hint: ""
+    amount:
+      label: Amount paid (including VAT)
+    saveAddAnother:
+      label: Save and add another
+    saveAndContinue:
+      label: Save and continue
+
+interimExists:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  pageSectionDescription: Costs for this reporting period
+  form:
+    profDeputyCostsHasInterim:
+      label: Have you charged in line with interim billing under Practice Direction 19B for the work you carried out in this reporting period?
+
+interim:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  pageSectionDescription01: |
+    How much has %client% paid you in this reporting period for work carried out in
+    this reporting period (including VAT)?
+  pageSectionDescription02: |
+    If you charged more than 3 interim bills, please combine these into 3 groups of payments.
+    For 'Date paid', use the date the last payment in each group was made.
+  form:
+    date.label: Date paid
+    amount.label: Amount paid
+
+fixedCost:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  form:
+    profDeputyFixedCost.label: "How much has %client% paid you in this reporting period for work carried out in this reporting period (including VAT)?"
+
+amountToScco:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  form:
+    profDeputyCostsAmountToScco.label: "What amount is being submitted to SCCO for assessment this reporting period (including VAT)?"
+    profDeputyCostsReasonBeyondEstimate.label: "If you charged 20% or more above your estimate from your last reporting period, tell us why."
+    profDeputyCostsReasonBeyondEstimate.labelSummary: "Why are costs 20% or more than estimated in last reporting period?"
+
+breakdown:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle: Deputy costs
+  pageSectionDescription: Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period.
+  pageHint: "These are any costs that are not classed as 'general management'."
+  form:
+    entries:
+      appointments:
+        label: Appointment
+      annual-reporting:
+        label: Annual report
+      conveyancing:
+        label: Conveyancing
+      tax-returns:
+        label: Tax returns
+      disbursements:
+        label: Disbursements
+      cost-draftsman:
+        label: Cost draftsman
+      other:
+        label: Other
+        moreInformation: Give details of any 'other' costs
+        moreInformationLabelSummary: Details of other costs
+
+summaryPage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  pageTitle:  Deputy costs
+  returnToClientProfile: Return to client profile
+  weveListedYourAnswers: We've listed your saved answers below
+  checkTheyreCorrect: Check they're correct and edit them where necessary.
+  breakdownOfAdditionalCosts: |
+      Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
+  item: Item
+  amount: Amount
+  questionLabel:
+    paidThisPeriod: Paid for this reporting period
+    totaPaidThisPeriod: Total costs paid this reporting period
+    totalCosts: Total costs
+
+deletePage:
+  htmlTitle: "Deputy report - Deputy costs | GOV.UK"
+  subject: previous cost
+  summary:
+    startDate: Reporting period start date
+    endDate: Reporting period end date
+    amount: Amount

@@ -1,0 +1,39 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "signin" %}
+{% if not isAdmin %}
+    {% set page = 'signIn' %}
+{% else %}
+    {% set page = 'signInAdmin' %}
+{% endif %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ macros.notification('info', 'Get help paying deputy fees. Check whether you\'re eligible to <a href="https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption" target="_blank">pay a reduced or no fee</a>.') }}
+
+    {% if serviceNotificationContent is defined and serviceNotificationContent%}
+        <div class="behat-region-service-notification">
+            {{ macros.notification('info', serviceNotificationContent | nl2br) }}
+        </div>
+    {% endif %}
+
+    {# Content gets injected here when manually signing out (login-from-logout) #}
+    {% block pageHeader %}
+    {% endblock %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {{ form_input(form.email,'signInForm.email', { 'labelRaw': true }) }}
+    {{ form_input(form.password,'signInForm.password') }}
+    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login'}) }}
+
+    {{ form_end(form) }}
+
+    <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
+
+{% endblock %}

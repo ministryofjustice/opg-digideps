@@ -1,0 +1,26 @@
+
+<div class="opg-card behat-region-{{ behatRegion }}">
+    <span class="govuk-tag opg-card__tag {{ status | status_to_tag_css }}">{{ (status) | trans({}, 'common') }}</span>
+    <h3 class="heading-medium flush--ends">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}">
+            {{ report.getPeriod() }} report
+        </a>
+    </h3>
+    <div>
+        <p>
+            <strong class="bold">{{ 'dueDate' | trans({}, 'common') }}: </strong>
+            {{ report.dueDate | date("j F Y") }}
+        </p>
+        <p class="text flush--bottom">
+            {% block bottomLeftContent %}
+            {% endblock %}
+            {#{{ bottomLeftContent | raw }}#}
+            {#{{ (page ~ '.editReportingPeriodPara') | trans(transOptions) }}#}
+            {#<a class="behat-link-report-edit-period" href="{{ path('report_edit', {'reportId': report.id}) }}">{{ (page ~ '.editReportingPeriodLink') | trans }}</a>#}
+        </p>
+    </div>
+    <div class="opg-card__actions">
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button behat-link-report-start"
+        >{{ buttonText | trans({}, 'common') }}</a>
+    </div>
+</div>

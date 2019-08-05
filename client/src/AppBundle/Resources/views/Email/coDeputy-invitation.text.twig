@@ -1,0 +1,31 @@
+{% set translationDomain = "email-coDeputy-invitation" %}
+
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+'%deputyName%': deputyName,
+} %}
+
+{{ 'default.heading' | trans  }}
+---------------------
+
+{{ ('default.beenInvited') | trans(transOptions)  }}
+
+{{ ('default.needToSignUp') | trans  }}
+
+{{ ('default.clickOnLink') | trans  }}
+
+{{link}}
+
+{{ ('default.thenAsked') | trans  }}
+
+1. {{ ('default.firstPoint') | trans  }}
+2. {{ ('default.secondPoint') | trans  }}
+3. {{ ('default.thirdPoint') | trans  }}
+
+{{ ('default.ifLinkDoesntWork') | trans  }}
+
+{{ ('default.linkExpires') | trans  }}
+
+
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

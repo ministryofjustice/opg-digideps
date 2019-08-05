@@ -1,0 +1,62 @@
+// ==========================================================================
+// OVERVIEW SECTIONS
+// Report overview sections - grey boxes and spacing
+
+.opg-overview-section {
+    @include govuk-clearfix;
+
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: govuk-spacing(3);
+
+    & + & {
+        border-top: 1px solid $govuk-border-colour;
+    }
+
+    &--error {
+        padding-left: govuk-spacing(2);
+        border-left: govuk-spacing(1) solid $govuk-error-colour;
+    }
+
+    &__divider {
+        margin-top: govuk-spacing(6);
+        padding: govuk-spacing(1) govuk-spacing(2);
+        background: govuk-colour('grey-3');
+    }
+
+    &__header {
+        flex-grow: 1;
+    }
+
+    &__label {
+        margin-bottom: govuk-spacing(1);
+    }
+
+    &__label-link {
+        color: inherit !important;
+        text-decoration: none;
+    }
+
+    &__description {
+        color: govuk-colour('grey-1');
+    }
+
+    &__status,
+    &__link {
+        margin-left: govuk-spacing(7);
+    }
+
+    &__status {
+        // Currently need to use !important to override high-specificy margins from .status
+        margin-top: 0 !important; // sass-lint:disable-line no-important
+        margin-bottom: 0 !important; // sass-lint:disable-line no-important
+    }
+
+    &__link {
+        @include govuk-media-query($until: mobile) {
+            display: none;
+        }
+    }
+}

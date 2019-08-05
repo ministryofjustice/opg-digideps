@@ -1,0 +1,15 @@
+htmlTitle: "Archive client | GOV.UK"
+pageTitle: "Archive client"
+supportTitle: "Client profile: %fullName%"
+question: Are you sure you want to archive this client?
+warning: |
+  You can't undo this action. Once you archive this client, no one in your organisation will be able
+  to see or edit the client's record or reports.<br><br>You must inform your OPG case manager if
+  there's been a change in the client's circumstances.
+form:
+  error:
+    confirmArchive: "Please confirm that you want to archive the client"
+  confirmArchive:
+    label: "Yes, I'm sure I want to archive this client"
+  save:
+    label: Continue

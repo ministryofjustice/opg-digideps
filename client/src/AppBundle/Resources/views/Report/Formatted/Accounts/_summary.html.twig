@@ -1,0 +1,90 @@
+<h3>Summary</h3>
+<div id="account-summary" class="subsection">
+    <div class="box box-heading flush--bottom">
+        <h3 class="flush--bottom">Accounts summary</h3>
+    </div>
+    <div class="box box-white push-half--bottom">
+        <table class="money">
+            <thead>
+                <tr>
+                    <th scope="col">&nbsp;</th>
+                    <th class="grey numeric" scope="col">Opening balance</th>
+                    <th class="numeric" scope="col">Change</th>
+                    <th class="grey numeric" scope="col">Closing balance</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for account in report.bankAccounts %}
+                <tr>
+                    <td>
+                        <div class="review-account-name">
+                            {{ account.bank }} {{ account.accountTypeText }}
+                        </div>
+                        <div class="review-account-number">****{{ account.accountNumber }}
+                            {% if account.requiresSortCode and account.sortCode %}
+                               , {{ account.sortCode | split('', 2) | join('-') }}
+                            {% endif %}
+                            {% if account.isJointAccount =='yes' %}
+                                <br><span class="review-account-closed">JOINT ACCOUNT</span>
+                            {% endif %}
+                            {% if account.isClosed %}
+                                <br><span class="review-account-closed">ACCOUNT CLOSED</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="numeric grey">&pound;{{ account.openingBalance | money_format }}</td>
+                    <td class="numeric ">&pound;{{ (account.closingBalance - account.openingBalance) | abs | money_format }}</td>
+                    <td class="numeric grey">&pound;{{ account.closingBalance | money_format }}</td>
+                </tr>
+            {% endfor %}
+                <tr class="totals">
+                    <td>&nbsp;</td>
+                    <td class="numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
+                    <td>&nbsp;</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.accountsClosingBalanceTotal | money_format}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% if report.type == '102'  %}
+    <div class="box box-heading flush-half--bottom">
+        <h3 class="flush--bottom">Balance after income and expenditure</h3>
+    </div>
+    <div class="box box-white">
+        <table class="money">
+            <tbody>
+                <tr>
+                    <td>Total of all opening balances:</td>
+                    <td class="grey numeric">&pound;{{ report.accountsOpeningBalanceTotal | money_format }}</td>
+                </tr>
+                <tr>
+                    <td>Total money in:</td>
+                    <td class="grey numeric">&pound;{{ report.moneyInTotal | money_format}}</td>
+                </tr>
+                <tr>
+                    <td>Total money out:</td>
+                    <td class="grey numeric">&pound;{{ report.moneyOutTotal | money_format}}</td>
+                </tr>
+                <tr>
+                    {% if report.has106flag %}
+                    <td>Total deputy fees and expenses:</td>
+                    <td class="grey numeric">&pound;{{ (report.getExpensesTotal + report.getFeesTotal) | money_format}}</td>
+                    {% else %}
+                    <td>Total deputy expenses:</td>
+                    <td class="grey numeric">&pound;{{ report.getExpensesTotal | money_format}}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>Total gifts:</td>
+                    <td class="grey numeric">&pound;{{ report.getGiftsTotalValue | money_format}}</td>
+                </tr>
+                <tr class="totals">
+                    <td>&nbsp;</td>
+                    <td class="numeric reverse"><span class="bold">&pound;{{ report.calculatedBalance | money_format}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>

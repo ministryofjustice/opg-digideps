@@ -1,0 +1,80 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "prof-terms-use" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%userFirstname%': user.firstname}  %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block helpline %}
+    <div class="opg-helpline">
+        <h3>Helpline<br/>{{ 'helplineProf' | trans({}, 'common') }}</h3>
+    </div>
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <h2 class="heading-medium">
+            {{ 'section01.heading' | trans(transOptions) }}
+        </h2>
+
+        <p>{{ 'section01.para01' | trans(transOptions) }}</p>
+        <p>{{ 'section01.para02' | trans(transOptions) }}</p>
+        <p>{{ 'section01.para03' | trans(transOptions) }}</p>
+        <ul class="list list-bullet">
+            <li>{{ 'section01.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section01.listItem02' | trans(transOptions) }}</li>
+        </ul>
+
+
+        <h3 class="heading-small">
+            {{ 'section02.heading' | trans(transOptions) }}
+        </h3>
+
+        <p>{{ 'section02.para01' | trans(transOptions) }}</p>
+        <p>{{ 'section02.para02' | trans(transOptions) }}</p>
+
+        <ul class="list list-bullet">
+            <li>{{ 'section02.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem02' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem03' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem04' | trans(transOptions) }}</li>
+            <li>{{ 'section02.listItem05' | trans(transOptions) }}</li>
+        </ul>
+
+
+        <h3 class="heading-small">
+            {{ 'section03.heading' | trans(transOptions) }}
+        </h3>
+
+        <p>{{ 'section03.para01' | trans(transOptions) }}</p>
+
+        <ul class="list list-bullet">
+            <li>{{ 'section03.listItem01' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem02' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem03' | trans(transOptions) }}</li>
+            <li>{{ 'section03.listItem04' | trans(transOptions) }}</li>
+        </ul>
+
+        <p>{{ 'section03.para02' | trans(transOptions) }}</p>
+        <p>{{ 'section03.para03' | trans(transOptions) }}</p>
+        <p>{{ 'section03.para04' | trans(transOptions) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' }}) }}
+
+    {{ form_checkbox(form.agreeTermsUse, 'form.agreeTermsUse', { 'labelClass': 'required' }) }}
+
+    <div class="form-group">
+        {{ form_submit(form.save, 'form.save') }}
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

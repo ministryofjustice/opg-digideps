@@ -1,0 +1,29 @@
+{
+  "name": "govuk_digideps",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "gulp",
+    "lint": "npm i && gulp lint",
+    "develop": "gulp watch"
+  },
+  "devDependencies": {
+    "del": "^3.0.0",
+    "govuk-elements-sass": "^3.1.0",
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-jshint": "^2.1.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifycss": "^1.1.0",
+    "jquery": "^3.4.1",
+    "jshint": "^2.9.5",
+    "postcss-wcag-contrast": "^2.0.0"
+  },
+  "dependencies": {
+    "govuk-frontend": "^2.13.0"
+  }
+}

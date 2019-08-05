@@ -1,0 +1,258 @@
+{% macro breadcrumbs(report) %}
+    {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
+    {% set isOrgUser = app.user.isDeputyOrg() %}
+
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                {% if isOrgUser %}
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        {{ 'dashboard' | trans({}, 'common' ) }}
+                    </a>
+                {% else %}
+                    <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                        {{ 'yourReports' | trans({}, 'common' ) }}
+                    </a>
+                {% endif %}
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                {% if report.type == 'ndr' %}
+                    <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview">
+                        {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                    </a>
+
+                {% else %}
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                       class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview">
+                        {% if isOrgUser %}
+                            {{ 'clientProfile' | trans({}, 'common' ) }}
+                        {% else %}
+                            {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </li>
+        </ol>
+    </div>
+{% endmacro %}
+
+{% macro homepage() %}
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            <li class="govuk-breadcrumbs__list-item">
+                <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                    Your reports
+                </a>
+            </li>
+        </ol>
+    </div>
+{% endmacro %}
+
+{% macro breadcrumbsSettings(section) %}
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            {% if app.user.isDeputyOrg() %}
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        Dashboard
+                    </a>
+                </li>
+                {% if 'settings' in section and section != 'settings' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_settings') }}" class="govuk-breadcrumbs__link">
+                            Settings
+                        </a>
+                    </li>
+                {% endif %}
+                {% if 'team' in section and section != 'settings-team' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_team') }}" class="govuk-breadcrumbs__link">
+                            User accounts
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section == 'settings-profile-edit' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('org_profile_show') }}" class="govuk-breadcrumbs__link">
+                            Your details
+                        </a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="govuk-breadcrumbs__list-item">
+                    <a href="{{ path('lay_home') }}" class="govuk-breadcrumbs__link">
+                        Deputy reports
+                    </a>
+                </li>
+                {% if 'settings' in section and section != 'settings' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('account_settings') }}" class="govuk-breadcrumbs__link">
+                            Deputyship details
+                        </a>
+                    </li>
+                {% endif %}
+                {% if section == 'settings-profile-edit' %}
+                    <li class="govuk-breadcrumbs__list-item">
+                        <a href="{{ path('user_show') }}" class="govuk-breadcrumbs__link">
+                            Your details
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        </ol>
+    </div>
+{% endmacro %}
+
+{% macro linkBackStep(backLink,stepPage) %}
+    {% if backLink %}
+        <a href="{{ backLink }}" class="govuk-back-link behat-link-step-back">{{ stepPage }}</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro saveAndContinueButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'saveAndContinue',
+        'labelTranslationDomain': 'common',
+        'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
+    }) }}
+{% endmacro %}
+
+{% macro addAnotherSaveButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'continue',
+        'labelTranslationDomain': 'common',
+        'buttonClass': 'govuk-button govuk-!-margin-right-1 behat-link-save-and-continue',
+    }) }}
+{% endmacro %}
+
+{% macro saveAndAddAnotherSaveButton(button) %}
+    {{ form_submit(button, '', {
+        'labelText': 'saveAndAddAnother' | trans({}, 'common'),
+        'buttonClass': 'behat-link-save-and-add-another govuk-button govuk-button--secondary',
+    }) }}
+{% endmacro %}
+
+{% macro icon(type, extraClass = '') %}
+    <span class="opg-icon opg-icon--{{ type }} {{ extraClass }}"></span>
+{% endmacro %}
+
+
+{% macro notification(alertType,message) %}
+    {% if alertType is defined %}
+        {% if alertType == 'notice' %}
+            <div class="opg-alert opg-alert--notice">
+                {{ _self.icon('notification', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'success' %}
+            <div class="opg-alert opg-alert--success">
+                {{ _self.icon('tick', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'error' %}
+            <div class="opg-alert opg-alert--error">
+                {{ _self.icon('cross', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'info' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('information', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'important' %}
+            <div class="opg-alert opg-alert--important">
+                {{ _self.icon('important-small', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% elseif alertType == 'loader' %}
+            <div class="opg-alert opg-alert--info">
+                {{ _self.icon('loader', 'opg-alert__icon') }}
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% else %}
+            <div class="opg-alert">
+                <div class="behat-region-alert-message opg-alert__message">
+                    {{ message | raw }}
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="opg-alert">
+            <div class="behat-region-alert-message opg-alert__message">
+                <p>{{ message | raw }}</p>
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{# Related section links on the summary pages #}
+{% macro relatedSections(report,section) %}
+    {% set isOrgUser = app.user.isDeputyOrg() %}
+
+    <aside class="opg-related-items" role="complementary">
+        <nav role="navigation">
+            <ul class="govuk-list govuk-!-font-size-16">
+                <li>
+                    {% if report.type == 'ndr' %}
+                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}" class="govuk-link">
+                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
+                        </a>
+                    {% else %}
+                        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="govuk-link">
+                            {% if isOrgUser %}
+                                {{ 'clientProfile' | trans({}, 'common' ) }}
+                            {% else %}
+                                {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                </li>
+                {% if (section_link_params(report, section, +1)) %}
+                    <li>
+                        <a href="{{ section_link_params(report, section, +1).link }}" class="govuk-link">
+                            Next section: {{ ('prevNextLinks.sections.' ~ section_link_params(report, section, +1).section) | trans({}, 'report-common') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if report.type != 'ndr' %}
+                    {% if report.hasSection('balance') %}
+                        {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
+                            <li>
+                                <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
+                                    Accounts balance check
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </nav>
+    </aside>
+{% endmacro %}
+
+{# Question/Answer table header for summary pages #}
+{% macro summaryTableHeaderQA(hideEditLink) %}
+    <thead>
+        <tr>
+            <th>{{ 'question' | trans({}, 'common') }}</th>
+            <th>{{ 'answer' | trans({}, 'common') }}</th>
+            {% if not hideEditLink %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
+{% endmacro %}

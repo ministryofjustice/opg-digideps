@@ -1,0 +1,51 @@
+{% set translationDomain = "client-profile" %}
+{% trans_default_domain translationDomain %}
+{% set page = "clientReports" %}
+
+<div class="govuk-accordion__section">
+
+    <div class="govuk-accordion__section-header">
+        <h3 class="govuk-accordion__section-heading">
+            <button class="govuk-accordion__section-button">
+                {{ (page ~ '.heading') | trans }}
+            </button>
+        </h3>
+    </div>
+
+    <div class="govuk-accordion__section-content behat-region-client-profile-reports">
+        {% if reports is not empty %}
+
+            <table>
+                <thead>
+                    <th>{{ (page ~ '.reportingPeriod') | trans }}</th>
+                    <th>{{ (page ~ '.dateSubmitted') | trans }}</th>
+                    <th></th>
+                </thead>
+
+                <tbody>
+                    {% for report in reports %}
+                        {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+                        {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
+                        <tr class="behat-region-submitted-report-{{ report.endDate | date("Ymd") }}">
+                            <td>{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</td>
+                            <td>{{ report.getSubmitDate() | date(" j F Y") }}</td>
+                            <td class="text--right hard--right">
+                                <a class="behat-link-view-report" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.viewReport' | trans({} , 'report-overview') }}</a>
+                                <br>
+                                <a href="{{ path('report_documents', {reportId: report.id}) }}" class="no-wrap behat-link-add-more-documents">
+                                    {{ (page ~ '.attachDocuments') | trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% else %}
+
+            <p>{{ (page ~ '.noReports') | trans }}</p>
+
+        {% endif %}
+    </div>
+
+</div>

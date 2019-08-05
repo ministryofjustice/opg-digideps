@@ -1,0 +1,68 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs-estimate" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'breakdown' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    <p class="heading-small push-half--bottom  text">
+        {{ (page ~ '.form.profDeputyCostsEstimateManagementCost.sectionDescription') | trans(transOptions) }}
+    </p>
+
+    <div>
+        {{ form_input(form.profDeputyManagementCostAmount, 'amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelText' : (page ~ '.form.profDeputyCostsEstimateManagementCost.label') | trans,
+            'labelRaw': true
+        }) }}
+    </div>
+
+    <p class="heading-small push-half--bottom  text">
+        {{ (page ~ '.pageSectionDescription') | trans(transOptions) }}
+    </p>
+
+    {% for profDeputyEstimateCost in form.profDeputyEstimateCosts %}
+        <div class="{{ profDeputyEstimateCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
+            {{ form_row(profDeputyEstimateCost.profDeputyEstimateCostTypeId) }}
+            {{ form_input(profDeputyEstimateCost.amount, 'amount', {
+                'inputPrefix' : '£',
+                'inputClass' : 'form-control-1-4 js-format-currency',
+                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
+                'labelRaw': true
+            }) }}
+
+            {# this is testing the form field is defined. Not the entity property #}
+            {% if profDeputyEstimateCost.moreDetails is defined %}
+                <div class="">
+                    {{ form_input(profDeputyEstimateCost.moreDetails, 'moreDetails', {
+                        'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.moreInformation') | trans,
+                        'formGroupClass': 'opg-indented-block',
+                        'labelRaw': true
+                    }) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

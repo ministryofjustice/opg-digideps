@@ -1,0 +1,59 @@
+addClient:
+    htmlTitle: "Deputy report - add your client's details | GOV.UK"
+    pageTitle: Add your client's details
+    pageTitleWithClient: Add %client%'s details
+    formHeading: Client's details
+courtDate:
+    legend: Court order date
+    hint: For example, 31 3 2015
+firstname:
+    label: First name
+lastname:
+    label: Last name
+caseNumber:
+    label: Case number
+    hint: You will find the case number on the first page of the court order (top right-hand corner)
+address:
+    label: Address
+address2:
+    label: ' '
+county:
+    label: ' '
+postcode:
+    label: Postcode
+country:
+    label: Country
+    defaultOption: Please select
+phone:
+    label: Phone number
+save:
+    label: Save
+saveAndContinue:
+    label: Save and continue
+createReport:
+    htmlTitle: "Deputy report - create a report | GOV.UK"
+    pageTitle: Create a report
+form:
+  newReportForm:
+    addStartDate: "Add the report start date"
+    addEndDate: "Add the report end date"
+    startDateDescription: "Your reporting period starts on the anniversary of the date your court order was made. For example, if your court order was made on 10 May 2012, your 2016 to 2017 reporting period would start on 10 May 2016."
+    endDateDescription: "Your reporting period ends 12 months after its start date. For example, if your 2016 to 2017 reporting period started on 10 May 2016, it would end on 9 May 2017. We'll let you know if we want your reporting period to be shorter."
+    controls:
+      createNewReportLink:
+        label: "Create new report"
+      startDate:
+        legend: "Start date"
+        hint: For example, 31 3 2015
+      endDate:
+        legend: "End date"
+        hint: For example, 30 3 2016
+      save:
+        label: "Save"
+      cancel:
+        label: "Cancel"
+  editClientForm:
+    subSectionTitle: "Edit client's details"
+    controls:
+      cancel:
+        label: "Cancel"

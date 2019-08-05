@@ -1,0 +1,57 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'previousReceived' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+{% block pageContent %}
+
+    <h2 class="heading-medium flush--ends">{{ (page ~ '.pageSectionDescription01') | trans }}</h2>
+
+    <div class="text">
+        <p>{{ (page ~ '.pageSectionDescription02') | trans(transOptions, translationDomain) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        {{ form_known_date(form.startDate, page ~ '.form.startDate') }}
+
+        {{ form_known_date(form.endDate, page ~ '.form.endDate') }}
+
+        {{ form_input(form.amount, page ~ '.form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'labelClass' : 'form-label-bold',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
+    </div>
+
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
+
+    {% if form.saveAndAddAnother is defined %}
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

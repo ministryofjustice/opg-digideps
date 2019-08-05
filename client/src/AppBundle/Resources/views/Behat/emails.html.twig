@@ -1,0 +1,56 @@
+{% extends 'AppBundle:Layouts:moj_template.html.twig' %}
+
+{% block htmlTitle %}Mocked emails{% endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-xl">
+        Latest mocked emails
+        <span class="govuk-caption-l">
+            Emails sent from
+            <strong class="bold">{{ isAdmin ? 'admin' : 'deputy' }}</strong>
+            site on
+            <strong class="bold">{{ host }}</strong>
+        </span>
+    </h1>
+
+    {% for email in emails %}
+        <details style="margin-bottom: 3rem">
+            <summary style="display: block">
+                <strong class="bold">{{ email.time | date("Y-m-d H:i:s") }}</strong>
+                <br>
+                {% for address, name in email.to %}
+                    {{ name }} &lt;{{ address }}&gt;
+                {% endfor %}
+                <br>
+                {{ email.subject }}
+            </summary>
+
+            <div class="opg-indented-block">
+                <strong class="bold">From:</strong>
+                {% for address, name in email.from %}
+                    {{ name }} &lt;{{ address }}&gt;
+                {% endfor %}
+                <br>
+                <strong class="bold">Subject:</strong> {{ email.subject }}
+                <br>
+                <button onclick="ddPreviewEmail('{{ email.parts[0].body }}')">
+                    HTML preview
+                </button>
+                <hr>
+                {% autoescape %}
+                    {{ email.body | raw | nl2br }}
+                {% endautoescape %}
+            </div>
+        </details>
+    {% else %}
+        <em>No emails have been mocked, or the log has been cleared.</em>
+    {% endfor %}
+
+    <script type="text/javascript">
+        function ddPreviewEmail(blob) {
+            var html = decodeURIComponent(escape(atob(blob)));
+            var win = window.open();
+            win.document.body.innerHTML = html;
+        }
+    </script>
+{% endblock %}

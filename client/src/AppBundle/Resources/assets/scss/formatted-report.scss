@@ -1,0 +1,18 @@
+$is-ie: false !default;
+$mobile-ie6: false !default;
+$path: "/images/";
+$xlarge: 22;
+$large: 18;
+$medium: 14;
+$small: 12;
+
+@import "measurements";
+@import "colours";
+@import "conditionals";
+@import "shims";
+@import "typography";
+
+@import "gds/fonts";
+@import "digideps/colours";
+@import "digideps/helpers";
+@import "digideps/formatted_report/main";

@@ -1,0 +1,39 @@
+activation:
+    subject: Deputy report - activate your account now
+    fromName: Office of the Public Guardian
+changePassword:
+    subject: Deputy report - new password
+    fromName: Office of the Public Guardian
+reportSubmission:
+    subject: Report submission from Digital Deputy
+    fromName: Digital deputy secure email service
+    toName: Deputyship Service
+ndrSubmission:
+    subject: NDR submission from Digital Deputy
+    fromName: Digital deputy secure email service
+    toName: Deputyship Service
+reportSubmissionConfirmation:
+    subject: We’re reviewing your deputy report for %clientFullname%
+    fromName: Office of the Public Guardian
+ndrSubmissionConfirmation:
+    subject: Complete the deputy report - new deputy report submitted
+    fromName: Office of the Public Guardian
+resetPassword:
+    subject: Deputy report - reset your password
+    fromName: Office of the Public Guardian
+feedbackForm:
+    subject: User feedback
+    fromName: Deputy report service - feedback form
+    toName: Deputyship Service
+codeputyInvitation:
+    subject: Deputy report - activate your account now
+    fromName: Office of the Public Guardian
+addressUpdateForm:
+    deputy:
+        subject: Change to deputy contact details
+        fromName: Deputy report service - deputy contact details updated
+        toName: Deputyship Service
+    client:
+        subject: Change to client contact details
+        fromName: Deputy report service - client contact details updated
+        toName: Deputyship Service

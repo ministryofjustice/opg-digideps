@@ -1,0 +1,72 @@
+{% extends 'AppBundle:Email:_template.html.twig' %}
+
+{% set translationDomain = "email-report-submission-confirm" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%fullDeputyName%': fullDeputyName,
+    '%startDate%': submittedReport.startDate | date("d/m/Y"),
+    '%endDate%': submittedReport.endDate | date("d/m/Y"),
+    '%newStartDate%': newReport.startDate | date("d/m/Y"),
+    '%newEndDate%': newReport.endDate | date("d/m/Y"),
+    '%homepageUrl%': homepageUrl,
+    '%fullClientName%': fullClientName,
+    '%caseNumber%': caseNumber
+} %}
+
+{% block emailHTMLHeaderTitle %}{{ ('default.htmlHeaderTitle') | trans }}{% endblock %}
+
+{% block content %}
+
+    {% if recipientRole != 'default' %}
+        <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('caseDetails') | trans(transOptions) | raw }}
+        </p>
+    {% endif %}
+
+    <p style="Margin: 0 0 40px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.dear') | trans(transOptions) }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.thanksForSubmitting') | trans(transOptions) | raw }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.currentlyReviewing') | trans }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.reportAccess') | trans | raw  }}
+    </p>
+
+    {% if recipientRole == 'default' %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('default.downloadInstructions01') | trans }}
+            <a style="word-wrap: break-word;" href="{{ homepageUrl }}">{{ homepageUrl }}</a>
+        </p>
+
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('default.downloadInstructions02') | trans }}
+        </p>
+    {% endif %}
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        <strong>{{ ('default.whatNext') | trans }}</strong>
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ (recipientRole ~ '.startNextReport') | trans(transOptions) }}
+    </p>
+
+    <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+        {{ ('default.signInToKeepTrack') | trans(transOptions) | raw  }}
+    </p>
+
+    {% if recipientRole == 'default' %}
+        <p style="Margin: 0 0 20px 0; font-size: 19px; line-height: 25px; color: #0B0C0C;">
+            {{ ('default.reportReminder') | trans(transOptions) | raw }}
+        </p>
+    {% endif %}
+
+{% endblock %}

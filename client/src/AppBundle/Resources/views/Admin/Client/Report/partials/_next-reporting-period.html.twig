@@ -1,0 +1,103 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="nextReportingPeriod">{{ (page ~ '.heading.nextPeriod') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.futureSignificantDecisions, (
+            report.hasSection('lifestyle') ? page ~ '.form.futureSignificantChanges':
+                page ~ '.form.futureSignificantDecisions'
+            ), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(true) }}
+                    <tbody>
+                        {# step 1 #}
+                        <tr>
+                            <td>
+                                {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions') }}
+                            </td>
+                            <td>
+                                {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+                            </td>
+                        </tr>
+                        {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+                            <tr>
+                                <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions, 'report-actions') }}</td>
+                                <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+</div>
+
+<div class="form-section">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox_group(form.hasDeputyRaisedConcerns, (page ~ '.form.hasDeputyRaisedConcerns'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.deputysResponses') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(true) }}
+                    <tbody>
+                        {# Concerns about deputyship? #}
+                        <tr>
+                            <td>
+                                {{ 'form.doYouHaveConcerns.label' | trans(transOptions, 'report-actions') }}
+                            </td>
+                            <td>
+                                {{ report.action.doYouHaveConcerns | capitalize }}
+                            </td>
+                        </tr>
+                        {% if report.action.doYouHaveConcerns == 'yes' %}
+                            <tr>
+                                <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions, 'report-actions') }}</td>
+                                <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
+                            </tr>
+                        {% endif %}
+                        {# Any other concerns? #}
+                        <tr>
+                            <td>
+                                {{ 'form.actionMoreInfo.label' | trans(transOptions, 'report-more-info') }}
+                            </td>
+                            <td>
+                                {{ report.actionMoreInfo | capitalize }}
+                            </td>
+                        </tr>
+                        {% if report.actionMoreInfo == 'yes' %}
+                            <tr>
+                                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions, 'report-more-info') }}</td>
+                                <td>{{ report.actionMoreInfoDetails | nl2br }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+</div>

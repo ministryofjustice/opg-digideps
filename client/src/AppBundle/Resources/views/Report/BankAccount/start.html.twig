@@ -1,0 +1,47 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-bank-accounts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%moneyInPath%': path('money_in', {reportId: report.id})
+} %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+        <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+        {% if report.hasSection('moneyIn') %}
+            <p>{{ 'startPage.pageSectionDescription3' | trans(transOptions) | raw }}</p>
+        {% endif %}
+
+        {% if not app.user.isDeputyOrg() %}
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+                </summary>
+                <div class="opg-indented-block">
+                    <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions)|raw }}</p>
+                </div>
+            </details>
+        {% endif %}
+    </div>
+
+    <a href="{{ path('bank_accounts_step', { 'reportId': report.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'bankAccounts',
+    } %}
+
+{% endblock %}

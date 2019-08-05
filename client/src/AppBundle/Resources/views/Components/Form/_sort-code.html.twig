@@ -1,0 +1,25 @@
+<div id="form-group-{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %}">
+    <fieldset>
+        <legend class="govuk-fieldset__legend">
+            {{ legendText }}
+        </legend>
+
+        {{ form_errors(element) }}
+        {% set errorClass = element.vars.valid ? '' : ' govuk-input--error ' %}
+
+        <div class="govuk-form-group">
+            {{ form_label(element.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'govuk-visually-hidden' } }) }}
+            {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'govuk-input govuk-input--width-2' ~ errorClass} }) }}
+
+            <span class="opg-sort-code-separator">-</span>
+
+            {{ form_label(element.sort_code_part_2,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_2', 'class': 'govuk-visually-hidden' } }) }}
+            {{ form_widget(element.sort_code_part_2, {'attr': {'class': 'govuk-input govuk-input--width-2' ~ errorClass} }) }}
+
+            <span class="opg-sort-code-separator">-</span>
+
+            {{ form_label(element.sort_code_part_3,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_3', 'class': 'govuk-visually-hidden' } }) }}
+            {{ form_widget(element.sort_code_part_3, { 'attr': { 'class': 'govuk-input govuk-input--width-2' ~ errorClass} }) }}
+        </div>
+    </fieldset>
+</div>

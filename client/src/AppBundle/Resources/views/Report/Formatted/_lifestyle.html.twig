@@ -1,0 +1,25 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+<div class="section" id="lifestyle-section">
+    <h2 class="section-heading">Health and lifestyle</h2>
+
+    {{ macros.answerSimple({
+        question: 'form.careAppointments.label' | trans(transOptions, 'report-lifestyle'),
+        answer: report.lifestyle.careAppointments
+    }) }}
+
+    {%  if (report.lifestyle.doesClientUndertakeSocialActivities and "no" == report.lifestyle.doesClientUndertakeSocialActivities) %}
+        {% set moreDetails = report.lifestyle.activityDetailsNo %}
+        {% set moreDetailsLabel = 'form.activityDetailsNo.label' %}
+    {% else %}
+        {% set moreDetails = report.lifestyle.activityDetailsYes %}
+        {% set moreDetailsLabel = 'form.activityDetailsYes.label' %}
+    {%  endif %}
+    {{ macros.answerYesNo({
+        question: 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions, 'report-lifestyle'),
+        answer: report.lifestyle.doesClientUndertakeSocialActivities,
+        moreDetails: moreDetails,
+        moreDetailsLabel: moreDetailsLabel | trans(transOptions, 'report-lifestyle'),
+        showMoreDetailsWith: report.lifestyle.doesClientUndertakeSocialActivities
+    }) }}
+</div>

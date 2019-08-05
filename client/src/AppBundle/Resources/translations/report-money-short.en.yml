@@ -1,0 +1,169 @@
+startPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+    pageSectionDescription1: |
+      Tell us about how you have managed %client%'s money during this reporting period.
+      We need this information to understand the client's financial situation.
+    startButton: Start money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+    pageSectionDescription1: |
+      Tell us about how you have managed %client%'s money during this reporting period.
+      We need this information to understand the client's financial situation.
+    startButton: Start money out
+  notification: |
+    We’ve simplified this section for deputies looking after assets worth less than
+    £21,000. We may have removed some information you entered previously because we
+    no longer need it to process your report.
+
+categoryPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+
+existPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+  form:
+    moneyTransactionsShortInExist:
+      label: Have there been any one-off income payments over £1,000?
+    moneyTransactionsShortOutExist:
+      label: Have there been any one-off payments over £1,000?
+    save:
+      label: Save and continue
+
+addPage:
+  moneyIn:
+    htmlTitle: "Deputy report - money in | GOV.UK"
+    pageTitle: Add an item of income
+    supportTitle: Money in
+    pageSectionDescription1: |
+      List all one-off items of income over £1,000
+    pageSectionDescription2: |
+      You may find it easier to use %client%'s bank statements to find this information.
+    pageSectionDescription3: |
+      You can add one or more items of income and come back to complete the section later.
+  moneyOut:
+      htmlTitle: "Deputy report - money out | GOV.UK"
+      pageTitle: Add a payment
+      supportTitle: Money out
+      pageSectionDescription1: |
+        List all one-off payments of over £1,000
+      pageSectionDescription2: |
+        You may find it easier to use %client%'s bank statements to find this information.
+        Don't tell us about any regular payments, such as care home fees.
+      pageSectionDescription3: |
+        You can add one or more payment items and come back to complete the section later.
+
+editPage:
+  moneyIn:
+    htmlTitle: "Deputy report - money in - edit item of income | GOV.UK"
+    supportTitle: Money in
+    pageTitle: Edit item of income
+  moneyOut:
+    htmlTitle: "Deputy report - money out - edit payment | GOV.UK"
+    supportTitle: Money out
+    pageTitle: Edit payment
+
+addAnotherPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    supportTitle: Money in
+    pageTitle: Add another item
+    form:
+      addAnother:
+        label: The item of income has been saved. Would you like to add another item of income over £1,000 now?
+        hint: If you prefer, you can come back to this section later to add more items of income
+      save:
+         label: Continue
+  moneyOut:
+    htmlTitle: "Deputy report - Add another payment | GOV.UK"
+    supportTitle: Money out
+    pageTitle: Add another payment
+    form:
+      addAnother:
+        label: The payment has been saved. Would you like to add another payment of over £1,000 now?
+        hint: If you prefer, you can come back to this section later to add more payments
+      save:
+        label: Continue
+
+
+summaryPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+    weAskAbout: |
+      In this section we ask for details of how you have managed
+      %client%'s money during this reporting period.
+    addButton: Add an item of income over £1,000
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+    weAskAbout: |
+      In this section we ask for details of how you have managed
+      %client%'s money during this reporting period.
+    addButton: Add an payment over £1,000
+
+
+form:
+  categoriesIn:
+    label: Tell us about the different categories of money paid into %client%'s accounts
+    hint: Please tick all that apply
+  categoriesOut:
+      label: Tell us about the different categories of money paid out of %client%'s accounts
+      hint: Please tick all that apply
+  categoriesEntries:
+      # in
+      state_pension_and_benefit.label: State pension and benefits
+      bequests.label: Bequests – for example, inheritance, gifts received
+      income_from_invesments_dividends_rental.label: Income from investments, dividends, property rental
+      sale_of_investments_property_assets.label: Sale of investments, property or assets
+      salary_or_wages.label: Salary or wages
+      compensations_and_damages_awards.label: Compensations and damages awards
+      personal_pension.label: Personal pension
+      # out
+      accomodation_costs.label:  Accommodation costs – for example, rent, mortgage, service charges
+      care_fees.label: Care fees or local authority charges for care
+      holidays.label: Holidays and trips
+      households_bills.label: Household bills – for example, water, gas, electricity, phone, council tax
+      personal_allowance.label: %client%'s personal allowance
+      professional_fees.label: Professional fees – for example, solicitor or accountant fees
+      new_investments.label: New investments – for example, buying shares, new bonds
+      travel_costs.label: Travel costs – for example, bus, train, taxi fares
+
+  transactionsIn:
+      description:
+        label: Description of item
+      amount:
+        label: Amount
+      date:
+         label: What date did this money come in? (optional)
+         hint: For example, 20 12 2015
+      addAnother:
+        label: Add another item
+      save:
+          label: Save item
+
+  transactionsOut:
+        description:
+          label: Description of payment
+        amount:
+          label: Amount
+        date:
+           label: What date did this money go out? (optional)
+           hint: For example, 20 12 2015
+        addAnother:
+          label: 12345345646
+        save:
+            label: Save payment
+
+

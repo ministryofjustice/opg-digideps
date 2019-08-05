@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "client" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'editClient' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({'%client%': client.firstname}) }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsSettings('settings-client') }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
+
+    {{ form_input(form.firstname, 'firstname') }}
+    {{ form_input(form.lastname, 'lastname') }}
+
+    {{ form_input(form.address, 'address') }}
+    {{ form_input(form.address2, 'address2') }}
+    {{ form_input(form.county, 'county') }}
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
+    {{ form_select(form.country, 'country') }}
+    {{ form_input(form.phone, 'phone') }}
+
+    {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
+    {{ form_known_date(form.courtDate, 'courtDate') }}
+
+    {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.editClientForm.controls.cancel.label',
+        linkHref: path('client_show')
+    } %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

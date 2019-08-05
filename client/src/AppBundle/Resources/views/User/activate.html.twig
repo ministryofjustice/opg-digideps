@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "user-activate" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block progressBar %}
+        {{ progress_bar_registration(user, 'password') }}
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.password.first,'password', { 'labelRaw': true, 'hasHintList': true } ) }}
+
+    {{ form_input(form.password.second,'password_confirm' ) }}
+
+    {% if form.showTermsAndConditions is defined %}
+        {{ form_checkbox(form.showTermsAndConditions, '', {
+            'labelText': 'terms_conditions.label' | trans({'%link%': path('terms')}) | raw,
+            'labelRaw': true
+        } ) }}
+    {% endif %}
+
+    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

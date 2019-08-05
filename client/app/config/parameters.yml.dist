@@ -1,0 +1,66 @@
+# This file is a "template" of what your parameters.yml file should look like
+# parameters.yml is currently generated from docker files.
+# This is file is kept for potential use outside docker
+parameters:
+    locale:   en
+    secret:   setme
+    api_base_url: http://digideps-api.local/
+    # START variables different for admin area, using the same codebase but running on a different container
+    api_client_secret: setme
+    env:    setme
+    redis_dsn: redis://setme
+    # END
+    non_admin_host: https://digideps-client.local
+    admin_host: https://digideps-admin.local
+    # for the following two settings, use a multiple of 60
+    session_expire_seconds: 3900
+    session_popup_show_after: 3600
+    session_cookie_secure: false
+
+    session_prefix: application_session
+    ga: null
+    opg_docker_tag: 0.0.0
+    behat_controller_enabled: true
+    log_level: warning
+    log_path: /var/log/app/application.log
+    # the following two paramters can be set to null on production
+    email_send:
+      from_email: no-reply@digideps.dsd.io
+      # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
+    # report submit email with attachment, uses local secure SMTP (no auth needed)
+    email_report_submit:
+      from_email: no-reply@digideps.dsd.io
+      to_email: behat-digideps@digital.justice.gov.uk
+    # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
+    email_feedback_send:
+      from_email: no-reply@digideps.dsd.io
+      to_email: behat-digideps@digital.justice.gov.uk
+    email:
+      base_url:
+        frontend: https://digideps-client.local
+        admin: https://digideps-admin.local
+        routes:
+          user_activate:  /user/activate/{token}
+          password_reset:  /user/password-reset/{token}
+          homepage: /
+          report_overview: /report/{reportId|}/overview
+          client_home: /client/show
+    smtp_default_hostname: localhost
+    smtp_default_port: 25
+    smtp_default_user: setme
+    smtp_default_password: setme
+    smtp_secure_hostname: localhost
+    smtp_secure_port: 25
+    s3_bucket_name: pa-uploads.local
+    s3_client_params:
+      version: 'latest'
+      region: 'eu-west-1'
+      endpoint: 'http://localstack:4572'
+      use_path_style_endpoint: true
+      validate: false
+      credentials:
+        key: 'YOUR_ACCESS_KEY_ID'
+        secret: 'YOUR_SECRET_ACCESS_KEY'
+    file_scanner_url: https://file-scanner-api:8443
+    file_scanner_sslverify: false
+    wkhtmltopdf_address: "http://wkhtmltopdf:80"

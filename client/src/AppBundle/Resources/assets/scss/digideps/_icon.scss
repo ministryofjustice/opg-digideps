@@ -1,0 +1,61 @@
+// ==========================================================================
+// ICON
+// Reusable icons
+.icon,
+.opg-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-size: contain;
+    vertical-align: middle;
+}
+
+.icon-plus,
+.opg-icon--plus {
+    background-image: file-url('icons/icon-plus.png');
+}
+
+.icon-notification,
+.opg-icon--notification {
+    background-image: file-url('icons/icon-notification.png');
+}
+
+.icon-tick,
+.opg-icon--tick {
+    background-image: file-url('icons/icon-tick.png');
+}
+
+.icon-cross,
+.opg-icon--cross {
+    background-image: file-url('icons/icon-cross.png');
+}
+
+.icon-information,
+.opg-icon--information {
+    background-image: file-url('icons/icon-information.png');
+}
+
+.icon-important-small,
+.opg-icon--important-small {
+    background-image: file-url('icons/icon-important-small.png');
+}
+
+.icon-loader,
+.opg-icon--loader {
+    background-image: file-url('icons/icon-loader.gif');
+}
+
+.icon-pdf,
+.opg-icon--pdf {
+    @include govuk-media-query($until: tablet) {
+        width: 28px;
+        height: 28px;
+    }
+
+    @include govuk-media-query($from: tablet) {
+        width: 32px;
+        height: 32px;
+    }
+
+    background-image: file-url('icons/icon-pdf-2x.png');
+}

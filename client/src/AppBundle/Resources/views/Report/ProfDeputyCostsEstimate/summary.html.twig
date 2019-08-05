@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs-estimate" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'summaryPage' %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/ProfDeputyCostsEstimate:_answers.html.twig' %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+    'report': report,
+    'sectionId': 'profDeputyCostsEstimate',
+    } %}
+{% endblock %}
+
+
+

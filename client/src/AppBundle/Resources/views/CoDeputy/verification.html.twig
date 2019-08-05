@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "settings" %}
+{% set page = "verifyDeputy" %}
+
+{% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
+{% block pageTitle %}Enter your information{% endblock %}
+
+{% block progressBar %}
+    {{ progress_bar_registration(user, 'codep_verify') }}
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="heading-medium flush--top">{{ (page ~ '.yourDetails') | trans }}</h2>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% include 'AppBundle:User:_form_fields.html.twig' %}
+
+    <h2 class="heading-medium flush--top">{{ (page ~ '.yourClientsDetails') | trans }}</h2>
+
+    {{ form_input(form.clientLastname,   'clientLastname') }}
+    {{ form_input(form.clientCaseNumber, 'clientCaseNumber', { 'labelRaw': true }) }}
+    {{ form_submit(form.save, 'saveAndContinue') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

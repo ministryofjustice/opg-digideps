@@ -1,0 +1,46 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
+
+{% block pageContent %}
+
+	<div class="text">
+	    <p>{{ 'startPage.pageSectionDescription1' | trans(transOptions) }}</p>
+	    <p>{{ 'startPage.pageSectionDescription2' | trans(transOptions) }}</p>
+
+	    <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ 'startPage.hiddenText01.summary' | trans(transOptions) }}</span>
+            </summary>
+            <div class="opg-indented-block">
+                <p>{{ 'startPage.hiddenText01.content.para01' |trans(transOptions) }}</p>
+                <p>{{ 'startPage.hiddenText01.content.para02' |trans(transOptions)|raw }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ 'startPage.hiddenText01.content.listItem01' | trans(transOptions) }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem02' | trans(transOptions) }}</li>
+                    <li>{{ 'startPage.hiddenText01.content.listItem03' | trans(transOptions) }}</li>
+                </ul>
+                <p>{{ 'startPage.hiddenText01.content.para03' |trans(transOptions)|raw }}</p>
+            </div>
+        </details>
+	</div>
+
+    <a href="{{ path('ndr_actions_step', { 'ndrId': ndr.id, 'step': 1 }) }}" class="button button-start behat-link-start">{{ 'startPage.startButton' | trans }}</a>
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'actions',
+    } %}
+
+{% endblock %}

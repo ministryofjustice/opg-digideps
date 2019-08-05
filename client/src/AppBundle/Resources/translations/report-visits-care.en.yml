@@ -1,0 +1,57 @@
+startPage:
+  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  pageTitle: Visits and care
+  pageSectionDescription: |
+    Use this section to tell us about %client%'s care and contact with you and other people.
+    We ask about this because it's OPG's responsibility to make sure you're looking after
+    %client%'s best interests, which includes making health and welfare decisions.
+  startButton: Start visits and care
+
+stepPage:
+  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  pageTitle: Visits and care
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Deputy report - visits and care | GOV.UK"
+  pageTitle: Visits and care
+  supportTitle: ""
+  weAskAbout: In this section, we ask you about %client%'s care and contact with you and other people.
+
+form:
+  doYouLiveWithClient:
+    label: Do you live with %client%?
+    hint: ""
+  howOftenDoYouContactClient:
+    label: |
+      Please tell us how often do you have contact with %client% and how do you make sure others are looking
+      after %client%'s needs when you're not able to.
+    labelShort: How often do you have contact with %client% and how do you make sure others are looking after %client%'s needs when you're not able to
+  doesClientReceivePaidCare:
+    label: Does %client% receive care that is paid for?
+    hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+  howIsCareFunded:
+    label: How is the care funded?
+    hint: ""
+    choices:
+      client_pays_for_all: %client% pays for all the care
+      client_gets_financial_help: %client% gets some financial help (for example, from the local authority, council or NHS)
+      all_care_is_paid_by_someone_else: All  %client%'s care is paid for by someone else (for example, by the local authority, council or NHS)
+  whoIsDoingTheCaring:
+    label: Who is doing the caring?
+    hint: For example, local authority or private residential care workers, live-in or visiting care workers, family members
+  doesClientHaveACarePlan:
+    label: Does %client% have a care plan?
+    hint: |
+      If %client% receives care from a private organisation or local social services, they may have
+      a plan that sets out how %client%'s care needs will be met.
+  whenWasCarePlanLastReviewed:
+      label: When was the care plan last reviewed?
+      hint: For example, 12 2015
+  choices:
+    everyday: Every day
+    once_a_week: At least once a week
+    once_a_month: At least once a month
+    more_than_twice_a_year: More than twice a year
+    once_a_year: Once a year
+    less_than_once_a_year: Less than once a year

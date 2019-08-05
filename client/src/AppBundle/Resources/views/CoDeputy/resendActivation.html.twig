@@ -1,0 +1,32 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "co-deputy" %}
+{% trans_default_domain translationDomain %}
+{% set page = "reinviteDeputy" %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
+
+{% block pageContent %}
+
+    <p class="text">{{ (page ~ '.intro') | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.email,'form.email') }}
+
+    {{ form_submit(form.submit, '', {
+        'buttonClass': 'behat-link-send-invitation',
+        'labelText': (page ~ '.submitButton') | trans
+    }) }}
+
+    <a href="{{ backLink }}" class="behat-link-cancel-invitation button-link">{{ 'cancel' | trans({}, 'common') }}</a>
+
+    {{ form_end(form) }}
+
+{% endblock %}

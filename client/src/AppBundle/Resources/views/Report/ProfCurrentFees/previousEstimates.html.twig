@@ -1,0 +1,60 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'estCostsPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {% if backLink %}
+        {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    {% if not backLink %}
+        {{ macros.breadcrumbs(report) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom {% if not form.previousProfFeesEstimateGiven.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.previousProfFeesEstimateGiven, 'existPage.form.hasFees', {
+                'useFormGroup': false,
+                'legendText' : (page ~ '.form.estimateCosts.legend') | trans,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold text push-half--bottom',
+                'items': [
+                    {'dataTarget': 'scco-reason'},
+                    {},
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+
+            <div id="scco-reason" class="opg-indented-block js-hidden">
+                {{ form_input(form.profFeesEstimateSccoReason, 'estCostsPage.form.profFeesEstimateSccoReason') }}
+            </div>
+
+        </div>
+
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+
+
+

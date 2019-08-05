@@ -1,0 +1,31 @@
+htmlTitle: "Edit client details | GOV.UK"
+pageTitle: Edit client details
+supportTitle: "Client profile: %fullName%"
+
+form:
+  nameHeading: Client name
+  contactHeading: Contact details
+  firstname:
+      label: First name
+  lastname:
+      label: Last name
+  address:
+      label: Address
+  address2:
+      label: ' '
+  county:
+      label: ' '
+  postcode:
+      label: Postcode
+  dateOfBirth:
+      legend: Date of Birth
+      hint: For example, 31 3 1955
+  email:
+      label: Email
+#  country:
+#      label: Country
+#      defaultOption: Please select
+  phone:
+      label: Phone number
+  save:
+      label: Save client details

@@ -1,0 +1,145 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-balance" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more"
+} %}
+
+{% set readyToBalance = report.status.balanceState['state'] != 'not-started' %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+    {% if not readyToBalance %}
+        {{ macros.notification('info', ('alerts.notStarted' ~ app.user.getRoleForTrans) | trans(transOptions)) }}
+    {% else %}
+        {% if report.isTotalsMatch %}
+            {{ macros.notification('success', 'alerts.balanced' | trans) }}
+        {% else %}
+            {% set alertMessage %}
+                <div class="behat-region-balance-bad">
+                    {% if report.isDue %}
+                        <h3 class="govuk-heading-m">{{ 'alerts.notBalanced' | trans }}</h3>
+                    {% endif %}
+                    <div class="data behat-region-unaccounted-for">
+                        <span class="govuk-heading-xl govuk-!-margin-bottom-0">
+                            £{{ report.totalsOffset | abs | money_format }}
+                        </span>
+                        {{ 'alerts.notBalancedSupport' | trans(transOptions) }}
+                    </div>
+                </div>
+            {% endset %}
+            {{ macros.notification(report.isDue ? 'error' : 'notice', alertMessage) }}
+        {% endif %}
+    {% endif %}
+
+    {# Balance table #}
+    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' %}
+
+    {% if readyToBalance %}
+        {# Balance table #}
+        {% include 'AppBundle:Report/Balance:_difference_table.html.twig' %}
+    {% endif %}
+
+    {# TODO use report.hasSection('moneyIn') || report.hasSection('gifts') || report.hasSection('deputyExpenses') to decouple #}
+    {% if report.canLinkToBankAccounts %}
+        {# If no transactions, don't display download CSV link #}
+        {% if report.gifts is not empty or report.expenses is not empty or report.moneyTransactionsIn is not empty or report.moneyTransactionsOut is not empty %}
+            <p class="text push--top">
+                {{ 'download-transactions' | trans({ '%transactionsCsvPath%': path('report_transactions_csv', {reportId: report.id})}) | raw }}
+            </p>
+        {% endif %}
+    {% endif %}
+
+    <h3 class="heading-medium">{{ 'moreInfo.heading' | trans }}</h3>
+
+    <div class="text">
+        <p>{{ 'moreInfo.para1' | trans(transOptions) | raw }}</p>
+        <p>{{ 'moreInfo.para2' | trans }}</p>
+        <p>{{ 'moreInfo.para3' | trans }}</p>
+
+        {% if readyToBalance and not report.isTotalsMatch %}
+
+            <p class="bold">{{ 'moreInfo.para4' | trans(transOptions) }}</p>
+
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'moreInfo.whatToDo.title' | trans }}</span>
+                </summary>
+                <div class="opg-indented-block">
+                    <p>{{ 'moreInfo.whatToDo.para1' | trans }}</p>
+                    <ul class="list list-bullet">
+                        <li>{{ 'moreInfo.whatToDo.listItem1' | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem2' ~ app.user.getRoleForTrans) | trans }}</li>
+                        <li>{{ ('moreInfo.whatToDo.listItem3' ~ app.user.getRoleForTrans) | trans(transOptions) }}</li>
+                        {% if app.user and not app.user.isDeputyProf() %}
+                            <li>{{ ('moreInfo.whatToDo.listItem4' ~ app.user.getRoleForTrans) | trans }}</li>
+                        {% endif %}
+                        <li>{{ 'moreInfo.whatToDo.listItem5' | trans(transOptions) | raw }}</li>
+                    </ul>
+                </div>
+            </details>
+
+        {% endif %}
+    </div>
+
+    {% if report.isDue and readyToBalance and not report.isTotalsMatch %}
+        <h3 class="heading-medium" id="cantFindTheProblem">{{ 'cantFind.heading' | trans }}</h3>
+
+        <div class="text">
+            <p>{{ 'cantFind.para1' | trans }}</p>
+            <p>{{ 'cantFind.para2' | trans }}</p>
+        </div>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.balanceMismatchExplanation, '', {
+            'labelText': 'form.explanation.label' | trans
+        }) }}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button-link">
+            {% if app.user.isDeputyOrg() %}
+                {{ 'backToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'backToReportOverview' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+
+        {{ form_end(form) }}
+
+    {% else %}
+
+        <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="button">
+            {% if app.user.isDeputyOrg() %}
+                {{ 'backToClientProfile' | trans({}, 'common') }}
+            {% else %}
+                {{ 'backToReportOverview' | trans({}, 'common') }}
+            {% endif %}
+        </a>
+
+    {% endif %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'balance',
+    } %}
+
+    <script>
+        $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('#transactionsCsv'));
+        });
+    </script>
+
+{% endblock %}

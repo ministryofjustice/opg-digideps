@@ -1,0 +1,27 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "report-submitted" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'thanksForFeedback' %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.thankYou') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+
+        <p>Thank you for giving us your feedback about completing your deputy report online. We regularly update the service and pay careful attention to all the comments we receive.</p>
+
+        <p>If you have a question that needs a response, please email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a> or call the helpline.</p>
+
+        {% if app.user.isDeputyOrg() %}
+            <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'continue' | trans({}, 'common') }}</a>
+        {% else %}
+            <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'continue' | trans({}, 'common') }}</a>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

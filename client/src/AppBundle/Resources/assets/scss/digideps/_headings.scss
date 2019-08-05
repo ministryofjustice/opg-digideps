@@ -1,0 +1,11 @@
+// ==========================================================================
+// HEADINGS
+// Various heading styles
+
+// Currently only used on the checklist
+.underline {
+    &.heading-medium {
+        padding-bottom: 4px;
+        border-bottom: 5px solid $border-colour;
+    }
+}

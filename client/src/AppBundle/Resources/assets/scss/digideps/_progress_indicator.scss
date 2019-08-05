@@ -1,0 +1,82 @@
+// ==========================================================================
+// PROGRESS INDICATOR
+// When setting up user and client (registration)
+
+.opg-progress-bar {
+    @include govuk-media-query($from: tablet) {
+        display: flex;
+    }
+
+    width: 100%;
+    margin: govuk-spacing(7) 0;
+    padding: 0;
+    border-top: 1px solid  $govuk-border-colour;
+    border-bottom: 1px solid  $govuk-border-colour;
+    background-color: govuk-colour('grey-4');
+    list-style-type: none;
+    counter-reset: pos;
+
+    &__item {
+        @include govuk-media-query($from: tablet) {
+            display: inline-flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        position: relative;
+        flex: auto;
+        padding: govuk-spacing(3) govuk-spacing(3) govuk-spacing(3) govuk-spacing(8);
+        counter-increment: pos;
+
+        &::before {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 1.334em;
+            height: 1.334em;
+            margin: {
+                top: -.666em;
+                left: 7px;
+            }
+            border-radius: 100%;
+            background-color: govuk-colour('grey-3');
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1.5;
+            text-align: center;
+            content: counter(pos);
+        }
+
+        &--completed {
+            color: govuk-colour('turquoise');
+
+            &::before {
+                background: govuk-colour('turquoise') url('/images/progress-tick.png') center center no-repeat;
+                color: govuk-colour('white');
+                content: '';
+            }
+        }
+
+        &--previous {
+            @include govuk-media-query($from: tablet) {
+                background: url('/images/progress-chevron-end.png') right 50% no-repeat;
+            }
+        }
+
+        &--active {
+            @include govuk-media-query($from: tablet) {
+                &:not(:last-child) {
+                    background: govuk-colour('light-blue') url('/images/progress-chevron.png') right 50% no-repeat;
+                }
+            }
+
+            background-color: govuk-colour('light-blue');
+            color: govuk-colour('white');
+
+            &::before {
+                background-color: govuk-colour('white');
+                color: govuk-colour('light-blue');
+            }
+        }
+    }
+}

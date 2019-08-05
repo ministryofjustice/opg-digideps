@@ -1,0 +1,41 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'statsPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <div class="text">
+        <p>{{ (page ~ '.reportSubmissionsPara') | trans }}</p>
+
+
+        {{ form_start(form, {attr: {class: 'search', novalidate: 'novalidate' }}) }}
+
+        <div class="form-group form-groups-inline flush--bottom">
+            {{ form_known_date(form.startDate, 'statsPage.form.fromDate', {
+                'hintText': 'statsPage.form.fromDate.hint'
+            }) }}
+        </div>
+        <div class="form-group form-groups-inline flush--bottom">
+            {{ form_known_date(form.endDate, 'statsPage.form.toDate', {
+                'hintText': 'statsPage.form.toDate.hint'
+            }) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_submit(form.submitAndDownload, (page ~ '.form.submitAndDownload'), {
+                'buttonClass': 'behat-link-submit-and-download'
+            }) }}
+            <a href="{{ path('admin_stats') }}" class="button-link">{{ 'homeForm.clear' | trans }}</a>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+
+{% endblock %}

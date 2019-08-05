@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'deleteConfirm' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="heading-medium">{{ (page ~ '.heading') | trans }}</h2>
+
+    <p class="text">{{ (page ~ '.question') | trans({'%fullName%': user.getFullname()}) | raw }}</p>
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'yes.label',
+        linkClass: 'button-warning push-half--right',
+        linkHref: path('admin_delete', { id: user.id })
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: 'admin',
+        linkButtonLabel: 'no.label',
+        linkClass: 'button-secondary',
+        linkHref: path('admin_editUser', { filter: user.id })
+    } %}
+
+{% endblock %}
+

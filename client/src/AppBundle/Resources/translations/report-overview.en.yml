@@ -1,0 +1,206 @@
+htmlTitle: "Deputy report - overview | GOV.UK"
+htmlTitle-ORG: "Client profile | GOV.UK"
+report: "report"
+pageTitle: "The deputy report"
+pageSectionDescription: "Your report:"
+submitWhenReady: "You can't submit your report until it's complete"
+reportingPeriod: "Reporting period"
+edit: "Edit"
+dueDate: "Due date"
+reportIsReady: "Report is ready to submit"
+reportIsUnsubmitted: |
+  The report you sent us was incomplete. We've marked the sections that need more information.
+  Please complete these sections, then resubmit your report.
+  %newLine%
+  Contact your caseworker if you have any questions.
+yourFinalStep: "Your final step"
+reviewAndSubmit: "Review and submit"
+sectionsRemaining: "sections remaining"
+overview: Report overview
+status:
+  notStarted: "Not started"
+  notFinished: "Not finished"
+  readyToSubmit: "Ready to submit"
+  changesNeeded: "Changes needed"
+reportDueDate: "Report due date"
+currentReport: "Current report"
+incompleteReport: "Incomplete report"
+reportStatus: "Report status"
+reportOptions: "Report options"
+reportSectionsToComplete: "Report sections to complete"
+
+options:
+  submitReport: Submit report
+  viewReport: View report
+  previewReport: Preview report
+  reviewReport: Review report
+
+guidanceNotice: |
+  You don't have to fill in all the sections in one go. You can complete the report in any
+  order you want, save it and return to it.
+
+incompleteNotice: |
+  We have marked your report as incomplete due to certain parts being unfinished or requiring
+  further attention. Please see below for the items which we have highlighted
+
+unsubmittedConfirm:
+  notification: Before reviewing your report, please confirm that you've completed the sections marked above.
+  form:
+    agree.label: I have reviewed the items highlighted on this page.
+    save.label: Review report
+
+
+previewNoticeNotDue: |
+  You may preview your report at anytime. You can't submit your report until %date%.
+
+previewNotice: |
+  You may preview your report at anytime. When all sections are complete you will be able to submit the report to us.
+
+completeNotice: |
+  All sections are now complete. Please review then submit your report.
+
+labels:
+    not-started: "Not started"
+    incomplete: "Not finished"
+    needs-attention: "Changes needed"
+
+heading.decisionsContacts: "Decisions and contacts"
+decisions:
+    subSectionTitle: "Decisions"
+    subSectionDescription: "Tell us about the significant decisions you've made for %client%"
+    label:
+      done: "{0} no decisions | {1} 1 decision | ]1,Inf[ %count% decisions"
+contacts:
+    subSectionTitle: "Contacts"
+    subSectionDescription: Tell us who helped you make significant decisions as a deputy
+    label:
+      done: "{0} no contacts | {1} 1 contact | ]1,Inf[ %count% contacts"
+
+heading.healthAndWelfare: "Health and welfare"
+visits_care:
+    subSectionTitle: "Visits and care"
+    subSectionDescription: "Give us an overview of who is looking after %client%"
+    label:
+      done: "Finished"
+lifestyle:
+    subSectionTitle: "Health and lifestyle"
+    subSectionDescription: "Describe %client%'s health and any activities %client% is involved in"
+    label:
+      done: "Finished"
+heading.propFinance: "%client%'s property and finances"
+deputy_expenses:
+    subSectionTitle: "Deputy expenses"
+    subSectionDescription: "Claim for things you paid for on %client%'s behalf"
+    label:
+      done: "{0} no expenses | {1} 1 expense | ]1,Inf[ %count% expenses"
+pa_fee_expense:
+    subSectionTitle: "Deputy fees and expenses"
+    subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
+    label:
+      done: "Finished"
+prof_current_fees:
+    subSectionTitle: "Current fees and expenses"
+    subSectionDescription: "Any fees or expenses you have charged in line with the practice direction"
+    label:
+      done: "Finished"
+prof_deputy_costs:
+  subSectionTitle: "Deputy costs"
+  label:
+    done: "Finished"
+prof_deputy_costs_estimate:
+  subSectionTitle: "Deputy costs estimate"
+  label:
+    done: "Finished"
+
+gifts:
+    subSectionTitle: "Gifts"
+    subSectionDescription: Tell us about gifts you've given to other people on %client%'s behalf
+    label:
+      done: "{0} no gifts | {1} 1 gift | ]1,Inf[ %count% gifts"
+bank_accounts:
+    subSectionTitle: "Accounts"
+    subSectionTitleNotBalanced: "Accounts not balanced"
+    subSectionDescription: "Add %client%'s bank, building society and savings accounts"
+    label:
+      done: "{0} no accounts | {1} 1 account | ]1,Inf[ %count% accounts"
+      addReason: "Add reason"
+money_transfers:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "Provide details of money transferred between %client%'s accounts"
+    label:
+       done: "{0} no transfers | {1} 1 transfer | ]1,Inf[ %count% transfers"
+money_in:
+    subSectionTitle: "Money in"
+    subSectionDescription: "Enter details of money paid into %client%'s accounts"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+money_out:
+    subSectionTitle: "Money out"
+    subSectionDescription: "Enter details of money you've spent on %client%'s living and other costs"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+
+money_in_short:
+    subSectionTitle: "Money in"
+    subSectionDescription: "Tell us about money paid into %client%'s accounts"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+money_out_short:
+    subSectionTitle: "Money out"
+    subSectionDescription: "Tell us about money you have spent on %client%'s living and welfare costs"
+    label:
+      done: "{0} no items | {1} 1 item | ]1,Inf[ %count% items"
+balance:
+    subSectionTitle: "Accounts balance check"
+    subSectionDescription:
+      default: Check that %client%'s accounts balance
+      addExplanation: "Add explanation"
+      editExplanation: "Edit explanation"
+    label:
+      not-started: "more information needed"
+      not-matching: "not balanced"
+      done: "balanced"
+      explained: "not balanced"
+assets:
+    subSectionTitle: "Assets"
+    subSectionDescription: "Tell us about %client%'s property, investments and other valuables"
+    label:
+      done: "{0} no assets | {1} 1 asset | ]1,Inf[ %count% assets"
+debts:
+    subSectionTitle: "Debts"
+    subSectionDescription: "Let us know about any debts %client% owes"
+    label:
+       done: "Finished"
+heading.other: "Other information"
+actions:
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: What significant decisions will you need to take for %client% in the next year?
+    label:
+      done: "Finished"
+other_info:
+    subSectionTitle: "Any other information"
+    subSectionDescription: "Is there anything else you want to tell us about the deputyship?"
+    label:
+      done: "Finished"
+
+heading.caseDocuments: "Case documents"
+documents:
+    subSectionTitle: "Supporting documents"
+    subSectionDescription: "Provide documents to support your report, for example bank statements"
+    label:
+      done: "{0} no documents | {1} 1 document | ]1,Inf[ %count% documents"
+
+additionalInformation:
+  subSectionTitle: More information
+
+reportSubmit:
+    checkbox:
+        label: I have reviewed and checked this report.
+
+decisionsMadeAsDeputy: Decisions made as deputy
+
+announcement: |
+  We've made some changes to the layout of this page.<br/>
+  Use the links on this page to view and edit the different sections of your report.
+
+currentReport: Current report

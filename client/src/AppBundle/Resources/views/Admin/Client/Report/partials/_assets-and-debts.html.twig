@@ -1,0 +1,51 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="assetsAndDebts">{{ (page ~ '.heading.assetsAndDebts') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.assetsSummary') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                {# Questions and answers table #}
+                {% include 'AppBundle:Report/Asset:_list.html.twig' with {
+                    hideEditLink: true
+                } %}
+            </div>
+        </div>
+    </details>
+</div>
+
+<div class="form-section">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.debtsSummary') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                {# Questions and answers table #}
+                {% include 'AppBundle:Report/Debt:_answers.html.twig' with {
+                    hideEditLink: true
+                } %}
+            </div>
+        </div>
+    </details>
+</div>

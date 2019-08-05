@@ -1,0 +1,89 @@
+{% set translationDomain = transDomain %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{# Set page to summary page to allow correct translations to be pulled in#}
+{% set page = 'summaryPage' %}
+
+
+     {# Have you charged in line with interim billing under Practice Direction 19B  #}
+    {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
+    <tr class="behat-region-has-interim">
+        <td>
+            {% if report.profDeputyCostsHasInterim is null %}<span class="error">{% endif %}
+                {{ 'interimExists.form.profDeputyCostsHasInterim.label' | trans(transOptions) }}
+                {% if report.profDeputyCostsHasInterim is null %}</span>{% endif %}
+        </td>
+        <td>
+            {% if report.profDeputyCostsHasInterim is null %}
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            {% else %}
+                {{ report.profDeputyCostsHasInterim | capitalize }}
+            {% endif %}
+        </td>
+        {% if not hideEditLink  %}
+            <td class="change-answer">
+                <a href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </td>
+        {% endif %}
+    </tr>
+
+
+    {% for ic in report.profDeputyInterimCosts %}
+        <tr class="behat-region-interim-cost-{{ loop.index }}">
+            <td>
+                Costs for interim {{ loop.index }}
+            </td>
+            <td>
+                £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer width-sixth soft-half--left hard--right">
+                    <a href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+
+    {% endif %}
+    {# Fixed cost #}
+    {% if report.hasProfDeputyCostsHowChargedFixedOnly or report.profDeputyCostsHasInterim == 'no'  %}
+        <tr class="behat-region-fixed-cost-amount">
+            <td>
+                {{ (page ~ '.questionLabel.paidThisPeriod') | trans(transOptions) }}
+            </td>
+            <td>
+                {% if report.profDeputyFixedCost is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ report.profDeputyFixedCost | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endif %}
+
+    {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
+        {# SCCO assessment #}
+        <tr class="behat-region-scco-assessment-amount">
+            <td>
+                {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
+            </td>
+            <td>
+                {% if report.profDeputyCostsAmountToScco is null %}
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                {% else %}
+                    £{{ report.profDeputyCostsAmountToScco | money_format }}
+                {% endif %}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endif %}

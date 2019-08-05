@@ -1,0 +1,61 @@
+<div id="form-group-{{ element.vars.id }}" class="govuk-form-group{% if not element.vars.valid %} govuk-form-group--error{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+
+    {% if labelRaw is defined and labelRaw %}
+        <label class="govuk-label {{ labelClass }}" for="{{ element.vars.id }}">
+            {{ labelText | raw }}
+        </label>
+    {% else %}
+        <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
+           {{ labelText }}
+        </label>
+    {% endif %}
+
+    {% if (hintText is defined) and (hintText is not empty) %}
+        <span class="govuk-hint" id="{{ element.vars.id }}-hint">
+            {{ hintText }}
+        </span>
+        {% if hintListArray is defined and hintListArray is not empty %}
+            <ul class="govuk-hint govuk-list govuk-list--bullet">
+                {% for hintList in hintListArray %}
+                    <li>{{ hintList }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    {{ form_errors(element) }}
+
+    {% set inputType = multiline ? 'textarea' : 'input' %}
+    {% if 'govuk-!-width' not in inputClass %}
+        {% set inputClass = ' govuk-!-width-one-half ' ~ inputClass %}
+    {% endif %}
+    {% set class = element.vars.attr.class | default('') ~ ' govuk-' ~ inputType ~ ' ' ~ inputClass | default('') %}
+
+    {% if (preInputText is defined) and (preInputText is not empty) %}
+        <span class="opg-pre-input-text">{{ preInputText }}</span>
+    {% endif %}
+
+    {% if inputPrefix is defined and inputPrefix is not empty %}
+        <span class="opg-input-prefix">{{ inputPrefix }}</span>
+    {% endif %}
+
+    {% if element.vars.valid %}
+        {{ form_widget(element, {
+            'attr': {
+                'class': class,
+                'rows': '5',
+                'aria-describedby': element.vars.id ~ '-hint',
+            }
+        }) }}
+    {% else %}
+        {{ form_widget(element, {
+            'attr': {
+                'class': class ~ ' govuk-' ~ inputType ~ '--error',
+                'aria-invalid': 'true',
+                'rows': '5',
+                'aria-describedby': element.vars.id ~ '-hint ' ~ element.vars.id ~ '-error',
+            }
+        }) }}
+    {% endif %}
+
+</div>

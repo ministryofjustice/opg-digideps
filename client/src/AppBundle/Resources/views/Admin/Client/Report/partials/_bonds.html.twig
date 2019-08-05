@@ -1,0 +1,22 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="bonds">{{ (page ~ '.heading.bonds') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+</div>
+
+<div class="form-section">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+</div>

@@ -1,0 +1,33 @@
+{% set translationDomain = "ndr-overview" %}
+{% trans_default_domain translationDomain %}
+
+<div id="{{ subSection }}-sub-section" class="opg-overview-section">
+
+    <div class="opg-overview-section__header">
+        <h3 class="govuk-heading-m opg-overview-section__label">
+            <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">
+                {{ (subSection ~ '.subSectionTitle') | trans }}
+            </a>
+        </h3>
+
+        {%  if description is defined and description %}
+            <p class="opg-overview-section__description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%': client.firstname}, translationDomain ) }}</p>
+        {%  endif %}
+    </div>
+
+    <span class="opg-overview-section__status govuk-tag {{ state.state | status_to_tag_css }}">
+        {% if state.state == 'done' %} {# "done" label depends on the section therefore defined for each section #}
+            {{ (subSection ~ '.label.' ~ state.state) | transchoice(state.nOfRecords | default(0)) }}
+        {% else %}
+            {{ ('labels.' ~ state.state) | trans }}
+        {% endif %}
+    </span>
+
+    <a href="{{ linkToSubSection }}" class="opg-overview-section__link behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" aria-label="{{ (subSection ~ '.edit') | trans }}">
+        {% if state.state == 'not-started' %}
+            {{ (subSection ~ '.start') | trans({}, translationDomain) }}
+        {% else %}
+            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        {% endif %}
+    </a>
+</div>

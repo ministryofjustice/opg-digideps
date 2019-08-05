@@ -1,0 +1,179 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-debts" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'startPage.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'startPage.pageTitle' | trans(transOptions) }}{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {# Introduction text #}
+            <p>{{ 'summaryPage.weAskAbout' | trans(transOptions) }}</p>
+
+            {# Check answers text #}
+            <p><strong>{{ 'weHaveListed' | trans(transOptions, 'common') }}</strong></p>
+            <p>{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.debtsState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.debtsState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswerNDR' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ macros.relatedSections(ndr, 'debts') }}
+        </div>
+    </div>
+
+    {# Questions and answers table #}
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'question' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__key">
+                {{ 'answer' | trans({}, 'common') }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+            </dd>
+        </div>
+
+        <div class="govuk-summary-list__row behat-region-has-debts">
+            <dt class="govuk-summary-list__key">
+                {{ 'existPage.form.exist.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.hasDebts == 'yes' ? 'Yes': 'No' }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a
+                href="{{ path('ndr_debts_exist', {'ndrId': ndr.id, 'from': 'summary'}) }}"
+                class="govuk-link behat-link-edit">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+        </div>
+    </dl>
+
+    {% if ndr.hasDebts == 'yes' %}
+
+        {# Items list heading #}
+        <div class="govuk-grid-row behat-region-debts-list">
+            <div class="govuk-grid-column-one-half">
+                <h2 class="govuk-heading-l">List of debts</h2>
+            </div>
+            <div class="govuk-grid-column-one-half text--right">
+                <strong>
+                    <a href="{{ path('ndr_debts_edit', {'ndrId': ndr.id, 'from': 'summary'}) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </strong>
+            </div>
+        </div>
+
+        {# Items list table #}
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Description
+                </dt>
+                <dd class="govuk-summary-list__key">
+                    Amount
+                </dd>
+            </div>
+            {% for debt in ndr.debts %}
+                <div class="govuk-summary-list__row behat-region-debt-{{ debt.debtTypeId | behat_namify }}">
+                    <dt class="govuk-summary-list__value">
+                         {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        £{{ debt.amount | money_format }}
+                    </dd>
+                </div>
+            {% endfor %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Total amount
+                </dt>
+                <dd class="govuk-summary-list__key">
+                    £{{ ndr.debtsTotalAmount | money_format }}
+                </dd>
+            </div>
+        </dl>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ 'question' | trans({}, 'common') }}
+                </dt>
+                <dd class="govuk-summary-list__key">
+                    {{ 'answer' | trans({}, 'common') }}
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </dd>
+            </div>
+
+            {% set debtOther = ndr.getDebtById('other') %}
+            {% if debtOther.moreDetails %}
+                <div class="govuk-summary-list__row behat-region-debt-other-more-details">
+                    <dt class="govuk-summary-list__key">
+                        {{ 'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ debtOther.moreDetails | nl2br }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a href="{{ path('ndr_debts_edit', {'ndrId': ndr.id, 'from': 'summary'}) }}" class="govuk-link">
+                            {{ 'edit' | trans({}, 'common' ) }}
+                        </a>
+                    </dd>
+                </div>
+            {% endif %}
+
+            <div class="govuk-summary-list__row behat-region-debt-management-details">
+            {% if ndr.debtManagement %}
+                <dt class="govuk-summary-list__key">
+                    {{ 'managementPage.form.debtManagement.label' | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ ndr.debtManagement | nl2br }}
+                </dd>
+            {% else %}
+                <dt class="govuk-summary-list__key">
+                    <span class="error">{{ 'managementPage.form.debtManagement.label' | trans }}</span>
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </dd>
+            {% endif %}
+                <dd class="govuk-summary-list__actions">
+                    <a
+                    href="{{ path('ndr_debts_management', {'ndrId': ndr.id, 'from': 'summary'}) }}"
+                    class="behat-link-edit-debt-management govuk-link">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                    </a>
+                </dd>
+            </div>
+        </dl>
+    {% endif %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'debts',
+    } %}
+
+{% endblock %}

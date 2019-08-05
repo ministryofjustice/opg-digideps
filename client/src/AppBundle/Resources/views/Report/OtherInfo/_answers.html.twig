@@ -1,0 +1,45 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+        <tr class="behat-region-more-info">
+            {% if report.actionMoreInfo is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.actionMoreInfo.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.actionMoreInfo | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                <a href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </td>
+        </tr>
+        {% if report.actionMoreInfo == 'yes' %}
+            <tr class="behat-region-more-info-details">
+                <td>{{ 'form.actionMoreInfoDetails.label' | trans(transOptions) }}</td>
+                <td>{{ report.actionMoreInfoDetails | nl2br }}</td>
+                <td class="change-answer">
+                    <a href="{{ path('other_info_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </td>
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>

@@ -1,0 +1,94 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{% macro accountDetails(account) %}
+    {% if account.requiresBankName %}
+        {{ account.bank }}<br/>
+    {% endif %}
+    <p class="font-xsmall flush--ends">
+        {{ account.accountTypeText }}<br/>
+        {% if account.requiresSortCode %}
+            Sort code: {{ account.sortCode }}<br/>
+        {% endif %}
+        Account number: ****{{ account.accountNumber }}<br/>
+        Joint account: {{ account.isJointAccount == 'no' ? 'No' : 'Yes' }}<br/>
+    </p>
+{% endmacro %}
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+        <tr class="behat-region-no-transfers-to-add">
+            <td>
+                {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-' }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="change-answer">
+                    <a href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                </td>
+            {% endif %}
+        </tr>
+    </tbody>
+</table>
+
+{% if report.moneyTransfers | length > 0 %}
+    <div class="grid-row">
+        <div class="column-half">
+            <h2 class="heading-medium flush--ends">List of money transfers</h2>
+        </div>
+        <div class="column-half text--right">
+            {% if not hideEditLink  %}
+                <a href="{{ path('money_transfers_step', { 'reportId': report.id, 'step': 1}) }}" class="bold-small move-quarter--up action-link behat-link-add">
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% if report.moneyTransfers | length > 0 %}
+    <table class="check-your-answers">
+        <thead>
+            <tr>
+                <th>Transferred from</th>
+                <th>Transferred to</th>
+                <th class="text--right">Amount</th>
+                {% if not hideEditLink  %}
+                    <th>
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for transfer in report.moneyTransfers %}
+                <tr class="behat-region-transfer-{{ transfer.accountFrom.accountNumber }}-{{ transfer.accountTo.accountNumber }}-{{ transfer.amount | behat_namify }}">
+                    <td class="width-quarter">
+                        {{ _self.accountDetails(transfer.accountFrom) }}
+                    </td>
+                    <td class="width-quarter">
+                        {{ _self.accountDetails(transfer.accountTo) }}
+                    </td>
+                    <td class="numeric-small">
+                        £{{ transfer.amount | money_format }}
+                    </td>
+                    {% if not hideEditLink  %}
+                        <td class="change-answer width-sixth soft-half--left hard--right">
+                            <a href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('money_transfers_delete', { 'reportId': report.id, 'transferId': transfer.id }) }}" class="push-half--left action-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

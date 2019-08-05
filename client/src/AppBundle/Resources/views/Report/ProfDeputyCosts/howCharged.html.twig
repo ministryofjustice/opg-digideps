@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'howCharged' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <h3 class="heading-small push-half--bottom">
+        {{ (page ~ '.form.profDeputyCostsHow.label') | trans(transOptions, translationDomain) }}
+    </h3>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {#<p class="text">#}
+        {#{{ (page ~ '.profDeputyCostsHow.label') | trans(transOptions) }}#}
+    {#</p>#}
+
+        <div class="form-group push--bottom {% if not form.profDeputyCostsHowCharged.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.profDeputyCostsHowCharged, 'report.form.profDeputyCostsHowCharged', {
+                'legendClass' : 'form-label-bold',
+                'useFormGroup': false,
+            }) }}
+        </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

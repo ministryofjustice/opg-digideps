@@ -1,0 +1,20 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_input(form.contactName, 'form.contactName') }}
+    {{ form_input(form.relationship, 'form.relationship', {
+        'labelText': 'form.relationship.label' | trans(transOptions, translationDomain)
+    }) }}
+    {{ form_input(form.explanation, 'form.explanation') }}
+    {{ form_input(form.address, 'form.address') }}
+    {{ form_input(form.address2, 'form.address2') }}
+    {{ form_input(form.county, 'form.county') }}
+    {{ form_input(form.postcode, 'form.postcode', {'inputClass': 'form-control-1-4' }) }}
+    {{ form_select(form.country, 'form.country') }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

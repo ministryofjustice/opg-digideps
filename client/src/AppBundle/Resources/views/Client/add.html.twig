@@ -1,0 +1,70 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "registration" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'addClient.htmlTitle' | trans }} {% endblock %}
+{% block pageTitle %}
+    {% if client_validated %}
+        {{ 'addClient.pageTitleWithClient' | trans({'%client%': client.firstName }) }}
+    {% else %}
+        {{ 'addClient.pageTitle' | trans }}
+    {% endif %}
+{% endblock %}
+
+{% block progressBar %}
+     {{ progress_bar_registration(app.user, 'client_details') }}
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if client_validated %}
+
+        <h3 class="heading-medium">{{ 'form.editYourDetails.detailsEntered' | trans({}, 'settings') }}</h3>
+
+        {{ form_widget(form.firstname, {'type': 'hidden'}) }}
+        {{ form_widget(form.lastname, {'type': 'hidden'}) }}
+        {{ form_widget(form.caseNumber, {'type': 'hidden'}) }}
+
+        <p class="flush--bottom">
+            <strong class="bold">{{ 'name' | trans({}, 'common' ) }}: </strong>
+            {{ client.fullName }}
+        </p>
+
+        <p class="push--bottom">
+            <strong class="bold">{{ 'caseNumber' | trans({}, 'common' ) }}: </strong>
+            {{ client.caseNumber }}
+        </p>
+
+    {% else %}
+        {{ form_input(form.firstname, 'firstname') }}
+        {{ form_input(form.lastname, 'lastname') }}
+    {% endif %}
+
+    {% if client_validated %}
+        <h3 class="heading-medium">{{ 'form.editYourDetails.furtherDetailsNeeded' | trans({}, 'settings') }}</h3>
+    {% endif %}
+
+    {{ form_input(form.address, 'address') }}
+    {{ form_input(form.address2, 'address2') }}
+    {{ form_input(form.county, 'county') }}
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control-1-4' }) }}
+    {{ form_select(form.country, 'country') }}
+    {{ form_input(form.phone, 'phone') }}
+
+    {% if not client_validated %}
+        {{ form_input(form.caseNumber, 'caseNumber', {
+            'labelRaw': true
+        }) }}
+    {% endif %}
+
+    {{ form_known_date(form.courtDate, 'courtDate') }}
+
+    {{ form_submit(form.save,'saveAndContinue') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

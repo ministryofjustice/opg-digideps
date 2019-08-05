@@ -1,0 +1,142 @@
+// ==========================================================================
+// FORMS
+// Various custom form styles
+
+// Fix for annoying clear x in windows
+input[type=text]::-ms-clear {
+    display: none;
+}
+
+.form-group {
+
+    textarea.form-control {
+        height: 7em;
+    }
+}
+
+.form-label {
+    @include media(mobile) {
+        width: auto;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+}
+
+.opg-input-prefix {
+    position: absolute;
+    z-index: 1;
+    width: 10px;
+    margin: 2px;
+    padding: 5px 9px 6px;
+    border: 0;
+    background: $grey-3;
+
+    + input {
+        padding-left: 2em;
+    }
+
+    .govuk-form-group--error > & {
+        margin: 4px;
+        padding: 4px 9px 3px;
+    }
+}
+
+.opg-pre-input-text {
+    float: left;
+    padding-right: 10px;
+    font-size: 24px;
+    line-height: 1.04167;
+
+    @include govuk-media-query($from: tablet) {
+        font-size: 36px;
+        line-height: 1.5;
+    }
+}
+
+.inputs-right-aligned {
+    .form-label {
+        padding-top: 7px;
+    }
+
+    .form-label,
+    .error-message {
+        width: 50%;
+        padding-right: 20px;
+        float: left;
+    }
+
+    .panel {
+        margin-top: -20px;
+    }
+}
+
+
+// Horizontally lined up form-groups
+// Currently only used on the admin search (Search, Role, NDR check)
+
+.form-groups-inline {
+    .form-group {
+        margin-right: 30px;
+        float: left;
+
+        @include media(mobile) {
+            width: 100% !important; // Overriding manual width classes
+            float: none;
+        }
+
+        &.form-group__checkbox {
+            margin-top: 27px;
+        }
+    }
+}
+
+
+// Smaller checkboxes for admin
+// https://home-office-digital-patterns.herokuapp.com/components/checkboxes
+
+.multiple-choice--smaller {
+    &.form-group {
+        margin-bottom: 10px;
+    }
+
+    .multiple-choice {
+        padding-top: 3px;
+        padding-bottom: 2px;
+
+        @include media(mobile) {
+            margin-bottom: 15px;
+            padding-top: 2px;
+        }
+
+        label {
+            padding: 0;
+        }
+    }
+
+    [type=checkbox] {
+        + label {
+            &::before {
+                width: 21px;
+                height: 21px;
+            }
+
+            &::after {
+                top: 8px;
+                left: 6px;
+                width: 11px;
+                height: 4px;
+                border-width: 0 0 3px 3px;
+            }
+        }
+    }
+}
+
+// Auto sized text area
+.js-auto-size textarea {
+    width: 100%;
+    min-height: 7em;
+    padding: 0;
+    overflow: hidden;
+}

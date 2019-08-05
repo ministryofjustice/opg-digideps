@@ -1,0 +1,77 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-deputy-costs" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+{% set actualSubmittedOtherCosts = report.generateActualSubmittedOtherCosts %}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
+        <p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+    </div>
+    <div class="column-third">
+        {{ macros.relatedSections(report, 'profDeputyCosts') }}
+    </div>
+</div>
+
+<table class="check-your-answers columns-2 push--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+        {# How did you charge for your costs? #}
+        {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+           'report': report,
+           'transDomain': translationDomain,
+           'hideEditLink' : false
+        } %}
+        {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
+            'report': report,
+            'transDomain': translationDomain,
+            'hideEditLink' : false
+        } %}
+    </tbody>
+</table>
+<table class="check-your-answers columns-2 push--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+    {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+    {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+    </tbody>
+</table>
+{% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
+    'report': report,
+    'submittedOtherCosts': actualSubmittedOtherCosts,
+    'transDomain': "report-prof-deputy-costs",
+    'hideEditLink' : false
+} %}
+
+{% if report.profDeputyTotalCosts is not null %}
+<table class="check-your-answers columns-2 push--bottom">
+    <tbody>
+        {# empty line to have border. fix with CSS if simpler#}
+        <tr>
+            <td colspan="3"></td>
+        </tr>
+        {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+            'report': report,
+            'submittedOtherCosts': actualSubmittedOtherCosts,
+            'transDomain': "report-prof-deputy-costs",
+            'hideEditLink' : false
+        } %}
+
+    </tbody>
+</table>
+{% endif %}

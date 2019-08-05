@@ -1,0 +1,79 @@
+// ==========================================================================
+// SWATCH
+// Swatches for styleguide
+
+.swatch {
+    @include border-radius(100%);
+
+    width: 60px;
+    height: 60px;
+
+    @include media(mobile) {
+        margin-right: $gutter-half;
+        margin-bottom: $gutter-half;
+        float: left;
+        clear: both;
+    }
+
+    @include media(tablet) {
+        margin: 0 auto $gutter-half auto;
+    }
+
+}
+
+// Colour swatch layout
+.swatch-wrapper {
+
+    @include media(tablet) {
+        width: 20%;
+        float: left;
+        text-align: center;
+    }
+
+    .heading-small {
+        margin-bottom: em(10);
+    }
+
+    ul {
+        padding-bottom: $gutter-half;
+
+        @include media(mobile) {
+            min-height: 50px;
+            padding-top: 10px;
+        }
+
+    }
+
+    li {
+        @include core-16;
+    }
+
+    b {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+}
+
+// Sass list for colour palette
+$palette: (
+        ("east-bay", $east-bay),
+        ("grey-60-percent-white", $grey-60-percent-white),
+        ("grey-75-percent-white", $grey-75-percent-white)
+);
+
+@mixin color-swatches {
+    @each $color in $palette {
+        $color-name: nth($color, 1);
+        $color-var: nth($color, 2);
+
+        .swatch-#{$color-name} {
+            background-color: $color-var;
+        }
+
+    }
+
+}
+
+// Generate swatch classes for each colour in palette list
+@include color-swatches;

@@ -1,0 +1,20 @@
+services:
+    guzzle_json_http_client:
+        class: GuzzleHttp\Client
+        arguments:
+          $config:
+            base_uri: "%api_base_url%"
+            verify: false
+            # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
+            version: "1.0"
+            headers:
+                Content-Type: application/json
+            verify: false
+            timeout: 20
+            allow_redirects: false
+
+    rest_client:
+        class:  AppBundle\Service\Client\RestClient
+        arguments: ["@service_container", "@guzzle_json_http_client", "@redis_token_storage", "%api_client_secret%"]
+
+

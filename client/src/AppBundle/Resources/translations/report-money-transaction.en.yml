@@ -1,0 +1,361 @@
+startPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+    pageSectionDescription1: |
+      In this section, we ask you about money paid into %client%'s accounts between %startDate%
+      and %endDate%.
+    pageSectionDescription2: |
+      Transfers between %client%'s accounts should be entered in the
+      <a href="%moneyTransfersPath%">money transfers</a> section.
+    pageSectionDescription3: |
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      Enter a total amount or individual amounts for each type of income
+    totalOrIndividualPara: |
+      For example, you can add one item of income that covers the total amount of state pension
+      received over the reporting period, or you can add 12 items - one for each month's pension
+      payment.
+    accountLinksHeading: Link payments to %client%'s bank accounts
+    accountLinksPara1: |
+      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid into.
+      If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s bank accounts</a>
+      before you start this section.
+    startButton: Start money in
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+    pageSectionDescription1: |
+      In this section, we ask you about money paid out of %client%'s accounts between %startDate%
+      and %endDate%.
+    pageSectionDescription2: |
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+      deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2-PA: |
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
+      deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription2-PROF: |
+      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
+      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
+#    pageSectionDescription2-PROF: |
+#      There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+#      money transfers</a> between %client%'s accounts, your <a href="%deputyCostsPath%">
+#      deputy costs</a>, and <a href="%giftsPath%">gifts</a>.
+    pageSectionDescription3: |
+      Make sure you only enter each payment in one place, so we don't count it twice.
+    totalOrIndividualHeading: |
+      Enter a total amount or individual amounts for each type of payment
+    totalOrIndividualPara: |
+      For example, you can add one payment that covers the cost of rent for the whole reporting
+      period, or you can add 12 payments - one for each month's rent.
+    accountLinksHeading: Link payments to %client%'s bank accounts
+    accountLinksPara1: |
+      When you add a payment, you have the option to say which of %client%'s bank accounts it was paid
+      out from. If you'd like to do this, you may want to <a href="%accountsPath%">add %client%'s
+      bank accounts</a> before you start this section.
+    startButton: Start money out
+
+
+stepPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Add an item of income
+    supportTitle: Money in
+    pageSectionDescription:
+      step1: You can add one or more items and come back to complete the section later.
+      transferWarning: |
+        Don't include transfers between %client%'s accounts here. Enter them in the
+        <a href="%moneyTransfersPath%">money transfers</a> section
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Add a payment
+    supportTitle: Money out
+    pageSectionDescription:
+      step1: You can add one or more types of payment and come back to complete the section later.
+      differentSections: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%deputyExpensesPath%">
+        deputy expenses</a>, and <a href="%giftsPath%">gifts</a>.
+      differentSections-PA: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts, your <a href="%paDeputyExpensesPath%">
+        deputy fees and expenses</a>, and <a href="%giftsPath%">gifts</a>.
+      differentSections-PROF: |
+        There are different sections for you to tell us about <a href="%moneyTransfersPath%">
+        money transfers</a> between %client%'s accounts and <a href="%giftsPath%">gifts</a>.
+
+addAnotherPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Add another item of income | GOV.UK"
+    pageTitle: Add another item
+    form:
+      addAnother:
+        label: The item has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more items
+      save:
+         label: Continue
+  moneyOut:
+    htmlTitle: "Deputy report - Add another payment | GOV.UK"
+    pageTitle: Add a payment
+    form:
+      addAnother:
+        label: The payment has been saved. Would you like to add another now?
+        hint: If you prefer, you can come back later to add more payments
+      save:
+         label: Continue
+
+
+summaryPage:
+  moneyIn:
+    htmlTitle: "Deputy report - Money in | GOV.UK"
+    pageTitle: Money in
+    moreDetails: More details about this section
+  moneyOut:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    pageTitle: Money out
+    moreDetails: More details about this section
+form:
+  group:
+    moneyIn.legend: What category does the item of income come under?
+    moneyOut.legend: What category does the payment come under?
+    entries:
+      # money in
+      salary-or-wages: Salary or wages
+      income-and-earnings: Income from interest, investments, or property
+      pensions: Pension
+      state-benefits: State benefit
+      damages: Damages
+      compensation-or-damages-award: Compensation or damages award
+      one-off: One-off, such as inheritance, sale of asset, or a refund
+      moneyin-other: Other
+      # money out
+      household-bills: Household bills and expenses
+      accommodation: Accommodation costs, such as mortgage or rent
+      care-and-medical: Care or medical bill
+      client-expenses: Client's personal expenses
+      fees: OPG and other professional fees
+      major-purchases: Major purchase, such as property or investment
+      debt-and-charges: Tax or charge
+      moving-money: Moving money
+      cash-withdrawn: Cash withdrawn
+      transfers-out-to-other-accounts: Transfers from %client%'s account to other accounts
+      moneyout-other: Other
+  amount:
+      label: Amount
+      hint: ""
+  description:
+    mandatory:
+      label: Description
+      hint: ""
+    optional:
+      label: Description (optional)
+  bankAccount:
+    hint: ""
+    moneyIn:
+      label: Which bank account was this paid into? (optional)
+    moneyOut:
+      label: Which bank account was this paid from? (optional)
+  category:
+    moneyOut.legend: What type of payment was it?
+    moneyIn.legend:
+      income-and-earnings: What type of investment income was it?
+      state-benefits: What type of state benefit was it?
+      pensions: What type of pension was it?
+      damages: What type of payment was it?
+      one-off: What type of income was it?
+      moneyin-other: What type of income was it?
+    entries:
+      # money in and out
+      dividends:
+        label: Dividends
+      account-interest:
+        label: Interest on savings and other accounts
+      salary-or-wages:
+        label: Salary or wages
+      other-incomes:
+        label: Other
+        moreInformations: Please give us more information
+      income-from-property-rental:
+        label: Income from property rental
+      attendance-allowance:
+        label: Attendance Allowance
+        label2ndStep: Attendance Allowance
+      disability-living-allowance:
+        label: Disability Living Allowance
+        label2ndStep: Disability Living Allowance
+      personal-independence-payment:
+        label: Personal Independence Payment
+        label2ndStep: Personal Independence Payment
+      severe-disablement-allowance:
+        label: Severe Disablement Allowance
+        label2ndStep  : Severe Disablement Allowance
+      winter-fuel-cold-weather-payment:
+        label: Winter Fuel/Cold Weather Payment
+        label2ndStep: Winter Fuel/Cold Weather Payment
+      housing-benefit:
+        label: Housing Benefit
+        label2ndStep: Housing Benefit
+      employment-support-allowance:
+        label: Employment Support Allowance
+        label2ndStep: Employment Support Allowance
+      incapacity-benefit:
+        label: Incapacity Benefit
+        label2ndStep: Incapacity Benefit
+      income-support:
+        label: Income Support
+        label2ndStep: Income Support
+      pension-credit:
+        label: Pension Credit
+        label2ndStep: Pension Credit
+      universal-credit:
+        label: Universal Credit
+        label2ndStep: Universal Credit
+      personal-pension:
+        label: Private pension
+      state-pension:
+        label: State pension
+      compensation-or-damages-award:
+        label: Compensation or damages award
+        moreInformations: For each amount, please give the date and a description of the award
+      bequest-or-inheritance:
+        label: Bequest or inheritance
+      cash-gift-received:
+        label: Cash gift received
+      sale-of-property:
+        label: Sale of property
+        moreInformations: For each property, please give the address, the date it was sold and the value
+      sale-of-investment:
+        label: Sale of investment
+        moreInformations: For each investment, give a description, the date it was sold and the value
+      sale-of-asset:
+        label: Sale of asset
+        moreInformations: For each asset, give a description, the date it was sold and the value
+      moving-money:
+        label: Moving money
+      refunds:
+        label: Refund
+      anything-else:
+        label: Anything else
+        moreInformations: Please give us more information
+      broadband:
+        label: Broadband
+      food:
+        label: Food
+      water:
+        label: Water
+      insurance-eg-life-home-contents:
+        label: Insurance (for example, life, home and contents)
+      gas:
+        label: Gas
+      electricity:
+        label: Electricity
+      dual-fuel:
+        label: Dual fuel (Combined electricity & gas)
+      telephone:
+        label: Phone
+      council-tax:
+        label: Council tax
+      property-maintenance-improvement:
+        label: Property maintenance/improvement
+        moreInformations: Please give us more information
+      tv-services:
+        label: TV services
+        label2ndStep: TV services
+      rent:
+        label: Rent
+      mortgage:
+        label: Mortgage
+      accommodation-service-charge:
+        label: Accommodation service charge
+      buildings-or-contents-insurance:
+        label: Buildings or contents insurance
+      care-fees:
+        label: Care fees
+      care-fees-arrears:
+        label: Care fee arrears
+      local-authority-charges-for-care:
+        label: Local authority charges for care
+      medical-expenses:
+        label: Medical expenses
+      medical-insurance:
+        label: Medical insurance
+      other-benefits:
+        label: Other benefits
+        moreInformations: Please enter the type of benefit %client% gets
+      client-transport-bus-train-taxi-fares:
+        label: Transport (for example, bus, train, taxi fares)
+      food:
+        label: Food
+      toiletries:
+        label: Toiletries
+      clothes:
+        label: Clothes
+      personal-allowance-pocket-money:
+        label: Personal allowance or pocket money
+      holidays:
+        label: Holidays
+      day-trips:
+        label: Day trips
+      tax-payments-to-hmrc:
+        label: Tax payment to HMRC
+      deputy-security-bond:
+        label: Deputy security bond
+      solicitor-fees:
+        label: Solicitor's fees
+      accountant-fees:
+        label: Accountant's fees
+      professional-fees-eg-solicitor-accountant:
+        label: Fees charged by a solicitor, accountant or other professional
+        moreInformations: For each fee, please enter the date, the amount and what it was for
+      professional-fees-eg-solicitor-accountant-non-lay:
+        label: Fees charged by a solicitor, accountant or other professional (Do not include deputy costs)
+        moreInformations: For each fee, please enter the date, the amount and what it was for
+      deputy-fees-and-expenses:
+        label: Deputy fees and expenses
+        moreInformations: For each fee, please enter the date, the amount and what it was for
+      opg-fees:
+        label: OPG's fees
+        label2ndStep: OPG's fees
+      stocks-and-shares-purchased:
+        label: Stocks and shares
+        moreInformations: For stocks and shares, please enter the date, a description and the value
+      investment-bonds-purchased:
+        label: Investment bond
+        moreInformations: For each bond, please enter the date and the value
+      investment-account-purchased:
+        label: Investment fund account
+        moreInformations: For each new investment, please enter the date, a description and the value
+      purchase-over-1000:
+        label: Other purchase over £1,000
+        moreInformations: Please give us more information
+      deputy-expenses:
+        label: Deputy expenses
+      gifts:
+        label: Gifts
+        moreInformations: For each gift, please enter the date, the amount and what it was for
+      bank-charges:
+        label: Bank charge
+      loans:
+        label: Loan repayment
+      credit-cards-charges:
+        label: Credit card charge
+      unpaid-care-fees:
+        label: Unpaid care fee
+      arrears:
+        label: Arrears
+      transfers-out-to-other-accounts:
+        label: Transfers from %client%'s account to other accounts
+        moreInformations: Please enter the bank or building society name, the last 4 digits of the account number and the amount transferred
+      cash-withdrawn:
+        label: Cash withdrawn from %client%'s account
+        moreInformations: For each withdrawal, please enter the date, the amount and what it was for
+      anything-else-paid-out:
+        label: Anything else paid out
+        moreInformations: Give us more information
+      moneyout-other:
+        label: Anything else paid out
+        moreInformation: Give us more information
+

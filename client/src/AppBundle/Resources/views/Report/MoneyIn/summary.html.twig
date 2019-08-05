@@ -1,0 +1,64 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%startDate%': report.startDate | date("j F Y"),
+    '%endDate%': report.endDate | date("j F Y"),
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
+} %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyIn.pageTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ 'startPage.moneyIn.pageSectionDescription1' | trans(transOptions) }}</p>
+            </div>
+
+            {# More details (from the start page) #}
+            <details class="push--bottom">
+                <summary>
+                    <span class="summary">{{ 'summaryPage.moneyIn.moreDetails' |trans }}</span>
+                </summary>
+                <div class="opg-indented-block text">
+                    <p>{{ 'startPage.moneyIn.pageSectionDescription2' | trans(transOptions) | raw }}</p>
+                    <p>{{ 'startPage.moneyIn.pageSectionDescription3' | trans }}</p>
+                    <h2 class="heading-small">{{ 'startPage.moneyIn.totalOrIndividualHeading' | trans }}</h2>
+                    <p>{{ 'startPage.moneyIn.totalOrIndividualPara' | trans }}</p>
+                </div>
+            </details>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'moneyIn') }}
+        </div>
+    </div>
+
+    {# Items list #}
+    {% include "AppBundle:Report/MoneyIn:_list.html.twig" %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyIn',
+    } %}
+
+{% endblock %}

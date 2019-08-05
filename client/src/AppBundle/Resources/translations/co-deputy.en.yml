@@ -1,0 +1,61 @@
+addCoDeputy:
+  htmlTitle: Deputy report - Invite deputy | GOV.UK
+  pageTitle: Deputies
+  intro: |
+    You can invite additional deputies to %clientFirstName%'s reports, all we need is their
+    email address.
+  submitButton: Send invitation
+
+reinviteDeputy:
+  htmlTitle: Deputy report - Reinvite deputy | GOV.UK
+  pageTitle: Deputies
+  intro: |
+    Use the box below to resend an invitation to the original or alternative email address.
+  submitButton: Resend invitation
+
+form:
+  email:
+    label: Deputy email address
+    existingError: |
+      There's a problem with your email address. Please contact us for help on 0115 934 2700.
+
+  editYourDetails:
+    subSectionTitle: "Edit your details"
+    controls:
+      cancel:
+        label: Cancel
+      save:
+        label: Save
+      firstname:
+        label: First name
+      lastname:
+        label: Last name
+      address1:
+        label: Address
+      address2:
+        label: " "
+      address3:
+        label: " "
+      addressPostcode:
+        label: Postcode
+      addressCountry:
+        label: Country
+      phoneMain:
+        label: Phone number
+      phoneAlternative:
+        label: Alternative phone number
+      email:
+        label: Email
+      jobTitle:
+        label: Job title
+      removeAdmin:
+        label: Administrator access
+        hint: You are currently an administrator on the Deputy Report Service.
+
+clientLastname:
+    label: Last name
+clientCaseNumber:
+    label: Case number
+    hint: You will find the case number on the first page of the court order (top right-hand corner)
+saveAndContinue:
+    label: Save and continue

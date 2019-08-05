@@ -1,0 +1,23 @@
+[template]
+src = "parameters.yml.tmpl"
+dest = "/var/www/app/config/parameters.yml"
+keys = [
+    "/opg/docker/tag",
+    "/frontend/role",
+    "/frontend/session",
+    "/frontend/ga",
+    "/frontend/secret",
+    "/frontend/api",
+    "/frontend/fixtures",
+    "/frontend/admin",
+    "/frontend/nonadmin",
+    "/frontend/behat",
+    "/frontend/email",
+    "/frontend/smtp",
+    "/frontend/url",
+    "/frontend/s3/bucketname",
+    "/frontend/s3/localstack",
+    "/frontend/filescanner/url",
+    "/frontend/filescanner/sslverify",
+    "/wkhtmltopdf/address"
+ ]

@@ -1,0 +1,88 @@
+startPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Current fees and expenses
+  pageSectionDescription1: |
+    In cases where fixed costs have not been applied, professional deputy costs may include:
+  listItem01: |
+    interim bills paid from the client’s funds in the current reporting period before SCCO
+    assessment payments for the balance of costs due after SCCO assessment.
+  listItem02: |
+    payments for the balance of costs due after SCCO assessment. These final cost payments
+    may relate to costs from a previous reporting period, but we still need you to tell us
+    about them in this insert
+  pageSectionDescription2: |
+    For more detail, you should refer to the court's Practice Direction 19B Fixed Costs
+    in the Court of Protection, published as part of the Court of Protection (Amendment)
+    Rules 2017.
+  startButton: Start current fees and expenses
+
+existPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Current fees and expenses
+  form:
+    hasFees:
+      label: During this reporting period, have you charged the client for any services?
+
+addTypePage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Add a charge
+  supportTitle: Current fees and expenses
+  form:
+    label: What type of professional deputy services did you charge for?
+    serviceType:
+      annual-report: Annual report
+      annual-management-interim: Annual management (interim)
+      annual-management-final: Annual management (final)
+      appointment: Appointment
+      conveyancing: Conveyancing
+      tax-returns: Tax returns
+      trust-applications: Trust applications
+      other-costs: Other costs
+
+addDetailsPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: "Add a charge:"
+  supportTitle: Current fees and expenses
+  form:
+    assessedOrFixed:
+      legend: How did you charge for this service?
+    amountCharged:
+      label: How much was charged?
+    paymentReceived:
+      legend: Was payment received for this service?
+    amountReceived:
+      label: How much was received?
+    paymentReceivedDate:
+      label: What date was payment received?
+
+estCostsPage:
+  htmlTitle: "Deputy report - Current fees and expenses | GOV.UK"
+  pageTitle: Current fees and expenses
+  form:
+    estimateCosts:
+      legend: |
+        Did you give OPG an estimate of your costs for the current reporting period in your
+        last deputyship report or in your opening deputyship record?
+    profFeesEstimateSccoReason:
+      label: |
+        If your total charges are 20% or more above your estimate please provide an explanation
+        for the SCCO.
+
+summaryPage:
+  htmlTitle: "Deputy report -  Current fees and expenses | GOV.UK"
+  pageTitle:  Current fees and expenses
+  pageSectionDescription: |
+    In this section, we asked you to tell us about any fees or expenses you have charged in line
+    with the practice direction.
+  addButton: Add a charge
+  table:
+    heading: List of charges and payments received
+    subheading:
+      fixed: Fixed costs
+      assessed: Assessed costs
+    service: Service
+    charged: Charged
+    received: Received
+    dateReceived: Date received
+    total: Total amount
+    grandtotal: Grand total

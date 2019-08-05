@@ -1,0 +1,27 @@
+signIn:
+  htmlTitle: "Deputy report - sign in | GOV.UK"
+  pageTitle: Sign in
+
+signedOut:
+  pageTitle: You are now signed out
+  para01: Your report has been saved.
+  para02: Sign in to get started again.
+
+signInAdmin:
+  htmlTitle: "Admin - sign in | GOV.UK"
+  pageTitle: OPG user sign in
+
+forgottenPassword: Forgotten your password?
+sessionTimeoutOutWarning: There's a problem with your connection to this service. You've been signed out because you've not used the service for more than %time%.
+bruteForceLocked: You've tried to sign in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
+
+signInForm:
+  email:
+      label: Email address
+      hint: We sent your registration link to this email address.
+  password:
+      label: Password
+      hint: ""
+  signin:
+      label: Sign in
+      invalidMessage: You've entered an invalid email or password. Please try again.

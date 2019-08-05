@@ -1,0 +1,34 @@
+{% set translationDomain = "email-ndr-submission-confirm" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%deputyFirstName%': deputyFirstName,
+    '%homepageUrl%': homepageUrl
+} %}
+
+{{ ('default.dear') | trans(transOptions) }}
+
+{{ ('default.thanksForSubmitting') | trans }}
+
+{{ ('default.currentlyReviewing') | trans }}
+
+
+{{ ('default.reportAccess') | trans }}
+-----------------------------
+
+{{ ('default.downloadInstructions') | trans(transOptions) | raw }}
+
+
+{{ ('default.whatNext') | trans }}
+-----------------
+
+{{ ('default.nowThatYoureDone') | trans }}
+
+{{ ('default.sendYouAReminder') | trans }}
+
+{{ ('default.useServiceYearRound') | trans }}
+
+{{ ('default.makeAStart') | trans(transOptions) | raw }}
+
+
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

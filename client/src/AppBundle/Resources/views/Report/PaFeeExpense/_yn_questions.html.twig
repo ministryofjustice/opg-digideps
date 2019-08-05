@@ -1,0 +1,83 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-pa-fee-expense" %}
+{% trans_default_domain translationDomain %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+
+<table class="check-your-answers columns-2 push-double--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+    {#
+        Have you charged the client any fees or expensesfor your
+        services during the reporting period?
+    #}
+    <tr class="behat-region-has-fees">
+        {% if report.hasFees is null %}
+            <td>
+                <span class="error">
+                    {{ 'feeExistPage.form.hasFees.label' | trans(transOptions) }}
+                </span>
+            </td>
+            <td>
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </td>
+        {% else %}
+            <td>
+                {{ 'feeExistPage.form.hasFees.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.hasFees | capitalize }}
+            </td>
+        {% endif %}
+        <td class="change-answer">
+            {% if not hideEditLink %}
+                <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% if report.reasonForNoFees %}
+        <tr class="behat-region-reason-no-fees">
+            <td>Reason for not having charged the client any fees for your services during the reporting period</td>
+            <td>{{ report.reasonForNoFees | nl2br }}</td>
+            <td class="change-answer">
+                {% if not hideEditLink %}
+                    <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+    {#
+        Have you claimed any other expenses or fees outside
+        of the practice direction?
+    #}
+        <tr class="behat-region-paid-for-anything">
+
+            {% if report.paidForAnything is null %}
+                <td>
+                    <span class="error">
+                        {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
+                </td>
+                <td>
+                    {{ report.paidForAnything | capitalize }}
+                </td>
+            {% endif %}
+            <td class="change-answer">
+                {% if not hideEditLink %}
+                <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
+                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                {% endif %}
+            </td>
+        </tr>
+
+    </tbody>
+</table>

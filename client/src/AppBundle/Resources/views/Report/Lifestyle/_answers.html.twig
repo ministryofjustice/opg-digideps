@@ -1,0 +1,90 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-lifestyle" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<table class="check-your-answers columns-2 push--bottom">
+    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+    <tbody>
+        {# step 1 #}
+        <tr class="behat-region-care-appointments">
+            {% if report.lifestyle.careAppointments is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.careAppointments.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.careAppointments.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.lifestyle.careAppointments | nl2br }}
+                </td>
+            {% endif %}
+            {% if not hideEditLink %}
+                <td class="change-answer">
+                    <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-care-appointments-edit action-link">Edit</a>
+                </td>
+            {% endif %}
+        </tr>
+
+        {#step 2#}
+        <tr class="behat-region-does-client-undertake-social-activities">
+            {% if report.lifestyle.doesClientUndertakeSocialActivities is null %}
+                <td>
+                    <span class="error">
+                        {{ 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions) }}
+                    </span>
+                </td>
+                <td>
+                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+                </td>
+            {% else %}
+                <td>
+                    {{ 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions) }}
+                </td>
+                <td>
+                    {{ report.lifestyle.doesClientUndertakeSocialActivities | capitalize }}
+                </td>
+            {% endif %}
+            {% if not hideEditLink %}
+            <td class="change-answer">
+                <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% if report.lifestyle.doesClientUndertakeSocialActivities and (report.lifestyle.activityDetailsYes or report.lifestyle.activityDetailsNo) %}
+            <tr class="behat-region-activity-details">
+
+                {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
+                    <td>
+                        {{ 'form.activityDetailsYes.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ report.lifestyle.activityDetailsYes | nl2br }}
+                    </td>
+                {% else %}
+                    <td>
+                        {{ 'form.activityDetailsNo.label' | trans(transOptions) }}
+                    </td>
+                    <td>
+                        {{ report.lifestyle.activityDetailsNo | nl2br }}
+                    </td>
+                {% endif %}
+                {% if not hideEditLink %}
+                <td class="change-answer">
+                    <a href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="action-link">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+        {% endif %}
+    </tbody>
+
+</table>

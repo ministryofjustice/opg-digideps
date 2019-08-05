@@ -1,0 +1,23 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+<div class="section" id="deputy-client-information-section">
+    <h2 class="section-heading">Deputy and client information</h2>
+    {{ macros.caseNumber(client.getCaseNumber) }}
+
+    {% if adLoggedAsDeputy %}
+        <div class="box">
+            <dl class="labelvalue">
+                <dt class="label">Assisted digital</dt>
+                <dd class="value">
+                    {{ app.session.get('_adFirstname') }}
+                    {{ app.session.get('_adLastname') }}
+                </dd>
+            </dl>
+        </div>
+    {% endif %}
+
+    <p>{{ adLoggedAsDeputy}}</p>
+
+    {{ macros.deputyClientInfo(true,app.user,client,team,adLoggedAsDeputy) }}
+
+</div>

@@ -1,0 +1,60 @@
+{% if useFormGroup %}
+    <div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}form-group-error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+{% endif %}
+
+    <fieldset class="govuk-fieldset {{ fieldSetClass }}" {% if hintText %}aria-describedby="{{ element.vars.id }}-hint"{% endif %}>
+        <legend class="govuk-fieldset__legend {{ legendClass }}">
+            {{ legendText }}
+        </legend>
+
+        {% if hintText is not null %}
+            <span class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</span>
+        {% endif %}
+
+        {{  form_errors(element) }}
+
+        <div class="govuk-radios" data-module="radios">
+
+        {% for key,choiceElement in element %}
+
+            {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+            {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
+            {% set description = items[key].description is defined ?  items[key].description : null %}
+            {% set disabled = items[key].disabled is defined and items[key].disabled %}
+            {% set conditional = items[key].conditional is defined ? items[key].conditional : '' %}
+            {% set labelDataTarget = items[key].dataTarget is defined ? items[key].dataTarget : null %}
+
+            <div class="govuk-radios__item" {% if labelDataTarget %} data-target="{{ labelDataTarget }}"{% endif %}>
+                {% set attr = {'class': 'govuk-radios__input ' ~ elementClass} %}
+                {% if disabled %}
+                    {% set attr = attr | merge({'disabled': 'disabled'}) %}
+                {% endif %}
+
+                {% if conditional %}
+                    {% set attr = attr | merge({'data-aria-controls': choiceElement.vars.id ~ '-conditional'}) %}
+                {% endif %}
+
+                {{ form_widget(choiceElement, {'attr': attr}) }}
+                <label class="govuk-label govuk-radios__label {{ labelClass }}" for="{{ choiceElement.vars.id }}">
+                    {{ choiceElement.vars.label | trans({}, translationDomain)}}
+                </label>
+
+                {% if description is not null %}
+                    <span class="form-hint govuk-radios__hint">{{ description | raw }}</span>
+                {% endif %}
+            </div>
+
+            {% if conditional %}
+                <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="{{ choiceElement.vars.id }}-conditional">
+                    {{ conditional }}
+                </div>
+            {% endif %}
+
+        {% endfor %}
+
+        </div>
+    </fieldset>
+
+{% if useFormGroup %}
+    </div>
+{% endif %}

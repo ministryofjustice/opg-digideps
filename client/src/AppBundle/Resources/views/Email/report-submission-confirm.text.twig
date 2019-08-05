@@ -1,0 +1,44 @@
+{% set translationDomain = "email-report-submission-confirm" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%fullDeputyName%': fullDeputyName,
+    '%startDate%': submittedReport.startDate | date("d/m/Y"),
+    '%endDate%': submittedReport.endDate | date("d/m/Y"),
+    '%newStartDate%': newReport.startDate | date("d/m/Y"),
+    '%newEndDate%': newReport.endDate | date("d/m/Y"),
+    '%homepageUrl%': homepageUrl,
+    '%fullClientName%': fullClientName,
+    '%caseNumber%': caseNumber
+} %}
+
+{% if recipientRole != 'default' %}
+    {{ ('caseDetails') | trans(transOptions) | raw }}
+{% endif %}
+
+{{ ('default.dear') | trans(transOptions) }}
+
+{{ (recipientRole ~ '.thanksForSubmitting') | trans(transOptions) | raw }}
+
+{{ ('default.currentlyReviewing') | trans }}
+
+{{ (recipientRole ~ '.reportAccess') | trans | raw  }}
+{% if recipientRole == 'default' %}
+-----------------------------
+
+{{ ('default.downloadInstructions') | trans(transOptions) | raw }}
+{% endif %}
+
+{{ ('default.whatNext') | trans }}
+-----------------
+
+{{ (recipientRole ~ '.startNextReport') | trans(transOptions) }}
+
+{{ ('default.signInToKeepTrack') | trans(transOptions) | raw  }}
+
+{% if recipientRole == 'default' %}
+    {{ ('default.reportReminder') | trans(transOptions) | raw }}
+{% endif %}
+
+
+{% include 'AppBundle:Email:_footer-text.text.twig' %}

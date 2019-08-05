@@ -1,0 +1,55 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-actions" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(ndr) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.actionsState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.actionsState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswerNDR' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(ndr, 'actions') }}
+        </div>
+    </div>
+
+    {# Questions and answers table #}
+    {% include 'AppBundle:Ndr/Action:_answers.html.twig' %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': ndr,
+        'sectionId': 'actions',
+    } %}
+
+{% endblock %}
+
+
+

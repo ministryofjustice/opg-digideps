@@ -1,0 +1,50 @@
+imports:
+    - { resource: services/mappers.yml }
+    - { resource: services/resolvers.yml }
+    - { resource: services/transformers.yml }
+    - { resource: services/twig.yml }
+    - { resource: services_mail.yml }
+    - { resource: services_forms.yml }
+    - { resource: services_api.yml }
+    - { resource: services_listeners.yml }
+    - { resource: services_login.yml }
+    - { resource: services_pa.yml }
+    - { resource: services_file_upload.yml }
+
+services:
+
+    _defaults:
+        autowire: false
+        autoconfigure: false
+        public: true
+
+    redirector_service:
+        class: AppBundle\Service\Redirector
+        arguments: [ "@security.token_storage", "@security.authorization_checker", "@router", "@session", "%env%" ]
+
+    wkhtmltopdf:
+        class: AppBundle\Service\WkHtmlToPdfGenerator
+        arguments: [ "%wkhtmltopdf_address%", 30]
+
+    step_redirector:
+      class: AppBundle\Service\StepRedirector
+      arguments: [ "@router" ]
+
+    document_service:
+      class: AppBundle\Service\DocumentService
+      arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+
+    report_fee_service:
+      class: AppBundle\Service\ReportFeeService
+
+    report_submission_service:
+      class: AppBundle\Service\ReportSubmissionService
+      arguments: [ "@service_container" ]
+
+    csv_generator_service:
+      class: AppBundle\Service\CsvGeneratorService
+      arguments: [ "@translator", "@logger" ]
+
+    report_section_link_service:
+      class: AppBundle\Service\ReportSectionsLinkService
+      arguments: [ "@router" ]

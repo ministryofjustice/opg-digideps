@@ -1,0 +1,24 @@
+{% set translationDomain = "ndr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<div class="form-group">
+{% for sbSingleForm in elements %}
+    {% set hasMoreDetails = sbSingleForm.moreDetails is defined %}
+    {% set labelText = (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value  ~ '.label') | trans %}
+    {{ form_checkbox(sbSingleForm.present, '', {
+        'useFormGroup': false,
+        'labelText': labelText,
+        'formGroupClass': 'form-group-compound',
+        'labelDataTarget': hasMoreDetails ? (sbSingleForm.typeId.vars.value ~ '-more-details') : null,
+    }) }}
+    {{ form_row(sbSingleForm.typeId) }}
+    {% if hasMoreDetails %}
+        <div id="{{ sbSingleForm.typeId.vars.value }}-more-details" class="opg-indented-block js-hidden">
+            {{ form_input(sbSingleForm.moreDetails, '', {
+                'labelText': (categoryKey ~ '.entries.' ~ sbSingleForm.typeId.vars.value ~ '.moreInfo') | trans(transOptions)
+            }) }}
+        </div>
+    {% endif %}
+{% endfor %}
+</div>

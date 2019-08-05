@@ -1,0 +1,96 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-declaration" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs hard--bottom">
+        <ol class="group">
+            <li>
+                {% if app.user.isDeputyOrg() %}
+                    <a href="{{ path('org_dashboard') }}">{{ 'dashboard' | trans({}, 'common' ) }}</a>
+                {% else %}
+                    <a href="{{ path('homepage') }}">{{ 'yourReports' | trans({}, 'common' ) }}</a>
+                {% endif %}
+            </li>
+            <li>
+                <a href="{{ path('report_overview', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-overview">
+                    {% if app.user.isDeputyOrg() %}
+                        {{ 'clientProfile' | trans({}, 'common' ) }}
+                    {% else %}
+                        {{ 'deputyReportOverview' | trans({}, 'common' ) }}
+                    {% endif %}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="behat-link-breadcrumbs-report-review">
+                    {{ 'reviewReport' | trans({}, 'common' ) }}
+                </a>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+
+{% block pageContent %}
+
+    {% include 'AppBundle:Report/Report:_contact_details.html.twig' with {
+        'contactDetails': contactDetails,
+        'transDomain': translationDomain
+    } %}
+
+    <div id="declaration-container">
+        <h2 class="heading-small">{{ 'page.declarationSectionHeader' | trans }}</h2>
+        <div class="text">
+            <p>{{ 'page.declarationTerms01' | trans }}</p>
+            <p>{{ 'page.declarationTerms02' | trans }}</p>
+            {% if app.user.isLayDeputy %}
+                <p>{{ 'page.declarationTerms03.lay' | trans }}</p>
+            {% else %}
+                <p>{{ 'page.declarationTerms03.nonLay.intro' | trans }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ 'page.declarationTerms03.nonLay.option1' | trans }}</li>
+                    <li>{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
+                </ul>
+            {% endif %}
+            <p>{{ 'page.declarationTerms04' | trans }}</p>
+        </div>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+        {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
+
+        <div class="form-group push-half--bottom {% if not form.agreedBehalfDeputy.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
+                'useFormGroup': false,
+                'fieldSetClass' : 'radio-agreed-behalf-deputy',
+                'legendClass' : 'form-label-bold',
+                'items': [
+                    {},
+                    {},
+                    {'dataTarget': 'agreed-behalf-deputy-explanation-section' }
+                ]
+            }) }}
+
+            <div id="agreed-behalf-deputy-explanation-section" class="opg-indented-block js-hidden">
+                {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation') }}
+            </div>
+
+        </div>
+
+        <div class="push--top">
+            {{ macros.notification('important', 'unableToEditAfterSubmission' | trans) }}
+        </div>
+
+        <div class="form-group push-half--top">
+            {{ form_submit(form.save,'save') }}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

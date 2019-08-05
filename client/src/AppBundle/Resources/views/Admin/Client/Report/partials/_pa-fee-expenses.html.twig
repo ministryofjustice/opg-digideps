@@ -1,0 +1,47 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="paFeesExpenses">{{ (page ~ '.heading.paFeeExpenses') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.deputyChargeAllowedByCourt, (page ~ '.form.deputyChargeAllowedByCourt'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.satisfiedWithPaExpenses, (page ~ '.form.satisfiedWithPaExpenses'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.paDeputyExpenses') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+
+                {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
+                    'report': report,
+                    'transDomain': translationDomain,
+                    'hideEditLink' : true
+                } %}
+
+                {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
+                    'report': report,
+                    'transDomain': translationDomain,
+                    'hideEditLink': true
+                } %}
+
+                {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
+                    'report': report,
+                    'transDomain': translationDomain,
+                    'hideEditLink': true
+                } %}
+            </div>
+        </div>
+    </details>
+
+</div>

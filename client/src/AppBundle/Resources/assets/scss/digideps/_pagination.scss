@@ -1,0 +1,73 @@
+// ==========================================================================
+// PAGINATION
+// Next/Previous component
+
+.opg-pagination {
+    @include govuk-clearfix;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: govuk-spacing(7);
+    list-style: none;
+
+    // Combined with flex-wrap, this ensures the clearfix ::after element doesn't
+    // affect spacing of the flex elements.
+    &::after {
+        width: 100%;
+    }
+
+    &__item {
+        @include govuk-media-query($until: tablet) {
+            width: 100%;
+        }
+
+        flex-grow: 1;
+    }
+
+    &__link {
+        display: block;
+        padding: govuk-spacing(3) govuk-spacing(6);
+        text-decoration: none;
+
+        &:hover,
+        &:active {
+            background-color: $canvas-colour;
+        }
+
+        &::before {
+            display: block;
+            width: 30px;
+            height: 38px;
+            margin-right: -32px;
+            margin-left: -32px;
+            float: left;
+            content: ' ';
+        }
+
+        &--previous {
+            &::before {
+                background-image: url('/images/arrow-sprite.png');
+                background-position: -20px -11px;
+            }
+        }
+
+        &--next {
+            @include govuk-media-query($from: tablet) {
+                text-align: right;
+                &::before {
+                    float: right;
+                }
+            }
+
+            &::before {
+                background-image: url('/images/arrow-sprite.png');
+                background-position: -102px -11px;
+            }
+        }
+    }
+
+    &__link-text {
+        @include govuk-font(27);
+        display: block;
+    }
+}

@@ -1,0 +1,55 @@
+// ==========================================================================
+// REPORT FORMATTED
+// Report formatted for PDF printing
+
+.formatted-report {
+
+    width: 800px;
+
+    #safeguarding-section table {
+        width: auto;
+
+        td,
+        th {
+            border-bottom: 0;
+        }
+
+        td.checkbox {
+            border-bottom: 1px solid $black;
+        }
+
+    }
+
+    #action-section table {
+        width: auto;
+
+        td,
+        th {
+            border-bottom: 0;
+        }
+
+        td.checkbox {
+            border-bottom: 1px solid $black;
+        }
+
+    }
+
+    #decisions-list {
+        .value.textarea {
+            font-size: 19px;
+            font-weight: bold;
+        }
+    }
+
+}
+
+.page-report-header {
+    @extend %contain-floats;
+
+    .item {
+        width: 60%;
+        margin-top: 0;
+        float: left;
+    }
+
+}

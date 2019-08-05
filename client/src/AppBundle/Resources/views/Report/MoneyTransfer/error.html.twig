@@ -1,0 +1,35 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transfer" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ 'errorPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'errorPage.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ ('errorPage.errors.' ~ error) | trans(transOptions) }}</p>
+    </div>
+
+    <a href="{{ path('report_overview', { 'reportId': report.id}) }}">
+        {% if app.user.isDeputyOrg() %}
+			{{ 'errorPage.backToClientProfile' | trans }}
+		{% else %}
+    		{{ 'errorPage.backToOverview' | trans }}
+		{% endif %}
+	</a>
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyTransfers',
+    } %}
+
+{% endblock %}

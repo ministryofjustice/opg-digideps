@@ -1,0 +1,96 @@
+startPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageTitle: Contacts
+  pageSectionDescription1: |
+    Please tell us about the people who helped you make significant decisions as a deputy. They might include friends or family, and professionals like a GP, solicitor, accountant or care worker.
+  startButton: Start contacts
+
+existPage:
+  htmlTitle: "Deputy report - add contact | GOV.UK"
+  pageTitle: Contacts
+  form:
+    hasContacts:
+      label: Has anyone helped you make any significant decisions for %client% during this reporting period?
+      hint: For example, you may have asked an accountant to prepare accounts for the deputy report
+      hint-104: For example, you may have asked a GP, care worker, social services or family member
+      hint-4: |
+        Give details of people who helped you make significant decisions, such as a GP, care worker,
+        accountant or family member. For example, you may have asked a care worker to provide
+        updates on %client%'s wellbeing, or an accountant to prepare accounts for the deputy report.
+    reasonForNoContacts:
+      label: Please explain why you didn't need anyone to help you
+      hint: ""
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add contact | GOV.UK"
+  pageTitle: Contacts
+  form:
+    addAnother:
+      label: The person has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more people
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageTitle: Add a contact
+  supportTitle: Contacts
+  pageSectionDescription: |
+    Please tell us about someone who has helped you make any significant decisions for %client%.
+    You'll be able to add more people later if you need to.
+
+editPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  supportTitle: Contacts
+  pageTitle: Edit contact
+
+summaryPage:
+  htmlTitle: "Deputy report - contacts | GOV.UK"
+  pageTitle: Contacts
+  addButton: Add a contact
+  weAskAbout: |
+    In this section we ask you about the people who helped you make significant decisions as a deputy.
+  listOfContacts: List of contacts
+  contact: Contact
+  relationship: Relationship
+  reasonForContact: Reason for contact
+
+deletePage:
+  htmlTitle: "Deputy report - remove contact | GOV.UK"
+  subject: contact
+  summary:
+    contactName: Contact name
+    relationship: Relationship
+    explanation: Reason for contact
+
+form:
+  contactName:
+      label: Contact name
+      hint: ""
+  relationship:
+      label: Their relationship to %client%
+      hint: ""
+  explanation:
+      label: Why did you ask this person to help you?
+      hint: ""
+  address:
+      label: Address (optional)
+      hint: ""
+  address2:
+      label: ' '
+      hint: ""
+  county:
+      label: ' '
+      hint: ""
+  postcode:
+      label: Postcode (optional)
+      hint: ""
+  country:
+      label: Country (optional)
+      hint: ""
+      defaultOption: Please select ...
+  save:
+      label: Save and continue
+

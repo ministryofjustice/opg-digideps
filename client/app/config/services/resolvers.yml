@@ -1,0 +1,6 @@
+services:
+  resolver.prof_costs_subsection_route_resolver:
+    class:  AppBundle\Resolver\SubSectionRoute\ProfCostsSubSectionRouteResolver
+
+  resolver.prof_costs_estimate_subsection_route_resolver:
+    class:  AppBundle\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver

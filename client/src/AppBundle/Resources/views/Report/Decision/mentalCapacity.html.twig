@@ -1,0 +1,52 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'mentalCapacity' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom {% if not form.hasCapacityChanged.vars.valid %}form-group-error{% endif %}">
+            {% set conditionalCapacityChanged %}
+                {{ form_input(form.hasCapacityChangedDetails, (page ~ '.form.hasCapacityChangedDetails'), {
+                    'labelClass': 'required',
+                    'labelParameters': transOptions,
+                    'hintText' : (page ~ '.form.hasCapacityChangedDetails.hint') | trans(transOptions, translationDomain),
+                    'labelRaw': true
+                }) }}
+            {% endset %}
+
+            {{ form_checkbox_group(form.hasCapacityChanged, (page ~ '.form.hasCapacityChanged'), {
+                'useFormGroup': false,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold',
+                'legendText' : (page ~ '.form.hasCapacityChanged.label' ~ append104) | trans(transOptions, translationDomain),
+                'items': [{'conditional': conditionalCapacityChanged}]
+            }) }}
+        </div>
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {% if skipLink %}
+        <a href="{{ skipLink }}" class="button-link behat-link-step-skip">{{ 'skipLink' | trans({}, 'common') }}</a>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+{% endblock %}

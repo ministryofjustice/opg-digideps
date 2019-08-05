@@ -1,0 +1,21 @@
+<div class="balance subsection">
+
+    <div class="box box-heading">
+        <h3 class="flush--bottom text--center">Accounts balanced</h3>
+    </div>
+
+    <div class="half-width tight">
+        <div class="box flush">
+            <div class="message">Report closing balance:</div>
+            <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
+        </div>
+    </div>
+
+    <div class="half-width tight last">
+        <div class="box flush">
+            <div class="message">Accounts closing balance:</div>
+            <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
+        </div>
+    </div>
+
+</div>

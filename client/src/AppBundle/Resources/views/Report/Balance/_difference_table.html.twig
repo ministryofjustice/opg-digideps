@@ -1,0 +1,75 @@
+{% set translationDomain = "report-balance" %}
+{% trans_default_domain translationDomain %}
+
+{% set transOptions = {
+    '%client%': report.client.firstname | e,
+    '%moreless%': report.totalsOffset < 0 ? "less" : "more"
+} %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+<h3 class="heading-medium">
+    {% if not report.isTotalsMatch %}
+        {{ 'differenceTable.headingNotBalanced' | trans }}
+    {% else %}
+        {{ 'differenceTable.headingBalanced' | trans }}
+    {% endif %}
+</h3>
+
+<table class="push--ends" id="calculated_balance_table">
+    <thead class="visually-hidden">
+        <tr>
+            <th>{{ 'section' | trans({}, 'common') }}</th>
+            <th colspan="2"></th>
+            <th class="numeric">{{ 'balance' | trans({}, 'common') }}</th>
+            {% if not hideEditLink  %}
+                <th>
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="width-half">{{ 'differenceTable.accountsClosingBalance' | trans }}
+                ({{ report.endDate | date("j F Y") }})
+            </td>
+            <td colspan="2"></td>
+            <td class="numeric">
+                £{{ report.accountsClosingBalanceTotal | money_format }}
+            </td>
+            {% if not hideEditLink  %}
+                <td class="numeric width-twentieth">
+                    <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="bold">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>{{ 'differenceTable.reportClosingBalance' | trans }}</td>
+            <td colspan="2"></td>
+            <td class="numeric">
+                £{{ report.calculatedBalance | money_format }}
+            </td>
+            {% if not hideEditLink  %}
+                <td></td>
+            {% endif %}
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3">
+                <span class="bold">{{ 'differenceTable.footer' | trans }}</span>
+            </td>
+            <td class="numeric bold">
+                    <span class="bold behat-region-balance-difference">
+                        £{{ report.totalsOffset | abs | money_format }}
+                    </span>
+            </td>
+            {% if not hideEditLink  %}
+                <td></td>
+            {% endif %}
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,165 @@
+checklistPage:
+  htmlTitle: Administration - Report checklist
+  pageTitle: Admin
+  supportTitle: Lodging checklist
+  heading:
+    info: Deputy and client information
+    decisions: Decisions made over the reporting period
+    contacts: People consulted
+    visitsAndCare: Contact with client, care arrangements and care plan
+    assetsAndDebts: Assets and debts
+    money: Money in and money out
+    bonds: Bonds
+    paFeeExpenses: Deputy fees and expenses
+    nextPeriod: Next reporting period
+    declaration: Declaration
+    healthAndLifestyle: Health and lifestyle
+    contents: Checklist contents
+    profDeputyCosts: Deputy costs
+    profDeputyCostsEstimate: Estimated costs for next reporting period
+  lodgingSummary:
+    heading: Lodging summary
+    listItem1: Document any concerns
+    listItem2: Explain the decisions you've made and any further action taken
+    listItem3: Include changes made to CASREC details (or referrals to the MDU)
+    listItem4: |
+      Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
+  furtherInfo:
+    heading: Further information
+    para: |
+      You must complete this section if we have received or requested correspondence following a lodging
+      (incompletes and casework).
+    infoProvided: Information provided
+    noInfoReceived: No information received
+  backToClientDetails: Back to client details
+  backToQuestion: Back to question
+  expected: Expected
+  submitted: Submitted
+  deputysFullName: Deputy's full name
+  closingBalancesPrevReport: Closing balances from previous report
+  closingBalancesPrevReportMissing: No previous reports on record to show closing balance
+  openingBalances: Opening balances
+  closingBalances: Closing balances
+  balanceDifference: Balance difference
+  revealTitle:
+    contactDetails: View contact details
+    decisionsSummary: View decisions summary
+    contactsSummary: View contacts summary
+    deputysResponses: View deputy's responses
+    assetsSummary: View assets summary
+    debtsSummary: View debts summary
+    accountsBalances: View accounts balances
+    accountsBalanceSummary: View accounts balance summary
+    moneyTransfersSummary: View money transfers summary
+    moneyInSummary: View money in summary
+    moneyOutSummary: View money out summary
+    deputysDeclaration: View deputy's declaration
+    paDeputyExpenses: View deputy's fees and expenses
+    giftsSummary: View gifts summary
+    deputyExpensesSummary: View deputy expenses
+    lifestyleResponses: View health and lifestyle responses
+    profDeputyCosts: View deputy's responses
+    profDeputyCostsEstimate: View deputy's responses
+  noTransferToShow: No money transfers to view
+  incompleteSubmitted: Incomplete submitted
+  dueDateSetTo: Due date set to
+  sectionsMarkedIncomplete: Sections marked incomplete
+  form:
+    save:
+      label: Save progress
+    submitAndDownload:
+      label: Submit checklist and download PDF
+    saveFurtherInformation:
+      label: Save further information
+    reportingPeriodAccurate:
+      label: Is the reporting period correct or acceptable?
+    contactDetailsUptoDate:
+      label: Contact details are correct and up to date (updated where applicable)
+    deputyFullNameAccurateinCasrec:
+      label: Deputy's full name on CASREC is correct and up to date (updated where applicable)
+    decisionsSatisfactory:
+      label: Have satisfactory responses been provided by the deputy?
+    consultationsSatisfactory:
+      label: Have satisfactory responses been provided by the deputy?
+    careArrangements:
+      label: Have satisfactory responses been provided by the deputy?
+    assetsDeclaredAndManaged:
+      label: |
+        Are you satisfied that the deputy has accurately declared all the client's assets and that
+        the assets are being appropriately managed?
+    debtsManaged:
+      label: |
+        If the client has any debt, are you satisfied that the debt is appropriate and/or is it
+        being managed by the deputy in an appropriate manner?
+    openClosingBalancesMatch:
+      label: Does the opening balances(s) match last year's closing balance?
+    accountsBalance:
+      label: |
+        Do the accounts balance and match bank statements, where provided? Allow up to £250
+        leeway for lay deputies.
+    accountsBalanceNonLay:
+      label: |
+        Do the accounts balance and match bank statements, where provided?
+    moneyMovementsAcceptable:
+      label: |
+        Are you satisfied that the money in and money out entries (including transfers), along
+        with any comments, are acceptable, appear reasonable, and are inline with the terms of
+        the court order?
+    deputyChargeAllowedByCourt:
+        label: |
+          Does the court order allow the deputy to charge for their services?
+    satisfiedWithPaExpenses:
+      label: |
+        Are you satisfied that responses have been provided that are in line with the terms of
+        the practice direction (including any explanation of non-claiming of fees)?
+    bondAdequate:
+      label: |
+        Is the bond adequate protection for the client's assets? If ‘No’, refer to the Security
+        Bonds Discrepancy Resolution Job Card.
+    satisfiedWithHealthAndLifestyle:
+      label: |
+        Have satisfactory responses been provided by the deputy?
+    bondOrderMatchCasrec:
+      label: |
+        Does the bond amount on CASREC match that on the order? If ‘No’, refer to the Security
+        Bonds Discrepancy Resolution Job Card.
+    futureSignificantDecisions:
+      label: Are there any significant financial decision(s) in the next reporting period?
+    futureSignificantChanges:
+      label: Are there any significant changes in the next reporting period?
+    hasDeputyRaisedConcerns:
+      label: Does the deputy raise any concerns about their deputyship?
+    caseWorkerSatisified:
+      label: Are you satisfied with the deputy's declaration?
+    paymentsMatchCostCertificate:
+      label: |
+        Do the payments received for previous billing periods (a billing period started during an earlier reporting
+        period), plus interim payments made during this reporting period from the same billing period, match the
+        figure on the cost certificate for that billing period?
+    profCostsReasonableAndProportionate:
+      label: |
+        Do the total costs for work carried out during the current billing period (The new billing period started
+        during this reporting period) appear to be reasonable and proportionate compared to the client's assets?
+    hasDeputyOverchargedFromPreviousEstimates:
+      label: |
+        Has the deputy charged 20% or more than last years estimated costs for this billing period?
+    satisfiedEstimatesNextBilling:
+      label: |
+        Are you satisfied with the deputy’s estimated costs for the next billing period?
+    totalEstimatedCosts:
+      label: Total estimated costs
+    lodgingSummary:
+      label: Lodging summary concerns and decisions
+    finalDecision:
+      label: Final decision?
+      options:
+        forReview: I am referring the case for a staff review or gifting review
+        incomplete: The report is incomplete
+        furtherCaseworkRequired: |
+          I have lodged and acknowledged the report but issues require further case work
+        satisfied: |
+          I am satisfied with the deputy’s report, no further action is required and I have
+          sent an acknowledgment to the deputy(s)
+    furtherInformationReceived:
+      label: Further information received
+    

@@ -1,0 +1,142 @@
+startPage:
+  htmlTitle: "Deputy report - assets | GOV.UK"
+  pageTitle: Assets
+  pageSectionDescription: |
+    Use this section to tell us about %client%'s assets.
+    They may include property, vehicles, valuables or investments.
+    We also need to know if %client% doesn't have any assets.
+  startButton: Start assets
+
+existPage:
+  htmlTitle: "New deputy report - assets | GOV.UK"
+  pageTitle: Assets
+  form:
+    noAssetToAdd:
+      label: Does %client% own any assets?
+      hint: For example, property, vehicles, investments, jewellery, artworks, antiques or stocks and shares
+    save:
+      label: Save and continue
+
+typePage:
+  htmlTitle: "New deputy report - assets | GOV.UK"
+  supportTitle: Assets
+  pageTitle: Add an asset
+  pageSectionDescription: |
+    Please tell us a bit more about %client%'s assets.
+    Start by adding a type of asset; we'll then ask you for
+    some details about it. You can go back and add more assets
+    if you need to.
+  formstartButton: Save and continue
+
+addPage:
+  htmlTitle: "New deputy report - Assets | GOV.UK"
+  supportTitle: Assets
+  pageTitle: "Add an asset: %assetTitle%"
+
+editPage:
+  htmlTitle: "New deputy report - Assets | GOV.UK"
+  supportTitle: Assets
+  pageTitle: Edit %assetTitle%
+
+addAnotherPage:
+  htmlTitle: "New deputy report - assets | GOV.UK"
+  pageTitle: Assets
+  form:
+    addAnother:
+      label: The asset has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more assets
+    save:
+       label: Continue
+
+stepPageProperty:
+  htmlTitle: "New deputy report - Property | GOV.UK"
+  supportTitle: Assets
+  pageTitle: "Add an asset: property"
+
+summaryPage:
+  htmlTitle: "New deputy report - assets | GOV.UK"
+  pageTitle: Assets
+  supportTitle: ""
+  weAskAbout: In this section, we ask you about %client%'s assets, including property.
+  addButton: Add an asset
+  subtitle:
+    assets: List of assets
+  totalValue: "Total value of assets: £%value%"
+
+deletePage:
+  htmlTitle: "New deputy report - remove asset | GOV.UK"
+  subject: asset
+  summary:
+    type: Type
+    property: Property
+    address: Address
+    value: Value
+    description: Description
+    valuationDate: Valuation date
+
+form:
+  titleSave.label: Save and continue
+  title:
+    label: What sort of asset is it?
+    legend: What type of asset is it?
+    choices:
+      # ordering is configured in app/config.yml
+      property: Property
+      investment_bonds: Investment bonds
+      unit_trusts: Unit trusts
+      national_savings_certificates: National Savings certificates
+      stocks_shares: Stocks and shares
+      premium_bonds: Premium Bonds
+      vehicles: Vehicles
+      artwork: Artwork
+      antiques: Antiques
+      jewellery: Jewellery
+      assets_held_outside_england_and_wales: Assets held outside England and Wales
+      other_assets: Other valuable assets
+  value:
+    label: "Value"
+    hint: "This can be an estimate"
+  description:
+    label: "Description of asset"
+    hint: ""
+  valuationDate:
+    legend: Valuation date (optional)
+    hint: For example, 31 3 2010
+    label: Valuation date
+  property:
+    address:
+      label: Address line 1
+    address2:
+      label: Address line 2
+    county:
+      label: County
+    postcode:
+      label: "Postcode"
+    occupants:
+      label: "Who lives at this property?"
+    owned:
+      label: Is the property fully or partly-owned by %client%?
+    ownedPercentage:
+      label: What is %client%'s share of the property?
+    isSubjectToEquityRelease:
+      label: Is this property subject to an equity release scheme?
+      hint: This means that %client%'s stake, or equity, in the property has been used to generate a lump sum or income
+    value:
+      label: What is the value of property?
+      hint: This can be an estimate.
+    hasMortgage:
+      label: Is there a mortgage on the property?
+    mortgageOutstandingAmount:
+      label: How much is left to pay?
+    hasCharges:
+      label: Are there any other charges on the property?
+      hint: For example, from the local authority to recover care fees
+    isRentedOut:
+      label: Is the property rented out (either partly or fully)?
+    rentAgreementEndDate:
+      label: When does the rental agreement end?
+      hint: For example, 12 2015
+    rentIncomeMonth:
+      label: What is the rental income each month?
+  save:
+      label: Save and continue

@@ -1,0 +1,80 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-transaction" %}
+{% trans_default_domain translationDomain %}
+
+{% set clientTransOptions = {'%client%': report.client.firstname | e } %}
+{% set transOptions = clientTransOptions | merge({
+    '%moneyTransfersPath%': path('money_transfers', {reportId: report.id}),
+    '%deputyExpensesPath%': path('deputy_expenses', {reportId: report.id}),
+    '%paDeputyExpensesPath%': path('pa_fee_expense', {reportId: report.id}),
+    '%giftsPath%': path('gifts', {reportId: report.id})
+}) %}
+
+{% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block pageTitle %}
+    {% if step == 2 %}
+        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+    {% else %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ 'stepPage.moneyOut.supportTitle' | trans }}</span>
+{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+    {{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
+
+    {% if step == 1 %}
+        <div id="form-group-account_category" class="form-group push--top {% if not form.category.vars.valid %}form-group-error{% endif %}">
+        {% for group, categories in categoriesGrouped %}
+            <fieldset class="push--top">
+                <legend class="form-label-bold text push-half--bottom">{{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}</legend>
+                {% for category in categories %}
+                    {% for el in form.category %}
+                        {% if el.vars.value == category %}
+                            {{ form_checkbox(el, '', {
+                                'useFormGroup': false,
+                                'labelText': ('form.category.entries.' ~ category ~ '.label') | trans(clientTransOptions, translationDomain)
+                            }) }}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </fieldset>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if step == 2 %}
+        {{ form_input(form.description, 'form.description.' ~ (form.description.vars.required ? 'mandatory' : 'optional'), {
+            'labelParameters' : transOptions
+        }) }}
+
+        {{ form_input(form.amount, 'form.amount', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control-1-4 js-format-currency',
+            'formGroupClass': ' form-group-value'
+        }) }}
+
+        {% if report.bankAccounts is not empty and report.canLinkToBankAccounts %}
+            {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
+        {% endif %}
+
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

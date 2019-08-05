@@ -1,0 +1,56 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-money-short" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.moneyIn.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.moneyIn.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <div class="text">
+                <p>{{ 'summaryPage.moneyIn.weAskAbout' | trans(transOptions) }}</p>
+            </div>
+
+            {# Check answers text #}
+            <h2 class="heading-small">{{ 'weHaveListed' | trans(transOptions, 'common') }}</h2>
+            <p class="text">{{ 'checkCorrect' | trans(transOptions, 'common') }}</p>
+
+            {# Missing questions alerts #}
+            {% if status.moneyInShortState.state != 'done' and comingFromLastStep%}
+                {{ macros.notification('notice', 'remindComplete' | trans(transOptions, 'common')) }}
+            {% endif %}
+
+            {% if status.moneyInShortState.state != 'done' and not comingFromLastStep%}
+                {{ macros.notification('notice', 'canYouAnswer' | trans(transOptions, 'common')) }}
+            {% endif %}
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'moneyInShort') }}
+        </div>
+    </div>
+
+    {# Questions and answers table #}
+    {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'moneyInShort',
+    } %}
+
+{% endblock %}
+
+
+

@@ -1,0 +1,35 @@
+{% if report.giftsExist %}
+    <div class="section break-before" id="expenses-section">
+        <h2 class="section-heading">Gifts</h2>
+
+        <div class="box">
+            <h3 class="label question bold">Have you given any gifts to other people on {{ client.firstName }}'s behalf during this reporting period?</h3>
+
+            <table class="checkboxes labelvalue inline">
+                <tr>
+                    <td class="value checkbox">{% if report.giftsExist == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'yes' | trans({}, 'common' ) }}</td>
+                    <td class="value checkbox">{% if report.giftsExist == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">{{ 'no' | trans({}, 'common' ) }}</td>
+                </tr>
+            </table>
+
+            {% if report.giftsExist == 'yes' %}
+
+                <table class="labelvalue money push--top">
+                    {% for gift in report.gifts %}
+                        <tr>
+                            <td class="label noborder">{{ gift.explanation }}</td>
+                            <td class="value text--right width-fifth">&pound;{{ gift.amount | money_format }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+
+
+
+

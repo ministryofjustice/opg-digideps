@@ -1,0 +1,55 @@
+// ==========================================================================
+// BUTTONS
+// Buttons and links
+
+.opg-button--link {
+    background-color: transparent;
+    box-shadow: none;
+    color: $govuk-link-colour !important;
+    text-decoration: underline !important;
+
+    &:hover {
+        background-color: transparent;
+        color: $govuk-link-hover-colour !important;
+    }
+
+    &:active, &:focus {
+        top: initial;
+        background-color: transparent;
+        color: $govuk-link-active-colour !important;
+    }
+}
+
+
+.button-secondary {
+    @include button($grey-3);
+
+    &[disabled="disabled"] {
+        background: $grey-3;
+    }
+}
+
+.button-warning {
+    @include button($red);
+
+    &[disabled="disabled"] {
+        background: $red;
+    }
+}
+
+.button-link {
+    position: relative;
+    top: 1px;
+    margin-left: 20px;
+    line-height: 2.5;
+
+    @include media(mobile) {
+        margin-left: 0;
+    }
+}
+
+.action-link {
+    &:visited {
+        color: $link-colour;
+    }
+}

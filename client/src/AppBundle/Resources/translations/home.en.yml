@@ -1,0 +1,68 @@
+htmlTitle: "Deputy report | GOV.UK"
+pageTitle: "Complete the deputy report"
+intro:
+  lede: |
+    Use this online service to fill in your deputy report and send it to the
+    Office of the Public Guardian (OPG)
+  para01: You can save the report and then come back to add more information as often as you like.
+  para02: Once you've submitted your report, you can save it to your computer.
+
+iwanttocreate: I want to register for the online deputy service
+createaccount: Create an account now
+whatyouneed: What you'll need to sign up
+whatyouneedListItem1: your case number (look for 'OPG reference' on letters from OPG)
+whatyouneedListItem2: your email address
+whatyouneedListItem3: your client's last name
+ialready: I already have a deputy account
+
+whyWeNeed:
+  summary: Why we need the deputy report
+  para01: |
+    It's OPG's responsibility to look after the client's best interests (the client is the person
+    whose affairs you are looking after). Your deputy reports help us supervise your deputyship.
+  para02: |
+    Use this service to record the assets, income and outgoings of the person you're making
+    decisions for, as well as the important decisions you make. These can be added to the deputy
+    report any time throughout the year.
+  para03: You can also use your report to raise concerns and ask for support.
+
+provideDetails:
+  summary: What you'll need for the report
+  para01: "You'll need to provide details of:"
+  listItem01: how the client is cared for
+  listItem02: any big decisions you have made or are planning to make for the client
+  listItem03: friends, family and professionals you've contacted on behalf of the client
+  para02: "If you're a property and financial affairs deputy you'll also need to provide details of:"
+  listItem04: purchases you've made on the client's behalf
+  listItem05: financial records relating to the client (for example bank statements)
+  listItem06: the client's assets and debts
+
+moreThanOne:
+  summary: What if there's more than one deputy?
+  para01: |
+    You'll only need to submit one deputy report for each reporting period. This applies
+    if you make decisions together (usually called 'jointly') or separately and together
+    (usually called 'jointly and severally').
+
+afterISubmit:
+  summary: What happens after I submit my report?
+  para01: |
+    We'll review the report, and may still need to contact you for more information – by
+    phone, email, in writing or by arranging a visit.
+
+relatedLinks:
+  heading: "Deputies: make decisions for someone who lacks capacity"
+  link01Text: "Deputy guidance: how to carry out your duties"
+  link01Src: "https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties"
+  link02Text: "Deputy fees: remission or exemption"
+  link02Src: "https://www.gov.uk/government/publications/deputy-fees-remission-or-exemption"
+  link03Text: "Deputy guidance: dealing with banks"
+  link03Src: "https://www.gov.uk/government/publications/deputy-and-attorney-guidance-dealing-with-banks"
+  link04Text: "Giving gifts: a guide for deputies"
+  link04Src: "https://www.gov.uk/government/publications/giving-gifts-a-guide-for-deputies-and-attorneys"
+  link05Text: Mental Capacity Act Code of Practice
+  link05Src: "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf"
+  link06Text: Contact OPG
+  link06Src: "https://www.gov.uk/government/organisations/office-of-the-public-guardian"
+
+signin: Sign in

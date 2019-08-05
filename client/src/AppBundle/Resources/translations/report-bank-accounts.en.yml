@@ -1,0 +1,102 @@
+startPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageTitle: Accounts
+  pageSectionDescription1: |
+    Use this section to tell us about all of %client%'s bank accounts, building society accounts,
+    savings accounts and ISAs.
+  pageSectionDescription2: |
+    We will also need to know the balance of each account.
+  pageSectionDescription3: |
+    Interest can be added in the <a href="%moneyInPath%">money in</a> section.
+  hiddenText01:
+    summary: More on how to carry out your duties
+    content:
+      para01: |
+          OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+  startButton: Start accounts
+
+stepPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageTitle:
+    add: Add an account
+    edit: Edit an account
+  supportTitle: Accounts
+  pageSectionDescription:
+    step1: Start by selecting one type of account. We'll then ask you for the details of that account. You can go back and add more accounts if you need to.
+  backLink: Back
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add another account | GOV.UK"
+  pageTitle: Accounts
+  form:
+    addAnother:
+      label: The account has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more accounts
+    save:
+       label: Continue
+
+summaryPage:
+  htmlTitle: "Deputy report - Accounts | GOV.UK"
+  pageTitle: Accounts
+  weAskAbout: |
+    In this section, we ask you about %client%'s bank accounts, building society accounts,
+    savings accounts and ISAs.
+  totalBalance: "Total balance on %endDate%: £%amount%"
+  balanceRequired: Balance for %date% required
+  addBalance: Add balance
+
+deletePage:
+  htmlTitle: "Deputy report - remove account | GOV.UK"
+  subject: account
+  summary:
+    bank: Bank or building society name
+    accountType: Type of account
+    sortCode: Sort code
+    accountNumber: Account number
+  transferPresentError: |
+    This bank account cannot be removed because you've added money transfers to or from this account.
+  linkedPaymentsWarning: |
+    You have %paymentTypes% payments linked to this bank account. If you remove the account, we'll unlink the payments for you.
+
+form:
+  accountType:
+      label: What type of account is it?
+      hint: ""
+      choices:
+        current: Current account
+        savings: Savings account
+        isa: ISA
+        postoffice: Post Office account
+        cfo: Court Funds Office account
+        other: Other type of account
+        other_no_sortcode: Other type of account without sort code
+  bank:
+    label: Bank or building society name
+    hint: ""
+  meta:
+    label: Additional information (optional)
+  accountNumber:
+    label: Last 4 digits of the account number
+    hint: ""
+    preInput: "* * * *"
+  sortCode:
+    legend: Sort code
+    hint: ""
+  openingBalance:
+    label: How much was in the account on %startDate%?
+  closingBalance:
+    label: How much was in the account on %endDate%?
+    hint: ""
+  isJointAccount:
+    label: Is this a joint account?
+    hint: |
+      Joint accounts are often used by married couples or couples who live together. The money in
+      a joint account is owned by both account holders.
+  isClosed:
+      label: You currently have £0 in this account on %endDate%. Have you closed this account?
+      hint: ""
+  save:
+    label: Save and continue
+  cancel:
+    label: Cancel
+

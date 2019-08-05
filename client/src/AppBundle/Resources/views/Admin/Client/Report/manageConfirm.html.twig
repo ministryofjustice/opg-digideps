@@ -1,0 +1,90 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin-clients" %}
+{% set page = 'reportManage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+    <p class="flush--bottom">{{ 'client' | trans({}, 'common') }}: <span class="bold">{{ report.client.fullName }}</span></p>
+    <p>{{ 'courtOrderNumber' | trans({}, 'common') }}: <span class="bold">{{ report.client.caseNumber }}</span></p>
+
+    <p>{{ (page ~ '.form.confirmation.guidance') | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    <table class="push--bottom behat-region-report-review">
+        <thead>
+            <tr>
+                <th>{{ (page ~ '.form.confirmation.option') | trans }}</th>
+                <th>{{ (page ~ '.form.confirmation.selection') | trans }}</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>{{ (page ~ '.form.startDate.label') | trans }}</td>
+                <td>{{ form.startDate.vars.value | date("j F Y") }}</td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, data: urlData }) }}">
+                        {{ (page ~ '.form.confirmation.edit') | trans }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ (page ~ '.form.endDate.label') | trans }}</td>
+                <td>{{ form.endDate.vars.value | date("j F Y") }}</td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, data: urlData }) }}">
+                        {{ (page ~ '.form.confirmation.edit') | trans }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ (page ~ '.form.markSections.label') | trans }}</td>
+                <td>
+                    {% for section in form.unsubmittedSection.vars.value | split(',') %}
+                        {{ ('prevNextLinks.sections.' ~ section) | trans({}, 'report-common') }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, data: urlData }) }}">
+                        {{ (page ~ '.form.confirmation.edit') | trans }}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ (page ~ '.form.dueDateChoice.label') | trans }}</td>
+                <td>{{ form.dueDate.vars.value | date("j F Y") }}</td>
+                <td>
+                    <a href="{{ url('admin_report_manage', { 'id': report.id, data: urlData }) }}">
+                        {{ (page ~ '.form.confirmation.edit') | trans }}
+                    </a>
+                </td>
+            </tr>
+        </thead>
+    </table>
+
+    <div class="form-section push--bottom">
+        {{ form_checkbox_group(form.confirm, (page ~ '.form.confirmation'), {
+            'fieldSetClass' : 'inline',
+            'legendClass' : 'form-label-bold text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+
+    {{ macros.notification('info', (page ~ '.form.confirmation.warning') | trans) }}
+
+    {{ form_submit(form.save, 'reportManage.form.unsubmit') }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

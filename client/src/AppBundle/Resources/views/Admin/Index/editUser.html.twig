@@ -1,0 +1,96 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin" %}
+{% set page = 'editUser' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    <h2 class="heading-medium">{{ 'editUserForm.heading' | trans }}</h2>
+
+    {% set numberOfClients = user.clients | length %}
+    {% set firstClient = numberOfClients > 0 ? (user.clients | first) : null %}
+    {% set reportsCount = firstClient ? firstClient.totalReportCount : 0 %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+
+    {{ form_input(form.email,'addUserForm.email') }}
+    {{ form_input(form.firstname,'addUserForm.firstname') }}
+    {{ form_input(form.lastname,'addUserForm.lastname') }}
+    {{ form_input(form.addressPostcode,'addUserForm.addressPostcode') }}
+    {{ form_select(form.roleName,'addUserForm.roleName') }}
+    {% if reportsCount > 0 %}
+        <p class="text">{{ 'editUserForm.reportsExist' | trans }}</p>
+    {% endif %}
+    {% if user.roleName == 'ROLE_LAY_DEPUTY' %}
+        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+    {% else %}
+        <div class="hidden">
+            {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+        </div>
+    {% endif %}
+    {{ form_submit(form.save, 'editUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: 'admin',
+            linkId: 'admin_cancel',
+            linkButtonLabel: 'cancel.label',
+            linkHref: path('admin_homepage')
+            } %}
+        {% endif %}
+    {% endif %}
+
+    {% if numberOfClients > 0 %}
+        <h2 class="heading-medium">{{ (page ~ '.clientTable.heading') | trans }}</h2>
+        <table class="width-two-thirds">
+            <thead>
+                <tr>
+                    <th>{{ (page ~ '.clientTable.header.client') | trans }}</th>
+                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.caseNumber') | trans }}</th>
+                    <th class="numeric-small text--right">{{ (page ~ '.clientTable.header.reports') | trans }}</th>
+                </tr>
+
+            </thead>
+            {% for client in user.clients %}
+                <tr>
+                    <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
+                    <td class="numeric-small">{{ client.caseNumber|upper }}</td>
+                    <td class="numeric-small">{{ client.totalReportCount }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {{ form_end(form) }}
+
+    {% if action is defined %}
+        {% if action == 'edit' %}
+            {# only admin are allowed to delete users (except themselves when logged) #}
+            {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
+                {% if reportsCount == 0 %}
+                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',
+                    linkClass: 'button-warning push--top',
+                    linkHref: path('admin_delete_confirm', { id: id })
+                    } %}
+                {% else %}
+                    <p class="text text-secondary push--top">{{ (page ~ '.deleteDisabled') | trans }}</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

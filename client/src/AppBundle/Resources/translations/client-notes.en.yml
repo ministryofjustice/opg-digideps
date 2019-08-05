@@ -1,0 +1,33 @@
+addNote:
+  htmlTitle: Client profile - add note | GOV.UK
+  pageTitle: Add note
+  supportTitle: "Client profile:"
+editNote:
+  htmlTitle: Client profile - edit note | GOV.UK
+  pageTitle: Edit note
+  supportTitle: "Client profile:"
+deletePage:
+  htmlTitle: "Client profile - remove note | GOV.UK"
+  subject: note
+  summary:
+    title: Title
+    createdOn: Date added
+form:
+  category:
+    label: Category
+    entries:
+      undefined: undefined
+      todo: To Do
+      dwp: DWP
+      opg: OPG
+      welfare: Welfare
+      bank: Bank
+      report: Report
+      other: Other
+  title:
+    label: Title
+  content:
+    label: Description
+  save:
+    label: Save note
+pageNotice: Notes are for personal reference only, they are not viewable by the OPG

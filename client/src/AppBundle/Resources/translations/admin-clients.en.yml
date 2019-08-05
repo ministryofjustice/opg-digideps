@@ -1,0 +1,55 @@
+clientSearch:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Clients
+  searchBy: Search by client surname or case number
+  clientTable:
+    heading: Client list
+    results: Found %numberOfClients% clients
+    resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
+    noResults: No clients found
+
+clientDetails:
+  htmlTitle: Administration - Clients
+  pageTitle: Admin
+  supportTitle: Client details
+  reportsTitle: Submitted reports
+  noResults: No reports found
+  ndrTitle: NDR report
+
+reportManage:
+  htmlTitle: Administration - Manage report
+  pageTitle: Admin
+  supportTitle: Manage report
+  currentDueDate: "Current due date:"
+  overdueBy: Overdue by %overdueDays% days
+  form:
+    dueDateChoice:
+     label: New due date
+     choices:
+       keep: Keep existing due date
+       3weeks: 3 weeks from now
+       4weeks: 4 weeks from now
+       5weeks: 5 weeks from now
+       custom: Other
+    dueDateCustom:
+      legend: Specify a custom report due date
+    markSections:
+      legend: Mark sections as incomplete
+      label: Sections marked incomplete
+    unsubmit:
+      label: Continue
+    startDate:
+      label: Reporting start
+    endDate:
+      label: Reporting end
+    confirmation:
+      option: Option
+      selection: Selection
+      edit: Edit
+      guidance: |
+        Please read through and confirm the options you have selected
+        before marking this report as incomplete.
+      label: Are you sure you want to mark this report as incomplete?
+      warning: Once you have made the report incomplete you will not be able to undo this action.
+

@@ -1,0 +1,68 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-documents" %}
+{% set page = "summaryPage" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% set hideEditLink = hideEditLink | default(false) %}
+
+{# Page Titles #}
+{% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{# Breadcrumbs #}
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            {# Introduction text #}
+            <p class="text">
+                 {{ 'summaryPage.weAskAbout' | trans(transOptions) }}
+            </p>
+        </div>
+        <div class="column-third">
+            {{ macros.relatedSections(report, 'documents') }}
+        </div>
+    </div>
+
+    <table class="check-your-answers columns-2 push-double--bottom">
+        {{ macros.summaryTableHeaderQA(hideEditLink) }}
+        <tbody>
+        <tr class="behat-region-provided-documentation">
+            <td>
+                {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
+            </td>
+            <td>
+                {{ report.wishToProvideDocumentation | capitalize }}
+            </td>
+            <td class="change-answer">
+                <a href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    {# Attached documents table #}
+    {% if report.wishToProvideDocumentation == 'yes' %}
+        {% include 'AppBundle:Report/Document:_list.html.twig'  with {
+        'translationDomain': translationDomain,
+        'page' : page
+        } %}
+    {% endif %}
+
+    {# Pagination #}
+    {% include 'AppBundle:Report:_nextprevious.html.twig' with {
+        'report': report,
+        'sectionId': 'documents',
+    } %}
+
+{% endblock %}
+
+
+

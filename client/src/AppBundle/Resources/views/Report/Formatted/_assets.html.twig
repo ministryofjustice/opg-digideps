@@ -1,0 +1,41 @@
+{% set translationDomain = "report-assets" %}
+{% if assets | length > 0 or report.noAssetToAdd == true %}
+    <div class="section break-before" id="assets-section">
+        <h2 class="section-heading">{{ 'form.clientAssets.label' | trans(transOptions, translationDomain) }}</h2>
+
+        {% if report.assets | length == 0 %}
+            <div class="box">
+                <h3 class="label question bold">{{ 'form.doesClientHaveAssets.label' | trans(transOptions, translationDomain) }}</h3>
+                <table class="checkboxes labelvalue inline">
+                    <tr>
+                        <td class="value checkbox">X</td>
+                        <td class="label">{{ 'form.doesClientHaveAssets.noAssets.label' | trans(transOptions, translationDomain) }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% else %}
+            <ul id="assets">
+                {% for groupId, assetsInGroup in report.getAssetsGroupedByTitle %}
+                    <li data-group="{{ groupId }}">
+                        {% if (groupId | lower) == 'property' %}
+                            {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
+                        {% else %}
+                             {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
+                        {% endif%}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div class="box">
+                {# total value #}
+                <table class="labelvalue money">
+                    <tr>
+                        <td class="label bold">Assets Total Value</td>
+                        <td class="value total width-fifth" id="assetsTotal">&pound;{{ report.assetsTotalValue | money_format }}</td>
+                    </tr>
+                </table>
+            </div>
+
+        {% endif %}
+    </div>
+{% endif %}

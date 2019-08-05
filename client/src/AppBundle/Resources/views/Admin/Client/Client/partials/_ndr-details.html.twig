@@ -1,0 +1,45 @@
+{% trans_default_domain "admin-clients" %}
+{% set page = 'clientDetails' %}
+
+<h2 class="heading-medium flush--ends">{{ (page ~ '.ndrTitle') | trans }}</h2>
+
+<table class="check-your-answers">
+    <thead>
+    <tr>
+        <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
+        <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
+        <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
+        <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+
+        {# only show submitted and unsubmitted reports #}
+        {% set behatRegionPrefix = 'behat-region-ndr-' ~ (ndr.getStartDate() | date("j F Y")) %}
+        <tr class="{{ behatRegionPrefix }}">
+            <td>
+                {{ 'ndr' | trans({}, 'common') }}
+            </td>
+            <td class="{{ behatRegionPrefix }}-due-date">
+                {{ ndr.dueDate | date("j F Y") }}
+            </td>
+            <td>
+                {# Display submit date regardless of being submitted or not.
+                # An unsubmitted report still has a submit date from a previous submission
+                #}
+                {% if ndr.submitDate %}
+                    {{ ndr.submitDate | date("j F Y") }}
+                {% endif %}
+            </td>
+            <td>
+                {% if ndr.submitted %}
+                    {% set status = 'submitted' %}
+                {% else %}
+                    {% set status = ndr.statusService.status %}
+                {% endif %}
+
+                <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

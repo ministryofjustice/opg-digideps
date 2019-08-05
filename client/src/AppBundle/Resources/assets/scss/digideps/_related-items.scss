@@ -1,0 +1,21 @@
+// ==========================================================================
+// RELATED
+// Govuk related resources (aside)
+
+.opg-related-items {
+    padding-top: 10px;
+    border-top: 10px solid $link-colour;
+
+    .govuk-list {
+        li {
+            margin-bottom: 10px;
+        }
+    }
+
+    &--fixed {
+        position: fixed;
+        top: 1em;
+    }
+}
+
+

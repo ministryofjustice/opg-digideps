@@ -1,0 +1,236 @@
+{% set translationDomain = "ndr-income-benefits" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<h2 class="govuk-heading-l">{{ 'stepPage.pageTitle.stateBenefits' | trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-benefits">
+        <dt class="govuk-summary-list__value">
+            {{ 'form.stateBenefits.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if ndr.stateBenefitsPresent | length == 0 %}
+                None
+            {% else %}
+                <ul class="govuk-list govuk-list--bullet">
+                    {% for sb in ndr.stateBenefitsPresent %}
+                        <li>
+                            {{ ('form.stateBenefits.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    {% set stateBenefitsOther = ndr.getStateBenefitOther() %}
+    {% if stateBenefitsOther.present %}
+        <div class="govuk-summary-list__row behat-region-benefits-other-more-details">
+            <dt class="govuk-summary-list__value">
+                {{ 'form.stateBenefitsOtherDetails.labelSummaryPage' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ stateBenefitsOther.moreDetails | nl2br }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 1, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        </div>
+    {% endif %}
+</dl>
+
+<h2 class="govuk-heading-l">{{ 'stepPage.pageTitle.pensions' | trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-receive-state-pension">
+        {% if ndr.receiveStatePension is null %}
+            <dt class="govuk-summary-list__value">
+                <span class="error">
+                    {{ 'form.receiveStatePension.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__value">
+                {{ 'form.receiveStatePension.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.receiveStatePension | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 2, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-receive-other-regular-income">
+        {% if ndr.receiveOtherIncome is null %}
+            <dt class="govuk-summary-list__value">
+                <span class="error">
+                    {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__value">
+                {{ 'form.receiveOtherIncome.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.receiveOtherIncome | capitalize }}
+            </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    {% if ndr.receiveOtherIncome == 'yes' %}
+    <div class="govuk-summary-list__row behat-region-receive-other-regular-income-more-details">
+        <dt class="govuk-summary-list__value">
+            {{ 'form.receiveOtherIncomeDetails.labelSummaryPage' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.receiveOtherIncomeDetails | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 3, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
+</dl>
+
+<h2 class="govuk-heading-l">{{ 'stepPage.pageTitle.damages' | trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-compensation-awards">
+        {% if ndr.expectCompensationDamages is null %}
+        <dt class="govuk-summary-list__value">
+            <span class="error">
+                {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
+            </span>
+        </dt>
+        <dd class="govuk-summary-list__value">
+            <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+        </dd>
+        {% else %}
+        <dt class="govuk-summary-list__value">
+            {{ 'form.expectCompensationDamages.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.expectCompensationDamages | capitalize }}
+        </dd>
+        {% endif %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+
+    {% if ndr.expectCompensationDamages == 'yes' %}
+    <div class="govuk-summary-list__row behat-region-compensation-awards-more-details">
+        <dt class="govuk-summary-list__value">
+            {{ 'form.expectCompensationDamagesDetails.labelSummaryPage' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.expectCompensationDamagesDetails | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 4, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+    {% endif %}
+</dl>
+
+<h2 class="govuk-heading-l">{{ 'stepPage.pageTitle.oneOff' | trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'question' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ 'answer' | trans({}, 'common') }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        </dd>
+    </div>
+
+    <div class="govuk-summary-list__row behat-region-one-off">
+        <dt class="govuk-summary-list__value">
+            {{ 'form.oneOff.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+
+            {% if ndr.getOneOffPresent | length == 0 %}
+                None
+            {% else %}
+                <ul class="govuk-list govuk-list--bullet">
+                    {% for sb in ndr.oneOffPresent %}
+                        <li>
+                            {{ ('form.oneOff.entries.' ~ sb.typeId ~ '.label') | trans(transOptions) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('ndr_income_benefits_step', { 'ndrId': ndr.id, 'step': 5, 'from': 'summary' }) }}">
+                {{ 'edit' | trans({}, 'common') }}
+            </a>
+        </dd>
+    </div>
+</dl>

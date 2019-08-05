@@ -1,0 +1,39 @@
+{% set translationDomain = "report-declaration" %}
+{% trans_default_domain translationDomain %}
+{% if report.submitted %}
+
+<div class="section">
+    <h2 class="section-heading">{{ 'page.pageTitle' | trans }}</h2>
+    <div class="box behat-region-deputy-declaration">
+
+        <p class="label">{{ 'page.declarationTerms01' | trans }}</p>
+        <p class="label">{{ 'page.declarationTerms02' | trans }}</p>
+
+        {% if submittedBy.isLayDeputy %}
+            <p class="label">{{ 'page.declarationTerms03.lay' | trans }}</p>
+        {% else %}
+            <p class="label">{{ 'page.declarationTerms03.nonLay.intro' | trans }}</p>
+            <ul class="list list-bullet">
+                <li class="label">{{ 'page.declarationTerms03.nonLay.option1' | trans }}</li>
+                <li class="label">{{ 'page.declarationTerms03.nonLay.option2' | trans }}</li>
+            </ul>
+        {% endif %}
+        <p class="label">{{ 'page.declarationTerms04' | trans }}</p>
+
+        <dl class="labelvalue">
+            <dt class="label">Declaration</dt>
+            <dd class="value" id="declarationString">
+                {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans() }}
+            </dd>
+            {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                <dt class="label">Reason</dt>
+                <dd class="value">{{ report.agreedBehalfDeputyExplanation | nl2br }}</dd>
+            {% endif %}
+            <dt class="label">Declaration time</dt>
+            <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
+            <dt class="label">Deputy name</dt>
+            <dd class="value" id="statusDeputyName">{{ submittedBy.fullname }}</dd>
+        </dl>
+    </div>
+</div>
+{% endif %}

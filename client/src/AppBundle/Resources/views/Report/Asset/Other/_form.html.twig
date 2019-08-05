@@ -1,0 +1,14 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+{{ form_input(form.value, 'form.value', {
+    'inputPrefix' : '£',
+    'inputClass' : 'form-control-1-4 js-format-currency',
+    'labelRaw': true
+} ) }}
+{{ form_input(form.description, 'form.description') }}
+{{ form_known_date(form.valuationDate, 'form.valuationDate') }}
+{{ macros.saveAndContinueButton(form.save) }}
+
+{{ form_end(form) }}

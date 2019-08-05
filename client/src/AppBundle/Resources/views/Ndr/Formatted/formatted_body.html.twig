@@ -1,0 +1,27 @@
+{% set client = ndr.client %}
+{% set team = app.user.teams | first %}
+{% set isEmailAttachment = true %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<div id="wrapper">
+    <div class="formatted-report content">
+        <div id="report-header">Office of the Public Guardian</div>
+        <h1>New deputy report</h1>
+        {% if adLoggedAsDeputy %}
+        <h2>Assisted Digital</h2>
+        {% endif %}
+        {% include 'AppBundle:Ndr/Formatted:_client_information.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_visits-care.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_expenses.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_income_benefits.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_accounts.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_assets.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_debts.html.twig' %}
+        {% include 'AppBundle:Ndr/Formatted:_actions.html.twig' %}
+        {% include 'AppBundle:Report/Formatted:_any_other_info.html.twig' with {
+            'report': ndr,
+            'title': "Is there anything else you'd like to tell us?",
+        } %}
+        {% include 'AppBundle:Ndr/Formatted:_submission_declaration.html.twig' %}
+    </div>
+</div>

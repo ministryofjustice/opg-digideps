@@ -1,0 +1,52 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "ndr-more-info" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+{% block htmlTitle %}
+    {{ 'stepPage.htmlTitle' | trans }}
+{% endblock %}
+{% block pageTitle %}
+    {{ 'stepPage.pageTitle' | trans }}
+{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.actionMoreInfo.vars.valid %}form-group-error{% endif %}">
+                {{ form_checkbox_group(form.actionMoreInfo, 'form.actionMoreInfo', {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'form-label-bold',
+                    'legendText' : 'form.actionMoreInfo.label' | trans(transOptions),
+                    'items': [
+                        {'dataTarget': 'more-info-textarea' }
+                    ]
+                }) }}
+
+                <div id="more-info-textarea" class="opg-indented-block js-hidden">
+                    {{ form_input(form.actionMoreInfoDetails, 'form.actionMoreInfoDetails', {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+

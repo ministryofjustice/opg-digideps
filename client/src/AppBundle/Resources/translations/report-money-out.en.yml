@@ -1,0 +1,9 @@
+deletePage:
+    htmlTitle: "Deputy report - Money out | GOV.UK"
+    subject: payment
+    summary:
+        category: Type
+        description: Description
+        amount: Amount
+        bankAccount: Bank account
+        date: Date

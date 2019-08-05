@@ -1,0 +1,68 @@
+startPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageTitle: Money transfers
+  pageSectionDescription1: |
+    Use this section to tell us about money you've transferred between %client%'s accounts.
+  pageSectionDescription2: |
+    If you've made more than one transfer from one account to another, you can give us a total for the reporting period.
+
+  startButton: Start money transfers
+
+existPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageTitle: Money transfers
+  form:
+    noTransfersToAdd:
+      label: Have you made any money transfers between %client%'s accounts in this reporting period?
+      hint: ""
+    save:
+      label: Save and continue
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add another transfer | GOV.UK"
+  pageTitle: Money transfers
+  form:
+    addAnother:
+      label: The transfer has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more transfers
+    save:
+       label: Continue
+
+stepPage:
+  htmlTitle: "Deputy report - Money transfer | GOV.UK"
+  supportTitle: Money transfers
+  pageTitle: Add a money transfer
+
+summaryPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageTitle: Money transfers
+  weAskAbout: In this section, we ask you about money you've transferred between %client%'s accounts.
+  addButton: Add a transfer
+
+deletePage:
+  htmlTitle: "Deputy report - remove money transfer | GOV.UK"
+  subject: transfer
+  summary:
+    accountFrom: Transferred from
+    accountTo: Transferred to
+    amount: Amount
+
+errorPage:
+  htmlTitle: "Deputy report - money transfers | GOV.UK"
+  pageTitle: Money transfers
+  errors:
+    atLeastTwoBankAccounts: You don't need to complete this section if you have fewer than two bank accounts.
+  backToOverview: Back to overview page
+  backToClientProfile: Back to client profile
+
+
+form:
+  accountFrom:
+    label: Which account did you transfer money from?
+    hint: ""
+  accountTo:
+    label: Which account did you transfer money to?
+    hint: ""
+  amount:
+    label: How much money was transferred?
+    hint: ""

@@ -1,0 +1,29 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "settings" %}
+{% set translationDomain = "settings" %}
+
+{% block htmlTitle %}{{ 'htmlTitle.registration-details' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle.registration-details' | trans }}{% endblock %}
+
+{% block progressBar %}
+    {{ progress_bar_registration(user, 'user_details') }}
+{% endblock %}
+
+{% block helpline %}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {class: 'behat-region-user-details', novalidate: 'novalidate' }}) }}
+
+    {% include 'AppBundle:User:_form_fields.html.twig'  with {
+        'translationDomain': translationDomain,
+        'user': user,
+        'client_validated': client_validated
+    } %}
+
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

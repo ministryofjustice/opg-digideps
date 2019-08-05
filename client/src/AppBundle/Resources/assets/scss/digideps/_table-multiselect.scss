@@ -1,0 +1,28 @@
+// ==========================================================================
+// TABLE MULTISELECT
+// Select all/many rows on a table in the admin
+
+// Various custom form styles
+.table-clickable {
+
+    .multiple-choice--smaller {
+       margin: 0;
+       padding: 10px 0 0 10px;
+
+        .multiple-choice {
+            padding-left: 10px;
+
+            label {
+                padding: 0 10px 30px 12px;
+            }
+        }
+    }
+
+    tr {
+        // Highlight which row is selected
+        &.checked {
+            background-color: lighten($focus-colour, 25%);
+        }
+    }
+}
+

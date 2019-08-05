@@ -1,0 +1,8 @@
+generic:
+  title: Application error
+  titleForDisplayableException: "%message%"
+  description: Please try again in a short while
+  backToHomePage: Go back to homepage
+404:
+  title: Page not found
+  description: If you entered a web address please check it was correct.

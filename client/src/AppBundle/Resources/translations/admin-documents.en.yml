@@ -1,0 +1,30 @@
+page:
+  htmlTitle: Administration - Documents
+  pageTitle: Admin
+  supportTitle: Submitted reports and supporting documents
+  tabs:
+    new.label: "New"
+    archived.label: "Archived"
+  searchForm:
+    search:
+      label: Client, deputy or case number
+  postactions:
+    download: Download
+    archive: Archive
+    archived:
+      notice: "{1} 1 document archived|]1,Inf[ %count% documents archived"
+  resultsTable:
+    header:
+      all: All
+      clientAndCaseNo: Client and case no
+      deputy: Deputy
+      period: Period
+      documents: Documents
+      date: Date
+      user: User
+    noDocumentsFound: No documents found
+  table:
+    rows:
+      documents: "{0} No documents | {1} 1 document | ]1,Inf[ %count% documents"
+      documentsWithReport: "{0} No documents | {1} Report | ]1,Inf[ Report + docs"
+

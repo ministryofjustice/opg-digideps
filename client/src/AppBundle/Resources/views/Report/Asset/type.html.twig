@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application.html.twig'%}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'typePage' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <div class="text">
+        <p>{{ (page ~ '.pageSectionDescription1') | trans(transOptions) }}</p>
+        <p>{{ (page ~ '.pageSectionDescription2') | trans(transOptions) }}</p>
+    </div>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_checkbox_group(form.title, 'form.title', {
+        'legendClass' : 'form-label-bold',
+        'legendText' : 'form.title.legend' | trans(transOptions)
+    }) }}
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

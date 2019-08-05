@@ -1,0 +1,10 @@
+{% set class = '' %}
+{% if linkClass is defined %}
+    {% set class = 'govuk-button ' ~ linkClass %}
+{% else %}
+    {% set class = 'govuk-button opg-button--link' %}
+{% endif %}
+<a href="{{ linkHref|default('#link-button-href-not-defined') }}"
+   {% if linkId is defined %} id="{{ linkId }}" {% endif %}
+   class="{{ class }}"
+   {% if linkId is defined %}id="{{linkId}}"{% endif %}>{{ linkButtonLabel|default('Link Button Label')|trans({}, transDomain) }}</a>

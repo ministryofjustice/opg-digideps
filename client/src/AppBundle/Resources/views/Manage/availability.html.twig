@@ -1,0 +1,16 @@
+<h1>App Health Check</h1>
+<ul>
+  <li>
+    <b>Environment</b>: {{ environment }}
+  </li>
+  {% for service in services %}
+    <li>
+      <b>{{ service.name }}</b>:
+      {% if service.healthy %}
+        OK
+      {% else %}
+        <span style="color: #FF0000">{{ service.errors | nl2br }}</span>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

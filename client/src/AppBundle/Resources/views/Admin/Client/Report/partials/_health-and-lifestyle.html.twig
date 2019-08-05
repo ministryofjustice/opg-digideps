@@ -1,0 +1,28 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="lifestyle">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</h3>
+
+<div class="form-section">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.satisfiedWithHealthAndLifestyle, (page ~ '.form.satisfiedWithHealthAndLifestyle'), {
+            'fieldSetClass' : 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.lifestyleResponses') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                {# Questions and answers table #}
+                {% include 'AppBundle:Report/Lifestyle:_answers.html.twig' with {
+                    hideEditLink: true
+                } %}
+            </div>
+        </div>
+    </details>
+</div>

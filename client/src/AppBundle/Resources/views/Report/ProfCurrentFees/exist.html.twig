@@ -1,0 +1,45 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-prof-current-fees" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'existPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <div class="form-section push--bottom">
+        <div class="form-group flush--bottom {% if not form.currentProfPaymentsReceived.vars.valid %}form-group-error{% endif %}">
+            {{ form_checkbox_group(form.currentProfPaymentsReceived, 'existPage.form.hasFees', {
+                'useFormGroup': false,
+                'fieldSetClass' : 'inline',
+                'legendClass' : 'form-label-bold text push-half--bottom',
+                'items': [
+                {},
+                ],
+                'formGroupClass': 'flush--bottom'
+            }) }}
+
+        </div>
+    </div>
+
+    {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+
+
+

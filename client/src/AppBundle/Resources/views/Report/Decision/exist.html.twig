@@ -1,0 +1,77 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'existPage' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+{% set append104 = report.get104TransSuffix %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        <div class="form-section push--bottom">
+            <div class="form-group flush--bottom {% if not form.hasDecisions.vars.valid %}form-group-error{% endif %}">
+                {{ form_checkbox_group(form.hasDecisions, (page ~ '.form.hasDecisions'), {
+                    'useFormGroup': false,
+                    'fieldSetClass' : 'inline',
+                    'labelParameters': transOptions,
+                    'legendClass' : 'form-label-bold text',
+                    'items': [
+                        {},
+                        {'dataTarget': 'reason-for-no-decisions'}
+                    ],
+                    'formGroupClass': 'flush--bottom'
+                }) }}
+
+                <div id="reason-for-no-decisions" class="opg-indented-block js-hidden">
+                    {{ form_input(form.reasonForNoDecisions, (page ~ '.form.reasonForNoDecisions'), {
+                        'labelClass': 'required',
+                        'labelParameters': transOptions
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+        {# Reusing content from the start page #}
+        {% set page = 'startPage' %}
+
+        <details class="push--bottom">
+            <summary>
+                <span class="summary">{{ (page ~ '.whatisdecisionSummary') | trans }}</span>
+            </summary>
+            <div class="text opg-indented-block">
+                <p>{{ (page ~ '.whatisdecisionPara1' ~ append104) | trans(transOptions) }}</p>
+                <p>{{ (page ~ '.whatisdecisionPara2' ~ append104) | trans(transOptions) }}</p>
+                <ul class="list list-bullet">
+                    <li>{{ (page ~ '.whatisdecisionListItem1' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem2' ~ append104) | trans(transOptions) }}</li>
+                    <li>{{ (page ~ '.whatisdecisionListItem3' ~ append104) | trans(transOptions) }}</li>
+                    {% if '104' not in report.type %}
+                        <li>{{ (page ~ '.whatisdecisionListItem4' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem5' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem6' ~ append104) | trans(transOptions) }}</li>
+                        <li>{{ (page ~ '.whatisdecisionListItem7' ~ append104) | trans(transOptions) }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </details>
+
+        {# Resetting correct page for content #}
+        {% set page = 'existPage' %}
+
+        {{ macros.saveAndContinueButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

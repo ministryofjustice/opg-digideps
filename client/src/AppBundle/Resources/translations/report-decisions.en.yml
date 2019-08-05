@@ -1,0 +1,135 @@
+startPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageTitle: Decisions
+  startButton: Start decisions
+  description1: "Use this section to tell us about %client%'s mental capacity and the significant decisions you've made on %client%'s behalf."
+
+  whatisMentalCapacitySummary: What is mental capacity?
+  whatisMentalCapacityPara1: |
+    'Mental capacity' means being able to make a specific decision at the time that it needs to be made.
+  whatisMentalCapacityPara2: |
+    For more information, refer to the <a href=" https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/497253/Mental-capacity-act-code-of-practice.pdf " target="_blank">Mental Capacity Code of Conduct</a>.
+  whatisdecisionSummary: What counts as a significant decision?
+  whatisdecisionPara1: |
+    Significant decisions are any important decisions you make for %client% - not
+    just financial ones. We need to know about any decisions that have a big
+    impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara1-104: |
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%'s wellbeing or circumstances.
+  whatisdecisionPara1-4: |
+    Significant decisions are any important decisions you make for %client%. We need to know about
+    any decisions that have a big impact on %client%’s wellbeing or circumstances.
+  whatisdecisionPara2: "Your significant decisions might include:"
+  whatisdecisionPara2-104: "Significant decisions might include changes to:"
+  whatisdecisionPara2-4: "Significant decisions might include:"
+  whatisdecisionListItem1: buying, selling or renting property
+  whatisdecisionListItem2: buying or selling investments or shares
+  whatisdecisionListItem3: holidays or frequent day trips
+  whatisdecisionListItem4: home improvements
+  whatisdecisionListItem5: making gifts on %client%'s behalf
+  whatisdecisionListItem6: moving %client% to another nursing or care home
+  whatisdecisionListItem7: changing day centres
+  whatisdecisionListItem1-104: "%client%'s living arrangements"
+  whatisdecisionListItem2-104: medical treatment
+  whatisdecisionListItem3-104: diet
+  whatisdecisionListItem1-4: "changing %client%'s living arrangements or day centre"
+  whatisdecisionListItem2-4: "changing %client%'s medical treatment or diet"
+  whatisdecisionListItem3-4: "buying, selling or renting property"
+  whatisdecisionListItem4-4: "making home improvements"
+  whatisdecisionListItem5-4: "buying or selling investments or shares"
+  whatisdecisionListItem6-4: "taking holidays or frequent day trips"
+  whatisdecisionListItem7-4: "making gifts on %client%'s behalf"
+  description2: |
+    You don't need to include small, day-to-day decisions like buying food or toiletries.
+
+mentalCapacity:
+  htmlTitle: "Deputy report - mental capacity | GOV.UK"
+  pageTitle: "Mental capacity"
+  form:
+    hasCapacityChanged:
+      label: "Has %client%'s mental capacity to make financial decisions changed?"
+      label-104: "Has %client%'s mental capacity to make health and welfare decisions changed?"
+      label-4: "Has %client%'s mental capacity to make financial or health and welfare decisions changed?"
+      hint: ""
+      choices:
+        changed: Changed
+        stayedSame: Stayed the same
+    hasCapacityChangedDetails:
+        label: "Please tell us more."
+        hint: "For example, %client% may be able to make some types of decisions but not others – or only make decisions at some times"
+    mentalAssessmentDate:
+        legend: "When was %client%'s mental capacity to make decisions last assessed by a professional (such as a psychiatrist or social worker)?"
+        hint: For example, 12 2015
+
+existPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageTitle: Decisions
+  form:
+    hasDecisions:
+      label: Have you made any significant decisions for %client% during this reporting period?
+      hint: ""
+    reasonForNoDecisions:
+      label: Please give us an explanation
+      hint: ""
+
+addAnotherPage:
+  htmlTitle: "Deputy report - add decision | GOV.UK"
+  pageTitle: Decisions
+  form:
+    addAnother:
+      label: The decision has been saved. Would you like to add another now?
+      hint: If you prefer, you can come back to this section later to add more decisions
+    save:
+       label: Continue
+
+addPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageTitle: Add a decision
+  supportTitle: Decisions
+  pageSectionDescription: |
+    We need to know the details of the significant decisions you've made for %client%. You'll be
+    able to add more decisions later if you need to.
+
+editPage:
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  supportTitle: Decisions
+  pageTitle: Edit decision
+
+summaryPage:
+  weAskAbout: |
+      In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
+  htmlTitle: "Deputy report - decisions | GOV.UK"
+  pageTitle: Decisions
+  addButton: Add significant decision
+  listOfDecisions: List of significant decisions
+  decisionTableColumnHeading1: Decision description
+  decisionTableColumnHeading2: Was %client% involved?
+  decisionTableColumnHeading3: If not, explain why; if yes, provide detail
+
+deletePage:
+  htmlTitle: "Deputy report - remove decision | GOV.UK"
+  subject: decision
+  summary:
+    description: Decision description
+
+form:
+  title:
+    label: Title
+    hint: Add a title to help you identify the decision.
+  description:
+    heading: Description
+    label: What was the significant decision? Why did you make it at the time?
+    hint: ""
+  clientInvolvedBoolean:
+    heading: %client%'s involvement
+    label: Did you involve %client% in this decision?
+    hint: ""
+    defaultOption: Please select...
+  clientInvolvedDetails:
+    label: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
+    hint: ""
+  save:
+    label: Save and continue
+
+

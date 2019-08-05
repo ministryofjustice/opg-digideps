@@ -1,0 +1,12 @@
+satisfactionLevel:
+  legend: Overall, how did you feel about the process of completing your deputy report online?
+  hint: ""
+send:
+  label: Send feedback
+
+satisfactionLevelsChoices: |
+    Very satisfied
+    Satisfied
+    Neither satisfied or dissatisfied
+    Dissatisfied
+    Very dissatisfied

@@ -1,0 +1,14 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+    
+logout:
+    path: /logout
+
+# redirecting the admin home
+root:
+    path: /pa
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: org_dashboard
+        permanent: true

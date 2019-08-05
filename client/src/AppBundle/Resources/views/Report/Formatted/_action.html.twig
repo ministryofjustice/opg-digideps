@@ -1,0 +1,22 @@
+{% import 'AppBundle:Macros:macros-review.html.twig' as macros %}
+
+{% set append104 = report.get104TransSuffix %}
+
+<div class="section" id="action-section">
+    <h2 class="section-heading">Actions you plan to take</h2>
+
+    {{ macros.answerYesNo({
+        question: ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions, 'report-actions'),
+        answer: report.action.doYouExpectFinancialDecisions,
+        moreDetails: report.action.doYouExpectFinancialDecisionsDetails,
+        showMoreDetailsWith: 'yes'
+    }) }}
+
+    {{ macros.answerYesNo({
+        question: 'form.doYouHaveConcerns.label' | trans({}, 'report-actions'),
+        answer: report.action.doYouHaveConcerns,
+        moreDetails: report.action.doYouHaveConcernsDetails,
+        showMoreDetailsWith: 'yes'
+    }) }}
+
+</div>

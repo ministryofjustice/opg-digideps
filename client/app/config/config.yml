@@ -1,0 +1,101 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+framework:
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:
+        enabled: true
+        enable_annotations: true
+        strict_email: true
+    templating:
+        engines: ['twig']
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:
+      handler_id: snc_redis.session.handler
+      name: digideps
+      # force session usage, no cookie (we want to logout when the browser closes)
+      cookie_lifetime: 0
+      gc_probability: 1
+      gc_divisor: 100
+      # session timeout (when GC kicks in)
+      gc_maxlifetime: %session_expire_seconds%
+      # true:  cookie won't be accessible by Javascript, safer for XSS
+      cookie_httponly: true
+      # set this only HTTPS environments to force cookie only to be sent over HTTPS (when true, login won't work on non-HTTPS domains)
+      cookie_secure: %session_cookie_secure%
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    globals:
+        env: %env%
+        opg_docker_tag: %opg_docker_tag%
+        session_expires_seconds: %session_expire_seconds%
+        session_popup_show_after: %session_popup_show_after%
+        ga: %ga%
+        feedbackUrl: "http://www.smartsurvey.co.uk/s/GOR7N/"
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'AppBundle:Form:fields.html.twig'
+
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: smtp
+    host:      localhost
+    username:  ~
+    password:  ~
+    spool:     { type: memory }
+
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: %redis_dsn%
+    session:
+        client: default
+        prefix: %session_prefix%
+
+parameters:
+    # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
+    asset_dropdown:
+        - antiques
+        - artwork
+        - investment_bonds
+        - jewellery
+        - national_savings_certificates
+        - premium_bonds
+        - property
+        - stocks_shares
+        - unit_trusts
+        - vehicles
+        - assets_held_outside_england_and_wales
+        - other_assets
+
+services:
+    # Logtash formatter for Kibana
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+        arguments: [ "application.client", null, null, "", 1 ]
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
+
+monolog:
+   handlers:
+       main:
+           type: stream
+           path: php://stderr
+           level: %log_level%
+           formatter: logstash_formatter

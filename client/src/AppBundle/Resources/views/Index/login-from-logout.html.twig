@@ -1,0 +1,16 @@
+{% extends 'AppBundle:Index:login.html.twig' %}
+
+{% set translationDomain = "signin" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'signedOut.pageTitle' | trans }}{% endblock %}
+
+{% block pageHeader %}
+
+    {% if not isAdmin %}
+        <p class="lede">{{ 'signedOut.para01' | trans }}</p>
+    {% endif %}
+
+    <p class="behat-region-manual-logout-message">{{ 'signedOut.para02' | trans }}</p>
+
+{% endblock %}

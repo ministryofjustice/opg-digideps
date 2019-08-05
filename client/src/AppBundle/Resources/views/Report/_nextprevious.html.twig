@@ -1,0 +1,32 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
+{# set default label and link (report overview / client profile) #}
+{% set overviewPageConfig = {
+    'section': app.user.isDeputyOrg ? 'clientProfile' : 'reportOverview',
+    'link': report.type == 'ndr'
+    ? path('ndr_overview', {'ndrId': report.id})
+    : path('report_overview', {'reportId': report.id}),
+} %}
+
+{# get link from twig extension (that uses ReportSectionLinkService). Default to overview page if it's the first/last #}
+{% set prevConfig = section_link_params(report, sectionId, -1) | default(overviewPageConfig) %}
+{% set nextConfig = section_link_params(report, sectionId, 1) | default(overviewPageConfig)%}
+
+<nav role="navigation" aria-label="Pagination">
+  <ul class="opg-pagination">
+    <li class="opg-pagination__item">
+        <a href="{{ prevConfig.link }}" class="opg-pagination__link opg-pagination__link--previous" rel="prev" title="Navigate to previous part">
+            <span class="opg-pagination__link-text">{{ 'prevNextLinks.previous' | trans({}, translationDomain) }}</span>
+            {{ ('prevNextLinks.sections.' ~ prevConfig.section) | trans }}
+        </a>
+    </li>
+    <li class="opg-pagination__item">
+        <a href="{{ nextConfig.link }}" class="opg-pagination__link opg-pagination__link--next" rel="next" title="Navigate to next part">
+            <span class="opg-pagination__link-text">{{ 'prevNextLinks.next' | trans({}, translationDomain) }}</span>
+            {{ ('prevNextLinks.sections.' ~ nextConfig.section) | trans }}
+        </a>
+    </li>
+  </ul>
+</nav>
+

@@ -1,0 +1,45 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-submitted" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'page.pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ macros.notification('success', 'page.thankYouForsubmitting' | trans({'%reportName%': ''})) }}
+
+    <div class="text push--top">
+        <p>{{ 'page.yourReportWillBeSent' | trans }}</p>
+        <p>{{ 'page.weWillSendReminder' | trans }}</p>
+    </div>
+
+    <a href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" class="behat-link-download-report">
+        {{ 'page.downloadLink' | trans({'%reportName%': ''}) }}
+    </a>
+
+    {# feedback form #}
+    <h2 class="heading-medium">{{ 'page.feedback.title' | trans }}</h2>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
+
+    {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
+        'legendClass' : 'form-label-bold',
+        'legend': 'satisfactionLevel'
+    }) }}
+
+    {{ form_submit(form.save, 'send') }}
+
+    {{ form_end(form) }}
+    {# end feedback form #}
+
+    {% if app.user.isDeputyOrg() %}
+        <a href="{{path('org_dashboard')}}" class="behat-link-return-to-org-dashboard">{{ 'page.returnToDashboard' | trans }}</a>
+    {% else %}
+        <a href="{{ path('lay_home')}}" class="behat-link-return-to-reports-page">{{ 'page.returnToHomepage' | trans }}</a>
+    {% endif %}
+
+{% endblock %}

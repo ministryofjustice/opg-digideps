@@ -1,0 +1,33 @@
+// ==========================================================================
+// DETAILS BANNER
+// Details banner component
+
+.opg-details-banner {
+    @include govuk-clearfix;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: govuk-spacing(3) 0;
+    border-bottom: 1px solid $govuk-border-colour;
+
+    // Combined with flex-wrap, this ensures the clearfix ::after element doesn't
+    // affect spacing of the flex elements.
+    &::after {
+        width: 100%;
+    }
+
+    &__content {
+        float: left;
+    }
+
+    &__helpline {
+        position: static;
+        float: right;
+
+        h3 {
+            @include govuk-font(16, $weight: bold)
+        }
+    }
+}

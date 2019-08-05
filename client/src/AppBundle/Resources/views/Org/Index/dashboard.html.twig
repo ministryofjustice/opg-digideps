@@ -1,0 +1,137 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "org-dashboard" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block pageContent %}
+
+    <form action="{{ path('org_dashboard') }}" method="GET">
+        <div class="govuk-form-group govuk-!-margin-bottom-2">
+            <label for="search" class="govuk-label">{{ 'searchBy' | trans }}</label>
+            <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input">
+        </div>
+
+        <div class="govuk-form-group">
+            <input id="search_submit" class="govuk-button govuk-!-margin-bottom-0 behat-link-search" type="submit" value="Search">
+        </div>
+
+        {% if filters.q %}
+            <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0">{{ 'clearSearch' | trans({}, 'common') }}</a>
+        {% endif %}
+    </form>
+
+    <div class="govuk-tabs" data-module="tabs">
+        <ul class="govuk-tabs__list" role="tablist">
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ not filters.status ? 'govuk-tabs__tab--selected' : '' }}" href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'tabClients' | trans }}
+                    <span class="govuk-tag">{{ counts.total }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='notStarted' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-unstarted" href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'notStarted' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--not-started">{{ counts.notStarted }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='notFinished' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-in-progress" href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'inProgress' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--notice">{{ counts.notFinished }}</span>
+                </a>
+            </li>
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab {{ filters.status =='readyToSubmit' ? 'govuk-tabs__tab--selected' : '' }} behat-link-tab-ready" href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
+                    {{ 'readyToSubmit' | trans({}, 'common') }}
+                    <span class="govuk-tag opg-tag--success">{{ counts.readyToSubmit }}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <table class="push--bottom">
+        <thead>
+            <tr>
+                <th scope="col">{{ 'client' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'courtOrderNo' | trans({}, 'common') }}</th>
+                <th scope="col">{{ 'reportDueDate' | trans({}, 'common') }}</th>
+                <th scope="col" class="numeric">{{ 'reportStatus' | trans({}, 'common') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            {% set transOptions = {
+                '%overdueDays%': report.dueDateDiffDays|abs,
+                '%dueDays%': report.dueDateDiffDays
+            } %}
+            {# condition for setting an appendum for reports that are identified as changes needed #}
+            {% set clientRegionAppend = "" %}
+            {% if report.status.status == 'readyToSubmit' and report.unSubmitDate is not empty and report.submitted == false %}
+                {% set clientRegionAppend = "-changes-needed" %}
+            {% endif %}
+
+            {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+
+            <tr class="behat-region-client behat-region-client-{{ report.client.caseNumber | upper }}{{ clientRegionAppend }}">
+                <td>
+                    <a href="{{ linkToReportOverviewPage }}" class="behat-link-pa-report-open behat-link-pa-report-{{ report.getPeriod() | behat_namify }}-open">{{ report.client.lastName | title | e }}, {{ report.client.firstName | title | e }}</a>
+                </td>
+                <td>
+                    {{ report.client.caseNumber|upper }}
+                </td>
+                <td>
+                    {% if report.dueDate is not null %}
+                        <span>{{ report.dueDate | date("j M Y") }}</span><br>
+                        {% if report.dueDateDiffDays < 0 %}
+                            <span class="font-xsmall bold text-red">{{ 'overdue' | trans(transOptions) }}</span>
+                        {% elseif report.dueDateDiffDays == 0 %}
+                            <span class="font-xsmall bold">{{ 'dueToday' | trans }}</span>
+                        {% elseif report.dueDateDiffDays <= 30 %}
+                            <span class="font-xsmall">{{ 'dueIn' | trans(transOptions) }}</span>
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="numeric">
+                    {% if report.status.status == 'notStarted' %}
+                        <span class="govuk-tag opg-tag--not-started">{{ 'notStarted' | trans({}, 'common') }}</span>
+                    {% elseif report.status.status == 'notFinished' %}
+                        <span class="govuk-tag opg-tag--notice">{{ 'notFinished' | trans({}, 'common') }}</span>
+                    {% elseif report.status.status == 'readyToSubmit' %}
+                        {% if report.unSubmitDate is not empty and report.submitted == false %}
+                            <span class="govuk-tag opg-tag--warning">{{ 'changesNeeded' | trans({}, 'common') }}</span>
+                        {% else  %}
+                            <span class="govuk-tag opg-tag--success">{{ 'readyToSubmit' | trans({}, 'common') }}</span>
+                        {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if filters.q and reports |length == 0 %}
+        <p>{{ 'sorryNoResultsFor' | trans({}, 'common') }} "<strong class="bold">{{ filters.q }}</strong>"</p>
+        <hr>
+    {% endif %}
+
+    {% include 'AppBundle:Components:paginator.html.twig' with {
+        currentOffset: filters.offset,
+        recordsPerPage: filters.limit,
+        totalRecords: counts[filters.status ?: 'total'],
+        routeName: 'org_dashboard',
+        routeParams: {
+            'status': filters.status,
+            'q': filters.q
+        },
+        messages: {
+            singlePage: '{0} Showing 0 clients|{1} Showing 1 client|]1,Inf[ Showing %count% clients',
+            multiPage: 'Showing %from% &ndash; %to% of %total% clients'
+        }
+    } %}
+
+{% endblock %}

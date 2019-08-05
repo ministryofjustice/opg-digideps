@@ -1,0 +1,184 @@
+{% set translationDomain = "ndr-visits-care" %}
+{% trans_default_domain translationDomain %}
+{% set transOptions = {'%client%': ndr.client.firstname | e } %}
+
+<dl class="govuk-summary-list">
+{# STEP 1 #}
+    <div class="govuk-summary-list__row behat-region-live-with-client">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+        {% if ndr.visitsCare.doYouLiveWithClient is null %}
+            <span class="error-message">
+                {{ 'pleaseAnswer' | trans({}, 'common' ) }}
+            </span>
+        {% else %}
+            {{ ndr.visitsCare.doYouLiveWithClient | capitalize }}
+        {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}"
+            class="behat-link-live-with-client-edit govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+    {% if ndr.visitsCare.doYouLiveWithClient == 'no' %}
+    <div class="govuk-summary-list__row behat-region-how-often-contact-client">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ ndr.visitsCare.howOftenDoYouContactClient | nl2br }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step': 1, 'from': 'summary'}) }}"
+            class="govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+    {% endif %}
+{# STEP 2 #}
+    <div class="govuk-summary-list__row behat-region-does-client-receive-paid-care">
+        <dt class="govuk-summary-list__key">
+        {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if ndr.visitsCare.doesClientReceivePaidCare is null %}
+                <span class="error-message">
+                    {{ 'pleaseAnswer' | trans({}, 'common' ) }}
+                </span>
+            {% else %}
+                {{ ndr.visitsCare.doesClientReceivePaidCare | capitalize }}
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':2, 'from': 'summary'}) }}"
+            class="govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+    {% if ndr.visitsCare.doesClientReceivePaidCare == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-how-is-care-funded">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.howIsCareFunded.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ('form.howIsCareFunded.choices.' ~ ndr.visitsCare.howIsCareFunded) | trans(transOptions) }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            <a
+                href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':2, 'from': 'summary'}) }}"
+                class="govuk-link">
+                {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.howIsCareFunded.label' | trans(transOptions) }}</span>
+            </a>
+            </dd>
+        </div>
+    {% endif %}
+{# STEP 3 #}
+    <div class="govuk-summary-list__row behat-region-who-is-doing-caring">
+        <dt class="govuk-summary-list__key">
+                        {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if ndr.visitsCare.whoIsDoingTheCaring is null %}
+                <span class="error-message">
+                    {{ 'pleaseAnswer' | trans({}, 'common' ) }}
+                </span>
+            {% else %}
+                    {{ ndr.visitsCare.whoIsDoingTheCaring | nl2br }}
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':3, 'from': 'summary'}) }}"
+            class="govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+{# STEP 4 #}
+    <div class="govuk-summary-list__row behat-region-client-has-care-plan">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if ndr.visitsCare.doesClientHaveACarePlan is null %}
+                <span class="error-message">
+                    {{ 'pleaseAnswer' | trans({}, 'common' ) }}
+                </span>
+            {% else %}
+                {{ ndr.visitsCare.doesClientHaveACarePlan | capitalize }}
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':4, 'from': 'summary'}) }}"
+            class="govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+    {% if ndr.visitsCare.doesClientHaveACarePlan == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-care-plan-last-reviewed">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.visitsCare.whenWasCarePlanLastReviewed | date('F Y') }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            <a
+                href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':4, 'from': 'summary'}) }}"
+                class="govuk-link">
+                {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.howIsCareFunded.label' | trans(transOptions) }}</span>
+            </a>
+            </dd>
+        </div>
+    {% endif %}
+{# STEP 5 #}
+    <div class="govuk-summary-list__row behat-region-plan-move-new-residence">
+        <dt class="govuk-summary-list__key">
+            {{ 'form.planMoveNewResidence.label' | trans(transOptions) }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {% if ndr.visitsCare.planMoveNewResidence is null %}
+                <span class="error-message">
+                    {{ 'pleaseAnswer' | trans({}, 'common' ) }}
+                </span>
+            {% else %}
+                    {{ ndr.visitsCare.planMoveNewResidence | capitalize }}
+            {% endif %}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+        <a
+            href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':5, 'from': 'summary'}) }}"
+            class="govuk-link">
+            {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}</span>
+        </a>
+        </dd>
+    </div>
+    {% if ndr.visitsCare.planMoveNewResidence == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-plan-move-new-residence-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.planMoveNewResidenceDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ ndr.visitsCare.planMoveNewResidenceDetails | nl2br }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+            <a
+                href="{{ path('ndr_visits_care_step', {'ndrId': ndr.id, 'step':5, 'from': 'summary'}) }}"
+                class="govuk-link">
+                {{ 'edit' | trans({}, 'common' ) }}<span class="govuk-visually-hidden"> {{ 'form.howIsCareFunded.label' | trans(transOptions) }}</span>
+            </a>
+            </dd>
+        </div>
+    {% endif %}
+</dl>

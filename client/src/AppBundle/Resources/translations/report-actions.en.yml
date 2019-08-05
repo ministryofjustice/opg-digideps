@@ -1,0 +1,97 @@
+startPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageTitle: Actions you plan to take
+  pageSectionDescription1: |
+    Use this section to tell us about any significant financial decisions you plan to
+    make on %client%'s behalf in the next 12 months.
+  pageSectionDescription1-104: |
+    Use this section to tell us about any significant health and welfare decisions you plan to
+    make on %client%'s behalf in the next 12 months
+  pageSectionDescription1-4: |
+    Use this section to tell us about any significant financial or health and welfare decisions you plan to
+    make on %client%'s behalf in the next 12 months
+  hiddenText01:
+    summary: Making decisions on %client%'s behalf
+    content:
+      para01: Your court order tells you what you can and can't do on %client%'s behalf.
+      para02: "When you're making a decision or planning future actions as a deputy, you must:"
+      listItem01: make sure it's in %client%'s best interests
+      listItem02: consider what %client% has done in the past
+      listItem03: |
+        apply a high standard of care – this might mean involving other people, for example
+        getting advice from relatives and professionals like doctors
+      para03: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a deputy' (SD3)</a> booklet gives detailed guidance on how to look after %client%'s financial affairs.
+      para03-104: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklet give detailed guidance on how to look after %client%'s health and welfare.
+      para03-4: |
+        OPG's <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a property and affairs deputy' (SD3)</a>
+        and <a href="https://www.gov.uk/government/publications/deputy-guidance-how-to-carry-out-your-duties" target="_blank">'How to be a health and welfare deputy' (SD4)</a> booklets give detailed guidance on how to look after %client%'s property, finance, health and welfare.
+  startButton: Start actions
+
+stepPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageTitle: Actions you plan to take
+  backLink: Back
+
+summaryPage:
+  htmlTitle: "Deputy report - actions you plan to take | GOV.UK"
+  pageTitle: Actions you plan to take
+  supportTitle: ""
+  weAskAbout: |
+    In this section, we ask you about significant financial decisions you may have to make on
+    %client%'s behalf over the coming year.
+
+form:
+  save:
+    label: Save
+  doYouExpectFinancialDecisions:
+    label: |
+      Do you expect to make any significant financial decisions on %client%'s behalf in the
+      next 12 months?
+    label-104: |
+      Do you expect %client%'s circumstances to change in the next 12 months?
+    label-4: |
+      Do you expect %client%'s circumstances to change in the next 12 months?
+    hint: |
+      For example, making a large gift, alterations to %client%'s home, or buying and selling property
+      for %client%
+    hint-104: |
+      For example, changes to %client%'s accommodation or funding, future appointments that
+      affect %client%'s welfare, carrying out an assessment of %client%'s care needs
+    hint-4: |
+      For example, changes to %client%'s accommodation or funding, future appointments that
+      affect %client%'s welfare, carrying out an assessment of %client%'s care needs, making
+      a large gift, alterations to %client%'s home, or buying and selling property for %client%.
+    hiddenText01:
+      summary: Selling property on %client%'s behalf
+      content:
+        para01: |
+          If your court order says that you must not sell, buy, lease or rent property %client%
+          owns or has a share in, you need to apply to the Court of Protection for permission.
+        para02: |
+          It costs £385 to apply – paid from %client%'s funds – and there may be additional
+          costs if there's a court hearing.
+        para03: |
+          If %client% has a small estate (low funds), you can apply to pay a smaller or no fee.
+        para04: <a href="https://www.gov.uk/joint-property-ownership/selling-when-an-owner-has-lost-mental-capacity" target="_blank">Find out more</a>
+  doYouExpectFinancialDecisionsDetails:
+      label: Please give us details about your decisions
+      label-104: Please give us details of these changes
+      label-4: Please give us details of these changes
+  doYouHaveConcerns:
+      label: Do you have any concerns about your deputyship?
+      hint: |
+        For example, paying care home fees if %client%'s money runs low, managing %client%'s property,
+        family members' involvement with %client%'s funds
+      hint-104: |
+        For example, people not recognising or understanding your court order, not being involved in
+        making decisions stated on your court order on behalf of %client%, any complaints about
+        %client%'s care or treatment
+      hint-4: |
+        For example, people not recognising or understanding your court order, not being involved in
+        making decisions stated on your court order on behalf of %client%, any complaints about
+        %client%'s care or treatment, paying care home fees if %client%'s money runs low, managing
+        %client%'s property, family members' involvement with %client%'s funds.
+  doYouHaveConcernsDetails:
+      label: Please give us details about your concerns

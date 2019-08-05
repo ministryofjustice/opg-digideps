@@ -1,0 +1,160 @@
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+
+<h3 class="heading-medium underline" id="deputyAndClientInfo">{{ (page ~ '.heading.info') | trans }}</h3>
+
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
+            'fieldSetClass': 'inline',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <div class="opg-indented-block push--bottom">
+        <p class="flush--bottom behat-region-court-date">
+            <strong class="bold">{{ 'courtOrderDate' | trans({}, 'common') }}:</strong>
+            {% if report.client.courtDate is not null %}
+                {{ report.client.courtDate | date("j M Y") }}
+            {% elseif report.client.calculatedCourtDate is not null %}
+                {{ report.client.calculatedCourtDate | date("j M Y") }} (calculated based on first report submission)
+            {% else %}
+                Not known
+            {% endif %}
+        </p>
+        <p class="flush--bottom behat-region-expected-date hidden">
+            <strong class="bold">{{ (page ~ '.expected') | trans }}:</strong>
+            {% if report.client.expectedReportEndDate is defined %}
+                {{ report.client.expectedReportStartDate | date("j M Y") }} to {{ report.client.expectedReportEndDate | date("j M Y") }}
+            {% endif %}
+        </p>
+        <p class="behat-region-submitted-date">
+            <strong class="bold">{{ (page ~ '.submitted') | trans }}:</strong> {{ report.startDate | date("j M Y") }} - {{ report.endDate | date("j M Y") }}
+        </p>
+    </div>
+</div>
+
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
+            'labelClass': 'text',
+            'formGroupClass': 'push-half--bottom'
+        }) }}
+    </div>
+
+    <details class="push--bottom">
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.contactDetails') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+
+            {# CLIENT DETAILS #}
+            <h3 class="heading-medium">Client details</h3>
+            <table class="text">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-firstname">{{ report.client.firstName }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-lastname">{{ report.client.lastName }}</td>
+                    </tr>
+                    <tr class="align--top">
+                        <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-address">
+                            <p>
+                                {% if report.client.address is not empty %}
+                                    {{ report.client.address }}<br/>
+                                {% endif %}
+                                {% if report.client.address2 is not empty %}
+                                    {{ report.client.address2 }}<br/>
+                                {% endif %}
+                                {% if report.client.county is not empty %}
+                                    {{ report.client.county }}<br/>
+                                {% endif %}
+                                {% if report.client.postcode is not empty %}
+                                    {{ report.client.postcode }}<br/>
+                                {% endif %}
+                                {% if report.client.country is not empty %}
+                                    {{ report.client.country | country_name }}
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-client-phone">{{ report.client.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            {# DEPUTY DETAILS #}
+            {% set deputy = report.submittedBy.isDeputyOrg and report.client.getNamedDeputy ? report.client.getNamedDeputy : report.submittedBy %}
+            <h3 class="heading-medium">Deputy details</h3>
+            <table class="text">
+                <tbody>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'firstNames' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-firstname">{{ deputy.firstname }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'lastName' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-lastname">{{ deputy.lastname }}</td>
+                    </tr>
+                    <tr class="align--top">
+                        <th scope="row" class="bold">{{ 'address' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-address">
+                            <p>
+                                {% if deputy.address1 is not empty %}
+                                    {{ deputy.address1 }}<br/>
+                                {% endif %}
+                                {% if deputy.address2 is not empty %}
+                                    {{ deputy.address2 }}<br/>
+                                {% endif %}
+                                {% if deputy.address3 is not empty %}
+                                    {{ deputy.address3 }}<br/>
+                                {% endif %}
+                                {% if deputy.addressPostcode is not empty %}
+                                    {{ deputy.addressPostcode }}<br/>
+                                {% endif %}
+                                {% if deputy.addressCountry is not empty %}
+                                    {{ deputy.addressCountry | country_name }}
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                        <td class="behat-region-checklist-deputy-phone">{{ deputy.phoneMain }}</td>
+                    </tr>
+                    {% if (deputy.phoneAlternative is defined) %}
+                        <tr>
+                            <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
+                            <td>{{deputy.phoneAlternative}}</td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <th scope="row" class="bold">{{ 'email' | trans({}, 'common') }}</th>
+                        <td class="dont-break-out behat-region-checklist-deputy-email">{{ deputy.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </details>
+</div>
+
+{% if form.deputyFullNameAccurateInCasrec is defined %}
+<div class="form-section push-half--bottom">
+    <div class="form-group-outer border-top soft--top">
+        {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
+            'labelClass': 'text',
+            'formGroupClass': 'flush--bottom'
+        }) }}
+    </div>
+    <div class="opg-indented-block push-half--top">
+        <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}</p>
+    </div>
+</div>
+{% endif %}

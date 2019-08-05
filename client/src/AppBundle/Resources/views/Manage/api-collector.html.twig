@@ -1,0 +1,73 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{# icon at http://www.flaticon.com/free-icon/computers-network-interface-symbol_36181  #}
+
+{% block toolbar %}
+    {# This toolbar item may appear along the top or bottom of the screen.#}
+    {% set icon %}
+    <span class="icon">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA+0lEQVQ4jb3RvyuFcRgF8M9mkEUZuH4MrmshSiSjQcpyS7rZjDLIcgeDgSSL0WK9CpkkVln8EVa7QWyK4T63vr335b6DnDr1PKdzTs/3fWnHAPZ+YE+Ovw2zOEQlwzOUihZs5+jH/1ZQxgUaeMNLzJfoLVLQwhhOcYDhIoEhzAW7QpvBSMzdmAr2pcElzTff4QOv2A9tF/WYT/AenqvQytkrtjpcOY353wxrHQoqmMyKN5pfOeU1FhLPIm5xnuGjCGSximqyV0PLovEnBfeavytlPafgCCsZPsBO8BmfyT6aFJRQwwa+8BR7rWUYxDo2MZ5zagsTEVpGP3wD3WU1Mj7+leEAAAAASUVORK5CYII="/>
+    </span>
+    <span class="sf-toolbar-status">Api Collector ({{ collector.calls | length }})</span>
+    {% endset %}
+
+    {% set text %}
+        <table width="100%">
+            <tr>
+                <th></th>
+                <th>Time (s)</th>
+                <th>URL</th>
+                <th>Response code</th>
+                <th>bytes sent</th>
+                <th>bytes received</th>
+            </tr>
+      {% for entry in collector.calls %}
+         <tr>
+             <td>{{ entry.method | upper }}</td>
+             <td>{{ entry.time | round(3)}}</td>
+             <td>{{ entry.url }}</td>
+             <td>{{ entry.responseCode }}</td>
+             <td>{{ entry.options | length | number_format  }}</td>
+             <td>{{ entry.responseBody | length | number_format }}</td>
+         </tr>
+      {% endfor %}
+      </table>
+    {% endset %}
+
+    {# Set the "link" value to false if you do not have a big "panel"
+       section that you want to direct the user to. #}
+    {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with { 'link': true } %}
+
+{% endblock %}
+
+{% block head %}
+    {# Optional, if you need your own JS or CSS files. #}
+    {{ parent() }} {# Use parent() to keep the default styles #}
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label">
+        <span class="icon">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABiElEQVRYhe2WTyhEQRzHP3c5yA3FhYOUEwdFDrI5KEWJwxIl8ifFwZGT25aTg9NGe91s2STuyMEBFytEOS2bi1I8h5nNmGbH7O57Sr1ffeo1832/3+ft9noD/6RmgPciafNTYBZ4AvodGAE8oN1vgYxjtioUCAWCEvgAsg68BCHQiHi9VLJykAfsGvar/RQw1YMisB70MLW6EU84AUxKonKt4S9FALqAJr+bVgBzBuoN2RgwbFhvAcY0hgoNbAVSCgd8/7cqx1ouBdwAZ4b1K8P9b1pmWX3iZoVOxDufQXzV8tdRLWdjFXgEnoGcvD7XMnWFfhG1Ll1ClhoHFstpEAqslSnQAfT8Floqkj5Lr2lgp0jwgDvgwoEcELcIxIFbYNuBIzkbD4hYmqqVcBBIOPaKhAKhgCqwAUw5cOogcA1sOrCXF7jXyJ/pPODTsB+zCCwASYV9fn4RT7T9pKnJinLDq2WYS9VoAgO2cC0wijjfHUrScq23hOGDiIPIlsI84uhWWUK/YOoLAs3VCqZM29oAAAAASUVORK5CYII="/>
+        </span>
+        <strong>Api Collector</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+     <h2>Api Requests for this page</h2>
+     <ul>
+      {% for entry in collector.calls %}
+        <li>
+            <h1>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)  </h1>
+          <br/><b>Request:</b> <pre>{{ entry.options }} </pre>
+          <br/><b>Response body decoded:</b>
+          <pre>{{ entry.responseBody }}</pre>
+
+          <br/><b>Response JSON:</b>
+          <pre>{{ entry.responseRaw }}</pre>
+        </li>
+      {% endfor %}
+      </ul>
+{% endblock %}

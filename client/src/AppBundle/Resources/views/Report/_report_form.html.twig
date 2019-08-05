@@ -1,0 +1,19 @@
+{% trans_default_domain "registration" %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
+
+    <h2 class="heading-medium">{{ 'form.newReportForm.addStartDate' | trans }}</h2>
+
+    <p class="text">{{ 'form.newReportForm.startDateDescription' | trans }}</p>
+
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+    <h2 class="heading-medium">{{ 'form.newReportForm.addEndDate' | trans }}</h2>
+
+    <p class="text">{{ 'form.newReportForm.endDateDescription' | trans }}</p>
+
+    {{ form_known_date(form.endDate, 'endDate') }}
+
+    {{ form_submit(form.save, 'saveAndContinue') }}
+
+{{ form_end(form) }}

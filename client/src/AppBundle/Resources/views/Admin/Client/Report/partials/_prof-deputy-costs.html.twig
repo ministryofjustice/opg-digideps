@@ -1,0 +1,132 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'checklistPage' %}
+{% set hideEditLink = true %}
+{% set actualOtherCosts = report.generateActualSubmittedOtherCosts %}
+
+<h3 class="heading-medium underline" id="profDeputyCosts">{{ (page ~ '.heading.profDeputyCosts') | trans }}</h3>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.paymentsMatchCostCertificate, (page ~ '.form.paymentsMatchCostCertificate'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>
+
+                {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
+                    'report': report,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : hideEditLink
+                } %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </details>
+
+</div>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.profCostsReasonableAndProportionate, (page ~ '.form.profCostsReasonableAndProportionate'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+                        'report': report,
+                        'transDomain': 'report-prof-deputy-costs',
+                        'hideEditLink' : true
+                    } %}
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
+                        'report': report,
+                        'submittedOtherCosts': actualOtherCosts,
+                        'transDomain': "report-prof-deputy-costs",
+                        'hideEditLink' : true
+                    } %}
+                    </tbody>
+                </table>
+                {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
+                    'report': report,
+                    'submittedOtherCosts': actualOtherCosts,
+                    'transDomain': "report-prof-deputy-costs",
+                    'hideEditLink' : true
+                } %}
+                <table class="check-your-answers columns-2 push--bottom">
+                    <tbody>
+                        {# empty line to have border. fix with CSS if simpler#}
+                        <tr>
+                            <td colspan="2"></td>
+                        </tr>
+                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_taken_from_client_answers.html.twig' with {
+                            'report': report,
+                            'submittedOtherCosts': actualOtherCosts,
+                            'transDomain': "report-prof-deputy-costs",
+                            'hideEditLink' : true
+                        } %}
+                        {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
+                            'report': report,
+                            'submittedOtherCosts': actualOtherCosts,
+                            'transDomain': "report-prof-deputy-costs",
+                            'hideEditLink' : true
+                        } %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+
+</div>
+
+<div class="form-section push--bottom">
+    <div class="form-group-outer">
+        {{ form_checkbox_group(form.hasDeputyOverchargedFromPreviousEstimates, (page ~ '.form.hasDeputyOverchargedFromPreviousEstimates'), {
+            'fieldSetClass' : 'inline'
+        }) }}
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary">{{ (page ~ '.revealTitle.profDeputyCosts') | trans }}</span>
+        </summary>
+        <div class="opg-indented-block">
+            <div>
+                <table class="check-your-answers columns-2 push--bottom">
+                    {{ macros.summaryTableHeaderQA(hideEditLink) }}
+                    <tbody>
+                    {% include 'AppBundle:Report/ProfDeputyCosts:_scco_more_details_answer.html.twig' with {
+                        'report': report,
+                        'submittedOtherCosts': actualOtherCosts,
+                        'transDomain': "report-prof-deputy-costs",
+                        'hideEditLink' : true
+                    } %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </details>
+
+</div>

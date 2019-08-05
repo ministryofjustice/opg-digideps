@@ -1,0 +1,151 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "home" %}
+    {% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+
+{% block pageContent %}
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="text">
+                <p class="lede">{{ 'intro.lede' |trans }}</p>
+                {{ macros.notification('info', 'intro.para01' |trans) }}
+                <p>{{ 'intro.para02' |trans }}</p>
+            </div>
+
+            <div class="grid-row push--top">
+                <div class="column-half">
+                    <h2 class="heading-medium flush--top">{{ 'iwanttocreate' | trans }}</h2>
+                </div>
+                <div class="column-half">
+
+                    <p>
+                        <a id="creat-account-button" class="button" href="{{ path('register') }}">{{ 'createaccount' | trans }}</a>
+                    </p>
+
+                    <details class="push--bottom">
+                        <summary>
+                            <span class="summary">{{ 'whatyouneed' |trans }}</span>
+                        </summary>
+                        <div class="opg-indented-block">
+                            <ul class="list list-bullet">
+                                <li>{{ 'whatyouneedListItem1' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem2' | trans }}</li>
+                                <li>{{ 'whatyouneedListItem3' | trans }}</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="grid-row push-half--top">
+                <div class="column-half">
+                    <h2 class="heading-medium flush--top">{{ 'ialready' |trans }}</h2>
+                </div>
+                <div class="column-half">
+                    <p>
+                        <a href="{{ path('login') }}" class="button">{{ 'signin' |trans }}</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="text push--top">
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'whyWeNeed.summary' |trans }}</span>
+                    </summary>
+                    <div class="opg-indented-block">
+                        <p>{{ 'whyWeNeed.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'provideDetails.summary' |trans }}</span>
+                    </summary>
+                    <div class="opg-indented-block">
+                        <p>{{ 'provideDetails.para01' |trans }}</p>
+                        <ul class="list list-bullet">
+                            <li>{{ 'provideDetails.listItem01' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem02' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem03' |trans }}</li>
+                        </ul>
+                        <p>{{ 'provideDetails.para02' |trans }}</p>
+                        <ul class="list list-bullet">
+                            <li>{{ 'provideDetails.listItem04' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem05' |trans }}</li>
+                            <li>{{ 'provideDetails.listItem06' |trans }}</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'moreThanOne.summary' |trans }}</span>
+                    </summary>
+                    <div class="opg-indented-block">
+                        <p>{{ 'moreThanOne.para01' |trans }}</p>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <span class="summary">{{ 'afterISubmit.summary' |trans }}</span>
+                    </summary>
+                    <div class="opg-indented-block">
+                        <p>{{ 'afterISubmit.para01' |trans }}</p>
+                    </div>
+                </details>
+
+            </div>
+
+        </div>
+        <div class="column-third">
+            <aside class="opg-related-items" role="complementary">
+                <h2 id="related-items-title" class="govuk-heading-m">{{ 'relatedLinks.heading' |trans|raw }}</h2>
+                <nav role="navigation" aria-labelledby="related-items-title">
+                    <ul class="govuk-list govuk-!-font-size-16">
+                        <li>
+                            <a href="{{ 'relatedLinks.link01Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link01Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link02Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link02Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link03Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link03Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link04Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link04Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link05Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link05Text' |trans|raw }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ 'relatedLinks.link06Src' |trans|raw }}" class="govuk-link" target="_blank">
+                                {{ 'relatedLinks.link06Text' |trans|raw }}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+
+{% endblock %}

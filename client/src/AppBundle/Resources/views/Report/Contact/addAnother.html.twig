@@ -1,0 +1,29 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+{% set page = 'addAnotherPage' %}
+{% set transOptions = {'%client%': report.client.firstname | e } %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitleClass %}heading-large{% endblock %}
+
+{% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_checkbox_group(form.addAnother, (page ~ '.form.addAnother'), {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label-bold'
+    }) }}
+
+    {{ macros.addAnotherSaveButton(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

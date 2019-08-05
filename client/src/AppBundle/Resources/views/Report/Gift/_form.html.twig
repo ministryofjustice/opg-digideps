@@ -1,0 +1,21 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate'} }) }}
+
+    {{ form_input(form.explanation, 'form.explanation', { 'labelRaw': true }) }}
+    {{ form_input(form.amount, 'form.amount', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control-1-4 js-more-info js-format-currency'
+    }) }}
+
+    {% if report.bankAccounts is not empty and report.canLinkToBankAccounts %}
+        {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+    {% endif %}
+
+    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
+
+    {% if form.saveAndAddAnother is defined %}
+        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% endif %}
+
+{{ form_end(form) }}

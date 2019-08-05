@@ -1,0 +1,12 @@
+$is-ie: true;
+$ie-version: 8;
+
+@import "common";
+
+#footer .footer-meta .footer-meta-inner ul li:first-child + li {
+    float: left;
+}
+
+input.form-control {
+    height: 36px;
+}
