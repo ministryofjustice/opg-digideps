@@ -63,6 +63,7 @@
                 </tr>
 
             </thead>
+
             {% for client in user.clients %}
                 <tr>
                     <td>{{ client.firstname|title }} {{ client.lastname|title }}</td>
@@ -77,9 +78,9 @@
 
     {% if action is defined %}
         {% if action == 'edit' %}
-            {# only admin are allowed to delete users (except themselves when logged) #}
+            {# only admin are allowed to delete users (except themselves when logged in) #}
             {% if is_granted('ROLE_ADMIN') and app.user.id != user.id %}
-                {% if reportsCount == 0 %}
+                {% if 'ROLE_LAY_DEPUTY' == user.roleName and clientsCount <= 1 and reportsCount == 0 %}
                     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: 'admin',
                     linkButtonLabel: firstClient ? 'Delete User and Client' : 'Delete user',

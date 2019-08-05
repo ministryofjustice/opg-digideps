@@ -127,4 +127,4 @@ Feature: Infrastructure document tests
     And I check "Select 103-4"
     And I click on "download"
     Then the page content should be a zip file containing files with the following files:
-        | Report_103-4_2016_2016-* | regexpName+sizeAtLeast | 30000 |
+        | Report_103-4_2016_2016-* | regexpName+sizeAtLeast | 25000 |

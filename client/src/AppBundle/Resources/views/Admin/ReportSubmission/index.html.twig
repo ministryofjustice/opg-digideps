@@ -102,10 +102,11 @@
                     <th>{{ 'page.resultsTable.header.deputy' | trans }}</th>
                     <th>{{ 'period' | trans({}, 'common') }}</th>
                     <th>{{ 'page.resultsTable.header.documents' | trans }}</th>
-                    <th>{{ 'page.resultsTable.header.date' | trans }}</th>
+                    <th>{{ 'page.resultsTable.header.submitted' | trans }}</th>
                     {% if not isNewPage %}
                         <th>{{ 'page.resultsTable.header.user' | trans }}</th>
                     {% endif %}
+                    <th>{{ 'page.resultsTable.header.discharged' | trans }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -188,6 +189,19 @@
                                 <span title="{{ reportSubmission.archivedBy.firstname }} {{ reportSubmission.archivedBy.lastname }}">{{ reportSubmission.archivedBy.firstname | first }}{{ reportSubmission.archivedBy.lastname | first }}</span>
                             </td>
                         {% endif %}
+                        <td class="width-tenth">
+                            {% set dischargedDate = client.deletedAt %}
+                            {% if dischargedDate is defined and dischargedDate is not null %}
+                                {% if ("now" | date('Y-m-d') == dischargedDate | date('Y-m-d')) %}
+                                    Today
+                                {% else %}
+                                    {{ dischargedDate | date('d/m/Y') }}
+                                {% endif %}
+                                <br/>
+                                {# show hour and time #}
+                                {{ dischargedDate | date('g:ia') }}
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

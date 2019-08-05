@@ -8,7 +8,8 @@ clientSearch:
     results: Found %numberOfClients% clients
     resultsLimited: Results limited to 100 clients.<br>Use search to filter the wanted clients.
     noResults: No clients found
-
+    activeFrom: Active from
+    discharged: Discharged
 clientDetails:
   htmlTitle: Administration - Clients
   pageTitle: Admin

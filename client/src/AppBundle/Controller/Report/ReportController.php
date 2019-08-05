@@ -158,7 +158,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'client-reports']);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', ['client', 'client-reports', 'report-id']);
 
         $existingReports = $this->getReportsIndexedById($client);
 

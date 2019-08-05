@@ -66,7 +66,7 @@ editUser:
       client: Client
       caseNumber: Case number
       reports: Number of reports
-  deleteDisabled: Delete is disabled as there is at least one report
+  deleteDisabled: Delete user is disabled for non lay deputies, deputies with multiple clients or clients with reports
 
 editUserForm:
   heading: Edit user
