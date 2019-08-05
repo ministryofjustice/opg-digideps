@@ -130,7 +130,7 @@ EOF
 EOF
 
 
-test_front_container = <<EOF
+  test_front_container = <<EOF
   {
     "name": "test_front",
     "image": "${local.images.client}",
