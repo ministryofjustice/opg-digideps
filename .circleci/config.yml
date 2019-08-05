@@ -3,12 +3,12 @@ version: 2.1
 workflows:
   build:
     jobs:
-      - build_images:
+      - build:
           filters:
             branches:
               ignore:
                 - master
-      - build:
+      - plan:
           filters:
             branches:
               ignore:
@@ -18,7 +18,7 @@ orbs:
   aws-cli: circleci/aws-cli@0.1.13
 
 jobs:
-  build:
+  plan:
     docker:
       - image: hashicorp/terraform:full
     environment:
@@ -46,7 +46,7 @@ jobs:
             TF_WORKSPACE: master
             TF_VAR_OPG_DOCKER_TAG: dummy_value
           command: terraform plan -var-file=environment/terraform.tfvars.json environment
-  build_images:
+  build:
     docker:
       - image: circleci/python:2.7
     environment:
@@ -65,6 +65,13 @@ jobs:
           name: build api
           command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
       - run:
+          name: build client
+          command: docker build -t ${AWS_REGISTRY}/digideps/client:${VERSION} client
+      - run:
           name: push api
           command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
-
+      - run:
+          name: push client
+          command: docker push ${AWS_REGISTRY}/digideps/client:${VERSION}
+      - run: git tag ${VERSION}
+      - run: git push --tags
