@@ -1,5 +1,7 @@
 .idea/
+.DS_Store
 fabfile.pyc
+log/
 vendor/
 fixtures/__init__.py
 venv/
