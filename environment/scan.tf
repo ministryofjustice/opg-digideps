@@ -155,7 +155,7 @@ EOF
 EOF
 
 
-file_scanner_redis_container = <<EOF
+  file_scanner_redis_container = <<EOF
   {
       "name": "redis",
       "essential": true,
