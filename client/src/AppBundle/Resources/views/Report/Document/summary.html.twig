@@ -12,7 +12,6 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -30,22 +29,23 @@
             {{ macros.relatedSections(report, 'documents') }}
         </div>
     </div>
-<dl class="govuk-summary-list columns-2 push-double--bottom">
-    {{ macros.summaryListHeaderQA(false) }}
-    <div class="govuk-summary-list__row behat-region-provided-documentation">
-        <dt class="govuk-summary-list__key">
-            {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ report.wishToProvideDocumentation | capitalize }}
-        </dd>
-        <dd class="govuk-summary-list__actions">
-            <a class="govuk-link behat-link-edit" href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}">
-                {{ 'edit' | trans(transOptions, 'common') }}
-            </a>
-        </dd>
-    </div>
-</dl>
+
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        {{ macros.summaryListHeaderQA(false) }}
+        <div class="govuk-summary-list__row behat-region-provided-documentation">
+            <dt class="govuk-summary-list__key">
+                {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.wishToProvideDocumentation | capitalize }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans(transOptions, 'common') }}
+                </a>
+            </dd>
+        </div>
+    </dl>
 
     {# Attached documents table #}
     {% if report.wishToProvideDocumentation == 'yes' %}

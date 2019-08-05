@@ -5,20 +5,23 @@
 
 {% if report.unsubmittedDocuments | length > 0 %}
 
-    <div class="grid-row">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">{{ (page ~ '.documentList') | trans }}</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
         {% if page == 'submitMoreDocumentsConfirm' %}
-            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                {{ 'summaryPage.addButton' | trans }}
+            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <strong>
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </strong>
             </a>
         {% endif %}
         </div>
     </div>
-    <dl class=" behat-region-new-document-list">
+
+    <dl class="govuk-summary-list behat-region-new-document-list">
         <div class="govuk-summary-list__row behat-region-document-list">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.filename') | trans }}
@@ -39,8 +42,8 @@
                     {{ document.createdOn | date("j F Y") }}
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    <a 
-                        class="govuk-link behat-link-delete-documents-button" 
+                    <a
+                        class="govuk-link behat-link-delete-documents-button"
                         href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
                         {{ (page ~ '.deleteDocument') | trans }}
                     </a>
@@ -48,6 +51,7 @@
             </div>
         {% endfor %}
     </dl>
+
     {% if page == 'attachPage' %}
         <a href="{{ nextLink }}" class="button push-double--bottom behat-link-continue-to-submit">{{ (page ~ '.continueToSubmit') | trans }}</a>
     {% endif %}
@@ -58,7 +62,7 @@
 
 {% if page == 'attachPage' and report.submittedDocuments | length > 0 %}
 
-    <h2 class="heading-medium flush--ends">{{ (page ~ '.documentListPrevious') | trans }}</h2>
+    <h2 class="govuk-heading-m">{{ (page ~ '.documentListPrevious') | trans }}</h2>
 
     <dl class="govuk-summary-list behat-region-previous-submitted-document-list behat-region-document-list">
         <div class="govuk-summary-list__row">

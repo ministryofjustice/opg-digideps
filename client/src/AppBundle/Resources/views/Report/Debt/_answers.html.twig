@@ -7,7 +7,7 @@
 {% set hideEditLink = hideEditLink | default(false) %}
 
 {# Questions and answers table #}
-<dl class="govuk-summary-list columns-2 push-double--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
     <div class="govuk-summary-list__row behat-region-has-debts">
         <dt class="govuk-summary-list__key">
@@ -29,24 +29,26 @@
 {% if report.hasDebts == 'yes' %}
 
     {# Items list heading #}
-    <div class="grid-row behat-region-debts-list">
-        <div class="column-half">
+    <div class="govuk-grid-row behat-region-debts-list">
+        <div class="govuk-grid-column-one-half">
             <h2 class="heading-medium flush--ends">List of debts</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit">
+                    <strong>{{ 'edit' | trans({}, 'common' ) }}</strong>
+                </a>
             {% endif %}
         </div>
     </div>
 
     {# Items list table #}
-    <dl class="govuk-summary-list columns-2">
+    <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
                 Description
             </dt>
-            <dd class="govuk-summary-list__key numeric">
+            <dd class="govuk-summary-list__key">
                 Amount
             </dd>
         </div>
@@ -56,7 +58,7 @@
             <dt class="govuk-summary-list__key">
                 {{ ('form.entries.' ~ debt.debtTypeId ~ '.label') | trans(transOptions) }}
             </dt>
-            <dd class="govuk-summary-list__value numeric-small">
+            <dd class="govuk-summary-list__value">
                 £{{ debt.amount | money_format }}
             </dd>
         </div>
@@ -66,7 +68,7 @@
             <dt class="govuk-summary-list__key">
                 Total amount
             </dt>
-            <dd class="govuk-summary-list__value bold-small">
+            <dd class="govuk-summary-list__value">
                 £{{ report.debtsTotalAmount | money_format }}
             </dd>
         </div>

@@ -5,7 +5,7 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<dl class="govuk-summary-list columns-2 push-double--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
     <div class="govuk-summary-list__row behat-region-paid-for-anything">
         <dt class="govuk-summary-list__key">
@@ -25,15 +25,17 @@
 </dl>
 
 {% if report.expenses | length > 0 %}
-    <div class="grid-row">
-        <div class="column-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <h2 class="heading-medium flush--ends">List of expenses</h2>
         </div>
         {% if not hideEditLink %}
-            <div class="column-half text--right">
-                <a href="{{ path('deputy_expenses_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ 'summaryPage.addButton' | trans }}
+            <div class="govuk-grid-column-one-half text--right">
+                <a href="{{ path('deputy_expenses_add', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                    <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ 'summaryPage.addButton' | trans }}
+                    </strong>
                 </a>
             </div>
         {% endif %}
@@ -41,61 +43,65 @@
 {% endif %}
 
 {% if report.expenses | length > 0 %}
-    <dl class="govuk-summary-list columns-3">
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Description of expense
-            </dt>
-            {% if report.canLinkToBankAccounts %}
-                <dd class="govuk-summary-list__key">
-                    Bank account
-                </dd>
-            {% endif %}
-            <dd class="govuk-summary-list__key text--right">
-                Amount
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </dd>
-            {% endif %}
-        </div>
-
-        {% for expense in report.expenses %}
-            <div class="govuk-summary-list__row behat-region-expense-{{ expense.explanation | behat_namify }}">
-                <dt class="govuk-summary-list__key">
-                    {{ expense.explanation }}
-                </dt>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Description of expense
+                </th>
                 {% if report.canLinkToBankAccounts %}
-                    <dd class="govuk-summary-list__value">
-                        {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
-                    </dd>
+                    <th scope="col" class="govuk-table__header">
+                        Bank account
+                    </th>
                 {% endif %}
-                <dd class="govuk-summary-list__value numeric-small">
-                        £{{ expense.amount | money_format }}
-                </dd>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
                 {% if not hideEditLink %}
-                    <dd class="govuk-summary-list__actions">
-                        <a href="{{ path('deputy_expenses_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
-                        <a href="{{ path('deputy_expenses_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="push-half--left govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
-                    </dd>
+                    <th scope="col" class="govuk-table__header">
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </th>
                 {% endif %}
-            </div>
-        {% endfor %}
+            </tr>
+        </thead>
 
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                <span class="bold-small">Total amount</span>
-            </dt>
-            {% if report.canLinkToBankAccounts %}
-                <dd class="govuk-summary-list__value"></dd>
-            {% endif %}
-            <dd class="govuk-summary-list__value numeric-small">
-                <span class="bold-small behat-region-expense-total">£{{ report.expensesTotal | money_format }}</span>
-            </dd>
-            {% if not hideEditLink %}
-                <dd class="govuk-summary-list__actions"></dd>
-            {% endif %}
-        </div>
-    </dl>
+        <tbody class="govuk-table__body">
+            {% for expense in report.expenses %}
+                <tr class="govuk-table__row behat-region-expense-{{ expense.explanation | behat_namify }}">
+                    <th scope="row" class="govuk-table__header">
+                        {{ expense.explanation }}
+                    </th>
+                    {% if report.canLinkToBankAccounts %}
+                        <td class="govuk-table__cell">
+                            {{ (expense.bankAccount) ? expense.bankAccount.nameOneLine : '-' }}
+                        </td>
+                    {% endif %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                            £{{ expense.amount | money_format }}
+                    </td>
+                    {% if not hideEditLink %}
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a href="{{ path('deputy_expenses_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('deputy_expenses_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}" class="govuk-link govuk-!-margin-left-1 behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        <tfoot>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Total amount</th>
+                {% if report.canLinkToBankAccounts %}
+                    <td class="govuk-table__cell"></td>
+                {% endif %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong class="behat-region-expense-total">£{{ report.expensesTotal | money_format }}</strong>
+                </td>
+                {% if not hideEditLink %}
+                    <td class="govuk-table__cell"></td>
+                {% endif %}
+            </tr>
+        </tfoot>
+    </table>
 {% endif %}

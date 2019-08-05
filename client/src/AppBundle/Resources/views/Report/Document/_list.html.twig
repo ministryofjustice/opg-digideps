@@ -1,15 +1,17 @@
 {% set translationDomain = translationDomain %}
 {% trans_default_domain translationDomain %}
 
-<div class="grid-row">
-    <div class="column-half">
-        <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">{{ (page ~ '.documentList') | trans }}</h2>
     </div>
-    <div class="column-half text--right">
+    <div class="govuk-grid-column-one-half text--right">
         {% if page == 'summaryPage' and report.wishToProvideDocumentation == 'yes' %}
-            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                {{ 'summaryPage.addButton' | trans }}
+            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <strong>
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </strong>
             </a>
         {% endif %}
     </div>
@@ -32,11 +34,11 @@
             <dt class="govuk-summary-list__value">
                 {{ document.fileName }}
             </dt>
-            <dd class="govuk-summary-list__value numeric-small">
+            <dd class="govuk-summary-list__value">
                 {{ document.createdOn | date("j F Y H:i") }}
             </dd>
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="behat-link-delete-documents-button action-link">
+                <a class="govuk-link behat-link-edit" href="govuk-link behat-link-delete-documents-button">
                     {{ (page ~ '.deleteDocument') | trans }}
                 </a>
             </dd>

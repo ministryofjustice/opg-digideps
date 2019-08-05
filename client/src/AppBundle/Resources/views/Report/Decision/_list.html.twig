@@ -7,12 +7,12 @@
 {% set page = 'summaryPage' %}
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<dl class="govuk-summary-list columns-2 push-double--bottom">
+<dl class="govuk-summary-list">
     {{ macros.summaryListHeaderQA(hideEditLink) }}
 
     {# mental capacity #}
     <div class="govuk-summary-list__row behat-region-mental-capacity">
-    
+
         {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged %}
             <dt class="govuk-summary-list__key">
                 {{ ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions) }}
@@ -37,24 +37,24 @@
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions change-answer">
+            <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
             </dd>
         {% endif %}
     </div>
-    
+
     {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged == 'changed' %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
-                Mental capacity changes details
+                {{ (page ~ '.capacityChangeDetails') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}
             </dd>
             {% if not hideEditLink  %}
-                <dd class="govuk-summary-list__actions change-answer">
+                <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_capacity', { 'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
                     </a>
@@ -62,7 +62,7 @@
             {% endif %}
         </div>
     {% endif %}
-    
+
     <div class="govuk-summary-list__row behat-region-mental-capacity-changed-details">
         {% if report.mentalCapacity and report.mentalCapacity.mentalAssessmentDate %}
             <dt class="govuk-summary-list__key">
@@ -93,7 +93,7 @@
             </dd>
         {% endif %}
     </div>
-    
+
     <div class="govuk-summary-list__row">
         {% if report.mentalCapacity and report.mentalCapacity.mentalAssessmentDate %}
             <dt class="govuk-summary-list__key">
@@ -117,7 +117,7 @@
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions change-answer">
+            <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_assessment', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
@@ -145,7 +145,7 @@
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions change-answer">
+            <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
                 </a>
@@ -156,13 +156,13 @@
     {% if report.reasonForNoDecisions %}
         <div class="govuk-summary-list__row behat-region-reason-no-decisions">
             <dt class="govuk-summary-list__key">
-                Reason for no decisions
+                {{ (page ~ '.reasonNoDecisions') | trans }}
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.reasonForNoDecisions | nl2br }}
             </dd>
             {% if not hideEditLink  %}
-                <dd class="govuk-summary-list__actions change-answer">
+                <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('decisions_exist', { 'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
                     </a>
@@ -170,20 +170,21 @@
             {% endif %}
         </div>
     {% endif %}
-    
+
 </dl>
 
 {% if report.decisions | length > 0 %}
-    <div class="grid-row">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">{{ (page ~ '.listOfDecisions') | trans }}</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">{{ (page ~ '.listOfDecisions') | trans }}</h2>
         </div>
-        <div class="column-half text--right">
+        <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}"
-                   class="bold-small move-quarter--up action-link behat-link-add">
-                    <span class="icon icon-plus"></span>
-                    {{ (page ~ '.addButton') | trans }}
+                <a href="{{ path('decisions_add', { 'reportId': report.id ,'from': 'decisions_summary'}) }}" class="behat-link-add">
+                    <strong>
+                        <span class="icon icon-plus"></span>
+                        {{ (page ~ '.addButton') | trans }}
+                    </strong>
                 </a>
             {% endif %}
         </div>
@@ -191,7 +192,7 @@
 {% endif %}
 
 {% if report.decisions | length > 0 %}
-    <dl class="govuk-summary-list columns-3">
+    <dl class="govuk-summary-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.decisionTableColumnHeading1') | trans(transOptions) }}
@@ -211,20 +212,20 @@
 
         {% for decision in report.decisions %}
             <div class="govuk-summary-list__row behat-region-decision-{{ loop.index }}">
-                <dt class="govuk-summary-list__value width-quarter">
+                <dt class="govuk-summary-list__value">
                     {{ decision.description | nl2br }}
                 </dt>
-                <dd class="govuk-summary-list__value width-eighth">
+                <dd class="govuk-summary-list__value">
                     {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
                 </dd>
-                <dd class="govuk-summary-list__value width-quarter">
+                <dd class="govuk-summary-list__value">
                     {{ decision.clientInvolvedDetails | nl2br }}
                 </dd>
                 <dd class="govuk-summary-list__actions">
                     <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
                     <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
-                        class="push-half--left govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                        class="govuk-!-margin-left-1 govuk-link behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
                 </dd>
             </div>
         {% endfor %}
