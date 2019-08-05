@@ -1,0 +1,6 @@
+imports:
+    - { resource: config_prod.yml }
+
+jms_serializer:
+    metadata:
+        debug: true

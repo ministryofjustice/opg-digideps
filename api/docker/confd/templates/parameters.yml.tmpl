@@ -1,0 +1,32 @@
+# This file is auto-generated during the composer install
+
+
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+    database_driver: pdo_pgsql
+    database_host: {{ getv "/database/hostname" }}
+    database_port: {{ getv "/database/port" }}
+    database_name: {{ getv "/database/name" }}
+    database_user: {{ getv "/database/username" }}
+    database_password: {{ getv "/database/password" }}
+    locale: en
+    secret: {{ getv "/secret" }}
+    anonymous: {{ getv "/security/anonymous" }}
+    redis_dsn: '{{getv "/redis/dsn" }}'
+{{ if ls "/fixtures" }}
+    fixtures:
+        account_password: {{ getv "/fixtures/accountpassword" }}
+{{ end }}
+
+{{ if lsdir "/secrets" }}
+    client_secrets:
+{{ range lsdir "/secrets" }}
+        {{ getv (printf "/secrets/%s/key" .) }}:
+            permissions: {{ getv (printf "/secrets/%s/permissions" .) }}
+{{ end }}
+{{ end }}
+    
+    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
+
+    log_level: warning
+    log_path: /var/log/app/application.log

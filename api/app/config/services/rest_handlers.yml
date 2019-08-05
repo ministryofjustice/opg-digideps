@@ -1,0 +1,12 @@
+services:
+  rest_handler.report.deputy_costs_estimate_report_update_handler:
+    class: AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
+    arguments: [ "@em" ]
+
+  rest_handler.report.deputy_costs_report_update_handler:
+    class: AppBundle\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+    arguments: [ "@em" ]
+
+  rest_handler.report.pa_fees_expenses_report_update_handler:
+    class: AppBundle\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
+    arguments: [ "@em" ]

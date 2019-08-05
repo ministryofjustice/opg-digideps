@@ -1,0 +1,42 @@
+imports:
+    - { resource: config_prod.yml }
+
+framework:
+    test: ~
+    profiler:
+        collect: false
+
+doctrine:
+    dbal:
+        dbname: digideps_unit_test
+
+services:
+    attemptsInTimeChecker:
+        class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
+        public: true
+        arguments: [ "@snc_redis.default" ]
+        calls:
+            - [ setRedisPrefix, ["test_ac_ret_code"] ]
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            - [ addTrigger, [  5, 600 ] ]
+    attemptsIncrementalWaitingChecker:
+        class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
+        arguments: [ "@snc_redis.default" ]
+        public: true
+        calls:
+            - [ setRedisPrefix, ["test_ac_exception"] ]
+            # after 10 attempts, freeze for 10 minutes. used by AuthControllerTest::testBruteForceSameEmail
+            - [ addFreezingRule, [  10, 600 ] ]
+
+# during tests, display on the console the entries with priority greater than "warnings" level
+monolog:
+   handlers:
+       main:
+           type: stream
+           path: "%log_path%"
+           level: warning
+           formatter: line_formatter
+
+jms_serializer:
+    metadata:
+        debug: true

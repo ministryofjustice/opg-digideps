@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+        convertErrorsToExceptions="false"
+        convertNoticesToExceptions="false"
+        convertWarningsToExceptions="false"
+        stopOnFailure="true"
+        backupGlobals="false"
+        colors="true"
+        bootstrap="bootstrap.php"
+        cacheTokens="false"
+>
+    <testsuites>
+        <testsuite name="src">
+            <directory>./AppBundle</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="KERNEL_DIR" value="app" />
+        <ini name="memory_limit" value="1024M" />
+    </php>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../src</directory>
+        </whitelist>
+    </filter>
+
+</phpunit>

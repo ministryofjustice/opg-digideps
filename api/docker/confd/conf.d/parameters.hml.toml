@@ -1,0 +1,17 @@
+[template]
+prefix = "/api"
+src = "parameters.yml.tmpl"
+dest = "/var/www/app/config/parameters.yml"
+keys = [
+    "/database",
+    "/smtp",
+    "/secret",
+    "/security",
+    "/email",
+    "/email_settings",
+    "/redis",
+    "/url",
+    "/fixtures",
+    "/secrets",
+    "/behat"
+]

@@ -1,0 +1,26 @@
+services:
+  AppBundle\Controller\Report\ReportController:
+    public: true
+    class: AppBundle\Controller\Report\ReportController
+    arguments:
+      -
+        - '@rest_handler.report.deputy_costs_estimate_report_update_handler'
+        - '@rest_handler.report.deputy_costs_report_update_handler'
+        - '@rest_handler.report.pa_fees_expenses_report_update_handler'
+
+
+  AppBundle\v2\Controller\DeputyController:
+    class: AppBundle\v2\Controller\DeputyController
+    arguments:
+      - '@AppBundle\Entity\Repository\UserRepository'
+      - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
+    public: true
+
+  AppBundle\v2\Controller\ClientController:
+    class: AppBundle\v2\Controller\ClientController
+    arguments:
+    - '@AppBundle\Entity\Repository\ClientRepository'
+    - '@ClientAssemblerFromReportEntity'
+    - '@AppBundle\v2\Transformer\ClientTransformer'
+    public: true

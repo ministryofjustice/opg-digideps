@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+$migrations = glob(__DIR__ . '/../app/DoctrineMigrations/Version*.php');
+
+$migrations = array_map(function($filename) {
+    preg_match('/Version([\d]+)\.php$/', $filename, $matches);
+    return (int)$matches[1];
+} , $migrations);
+
+if (empty($migrations)) {
+   die(1);
+}
+
+$max = max($migrations);
+if ($max < 1) {
+    die(1);
+}
+
+echo $max;
+
+die(0);

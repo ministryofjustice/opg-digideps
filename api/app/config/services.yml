@@ -1,0 +1,78 @@
+imports:
+    - { resource: services/assemblers.yml }
+    - { resource: services/controllers.yml }
+    - { resource: services/event_listeners.yml }
+    - { resource: services/registration.yml }
+    - { resource: services/rest_handlers.yml }
+    - { resource: services/repositories.yml }
+    - { resource: services/transformers.yml }
+
+services:
+    em:
+        alias: doctrine.orm.entity_manager
+        public: true
+
+    opg_digideps.casrec_verification_service:
+        class: AppBundle\Service\CasrecVerificationService
+        arguments: [ "@em" ]
+
+    user_registration_service:
+        class: AppBundle\Service\UserRegistrationService
+        arguments: [ "@em", "@opg_digideps.casrec_verification_service" ]
+
+    org_service:
+        class: AppBundle\Service\OrgService
+        arguments: [ "@em", "@logger"]
+
+    user_service:
+        class: AppBundle\Service\UserService
+        arguments: [ "@em", "@org_service"]
+
+    monolog.processor.add_request_id:
+        class: AppBundle\Service\RequestIdLoggerProcessor
+        arguments:  [ "@service_container" ]
+        tags:
+              - { name: monolog.processor, method: processRecord }
+
+    opg_digideps.report_service:
+        class: AppBundle\Service\ReportService
+        arguments:
+          - "@em"
+        public: true
+
+    gedmo.listener.softdeleteable:
+      class: Gedmo\SoftDeleteable\SoftDeleteableListener
+      tags:
+        - { name: doctrine.event_subscriber, connection: default }
+      calls:
+        - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+    app.transformer.report_submission.report_submission_summary_transformer:
+        class: AppBundle\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer
+        public: true
+        arguments: [ '@app.service.date_time_provider' ]
+
+    app.service.date_time_provider:
+        class: AppBundle\Service\DateTimeProvider
+        public: true
+
+    AppBundle\Service\ReportStatusServiceFactory:
+        class: AppBundle\Service\ReportStatusServiceFactory
+
+    AppBundle\DataFixtures\:
+        resource: '../../src/AppBundle/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+        arguments: ['@security.password_encoder']
+
+    AppBundle\Service\DataCompression:
+        class: AppBundle\Service\DataCompression
+
+    AppBundle\Service\DataNormaliser:
+        class: AppBundle\Service\DataNormaliser

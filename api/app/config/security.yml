@@ -1,0 +1,130 @@
+parameters:
+    # set this param to a higher value than session_expire_seconds on the client
+    user_provider_timeout_seconds: 3901
+    
+services:
+    # authenticator
+    authenticator.token_header:
+        class: AppBundle\Service\Auth\HeaderTokenAuthenticator
+        public: false
+    user_provider:
+        class: AppBundle\Service\Auth\UserProvider
+        arguments: [ "@em", "@snc_redis.default", "@logger", { "timeout_seconds": "%user_provider_timeout_seconds%" } ]
+        public: true
+    authService:
+        class: AppBundle\Service\Auth\AuthService
+        public: true
+        arguments: [ "@security.encoder_factory", "@logger", "@service_container" ]
+    attemptsInTimeChecker:
+        class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
+        arguments: [ "@snc_redis.default" ]
+        public: true
+        calls:
+            - [ setRedisPrefix, ["ac_ret_code"] ]
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            - [ addTrigger, [  5, 600 ] ]
+    attemptsIncrementalWaitingChecker:
+        class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
+        arguments: [ "@snc_redis.default" ]
+        public: true
+        calls:
+            - [ setRedisPrefix, ["ac_exception"] ]
+            # after 10 attempts, freeze for 30 minutes
+            - [ addFreezingRule, [  10, 1800 ] ]
+            # after further 10 attempts. freeze for 1h
+            - [ addFreezingRule, [  20, 3600 ] ]
+            # after further 10 attempts. freeze for 2h
+            - [ addFreezingRule, [  30, 7200 ] ]
+    
+    
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+        AppBundle\Entity\User: sha512
+       
+    
+    providers:
+        user_provider_redis:
+            id: user_provider
+
+    firewalls:
+        elb:
+            pattern: ^/manage/
+            security: false
+            methods: [GET]
+        # disabled at the controller level if "behat_controller_enabled" param is equal to false
+        behat:
+            pattern: ^/behat/
+            security: false
+        feedbackHomepage:
+            pattern: ^/feedback/homepage
+            security: false
+            methods: [POST]
+        login:
+            pattern:  ^/auth/login$
+            security: false
+            methods: [POST]
+        userRecreateToken:
+            pattern: ^/user/recreate-token
+            security: false
+            methods: [PUT]
+        userAgreeTermsUse:
+            pattern: ^/user/agree-terms-use
+            security: false
+            methods: [PUT]
+        userGetByToken:
+            pattern: ^/user/get-by-token
+            security: false
+            methods: [GET]
+        selfregister:
+            pattern: ^/selfregister
+            security: false
+            methods: [POST]
+        documentGetSoftDeleted:
+           pattern: ^/document/soft-deleted
+           security: false
+           methods: [GET]
+        documentHardDelete:
+           pattern: ^/document/hard-delete/
+           security: false
+           methods: [DELETE]
+        reportSubmissionGetOld:
+           pattern: ^/report-submission/old
+           security: false
+           #methods: [GET]
+        reportSubmissionSetUndownloadable:
+           pattern: ^/report-submission/\d+/set-undownloadable
+           security: false
+           #methods: [PUT]
+        settingServiceNotification:
+           pattern: ^/setting/service-notification
+           security: false
+           methods: [GET]
+        # keep this one last so that the previous ones bypass the catch-all pattern below
+        default:
+            pattern: .*
+            security: true
+            simple_preauth:
+                authenticator: authenticator.token_header
+            provider: user_provider_redis
+            stateless:   true
+
+    # https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/191299647/User+roles
+    role_hierarchy:
+        ROLE_ADMIN:           [ ROLE_DOCUMENT_MANAGE, ROLE_CASE_MANAGER ]
+
+        ROLE_LAY_DEPUTY:      ROLE_DEPUTY
+        ROLE_ORG:             ROLE_DEPUTY
+
+        ROLE_PA:              ROLE_ORG
+        ROLE_PROF:            ROLE_ORG
+
+        ROLE_PA_NAMED:        [ ROLE_PA, ROLE_ORG_NAMED ]
+        ROLE_PA_ADMIN:        [ ROLE_PA, ROLE_ORG_ADMIN ]
+        ROLE_PA_TEAM_MEMBER:  [ ROLE_PA, ROLE_ORG_TEAM_MEMBER ]
+
+        ROLE_PROF_NAMED:        [ ROLE_PROF, ROLE_ORG_NAMED ]
+        ROLE_PROF_ADMIN:        [ ROLE_PROF, ROLE_ORG_ADMIN ]
+        ROLE_PROF_TEAM_MEMBER:  [ ROLE_PROF, ROLE_ORG_TEAM_MEMBER ]
+
+

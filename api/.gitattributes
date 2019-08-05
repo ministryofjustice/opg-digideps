@@ -1,0 +1,16 @@
+* text=auto
+
+*.sh text eol=lf
+*.php text eol=lf
+*.js text eol=lf
+*.feature text eol=lf
+*.dist text eol=lf
+*.txt text eol=lf
+*.scss text eol=lf
+*.yml text eol=lf
+composer.lock text eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+
