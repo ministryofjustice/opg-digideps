@@ -1,0 +1,145 @@
+# start up the containers
+dd-start() {
+  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml up -d
+}
+
+# run command/bash into container
+# e.g. `dd-exec api bash` or `dd-exec frontend gulp`
+dd-exec() {
+  CONTAINER=$1
+  shift
+  docker-compose -f $DD_DOCKER_DIR/docker-compose.yml exec ${CONTAINER} "$@"
+}
+
+# view logs inside container
+# e.g. `dd-tail-logs api`
+dd-tail-logs() {
+  COMPOSE_FILE=$DD_DOCKER_DIR/docker-compose.yml docker-compose logs -f $1
+}
+
+# IMPORT Digideps SQL snapshots, dropping the public schema first. e.g. dd-psql-import file.sql
+dd-psql-import() {
+  dd-exec postgres psql -U api api -c "drop schema public cascade; create schema public;"
+  cat $1 | dd-exec postgres psql -q -U api api
+  echo Schema recreated. $1 imported correctly into Digideps postgres
+  echo Run "dd-psql-import-no-schema-drop scripts/mask.sql" to mask data
+  echo Run "dd-exec api scripts/migrate.sh" to migrate data
+}
+
+# Import SQL file, without dropping and re-creating the schema
+dd-psql-import-no-schema-drop() {
+  cat $1 | dd-exec postgres psql -q -U api api
+  echo $1 imported correctly into Digideps postgres
+  echo Run `dd-exec api app/console doctrine:fixtures:load` to add missing fixtures
+}
+
+# EXPORT Digideps SQL snapshots (that include table creation). e.g. dd-psql-export file.sql
+dd-psql-export() {
+  if [ -f $1 ]; then
+    echo "ERROR: file $1 already exists. Did you mean to dd-psql-import that file instead?"
+    return 1
+  else
+    dd-exec postgres pg_dump --clean -U api api > $1
+    echo Digideps postgres db exported into $1
+    return 0
+  fi
+}
+
+dd-mode-prod()
+{
+    containers=(frontend api admin test)
+    for i in "${containers[@]}"
+    do
+      dd-exec $i touch /var/www/.enableProdMode
+      echo "$i: prod mode enabled."
+    done
+}
+
+dd-mode-dev()
+{
+    containers=(frontend api admin test)
+    for i in "${containers[@]}"
+    do
+       dd-exec $i rm -f /var/www/.enableProdMode
+       echo "$i: dev mode."
+    done
+}
+
+dd-cache-clear()
+{
+    dd-exec api sh -c "rm -rf var/cache/*"
+    dd-exec frontend sh -c "rm -rf var/cache/*"
+    dd-exec test sh -c "rm -rf var/cache/*"
+    dd-exec admin sh -c "rm -rf var/cache/*"
+    echo "Cache reset"
+}
+
+dd-redis-reset()
+{
+    dd-exec redisfront redis-cli flushall
+    dd-exec redisapi redis-cli flushall
+    dd-exec redisadmin redis-cli flushall
+    echo "Redis reset"
+}
+
+# reset db
+dd-db-reset()
+{
+    dd-exec api sh scripts/resetdb.sh
+    echo "Db completely recreated with default users"
+}
+
+# Run behat tests
+#
+# Launch all suites (resets redis and DB first):
+# dd-behat-run
+#
+# Lanch specific suite (resets redis and DB first):
+# dd-behat-run lay
+#
+# Launch specific feature in suite (redis and DB untouched):
+# dd-behat-run lay path/to/feature.feature
+#
+# Set the ENV var DD_SKIP_MODE_SWITCH=1 to disable auto switch of PROD/DEV mode
+#
+dd-behat-run()
+{
+    # no specific path => reset db and redis
+    if [ "$2" = "" ]; then dd-db-reset; dd-redis-reset; fi;
+
+    # prod/dev mode toggler
+    if [ "${DD_SKIP_MODE_SWITCH}" != "1" ]; then dd-cache-clear; dd-mode-prod; fi
+
+    if [ "$1" != "" ]; then
+        # launch specific suite, with or without path
+        dd-exec test confd -onetime -backend env
+        time dd-exec test bin/behat $2 -c tests/behat/behat.yml --suite=${1} --stop-on-failure --profile=headless
+    else
+        # launch all suites
+        time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run test sh scripts/clienttest.sh
+    fi
+
+    # prod/dev mode toggler
+    if [ "${DD_SKIP_MODE_SWITCH}" != "1" ]; then dd-mode-dev; fi
+    echo "Use DD_SKIP_MODE_SWITCH variable to 1(disable)/0(enable) prod mode during execution"
+}
+
+# e.g.
+dd-behat-snapshot-import()
+{
+   if [ "$1" == "" ]; then echo "e.g. dd-behat-snapshot-import init"; return 1; fi
+   dd-exec test sh -c "psql < /tmp/behat/behat-snapshot-${1}.sql"
+}
+
+
+# phpunit
+alias dd-phpunit-frontend="dd-exec frontend bin/phpunit -c tests/phpunit"
+alias dd-phpunit-api="dd-exec api sh scripts/apiunittest.sh"
+alias dd-phpunit="dd-phpunit-frontend;dd-phpunit-api"
+
+# phpunit + behat
+alias dd-test="dd-phpunit; dd-behat-run"
+
+# postgres shell
+alias dd-psql-console="dd-exec postgres psql -U api api"
+alias dd-psql-console-test="dd-exec postgres psql -U api digideps_unit_test"
