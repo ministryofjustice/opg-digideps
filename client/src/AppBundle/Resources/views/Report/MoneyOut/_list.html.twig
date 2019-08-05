@@ -50,7 +50,7 @@
 
         <tbody class="govuk-table__body">
             {% for entry in groupData.entries %}
-                <tr class="govuk-table__row behat-region-transaction-{{ t.description | behat_namify }}">
+                <tr class="govuk-table__row behat-region-transaction-{{ entry.description | behat_namify }}">
                     <th scope="row" class="govuk-table__header">
                         {{ ('form.category.entries.' ~ entry.category ~ '.label') | trans(transOptions) }}
                     </th>
@@ -103,6 +103,6 @@
 {% endfor %}
 
 {# Total money in #}
-<div class="govuk-heading-m text--right behat-region-asset-total">
+<div class="govuk-heading-m text--right">
     {{ 'summaryPage.moneyOut.totalValue' | trans({ '%value%': (report.moneyOutTotal | money_format) }) }}
 </div>

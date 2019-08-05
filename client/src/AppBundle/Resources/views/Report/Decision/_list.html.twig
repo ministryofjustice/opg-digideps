@@ -46,7 +46,7 @@
     </div>
 
     {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged == 'changed' %}
-        <div class="govuk-summary-list__row">
+        <div class="govuk-summary-list__row behat-region-mental-capacity-changed-details">
             <dt class="govuk-summary-list__key">
                 {{ (page ~ '.capacityChangeDetails') | trans }}
             </dt>
@@ -63,7 +63,7 @@
         </div>
     {% endif %}
 
-    <div class="govuk-summary-list__row behat-region-mental-capacity-changed-details">
+    <div class="govuk-summary-list__row">
         {% if report.mentalCapacity and report.mentalCapacity.mentalAssessmentDate %}
             <dt class="govuk-summary-list__key">
                 {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions) }}

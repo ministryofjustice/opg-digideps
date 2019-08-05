@@ -108,7 +108,7 @@
 
         <tbody class="govuk-table__body">
             {% for tr in report.moneyTransactionsShortIn %}
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row behat-region-transaction-{{ tr.description | behat_namify }}">
                     <th scope="row" class="govuk-table__header">
                         {{ tr.description }}
                     </th>
@@ -130,7 +130,7 @@
             {% endfor %}
         </tbody>
 
-        <tbody class="govuk-table__body behat-region-transaction-{{ tr.description | behat_namify }}">
+        <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Total money in</th>
                 <td class="govuk-table__cell"></td>
