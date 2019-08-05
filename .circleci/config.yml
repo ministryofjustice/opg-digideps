@@ -48,13 +48,23 @@ jobs:
           command: terraform plan -var-file=environment/terraform.tfvars.json environment
   build_images:
     docker:
-      - image: 'circleci/python:2.7'
+      - image: circleci/python:2.7
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
+      AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+      VERSION: test
     steps:
+      - setup_remote_docker
       - aws-cli/install
       - checkout
       - run:
-          name: check identity
-          command: aws sts get-caller-identity --profile digideps-ci
+          name: docker login
+          command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+      - run:
+          name: build api
+          command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
+      - run:
+          name: push api
+          command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
+
