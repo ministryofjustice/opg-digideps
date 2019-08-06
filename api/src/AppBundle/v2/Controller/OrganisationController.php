@@ -2,7 +2,10 @@
 
 namespace AppBundle\v2\Controller;
 
+use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Service\RestHandler\OrganisationRestHandler;
+use AppBundle\v2\Assembler\OrganisationAssembler;
+use AppBundle\v2\Transformer\OrganisationTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -19,12 +22,31 @@ class OrganisationController
     /** @var OrganisationRestHandler */
     private $restHandler;
 
+    /** @var OrganisationRepository */
+    private $repository;
+
+    /** @var OrganisationAssembler */
+    private $assembler;
+
+    /** @var OrganisationTransformer */
+    private $transformer;
+
     /**
      * @param OrganisationRestHandler $restHandler
+     * @param OrganisationRepository $repository
+     * @param OrganisationAssembler $assembler
+     * @param OrganisationTransformer $transformer
      */
-    public function __construct(OrganisationRestHandler $restHandler)
-    {
+    public function __construct(
+        OrganisationRestHandler $restHandler,
+        OrganisationRepository $repository,
+        OrganisationAssembler $assembler,
+        OrganisationTransformer $transformer
+    ) {
         $this->restHandler = $restHandler;
+        $this->repository = $repository;
+        $this->assembler = $assembler;
+        $this->transformer = $transformer;
     }
 
     /**
@@ -35,7 +57,24 @@ class OrganisationController
      */
     public function getAllAction()
     {
-        return $this->buildSuccessResponse(['foo' => 'bar']);
+        $data = $this->repository->findAllArray();
+
+        $organisationDtos = [];
+        foreach ($data as $organisationArray) {
+            $organisationDtos[] = $this->assembler->assembleFromArray($organisationArray);
+        }
+
+        $transformedDtos = [];
+        foreach ($organisationDtos as $organisationDto) {
+            $transformedDtos[] = $this->transformer->transform($organisationDto);
+        }
+
+        return $this->buildSuccessResponse($transformedDtos);
+    }
+
+    public function getByIdAction($id)
+    {
+
     }
 
     /**

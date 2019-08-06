@@ -29,4 +29,7 @@ services:
     class: AppBundle\v2\Controller\OrganisationController
     arguments:
       - '@AppBundle\Service\RestHandler\OrganisationRestHandler'
+      - '@AppBundle\Entity\Repository\OrganisationRepository'
+      - '@AppBundle\v2\Assembler\OrganisationAssembler'
+      - '@AppBundle\v2\Transformer\OrganisationTransformer'
     public: true
