@@ -45,9 +45,9 @@ class ClientRepository extends EntityRepository
         // ensure max 100 results
         $limit = ($limit <= 100) ? $limit : 100;
         $qb->setMaxResults($limit);
-
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); //disable softdelete for createdBy, needed from admin area
         $clients = $qb->getQuery()->getResult(); /* @var $clients Client[] */
-
+        $this->_em->getFilters()->enable('softdeleteable');
         return $clients;
     }
 
@@ -108,8 +108,10 @@ class ClientRepository extends EntityRepository
             ->createQuery('SELECT c, r, ndr FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr WHERE c.id = ?1')
             ->setParameter(1, $id);
 
+        $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class);
         $result = $query->getArrayResult();
-
+        $this->_em->getFilters()->enable('softdeleteable');
+        
         return count($result) === 0 ? null : $result[0];
     }
 }

@@ -3,9 +3,20 @@
 This application uses two main testing technologies:
 
 - PHPUnit performs unit tests for individual classes
-- Behat performs user tests to ensure whole application journies work
+- Behat performs user tests to ensure whole application journeys work
 
 ## How to run the tests
+
+### API
+
+You can run all tests via the docker container. Note that the first command sets up the database and only needs to be run once.
+
+```sh
+docker-compose run --rm api sh scripts/phpunitdb.sh
+docker-compose run --rm api sh scripts/apiunittest.sh
+```
+
+### Frontend
 
 To run the entire test suite, use the container script. Note that this resets the database first.
 
