@@ -1,11 +1,36 @@
-terraform: &terraform
-  docker:
-    - image: hashicorp/terraform:full
+version: 2.1
 
-version: 2
+workflows:
+  pull_request:
+    jobs:
+      - build:
+          name: build pr
+          semver_stage: --stage dev
+          filters:
+            branches:
+              ignore:
+                - master
+      - plan:
+          filters:
+            branches:
+              ignore:
+                - master
+  master:
+    jobs:
+      - build:
+          name: build master
+          filters:
+            branches:
+              only:
+                - master
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+
 jobs:
-  build:
-    <<: *terraform
+  plan:
+    docker:
+      - image: hashicorp/terraform:full
     environment:
       TF_CLI_ARGS_plan: -input=false -lock=false
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
@@ -31,14 +56,49 @@ jobs:
             TF_WORKSPACE: master
             TF_VAR_OPG_DOCKER_TAG: dummy_value
           command: terraform plan -var-file=environment/terraform.tfvars.json environment
-
-workflows:
-  version: 2
   build:
-    jobs:
-    - build:
-        filters:
-          branches:
-            ignore:
-            - master
-
+    docker:
+      - image: circleci/python:2.7
+    parameters:
+      semver_stage:
+        description: semver stage suffix
+        default: ""
+        type: string
+    environment:
+      AWS_REGION: eu-west-1
+      AWS_CONFIG_FILE: ~/project/aws_config
+      AWS_REGISTRY: 311462405659.dkr.ecr.eu-west-1.amazonaws.com
+    steps:
+      - setup_remote_docker
+      - aws-cli/install
+      - add_ssh_keys:
+          fingerprints:
+            - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
+      - checkout
+      - run:
+          name: Install semvertag
+          command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
+      - run:
+          name: Set next version
+          command: echo "export VERSION=$(semvertag bump patch << parameters.semver_stage >>)" >> $BASH_ENV
+      - run:
+          name: Docker login
+          command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+      - run:
+          name: Build api image
+          command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
+      - run:
+          name: Build client image
+          command: docker build -t ${AWS_REGISTRY}/digideps/client:${VERSION} client
+      - run:
+          name: Push api image
+          command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
+      - run:
+          name: Push client image
+          command: docker push ${AWS_REGISTRY}/digideps/client:${VERSION}
+      - run:
+          name: Tag git
+          command: git tag ${VERSION}
+      - run:
+          name: Push git tags
+          command: git push --tags
