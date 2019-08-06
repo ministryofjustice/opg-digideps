@@ -70,11 +70,24 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## Xdebug
 
-To install Xdebug on the API and client contains, add a `.env` file to the top-level of this repo, with the contents `REQUIRE_XDEBUG_FRONTEND=true`. Rebuilding the Docker images will then cause them to install Xdebug.
+To use Xdebug in the `frontend` and/or `admin` app, it must be installed on the client image. To install, you will need to create a `.env` file in the top-level of this repo, and add the following:
 
-Once installed, you can set Xdebug config values from `api/docker/env/api.env`, `client/docker/env/admin.env` and `client/docker/env/frontend.env`. For the values to take effect, the target environment configuration file must contain `OPG_PHP_XDEBUG_ENABLED=true`.
+```
+REQUIRE_XDEBUG_API=false
+REQUIRE_XDEBUG_FRONTEND=true
+```
+Then add the following to `client/docker/env/admin.env` and `client/docker/env/frontend.env`:
+```
+OPG_PHP_XDEBUG_ENABLED=true
+OPG_PHP_XDEBUG_REMOTE_HOST=docker.for.mac.localhost
+OPG_PHP_XDEBUG_REMOTE_PORT=9001
+OPG_PHP_XDEBUG_IDEKEY=PHPSTORM
+```
+**Note** the above is an example for PHP Storm using a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set above.
 
-The default values currently set are those required to step through the PHPSTORM IDE on a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set in the environment configuration files.
+Now build the image and run the container. You can confirm installation by running `php -v` in the container and seeing that it reports the Xdebug version.
+
+To install Xdebug on the API, set the flag to true in the `.env` file (see above), and add the same config as above to `api/docker/env/api.env`. **Note** that this impacts local performance dramatically and often times out when hitting the application through the frontend, so API debugging is best done in isolation by hitting endpoints via Postman, and uninstalling Xdebug when finished by setting the flag in `.env` to false.
 
 ## License
 
