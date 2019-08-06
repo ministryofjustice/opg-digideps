@@ -1,0 +1,28 @@
+indexPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Admin
+    supportTitle: Organisations
+    addOrganisation: Add a new organisation
+
+addPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Add a new organisation
+    supportTitle: Organisations
+
+form:
+    name:
+        label: Organisation name
+    emailIdentifierType:
+        notBlank: iodeoiji
+        label: Email identifier
+        hint: How can we identify deputies who are part of this organisation?
+        domainHint: e.g. on gmail.com
+    emailDomain:
+        label: Email domain
+    emailAddress:
+        label: Email address
+    isActivated:
+        label: Should the organisation be active?
+        hint: Deactivating an organisation will disable access permission for all members
+    save:
+        label: Save organisation
