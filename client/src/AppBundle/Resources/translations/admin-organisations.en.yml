@@ -22,7 +22,6 @@ form:
     name:
         label: Organisation name
     emailIdentifierType:
-        notBlank: iodeoiji
         label: Email identifier
         hint: How can we identify deputies who are part of this organisation?
         domainHint: e.g. on gmail.com

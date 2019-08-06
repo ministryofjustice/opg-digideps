@@ -30,8 +30,6 @@ class Organisation
      * @var string
      *
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="organisation.emailIdentifier.notBlank")
-     * @Assert\Length(max=256, maxMessage="organisation.emailIdentifier.maxLength")
      */
     private $emailIdentifier;
 
