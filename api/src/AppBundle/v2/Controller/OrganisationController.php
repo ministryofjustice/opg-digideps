@@ -2,10 +2,12 @@
 
 namespace AppBundle\v2\Controller;
 
+use AppBundle\Service\RestHandler\OrganisationRestHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/organisation")
@@ -13,6 +15,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class OrganisationController
 {
     use ControllerTrait;
+
+    /** @var OrganisationRestHandler */
+    private $restHandler;
+
+    /**
+     * @param OrganisationRestHandler $restHandler
+     */
+    public function __construct(OrganisationRestHandler $restHandler)
+    {
+        $this->restHandler = $restHandler;
+    }
 
     /**
      * @Route("/list")
@@ -29,11 +42,17 @@ class OrganisationController
      * @Route("")
      * @Method({"POST"})
      *
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createAction()
+    public function createAction(Request $request)
     {
-        return $this->buildSuccessResponse([], 'Organisation created', 201);
+        $data = json_decode($request->getContent(), true);
+        $entity = $this->restHandler->create($data);
+
+        return $this->buildSuccessResponse(['id' => $entity->getId()], 'Organisation created', 201);
     }
 
     /**

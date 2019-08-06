@@ -24,3 +24,9 @@ services:
     - '@ClientAssemblerFromReportEntity'
     - '@AppBundle\v2\Transformer\ClientTransformer'
     public: true
+
+  AppBundle\v2\Controller\OrganisationController:
+    class: AppBundle\v2\Controller\OrganisationController
+    arguments:
+      - '@AppBundle\Service\RestHandler\OrganisationRestHandler'
+    public: true

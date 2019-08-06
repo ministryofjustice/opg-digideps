@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="organisation")
@@ -23,16 +24,25 @@ class Organisation
     /**
      * @var string
      *
-     * @ORM\Column(name="organisation_name", type="string", length=256, nullable=false)
+     * @Assert\NotBlank()
+     * @ORM\Column(name="name", type="string", length=256, nullable=false)
      */
-    private $organisationName;
+    private $name;
 
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false)
      */
     private $emailIdentifier;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
+     */
+    private $isActivated;
 
     /**
      * @return int
@@ -56,18 +66,18 @@ class Organisation
     /**
      * @return string
      */
-    public function getOrganisationName(): string
+    public function getName(): string
     {
-        return $this->organisationName;
+        return $this->name;
     }
 
     /**
-     * @param string $organisationName
+     * @param string $name
      * @return Organisation
      */
-    public function setOrganisationName(string $organisationName): Organisation
+    public function setName(string $name): Organisation
     {
-        $this->organisationName = $organisationName;
+        $this->name = $name;
 
         return $this;
     }
@@ -87,6 +97,25 @@ class Organisation
     public function setEmailIdentifier(string $emailIdentifier): Organisation
     {
         $this->emailIdentifier = $emailIdentifier;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActivated(): bool
+    {
+        return $this->isActivated;
+    }
+
+    /**
+     * @param bool $isActivated
+     * @return Organisation
+     */
+    public function setIsActivated(bool $isActivated): Organisation
+    {
+        $this->isActivated = $isActivated;
 
         return $this;
     }
