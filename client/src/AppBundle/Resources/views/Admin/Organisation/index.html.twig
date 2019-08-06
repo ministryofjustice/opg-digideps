@@ -1,0 +1,68 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-organisations" %}
+{% set page = 'indexPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block pageContent %}
+
+    <a href="{{ url('admin_organisation_add') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
+        {{ (page ~ '.addOrganisation') | trans }}
+    </a>
+
+    <table class="govuk-table">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+
+        <th class="govuk-table__header" scope="col">Name</th>
+
+        <th class="govuk-table__header" scope="col">Email identifier</th>
+
+        <th class="govuk-table__header" scope="col">Active</th>
+
+        <th class="govuk-table__header" scope="col"><span class="govuk-visually-hidden">Actions</span></th>
+
+        </tr>
+    </thead>
+
+    <tbody class="govuk-table__body">
+
+        <tr class="govuk-table__row">
+        <td class="govuk-table__cell">Paoletti Associates</td>
+
+        <td class="govuk-table__cell">*@paoletti.co.uk</td>
+
+        <td class="govuk-table__cell"><span class="govuk-tag">Active</span></td>
+
+        <td class="govuk-table__cell govuk-table__cell--numeric"><a href="/ddpb-2782/edit" class="govuk-link">Edit</a></td>
+        </tr>
+
+        <tr class="govuk-table__row">
+        <td class="govuk-table__cell">Ashbourne Solicitors</td>
+
+        <td class="govuk-table__cell">*@ashbourne-solicitor.org</td>
+
+        <td class="govuk-table__cell"></td>
+
+        <td class="govuk-table__cell govuk-table__cell--numeric"><a href="/ddpb-2782/edit" class="govuk-link">Edit</a></td>
+        </tr>
+
+        <tr class="govuk-table__row">
+        <td class="govuk-table__cell">Jordan Tullar</td>
+
+        <td class="govuk-table__cell">jordan.tullar@gmail.com</td>
+
+        <td class="govuk-table__cell"><span class="govuk-tag">Active</span></td>
+
+        <td class="govuk-table__cell govuk-table__cell--numeric"><a href="/ddpb-2782/edit" class="govuk-link">Edit</a></td>
+        </tr>
+
+    </tbody>
+    </table>
+{% endblock %}
