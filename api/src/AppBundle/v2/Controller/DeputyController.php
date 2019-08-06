@@ -16,6 +16,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class DeputyController
 {
+    use ControllerTrait;
+
     /** @var UserRepository  */
     private $repository;
 
@@ -54,18 +56,5 @@ class DeputyController
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
-    }
-
-    /**
-     * @param array $data
-     * @return JsonResponse
-     */
-    private function buildSuccessResponse(array $data)
-    {
-        return new JsonResponse([
-            'success' => true,
-            'data' => $data,
-            'message' => ''
-        ]);
     }
 }
