@@ -23,7 +23,7 @@ class OrganisationController extends AbstractController
     public function indexAction()
     {
         $endpoint = 'setting/service-notification';
-        $organisations = $this->getRestClient()->get('v2/organisation/list', 'Organisation');
+        $organisations = $this->getRestClient()->get('v2/organisation/list', 'Organisation[]');
 
         return [
             'organisations' => $organisations

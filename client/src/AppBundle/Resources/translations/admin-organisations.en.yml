@@ -3,6 +3,10 @@ indexPage:
     pageTitle: Admin
     supportTitle: Organisations
     addOrganisation: Add a new organisation
+    summary:
+        name: Name
+        emailIdentifier: Email identifier
+        active: Active
 
 addPage:
     htmlTitle: Administration - Organisations
