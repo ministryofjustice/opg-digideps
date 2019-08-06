@@ -13,6 +13,11 @@ addPage:
     pageTitle: Add a new organisation
     supportTitle: Organisations
 
+editPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Edit organisation
+    supportTitle: Organisations
+
 form:
     name:
         label: Organisation name

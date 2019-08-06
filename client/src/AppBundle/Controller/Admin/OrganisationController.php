@@ -36,7 +36,7 @@ class OrganisationController extends AbstractController
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:form.html.twig")
      */
-    public function formAction(Request $request, $id)
+    public function formAction(Request $request, $id = null)
     {
         if (is_null($id)) {
             $organisation = new Organisation();
