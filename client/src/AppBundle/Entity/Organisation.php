@@ -103,7 +103,7 @@ class Organisation
      */
     public function getIsDomainIdentifier()
     {
-        return substr($this->emailIdentifier, 0, 1) === '@';
+        return strpos($this->emailIdentifier, '@') === false;
     }
 
     /**
