@@ -26,15 +26,16 @@ input[type=text]::-ms-clear {
 
 .opg-input-prefix {
     position: absolute;
-    z-index: 1;
-    width: 10px;
+    width: 15px;
     margin: 2px;
-    padding: 5px 9px 6px;
+    padding: 5px 10px 6px;
     border: 0;
     background: $grey-3;
+    text-align: center;
+    z-index: 1;
 
     + input {
-        padding-left: 2em;
+        padding-left: 40px;
     }
 
     .govuk-form-group--error > & {
@@ -44,15 +45,15 @@ input[type=text]::-ms-clear {
 }
 
 .opg-pre-input-text {
-    float: left;
-    padding-right: 10px;
-    font-size: 24px;
-    line-height: 1.04167;
-
     @include govuk-media-query($from: tablet) {
         font-size: 36px;
         line-height: 1.5;
     }
+
+    padding-right: 10px;
+    float: left;
+    font-size: 24px;
+    line-height: 1.04167;
 }
 
 .inputs-right-aligned {

@@ -23,7 +23,7 @@
     }) }}
 
     {% set emailIdentifierDomain %}
-        {{ form_input(form.emailDomain, 'form.emailDomain') }}
+        {{ form_input(form.emailDomain, 'form.emailDomain', { inputPrefix: '@' }) }}
     {% endset %}
 
     {% set emailIdentifierAddress %}
