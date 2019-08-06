@@ -70,9 +70,11 @@ _See [deployment documentation](docs/DEPLOYMENT.md)_
 
 ## Xdebug
 
-Xdebug is installed on the container when your local `.env` file in the `opg-digi-deps-docker` repo contains `REQUIRE_XDEBUG_FRONTEND=true`. (See the `opg-digi-deps-docker` README for more information).
+To install Xdebug on the API and client contains, add a `.env` file to the top-level of this repo, with the contents `REQUIRE_XDEBUG_FRONTEND=true`. Rebuilding the Docker images will then cause them to install Xdebug.
 
-Once installed, you can set xdebug config values from `admin.env` and `frontend.env`. For the values to take effect, the env file must contain `OPG_PHP_XDEBUG_ENABLED=true`. The default values currently set are those required to step through the PHPSTORM IDE on a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set in the `admin.env` and `frontend.env` files.
+Once installed, you can set Xdebug config values from `api/docker/env/api.env`, `client/docker/env/admin.env` and `client/docker/env/frontend.env`. For the values to take effect, the target environment configuration file must contain `OPG_PHP_XDEBUG_ENABLED=true`.
+
+The default values currently set are those required to step through the PHPSTORM IDE on a Mac. You will need to configure your IDE, ensuring that the same port is used in the IDE as that set in the environment configuration files.
 
 ## License
 
