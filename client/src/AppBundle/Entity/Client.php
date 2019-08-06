@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Traits\ActiveAudit;
+use AppBundle\Entity\Traits\IsSoftDeleteableEntity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -10,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Client
 {
+    use IsSoftDeleteableEntity;
+    use ActiveAudit;
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"edit", "pa-edit"})
@@ -248,7 +253,6 @@ class Client
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $archivedAt;
-
 
     public function __construct()
     {
@@ -935,4 +939,19 @@ class Client
         return $this->archivedAt;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getActiveFrom()
+    {
+        return $this->activeFrom;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getActiveTo()
+    {
+        return $this->activeTo;
+    }
 }

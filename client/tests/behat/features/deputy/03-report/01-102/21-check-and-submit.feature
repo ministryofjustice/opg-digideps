@@ -133,7 +133,7 @@ Feature: Report submit
         Then I click on "download"
         # only checks one level deep. In this case, we check for a single report zip file
         And the page content should be a zip file containing files with the following files:
-            | Report_102_2016_2016_.*.zip | regexpName+sizeAtLeast | 70000 |
+            | Report_102_2016_2016_.*.zip | regexpName+sizeAtLeast | 60000 |
         # test archive
         When I go to the URL previously saved as "admin-documents-list-new"
         Then I check "Select 102"
