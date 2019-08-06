@@ -1,9 +1,11 @@
 version: 2.1
 
 workflows:
-  build:
+  pull_request:
     jobs:
       - build:
+          name: build pr
+          semver_stage: --stage dev
           filters:
             branches:
               ignore:
@@ -12,6 +14,14 @@ workflows:
           filters:
             branches:
               ignore:
+                - master
+  master:
+    jobs:
+      - build:
+          name: build master
+          filters:
+            branches:
+              only:
                 - master
 
 orbs:
@@ -49,6 +59,11 @@ jobs:
   build:
     docker:
       - image: circleci/python:2.7
+    parameters:
+      semver_stage:
+        description: semver stage suffix
+        default: ""
+        type: string
     environment:
       AWS_REGION: eu-west-1
       AWS_CONFIG_FILE: ~/project/aws_config
@@ -61,33 +76,29 @@ jobs:
             - 6f:4b:55:76:0e:cd:27:7d:ad:c3:28:38:53:69:5c:32
       - checkout
       - run:
-          name: install semvertag
+          name: Install semvertag
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
-          name: version
-          command: echo "export VERSION=$(semvertag bump patch --stage test)" >> $BASH_ENV
+          name: Set next version
+          command: echo "export VERSION=$(semvertag bump patch << parameters.semver_stage >>)" >> $BASH_ENV
       - run:
-          name: echo version
-          command: echo ${VERSION}
-      - run:
-          name: cat bash_env
-          command: cat ${BASH_ENV}
-      - run:
-          name: docker login
+          name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
-          name: build api
+          name: Build api image
           command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
       - run:
-          name: build client
+          name: Build client image
           command: docker build -t ${AWS_REGISTRY}/digideps/client:${VERSION} client
       - run:
-          name: push api
+          name: Push api image
           command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
       - run:
-          name: push client
+          name: Push client image
           command: docker push ${AWS_REGISTRY}/digideps/client:${VERSION}
       - run:
-          name: git tag
+          name: Tag git
           command: git tag ${VERSION}
-      - run: git push --tags
+      - run:
+          name: Push git tags
+          command: git push --tags
