@@ -71,7 +71,6 @@ class OrganisationType extends AbstractType
             ->add('isActivated', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => true, 'No' => false],
                 'expanded' => true,
-                'data' => false,
             ])
             ->add('save', FormTypes\SubmitType::class);
 

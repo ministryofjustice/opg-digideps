@@ -38,14 +38,10 @@
 
         <tbody class="govuk-table__body">
             {% for organisation in organisations %}
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row behat-region-org-{{ organisation.name | behat_namify }}">
                     <td class="govuk-table__cell">{{ organisation.name }}</td>
                     <td class="govuk-table__cell">
-                        {% if organisation.isDomainIdentifier %}
-                            *@{{ organisation.emailIdentifier }}
-                        {% else %}
-                            {{ organisation.emailIdentifier }}
-                        {% endif %}
+                        {{ organisation.emailIdentifierDisplay }}
                     </td>
                     <td class="govuk-table__cell">
                         {% if organisation.isActivated %}
@@ -53,8 +49,11 @@
                         {% endif %}
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a href="{{ url('admin_organisation_edit', { id: organisation.id }) }}" class="govuk-link">
+                        <a class="govuk-link behat-link-edit" href="{{ url('admin_organisation_edit', { id: organisation.id }) }}">
                             {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                        <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
+                            {{ 'remove' | trans({}, 'common') }}
                         </a>
                     </td>
                 </tr>

@@ -87,6 +87,15 @@ class Organisation
         return $this->emailIdentifier;
     }
 
+    public function getEmailIdentifierDisplay()
+    {
+        if ($this->getIsDomainIdentifier()) {
+            return '*@' . $this->emailIdentifier;
+        } else {
+            return $this->emailIdentifier;
+        }
+    }
+
     /**
      * @param string $emailIdentifier
      *

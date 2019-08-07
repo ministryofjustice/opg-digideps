@@ -311,6 +311,10 @@ class RestClient
             return $response;
         }
 
+        if ($response->getStatusCode() === 204) {
+            return;
+        }
+
         $responseArray = $this->extractDataArray($response);
         if ($expectedResponseType == 'array') {
             return $responseArray;

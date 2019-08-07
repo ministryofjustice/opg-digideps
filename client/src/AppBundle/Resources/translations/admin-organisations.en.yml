@@ -18,6 +18,17 @@ editPage:
     pageTitle: Edit organisation
     supportTitle: Organisations
 
+deletePage:
+    htmlTitle: Administration - Remove organisation
+    subject: organisation
+    summary:
+        name: Name
+        emailIdentifier: Email identifier
+        active:
+            label: Active?
+            yes: Yes
+            no: No
+
 form:
     name:
         label: Organisation name
