@@ -13,4 +13,7 @@ services:
 
   AppBundle\Service\RestHandler\OrganisationRestHandler:
     class: AppBundle\Service\RestHandler\OrganisationRestHandler
-    arguments: [ "@em", "@validator" ]
+    arguments:
+      - '@em'
+      - '@validator'
+      - '@AppBundle\Entity\Repository\OrganisationRepository'

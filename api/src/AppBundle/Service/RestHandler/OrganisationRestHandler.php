@@ -3,6 +3,8 @@
 namespace AppBundle\Service\RestHandler;
 
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\v2\DTO\OrganisationDto;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -15,14 +17,19 @@ class OrganisationRestHandler
     /** @var ValidatorInterface */
     private $validator;
 
+    /** @var OrganisationRepository */
+    private $repository;
+
     /**
      * @param EntityManager $em
      * @param ValidatorInterface $validator
+     * @param OrganisationRepository $repository
      */
-    public function __construct(EntityManager $em, ValidatorInterface $validator)
+    public function __construct(EntityManager $em, ValidatorInterface $validator, OrganisationRepository $repository)
     {
         $this->em = $em;
         $this->validator = $validator;
+        $this->repository = $repository;
     }
 
     /**
@@ -41,6 +48,32 @@ class OrganisationRestHandler
         }
 
         $organisation = (new Organisation())
+            ->setName($data['name'])
+            ->setEmailIdentifier($data['email_identifier'])
+            ->setIsActivated((bool)$data['is_activated']);
+
+        $this->throwExceptionOnInvalidEntity($organisation);
+
+        $this->em->persist($organisation);
+        $this->em->flush();
+
+        return $organisation;
+    }
+
+    public function update(array $data, int $id): ?Organisation
+    {
+        if (!$this->verifyPostedData($data)) {
+            throw new OrganisationUpdateException(sprintf(
+                'Missing key or null value given in request: %s',
+                json_encode($data)
+            ));
+        }
+
+        if (null === ($organisation = $this->repository->find($id))) {
+            return null;
+        }
+
+        $organisation
             ->setName($data['name'])
             ->setEmailIdentifier($data['email_identifier'])
             ->setIsActivated((bool)$data['is_activated']);

@@ -20,9 +20,9 @@ services:
   AppBundle\v2\Controller\ClientController:
     class: AppBundle\v2\Controller\ClientController
     arguments:
-    - '@AppBundle\Entity\Repository\ClientRepository'
-    - '@ClientAssemblerFromReportEntity'
-    - '@AppBundle\v2\Transformer\ClientTransformer'
+      - '@AppBundle\Entity\Repository\ClientRepository'
+      - '@ClientAssemblerFromReportEntity'
+      - '@AppBundle\v2\Transformer\ClientTransformer'
     public: true
 
   AppBundle\v2\Controller\OrganisationController:

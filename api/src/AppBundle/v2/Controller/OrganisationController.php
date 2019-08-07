@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Controller;
 
+use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Service\RestHandler\OrganisationRestHandler;
 use AppBundle\v2\Assembler\OrganisationAssembler;
@@ -60,7 +61,7 @@ class OrganisationController
      *
      * @return JsonResponse
      */
-    public function getAllAction()
+    public function getAllAction(): JsonResponse
     {
         $data = $this->repository->getAllArray();
 
@@ -82,10 +83,10 @@ class OrganisationController
      * @Method({"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      *
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      */
-    public function getByIdAction($id)
+    public function getByIdAction(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->findArrayById($id))) {
             throw new NotFoundHttpException(sprintf('Organisation id %s not found', $id));
@@ -107,7 +108,7 @@ class OrganisationController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         $entity = $this->restHandler->create($data);
@@ -120,12 +121,16 @@ class OrganisationController
      * @Method({"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      *
-     * @param $id
+     * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, int $id): JsonResponse
     {
-        return $this->buildSuccessResponse([], 'Organisation updated' . $id, 204);
+        $data = json_decode($request->getContent(), true);
+        $this->restHandler->update($data, $id);
+
+        return $this->buildSuccessResponse([], '', 204);
     }
 
     /**
@@ -133,15 +138,14 @@ class OrganisationController
      * @Method({"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
-     * @param $id
+     * @param $int id
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteAction($id)
+    public function deleteAction(int $id): JsonResponse
     {
         $deleted = $this->repository->deleteById($id);
-
         $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
 
         return $this->buildSuccessResponse([], $message);
