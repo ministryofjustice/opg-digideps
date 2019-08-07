@@ -12,35 +12,84 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
   master:
     jobs:
-      - build:
-          name: build master
-          filters: { branches: { only: [ master ] } }
+#      - build:
+#          name: build master
+#          filters: { branches: { only: [ master ] } }
 
       - apply:
-          name: apply development
-          requires: [ build master ]
-          filters: { branches: { only: [ master ] } }
+          name: apply shared-development
+#          requires: [ build master ]
+#          filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: development
 
       - apply:
           name: apply master
-          requires: [ apply development ]
-          filters: { branches: { only: [ master ] } }
+          requires: [ apply shared-development ]
+#          filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - stabilize:
           name: stabilize master
           requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
+#          filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - test:
           name: test master
           requires: [ stabilize master ]
-          filters: { branches: { only: [ master ] } }
+#          filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
+      - apply:
+          name: apply training
+          requires: [ test master ]
+#          filters: { branches: { only: [ master ] } }
+          tf_workspace: training
+
+      - stabilize:
+          name: stabilize training
+          requires: [ apply training ]
+          #          filters: { branches: { only: [ master ] } }
+          tf_workspace: training
+
+      - apply:
+          name: apply shared-production
+          requires: [ test master ]
+#          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: production
+
+      - apply:
+          name: apply preproduction
+          requires: [ apply shared-production ]
+#          filters: { branches: { only: [ master ] } }
+          tf_workspace: preprod
+
+      - stabilize:
+          name: stabilize preproduction
+          requires: [ apply preproduction ]
+          #          filters: { branches: { only: [ master ] } }
+          tf_workspace: preprod
+
+      - approve:
+          name: approve release to production
+          type: approval
+          requires: [ stabilize preproduction ]
+#          filters: { branches: { only: [ master ] } }
+
+      - apply:
+          name: apply production
+          requires: [ approve release to production ]
+          #          filters: { branches: { only: [ master ] } }
+          tf_workspace: production02
+
+      - stabilize:
+          name: stabilize production
+          requires: [ apply production ]
+          #          filters: { branches: { only: [ master ] } }
+          tf_workspace: production02
+          
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
 
@@ -115,15 +164,15 @@ jobs:
       - run:
           name: Bundle install
           command: bundle install
-      - run:
-          name: Reset database
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
-      - run:
-          name: Test API
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
-      - run:
-          name: Test Client
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
+#      - run:
+#          name: Reset database
+#          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
+#      - run:
+#          name: Test API
+#          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
+#      - run:
+#          name: Test Client
+#          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
 
   stabilize:
     docker:
