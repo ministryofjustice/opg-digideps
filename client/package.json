@@ -24,6 +24,6 @@
     "postcss-wcag-contrast": "^2.0.0"
   },
   "dependencies": {
-    "govuk-frontend": "^2.13.0"
+    "govuk-frontend": "^3.0.0"
   }
 }
