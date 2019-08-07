@@ -6,11 +6,14 @@ use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Service\RestHandler\OrganisationRestHandler;
 use AppBundle\v2\Assembler\OrganisationAssembler;
 use AppBundle\v2\Transformer\OrganisationTransformer;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/organisation")
@@ -42,7 +45,8 @@ class OrganisationController
         OrganisationRepository $repository,
         OrganisationAssembler $assembler,
         OrganisationTransformer $transformer
-    ) {
+    )
+    {
         $this->restHandler = $restHandler;
         $this->repository = $repository;
         $this->assembler = $assembler;
@@ -52,12 +56,13 @@ class OrganisationController
     /**
      * @Route("/list")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @return JsonResponse
      */
     public function getAllAction()
     {
-        $data = $this->repository->findAllArray();
+        $data = $this->repository->getAllArray();
 
         $organisationDtos = [];
         foreach ($data as $organisationArray) {
@@ -72,19 +77,35 @@ class OrganisationController
         return $this->buildSuccessResponse($transformedDtos);
     }
 
+    /**
+     * @Route("/{id}", requirements={"id":"\d+"})
+     * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param $id
+     * @return JsonResponse
+     */
     public function getByIdAction($id)
     {
+        if (null === ($data = $this->repository->findArrayById($id))) {
+            throw new NotFoundHttpException(sprintf('Organisation id %s not found', $id));
+        }
 
+        $dto = $this->assembler->assembleFromArray($data);
+        $transformedDto = $this->transformer->transform($dto);
+
+        return $this->buildSuccessResponse($transformedDto);
     }
 
     /**
      * @Route("")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function createAction(Request $request)
     {
@@ -97,6 +118,7 @@ class OrganisationController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param $id
      * @return JsonResponse
@@ -109,6 +131,7 @@ class OrganisationController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
      *
      * @param $id
      * @return JsonResponse
