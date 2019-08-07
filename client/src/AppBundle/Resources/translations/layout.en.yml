@@ -6,6 +6,7 @@ nav:
     homepage: Homepage
     adminArea: Users
     adminClients: Clients
+    adminOrganisations: Organisations
     adminUploadLay: Lay CSV
     adminUploadPAProf: PA/Prof CSV
     adminStats: Stats
