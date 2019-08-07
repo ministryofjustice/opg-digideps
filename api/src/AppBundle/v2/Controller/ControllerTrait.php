@@ -20,4 +20,16 @@ trait ControllerTrait
             'message' => $message
         ], $status);
     }
+
+    /**
+     * @param string $message
+     * @return JsonResponse
+     */
+    private function buildNotFoundResponse($message = '')
+    {
+        return new JsonResponse([
+            'success' => false,
+            'message' => $message
+        ], 404);
+    }
 }

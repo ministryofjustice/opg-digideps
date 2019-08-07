@@ -33,7 +33,7 @@ class Organisation
      * @var string
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false)
+     * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
      */
     private $emailIdentifier;
 

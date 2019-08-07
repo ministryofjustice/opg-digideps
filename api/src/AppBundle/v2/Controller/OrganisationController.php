@@ -89,7 +89,7 @@ class OrganisationController
     public function getByIdAction(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->findArrayById($id))) {
-            throw new NotFoundHttpException(sprintf('Organisation id %s not found', $id));
+            return $this->buildNotFoundResponse(sprintf('Organisation id: %d not found', $id));
         }
 
         $dto = $this->assembler->assembleFromArray($data);
