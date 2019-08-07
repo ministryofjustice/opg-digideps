@@ -10,7 +10,7 @@
     <div id="header-report-submit" class="govuk-panel govuk-panel--confirmation">
         <h2 class="govuk-panel__title">{{ 'ndrReady' | trans }}</h2>
         <div class="govuk-panel__body">
-            <a class="govuk-button govuk-!-margin-0  push-half--top behat-link-ndr-submit" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+            <a class="govuk-button govuk-button--secondary govuk-!-margin-0  push-half--top behat-link-ndr-submit" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
         </div>
     </div>
 {% endif %}

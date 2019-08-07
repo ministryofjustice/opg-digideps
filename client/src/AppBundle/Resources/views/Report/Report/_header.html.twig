@@ -17,7 +17,7 @@
             <h2 class="govuk-panel__title">{{ 'reportIsReady' | trans() }}</h2>
         {% endif %}
         <div class="govuk-panel__body">
-            <a class="govuk-button govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+            <a class="govuk-button govuk-button--secondary govuk-!-margin-0 behat-link-report-submit" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
         </div>
     </div>
 {% endif %}
