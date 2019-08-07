@@ -23,7 +23,7 @@
 {% block pageContent %}
 
     {# Use a random ID to ensure that changes to open sections don't persist #}
-    <div class="govuk-accordion" data-module="accordion" id="overview-accordion-{{ "now" | date("U") }}">
+    <div class="govuk-accordion" data-module="govuk-accordion" id="overview-accordion-{{ "now" | date("U") }}">
         {% include 'AppBundle:Org/ClientProfile:_client.html.twig' with {
         '   client': client
         } %}

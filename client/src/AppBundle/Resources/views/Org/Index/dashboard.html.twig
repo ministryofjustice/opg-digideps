@@ -24,7 +24,7 @@
         {% endif %}
     </form>
 
-    <div class="govuk-tabs" data-module="tabs">
+    <div class="govuk-tabs" data-module="govuk-tabs">
         <ul class="govuk-tabs__list" role="tablist">
             <li class="govuk-tabs__list-item">
                 <a class="govuk-tabs__tab {{ not filters.status ? 'govuk-tabs__tab--selected' : '' }}" href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0">
