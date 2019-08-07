@@ -49,16 +49,26 @@ class OrganisationController extends AbstractController
             $organisation
         );
 
+        if (!is_null($organisation->getId())) {
+            if ($organisation->getIsDomainIdentifier()) {
+                $form->get('emailIdentifierType')->setData('domain');
+                $form->get('emailDomain')->setData($organisation->getEmailIdentifier());
+            } else {
+                $form->get('emailIdentifierType')->setData('address');
+                $form->get('emailAddress')->setData($organisation->getEmailIdentifier());
+            }
+        }
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $organisation = $form->getData();
 
-            if (is_null($id)) {
+            if (is_null($organisation->getId())) {
                 $this->getRestClient()->post('v2/organisation', $organisation);
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
             } else {
-                $this->getRestClient()->put('v2/organisation/' . $organistion->getId(), $organisation);
+                $this->getRestClient()->put('v2/organisation/' . $organisation->getId(), $organisation);
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
             }
 
