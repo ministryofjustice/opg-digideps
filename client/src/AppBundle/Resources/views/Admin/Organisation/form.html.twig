@@ -1,7 +1,8 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
 
 {% trans_default_domain "admin-organisations" %}
-{% if editView %}
+{% if isEditView %}
     {% set page = 'editPage' %}
 {% else %}
     {% set page = 'addPage' %}
@@ -14,6 +15,14 @@
     <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
 {% endblock %}
 
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('admin_homepage'), text: 'Admin' },
+        { href: url('admin_organisation_homepage'), text: 'Organisations' },
+        { text: (isEditView ? organisation.name : 'Add organisation') }
+    ]) }}
+{% endblock %}
+
 {% block pageContent %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
@@ -22,24 +31,21 @@
         'labelClass': 'govuk-label--m'
     }) }}
 
-    <div class="govuk-form-group {% if not form.emailIdentifierType.vars.valid %}govuk-form-group--error{% endif %}">
-        {% set emailIdentifierDomain %}
-            {{ form_input(form.emailDomain, 'form.emailDomain') }}
-        {% endset %}
+    {% set emailIdentifierDomain %}
+        {{ form_input(form.emailDomain, 'form.emailDomain', { inputPrefix: '@' }) }}
+    {% endset %}
 
-        {% set emailIdentifierAddress %}
-            {{ form_input(form.emailAddress, 'form.emailAddress') }}
-        {% endset %}
+    {% set emailIdentifierAddress %}
+        {{ form_input(form.emailAddress, 'form.emailAddress') }}
+    {% endset %}
 
-        {{ form_checkbox_group(form.emailIdentifierType, 'form.emailIdentifierType', {
-            useFormGroup: false,
-            legendClass: 'govuk-label--m',
-            items: [
-                { conditional: emailIdentifierDomain },
-                { conditional: emailIdentifierAddress, description: ('form.emailIdentifierType.domainHint' | trans) },
-            ]
-        }) }}
-    </div>
+    {{ form_checkbox_group(form.emailIdentifierType, 'form.emailIdentifierType', {
+        legendClass: 'govuk-label--m',
+        items: [
+            { conditional: emailIdentifierDomain },
+            { conditional: emailIdentifierAddress, description: ('form.emailIdentifierType.domainHint' | trans) },
+        ]
+    }) }}
 
     {{ form_checkbox_group(form.isActivated, 'form.isActivated', {
         'legendClass': 'govuk-label--m'

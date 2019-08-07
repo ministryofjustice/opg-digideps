@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/admin/organisation")
+ * @Route("/admin/organisations")
  */
 class OrganisationController extends AbstractController
 {
@@ -23,7 +23,7 @@ class OrganisationController extends AbstractController
     public function indexAction()
     {
         $endpoint = 'setting/service-notification';
-        $organisations = $this->getRestClient()->get('v2/organisation/list', 'Organisation');
+        $organisations = $this->getRestClient()->get('v2/organisation/list', 'Organisation[]');
 
         return [
             'organisations' => $organisations
@@ -36,7 +36,7 @@ class OrganisationController extends AbstractController
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:form.html.twig")
      */
-    public function formAction(Request $request, $id)
+    public function formAction(Request $request, $id = null)
     {
         if (is_null($id)) {
             $organisation = new Organisation();

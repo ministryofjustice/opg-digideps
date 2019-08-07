@@ -50,6 +50,11 @@
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="govuk-header__navigation-item">
+                        <a href="{{ path('admin_organisation_homepage') }}" class="govuk-header__link ">
+                            {{ 'nav.adminOrganisations' | trans }}
+                        </a>
+                    </li>
+                    <li class="govuk-header__navigation-item">
                         <a href="{{ path('casrec_upload') }}" class="govuk-header__link behat-link-csv-upload ">
                             {{ 'nav.adminUploadLay' | trans }}
                         </a>
