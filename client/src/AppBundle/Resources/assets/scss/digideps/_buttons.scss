@@ -22,17 +22,17 @@
 
 
 .button-secondary {
-    @include button($grey-3);
+    @include button(govuk-colour('light-grey'));
 
-    &[disabled="disabled"] {
-        background: $grey-3;
+    &[disabled='disabled'] {
+        background: govuk-colour('light-grey');
     }
 }
 
 .button-warning {
     @include button($red);
 
-    &[disabled="disabled"] {
+    &[disabled='disabled'] {
         background: $red;
     }
 }
