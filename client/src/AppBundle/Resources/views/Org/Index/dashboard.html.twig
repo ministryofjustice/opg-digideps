@@ -20,7 +20,9 @@
         </div>
 
         {% if filters.q %}
-            <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0">{{ 'clearSearch' | trans({}, 'common') }}</a>
+            <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" data-module="govuk-button">
+                {{ 'clearSearch' | trans({}, 'common') }}
+            </a>
         {% endif %}
     </form>
 

@@ -14,8 +14,8 @@
         <p>{{ 'component.secondLine' | trans }}</p>
 
         <form name="session-timeout-form" action="/logout">
-            <button type="button" name="continue" class="govuk-button" data-js="ok-button">{{ 'ok' | trans({}, 'common' ) }}</button>
-            <button type="submit" name="subsmit" class="govuk-button govuk-button--secondary">{{ 'signOut' | trans({}, 'common' ) }}</button>
+            <button type="button" name="continue" class="govuk-button" data-js="ok-button" data-module="govuk-button">{{ 'ok' | trans({}, 'common' ) }}</button>
+            <button type="submit" name="subsmit" class="govuk-button govuk-button--secondary" data-module="govuk-button">{{ 'signOut' | trans({}, 'common' ) }}</button>
         </form>
     </div>
 </div>
