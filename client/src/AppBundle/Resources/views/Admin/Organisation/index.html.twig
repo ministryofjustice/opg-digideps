@@ -41,11 +41,7 @@
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">{{ organisation.name }}</td>
                     <td class="govuk-table__cell">
-                        {% if organisation.isDomainIdentifier %}
-                            *@{{ organisation.emailIdentifier }}
-                        {% else %}
-                            {{ organisation.emailIdentifier }}
-                        {% endif %}
+                        {{ organisation.emailIdentifierDisplay }}
                     </td>
                     <td class="govuk-table__cell">
                         {% if organisation.isActivated %}
@@ -55,6 +51,9 @@
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="{{ url('admin_organisation_edit', { id: organisation.id }) }}" class="govuk-link">
                             {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                        <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
+                            {{ 'remove' | trans({}, 'common') }}
                         </a>
                     </td>
                 </tr>

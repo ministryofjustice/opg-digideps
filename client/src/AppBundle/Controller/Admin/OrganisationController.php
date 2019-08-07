@@ -82,4 +82,44 @@ class OrganisationController extends AbstractController
             'backLink' => $this->generateUrl('admin_organisation_homepage')
         ];
     }
+
+    /**
+     * @Route("/delete/{id}", name="admin_organisation_delete")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+
+        if ($form->isValid()) {
+            try {
+                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId());
+                $request->getSession()->getFlashBag()->add('notice', 'The organisation has been removed');
+            } catch (\Throwable $e) {
+                $this->get('logger')->error($e->getMessage());
+                $request->getSession()->getFlashBag()->add('error', 'Organisation could not be removed');
+            }
+
+            return $this->redirectToRoute('admin_organisation_homepage');
+        }
+
+        return [
+            'translationDomain' => 'admin-organisations',
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.name', 'value' => $organisation->getName()],
+                ['label' => 'deletePage.summary.emailIdentifier', 'value' => $organisation->getEmailIdentifierDisplay()],
+                [
+                    'label' => 'deletePage.summary.active.label',
+                    'value' => 'deletePage.summary.active.' . ($organisation->getIsActivated() ? 'yes' : 'no'),
+                    'format' => 'translate',
+                ],
+            ],
+            'backLink' => $this->generateUrl('admin_organisation_homepage')
+        ];
+    }
 }
