@@ -63,17 +63,17 @@
 
     <div class="govuk-tabs" data-module="govuk-tabs">
         <ul class="govuk-tabs__list" role="tablist">
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab {% if isNewPage %}govuk-tabs__tab--selected{% endif %} behat-link-tab-new" href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
+            <li class="govuk-tabs__list-item {% if isNewPage %}govuk-tabs__list-item--selected{% endif %}">
+                <a class="govuk-tabs__tab behat-link-tab-new" href="{{ path(baseRoute, {'status': 'new'} | merge(filtersToPreserveInTabs) ) }}" role="tab" tabindex="0">
                     {{ 'page.tabs.new.label' | trans }}
-                    <span class="govuk-tag">{{ counts.new }}</span>
                 </a>
+                <span class="govuk-tag">{{ counts.new }}</span>
             </li>
-            <li class="govuk-tabs__list-item">
-                <a class="govuk-tabs__tab {% if not isNewPage %}govuk-tabs__tab--selected{% endif %} behat-link-tab-archived" href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0">
+            <li class="govuk-tabs__list-item {% if not isNewPage %}govuk-tabs__list-item--selected{% endif %}">
+                <a class="govuk-tabs__tab behat-link-tab-archived" href="{{ path(baseRoute, {'status': 'archived'} | merge(filtersToPreserveInTabs)) }}" role="tab" tabindex="0">
                     {{ 'page.tabs.archived.label' | trans }}
-                    <span class="govuk-tag opg-tag--not-started">{{ counts.archived }}</span>
                 </a>
+                <span class="govuk-tag opg-tag--not-started">{{ counts.archived }}</span>
             </li>
         </ul>
     </div>
