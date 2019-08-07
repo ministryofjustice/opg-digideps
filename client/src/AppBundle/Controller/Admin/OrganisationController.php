@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/admin/organisation")
+ * @Route("/admin/organisations")
  */
 class OrganisationController extends AbstractController
 {
