@@ -29,9 +29,15 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
+      - stabilize:
+          name: stabilize master
+          requires: [ apply master ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: master
+
       - test:
           name: test master
-          requires: [ apply master ]
+          requires: [ stabilize master ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
@@ -118,6 +124,27 @@ jobs:
       - run:
           name: Test Client
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
+
+  stabilize:
+    docker:
+      - image: circleci/ruby
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+    environment:
+      TF_WORKSPACE: << parameters.tf_workspace >>
+      TF_VAR_default_role: digideps-ci
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Bundle install
+          command: bundle install
+      - run:
+          name: Check deployment
+          command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
 
   build:
     docker:
