@@ -135,9 +135,15 @@ class OrganisationController
      *
      * @param $id
      * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function deleteAction($id)
     {
-        return $this->buildSuccessResponse([], 'Organisation deleted' . $id);
+        $deleted = $this->repository->deleteById($id);
+
+        $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
+
+        return $this->buildSuccessResponse([], $message);
     }
 }

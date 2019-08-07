@@ -33,4 +33,22 @@ class OrganisationRepository extends EntityRepository
 
         return count($result) === 0 ? null : $result[0];
     }
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function deleteById(int $id): bool
+    {
+        if (null === ($organisation = $this->find($id))) {
+            return false;
+        }
+
+        $this->getEntityManager()->remove($organisation);
+        $this->getEntityManager()->flush();
+
+        return true;
+    }
 }
