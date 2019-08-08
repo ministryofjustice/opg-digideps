@@ -45,6 +45,17 @@ Feature: Administration of organisations
     And I should not see "Active" in the "org-email-address-owning-organisation" region
 
   @admin
+  Scenario: API errors are reported back to user
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations/add"
+    And I fill in "organisation_name" with "Duplicate organisation"
+    And I fill in "organisation_isActivated_0" with "0"
+    When I fill in "organisation_emailIdentifierType_0" with "domain"
+    And I fill in "organisation_emailDomain" with "example.com"
+    And I press "Save organisation"
+    Then I should see "Email identifer already in use"
+
+  @admin
   Scenario: Admin can edit an organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
