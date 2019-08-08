@@ -13,6 +13,12 @@ Feature: Administration of organisations
     And I am on admin page "/admin/organisations"
     When I follow "Add a new organisation"
     Then I should be on "/admin/organisations/add"
+    # Check fields are required
+    When I press "Save organisation"
+    Then I should see "Please enter an organisation name"
+    Then I should see "Please select an email identifier"
+    Then I should see "Please select whether the organisation should be activated"
+    # Fill in proper details
     When I fill in "organisation_name" with "Domain-owning organisation"
     And I fill in "organisation_emailIdentifierType_0" with "domain"
     And I fill in "organisation_emailDomain" with "example.com"
