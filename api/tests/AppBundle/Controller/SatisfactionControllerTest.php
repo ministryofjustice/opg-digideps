@@ -22,7 +22,7 @@ class SatisfactionControllerTest extends AbstractTestController
         }
     }
 
-    public function testupdateNote()
+    public function testSatisfactionHasSuitablePermissions()
     {
         $url = '/satisfaction';
         $okayData = [
@@ -36,7 +36,10 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $okayData);
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $okayData);
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
+    }
 
+    public function testSatisfactionFailsOnInvalidData()
+    {
         $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => false,
             'AuthToken'   => self::$tokenDeputy,
@@ -61,16 +64,30 @@ class SatisfactionControllerTest extends AbstractTestController
                 'reportType' => 'incorrect',
             ],
         ]);
+    }
 
-        foreach (range(1, 5) as $score) {
-            $this->assertJsonRequest('POST', $url, [
-                'mustSucceed' => true,
-                'AuthToken'   => self::$tokenDeputy,
-                'data'        => [
-                    'score'      => $score,
-                    'reportType' => '102-6',
-                ],
-            ]);
+    public function testSatisfactionAcceptsValidData()
+    {
+        $scores = range(1, 5);
+        $reportTypes = [
+            'ndr',
+            '102', '103', '104', '102-4', '103-4',
+            '102-5', '103-5', '104-5', '102-4-5', '103-4-5',
+            '102-6', '103-6', '104-6', '102-4-6', '103-4-6'
+        ];
+
+        foreach ($scores as $score) {
+            foreach ($reportTypes as $reportType) {
+                $this->assertJsonRequest('POST', $url, [
+                    'mustSucceed' => true,
+                    'AuthToken'   => self::$tokenDeputy,
+                    'data'        => [
+                        'score'      => $score,
+                        'reportType' => $reportType,
+                    ],
+                ]);
+            }
         }
+
     }
 }
