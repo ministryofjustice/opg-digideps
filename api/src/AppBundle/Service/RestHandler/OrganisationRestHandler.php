@@ -47,7 +47,7 @@ class OrganisationRestHandler
         }
 
         if ($this->orgWithEmailIdExists($data['email_identifier'])) {
-            throw new OrganisationCreationException('Email identifer already exists');
+            throw new OrganisationCreationException('Email identifer already in use');
         }
 
         $organisation = new Organisation();
@@ -81,7 +81,7 @@ class OrganisationRestHandler
         }
 
         if ($data['email_identifier'] !== $organisation->getEmailIdentifier() && $this->orgWithEmailIdExists($data['email_identifier'])) {
-            throw new OrganisationCreationException('Email identifer already exists');
+            throw new OrganisationCreationException('Email identifer already in use');
         }
 
         $this->populateOrganisation($data, $organisation);

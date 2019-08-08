@@ -4,11 +4,13 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Organisation as Organisation;
+use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormError;
 
 /**
  * @Route("/admin/organisations")
@@ -22,7 +24,6 @@ class OrganisationController extends AbstractController
      */
     public function indexAction()
     {
-        $endpoint = 'setting/service-notification';
         $organisations = $this->getRestClient()->get('v2/organisation/list', 'Organisation[]');
 
         return [
@@ -64,15 +65,19 @@ class OrganisationController extends AbstractController
         if ($form->isValid()) {
             $organisation = $form->getData();
 
-            if (is_null($organisation->getId())) {
-                $this->getRestClient()->post('v2/organisation', $organisation);
-                $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
-            } else {
-                $this->getRestClient()->put('v2/organisation/' . $organisation->getId(), $organisation);
-                $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
-            }
+            try {
+                if (is_null($organisation->getId())) {
+                    $this->getRestClient()->post('v2/organisation', $organisation);
+                    $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
+                } else {
+                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId(), $organisation);
+                    $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
+                }
 
-            return $this->redirectToRoute('admin_organisation_homepage');
+                return $this->redirectToRoute('admin_organisation_homepage');
+            } catch (RestClientException $e) {
+                $form->addError(new FormError($e->getData()['message']));
+            }
         }
 
         return [

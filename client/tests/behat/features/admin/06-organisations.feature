@@ -13,6 +13,12 @@ Feature: Administration of organisations
     And I am on admin page "/admin/organisations"
     When I follow "Add a new organisation"
     Then I should be on "/admin/organisations/add"
+    # Check fields are required
+    When I press "Save organisation"
+    Then I should see "Please enter an organisation name"
+    Then I should see "Please select an email identifier"
+    Then I should see "Please select whether the organisation should be activated"
+    # Fill in proper details
     When I fill in "organisation_name" with "Domain-owning organisation"
     And I fill in "organisation_emailIdentifierType_0" with "domain"
     And I fill in "organisation_emailDomain" with "example.com"
@@ -43,6 +49,17 @@ Feature: Administration of organisations
         | Email address-owning organisation | org-email-address-owning-organisation |
         | test@gmail.com                    | org-email-address-owning-organisation |
     And I should not see "Active" in the "org-email-address-owning-organisation" region
+
+  @admin
+  Scenario: API errors are reported back to user
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations/add"
+    And I fill in "organisation_name" with "Duplicate organisation"
+    And I fill in "organisation_isActivated_0" with "0"
+    When I fill in "organisation_emailIdentifierType_0" with "domain"
+    And I fill in "organisation_emailDomain" with "example.com"
+    And I press "Save organisation"
+    Then I should see "Email identifer already in use"
 
   @admin
   Scenario: Admin can edit an organisation
