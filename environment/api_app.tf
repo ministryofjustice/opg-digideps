@@ -37,7 +37,7 @@ resource "aws_ecs_service" "api" {
   name                    = aws_ecs_task_definition.api.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.api.arn
-  desired_count           = local.task_count
+  desired_count           = local.account.task_count
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -135,7 +135,7 @@ locals {
       { "name": "OPG_NGINX_SERVER_NAMES", "value": "~.*" },
       { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "${local.test_enabled ? "true" : "false"}" },
+      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
       { "name": "API_SECURITY_ANONYMOUS", "value": "true" },
       { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" },

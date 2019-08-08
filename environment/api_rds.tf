@@ -55,7 +55,7 @@ resource "aws_db_instance" "api" {
   tags = merge(
     local.default_tags,
     {
-      "Name" = "api.${terraform.workspace}.${local.account_id}.${local.domain_name}"
+      "Name" = "api.${terraform.workspace}.${local.account.account_id}.${local.account.domain_name}"
     },
   )
 

@@ -10,97 +10,62 @@ variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
 }
 
-variable "account_ids" {
-  type = map(string)
-}
-
-variable "account_long_names" {
-  type = map(string)
-}
-
-variable "account_names" {
-  type = map(string)
-}
-
-variable "admin_prefixes" {
-  type = map(string)
-}
-
-variable "admin_whitelists" {
-  type = map(list(string))
-}
-
-variable "domains" {
-  type = map(string)
-}
-
-variable "email_domains" {
-  type = map(string)
-}
-
-variable "email_feedback_addresses" {
-  type = map(string)
-}
-
-variable "email_report_addresses" {
-  type = map(string)
-}
-
-variable "email_update_addresses" {
-  type = map(string)
-}
-
-variable "external_certificate_names" {
-  type = map(string)
-}
-
-variable "front_whitelists" {
-  type = map(list(string))
-}
-
-variable "front_prefixes" {
-  type = map(string)
-}
-
-variable "host_suffix" {
-  type = map(string)
-}
-
-variable "is_production" {
-  type = map(string)
-}
-
-variable "task_count" {
-  type = map(string)
-}
-
-variable "test_enabled" {
-  type = map(string)
-}
-
-variable "vpc_names" {
-  type = map(string)
+variable "accounts" {
+  type = map(
+    object({
+      account_id                = string
+      account_long_name         = string
+      account_name              = string
+      admin_prefix              = string
+      admin_whitelist           = list(string)
+      domain                    = string
+      domain_name               = string
+      email_domain              = string
+      email_feedback_address    = string
+      email_report_address      = string
+      email_update_address      = string
+      external_certificate_name = string
+      front_prefix              = string
+      front_whitelist           = list(string)
+      host_suffix_enabled       = bool
+      is_production             = number
+      test_enabled              = bool
+      task_count                = number
+      vpc_name                  = string
+      secrets_prefix            = string
+    })
+  )
 }
 
 locals {
-  account_id                = var.account_ids[terraform.workspace]
-  account_long_name         = var.account_long_names[terraform.workspace]
-  account_name              = var.account_names[terraform.workspace]
-  admin_prefix              = var.admin_prefixes[terraform.workspace]
-  admin_whitelist           = var.admin_whitelists[terraform.workspace]
-  domain                    = var.domains[terraform.workspace]
-  domain_name               = "dd.opg.digital"
-  email_domain              = var.email_domains[terraform.workspace]
-  email_feedback_address    = var.email_feedback_addresses[terraform.workspace]
-  email_report_address      = var.email_report_addresses[terraform.workspace]
-  email_update_address      = var.email_update_addresses[terraform.workspace]
-  external_certificate_name = var.external_certificate_names[terraform.workspace]
-  front_prefix              = var.front_prefixes[terraform.workspace]
-  front_whitelist           = var.front_whitelists[terraform.workspace]
-  host_suffix               = var.host_suffix[terraform.workspace]
-  is_production             = var.is_production[terraform.workspace] ? 1 : 0
-  test_enabled              = var.test_enabled[terraform.workspace]
-  task_count                = var.task_count[terraform.workspace]
-  vpc_name                  = var.vpc_names[terraform.workspace]
-}
+  default_whitelist = [
+    "157.203.176.138/32",
+    "157.203.176.139/32",
+    "157.203.176.140/32",
+    "157.203.177.190/32",
+    "157.203.177.191/32",
+    "157.203.177.192/32",
+    "194.33.192.0/25",
+    "194.33.193.0/25",
+    "194.33.196.0/25",
+    "194.33.197.0/25",
+    "195.59.75.0/24",
+    "195.99.201.194/32",
+    "213.121.161.124/32",
+    "213.121.252.154/32",
+    "34.249.23.21/32",
+    "52.210.230.211/32",
+    "52.215.20.165/32",
+    "52.30.28.165/32",
+    "54.77.122.216/32",
+    "62.25.109.201/32",
+    "62.25.109.203/32",
+    "81.134.202.29/32",
+    "94.30.9.148/32",
+  ]
 
+  account         = contains(keys(var.accounts), terraform.workspace) ? var.accounts[terraform.workspace] : var.accounts["default"]
+  host_suffix     = local.account["host_suffix_enabled"] ? terraform.workspace : ""
+  front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
+  admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
+}
