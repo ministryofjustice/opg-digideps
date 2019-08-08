@@ -22,6 +22,9 @@ class ClientDto
     /** @var \DateTime */
     private $archivedAt;
 
+    /** @var \DateTime */
+    private $deletedAt;
+
     /** @var int */
     private $reportCount = 0;
 
@@ -77,6 +80,14 @@ class ClientDto
     public function getArchivedAt()
     {
         return $this->archivedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
     }
 
     /**
@@ -160,6 +171,16 @@ class ClientDto
     public function setArchivedAt($archivedAt)
     {
         $this->archivedAt = $archivedAt;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $deletedAt
+     * @return ClientDto
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
         return $this;
     }
 

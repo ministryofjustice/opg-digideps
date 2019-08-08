@@ -82,7 +82,9 @@ class ClientController extends RestController
      * @Method({"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
-     * @param int $id
+     * @param Request $request
+     * @param $id
+     * @return null|object
      */
     public function findByIdAction(Request $request, $id)
     {
@@ -154,7 +156,7 @@ class ClientController extends RestController
      */
     public function getAllAction(Request $request)
     {
-        $this->setJmsSerialiserGroups(['client']);
+        $this->setJmsSerialiserGroups(['client', 'active-period']);
 
         return $this->getRepository(EntityDir\Client::class)->searchClients(
             $request->get('q'),

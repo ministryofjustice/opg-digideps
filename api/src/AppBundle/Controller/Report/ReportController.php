@@ -81,9 +81,13 @@ class ReportController extends RestController
 
         $this->setJmsSerialiserGroups($groups);
 
-        $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
         /* @var $report Report */
-        if (!$this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+        if ($this->isGranted(EntityDir\User::ROLE_CASE_MANAGER)) {
+            $this->getEntityManager()->getFilters()->getFilter('softdeleteable')->disableForEntity(EntityDir\Client::class);
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
+            $this->getEntityManager()->getFilters()->enable('softdeleteable');
+        } else {
+            $report = $this->findEntityBy(EntityDir\Report\Report::class, $id);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
         }
 

@@ -227,10 +227,20 @@ class UserController extends RestController
         $user = $this->findEntityBy(EntityDir\User::class, $id);
         /* @var $user EntityDir\User */
 
-        // delete clients
-        foreach ($user->getClients() as $client) {
+        if ($user->getRoleName() !== EntityDir\User::ROLE_LAY_DEPUTY) {
+            throw $this->createAccessDeniedException('Cannot delete users with role ' . $user->getRoleName());
+        }
+
+        $clients = $user->getClients();
+
+        if (count($clients) > 1) {
+            throw $this->createAccessDeniedException('Cannot delete user with multiple clients');
+        }
+
+        // delete clients (max 1)
+        foreach ($clients as $client) {
             if (count($client->getReports()) > 0) {
-                throw new \RuntimeException('cannot delete user with reports');
+                throw $this->createAccessDeniedException('Cannot delete user with reports');
             }
             $this->getEntityManager()->remove($client);
         }

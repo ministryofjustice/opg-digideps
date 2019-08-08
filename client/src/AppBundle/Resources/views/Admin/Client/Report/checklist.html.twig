@@ -57,6 +57,10 @@
                 {{ 'lastSavedOn' | trans({}, 'common') }}:
                 <span class="bold">{{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}</span>
             </p>
+            {% if report.client.deletedAt %}
+                <p>{{ 'dischargedOn' | trans({}, 'common') }}:
+                    Discharged on: <span class="bold behat-region-discharged-on">{{ report.client.deletedAt | date("j M Y") }}</span></p>
+            {% endif %}
 
             {% if (checklist.submittedBy is defined) and (checklist.submittedBy is not empty) %}
                 <p class="flush--bottom behat-region-last-submitted-by">

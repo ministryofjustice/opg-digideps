@@ -18,3 +18,4 @@ sensio_framework_extra:
 ```
 and replace the annotations `Sensio\Bundle\FrameworkExtraBundle\Configuration\Route` and `Sensio\Bundle\FrameworkExtraBundle\Configuration\Method` with `Symfony\Component\Routing\Annotation\Route`
 - We should move Composer and NPM into separate containers so we can mount the vendor/assets folders first then build onto both the host and container (see DDPB-2732)
+

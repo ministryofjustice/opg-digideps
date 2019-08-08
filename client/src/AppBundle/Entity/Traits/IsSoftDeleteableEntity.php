@@ -13,7 +13,9 @@ trait IsSoftDeleteableEntity
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
+     * @var \DateTime
      */
     protected $deletedAt;
 

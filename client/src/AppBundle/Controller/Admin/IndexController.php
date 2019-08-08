@@ -196,6 +196,7 @@ class IndexController extends AbstractController
             'action'        => 'edit',
             'id'            => $user->getId(),
             'user'          => $user,
+            'clientsCount'  => count($clients),
             'deputyBaseUrl' => $this->container->getParameter('non_admin_host'),
         ];
 
