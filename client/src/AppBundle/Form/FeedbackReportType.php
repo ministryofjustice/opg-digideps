@@ -13,11 +13,14 @@ class FeedbackReportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $satisfactionLevel = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
+        $satisfactionScores = range(5, 1, -1);
+        $satisfactionLabels = array_map(function($score) {
+            return $this->translate('satisfactionLevelsChoices.' . $score, [], 'feedback');
+        }, $satisfactionScores);
 
         $builder
                  ->add('satisfactionLevel', FormTypes\ChoiceType::class, [
-                    'choices' => array_combine($satisfactionLevel, $satisfactionLevel),
+                    'choices' => array_combine($satisfactionLabels, $satisfactionScores),
                     'expanded' => true,
                     'multiple' => false,
                   ])

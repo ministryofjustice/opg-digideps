@@ -4,9 +4,9 @@ satisfactionLevel:
 send:
   label: Send feedback
 
-satisfactionLevelsChoices: |
-    Very satisfied
-    Satisfied
-    Neither satisfied or dissatisfied
-    Dissatisfied
-    Very dissatisfied
+satisfactionLevelsChoices:
+    5: Very satisfied
+    4: Satisfied
+    3: Neither satisfied or dissatisfied
+    2: Dissatisfied
+    1: Very dissatisfied
