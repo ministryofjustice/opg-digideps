@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "front_cache_task_in" {
 
 # TODO: switch to data source subnet group
 resource "aws_elasticache_cluster" "front" {
-  cluster_id           = "front-${terraform.workspace}"
+  cluster_id           = "front-${lower(terraform.workspace)}"
   engine               = "redis"
   node_type            = "cache.t2.small"
   num_cache_nodes      = 1

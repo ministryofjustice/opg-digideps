@@ -26,7 +26,7 @@ data "aws_kms_key" "rds" {
 
 resource "aws_db_instance" "api" {
   name                    = "api"
-  identifier              = "api-${terraform.workspace}"
+  identifier              = "api-${lower(terraform.workspace)}"
   instance_class          = "db.m3.medium"
   allocated_storage       = "10"
   availability_zone       = "eu-west-1a"
