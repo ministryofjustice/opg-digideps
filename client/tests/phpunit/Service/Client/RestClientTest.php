@@ -8,6 +8,7 @@ use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
 use MockeryStub as m;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -106,7 +107,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $responseJson = json_encode($responseArray);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage
@@ -139,7 +140,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with("user/get-by-token/{$token}", [
@@ -169,7 +170,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(201)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('post')->with('selfregister', [
@@ -196,7 +197,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage
@@ -226,7 +227,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         ;
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(201)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->tokenStorage
@@ -257,7 +258,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
@@ -287,7 +288,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
@@ -321,7 +322,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
@@ -352,7 +353,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
@@ -382,7 +383,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('get')->with($endpointUrl, [
@@ -432,7 +433,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
 
         $this->endpointResponse
-            ->shouldReceive('getStatusCode')->andReturn(200)
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK)
             ->shouldReceive('getBody')->andReturn($responseJson);
 
         $this->client->shouldReceive('delete')->with($endpointUrl, [
@@ -478,7 +479,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->endpointResponse
             ->shouldReceive('getBody')->andReturn($responseJson)
-            ->shouldReceive('getStatusCode')->andReturn(200);
+            ->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
 
         $this->client->shouldReceive('delete')->with($endpointUrl, [
                 'headers' => ['AuthToken' => $this->sessionToken],
@@ -492,7 +493,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($endpointUrl, $actual[0]['url']);
         $this->assertEquals('delete', $actual[0]['method']);
         $this->assertContains($this->sessionToken, $actual[0]['options']);
-        $this->assertEquals(200, $actual[0]['responseCode']);
+        $this->assertEquals(Response::HTTP_OK, $actual[0]['responseCode']);
         $this->assertContains('bbbbb', $actual[0]['responseBody']);
 
         $this->assertTrue($actual[0]['time'] > 0);

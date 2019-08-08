@@ -15,6 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Connects to RESTful Server (API)
@@ -311,7 +312,7 @@ class RestClient
             return $response;
         }
 
-        if ($response->getStatusCode() === 204) {
+        if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
             return;
         }
 
