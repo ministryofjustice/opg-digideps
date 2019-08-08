@@ -3,13 +3,30 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - build:
-          name: build pr
-          semver_stage: --stage dev
-          filters: { branches: { ignore: [ master ] } }
+#      - build:
+#          name: build pr
+#          semver_stage: --stage dev
+#          filters: { branches: { ignore: [ master ] } }
+#
+#      - apply:
+#          name: apply shared-development
+#          requires: [ build pr ]
+#          filters: { branches: { ignore: [ master ] } }
+#          tf_tier: shared
+#          tf_workspace: development
 
-      - plan:
+      - apply:
+          name: apply branch
+#          requires: [ apply shared-development ]
           filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+
+      - stabilize:
+          name: stabilize branch
+          requires: [ apply branch ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+
   master:
     jobs:
       - build:
@@ -138,18 +155,21 @@ jobs:
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
       TF_WORKSPACE: << parameters.tf_workspace >>
+      VERSION: dummy
     steps:
       - checkout
       - attach_workspace: { at: . }
-      - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
-      - run:
-          name: Show version
-          command: echo ${VERSION}
+#      - run:
+#          name: Get version
+#          command: cat VERSION.sh >> $BASH_ENV
+#      - run:
+#          name: Show version
+#          command: echo ${VERSION}
       - run:
           name: Initialize
           command: terraform init ${TF_TIER}
+          environment:
+            TF_WORKSPACE: ""
       - run:
           name: Apply
           command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform apply -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
