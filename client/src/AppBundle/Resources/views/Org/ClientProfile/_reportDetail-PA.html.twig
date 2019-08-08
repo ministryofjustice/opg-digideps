@@ -27,7 +27,9 @@
             <dd class="push--bottom">
                 {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                     <p class="push--top">
-                        <a class="behat-link-edit-report_submit button" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'reviewAndSubmit' | trans() }}</a>
+                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">
+                            {{ 'reviewAndSubmit' | trans() }}
+                        </a>
                     </p>
                 {% else %}
                     <a href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
