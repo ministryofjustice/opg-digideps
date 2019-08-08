@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -113,7 +114,7 @@ class OrganisationController
         $data = json_decode($request->getContent(), true);
         $entity = $this->restHandler->create($data);
 
-        return $this->buildSuccessResponse(['id' => $entity->getId()], 'Organisation created', 201);
+        return $this->buildSuccessResponse(['id' => $entity->getId()], 'Organisation created', Response::HTTP_CREATED);
     }
 
     /**
@@ -130,7 +131,7 @@ class OrganisationController
         $data = json_decode($request->getContent(), true);
         $this->restHandler->update($data, $id);
 
-        return $this->buildSuccessResponse([], '', 204);
+        return $this->buildSuccessResponse([], '', Response::HTTP_NO_CONTENT);
     }
 
     /**

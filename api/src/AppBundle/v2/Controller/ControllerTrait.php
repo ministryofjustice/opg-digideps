@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 trait ControllerTrait
 {
@@ -12,7 +13,7 @@ trait ControllerTrait
      * @param int $status
      * @return JsonResponse
      */
-    private function buildSuccessResponse(array $data, $message = '', $status = 200)
+    private function buildSuccessResponse(array $data, $message = '', $status = Response::HTTP_OK)
     {
         return new JsonResponse([
             'success' => true,
@@ -30,6 +31,6 @@ trait ControllerTrait
         return new JsonResponse([
             'success' => false,
             'message' => $message
-        ], 404);
+        ], Response::HTTP_NOT_FOUND);
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\AppBundle\v2\Controller;
 
 use AppBundle\Entity\Organisation;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\AppBundle\Controller\AbstractTestController;
 
 class OrganisationControllerTest extends AbstractTestController
@@ -51,7 +52,7 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
         $this->assertCount(3, $responseContent['data']);
@@ -67,7 +68,7 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
         $this->assertEquals(2, $responseContent['data']['id']);
@@ -79,14 +80,14 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function getByIdActionReturnsEmptyIfNotFound()
+    public function getByIdActionReturns404IfNotFound()
     {
         self::$frameworkBundleClient->request('GET', '/v2/organisation/27', [], [], $this->headers);
 
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
         $this->assertEquals('Organisation id: 27 not found', $responseContent['message']);
@@ -109,7 +110,7 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
 
@@ -140,7 +141,7 @@ class OrganisationControllerTest extends AbstractTestController
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     /**
@@ -158,7 +159,7 @@ class OrganisationControllerTest extends AbstractTestController
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     /**
@@ -176,7 +177,7 @@ class OrganisationControllerTest extends AbstractTestController
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
 
         $organisation = self::$em
             ->getRepository(Organisation::class)
@@ -205,7 +206,7 @@ class OrganisationControllerTest extends AbstractTestController
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     /**
@@ -239,7 +240,7 @@ class OrganisationControllerTest extends AbstractTestController
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     /**
@@ -258,7 +259,7 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
         $this->assertEquals('Organisation deleted', $responseContent['message']);
