@@ -347,6 +347,13 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            // Store in database
+            $this->getRestClient()->post('satisfaction', [
+                'score' => $form->get('satisfactionLevel')->getData(),
+                'reportType' => $report->getType()
+            ]);
+
+            // Send notification email
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData(), $this->getUser());
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
