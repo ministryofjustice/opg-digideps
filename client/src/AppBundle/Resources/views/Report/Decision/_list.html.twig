@@ -86,37 +86,6 @@
             </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions change-answer">
-                <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_assessment', { 'reportId': report.id, 'from': 'summary' }) }}">
-                    {{ 'edit' | trans({}, 'common') }}
-                </a>
-            </dd>
-        {% endif %}
-    </div>
-
-    <div class="govuk-summary-list__row">
-        {% if report.mentalCapacity and report.mentalCapacity.mentalAssessmentDate %}
-            <dt class="govuk-summary-list__key">
-                {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions) }}
-            </dt>
-            <dd class="govuk-summary-list__value">
-                {% if report.mentalCapacity.mentalAssessmentDate %}
-                    {{ report.mentalCapacity.mentalAssessmentDate | date("m/Y") }}
-                {% else %}
-                    -
-                {% endif %}
-            </dd>
-        {% else %}
-            <dt class="govuk-summary-list__key">
-                <span class="error">
-                    {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions) }}
-                </span>
-            </dt>
-            <dd class="govuk-summary-list__value">
-                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-            </dd>
-        {% endif %}
-        {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('decisions_mental_assessment', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
