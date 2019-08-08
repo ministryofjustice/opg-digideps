@@ -41,7 +41,7 @@ class Satisfaction
      * @JMS\Type("string")
      * @JMS\Groups({"satisfaction"})
      *
-     * @ORM\Column(type="string", name="deputy_type", length=50)
+     * @ORM\Column(type="string", name="deputy_role", length=50)
      */
     private $deputyRole;
 
