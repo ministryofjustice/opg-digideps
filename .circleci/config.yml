@@ -8,8 +8,25 @@ workflows:
           semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
-      - plan:
+      - apply:
+          name: apply shared-development
+          requires: [ build pr ]
           filters: { branches: { ignore: [ master ] } }
+          tf_tier: shared
+          tf_workspace: development
+
+      - apply:
+          name: apply branch
+          requires: [ apply shared-development ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+
+      - stabilize:
+          name: stabilize master
+          requires: [ apply branch ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_PULL_REQUEST##*/}-${CIRCLE_BRANCH//[-_]/}"
+
   master:
     jobs:
       - build:
