@@ -9,6 +9,17 @@ class OrganisationAssembler
 {
     use DtoPropertySetterTrait;
 
+    /** @var DeputyAssembler  */
+    private $deputyDtoAssembler;
+
+    /**
+     * @param DeputyAssembler $deputyDtoAssembler
+     */
+    public function __construct(DeputyAssembler $deputyDtoAssembler)
+    {
+        $this->deputyDtoAssembler = $deputyDtoAssembler;
+    }
+
     /**
      * @param array $data
      * @return OrganisationDto
@@ -19,6 +30,25 @@ class OrganisationAssembler
 
         $this->setPropertiesFromData($dto, $data);
 
+        if (isset($data['users'])  && is_array($data['users'])) {
+            $dto->setUsers($this->assembleOrganisationUsers($data['users']));
+        }
+
         return $dto;
+    }
+
+    /**
+     * @param array $users
+     * @return array
+     */
+    private function assembleOrganisationUsers(array $users)
+    {
+        $dtos = [];
+
+        foreach ($users as $user) {
+            $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+        }
+
+        return $dtos;
     }
 }

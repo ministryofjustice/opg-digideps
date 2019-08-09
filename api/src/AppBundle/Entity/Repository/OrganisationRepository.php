@@ -26,7 +26,7 @@ class OrganisationRepository extends EntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o FROM AppBundle\Entity\Organisation o WHERE o.id = ?1')
+            ->createQuery('SELECT o, u FROM AppBundle\Entity\Organisation o LEFT JOIN o.users u WHERE o.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
