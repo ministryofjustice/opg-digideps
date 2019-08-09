@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -150,5 +151,41 @@ class OrganisationController
         $message = $deleted ? 'Organisation deleted' : 'Organisation not found. Nothing deleted';
 
         return $this->buildSuccessResponse([], $message);
+    }
+
+    /**
+     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
+     * @Method({"PUT"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param Request $request
+     * @param int $orgId
+     * @param int $userId
+     * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function addUserAction(Request $request, int $orgId, int $userId): JsonResponse
+    {
+        $this->restHandler->addUser($orgId, $userId);
+
+        return $this->buildSuccessResponse([], 'User added', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
+     * @Method({"DELETE"})
+     * @Security("has_role('ROLE_ADMIN')")
+     *
+     * @param int $orgId
+     * @param int $userId
+     * @return JsonResponse
+     */
+    public function removeUserAction(int $orgId, int $userId): JsonResponse
+    {
+        //$deleted = $this->repository->deleteById($id);
+        //$message = $deleted ? 'User removed' : 'Organisation not found. Nothing deleted';
+
+        return $this->buildSuccessResponse([], 'User removed');
     }
 }

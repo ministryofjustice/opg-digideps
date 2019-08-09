@@ -17,3 +17,4 @@ services:
       - '@em'
       - '@validator'
       - '@AppBundle\Entity\Repository\OrganisationRepository'
+      - '@AppBundle\Entity\Repository\UserRepository'

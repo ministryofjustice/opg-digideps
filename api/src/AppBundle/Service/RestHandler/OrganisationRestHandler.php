@@ -4,6 +4,7 @@ namespace AppBundle\Service\RestHandler;
 
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\OrganisationRepository;
+use AppBundle\Entity\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -17,18 +18,28 @@ class OrganisationRestHandler
     private $validator;
 
     /** @var OrganisationRepository */
-    private $repository;
+    private $orgRepository;
+
+    /** @var UserRepository */
+    private $userRepository;
 
     /**
      * @param EntityManager $em
      * @param ValidatorInterface $validator
-     * @param OrganisationRepository $repository
+     * @param OrganisationRepository $orgRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(EntityManager $em, ValidatorInterface $validator, OrganisationRepository $repository)
+    public function __construct(
+        EntityManager $em,
+        ValidatorInterface $validator,
+        OrganisationRepository $orgRepository,
+        UserRepository $userRepository
+    )
     {
         $this->em = $em;
         $this->validator = $validator;
-        $this->repository = $repository;
+        $this->orgRepository = $orgRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -76,7 +87,7 @@ class OrganisationRestHandler
             ));
         }
 
-        if (null === ($organisation = $this->repository->find($id))) {
+        if (null === ($organisation = $this->orgRepository->find($id))) {
             return null;
         }
 
@@ -111,7 +122,7 @@ class OrganisationRestHandler
      */
     private function orgWithEmailIdExists($emailId): bool
     {
-        $org = $this->repository->findOneBy(['emailIdentifier' => $emailId]);
+        $org = $this->orgRepository->findOneBy(['emailIdentifier' => $emailId]);
 
         return $org instanceof Organisation ? true : false;
     }
@@ -136,5 +147,25 @@ class OrganisationRestHandler
         if (count($errors) > 0) {
             throw new OrganisationCreationException((string)$errors);
         }
+    }
+
+    /**
+     * @param int $orgId
+     * @param int $userId
+     * @throws OptimisticLockExceptionAlias
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function addUser(int $orgId, int $userId): void
+    {
+        if (null === ($organisation = $this->orgRepository->find($orgId))) {
+            throw new \InvalidArgumentException('Invalid organisation id');
+        }
+
+        if (null === ($user = $this->userRepository->find($userId))) {
+            throw new \InvalidArgumentException('Invalid user id');
+        }
+
+        $organisation->addUser($user);
+        $this->em->flush();
     }
 }
