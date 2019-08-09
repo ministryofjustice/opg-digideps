@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Entity\Organisation as Organisation;
+use AppBundle\Entity\Organisation;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,7 +32,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="admin_organisation_view")
+     * @Route("/{id}", name="admin_organisation_view", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:view.html.twig")
      */
@@ -51,7 +51,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/add", name="admin_organisation_add")
-     * @Route("/{id}/edit", name="admin_organisation_edit")
+     * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:form.html.twig")
      */
@@ -107,7 +107,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete", name="admin_organisation_delete")
+     * @Route("/{id}/delete", name="admin_organisation_delete", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
