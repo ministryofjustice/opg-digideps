@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity\Organisation;
+use AppBundle\Entity\User;
 use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -147,9 +148,54 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * Todo
-     * @Route("/{id}/add-user", name="admin_organisation_member_add")
-     * @Route("/{id}/delete-user/{user-id}", name="admin_organisation_member_delete")
+     * @Route("/{id}/add-user", name="admin_organisation_member_add", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Admin/Organisation:add-user.html.twig")
+     */
+    public function addUserAction(Request $request, $id) {
+        $form = $this->createForm(FormDir\Admin\OrganisationAddUserType::class);
+        $form->handleRequest($request);
+
+        $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+
+        if ($form->get('email')->getData()) {
+            try {
+                $email = $form->get('email')->getData();
+                $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
+
+                if (!$user->isDeputyOrg()) {
+                    $error = 'form.email.notOrgUserError';
+                }
+
+                if ($organisation->hasUser($user)) {
+                    $error = 'form.email.alreadyInOrgError';
+                }
+            } catch (RestClientException $e) {
+                $error = 'form.email.notFoundError';
+            }
+        }
+
+        if (isset($error)) {
+            $errorMessage = $this->get('translator')->trans($error, [], 'admin-organisation-users');
+            $form->get('email')->addError(new FormError($errorMessage));
+            $user = new User();
+        }
+
+        if ($form->get('confirm')->isClicked()) {
+            $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+            $request->getSession()->getFlashBag()->add('notice', $user->getFullName() . ' has been added to ' . $organisation->getName());
+
+            return$this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
+        }
+
+        return [
+            'form' => $form->createView(),
+            'organisation' => $organisation,
+            'user' => isset($user) ? $user : new User(),
+            'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()])
+        ];
+    }
+
      */
     public function routesToDo($id = null, $userId = null) {
         throw new Exception('Route still needs to be created');

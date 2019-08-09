@@ -1,0 +1,29 @@
+addPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Add a new user to %organisation%
+    supportTitle: Organisations
+    warning: "%user% will be able to see and report on all clients in the organisation."
+    summary:
+        name: Name
+        emailAddress: Email address
+        active: Active
+
+deletePage:
+    htmlTitle: Administration - Remove user from organisation
+    subject: user from this organisation
+    summary:
+        organisationName: Organisation
+        userName: User
+        userEmail: Email address
+
+form:
+    email:
+        label: Email address
+        hint: If the user is not already registered, you will need to create an account first.
+        notFoundError: Could not find user with specified email address
+        notOrgUserError: User has unsuitable role to be in this organisation
+        alreadyInOrgError: User is already in this organisation
+    retrieve:
+        label: Add user
+    confirm:
+        label: Add user to organisation

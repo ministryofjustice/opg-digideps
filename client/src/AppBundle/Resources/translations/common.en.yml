@@ -27,6 +27,7 @@ first: First
 last: Last
 manage: Manage
 checklist: Checklist
+warning: Warning
 
 # Section headings
 moneyOut: Money out

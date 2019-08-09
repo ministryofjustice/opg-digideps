@@ -45,7 +45,7 @@ class Organisation
     /**
      * @var User[]
      *
-     * @JMS\Type("array<User>")
+     * @JMS\Type("array<AppBundle\Entity\User>")
      */
     private $users = [];
 
@@ -186,6 +186,23 @@ class Organisation
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasUser(User $user)
+    {
+        foreach ($this->users?:[] as $currentUser) {
+            if ($user->getId()
+                && $currentUser instanceof User && $currentUser->getId()
+                && $user->getId() == $currentUser->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

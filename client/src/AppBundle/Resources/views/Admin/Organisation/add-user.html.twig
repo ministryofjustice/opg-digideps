@@ -1,0 +1,70 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin-organisation-users" %}
+{% set page = 'addPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans({ '%organisation%': organisation.name }) }}{% endblock %}
+
+{% block linkBack %}
+    {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {% if user is defined and user.id %}
+        {{ form_widget(form.email, { attr: { hidden: true }}) }}
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ (page ~ '.summary.name') | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ user.fullName }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ (page ~ '.summary.emailAddress') | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ user.email }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    {{ (page ~ '.summary.name') | trans }}
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
+                </dd>
+            </div>
+        </dl>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-warning-text__assistive">{{ 'warning' | trans({}, 'common' ) }}</span>
+                {{ (page ~ '.warning') | trans({ '%user%': user.fullName }) }}
+            </strong>
+        </div>
+
+        {% do form.retrieve.setRendered %}
+        {{ form_submit(form.confirm, 'form.confirm') }}
+
+        <a class="govuk-button govuk-button--secondary govuk-!-margin-left-6" href="{{ backLink }}">
+            {{ 'cancel' | trans({}, 'common' ) }}
+        </a>
+    {% else %}
+        {{ form_input(form.email, 'form.email') }}
+
+        {{ form_submit(form.retrieve, 'form.retrieve') }}
+        {% do form.confirm.setRendered %}
+    {% endif %}
+    {{ form_end(form) }}
+
+{% endblock %}
