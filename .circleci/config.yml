@@ -3,13 +3,24 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
+      - approve:
+          name: approve test
+          type: approval
+          filters: { branches: { ignore: [ master ] } }
+
       - build:
           name: build pr
+          requires: [ approve test ]
           semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
       - plan:
+          requires: [ approve test ]
           filters: { branches: { ignore: [ master ] } }
+
+      - slack/approval-notification:
+          message: Pending approval
+          webhook: webhook
   master:
     jobs:
       - build:
@@ -92,6 +103,7 @@ workflows:
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
+  slack: circleci/slack@3.3.0
 
 jobs:
   plan:
