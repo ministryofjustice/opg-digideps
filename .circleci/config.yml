@@ -3,33 +3,48 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-#      - build:
-#          name: build pr
-#          semver_stage: --stage dev
-#          filters: { branches: { ignore: [ master ] } }
-#
-#      - apply:
-#          name: apply shared-development
-#          requires: [ build pr ]
-#          filters: { branches: { ignore: [ master ] } }
-#          tf_tier: shared
-#          tf_workspace: development
+      - build:
+          name: build pr
+          semver_stage: --stage dev
+          filters: { branches: { ignore: [ master ] } }
 
       - apply:
-          name: apply branch
-#          requires: [ apply shared-development ]
+          name: apply shared-development
+          requires: [ build pr ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_tier: shared
+          tf_workspace: development
+
+      - apply:
+          name: apply pr
+          requires: [ apply shared-development ]
           filters: { branches: { ignore: [ master ] } }
           tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
 
       - stabilize:
-          name: stabilize branch
-          requires: [ apply branch ]
+          name: stabilize pr
+          requires: [ apply pr ]
           filters: { branches: { ignore: [ master ] } }
           tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
-#
-#        - test
-#        - approve
-#        - destroy
+
+      - test:
+          name: test pr
+          requires: [ stabilize pr ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+
+      - cleanup:
+          name: cleanup PR environment
+          type: approval
+          requires: [ test pr ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - destroy:
+          name: destroy pr
+          requires: [ cleanup PR environment ]
+          filters: { branches: { ignore: [ master ] } }
+          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+
   master:
     jobs:
       - build:
@@ -142,6 +157,7 @@ jobs:
             TF_WORKSPACE: master
             TF_VAR_OPG_DOCKER_TAG: dummy_value
           command: terraform plan -var-file=environment/terraform.tfvars.json environment
+
   apply:
     docker:
       - image: hashicorp/terraform:full
@@ -157,16 +173,15 @@ jobs:
       TF_CLI_ARGS_apply: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
-      VERSION: dummy
     steps:
       - checkout
       - attach_workspace: { at: . }
-#      - run:
-#          name: Get version
-#          command: cat VERSION.sh >> $BASH_ENV
-#      - run:
-#          name: Show version
-#          command: echo ${VERSION}
+      - run:
+          name: Get version
+          command: cat VERSION.sh >> $BASH_ENV
+      - run:
+          name: Show version
+          command: echo ${VERSION}
       - run:
           name: Initialize
           command: terraform init ${TF_TIER}
@@ -176,6 +191,41 @@ jobs:
       - run:
           name: Apply
           command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform apply -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+
+  destroy:
+    docker:
+      - image: hashicorp/terraform:full
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+      tf_tier:
+        description: tier to apply - shared or environment
+        default: environment
+        type: string
+    environment:
+      TF_CLI_ARGS_destroy: -input=false -auto-approve
+      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+      TF_TIER: << parameters.tf_tier >>
+    steps:
+      - checkout
+      - attach_workspace: { at: . }
+      - run:
+          name: Get version
+          command: cat VERSION.sh >> $BASH_ENV
+      - run:
+          name: Show version
+          command: echo ${VERSION}
+      - run:
+          name: Initialize
+          command: terraform init ${TF_TIER}
+      - run:
+          name: Set workspace
+          command: echo export TF_WORKSPACE=<< parameters.tf_workspace >> >> $BASH_ENV
+      - run:
+          name: Apply
+          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform destroy -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+
   test:
     docker:
       - image: circleci/ruby
@@ -194,7 +244,7 @@ jobs:
           command: bundle install
       - run:
           name: Set workspace
-          command: echo TF_WORKSPACE=<< parameters.tf_workspace >> >> $BASH_ENV
+          command: echo export TF_WORKSPACE=<< parameters.tf_workspace >> >> $BASH_ENV
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
