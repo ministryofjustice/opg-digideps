@@ -1,46 +1,57 @@
-<div class="grid-row">
-    <div class="column-half">
-        <h2 class="heading-large flush--top">Deputies</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-l">Deputies</h2>
     </div>
-    <div class="column-half text--right">
-        <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="bold-small action-link right behat-link-invite-codeputy-button">
-            <span class="icon icon-plus"></span>
-            {{ ('codeputy.inviteAnotherDeputy') | trans({}, 'report') }}
+    <div class="govuk-grid-column-one-half text--right">
+        <a href="{{ path('add_co_deputy', {'clientId': client.id}) }}" class="govuk-link behat-link-invite-codeputy-button">
+            <strong>
+                <span class="icon icon-plus"></span>
+                {{ ('codeputy.inviteAnotherDeputy') | trans({}, 'report') }}
+            </strong>
         </a>
     </div>
 </div>
-<table class="check-your-answers behat-region-codeputies">
-    <thead>
-    <tr>
-        <th>Name or email</th>
-        <th>Status</th>
-        <th>
-            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-        </th>
-    </tr>
+
+<table class="govuk-table behat-region-codeputies">
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">
+                Name or email
+            </th>
+            <th scope="col" class="govuk-table__header">
+                Status
+            </th>
+            <th scope="col" class="govuk-table__header">
+                <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+            </th>
+        </tr>
     </thead>
-    <tbody>
-    {#<tr>#}
-        {#<td>{{ app.user.firstname }} {{ app.user.lastname }}</td>#}
-        {#<td>Registered</td>#}
-        {#<td class="change-answer"></td>#}
-    {#</tr>#}
-    {% for deputy in coDeputies %}
-        {% if deputy.coDeputyClientConfirmed %}
-            <tr>
-                <td>{{ deputy.firstname }} {{ deputy.lastname }}</td>
-                <td>Registered</td>
-                <td class="change-answer"></td>
+
+    <tbody class="govuk-table__body">
+        {% for deputy in coDeputies %}
+            <tr class="govuk-table__row">
+                {% if deputy.coDeputyClientConfirmed %}
+                    <td class="govuk-table__cell">
+                        {{ deputy.firstname }} {{ deputy.lastname }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        Registered
+                    </td>
+                    <td></td>
+                {% else %}
+                    <td class="govuk-table__cell">
+                        {{ deputy.email }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        Awaiting registration
+                    </td>
+                    <td class="govuk-table__cell text--right">
+                        <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite govuk-link">
+                            Edit/Resend invite
+                        </a>
+                    </td>
+                {% endif %}
             </tr>
-        {% else %}
-            <tr>
-                <td>{{ deputy.email }}</td>
-                <td>Awaiting registration</td>
-                <td class="change-answer">
-                    <a href="{{ path('codep_resend_activation', {'email': deputy.email}) }}" class="behat-link-resend-invite">Edit/Resend invite</a>
-                </td>
-            </tr>
-        {% endif %}
-    {%  endfor %}
+        {% endfor %}
     </tbody>
 </table>

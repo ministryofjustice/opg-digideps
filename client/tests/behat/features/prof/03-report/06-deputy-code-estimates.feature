@@ -34,8 +34,7 @@ Feature: Prof deputy costs estimate
     And I should not see "Total estimated costs"
     And I should not see "More information"
     And I should not see "More information details"
-    When I click on "return-to-client-profile"
-    Then the URL should match "/report/\d+/overview"
+    When I click on "breadcrumbs-report-overview"
     Then I should see the "prof_deputy_costs_estimate-state-done" region
 
   Scenario: Partially completed Assessed Costs route

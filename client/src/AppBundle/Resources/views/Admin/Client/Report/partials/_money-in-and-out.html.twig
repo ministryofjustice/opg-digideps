@@ -6,64 +6,28 @@
 
 <h3 class="heading-medium underline" id="moneyInOut">{{ (page ~ '.heading.money') | trans }}</h3>
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer">
-        {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
-    </div>
+{{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
+    'fieldSetClass' : 'inline',
+    'formGroupClass': 'push-half--bottom'
+}) }}
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.accountsBalances') | trans }}</span>
-        </summary>
+<details class="govuk-details" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalances') | trans }}</span>
+    </summary>
 
-        <div class="opg-indented-block">
-            <div class="grid-row">
-                <div class="column-one-half">
+    <div class="govuk-details__text">
+        <div class="grid-row">
+            <div class="column-one-half">
 
-                    {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+                {% if report.previousReportData['financial-summary']['accounts'] is defined %}
 
-                        <h3 class="heading-medium">
-                            {{ (page ~ '.closingBalancesPrevReport') | trans }}
-                            {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
-                                ({{ report.previousReportData['report-summary']['type'] | upper }})
-                            {% endif %}
-                        </h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                                    <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
-                                    <tr>
-                                        <td>{{ previousAccount.nameOneLine }}</td>
-                                        <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
-                                    </tr>
-                                {% endfor %}
-                                <tr class="no-border">
-                                    <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                                    <td class="numeric-small">
-                                        <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    {% else %}
-
-                        <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
-
-                    {% endif %}
-                </div>
-
-                <div class="column-one-half">
-
-                    <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
+                    <h3 class="heading-medium">
+                        {{ (page ~ '.closingBalancesPrevReport') | trans }}
+                        {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
+                            ({{ report.previousReportData['report-summary']['type'] | upper }})
+                        {% endif %}
+                    </h3>
                     <table>
                         <thead>
                             <tr>
@@ -72,70 +36,99 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for account in report.bankAccounts %}
+                            {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
                                 <tr>
-                                    <td>{{ account.getNameOneLine() }}</td>
-                                    <td class="numeric-small">£{{ account.openingBalance | money_format }}</td>
+                                    <td>{{ previousAccount.nameOneLine }}</td>
+                                    <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
                                 </tr>
                             {% endfor %}
                             <tr class="no-border">
                                 <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
                                 <td class="numeric-small">
-                                    <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                                    <span class="bold behat-region-checklist-closing-balance-previous-report">£{{ report.previousReportData['financial-summary']['closing-balance-total'] | money_format }}</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </div>
+
+                {% else %}
+
+                    <h3 class="heading-medium behat-region-checklist-no-previous-reports">{{ (page ~ '.closingBalancesPrevReportMissing') | trans }}</h3>
+
+                {% endif %}
             </div>
 
-            {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+            <div class="column-one-half">
 
-                <h3 class="heading-medium">
-                    {{ (page ~ '.balanceDifference') | trans }}: £{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}
-                </h3>
-
-            {% endif %}
-
-
-            <div class="grid-row">
-                <div class="column-one-half">
-                    <p class="text-white">Ignore this content. Only here to affect layout.</p>
-                </div>
-
-                <div class="column-one-half">
-
-                    <h3 class="heading-medium">{{ (page ~ '.closingBalances') | trans }}</h3>
-                    <table>
-                        <thead>
+                <h3 class="heading-medium">{{ (page ~ '.openingBalances') | trans }}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                            <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in report.bankAccounts %}
                             <tr>
-                                <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
-                                <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                                <td>{{ account.getNameOneLine() }}</td>
+                                <td class="numeric-small">£{{ account.openingBalance | money_format }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for account in report.bankAccounts %}
-                                <tr>
-                                    <td>{{ account.getNameOneLine() }}</td>
-                                    <td class="numeric-small">£{{ account.closingBalance | money_format }}</td>
-                                </tr>
-                            {% endfor %}
-                            <tr class="no-border">
-                                <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
-                                <td class="numeric-small">
-                                    <span class="bold behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        {% endfor %}
+                        <tr class="no-border">
+                            <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
+                            <td class="numeric-small">
+                                <span class="bold behat-region-checklist-accounts-opening-total">£{{ report.accountsOpeningBalanceTotal | money_format }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-
-
-
         </div>
-    </details>
-</div>
+
+        {% if report.previousReportData['financial-summary']['accounts'] is defined %}
+
+            <h3 class="heading-medium">
+                {{ (page ~ '.balanceDifference') | trans }}: £{{ (report.accountsOpeningBalanceTotal - report.previousReportData['financial-summary']['closing-balance-total']) | money_format }}
+            </h3>
+
+        {% endif %}
+
+
+        <div class="grid-row">
+            <div class="column-one-half">
+                <p class="text-white">Ignore this content. Only here to affect layout.</p>
+            </div>
+
+            <div class="column-one-half">
+
+                <h3 class="heading-medium">{{ (page ~ '.closingBalances') | trans }}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>{{ 'bankAccount' | trans({}, 'common') }}</th>
+                            <th class="numeric">{{ 'amount' | trans({}, 'common') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for account in report.bankAccounts %}
+                            <tr>
+                                <td>{{ account.getNameOneLine() }}</td>
+                                <td class="numeric-small">£{{ account.closingBalance | money_format }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr class="no-border">
+                            <td class="bold">{{ 'totalAmount' | trans({}, 'common') }}</td>
+                            <td class="numeric-small">
+                                <span class="bold behat-region-checklist-accounts-closing-total">£{{ report.accountsClosingBalanceTotal | money_format }}</span>
+                            </td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</details>
 
 {% if report.hasSection('paDeputyExpenses') or report.hasSection('profDeputyCosts')%}
     {% set nonLayAppend = 'NonLay' %}
@@ -143,65 +136,61 @@
     {% set nonLayAppend = '' %}
 {% endif %}
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
-    </div>
+<hr />
 
-    {# Don't show Account Balance Summary for 103 #}
-    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+{{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
+    'fieldSetClass' : 'inline',
+    'formGroupClass': 'push-half--bottom'
+}) }}
 
-        <details class="push--bottom">
-            <summary>
-                <span class="summary">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
-            </summary>
-            <div class="opg-indented-block">
-                <div>
-                    {# Balance table #}
-                    {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
-                        hideEditLink: true
-                    } %}
+{# Don't show Account Balance Summary for 103 #}
+{% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            {# Balance table #}
+            {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                hideEditLink: true
+            } %}
 
-                    {# Difference table #}
-                    {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
-                        hideEditLink: true
-                    } %}
+            {# Difference table #}
+            {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                hideEditLink: true
+            } %}
 
-                    {% if not report.totalsMatch %}
-                        <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
-                        <table class="check-your-answers columns-2 push--bottom">
-                            {{ macros.summaryTableHeaderQA(true) }}
-                            <tbody>
-                                <tr>
-                                    <td>{{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}</td>
-                                    <td>{{ report.balanceMismatchExplanation | nl2br }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    {% endif %}
-                </div>
-            </div>
-        </details>
-    {% endif %}
-</div>
+            {% if not report.totalsMatch %}
+                <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
+                <dl class="govuk-summary-list columns-2 push--bottom">
+                    {{ macros.summaryListHeaderQA(true) }}
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            {{ report.balanceMismatchExplanation | nl2br }}
+                        </dd>
+                    </div>
+                </dl>
+            {% endif %}
+        </div>
+    </details>
+{% endif %}
 
-<div class="form-section">
-    <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
-    </div>
+<hr />
 
-    {# Don't show money transfers for 103 #}
-    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
-      {% if report.enoughBankAccountForTransfers %}
-        <details>
-            <summary>
-                <span class="summary">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
+{{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
+    'fieldSetClass' : 'inline',
+    'formGroupClass': 'push-half--bottom'
+}) }}
+
+{# Don't show money transfers for 103 #}
+{% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+    {% if report.enoughBankAccountForTransfers %}
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyTransfersSummary') | trans }}</span>
             </summary>
             <div class="opg-indented-block">
                 <div>
@@ -212,86 +201,77 @@
                 </div>
             </div>
         </details>
-      {% else %}
+    {% else %}
         <p class="text">
             {{ (page ~ '.noTransferToShow') | trans }}
         </p>
-      {% endif %}
     {% endif %}
+{% endif %}
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.moneyInSummary') | trans }}</span>
+<details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyInSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {# Questions and answers table #}
+        {% if report.hasSection('moneyIn') %}
+            {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
+                hideEditLink: true
+            } %}
+        {% elseif report.hasSection('moneyInShort') %}
+            {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
+                hideEditLink: true
+            } %}
+        {% endif %}
+    </div>
+</details>
+
+<details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
+    </summary>
+    <div class="govuk-details__text">
+        {# Questions and answers table #}
+        {% if report.hasSection('moneyOut') %}
+            {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
+                hideEditLink: true
+            } %}
+        {% elseif report.hasSection('moneyOutShort') %}
+            {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
+                hideEditLink: true
+            } %}
+        {% endif %}
+    </div>
+</details>
+
+{% if report.hasSection('gifts') %}
+    <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.giftsSummary') | trans }}</span>
         </summary>
-        <div class="opg-indented-block">
-            <div>
-                {# Questions and answers table #}
-                {% if report.hasSection('moneyIn') %}
-                    {% include 'AppBundle:Report/MoneyIn:_list.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                {% elseif report.hasSection('moneyInShort') %}
-                    {% include 'AppBundle:Report/MoneyInShort:_answers.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                {% endif %}
-            </div>
+        <div class="govuk-details__text">
+            {# Questions and answers table #}
+            {% include 'AppBundle:Report/Gift:_list.html.twig' with {
+                hideEditLink: true
+            } %}
         </div>
     </details>
+{% endif %}
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.moneyOutSummary') | trans }}</span>
+{% if report.hasSection('deputyExpenses') %}
+    <details class="govuk-details govuk-!-margin-bottom-0" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.deputyExpensesSummary') | trans }}</span>
         </summary>
-        <div class="opg-indented-block">
-            <div>
-                {# Questions and answers table #}
-                {% if report.hasSection('moneyOut') %}
-                    {% include 'AppBundle:Report/MoneyOut:_list.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                {% elseif report.hasSection('moneyOutShort') %}
-                    {% include 'AppBundle:Report/MoneyOutShort:_answers.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                {% endif %}
-            </div>
+        <div class="govuk-details__text">
+            {# Questions and answers table #}
+            {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
+                hideEditLink: true
+            } %}
         </div>
     </details>
+{% endif %}
 
-    {% if report.hasSection('gifts') %}
-        <details>
-            <summary>
-                <span class="summary">{{ (page ~ '.revealTitle.giftsSummary') | trans }}</span>
-            </summary>
-            <div class="opg-indented-block">
-                <div>
-                    {# Questions and answers table #}
-                    {% include 'AppBundle:Report/Gift:_list.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                </div>
-            </div>
-        </details>
-    {% endif %}
-
-    {% if report.hasSection('deputyExpenses') %}
-        <details>
-            <summary>
-                <span class="summary">{{ (page ~ '.revealTitle.deputyExpensesSummary') | trans }}</span>
-            </summary>
-            <div class="opg-indented-block">
-                <div>
-                    {# Questions and answers table #}
-                    {% include 'AppBundle:Report/DeputyExpense:_list.html.twig' with {
-                        hideEditLink: true
-                    } %}
-                </div>
-            </div>
-        </details>
-    {% endif %}
-
-    <a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
-</div>
+<a href="#moneyInOut" class="behat-link-back-to-money-in-out">{{ (page ~ '.backToQuestion') | trans }}</a>
 
 
