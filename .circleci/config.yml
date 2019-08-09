@@ -19,7 +19,7 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - slack/approval-notification:
-          message: Pending approval
+          message: Version $CIRCLE_TAG is ready for release
 
   master:
     jobs:
