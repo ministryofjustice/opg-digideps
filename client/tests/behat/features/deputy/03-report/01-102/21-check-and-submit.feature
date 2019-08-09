@@ -99,13 +99,14 @@ Feature: Report submit
             | feedback_report_satisfactionLevel_3 |
             | feedback_report_satisfactionLevel_4 |
         When I fill in the following:
-            | feedback_report_satisfactionLevel_0 | Very satisfied |
+            | feedback_report_satisfactionLevel_0 | 5 |
         And I press "feedback_report_save"
         Then the form should be valid
         And the URL should match "/report/\d+/submit_feedback"
         When I click on "return-to-reports-page"
         Then the URL should match "/lay"
         And the response status code should be 200
+        And the last email should contain "Very satisfied"
 
     @deputy
     Scenario: admin area check filters, submission and ZIP file content
