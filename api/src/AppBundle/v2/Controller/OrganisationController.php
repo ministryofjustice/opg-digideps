@@ -74,7 +74,7 @@ class OrganisationController
 
         $transformedDtos = [];
         foreach ($organisationDtos as $organisationDto) {
-            $transformedDtos[] = $this->transformer->transform($organisationDto);
+            $transformedDtos[] = $this->transformer->transform($organisationDto, ['users']);
         }
 
         return $this->buildSuccessResponse($transformedDtos);
