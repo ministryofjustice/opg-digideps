@@ -9,10 +9,16 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - slack/approval-notification:
-          name: test approve
+          name: test approve notification
           message: "Production ${CIRCLE_TAG} is ready for release and pending approval"
           requires: [ build pr ]
           filters: { branches: { ignore: [ master ] } }
+
+      - approve:
+          name: test approve
+          type: approval
+          requires: [ test approve notification ]
+          filters: { branches: { only: [ master ] } }
 
       - plan:
           requires: [ test approve ]
