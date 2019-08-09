@@ -154,23 +154,20 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{orgId}/user", requirements={"orgId":"\d+"})
-     * @Method({"POST"})
+     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
+     * @Method({"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
      * @param int $orgId
+     * @param int $userId
      * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    public function addUserAction(Request $request, int $orgId): JsonResponse
+    public function addUserAction(Request $request, int $orgId, int $userId): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!isset($data['user_id'])) {
-            throw new BadRequestHttpException('Missing user id in request');
-        }
-
-        $this->restHandler->addUser($orgId, $data['user_id']);
+        $this->restHandler->addUser($orgId, $userId);
 
         return $this->buildSuccessResponse([], 'User added', Response::HTTP_NO_CONTENT);
     }

@@ -7,7 +7,6 @@ use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class OrganisationRestHandler
@@ -159,11 +158,11 @@ class OrganisationRestHandler
     public function addUser(int $orgId, int $userId): void
     {
         if (null === ($organisation = $this->orgRepository->find($orgId))) {
-            throw new BadRequestHttpException('Invalid organisation id');
+            throw new \InvalidArgumentException('Invalid organisation id');
         }
 
         if (null === ($user = $this->userRepository->find($userId))) {
-            throw new BadRequestHttpException('Invalid user id');
+            throw new \InvalidArgumentException('Invalid user id');
         }
 
         $organisation->addUser($user);
