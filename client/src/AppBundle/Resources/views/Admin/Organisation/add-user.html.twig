@@ -37,7 +37,7 @@
             </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">
-                    {{ (page ~ '.summary.name') | trans }}
+                    {{ (page ~ '.summary.active') | trans }}
                 </dt>
                 <dd class="govuk-summary-list__value">
                     {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
