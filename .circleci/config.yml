@@ -6,7 +6,6 @@ workflows:
       - slack/approval-notification:
           name: test approve notification
           message: ":rocket: Production $CIRCLE_JOB is $CIRCLE_TAG ready ${CIRCLE_JOB} for release and pending approval"
-          requires: [ build pr ]
           filters: { branches: { ignore: [ master ] } }
   master:
     jobs:
