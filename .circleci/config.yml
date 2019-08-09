@@ -20,7 +20,7 @@ workflows:
 
       - slack/approval-notification:
           message: Pending approval
-          webhook: webhook
+
   master:
     jobs:
       - build:
