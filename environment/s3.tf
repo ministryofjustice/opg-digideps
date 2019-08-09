@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "pa_uploads" {
-  bucket = "pa-uploads-${terraform.workspace}"
+  bucket = "pa-uploads-${lower(terraform.workspace)}"
   acl    = "private"
 
   versioning {
