@@ -90,8 +90,12 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
 
+      - slack/approval-notification:
+          message: Production is ready for release and pending approval
+
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
+  slack: circleci/slack@3.3.0
 
 jobs:
   plan:
