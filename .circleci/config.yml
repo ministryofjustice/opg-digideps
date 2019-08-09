@@ -3,25 +3,10 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - build:
-          name: build pr
-          semver_stage: --stage dev
-          filters: { branches: { ignore: [ master ] } }
-
       - slack/approval-notification:
           name: test approve notification
-          message: "Production ${CIRCLE_TAG} is ready for release and pending approval"
+          message: ":rocket: Production $CIRCLE_JOB is $CIRCLE_TAG ready ${CIRCLE_JOB} for release and pending approval"
           requires: [ build pr ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - approve:
-          name: test approve
-          type: approval
-          requires: [ test approve notification ]
-          filters: { branches: { ignore: [ master ] } }
-
-      - plan:
-          requires: [ test approve ]
           filters: { branches: { ignore: [ master ] } }
   master:
     jobs:
