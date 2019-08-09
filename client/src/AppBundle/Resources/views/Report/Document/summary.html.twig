@@ -12,7 +12,6 @@
 {# Page Titles #}
 {% block htmlTitle %}{{ 'summaryPage.htmlTitle' | trans }}{% endblock %}
 {% block pageTitle %}{{ 'summaryPage.pageTitle' | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
 {# Breadcrumbs #}
 {% block breadcrumbs %}{{ macros.breadcrumbs(report) }}{% endblock %}
@@ -31,22 +30,22 @@
         </div>
     </div>
 
-    <table class="check-your-answers columns-2 push-double--bottom">
-        {{ macros.summaryTableHeaderQA(hideEditLink) }}
-        <tbody>
-        <tr class="behat-region-provided-documentation">
-            <td>
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        {{ macros.summaryListHeaderQA(false) }}
+        <div class="govuk-summary-list__row behat-region-provided-documentation">
+            <dt class="govuk-summary-list__key">
                 {{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {{ report.wishToProvideDocumentation | capitalize }}
-            </td>
-            <td class="change-answer">
-                <a href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans(transOptions,'common') }}</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans(transOptions, 'common') }}
+                </a>
+            </dd>
+        </div>
+    </dl>
 
     {# Attached documents table #}
     {% if report.wishToProvideDocumentation == 'yes' %}

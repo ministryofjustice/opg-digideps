@@ -39,23 +39,24 @@
 
     {# only show the initial question if it's set to "no" #}
     {#{% if report.currentProfPaymentsReceived == 'no' %}#}
-        <table class="check-your-answers columns-2 push-double--bottom">
-            {{ macros.summaryTableHeaderQA(hideEditLink) }}
-            <tbody>
-            <tr class="behat-region-has-fees">
-                <td>
-                    {{ 'existPage.form.hasFees.label' | trans }}
-                </td>
-                <td>
-                    {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('prof_current_fees_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-                       class="behat-link-edit-exist">Edit</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <dl class="govuk-summary-list columns-2 push-double--bottom">
+        {{ macros.summaryListHeaderQA(hideEditLink) }}
+        <div class="govuk-summary-list__row behat-region-has-fees">
+            <dt class="govuk-summary-list__key">
+                {{ 'existPage.form.hasFees.label' | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.currentProfPaymentsReceived | trans({}, 'common') }}
+            </dd>
+            {% if not hideEditLink %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit-exist" href="{{ path('prof_current_fees_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
+    </dl>
     {#{% endif %}#}
 
     {# yes scenario: show fees and last question #}
@@ -77,100 +78,124 @@
         {# fixed fees #}
         {% if hasFixedFees %}
             <h3 class="heading-small--table">{{ (page ~ '.table.subheading.fixed') | trans }}</h3>
-            <table class="check-your-answers behat-region-fixed-fees">
-                <thead>
-                <tr>
-                    <th>{{ 'summaryPage.table.service' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.received' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.dateReceived' | trans }}</th>
-                    <th>
+
+            <dl class="govuk-summary-list behat-region-fixed-fees">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.service' | trans }}
+                    </dt>
+                    <dd class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.charged' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.received' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.dateReceived' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
                         <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
+                    </dd>
+                </div>
                 {% for fixedServiceFee in report.currentFixedServiceFees %}
-                    <tr class="behat-region-service-fee-{{ fixedServiceFee.serviceTypeId }}">
-                        <td class="width-third">{{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}</td>
-                        <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountCharged | money_format }}</td>
-                        <td class="width-sixth numeric-small">£{{ fixedServiceFee.amountReceived | money_format }}</td>
-                        <td class="width-fifth numeric-small no-wrap">
+                    <div class="govuk-summary-list__row behat-region-service-fee-{{ fixedServiceFee.serviceTypeId }}">
+                        <dt class="govuk-summary-list__key width-third">
+                            {{ ('addTypePage.form.serviceType.' ~ fixedServiceFee.serviceTypeId) | trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value width-sixth numeric-small">
+                            £{{ fixedServiceFee.amountCharged | money_format }}
+                        </dd>
+                        <dd class="govuk-summary-list__value width-sixth numeric-small">
+                            £{{ fixedServiceFee.amountReceived | money_format }}
+                        </dd>
+                        <dd class="govuk-summary-list__value width-fifth numeric-small no-wrap">
                             {{ fixedServiceFee.paymentReceivedDate ? fixedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
-                        </td>
-                        <td class="change-answer width-seventh">
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
                             <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
-                               class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
+                               class="behat-link-edit-fee govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
                             <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'from': 'summary'}) }}"
-                               class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
-                        </td>
-                    </tr>
+                               class="behat-link-delete push-half--left govuk-link">{{ 'remove' | trans({}, 'common') }}</a>
+                        </dd>
+                    </div>
                 {% endfor %}
-                <tr class="no-border">
-                    <td>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
-                    </td>
-                    <td class="text--right">
+                    </dt>
+                    <dd class="govuk-summary-list__value text--right">
                         <span class="bold-small">£{{ report.feeTotals['totalFixedFeesCharged'] | money_format }}</span>
-                    </td>
-                    <td class="text--right">
+                    </dd>
+                    <dd class="govuk-summary-list__value text--right">
                         <span class="bold-small">£{{ report.feeTotals['totalFixedFeesReceived'] | money_format }}</span>
-                    </td>
-                    <td colspan="2"></td>
-                </tr>
-                </tbody>
-            </table>
+                    </dd>
+                    <dd class="govuk-summary-list__value"></dd>
+                    <dd class="govuk-summary-list__actions"></dd>
+                </div>
+            </dl>
         {% endif %}
 
         {# assessed fees #}
         {% if hasAssessedCostsFees %}
             <h3 class="heading-small--table">{{ (page ~ '.table.subheading.assessed') | trans }}</h3>
-            <table class="check-your-answers">
-                <thead>
-                <tr>
-                    <th>{{ 'summaryPage.table.service' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.charged' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.received' | trans }}</th>
-                    <th class="numeric">{{ 'summaryPage.table.dateReceived' | trans }}</th>
-                    <th>
-                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for assessedServiceFee in report.currentAssessedServiceFees %}
-                    <tr class="behat-region-assessed-fee-{{ assessedServiceFee.serviceTypeId }}">
-                        <td class="width-third ">{{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}</td>
-                        <td class="width-sixth numeric-small">
-                            £{{ assessedServiceFee.amountCharged | money_format }}</td>
-                        <td class="width-sixth numeric-small">
-                            £{{ assessedServiceFee.amountReceived | money_format }}</td>
-                        <td class="width-fifth numeric-small">
-                            {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
-                        </td>
-                        <td class="change-answer width-seventh">
-                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
-                               class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                            <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'from': 'summary'}) }}"
-                               class="behat-link-delete push-half--left action-link">{{ 'remove' | trans({}, 'common') }}</a>
 
-                        </td>
-                    </tr>
+            <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        {{ 'summaryPage.table.service' | trans }}
+                    </dt>
+                    <dd class="govuk-summary-list__key numeric">
+                        >{{ 'summaryPage.table.charged' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__key numeric">
+                        >{{ 'summaryPage.table.received' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__key numeric">
+                        >{{ 'summaryPage.table.dateReceived' | trans }}
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                    </dd>
+                </div>
+
+                {% for assessedServiceFee in report.currentAssessedServiceFees %}
+                    <div class="govuk-summary-list__row behat-region-assessed-fee-{{ assessedServiceFee.serviceTypeId }}">
+                        <dt class="govuk-summary-list__key width-third">
+                            {{ ('addTypePage.form.serviceType.' ~ assessedServiceFee.serviceTypeId) | trans }}
+                        </dt>
+                        <dd class="govuk-summary-list__value numeric-small width-sixth">
+                            £{{ assessedServiceFee.amountCharged | money_format }}
+                        </dd>
+                        <dd class="govuk-summary-list__value numeric-small width-sixth">
+                            £{{ assessedServiceFee.amountReceived | money_format }}
+                        </dd>
+                        <dd class="govuk-summary-list__value numeric-small width-fifth">
+                            {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
+                        </dd>
+                        <dd class="govuk-summary-list__actions change-answer width-seventh">
+                            <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
+                               class="behat-link-edit-fee govuk-link">{{ 'edit' | trans({}, 'common') }}</a>
+                            <a href="{{ path('prof_service_fee_delete', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'from': 'summary'}) }}"
+                               class="behat-link-delete push-half--left govuk-link">{{ 'remove' | trans({}, 'common') }}</a>
+                        </dd>
+                    </div>
                 {% endfor %}
-                <tr class="no-border">
-                    <td>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
                         <span class="bold-small">{{ (page ~ '.table.total') | trans }}</span>
-                    </td>
-                    <td class="text--right">
+                    </dt>
+                    <dd class="govuk-summary-list__value">
                         <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesCharged'] | money_format }}</span>
-                    </td>
-                    <td class="text--right">
+                    </dd>
+                    <dd class="govuk-summary-list__value">
                         <span class="bold-small">£{{ report.feeTotals['totalAssessedFeesReceived'] | money_format }}</span>
-                    </td>
-                    <td colspan="2"></td>
-                </tr>
-                </tbody>
-            </table>
+                    </dd>
+                    <dd class="govuk-summary-list__value"></dd>
+                    <dd class="govuk-summary-list__actions"></dd>
+                </div>
+            </dl>
         {% endif %}
 
         {# show totals if assessed and fixed are both present #}
@@ -195,20 +220,11 @@
         {% endif %}
 
         {# fees estimate question + Scco explanation given #}
-        <table class="check-your-answers columns-2 push-double--bottom push--top">
-            <thead>
-            <tr>
-                <th>{{ 'question' | trans({}, 'common') }}</th>
-                <th>{{ 'answer' | trans({}, 'common') }}</th>
-                <th>
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
+        <dl class="govuk-summary-list columns-2 push-double--bottom push--top">
+            {{ macros.summaryListHeaderQA(false) }}
             {% set answerGiven = report.previousProfFeesEstimateGiven is not null %}
-            <tr class="behat-region-previous-estimates">
-                <td>
+            <div class="govuk-summary-list__row behat-region-previous-estimates">
+                <dt class="govuk-summary-list__key">
                     {% if answerGiven %}
                         {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
                     {% else %}
@@ -216,36 +232,40 @@
                         {{ 'estCostsPage.form.estimateCosts.legend' | trans }}
                       </span>
                     {% endif %}
-                </td>
-                <td>
+                </dt>
+                <dd class="govuk-summary-list__value">
                     {% if answerGiven %}
                         {{ report.previousProfFeesEstimateGiven | trans({}, 'common') }}
                     {% else %}
                         <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                     {% endif %}
-
-                </td>
-                <td class="change-answer">
-                    <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
-                       class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                </td>
-            </tr>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a 
+                        href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
+                        class="behat-link-edit-fee govuk-link">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            </div>
             {% if report.previousProfFeesEstimateGiven == 'yes' and report.profFeesEstimateSccoReason %}
-                <tr class="behat-region-scco-reason">
-                    <td>
+                <div class="govuk-summary-list__row behat-region-scco-reason">
+                    <dt class="govuk-summary-list__key">
                         {{ 'estCostsPage.form.profFeesEstimateSccoReason.label' | trans }}
-                    </td>
-                    <td>
+                    </dt>
+                    <dd class="govuk-summary-list__value">
                         {{ report.profFeesEstimateSccoReason | nl2br }}
-                    </td>
-                    <td class="change-answer">
-                        <a href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
-                           class="behat-link-edit-fee action-link">{{ 'edit' | trans({}, 'common') }}</a>
-                    </td>
-                </tr>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        <a 
+                            href="{{ path('previous_estimates', { 'reportId': report.id, 'from': 'summary' }) }}"
+                            class="behat-link-edit-fee govuk-link">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                    </dd>
+                </div>
             {% endif %}
-            </tbody>
-        </table>
+        </dl>
     {% endif %}
 
     {# Pagination #}
@@ -255,6 +275,3 @@
     } %}
 
 {% endblock %}
-
-
-

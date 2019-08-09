@@ -5,79 +5,85 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-
-<table class="check-your-answers columns-2 push-double--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(false) }}
+    <div class="govuk-summary-list__row behat-region-has-fees">
     {#
         Have you charged the client any fees or expensesfor your
         services during the reporting period?
     #}
-    <tr class="behat-region-has-fees">
+
         {% if report.hasFees is null %}
-            <td>
+            <dt class="govuk-summary-list__key">
                 <span class="error">
                     {{ 'feeExistPage.form.hasFees.label' | trans(transOptions) }}
                 </span>
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-            </td>
+            </dd>
         {% else %}
-            <td>
+            <dt class="govuk-summary-list__key">
                 {{ 'feeExistPage.form.hasFees.label' | trans(transOptions)  }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {{ report.hasFees | capitalize }}
-            </td>
+            </dd>
         {% endif %}
-        <td class="change-answer">
-            {% if not hideEditLink %}
-                <a href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}" class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-            {% endif %}
-        </td>
-    </tr>
+
+        {% if not hideEditLink %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
     {% if report.reasonForNoFees %}
-        <tr class="behat-region-reason-no-fees">
-            <td>Reason for not having charged the client any fees for your services during the reporting period</td>
-            <td>{{ report.reasonForNoFees | nl2br }}</td>
-            <td class="change-answer">
-                {% if not hideEditLink %}
-                    <a href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                {% endif %}
-            </td>
-        </tr>
+        <div class="govuk-summary-list__row behat-region-reason-no-fees">
+            <dt class="govuk-summary-list__key">
+                Reason for not having charged the client any fees for your services during the reporting period
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.reasonForNoFees | nl2br }}
+            </dd>
+            {% if not hideEditLink %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common') }}
+                    </a>
+                </dd>
+            {% endif %}
+        </div>
     {% endif %}
     {#
         Have you claimed any other expenses or fees outside
         of the practice direction?
     #}
-        <tr class="behat-region-paid-for-anything">
-
-            {% if report.paidForAnything is null %}
-                <td>
-                    <span class="error">
-                        {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
-                    </span>
-                </td>
-                <td>
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                </td>
-            {% else %}
-                <td>
+    <div class="govuk-summary-list__row behat-region-paid-for-anything">
+        {% if report.paidForAnything is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
                     {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
-                </td>
-                <td>
-                    {{ report.paidForAnything | capitalize }}
-                </td>
-            {% endif %}
-            <td class="change-answer">
-                {% if not hideEditLink %}
-                <a href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}"
-                   class="behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
-                {% endif %}
-            </td>
-        </tr>
-
-    </tbody>
-</table>
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.paidForAnything | capitalize }}
+            </dd>
+        {% endif %}
+        {% if not hideEditLink %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
+                    {{ 'edit' | trans({}, 'common') }}
+                </a>
+            </dd>
+        {% endif %}
+    </div>
+</dl>

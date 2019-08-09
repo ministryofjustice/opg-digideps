@@ -7,82 +7,102 @@
 
 {% set hideEditLink = hideEditLink | default(false) %}
 
-<table class="check-your-answers columns-2 push--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        {# step 1 #}
-        <tr class="behat-region-expect-financial-decision">
-            {% if report.action.doYouExpectFinancialDecisions is null %}
-                <td>
-                    <span class="error">
-                        {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
-                    </span>
-                </td>
-                <td>
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                </td>
-            {% else %}
-                <td>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+
+    {# step 1 #}
+    <div class="govuk-summary-list__row behat-region-expect-financial-decision">
+
+        {% if report.action.doYouExpectFinancialDecisions is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
                     {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ report.action.doYouExpectFinancialDecisions | capitalize }}
-                </td>
-            {% endif %}
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            {% endif %}
-        </tr>
-        {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
-            <tr class="behat-region-expect-financial-decision-details">
-                <td>{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}</td>
-                <td>{{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}</td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer">
-                        <a href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
-                {% endif %}
-            </tr>
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouExpectFinancialDecisions | capitalize }}
+            </dd>
         {% endif %}
 
-        {# step 2 #}
-        <tr class="behat-region-have-concerns">
-            {% if report.action.doYouHaveConcerns is null %}
-                <td>
-                    <span class="error">
-                        {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
-                    </span>
-                </td>
-                <td>
-                    <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
-                </td>
-            {% else %}
-                <td>
+        {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+        {% endif  %}
+    </div>
+
+    {% if report.action.doYouExpectFinancialDecisions == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-expect-financial-decision-details">
+            <dt class="govuk-summary-list__key">
+                {{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouExpectFinancialDecisionsDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                    </a>
+                </dd>
+            {% endif  %}
+        </div>
+    {% endif %}
+
+    {# step 2 #}
+    <div class="govuk-summary-list__row behat-region-have-concerns">
+
+        {% if report.action.doYouHaveConcerns is null %}
+            <dt class="govuk-summary-list__key">
+                <span class="error">
                     {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
-                </td>
-                <td>
-                    {{ report.action.doYouHaveConcerns | capitalize }}
-                </td>
-            {% endif %}
-            {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
-            {% endif %}
-        </tr>
-        {% if report.action.doYouHaveConcerns == 'yes' %}
-            <tr class="behat-region-have-concerns-details">
-                <td>{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</td>
-                <td>{{ report.action.doYouHaveConcernsDetails | nl2br }}</td>
-                {% if not hideEditLink  %}
-                    <td class="change-answer">
-                        <a href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}" class="action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                    </td>
-                {% endif %}
-            </tr>
+                </span>
+            </dt>
+            <dd class="govuk-summary-list__value">
+                <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
+            </dd>
+        {% else %}
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcerns | capitalize }}
+            </dd>
         {% endif %}
-    </tbody>
 
-</table>
+        {% if not hideEditLink  %}
+        <dd class="govuk-summary-list__actions">
+            <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                {{ 'edit' | trans({}, 'common' ) }}
+            </a>
+        </dd>
+        {% endif  %}
+    </div>
+
+    {% if report.action.doYouHaveConcerns == 'yes' %}
+        <div class="govuk-summary-list__row behat-region-have-concerns-details">
+            <dt class="govuk-summary-list__key">
+                {{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ report.action.doYouHaveConcernsDetails | nl2br }}
+            </dd>
+            {% if not hideEditLink  %}
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                </a>
+            </dd>
+            {% endif  %}
+        </div>
+    {% endif %}
+</dl>
