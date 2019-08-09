@@ -70,7 +70,6 @@ Feature: Organisation membership
     Then the URL should match "admin/organisations/\d+"
     And I should not see "PROF Deputy 102-5 User"
 
-
   @admin
   Scenario: Users can be in more than one organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
