@@ -50,7 +50,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -66,7 +66,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getRoleName(): string
+    public function getRoleName(): ?string
     {
         return $this->roleName;
     }
@@ -74,7 +74,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getAddressPostcode(): string
+    public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
     }
@@ -82,7 +82,7 @@ class DeputyDto
     /**
      * @return bool
      */
-    public function getNdrEnabled(): bool
+    public function getNdrEnabled(): ?bool
     {
         return $this->ndrEnabled;
     }
@@ -90,7 +90,7 @@ class DeputyDto
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive(): ?bool
     {
         return $this->active;
     }
@@ -98,7 +98,7 @@ class DeputyDto
     /**
      * @return array
      */
-    public function getClients(): array
+    public function getClients(): ?array
     {
         return $this->clients;
     }
