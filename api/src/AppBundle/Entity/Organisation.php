@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -134,9 +135,9 @@ class Organisation
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getUsers(): ArrayCollection
+    public function getUsers(): Collection
     {
         return $this->users;
     }
@@ -151,6 +152,16 @@ class Organisation
             $this->users->add($user);
         }
 
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return Organisation
+     */
+    public function removeUser(User $user): Organisation
+    {
+        $this->users->removeElement($user);
         return $this;
     }
 }
