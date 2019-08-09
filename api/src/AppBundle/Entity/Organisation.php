@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,6 +44,18 @@ class Organisation
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
     private $isActivated;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="User")
+     */
+    private $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -116,6 +129,27 @@ class Organisation
     public function setIsActivated(bool $isActivated): Organisation
     {
         $this->isActivated = $isActivated;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getUsers(): ArrayCollection
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param User $user
+     * @return Organisation
+     */
+    public function addUser(User $user): Organisation
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+        }
 
         return $this;
     }
