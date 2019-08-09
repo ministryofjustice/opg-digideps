@@ -20,17 +20,23 @@ class OrganisationTransformer
 
     /**
      * @param OrganisationDto $dto
+     * @param array $exclude
      * @return array
      */
-    public function transform(OrganisationDto $dto): array
+    public function transform(OrganisationDto $dto, array $exclude = []): array
     {
-        return [
+        $data = [
             'id' => $dto->getId(),
             'name' => $dto->getName(),
             'email_identifier' => $dto->getEmailIdentifier(),
-            'is_activated' => $dto->isActivated(),
-            'users' => $this->transformUsers($dto->getUsers())
+            'is_activated' => $dto->isActivated()
         ];
+
+        if (!in_array('users', $exclude)) {
+            $data['users'] = $this->transformUsers($dto->getUsers());
+        }
+
+        return $data;
     }
 
     /**
