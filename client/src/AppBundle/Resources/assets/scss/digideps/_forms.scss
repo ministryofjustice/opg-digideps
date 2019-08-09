@@ -31,7 +31,7 @@ input[type=text]::-ms-clear {
     margin: 2px;
     padding: 5px 9px 6px;
     border: 0;
-    background: $grey-3;
+    background: govuk-colour('light-grey');
 
     + input {
         padding-left: 2em;

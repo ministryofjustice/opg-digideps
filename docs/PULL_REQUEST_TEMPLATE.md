@@ -23,7 +23,7 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 ### Frontend
 - [ ] There are no new frontend linting errors (`docker-compose run --rm npm run lint`)
 - [ ] There are no NPM security issues (`docker-compose run --rm npm audit`)
-- [ ] - [ ] There are no Composer security issues (`docker-compose run frontend php app/console security:check`)
+- [ ] There are no Composer security issues (`docker-compose run frontend php app/console security:check`)
 - [ ] I have run an in-browser accessibility test (e.g. WAVE, Lighthouse)
 - [ ] There are no deprecated CSS classes noted in the profiler
 - [ ] Translations are used and the profiler doesn't identify any missing

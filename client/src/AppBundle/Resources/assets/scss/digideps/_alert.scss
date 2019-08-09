@@ -3,7 +3,6 @@
 .opg-alert {
     @include govuk-responsive-padding(4);
     @include govuk-responsive-margin(8, 'bottom');
-    @include govuk-focusable;
     max-width: 30em;
     border-left: 5px solid transparent;
 
@@ -81,7 +80,7 @@
 .alert-important {
     @extend %alert-base;
     border-color: $black;
-    background-color: rgba($grey-3, .3);
+    background-color: govuk-colour('light-grey');
 }
 
 .alert-message {
