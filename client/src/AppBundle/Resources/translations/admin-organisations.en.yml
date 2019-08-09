@@ -2,7 +2,7 @@ indexPage:
     htmlTitle: Administration - Organisations
     pageTitle: Admin
     supportTitle: Organisations
-    noOrganisations: No organisations have been added yet
+    noOrganisations: No organisations have been added
     addOrganisation: Add a new organisation
     summary:
         name: Name
@@ -18,6 +18,17 @@ editPage:
     htmlTitle: Administration - Organisations
     pageTitle: Edit organisation
     supportTitle: Organisations
+
+viewPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Edit organisation
+    supportTitle: Organisations
+    addMember: Add someone to this organisation
+    noMembers: This organisation doesn't have any members
+    users:
+        name: Name
+        emailAddress: Email address
+        active: User account active
 
 deletePage:
     htmlTitle: Administration - Remove organisation

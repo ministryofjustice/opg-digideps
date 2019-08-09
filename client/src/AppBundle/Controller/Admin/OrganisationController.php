@@ -32,6 +32,24 @@ class OrganisationController extends AbstractController
     }
 
     /**
+     * @Route("/{id}", name="admin_organisation_view")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Admin/Organisation:view.html.twig")
+     */
+    public function viewAction(Request $request, $id)
+    {
+        try {
+            $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+        } catch (RestClientException $e) {
+            throw $this->createNotFoundException('Organisation not found');
+        }
+
+        return [
+            'organisation' => $organisation
+        ];
+    }
+
+    /**
      * @Route("/add", name="admin_organisation_add")
      * @Route("/edit/{id}", name="admin_organisation_edit")
      * @Security("has_role('ROLE_ADMIN')")
@@ -126,5 +144,14 @@ class OrganisationController extends AbstractController
             ],
             'backLink' => $this->generateUrl('admin_organisation_homepage')
         ];
+    }
+
+    /**
+     * Todo
+     * @Route("/{id}/add-user", name="admin_organisation_member_add")
+     * @Route("/{id}/delete-user/{user-id}", name="admin_organisation_member_delete")
+     */
+    public function routesToDo($id = null, $userId = null) {
+        throw new Exception('Route still needs to be created');
     }
 }
