@@ -5,6 +5,7 @@ namespace AppBundle\Service\RestHandler;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\UserRepository;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -157,15 +158,55 @@ class OrganisationRestHandler
      */
     public function addUser(int $orgId, int $userId): void
     {
+        $this
+            ->attemptGetOrganisation($orgId)
+            ->addUser($this->attemptGetUser($userId));
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param int $orgId
+     * @param int $userId
+     * @throws OptimisticLockExceptionAlias
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function removeUser(int $orgId, int $userId): void
+    {
+        $organisation = $this->attemptGetOrganisation($orgId);
+        $user = $this->attemptGetUser($userId);
+
+        if (!$organisation->getUsers()->contains($user)) {
+            throw new \InvalidArgumentException('Cannot remove: User does not belong to organisation');
+        }
+
+        $organisation->removeUser($user);
+        $this->em->flush();
+    }
+
+    /**
+     * @param int $orgId
+     * @return Organisation|null
+     */
+    private function attemptGetOrganisation(int $orgId): ?Organisation
+    {
         if (null === ($organisation = $this->orgRepository->find($orgId))) {
             throw new \InvalidArgumentException('Invalid organisation id');
         }
 
+        return $organisation;
+    }
+
+    /**
+     * @param int $userId
+     * @return User|null
+     */
+    private function attemptGetUser(int $userId): ?User
+    {
         if (null === ($user = $this->userRepository->find($userId))) {
             throw new \InvalidArgumentException('Invalid user id');
         }
 
-        $organisation->addUser($user);
-        $this->em->flush();
+        return $user;
     }
 }

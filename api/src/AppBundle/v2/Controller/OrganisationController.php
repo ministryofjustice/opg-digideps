@@ -180,11 +180,12 @@ class OrganisationController
      * @param int $orgId
      * @param int $userId
      * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function removeUserAction(int $orgId, int $userId): JsonResponse
     {
-        //$deleted = $this->repository->deleteById($id);
-        //$message = $deleted ? 'User removed' : 'Organisation not found. Nothing deleted';
+        $this->restHandler->removeUser($orgId, $userId);
 
         return $this->buildSuccessResponse([], 'User removed');
     }

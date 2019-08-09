@@ -19,8 +19,10 @@ services:
   AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
     arguments:
-    - '@AppBundle\v2\Transformer\ClientTransformer'
+      - '@AppBundle\v2\Transformer\ClientTransformer'
 
   AppBundle\v2\Transformer\OrganisationTransformer:
     class: AppBundle\v2\Transformer\OrganisationTransformer
+    arguments:
+      - '@AppBundle\v2\Transformer\DeputyTransformer'
 

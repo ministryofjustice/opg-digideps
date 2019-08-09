@@ -32,7 +32,8 @@ class DeputyTransformer
             'email' => $dto->getEmail(),
             'role_name' => $dto->getRoleName(),
             'address_postcode' => $dto->getAddressPostcode(),
-            'ndr_enabled' => $dto->getNdrEnabled()
+            'ndr_enabled' => $dto->getNdrEnabled(),
+            'active' => $dto->isActive()
         ];
 
         if (!in_array('clients', $exclude)) {
