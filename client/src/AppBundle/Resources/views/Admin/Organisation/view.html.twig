@@ -39,10 +39,10 @@
 
         <tbody class="govuk-table__body">
             {% for user in organisation.users %}
-                <tr class="govuk-table__row behat-region-org-{{ user.name | behat_namify }}">
+                <tr class="govuk-table__row behat-region-org-{{ user.fullName | behat_namify }}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="{{ url('admin_editUser', { filter: user.id }) }}">
-                            {{ user.name }}
+                            {{ user.fullName }}
                         </a>
                     </td>
                     <td class="govuk-table__cell">
@@ -52,7 +52,7 @@
                         {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a class="govuk-link behat-link-delete" href="{{ url('admin_organisation_user_delete', { id: organisation.id, userId: user.id }) }}">
+                        <a class="govuk-link behat-link-delete" href="{{ url('admin_organisation_member_delete', { id: organisation.id, userId: user.id }) }}">
                             {{ 'remove' | trans({}, 'common') }}
                         </a>
                     </td>
