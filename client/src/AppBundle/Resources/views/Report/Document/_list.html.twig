@@ -1,34 +1,47 @@
 {% set translationDomain = translationDomain %}
 {% trans_default_domain translationDomain %}
 
-<div class="grid-row">
-    <div class="column-half">
-        <h2 class="heading-medium flush--ends">{{ (page ~ '.documentList') | trans }}</h2>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <h2 class="govuk-heading-m">{{ (page ~ '.documentList') | trans }}</h2>
     </div>
-    <div class="column-half text--right">
+    <div class="govuk-grid-column-one-half text--right">
         {% if page == 'summaryPage' and report.wishToProvideDocumentation == 'yes' %}
-            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="bold-small move-quarter--up action-link behat-link-add">
-                <span class="icon icon-plus"></span>
-                {{ 'summaryPage.addButton' | trans }}
+            <a href="{{ path('report_documents', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-add">
+                <strong>
+                    <span class="icon icon-plus"></span>
+                    {{ 'summaryPage.addButton' | trans }}
+                </strong>
             </a>
         {% endif %}
     </div>
 </div>
-<table class="check-your-answers">
-    <thead>
-        <th>{{ (page ~ '.filename') | trans }}</th>
-        <th class="text--right">{{ (page ~ '.dateAttached') | trans }}</th>
-        <th><span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span></th>
-    </thead>
-    <tbody class="behat-region-document-list">
+
+<dl class="govuk-summary-list behat-region-document-list">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ (page ~ '.filename') | trans }}
+        </dt>
+        <dd class="govuk-summary-list__key">
+            {{ (page ~ '.dateAttached') | trans }}
+        </dd>
+        <dd class="govuk-summary-list__actions">
+            <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        </dd>
+    </div>
     {% for document in report.deputydocuments %}
-            <tr>
-                <td>{{ document.fileName }}</td>
-                <td class="numeric-small">{{ document.createdOn | date("j F Y H:i") }}</td>
-                <td class="change-answer width-sixth soft-half--left">
-                    <a href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}" class="behat-link-delete-documents-button action-link">{{ (page ~ '.deleteDocument') | trans }}</a>
-                </td>
-            </tr>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__value">
+                {{ document.fileName }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {{ document.createdOn | date("j F Y H:i") }}
+            </dd>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
+                    {{ (page ~ '.deleteDocument') | trans }}
+                </a>
+            </dd>
+        </div>
     {% endfor %}
-    </tbody>
-</table>
+</dl>

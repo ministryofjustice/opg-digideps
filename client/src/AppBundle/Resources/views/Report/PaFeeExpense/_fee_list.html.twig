@@ -13,59 +13,70 @@
     {% endfor %}
 
     {# Items list heading #}
-    <div class="grid-row behat-region-fees-list">
-        <div class="column-half">
-            <h2 class="heading-medium flush--ends">List of deputy fees and expenses</h2>
+    <div class="govuk-grid-row behat-region-fees-list">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m">List of deputy fees and expenses</h2>
         </div>
         {% if not hideEditLink %}
-            <div class="column-half text--right">
-                <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="bold-small action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+            <div class="govuk-grid-column-one-half text--right">
+                <strong>
+                    <a href="{{ path('pa_fee_expense_fee_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </strong>
             </div>
         {% endif %}
     </div>
 
     {# Items list table #}
-    <table class="check-your-answers push-double--bottom">
-        <thead>
-        <tr>
-            <th>Categories of fees</th>
-            {% if showDetailsColumn %}
-                <th>Details</th>
-            {% endif %}
-            <th class="numeric">Amount</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        {% for fee in report.fees %}
-            <tr class="behat-region-fee-{{ fee.feeTypeId | behat_namify }}">
-                <td>
-                    {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
-                    {{ feeLabel }}
-                </td>
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    Categories of fees
+                </th>
                 {% if showDetailsColumn %}
-                    <td class="width-half">
-                        {% if fee.moreDetails %}
-                        {{ fee.moreDetails | nl2br }}
-                    {% endif %}
-                    </td>
+                    <th scope="col" class="govuk-table__header">
+                        Details
+                    </th>
                 {% endif %}
-                <td class="numeric-small">£{{ fee.amount | money_format }}</td>
+                <th scope="col" class="govuk-table__header govuk-table__header--numeric">
+                    Amount
+                </th>
             </tr>
+        </thead>
 
-        {% endfor %}
-        <tr class="no-border">
-            <td>
-                <span class="bold-small">Total amount</span>
-            </td>
-            {% if showDetailsColumn %}
-                <td></td>
-            {% endif %}
-            <td class="text--right">
-                <span class="bold-small">£{{ report.feesTotal | money_format }}</span>
-            </td>
-        </tr>
+        <tbody class="govuk-table__body">
+            {% for fee in report.fees %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        {% set feeLabel = ('form.entries.' ~ fee.feeTypeId ~ '.label') | trans(transOptions) %}
+                        {{ feeLabel }}
+                    </td>
+                    {% if showDetailsColumn %}
+                        <td class="govuk-table__cell">
+                            {% if fee.moreDetails %}
+                                {{ fee.moreDetails | nl2br }}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        £{{ fee.amount | money_format }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">
+                    Total amount
+                </th>
+                {% if showDetailsColumn %}
+                <td class="govuk-table__cell"></td>
+                {% endif %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <strong>£{{ report.feesTotal | money_format }}</strong>
+                </td>
+            </tr>
         </tbody>
     </table>
-
 {% endif %}
