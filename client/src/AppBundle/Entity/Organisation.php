@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\User;
 
 /**
  * Organisation
@@ -40,6 +41,13 @@ class Organisation
      * @Assert\NotNull(message="organisation.isActivated.notBlank")
      */
     private $isActivated;
+
+    /**
+     * @var User[]
+     *
+     * @JMS\Type("array<User>")
+     */
+    private $users = [];
 
     /**
      * @return int
@@ -169,6 +177,36 @@ class Organisation
     public function setIsActivated($isActivated)
     {
         $this->isActivated = $isActivated;
+        return $this;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param User[] $users
+     * @return $this
+     */
+    public function setUsers($users)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return $this
+     */
+    public function addUser($user)
+    {
+        $this->users[] = $user;
+
         return $this;
     }
 }
