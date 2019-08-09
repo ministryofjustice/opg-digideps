@@ -24,6 +24,6 @@ form:
         notOrgUserError: User has unsuitable role to be in this organisation
         alreadyInOrgError: User is already in this organisation
     retrieve:
-        label: Add user
+        label: Find user
     confirm:
         label: Add user to organisation
