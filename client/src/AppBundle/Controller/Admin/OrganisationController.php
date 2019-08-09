@@ -196,8 +196,39 @@ class OrganisationController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/{id}/delete-user/{userId}", name="admin_organisation_member_delete", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
-    public function routesToDo($id = null, $userId = null) {
-        throw new Exception('Route still needs to be created');
+    public function deleteUserAction(Request $request, $id, $userId) {
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+        $user = $this->getRestClient()->get('user/' . $userId, 'User');
+
+        if ($form->isValid()) {
+            try {
+                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId());
+                $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());
+            } catch (\Throwable $e) {
+                $this->get('logger')->error($e->getMessage());
+                $request->getSession()->getFlashBag()->add('error', 'User could not be removed form '  . $organisation->getName());
+            }
+
+            return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
+        }
+
+        return [
+            'translationDomain' => 'admin-organisation-users',
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.organisationName', 'value' => $organisation->getName()],
+                ['label' => 'deletePage.summary.userName', 'value' => $user->getFullName()],
+                ['label' => 'deletePage.summary.userEmail', 'value' => $user->getEmail()],
+            ],
+            'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()])
+        ];
     }
 }
