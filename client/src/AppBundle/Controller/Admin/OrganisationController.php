@@ -51,7 +51,7 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/add", name="admin_organisation_add")
-     * @Route("/edit/{id}", name="admin_organisation_edit")
+     * @Route("/{id}/edit", name="admin_organisation_edit")
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:form.html.twig")
      */
@@ -107,7 +107,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="admin_organisation_delete")
+     * @Route("/{id}/delete", name="admin_organisation_delete")
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Common:confirmDelete.html.twig")
      */
