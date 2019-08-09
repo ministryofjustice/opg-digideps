@@ -5,38 +5,39 @@
 {% set transOptions = {'%client%': report.client.firstname | e } %}
 {% set append104 = report.get104TransSuffix %}
 
+{# Set page to summary page to allow correct translations to be pulled in#}
+{% set page = 'summaryPage' %}
+
 {% set hideEditLink = hideEditLink | default(false) %}
 {% set actualSubmittedOtherCosts = report.generateActualSubmittedOtherCosts %}
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h2 class="heading-medium">{{ (page ~ '.weveListedYourAnswers') | trans }}</h2>
-        <p class="text">{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p><strong>{{ (page ~ '.weveListedYourAnswers') | trans }}</strong></p>
+        <p>{{ (page ~ '.checkTheyreCorrect') | trans }}</p>
     </div>
-    <div class="column-third">
+    <div class="govuk-grid-column-one-third">
         {{ macros.relatedSections(report, 'profDeputyCosts') }}
     </div>
 </div>
 
-<table class="check-your-answers columns-2 push--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
-        {# How did you charge for your costs? #}
-        {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
-           'report': report,
-           'transDomain': translationDomain,
-           'hideEditLink' : false
-        } %}
-        {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
-            'report': report,
-            'transDomain': translationDomain,
-            'hideEditLink' : false
-        } %}
-    </tbody>
-</table>
-<table class="check-your-answers columns-2 push--bottom">
-    {{ macros.summaryTableHeaderQA(hideEditLink) }}
-    <tbody>
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
+    {# How did you charge for your costs? #}
+    {% include 'AppBundle:Report/ProfDeputyCosts:_how_charged_answers.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink' : false
+    } %}
+    {% include 'AppBundle:Report/ProfDeputyCosts:_payments_received_answers.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink' : false
+    } %}
+</dl>
+
+<dl class="govuk-summary-list">
+    {{ macros.summaryListHeaderQA(hideEditLink) }}
     {% include 'AppBundle:Report/ProfDeputyCosts:_all_cost_total_answers.html.twig' with {
         'report': report,
         'submittedOtherCosts': actualSubmittedOtherCosts,
@@ -49,29 +50,24 @@
         'transDomain': "report-prof-deputy-costs",
         'hideEditLink' : false
     } %}
-    </tbody>
-</table>
-{% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
-    'report': report,
-    'submittedOtherCosts': actualSubmittedOtherCosts,
-    'transDomain': "report-prof-deputy-costs",
-    'hideEditLink' : false
-} %}
+</dl>
 
-{% if report.profDeputyTotalCosts is not null %}
-<table class="check-your-answers columns-2 push--bottom">
-    <tbody>
-        {# empty line to have border. fix with CSS if simpler#}
-        <tr>
-            <td colspan="3"></td>
-        </tr>
+<h2 class="govuk-heading-m">{{ (page ~ '.breakdownOfAdditionalCosts') |  trans(transOptions) }}</h2>
+
+<dl class="govuk-summary-list">
+    {% include 'AppBundle:Report/ProfDeputyCosts:_breakdown_costs_answers.html.twig' with {
+        'report': report,
+        'submittedOtherCosts': actualSubmittedOtherCosts,
+        'transDomain': "report-prof-deputy-costs",
+        'hideEditLink' : false
+    } %}
+
+    {% if report.profDeputyTotalCosts is not null %}
         {% include 'AppBundle:Report/ProfDeputyCosts:_total_final_answers.html.twig' with {
             'report': report,
             'submittedOtherCosts': actualSubmittedOtherCosts,
             'transDomain': "report-prof-deputy-costs",
             'hideEditLink' : false
         } %}
-
-    </tbody>
-</table>
-{% endif %}
+    {% endif %}
+</dl>

@@ -67,6 +67,8 @@ summaryPage:
   pageSectionDescription: |
     In this section, we asked you about the gifts you have given on %client%'s behalf during this reporting period.
   addButton: Add a gift
+  listOfGifts: List of gifts
+  bankAccount: Bank account
 
 deletePage:
   htmlTitle: "Deputy report - remove gift | GOV.UK"

@@ -5,85 +5,84 @@
 {# Set page to summary page to allow correct translations to be pulled in#}
 {% set page = 'summaryPage' %}
 
-
-     {# Have you charged in line with interim billing under Practice Direction 19B  #}
+    {# Have you charged in line with interim billing under Practice Direction 19B  #}
     {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
-    <tr class="behat-region-has-interim">
-        <td>
+    <div class="govuk-summary-list__row behat-region-has-interim">
+        <dt class="govuk-summary-list__key">
             {% if report.profDeputyCostsHasInterim is null %}<span class="error">{% endif %}
                 {{ 'interimExists.form.profDeputyCostsHasInterim.label' | trans(transOptions) }}
                 {% if report.profDeputyCostsHasInterim is null %}</span>{% endif %}
-        </td>
-        <td>
+        </dt>
+        <dd class="govuk-summary-list__value">
             {% if report.profDeputyCostsHasInterim is null %}
                 <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
             {% else %}
                 {{ report.profDeputyCostsHasInterim | capitalize }}
             {% endif %}
-        </td>
+        </dd>
         {% if not hideEditLink  %}
-            <td class="change-answer">
-                <a href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-            </td>
+            <dd class="govuk-summary-list__actions">
+                <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+            </dd>
         {% endif %}
-    </tr>
+    </div>
 
 
     {% for ic in report.profDeputyInterimCosts %}
-        <tr class="behat-region-interim-cost-{{ loop.index }}">
-            <td>
+        <div class="govuk-summary-list__row behat-region-interim-cost-{{ loop.index }}">
+            <dt class="govuk-summary-list__key">
                 Costs for interim {{ loop.index }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 £{{ ic.amount | money_format }}, paid {{  ic.date | date('d/m/Y') }}
-            </td>
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer width-sixth soft-half--left hard--right">
-                    <a href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}" class="action-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
     {% endfor %}
 
     {% endif %}
     {# Fixed cost #}
     {% if report.hasProfDeputyCostsHowChargedFixedOnly or report.profDeputyCostsHasInterim == 'no'  %}
-        <tr class="behat-region-fixed-cost-amount">
-            <td>
+        <div class="govuk-summary-list__row behat-region-fixed-cost-amount">
+            <dt class="govuk-summary-list__key">
                 {{ (page ~ '.questionLabel.paidThisPeriod') | trans(transOptions) }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {% if report.profDeputyFixedCost is null %}
                     <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 {% else %}
                     £{{ report.profDeputyFixedCost | money_format }}
                 {% endif %}
-            </td>
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions">
+                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
     {% endif %}
 
     {% if not report.hasProfDeputyCostsHowChargedFixedOnly %}
         {# SCCO assessment #}
-        <tr class="behat-region-scco-assessment-amount">
-            <td>
+        <div class="govuk-summary-list__row behat-region-scco-assessment-amount">
+            <dt class="govuk-summary-list__key">
                 {{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}
-            </td>
-            <td>
+            </dt>
+            <dd class="govuk-summary-list__value">
                 {% if report.profDeputyCostsAmountToScco is null %}
                     <span class="error-message">{{ 'pleaseAnswer' | trans({}, 'common' ) }}</span>
                 {% else %}
                     £{{ report.profDeputyCostsAmountToScco | money_format }}
                 {% endif %}
-            </td>
+            </dd>
             {% if not hideEditLink  %}
-                <td class="change-answer">
-                    <a href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit action-link">{{ 'edit' | trans({}, 'common' ) }}</a>
-                </td>
+                <dd class="govuk-summary-list__actions">
+                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                </dd>
             {% endif %}
-        </tr>
+        </div>
     {% endif %}

@@ -113,10 +113,13 @@ summaryPage:
     htmlTitle: "Deputy report - Money in | GOV.UK"
     pageTitle: Money in
     moreDetails: More details about this section
+    totalValue: "Total money in: £%value%"
   moneyOut:
     htmlTitle: "Deputy report - Money out | GOV.UK"
     pageTitle: Money out
     moreDetails: More details about this section
+    totalValue: "Total money out: £%value%"
+
 form:
   group:
     moneyIn.legend: What category does the item of income come under?
