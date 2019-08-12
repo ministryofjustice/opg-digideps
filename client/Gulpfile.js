@@ -62,14 +62,14 @@ const buildApplicationCSSFromSass = () => { // Compile sass files, uglify, copy
 };
 
 const copyGovUKFonts = () => {
-    return gulp.src('node_modules/govuk-frontend/assets/fonts/*')
+    return gulp.src('node_modules/govuk-frontend/govuk/assets/fonts/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
 }
 
 const copyAllImages = () => {
     return gulp.src([
             './node_modules/govuk_frontend_toolkit/images/**/*',
-            './node_modules/govuk-frontend/assets/images/*',
+            './node_modules/govuk-frontend/govuk/assets/images/*',
             config.imgSrc + '/**/*'
         ])
         .pipe(gulp.dest('./web/images'));
@@ -77,7 +77,7 @@ const copyAllImages = () => {
 
 const concatJSThenMinifyAndCopy = () => { // Only minify if prod
     return gulp.src([
-            './node_modules/govuk-frontend/all.js',
+            './node_modules/govuk-frontend/govuk/all.js',
             config.jsSrc + '/modules/*.js',
             config.jsSrc + '/main.js'])
         .pipe(sourcemaps.init())
