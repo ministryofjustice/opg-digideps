@@ -43,11 +43,12 @@ workflows:
           requires: [ test environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - destroy:
+      - apply:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
           tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+          tf_command: destroy
 
   master:
     jobs:
@@ -153,46 +154,15 @@ jobs:
         description: terraform workspace
         type: string
       tf_tier:
-        description: tier to apply - shared or environment
+        description: tier to alter - shared or environment
         default: environment
+        type: string
+      tf_command:
+        description: terraform command
+        default: apply
         type: string
     environment:
       TF_CLI_ARGS_apply: -input=false -auto-approve
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
-      TF_TIER: << parameters.tf_tier >>
-    steps:
-      - checkout
-      - attach_workspace: { at: . }
-      - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
-      - run:
-          name: Show version
-          command: echo ${VERSION}
-      - run:
-          name: Initialize
-          command: terraform init ${TF_TIER}
-      - run:
-          name: Set workspace
-          command: |
-            export WORKSPACE=<< parameters.tf_workspace >>
-            echo export TF_WORKSPACE=${WORKSPACE,,} >> $BASH_ENV
-      - run:
-          name: Apply
-          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform apply -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
-
-  destroy:
-    docker:
-      - image: hashicorp/terraform:full
-    parameters:
-      tf_workspace:
-        description: terraform workspace
-        type: string
-      tf_tier:
-        description: tier to apply - shared or environment
-        default: environment
-        type: string
-    environment:
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
@@ -215,7 +185,7 @@ jobs:
             echo export TF_WORKSPACE=${WORKSPACE,,} >> $BASH_ENV
       - run:
           name: Apply
-          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform destroy -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
 
   test:
     docker:
