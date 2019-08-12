@@ -30,7 +30,7 @@ resource "aws_security_group_rule" "api_cache_task_in" {
 
 # TODO: switch to data source subnet group
 resource "aws_elasticache_cluster" "api" {
-  cluster_id           = "api-${lower(terraform.workspace)}"
+  cluster_id           = "api-${local.environment}"
   engine               = "redis"
   node_type            = "cache.t2.small"
   num_cache_nodes      = 1
@@ -42,8 +42,8 @@ resource "aws_elasticache_cluster" "api" {
   security_group_ids = [aws_security_group.api_cache.id]
 
   tags = {
-    InstanceName = "api-${terraform.workspace}"
-    Stack        = terraform.workspace
+    InstanceName = "api-${local.environment}"
+    Stack        = local.environment
   }
 }
 

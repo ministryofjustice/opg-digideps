@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "main" {
-  name = terraform.workspace
+  name = local.environment
   tags = local.default_tags
 }
 
@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 }
 
 resource "aws_iam_role" "execution_role" {
-  name               = "execution_role.${terraform.workspace}"
+  name               = "execution_role.${local.environment}"
   assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
   tags               = local.default_tags
 }
@@ -39,7 +39,7 @@ resource "aws_iam_role_policy" "execution_role" {
 }
 
 resource "aws_cloudwatch_log_group" "opg_digi_deps" {
-  name = terraform.workspace
+  name = local.environment
   tags = local.default_tags
 }
 
@@ -74,7 +74,7 @@ data "aws_iam_policy_document" "execution_role" {
 }
 
 resource "aws_service_discovery_private_dns_namespace" "private" {
-  name = "${terraform.workspace}.private"
+  name = "${local.environment}.private"
   vpc  = data.aws_vpc.vpc.id
 }
 

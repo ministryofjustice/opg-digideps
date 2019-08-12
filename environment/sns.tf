@@ -1,13 +1,13 @@
 resource "aws_sns_topic" "alerts" {
-  name = "alerts-${terraform.workspace}"
+  name = "alerts-${local.environment}"
 }
 
 resource "aws_sns_topic" "notifications_info" {
-  name = "notifications-info-${terraform.workspace}"
+  name = "notifications-info-${local.environment}"
 }
 
 resource "aws_sns_topic" "notifications_minor" {
-  name = "notifications-minor-${terraform.workspace}"
+  name = "notifications-minor-${local.environment}"
 }
 
 resource "aws_sns_topic_policy" "notifications_minor" {
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "notifications_minor" {
 }
 
 resource "aws_sns_topic" "notifications_major" {
-  name = "notifications-major-${terraform.workspace}"
+  name = "notifications-major-${local.environment}"
 }
 
 resource "aws_sns_topic_policy" "notifications_major" {
