@@ -133,8 +133,8 @@ dd-behat-snapshot-import()
 
 
 # phpunit
-alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run frontend bin/phpunit -c tests/phpunit"
-alias dd-phpunit-api="dd-exec api sh scripts/apiunittest.sh"
+alias dd-phpunit-frontend="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm frontend bin/phpunit -c tests/phpunit"
+alias dd-phpunit-api="docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run --rm api sh scripts/apiunittest.sh"
 alias dd-phpunit="dd-phpunit-frontend;dd-phpunit-api"
 
 # phpunit + behat
