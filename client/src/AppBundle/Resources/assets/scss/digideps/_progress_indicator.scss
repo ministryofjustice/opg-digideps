@@ -11,8 +11,8 @@
     margin: govuk-spacing(7) 0;
     padding: 0;
     border-top: 1px solid  $govuk-border-colour;
-    border-bottom: 1px solid  $govuk-border-colour;
-    background-color: govuk-colour('grey-4');
+    border-bottom: 1px solid $govuk-border-colour;
+    background-color: govuk-colour('light-grey');
     list-style-type: none;
     counter-reset: pos;
 
@@ -39,7 +39,7 @@
                 left: 7px;
             }
             border-radius: 100%;
-            background-color: govuk-colour('grey-3');
+            background-color: govuk-colour('mid-grey');
             font-size: 1.5rem;
             font-weight: bold;
             line-height: 1.5;

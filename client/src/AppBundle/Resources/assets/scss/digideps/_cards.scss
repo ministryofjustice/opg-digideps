@@ -22,7 +22,7 @@
         }
     }
 
-    &.disabled {
-        background-color: govuk-colour('grey-3');
+    &--disabled {
+        background-color: govuk-colour('mid-grey');
     }
 }

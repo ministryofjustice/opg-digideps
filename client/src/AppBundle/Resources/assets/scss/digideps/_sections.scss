@@ -23,7 +23,7 @@
     &__divider {
         margin-top: govuk-spacing(6);
         padding: govuk-spacing(1) govuk-spacing(2);
-        background: govuk-colour('grey-3');
+        background: govuk-colour('light-grey');
     }
 
     &__header {
@@ -40,7 +40,7 @@
     }
 
     &__description {
-        color: govuk-colour('grey-1');
+        color: govuk-colour('dark-grey');
     }
 
     &__status,
