@@ -77,9 +77,10 @@ EXPOSE 443
 COPY --from=composer /app/app app
 COPY --from=composer /app/vendor vendor
 COPY --from=composer /app/composer.lock composer.lock
-COPY src src
 COPY app app
+COPY bin bin
 COPY scripts scripts
+COPY src src
 COPY tests tests
 COPY web web
 COPY docker/confd /etc/confd
