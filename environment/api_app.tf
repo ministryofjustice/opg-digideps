@@ -22,7 +22,7 @@ resource "aws_service_discovery_service" "api" {
 }
 
 resource "aws_ecs_task_definition" "api" {
-  family                   = "api-${terraform.workspace}"
+  family                   = "api-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -140,7 +140,7 @@ locals {
       { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" },
       { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "OPG_STACKNAME", "value": "${terraform.workspace}" },
+      { "name": "OPG_STACKNAME", "value": "${local.environment}" },
       { "name": "NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_SERVICE", "value": "api" }
     ]
