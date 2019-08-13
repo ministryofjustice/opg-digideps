@@ -13,6 +13,9 @@ define('API_TOKEN_ADMIN', 'api-admin-key');
 
 if (empty(getenv('SKIP_RESET_DB'))) {
     exec('php app/console cache:clear --env=test');
+    exec('php app/console doctrine:query:sql "select pg_terminate_backend(pid) from pg_stat_activity where datname=\'digideps_unit_test\'"');
+    exec('php app/console doctrine:query:sql "DROP DATABASE IF EXISTS digideps_unit_test"');
+    exec('php app/console doctrine:query:sql "CREATE DATABASE digideps_unit_test"');
     exec('php app/console doctrine:query:sql "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;" --env=test');
     exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
     exec('php app/console doctrine:fixtures:load --no-interaction --env=test');

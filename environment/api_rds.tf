@@ -1,12 +1,12 @@
 resource "aws_security_group" "api_rds" {
-  name        = "rds-api-${terraform.workspace}"
+  name        = "rds-api-${local.environment}"
   description = "api rds access"
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = merge(
     local.default_tags,
     {
-      "Name" = "rds-api-${terraform.workspace}"
+      "Name" = "rds-api-${local.environment}"
     },
   )
 }
@@ -26,7 +26,7 @@ data "aws_kms_key" "rds" {
 
 resource "aws_db_instance" "api" {
   name                    = "api"
-  identifier              = "api-${terraform.workspace}"
+  identifier              = "api-${local.environment}"
   instance_class          = "db.m3.medium"
   allocated_storage       = "10"
   availability_zone       = "eu-west-1a"
@@ -55,7 +55,7 @@ resource "aws_db_instance" "api" {
   tags = merge(
     local.default_tags,
     {
-      "Name" = "api.${terraform.workspace}.${local.account_id}.${local.domain_name}"
+      "Name" = "api.${local.environment}.${local.account.account_id}.${local.account.domain_name}"
     },
   )
 

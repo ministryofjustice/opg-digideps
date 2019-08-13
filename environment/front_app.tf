@@ -1,5 +1,5 @@
 resource "aws_ecs_task_definition" "front" {
-  family                   = "front-${terraform.workspace}"
+  family                   = "front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -14,7 +14,7 @@ resource "aws_ecs_service" "front" {
   name                    = aws_ecs_task_definition.front.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.front.arn
-  desired_count           = local.task_count
+  desired_count           = local.account.task_count
   launch_type             = "FARGATE"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -66,18 +66,18 @@ locals {
     "environment": [
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "${local.test_enabled ? "true" : "false"}" },
-      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.email_domain}" },
-      { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.email_feedback_address}" },
-      { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.email_report_address}" },
-      { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.email_update_address}" },
+      { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
+      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.account.email_domain}" },
+      { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.account.email_feedback_address}" },
+      { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
+      { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
       { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },
       { "name": "FRONTEND_ROLE", "value": "front" },
-      { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${terraform.workspace}" },
+      { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
       { "name": "FRONTEND_SESSION_MEMCACHE", "value": "memcachefront" },
       { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
@@ -87,7 +87,7 @@ locals {
       { "name": "FRONTEND_SMTP_DEFAULT_PORT", "value": "587" },
       { "name": "FRONTEND_SMTP_SECURE_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
       { "name": "FRONTEND_SMTP_SECURE_PORT", "value": "25" },
-      { "name": "FRONTEND_TEST_ENABLED", "value": "${local.test_enabled}" },
+      { "name": "FRONTEND_TEST_ENABLED", "value": "${local.account.test_enabled}" },
       { "name": "FRONTEND_URL_ADMIN", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_URL_FRONTEND", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "NGINX_INDEX", "value": "app.php" },
@@ -96,11 +96,11 @@ locals {
       { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
-      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${local.domain_name} *.${terraform.workspace}.internal ~.*" },
+      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${local.account.domain_name} *.${local.environment}.internal ~.*" },
       { "name": "OPG_NGINX_SSL_FORCE_REDIRECT", "value": "1" },
       { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
       { "name": "OPG_SERVICE", "value": "front" },
-      { "name": "OPG_STACKNAME", "value": "${terraform.workspace}" },
+      { "name": "OPG_STACKNAME", "value": "${local.environment}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }

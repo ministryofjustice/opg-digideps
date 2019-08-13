@@ -1,13 +1,13 @@
 #TODO: tidy this up
 resource "aws_security_group" "admin_elb" {
-  name        = "admin-elb-${terraform.workspace}"
-  description = "admin elb access for ${terraform.workspace}"
+  name        = "admin-elb-${local.environment}"
+  description = "admin elb access for ${local.environment}"
   vpc_id      = data.aws_vpc.vpc.id
 
   tags = merge(
     local.default_tags,
     {
-      "Name" = "admin-elb-${terraform.workspace}"
+      "Name" = "admin-elb-${local.environment}"
     },
   )
 }
@@ -31,7 +31,7 @@ resource "aws_security_group_rule" "admin_elb_out" {
 }
 
 resource "aws_lb" "admin" {
-  name               = "admin-${terraform.workspace}"
+  name               = "admin-${local.environment}"
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
@@ -43,7 +43,7 @@ resource "aws_lb" "admin" {
   tags = merge(
     local.default_tags,
     {
-      "Name" = "admin-${terraform.workspace}"
+      "Name" = "admin-${local.environment}"
     },
   )
 }

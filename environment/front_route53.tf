@@ -1,5 +1,5 @@
 resource "aws_route53_record" "front" {
-  name    = "${local.front_prefix}${local.host_suffix}"
+  name    = "${local.account.front_prefix}${local.host_suffix}"
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
