@@ -1,5 +1,5 @@
 resource "aws_lb_target_group" "front" {
-  name                 = "front-${terraform.workspace}"
+  name                 = "front-${local.environment}"
   port                 = 443
   protocol             = "HTTPS"
   target_type          = "ip"

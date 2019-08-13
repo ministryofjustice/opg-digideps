@@ -1,5 +1,5 @@
 resource "aws_iam_user" "ses" {
-  name = "${terraform.workspace}-ses"
+  name = "${local.environment}-ses"
 }
 
 resource "aws_iam_access_key" "ses" {

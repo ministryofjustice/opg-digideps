@@ -1,7 +1,7 @@
 # TODO: switch to name prefix
 resource "aws_security_group" "front" {
-  name        = "front-${terraform.workspace}"
-  description = "frontend client access for ${terraform.workspace}"
+  name        = "front-${local.environment}"
+  description = "frontend client access for ${local.environment}"
   vpc_id      = data.aws_vpc.vpc.id
   tags        = local.default_tags
 
