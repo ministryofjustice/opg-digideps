@@ -52,11 +52,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->kernel = $kernel;
     }
 
-    protected function getSymfonyParam($name)
-    {
-        return $this->getContainer()->getParameter($name);
-    }
-
     /**
      * @return RestClient
      */
