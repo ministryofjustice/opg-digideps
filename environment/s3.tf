@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "pa_uploads" {
   bucket = "pa-uploads-${local.environment}"
   acl    = "private"
+  force_destroy = local.account["force_destroy_bucket"]
 
   versioning {
     enabled = true
@@ -22,7 +23,7 @@ resource "aws_s3_bucket" "pa_uploads" {
 }
 
 resource "aws_s3_bucket_public_access_block" "pa_uploads" {
-  bucket = aws_s3_bucket.pa_uploads.id
+  bucket = aws_s3_bucket.pa_uploads.bucket
 
   block_public_acls       = true
   block_public_policy     = true
@@ -31,7 +32,7 @@ resource "aws_s3_bucket_public_access_block" "pa_uploads" {
 }
 
 resource "aws_s3_bucket_policy" "pa_uploads" {
-  bucket = aws_s3_bucket.pa_uploads.id
+  bucket = aws_s3_bucket_public_access_block.pa_uploads.bucket
   policy = data.aws_iam_policy_document.pa_uploads.json
 }
 
