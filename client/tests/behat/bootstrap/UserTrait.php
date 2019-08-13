@@ -52,10 +52,11 @@ trait UserTrait
      */
     public function iChangeTheUserToken($userId, $token)
     {
-        $this->getRestClient()->put('behat/user/' . $userId, [
-            'token_date' => '-7days',
-            'registration_token' => $token,
-        ]);
+        $tokenDate = (new \DateTime('-7days'))->format('Y-m-d');
+        $query = sprintf('UPDATE dd_user SET registration_token = \'%s\', token_date = \'%s\' WHERE email = \'%s\'', $token, $tokenDate, $userId);
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+
+        exec($command);
     }
 
     /**

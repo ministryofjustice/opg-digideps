@@ -53,14 +53,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
-     * @return RestClient
-     */
-    protected function getRestClient()
-    {
-        return $this->getContainer()->get('rest_client');
-    }
-
-    /**
      * @return string
      */
     public function getAdminUrl()
