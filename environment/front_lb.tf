@@ -1,5 +1,5 @@
 resource "aws_security_group" "front_lb" {
-  name_prefix = "front-lb-${terraform.workspace}"
+  name_prefix = "front-lb-${local.environment}"
   vpc_id      = data.aws_vpc.vpc.id
   tags        = local.default_tags
 }
@@ -32,7 +32,7 @@ resource "aws_security_group_rule" "front_lb_https_out" {
 }
 
 resource "aws_lb" "front" {
-  name               = "front-${terraform.workspace}"
+  name               = "front-${local.environment}"
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
@@ -44,7 +44,7 @@ resource "aws_lb" "front" {
   tags = merge(
     local.default_tags,
     {
-      "Name" = "front-${terraform.workspace}"
+      "Name" = "front-${local.environment}"
     },
   )
 }

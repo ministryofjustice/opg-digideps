@@ -23,12 +23,12 @@ resource "aws_service_discovery_service" "scan" {
 
 resource "aws_iam_role" "scan" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  name               = "scan.${terraform.workspace}"
+  name               = "scan.${local.environment}"
   tags               = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "scan" {
-  family                   = "scan-${terraform.workspace}"
+  family                   = "scan-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024

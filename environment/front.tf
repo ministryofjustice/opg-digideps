@@ -1,11 +1,11 @@
 resource "aws_iam_role" "front" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  name               = "front.${terraform.workspace}"
+  name               = "front.${local.environment}"
   tags               = local.default_tags
 }
 
 resource "aws_iam_role_policy" "front_s3" {
-  name   = "front-s3.${terraform.workspace}"
+  name   = "front-s3.${local.environment}"
   policy = data.aws_iam_policy_document.front_s3.json
   role   = aws_iam_role.front.id
 }
