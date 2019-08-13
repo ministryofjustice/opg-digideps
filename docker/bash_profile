@@ -47,7 +47,7 @@ dd-psql-export() {
 
 dd-mode-prod()
 {
-    containers=(frontend api admin test)
+    containers=(frontend api admin)
     for i in "${containers[@]}"
     do
       dd-exec $i touch /var/www/.enableProdMode
@@ -57,7 +57,7 @@ dd-mode-prod()
 
 dd-mode-dev()
 {
-    containers=(frontend api admin test)
+    containers=(frontend api admin)
     for i in "${containers[@]}"
     do
        dd-exec $i rm -f /var/www/.enableProdMode
@@ -104,24 +104,19 @@ dd-db-reset()
 #
 dd-behat-run()
 {
-    # no specific path => reset db and redis
-    if [ "$2" = "" ]; then dd-db-reset; dd-redis-reset; fi;
+    dd-mode-prod
 
-    # prod/dev mode toggler
-    if [ "${DD_SKIP_MODE_SWITCH}" != "1" ]; then dd-cache-clear; dd-mode-prod; fi
-
-    if [ "$1" != "" ]; then
-        # launch specific suite, with or without path
-        dd-exec test confd -onetime -backend env
-        time dd-exec test bin/behat $2 -c tests/behat/behat.yml --suite=${1} --stop-on-failure --profile=headless
-    else
-        # launch all suites
-        time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run test sh scripts/clienttest.sh
+    # Reset attached resources if doing full run
+    if [ "$1" = "" ]; then
+      dd-db-reset;
+      dd-redis-reset
+      dd-cache-clear;
     fi
 
-    # prod/dev mode toggler
-    if [ "${DD_SKIP_MODE_SWITCH}" != "1" ]; then dd-mode-dev; fi
-    echo "Use DD_SKIP_MODE_SWITCH variable to 1(disable)/0(enable) prod mode during execution"
+    time docker-compose -f $DD_DOCKER_DIR/docker-compose.yml run test sh scripts/clienttest.sh $@
+
+    # Re-enable dev mode
+    dd-mode-dev
 }
 
 # e.g.
