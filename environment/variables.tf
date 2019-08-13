@@ -25,14 +25,15 @@ variable "accounts" {
       email_report_address      = string
       email_update_address      = string
       external_certificate_name = string
+      force_destroy_bucket      = bool
       front_prefix              = string
       front_whitelist           = list(string)
       host_suffix_enabled       = bool
       is_production             = number
-      test_enabled              = bool
-      task_count                = number
-      vpc_name                  = string
       secrets_prefix            = string
+      task_count                = number
+      test_enabled              = bool
+      vpc_name                  = string
     })
   )
 }
