@@ -6,7 +6,7 @@ This app is the [Complete the deputy report][service] service. It provides an on
 
 You must have Docker installed and access to the Ministry of Justice VPN.
 
-## Installation
+## Installation
 
 - Add `127.0.0.1 digideps-client.local digideps-admin.local digideps-api.local` to `/etc/hosts`
 - Log into the MoJ VPN
