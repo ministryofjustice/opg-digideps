@@ -3,7 +3,7 @@ data "aws_kms_alias" "secretmanager" {
 }
 
 data "aws_secretsmanager_secret" "database_password" {
-  name = "${terraform.workspace}/database-password"
+  name = "${local.account["secrets_prefix"]}/database-password"
 }
 
 data "aws_secretsmanager_secret_version" "database_password" {
@@ -11,30 +11,29 @@ data "aws_secretsmanager_secret_version" "database_password" {
 }
 
 data "aws_secretsmanager_secret" "api_secret" {
-  name = "${terraform.workspace}/api-secret"
-}
-
-data "aws_secretsmanager_secret" "admin_frontend_secret" {
-  name = "${terraform.workspace}/admin-frontend-secret"
+  name = "${local.account["secrets_prefix"]}/api-secret"
 }
 
 data "aws_secretsmanager_secret" "front_frontend_secret" {
-  name = "${terraform.workspace}/front-frontend-secret"
+  name = "${local.account["secrets_prefix"]}/front-frontend-secret"
+}
+
+data "aws_secretsmanager_secret" "admin_frontend_secret" {
+  name = "${local.account["secrets_prefix"]}/admin-frontend-secret"
 }
 
 data "aws_secretsmanager_secret" "oauth2_client_secret" {
-  name = "${terraform.workspace}/oauth2-client-secret"
+  name = "${local.account["secrets_prefix"]}/oauth2-client-secret"
 }
 
 data "aws_secretsmanager_secret" "admin_api_client_secret" {
-  name = "${terraform.workspace}/admin-api-client-secret"
+  name = "${local.account["secrets_prefix"]}/admin-api-client-secret"
 }
 
 data "aws_secretsmanager_secret" "front_api_client_secret" {
-  name = "${terraform.workspace}/front-api-client-secret"
+  name = "${local.account["secrets_prefix"]}/front-api-client-secret"
 }
 
 data "aws_secretsmanager_secret" "google_analytics" {
-  name = "${terraform.workspace}/google-analytics"
+  name = "${local.account["secrets_prefix"]}/google-analytics"
 }
-

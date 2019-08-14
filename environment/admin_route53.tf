@@ -1,6 +1,6 @@
 #TODO: this needed to be in complete-deputy-report.service.gov.uk
 resource "aws_route53_record" "admin" {
-  name    = "${local.admin_prefix}${local.host_suffix}"
+  name    = "${local.account.admin_prefix}${local.host_suffix}"
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
