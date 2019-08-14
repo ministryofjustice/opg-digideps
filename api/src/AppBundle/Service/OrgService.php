@@ -3,8 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -16,9 +18,19 @@ class OrgService
     protected $em;
 
     /**
+     * @var EntityDir\Repository\OrganisationRepository
+     */
+    private $orgRepository;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var OrganisationFactory
+     */
+    private $orgFactory;
 
     /**
      * @var array
@@ -37,18 +49,22 @@ class OrgService
 
     private $debug = false;
 
+
     /**
-     * @param EntityManager   $em
+     * @param EntityManager $em
      * @param LoggerInterface $logger
+     * @param OrganisationFactory $factory
      */
-    public function __construct(EntityManager $em, LoggerInterface $logger)
+    public function __construct(EntityManager $em, LoggerInterface $logger, OrganisationFactory $orgFactory)
     {
         $this->em = $em;
         $this->logger = $logger;
         $this->userRepository = $em->getRepository(EntityDir\User::class);
         $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
         $this->clientRepository = $em->getRepository(EntityDir\Client::class);
+        $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
         $this->log = [];
+        $this->orgFactory = $orgFactory;
     }
 
     /**
@@ -215,11 +231,60 @@ class OrgService
             $this->em->flush($team);
         }
         if ($user instanceof EntityDir\User) {
+            $this->addUserToOrganisation($user);
             $this->em->persist($user);
             $this->em->flush($user);
         }
 
         return $user;
+    }
+
+    /**
+     * @param EntityDir\User $user
+     */
+    private function addUserToOrganisation(EntityDir\User $user)
+    {
+        $organisation = $this->attemptDetermineOrgFromUserEmail($user->getEmail());
+
+        if ($organisation instanceof EntityDir\Organisation) {
+            $organisation->addUser($user);
+            return;
+        }
+
+        $this->createOrganisationFromUser($user);
+    }
+
+    /**
+     * @param $email
+     * @return EntityDir\Organisation|object|null
+     */
+    private function attemptDetermineOrgFromUserEmail($email)
+    {
+        $domain = substr($email, strpos($email, '@') + 1);
+        $organisation = $this->orgRepository->findOneBy(['emailIdentifier' => $domain]);
+
+        return ($organisation instanceof  EntityDir\Organisation) ?
+            $organisation :
+            $this->orgRepository->findOneBy(['emailIdentifier' => $email]);
+    }
+
+    /**
+     * @param EntityDir\User $user
+     * @return EntityDir\Organisation
+     * @throws \Doctrine\ORM\ORMException
+     */
+    private function createOrganisationFromUser(EntityDir\User $user)
+    {
+        $organisation = $this->orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
+        $organisation->addUser($user);
+
+        try {
+            $this->em->persist($organisation);
+        } catch (ORMException $e) {
+            throw new \RuntimeException('Organisation could not be created');
+        }
+
+        return $organisation;
     }
 
     /**

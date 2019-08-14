@@ -2,6 +2,7 @@ imports:
     - { resource: services/assemblers.yml }
     - { resource: services/controllers.yml }
     - { resource: services/event_listeners.yml }
+    - { resource: services/factories.yml }
     - { resource: services/registration.yml }
     - { resource: services/rest_handlers.yml }
     - { resource: services/repositories.yml }
@@ -22,7 +23,7 @@ services:
 
     org_service:
         class: AppBundle\Service\OrgService
-        arguments: [ "@em", "@logger"]
+        arguments: [ "@em", "@logger", '@AppBundle\Factory\OrganisationFactory' ]
 
     user_service:
         class: AppBundle\Service\UserService
