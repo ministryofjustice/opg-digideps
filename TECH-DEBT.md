@@ -9,3 +9,6 @@
 - wkhtmltopdf uses static version
 - file-scanner uses static version
 - remove dependency on semvertag
+- build images concurrently
+- run tests concurrently
+- merge this with docs techdebt
