@@ -23,12 +23,12 @@ resource "aws_service_discovery_service" "wkhtmltopdf" {
 
 resource "aws_iam_role" "wkhtmltopdf" {
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  name               = "wkhtmltopdf.${terraform.workspace}"
+  name               = "wkhtmltopdf.${local.environment}"
   tags               = local.default_tags
 }
 
 resource "aws_ecs_task_definition" "wkhtmltopdf" {
-  family                   = "wkhtmltopdf-${terraform.workspace}"
+  family                   = "wkhtmltopdf-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512

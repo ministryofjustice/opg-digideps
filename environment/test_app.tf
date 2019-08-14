@@ -1,6 +1,6 @@
 resource "aws_ecs_service" "test" {
-  count                   = local.test_enabled ? 1 : 0
-  name                    = "test-${terraform.workspace}"
+  count                   = local.account.test_enabled ? 1 : 0
+  name                    = "test-${local.environment}"
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.reset_database[0].arn
   desired_count           = 0
@@ -21,8 +21,8 @@ resource "aws_ecs_service" "test" {
 }
 
 resource "aws_ecs_task_definition" "test_front" {
-  count                    = local.test_enabled ? 1 : 0
-  family                   = "test-front-${terraform.workspace}"
+  count                    = local.account.test_enabled ? 1 : 0
+  family                   = "test-front-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -34,8 +34,8 @@ resource "aws_ecs_task_definition" "test_front" {
 }
 
 resource "aws_ecs_task_definition" "test_api" {
-  count                    = local.test_enabled ? 1 : 0
-  family                   = "test-api-${terraform.workspace}"
+  count                    = local.account.test_enabled ? 1 : 0
+  family                   = "test-api-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -47,8 +47,8 @@ resource "aws_ecs_task_definition" "test_api" {
 }
 
 resource "aws_ecs_task_definition" "reset_database" {
-  count                    = local.test_enabled ? 1 : 0
-  family                   = "reset-database-${terraform.workspace}"
+  count                    = local.account.test_enabled ? 1 : 0
+  family                   = "reset-database-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
@@ -158,17 +158,17 @@ EOF
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.email_domain}" },
-      { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.email_feedback_address}" },
-      { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.email_report_address}" },
-      { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.email_update_address}" },
+      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.account.email_domain}" },
+      { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.account.email_feedback_address}" },
+      { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
+      { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
       { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },
       { "name": "FRONTEND_ROLE", "value": "front" },
-      { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${terraform.workspace}" },
+      { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
       { "name": "FRONTEND_SESSION_MEMCACHE", "value": "memcachefront" },
       { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
@@ -186,11 +186,11 @@ EOF
       { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
-      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${local.domain_name} *.${terraform.workspace}.internal ~.*" },
+      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${local.account.domain_name} *.${local.environment}.internal ~.*" },
       { "name": "OPG_NGINX_SSL_FORCE_REDIRECT", "value": "1" },
       { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
       { "name": "OPG_SERVICE", "value": "front" },
-      { "name": "OPG_STACKNAME", "value": "${terraform.workspace}" },
+      { "name": "OPG_STACKNAME", "value": "${local.environment}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }

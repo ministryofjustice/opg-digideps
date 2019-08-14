@@ -3,7 +3,7 @@ data "aws_vpc" "vpc" {
     name = "tag:Name"
     values = [join(
       ".",
-      compact([local.vpc_name, local.account_name, local.domain_name]),
+      compact([local.account.vpc_name, local.account.account_name, local.account.domain_name]),
     )]
   }
 }
@@ -20,9 +20,9 @@ data "aws_subnet" "private" {
     name = "tag:Name"
 
     values = [
-      "private-1a.${local.vpc_name}",
-      "private-1b.${local.vpc_name}",
-      "private-1c.${local.vpc_name}",
+      "private-1a.${local.account.vpc_name}",
+      "private-1b.${local.account.vpc_name}",
+      "private-1c.${local.account.vpc_name}",
     ]
   }
 }
@@ -36,9 +36,9 @@ data "aws_subnet" "public" {
     name = "tag:Name"
 
     values = [
-      "public-1a.${local.vpc_name}",
-      "public-1b.${local.vpc_name}",
-      "public-1c.${local.vpc_name}",
+      "public-1a.${local.account.vpc_name}",
+      "public-1b.${local.account.vpc_name}",
+      "public-1c.${local.account.vpc_name}",
     ]
   }
 }

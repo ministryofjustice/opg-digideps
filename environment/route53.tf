@@ -1,9 +1,9 @@
 data "aws_route53_zone" "public" {
-  name = local.domain
+  name = local.account.domain
 }
 
 resource "aws_route53_zone" "internal" {
-  name    = "${terraform.workspace}.internal"
+  name    = "${local.environment}.internal"
   comment = ""
 
   vpc {
