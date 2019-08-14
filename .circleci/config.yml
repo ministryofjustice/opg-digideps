@@ -23,19 +23,19 @@ workflows:
           name: apply environment
           requires: [ apply shared-development ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+          tf_workspace: "${CIRCLE_BRANCH}"
 
       - stabilize:
           name: stabilize environment
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+          tf_workspace: "${CIRCLE_BRANCH}"
 
       - test:
           name: test environment
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+          tf_workspace: "${CIRCLE_BRANCH}"
 
       - cleanup:
           name: approve destroy environment
@@ -47,7 +47,7 @@ workflows:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH//[-_]/}"
+          tf_workspace: "${CIRCLE_BRANCH}"
           tf_command: destroy
 
   master:
@@ -187,9 +187,7 @@ jobs:
           command: terraform init ${TF_TIER}
       - run:
           name: Set workspace
-          command: |
-            export WORKSPACE=<< parameters.tf_workspace >>
-            echo export TF_WORKSPACE=${WORKSPACE,,} >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(./fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Apply
           command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
@@ -212,9 +210,7 @@ jobs:
           command: bundle install
       - run:
           name: Set workspace
-          command: |
-            export WORKSPACE=<< parameters.tf_workspace >>
-            echo export TF_WORKSPACE=${WORKSPACE,,} >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(./fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
@@ -243,9 +239,7 @@ jobs:
           command: bundle install
       - run:
           name: Set workspace
-          command: |
-            export WORKSPACE=<< parameters.tf_workspace >>
-            echo export TF_WORKSPACE=${WORKSPACE,,} >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(./fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Check deployment
           command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
