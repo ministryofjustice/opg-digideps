@@ -23,3 +23,4 @@ php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Controll
 php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Service/
 php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Entity/
 php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/Transformer/
+php vendor/phpunit/phpunit/phpunit -c tests/phpunit.xml tests/AppBundle/v2/
