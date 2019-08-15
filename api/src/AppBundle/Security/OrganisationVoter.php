@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Security;
 class OrganisationVoter extends Voter
 {
     const VIEW = 'view';
+    const EDIT = 'edit';
 
     private $security;
 
@@ -21,7 +22,7 @@ class OrganisationVoter extends Voter
     protected function supports($attribute, $subject)
     {
         // if the attribute isn't one we support, return false
-        if (!in_array($attribute, [self::VIEW])) {
+        if (!in_array($attribute, [self::VIEW, self::EDIT])) {
             return false;
         }
 
@@ -45,13 +46,14 @@ class OrganisationVoter extends Voter
 
         switch ($attribute) {
             case self::VIEW:
-                return $this->canView($organisation, $user);
+            case self::EDIT:
+                return $this->canManage($organisation, $user);
         }
 
         throw new \LogicException('This code should not be reached!');
     }
 
-    private function canView(Organisation $organisation, User $user)
+    private function canManage(Organisation $organisation, User $user)
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
