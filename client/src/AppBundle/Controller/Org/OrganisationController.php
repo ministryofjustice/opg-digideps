@@ -39,7 +39,7 @@ class OrganisationController extends AbstractController
      * @Route("/{id}", name="org_organisation_view")
      * @Template("AppBundle:Org/Organisation:view.html.twig")
      */
-    public function viewAction(Request $request, $id)
+    public function viewAction(Request $request, int $id)
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
@@ -56,7 +56,7 @@ class OrganisationController extends AbstractController
      * @Route("/{id}/add", name="org_organisation_add_member")
      * @Template("AppBundle:Org/Organisation:add.html.twig")
      */
-    public function addAction(Request $request, $id)
+    public function addAction(Request $request, int $id)
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
@@ -109,7 +109,7 @@ class OrganisationController extends AbstractController
             } catch (\Throwable $e) {
                 switch ((int) $e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-team')));
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-organisation')));
                         break;
 
                     default:
@@ -120,6 +120,62 @@ class OrganisationController extends AbstractController
 
         return [
             'organisation' => $organisation,
+            'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("/{orgId}/edit/{userId}", name="org_organisation_edit_member")
+     * @Template("AppBundle:Org/Team:edit.html.twig")
+     */
+    public function editAction(Request $request, int $orgId, int $userId)
+    {
+        try {
+            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            foreach ($organisation->getUsers() as $u) {
+                if ($u->getId() === $userId) {
+                    $user = $u;
+                }
+            }
+        } catch (RestClientException $e) {
+            throw $this->createNotFoundException('Organisation not found');
+        }
+
+        if (!isset($user)) {
+            throw $this->createNotFoundException();
+        }
+
+        if ($this->getUser()->getId() === $user->getId()) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(FormDir\Org\OrganisationMemberType::class, $user);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $user = $form->getData();
+
+            try {
+                $this->getRestClient()->put('user/' . $user->getId(), $user, ['org_team_add'], 'User');
+
+                $request->getSession()->getFlashBag()->add('notice', 'The user has been edited');
+                return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
+            } catch (\Throwable $e) {
+                switch ((int) $e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-organisation')));
+                        break;
+
+                    default:
+                        throw $e;
+                }
+            }
+        }
+
+        return [
+            'organisation' => $organisation,
+            'user' => $user,
             'form' => $form->createView()
         ];
     }

@@ -69,13 +69,13 @@
                 </td>
                 <td class="govuk-table__cell text--right">
                     {% if user.id != app.user.id %}
-                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
+                        <a class="behat-link-edit" href="{{  path('org_organisation_edit_member', {orgId: organisation.id, userId: user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if user.id != app.user.id %}
-                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
+                        <a class="behat-link-delete" href="{{  path('org_organisation_delete_member', {orgId: organisation.id, userId: user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if user.id != app.user.id and not user.active %}
-                        <a class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
+                        <a class="behat-link-send-activation-email" href="{{ path('org_organisation_send_activation_link', {orgId: organisation.id, userId: user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
                     {% endif %}
                 </td>
             </tr>
