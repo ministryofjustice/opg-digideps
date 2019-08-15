@@ -28,6 +28,12 @@ class DeputyDto
     /** @var bool */
     private $active;
 
+    /** @var string */
+    private $jobTitle;
+
+    /** @var string */
+    private $phoneMain;
+
     /** @var array */
     private $clients;
 
@@ -93,6 +99,22 @@ class DeputyDto
     public function isActive(): ?bool
     {
         return $this->active;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJobTitle(): ?string
+    {
+        return $this->jobTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneMain(): ?string
+    {
+        return $this->phoneMain;
     }
 
     /**
@@ -180,6 +202,26 @@ class DeputyDto
     public function setActive(bool $active): DeputyDto
     {
         $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * @param string $jobTitle
+     * @return DeputyDto
+     */
+    public function setJobTitle($jobTitle): DeputyDto
+    {
+        $this->jobTitle = $jobTitle;
+        return $this;
+    }
+
+    /**
+     * @param string $phoneMain
+     * @return DeputyDto
+     */
+    public function setPhoneMain($phoneMain): DeputyDto
+    {
+        $this->phoneMain = $phoneMain;
         return $this;
     }
 
