@@ -187,7 +187,7 @@ jobs:
           command: terraform init ${TF_TIER}
       - run:
           name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Apply
           command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
@@ -210,7 +210,7 @@ jobs:
           command: bundle install
       - run:
           name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
@@ -239,7 +239,7 @@ jobs:
           command: bundle install
       - run:
           name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.awk << parameters.tf_workspace >>) >> $BASH_ENV
+          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
       - run:
           name: Check deployment
           command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
