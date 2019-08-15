@@ -90,7 +90,6 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Organisation id: 27 not found', $responseContent['message']);
     }
 
     /**
@@ -300,7 +299,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function addUserActionReturnsBadRequestOnInvalidOrganisationId()
+    public function addUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
         self::$frameworkBundleClient->request(
             'PUT',
@@ -313,10 +312,9 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Invalid organisation id', $responseContent['message']);
     }
 
     /**
@@ -376,7 +374,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function removeUserActionReturnsBadRequestOnInvalidOrganisationId()
+    public function removeUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
         self::$frameworkBundleClient->request(
             'DELETE',
@@ -389,10 +387,9 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Invalid organisation id', $responseContent['message']);
     }
 
     /**
