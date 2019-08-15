@@ -1,0 +1,88 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "org-organisation" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'viewPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ organisation.name }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('org_dashboard'), text: 'breadcrumbs.dashboard' | trans },
+        { href: url('org_settings'), text: 'breadcrumbs.settings' | trans },
+        { text: organisation.name }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+    <p>{{ 'viewPage.intro' | trans }}</p>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+                    {{ 'viewPage.tableHeading' | trans }}
+                </div>
+                <div class="govuk-grid-column-one-half text--right">
+                    {% if is_granted('add-user') %}
+                        <a href="{{ path('add_team_member') }}" class="behat-link-add">
+                            <strong>
+                                <span class="icon icon-plus"></span>
+                                {{ 'viewPage.addUser' | trans }}
+                            </strong>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </caption>
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">{{ 'viewPage.nameAndJob' | trans }}</th>
+                <th scope="col" class="govuk-table__header">{{ 'viewPage.contactInfo' | trans }}</th>
+                <th scope="col" class="govuk-table__header">
+                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+        {% for user in organisation.users %}
+            <tr class="govuk-table__row" class="behat-region-team-user-{{ user.email | behat_namify }}">
+                <td class="govuk-table__cell">
+                    <strong>{{ user.firstname }} {{ user.lastname }}</strong>
+                    {% if app.user.id == user.id %}
+                        <br/>(Signed in)
+                    {% endif %}
+                    {% if user.jobTitle != '' %}
+                        <br />{{ user.jobTitle }}
+                    {% endif %}
+                </td>
+                <td class="govuk-table__cell">
+                    <strong>{{ 'email' | trans({}, 'common') }}</strong><br>
+                    {{ user.email }}
+                    {% if user.phoneMain != '' %}
+                        <br>
+                        <strong>{{ 'phone' | trans({}, 'common' ) }}</strong><br>
+                        {{ user.phoneMain }}
+                    {% endif %}
+                </td>
+                <td class="govuk-table__cell">
+                    {% if user.id != app.user.id %}
+                        <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
+                    {% endif %}
+                    {% if user.id != app.user.id %}
+                        <a class="behat-link-delete" href="{{  path('delete_team_member', {'id': user.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a><br>
+                    {% endif %}
+                    {% if user.id != app.user.id and not user.active %}
+                        <a class="behat-link-send-activation-email" href="{{ path('team_send_activation_link', {'id': user.id}) }}">{{ 'listPage.resendActivation' | trans }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
