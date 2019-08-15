@@ -20,6 +20,11 @@
             <h2 class="heading-small">{{ 'settings-page.links.client.title' | trans(transOptions) }}</h2>
         </a>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
+    {% elseif hasOrganisations %}
+        <a href="#" class="behat-link-client-show">
+            <h2 class="heading-small">{{ 'settings-page.links.organisation.title' | trans }}</h2>
+        </a>
+        <p class="text text-info">{{ 'settings-page.links.organisation.description' | trans }}</p>
     {% elseif app.user.isDeputyOrg() %}
         {% set transOptions = {} %}
         <a href="{{ path('org_team') }}" class="behat-link-user-accounts">
