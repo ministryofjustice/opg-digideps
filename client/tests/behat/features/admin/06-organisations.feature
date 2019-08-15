@@ -1,11 +1,11 @@
 Feature: Administration of organisations
 
-  @admin
-  Scenario: Navbar works
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see "Organisations" in the "navbar" region
-    When I click on "admin-organisations" in the "navbar" region
-    Then I should be on "/admin/organisations/"
+#   @admin
+#   Scenario: Navbar works
+#     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+#     Then I should see "Organisations" in the "navbar" region
+#     When I click on "admin-organisations" in the "navbar" region
+#     Then I should be on "/admin/organisations/"
 
   @admin
   Scenario: Admin can create organisation
