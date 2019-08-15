@@ -20,6 +20,11 @@ addPage:
     htmlTitle: Settings - Add organisation user
     pageTitle: Add user to organisation
 
+editPage:
+  htmlTitle: Settings - Edit organisation user
+  pageTitle: Edit user account
+  moreThanOneTeamNotification: This user also works on other deputyships. Any changes you make will update their account across all deputyship teams.
+
 form:
     firstname:
         label: First name
