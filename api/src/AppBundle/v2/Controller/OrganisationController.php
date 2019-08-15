@@ -83,13 +83,15 @@ class OrganisationController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('view', organisation)")
      *
      * @param int $id
      * @return JsonResponse
      */
-    public function getByIdAction(int $id): JsonResponse
+    public function getByIdAction(Organisation $organisation): JsonResponse
     {
+        $id = $organisation->getId();
+
         if (null === ($data = $this->repository->findArrayById($id))) {
             return $this->buildNotFoundResponse(sprintf('Organisation id: %d not found', $id));
         }
