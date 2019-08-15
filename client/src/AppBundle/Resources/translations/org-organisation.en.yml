@@ -1,0 +1,16 @@
+breadcrumbs:
+    dashboard: Dashboard
+    settings: Settings
+    index: Organisations
+
+listPage:
+    htmlTitle: Settings - Organisations
+    pageTitle: Select an organisation to view
+
+viewPage:
+    htmlTitle: Settings - Organisations
+    intro: Add and remove user accounts for your organisation
+    tableHeading: List of users
+    addUser: Add user
+    nameAndJob: Name and job
+    contactInfo: Contact info

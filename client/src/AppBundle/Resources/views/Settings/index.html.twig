@@ -21,7 +21,7 @@
         </a>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
     {% elseif hasOrganisations %}
-        <a href="#" class="behat-link-client-show">
+        <a href="{{ path('org_organisation_list') }}">
             <h2 class="heading-small">{{ 'settings-page.links.organisation.title' | trans }}</h2>
         </a>
         <p class="text text-info">{{ 'settings-page.links.organisation.description' | trans }}</p>
