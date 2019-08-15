@@ -16,6 +16,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ClientController
 {
+    use ControllerTrait;
+
     /** @var ClientRepository  */
     private $repository;
 
@@ -56,18 +58,5 @@ class ClientController
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
-    }
-
-    /**
-     * @param array $data
-     * @return JsonResponse
-     */
-    private function buildSuccessResponse(array $data)
-    {
-        return new JsonResponse([
-            'success' => true,
-            'data' => $data,
-            'message' => ''
-        ]);
     }
 }

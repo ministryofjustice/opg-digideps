@@ -33,3 +33,6 @@ services:
     class: AppBundle\v2\Assembler\DeputyAssembler
     arguments:
       - '@AppBundle\v2\Assembler\ClientAssembler'
+
+  AppBundle\v2\Assembler\OrganisationAssembler:
+    class: AppBundle\v2\Assembler\OrganisationAssembler

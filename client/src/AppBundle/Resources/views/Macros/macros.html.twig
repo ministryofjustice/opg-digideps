@@ -103,6 +103,22 @@
     </div>
 {% endmacro %}
 
+{% macro breadcrumbsArray(items) %}
+    <div class="govuk-breadcrumbs">
+        <ol class="govuk-breadcrumbs__list">
+            {% for item in items %}
+                <li class="govuk-breadcrumbs__list-item" {% if loop.last %}aria-current="page"{% endif %}>
+                    {% if item.href is defined %}
+                        <a class="govuk-breadcrumbs__link" href="{{ item.href }}">{{ item.text  }}</a>
+                    {% else %}
+                        {{ item.text }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endmacro %}
+
 {% macro linkBackStep(backLink,stepPage) %}
     {% if backLink %}
         <a href="{{ backLink }}" class="govuk-back-link behat-link-step-back">{{ stepPage }}</a>

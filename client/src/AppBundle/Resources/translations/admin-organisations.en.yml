@@ -1,0 +1,48 @@
+indexPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Admin
+    supportTitle: Organisations
+    noOrganisations: No organisations have been added yet
+    addOrganisation: Add a new organisation
+    summary:
+        name: Name
+        emailIdentifier: Email identifier
+        active: Active
+
+addPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Add a new organisation
+    supportTitle: Organisations
+
+editPage:
+    htmlTitle: Administration - Organisations
+    pageTitle: Edit organisation
+    supportTitle: Organisations
+
+deletePage:
+    htmlTitle: Administration - Remove organisation
+    subject: organisation
+    summary:
+        name: Name
+        emailIdentifier: Email identifier
+        active:
+            label: Active?
+            yes: Yes
+            no: No
+
+form:
+    name:
+        label: Organisation name
+    emailIdentifierType:
+        label: Email identifier
+        hint: How can we identify deputies who are part of this organisation?
+        domainHint: e.g. on gmail.com
+    emailDomain:
+        label: Email domain
+    emailAddress:
+        label: Email address
+    isActivated:
+        label: Should the organisation be active?
+        hint: Deactivating an organisation will disable access permission for all members
+    save:
+        label: Save organisation

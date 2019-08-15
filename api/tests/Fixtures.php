@@ -320,6 +320,22 @@ class Fixtures
         return $note;
     }
 
+    /**
+     * @param $amount
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createOrganisations($amount)
+    {
+        for ($i = 1; $i <= $amount; $i++) {
+            $org = new EntityDir\Organisation();
+            $org->setName(sprintf('Org %d', $i));
+            $org->setEmailIdentifier(sprintf('org_email_%d', $i));
+            $org->setIsActivated(true);
+
+            $this->em->persist($org);
+        }
+    }
+
     public function flush()
     {
         $args = func_get_args();

@@ -1,0 +1,69 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% trans_default_domain "admin-organisations" %}
+{% set page = 'indexPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block supportTitleBottom %}
+    <span class="govuk-caption-xl">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('admin_homepage'), text: 'Admin' },
+        { text: 'Organisations' }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <a href="{{ url('admin_organisation_add') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
+        {{ (page ~ '.addOrganisation') | trans }}
+    </a>
+
+    <table class="govuk-table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.summary.name') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.summary.emailIdentifier') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.summary.active') | trans }}</th>
+                <th class="govuk-table__header" scope="col">
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+            {% for organisation in organisations %}
+                <tr class="govuk-table__row behat-region-org-{{ organisation.name | behat_namify }}">
+                    <td class="govuk-table__cell">{{ organisation.name }}</td>
+                    <td class="govuk-table__cell">
+                        {{ organisation.emailIdentifierDisplay }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {% if organisation.isActivated %}
+                            <span class="govuk-tag">Active</span>
+                        {% endif %}
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a class="govuk-link behat-link-edit" href="{{ url('admin_organisation_edit', { id: organisation.id }) }}">
+                            {{ 'edit' | trans({}, 'common') }}
+                        </a>
+                        <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ url('admin_organisation_delete', { id: organisation.id }) }}">
+                            {{ 'remove' | trans({}, 'common') }}
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="govuk-table__row">
+                    <td colspan="4" class="govuk-table__cell text--center">
+                        {{ (page ~ '.noOrganisations') | trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

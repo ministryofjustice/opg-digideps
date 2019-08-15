@@ -752,7 +752,24 @@ checklist:
     notBlank: Please choose an option
   deputyChargeAllowedByCourt:
     notBlank: Please choose an option
-    
+
+organisation:
+  name:
+    notBlank: Please enter an organisation name
+    maxLength: Organisation name can't be longer than {{ limit }} characters
+  emailIdentifierType:
+    notBlank: Please select an email identifier
+  emailAddress:
+    notBlank: Please enter an email address
+    maxLength: Email address can't be longer than {{ limit }} characters
+    invalid: Please enter a valid email address
+  emailDomain:
+    notBlank: Please enter an email domain
+    maxLength: Email domain can't be longer than {{ limit }} characters
+    invalid: Please enter a valid email domain
+  isActivated:
+    notBlank: Please select whether the organisation should be activated
+
 #       COMMON ELEMENTS
 # ====================================================================================================
 

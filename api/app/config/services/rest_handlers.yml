@@ -10,3 +10,10 @@ services:
   rest_handler.report.pa_fees_expenses_report_update_handler:
     class: AppBundle\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
     arguments: [ "@em" ]
+
+  AppBundle\Service\RestHandler\OrganisationRestHandler:
+    class: AppBundle\Service\RestHandler\OrganisationRestHandler
+    arguments:
+      - '@em'
+      - '@validator'
+      - '@AppBundle\Entity\Repository\OrganisationRepository'
