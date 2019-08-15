@@ -85,6 +85,15 @@ class User implements UserInterface
     private $teams;
 
     /**
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Organisation>")
+     * @JMS\Groups({"user-organisations"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
+     *
+     * @var ArrayCollection
+     */
+    private $organisations;
+
+    /**
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({ "user", "report-submitted-by", "user-name", "user-list"})
@@ -656,6 +665,14 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Organisation[]
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
     }
 
     /**
