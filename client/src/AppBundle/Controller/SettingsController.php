@@ -21,7 +21,11 @@ class SettingsController extends AbstractController
     public function indexAction()
     {
         if ($this->getUser()->isDeputyOrg()) {
-            return [];
+            $user = $this->getUserWithData(['user-organisations', 'organisation']);
+
+            return [
+                'hasOrganisations' => count($user->getOrganisations()),
+            ];
         };
 
         // redirect if user has missing details or is on wrong page
