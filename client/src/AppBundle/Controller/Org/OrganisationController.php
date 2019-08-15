@@ -225,4 +225,38 @@ class OrganisationController extends AbstractController
             'backLink' => $this->generateUrl('org_organisation_view', ['id' => $organisation->getId()]),
         ];
     }
+
+    /**
+     * @Route("{orgId}/send-activation-link/{userId}", name="org_organisation_send_activation_link")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function resendActivationEmailAction(Request $request, int $orgId, int $userId)
+    {
+        try {
+            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            $user = $organisation->getUserById($userId);
+        } catch (RestClientException $e) {
+            throw $this->createNotFoundException('Organisation not found');
+        }
+
+        try {
+            /* @var $user EntityDir\User */
+            $user = $this->getRestClient()->userRecreateToken($user->getEmail(), 'pass-reset');
+            $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+            $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+            $request->getSession()->getFlashBag()->add(
+                'notice',
+                'An activation email has been sent to the user.'
+            );
+        } catch (\Throwable $e) {
+            $this->get('logger')->debug($e->getMessage());
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                'An activation email could not be sent.'
+            );
+        }
+
+        return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
+    }
 }
