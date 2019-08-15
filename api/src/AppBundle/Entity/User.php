@@ -272,6 +272,11 @@ class User implements UserInterface
     private $coDeputyClientConfirmed;
 
     /**
+     * @var Organisation
+     */
+    private $organisation;
+
+    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -1279,5 +1284,23 @@ class User implements UserInterface
                 $this->setRoleName(User::ROLE_PA_TEAM_MEMBER);
             }
         }
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function setOrganisation(Organisation $organisation)
+    {
+        $this->organisation = $organisation;
+        return $this;
     }
 }

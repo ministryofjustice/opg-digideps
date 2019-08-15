@@ -231,41 +231,15 @@ class OrgService
             $this->em->flush($team);
         }
         if ($user instanceof EntityDir\User) {
-            $this->addUserToOrganisation($user);
+            if (false === $this->orgRepository->organisationExists($user->getEmail())) {
+                $this->createOrganisationFromUser($user);
+            }
+
             $this->em->persist($user);
             $this->em->flush($user);
         }
 
         return $user;
-    }
-
-    /**
-     * @param EntityDir\User $user
-     */
-    private function addUserToOrganisation(EntityDir\User $user)
-    {
-        $organisation = $this->attemptDetermineOrgFromUserEmail($user->getEmail());
-
-        if ($organisation instanceof EntityDir\Organisation) {
-            $organisation->addUser($user);
-            return;
-        }
-
-        $this->createOrganisationFromUser($user);
-    }
-
-    /**
-     * @param $email
-     * @return EntityDir\Organisation|object|null
-     */
-    private function attemptDetermineOrgFromUserEmail($email)
-    {
-        $domain = substr($email, strpos($email, '@') + 1);
-        $organisation = $this->orgRepository->findOneBy(['emailIdentifier' => $domain]);
-
-        return ($organisation instanceof  EntityDir\Organisation) ?
-            $organisation :
-            $this->orgRepository->findOneBy(['emailIdentifier' => $email]);
     }
 
     /**
@@ -277,12 +251,7 @@ class OrgService
     {
         $organisation = $this->orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
         $organisation->addUser($user);
-
-        try {
-            $this->em->persist($organisation);
-        } catch (ORMException $e) {
-            throw new \RuntimeException('Organisation could not be created');
-        }
+        $this->em->persist($organisation);
 
         return $organisation;
     }
