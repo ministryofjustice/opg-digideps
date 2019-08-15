@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestInputOuputFormatter
 {
@@ -179,6 +180,9 @@ class RestInputOuputFormatter
         }
         if ($e instanceof AccessDeniedHttpException) {
             $code = 403;
+        }
+        if ($e instanceof NotFoundHttpException) {
+            $code = 404;
         }
 
         //simple timeout
