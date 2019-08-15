@@ -53,7 +53,7 @@ class OrganisationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/add", name="org_organisation_add_member")
+     * @Route("/{id}/add-user", name="org_organisation_add_member")
      * @Template("AppBundle:Org/Organisation:add.html.twig")
      */
     public function addAction(Request $request, int $id)
@@ -132,16 +132,12 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
-            foreach ($organisation->getUsers() as $u) {
-                if ($u->getId() === $userId) {
-                    $user = $u;
-                }
-            }
+            $user = $organisation->getUserById($userId);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }
 
-        if (!isset($user)) {
+        if (!($user instanceof EntityDir\User)) {
             throw $this->createNotFoundException();
         }
 
@@ -177,6 +173,56 @@ class OrganisationController extends AbstractController
             'organisation' => $organisation,
             'user' => $user,
             'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * @Route("/{orgId}/delete-user/{userId}", name="org_organisation_delete_member")
+     * @Template("AppBundle:Common:confirmDelete.html.twig")
+     */
+    public function deleteConfirmAction(Request $request, int $orgId, int $userId)
+    {
+        try {
+            $organisation = $this->getRestClient()->get('v2/organisation/' . $orgId, 'Organisation');
+            $user = $organisation->getUserById($userId);
+        } catch (RestClientException $e) {
+            throw $this->createNotFoundException('Organisation not found');
+        }
+
+        if (!($user instanceof EntityDir\User)) {
+            throw $this->createNotFoundException();
+        }
+
+        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            try {
+                $this->getRestClient()->delete('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+
+                $request->getSession()->getFlashBag()->add('notice', 'User account removed from organisation');
+            } catch (\Throwable $e) {
+                $this->get('logger')->debug($e->getMessage());
+
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        'User could not be removed'
+                    );
+                }
+            }
+
+            return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
+        }
+
+        return [
+            'translationDomain' => 'org-organisation',
+            'form' => $form->createView(),
+            'summary' => [
+                ['label' => 'deletePage.summary.fullName', 'value' => $user->getFullName()],
+                ['label' => 'deletePage.summary.email', 'value' => $user->getEmail()],
+            ],
+            'backLink' => $this->generateUrl('org_organisation_view', ['id' => $organisation->getId()]),
         ];
     }
 }

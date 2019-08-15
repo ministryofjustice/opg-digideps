@@ -25,6 +25,13 @@ editPage:
   pageTitle: Edit user account
   moreThanOneTeamNotification: This user also works on other deputyships. Any changes you make will update their account across all deputyship teams.
 
+deletePage:
+  htmlTitle: Settings - Remove organisation user
+  subject: user from this organisation
+  summary:
+    fullName: Name
+    email: Email address
+
 form:
     firstname:
         label: First name
