@@ -65,7 +65,7 @@ locals {
     "94.30.9.148/32",
   ]
   environment     = lower(terraform.workspace)
-  account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
+  account         = lookup(var.accounts, local.environment, var.accounts["default"])
   host_suffix     = local.account["host_suffix_enabled"] ? local.environment : ""
   front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist

@@ -38,10 +38,10 @@ composer install
 ```
 It will ask you to set parameters. Set database host to postgres.production02.internal, and add database credentials for production database. Leave the others as default (just press enter)
 
-### Clone the API repo
+### Clone the repo
 
 ```bash
-git clone https://github.com/ministryofjustice/opg-digi-deps-api.git
+git clone https://github.com/ministryofjustice/opg-digideps.git
 ```
 
 ### Connect to database
