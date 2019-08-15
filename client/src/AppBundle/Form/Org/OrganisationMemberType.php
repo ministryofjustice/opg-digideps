@@ -1,0 +1,41 @@
+<?php
+
+namespace AppBundle\Form\Org;
+
+use AppBundle\Entity\Organisation;
+use AppBundle\Entity\User;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type as FormTypes;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class OrganisationMemberType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $targetUser   = $options['targetUser'];
+
+        $builder
+            ->add('firstname', FormTypes\TextType::class, ['required' => true])
+            ->add('lastname', FormTypes\TextType::class, ['required' => true])
+            ->add('email', FormTypes\TextType::class, ['required' => true])
+            ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
+            ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)]);
+
+        $builder->add('save', FormTypes\SubmitType::class);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'org-organisation',
+            'data_class'         => User::class,
+            'targetUser'         => null
+        ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'organisation_member';
+    }
+}

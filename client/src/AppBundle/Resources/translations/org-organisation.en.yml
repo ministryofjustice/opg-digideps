@@ -6,6 +6,7 @@ breadcrumbs:
 listPage:
     htmlTitle: Settings - Organisations
     pageTitle: Select an organisation to view
+    resendActivation: Resend activation email
 
 viewPage:
     htmlTitle: Settings - Organisations
@@ -14,3 +15,22 @@ viewPage:
     addUser: Add user
     nameAndJob: Name and job
     contactInfo: Contact info
+
+addPage:
+    htmlTitle: Settings - Add organisation user
+    pageTitle: Add user to organisation
+
+form:
+    firstname:
+        label: First name
+    lastname:
+        label: Last name
+    email:
+        label: Email
+        existingError: There's a problem with your email address. Please contact our helpline.
+    jobTitle:
+        label: Job title (optional)
+    phoneMain:
+        label: Phone (optional)
+    save:
+        label: Save

@@ -10,8 +10,8 @@
 
 {% block breadcrumbs %}
     {{ macros.breadcrumbsArray([
-        { href: url('org_dashboard'), text: 'breadcrumbs.dashboard' | trans },
-        { href: url('org_settings'), text: 'breadcrumbs.settings' | trans },
+        { href: path('org_dashboard'), text: 'breadcrumbs.dashboard' | trans },
+        { href: path('org_settings'), text: 'breadcrumbs.settings' | trans },
         { text: organisation.name }
     ]) }}
 {% endblock %}
@@ -26,14 +26,12 @@
                     {{ 'viewPage.tableHeading' | trans }}
                 </div>
                 <div class="govuk-grid-column-one-half text--right">
-                    {% if is_granted('add-user') %}
-                        <a href="{{ path('add_team_member') }}" class="behat-link-add">
-                            <strong>
-                                <span class="icon icon-plus"></span>
-                                {{ 'viewPage.addUser' | trans }}
-                            </strong>
-                        </a>
-                    {% endif %}
+                    <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
+                        <strong>
+                            <span class="icon icon-plus"></span>
+                            {{ 'viewPage.addUser' | trans }}
+                        </strong>
+                    </a>
                 </div>
             </div>
         </caption>
@@ -69,7 +67,7 @@
                         {{ user.phoneMain }}
                     {% endif %}
                 </td>
-                <td class="govuk-table__cell">
+                <td class="govuk-table__cell text--right">
                     {% if user.id != app.user.id %}
                         <a class="behat-link-edit" href="{{  path('edit_team_member', {'id': user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
