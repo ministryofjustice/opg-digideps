@@ -36,7 +36,7 @@ settings-page:
       admin-description: Add, edit and remove user accounts for your team members
     organisation:
       title: User accounts
-      description: View and edit organisation members
+      description: View and edit members of your organisation
 
 profile-page:
   fullName: Full name
