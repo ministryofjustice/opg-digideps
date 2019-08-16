@@ -25,13 +25,16 @@ class DeputyDto
     /** @var bool */
     private $ndrEnabled;
 
+    /** @var bool */
+    private $active;
+
     /** @var array */
     private $clients;
 
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -39,7 +42,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -47,7 +50,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -55,7 +58,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -63,7 +66,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getRoleName()
+    public function getRoleName(): ?string
     {
         return $this->roleName;
     }
@@ -71,7 +74,7 @@ class DeputyDto
     /**
      * @return string
      */
-    public function getAddressPostcode()
+    public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
     }
@@ -79,15 +82,23 @@ class DeputyDto
     /**
      * @return bool
      */
-    public function getNdrEnabled()
+    public function getNdrEnabled(): ?bool
     {
         return $this->ndrEnabled;
     }
 
     /**
+     * @return bool
+     */
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    /**
      * @return array
      */
-    public function getClients()
+    public function getClients(): ?array
     {
         return $this->clients;
     }
@@ -96,7 +107,7 @@ class DeputyDto
      * @param int $id
      * @return DeputyDto
      */
-    public function setId($id)
+    public function setId($id): DeputyDto
     {
         $this->id = $id;
         return $this;
@@ -106,7 +117,7 @@ class DeputyDto
      * @param string $firstName
      * @return DeputyDto
      */
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): DeputyDto
     {
         $this->firstName = $firstName;
         return $this;
@@ -116,7 +127,7 @@ class DeputyDto
      * @param string $lastName
      * @return DeputyDto
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName): DeputyDto
     {
         $this->lastName = $lastName;
         return $this;
@@ -126,7 +137,7 @@ class DeputyDto
      * @param string $email
      * @return DeputyDto
      */
-    public function setEmail($email)
+    public function setEmail($email): DeputyDto
     {
         $this->email = strtolower($email);
         return $this;
@@ -136,7 +147,7 @@ class DeputyDto
      * @param string $roleName
      * @return DeputyDto
      */
-    public function setRoleName($roleName)
+    public function setRoleName($roleName): DeputyDto
     {
         $this->roleName = $roleName;
         return $this;
@@ -146,7 +157,7 @@ class DeputyDto
      * @param string $addressPostcode
      * @return DeputyDto
      */
-    public function setAddressPostcode($addressPostcode)
+    public function setAddressPostcode($addressPostcode): DeputyDto
     {
         $this->addressPostcode = $addressPostcode;
         return $this;
@@ -156,9 +167,19 @@ class DeputyDto
      * @param bool $ndrEnabled
      * @return DeputyDto
      */
-    public function setNdrEnabled($ndrEnabled)
+    public function setNdrEnabled($ndrEnabled): DeputyDto
     {
         $this->ndrEnabled = $ndrEnabled;
+        return $this;
+    }
+
+    /**
+     * @param bool $active
+     * @return DeputyDto
+     */
+    public function setActive(bool $active): DeputyDto
+    {
+        $this->active = $active;
         return $this;
     }
 
@@ -166,7 +187,7 @@ class DeputyDto
      * @param array $clients
      * @return DeputyDto
      */
-    public function setClients(array $clients)
+    public function setClients(array $clients): DeputyDto
     {
         $this->clients = $clients;
         return $this;

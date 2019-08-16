@@ -3,6 +3,8 @@
 namespace Tests;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Organisation;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -334,6 +336,20 @@ class Fixtures
 
             $this->em->persist($org);
         }
+    }
+
+    /**
+     * @param $userId
+     * @param $orgId
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function addUserToOrganisation($userId, $orgId)
+    {
+        $org = $this->em->getRepository(Organisation::class)->find($orgId);
+        $user = $this->em->getRepository(User::class)->find($userId);
+
+        $org->addUser($user);
+        $this->em->persist($org);
     }
 
     public function flush()

@@ -270,4 +270,150 @@ class OrganisationControllerTest extends AbstractTestController
 
         $this->assertNull($organisation);
     }
+
+    /**
+     * @test
+     */
+    public function addUserActionAddsUserToOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'PUT',
+            '/v2/organisation/1/user/3',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+
+        $organisation = self::$em
+            ->getRepository(Organisation::class)
+            ->findOneBy(['id' => 1]);
+
+        $this->assertInstanceOf(Organisation::class, $organisation);
+        $this->assertEquals(1, count($organisation->getUsers()));
+        $this->assertEquals(3, $organisation->getUsers()[0]->getId());
+    }
+
+    /**
+     * @test
+     */
+    public function addUserActionReturnsBadRequestOnInvalidOrganisationId()
+    {
+        self::$frameworkBundleClient->request(
+            'PUT',
+            '/v2/organisation/9004/user/3',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $responseContent = json_decode($response->getContent(), true);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertFalse($responseContent['success']);
+        $this->assertEquals('Invalid organisation id', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function addUserActionReturnsBadRequestOnInvalidUserId()
+    {
+        self::$frameworkBundleClient->request(
+            'PUT',
+            '/v2/organisation/1/user/9003',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $responseContent = json_decode($response->getContent(), true);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertFalse($responseContent['success']);
+        $this->assertEquals('Invalid user id', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function removeUserActionRemovesUserFromOrganisation()
+    {
+        self::fixtures()->addUserToOrganisation(5, 3);
+        self::fixtures()->flush()->clear();
+
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/3/user/5',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $responseContent = json_decode($response->getContent(), true);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertTrue($responseContent['success']);
+        $this->assertEquals('User removed', $responseContent['message']);
+
+        $organisation = self::$em
+            ->getRepository(Organisation::class)
+            ->findOneBy(['id' => 3]);
+
+        $this->assertInstanceOf(Organisation::class, $organisation);
+        $this->assertTrue($organisation->getUsers()->isEmpty());
+    }
+
+    /**
+     * @test
+     */
+    public function removeUserActionReturnsBadRequestOnInvalidOrganisationId()
+    {
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/9001/user/3',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $responseContent = json_decode($response->getContent(), true);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertFalse($responseContent['success']);
+        $this->assertEquals('Invalid organisation id', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function removeUserActionReturnsBadRequestOnInvalidUserId()
+    {
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/1/user/9003',
+            [],
+            [],
+            $this->headers
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $responseContent = json_decode($response->getContent(), true);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
+        $this->assertFalse($responseContent['success']);
+        $this->assertEquals('Invalid user id', $responseContent['message']);
+    }
 }

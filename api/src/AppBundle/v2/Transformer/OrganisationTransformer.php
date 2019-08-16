@@ -2,21 +2,61 @@
 
 namespace AppBundle\v2\Transformer;
 
+use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\OrganisationDto;
 
 class OrganisationTransformer
 {
+    /** @var DeputyTransformer */
+    private $deputyTransformer;
+
+    /**
+     * @param DeputyTransformer $deputyTransformer
+     */
+    public function __construct(DeputyTransformer $deputyTransformer)
+    {
+        $this->deputyTransformer = $deputyTransformer;
+    }
+
     /**
      * @param OrganisationDto $dto
+     * @param array $exclude
      * @return array
      */
-    public function transform(OrganisationDto $dto)
+    public function transform(OrganisationDto $dto, array $exclude = []): array
     {
-        return [
+        $data = [
             'id' => $dto->getId(),
             'name' => $dto->getName(),
             'email_identifier' => $dto->getEmailIdentifier(),
             'is_activated' => $dto->isActivated()
         ];
+
+        if (!in_array('users', $exclude)) {
+            $data['users'] = $this->transformUsers($dto->getUsers());
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $users
+     * @return array
+     */
+    private function transformUsers(array $users): array
+    {
+        if (empty($users)) {
+            return [];
+        }
+
+        $transformed = [];
+
+        foreach ($users as $user) {
+            if ($user instanceof DeputyDto) {
+                $transformed[] = $this->deputyTransformer->transform($user, ['clients']);
+            }
+        }
+
+        return $transformed;
     }
 }
