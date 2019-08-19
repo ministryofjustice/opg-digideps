@@ -17,7 +17,7 @@ class Organisation
     /**
      * @var int
      *
-     * @JMS\Groups({"user-organisations"})
+     * @JMS\Groups({"user-organisations", "client-organisations"})
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -29,7 +29,7 @@ class Organisation
     /**
      * @var string
      *
-     * @JMS\Groups({"user-organisations"})
+     * @JMS\Groups({"user-organisations", "client-organisations"})
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
@@ -62,9 +62,17 @@ class Organisation
      */
     private $users;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Client", inversedBy="organisations")
+     */
+    private $clients;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->clients = new ArrayCollection();
     }
 
     /**
@@ -171,6 +179,37 @@ class Organisation
     public function removeUser(User $user): Organisation
     {
         $this->users->removeElement($user);
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    /**
+     * @param Client $client
+     * @return Organisation
+     */
+    public function addClient(Client $client): Organisation
+    {
+        if (!$this->clients->contains($client)) {
+            $this->clients->add($client);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Client $client
+     * @return Organisation
+     */
+    public function removeClient(Client $client): Organisation
+    {
+        $this->clients->removeElement($client);
         return $this;
     }
 }

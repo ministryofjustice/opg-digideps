@@ -47,6 +47,11 @@ class OrgService
      */
     protected $warnings = [];
 
+    /**
+     * @var EntityDir\Organisation
+     */
+    private $currentOrganisation;
+
     private $debug = false;
 
 
@@ -231,8 +236,10 @@ class OrgService
             $this->em->flush($team);
         }
         if ($user instanceof EntityDir\User) {
-            if (false === $this->orgRepository->organisationExists($user->getEmail())) {
-                $this->createOrganisationFromUser($user);
+            $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($user->getEmail());
+
+            if (null === $this->currentOrganisation) {
+                $this->currentOrganisation = $this->createOrganisationFromUser($user);
             }
 
             $this->em->persist($user);
@@ -323,9 +330,10 @@ class OrgService
         // Add client to named user (will be done later anyway)
         $client->addUser($userOrgNamed);
 
+        $this->attachClientToOrganisation($client);
+
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
-
         $teams = $userOrgNamed->getTeams();
         $depCount = 0;
         foreach ($teams as $team) {
@@ -476,5 +484,15 @@ class OrgService
         if ($this->debug) {
             $this->logger->warning(__CLASS__ . ':' . $message);
         }
+    }
+
+    /**
+     * @param EntityDir\Client $client
+     */
+    private function attachClientToOrganisation(EntityDir\Client $client): void
+    {
+        $this->currentOrganisation->addClient($client);
+        $client->addOrganisation($this->currentOrganisation);
+        $this->currentOrganisation = null;
     }
 }

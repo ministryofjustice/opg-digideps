@@ -274,7 +274,7 @@ class User implements UserInterface
     /**
      * @var ArrayCollection
      *
-     *  @JMS\Groups({"user-organisations"})
+     * @JMS\Groups({"user-organisations"})
      *
      * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="users")
      */
@@ -288,6 +288,7 @@ class User implements UserInterface
         $this->clients = new ArrayCollection();
         $this->password = '';
         $this->teams = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
         $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
 
