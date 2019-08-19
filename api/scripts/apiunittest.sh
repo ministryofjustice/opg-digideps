@@ -1,4 +1,10 @@
 #!/bin/bash
+
+export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
+export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
+export PGDATABASE=${API_DATABASE_NAME:=digideps_unit_test}
+export PGUSER=${API_DATABASE_USERNAME:=api}
+
 # Run each folder of unit tests individually. If we were to run them all
 # individually it would cause a memory leak.
 php bin/phpunit -c tests tests/AppBundle/Controller/
