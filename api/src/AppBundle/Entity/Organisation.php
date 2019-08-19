@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,6 +17,8 @@ class Organisation
     /**
      * @var int
      *
+     * @JMS\Groups({"user-organisations"})
+     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -26,6 +29,8 @@ class Organisation
     /**
      * @var string
      *
+     * @JMS\Groups({"user-organisations"})
+     *
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
      */
@@ -33,6 +38,8 @@ class Organisation
 
     /**
      * @var string
+     *
+     * @JMS\Groups({"user-organisations"})
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
@@ -42,6 +49,8 @@ class Organisation
     /**
      * @var bool
      *
+     * @JMS\Groups({"user-organisations"})
+     *
      * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
     private $isActivated;
@@ -49,7 +58,7 @@ class Organisation
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
      */
     private $users;
 

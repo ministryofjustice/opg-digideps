@@ -60,7 +60,7 @@ class MigrateUsersIntoOrgsCommand extends ContainerAwareCommand
     private function attachUserToOrganisation(Organisation $organisation, User $user): void
     {
         $organisation->addUser($user);
-        $user->setOrganisation($organisation);
+        $user->addOrganisation($organisation);
     }
 
     /**
