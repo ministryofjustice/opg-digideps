@@ -39,7 +39,11 @@
         <tbody class="govuk-table__body">
             {% for organisation in organisations %}
                 <tr class="govuk-table__row behat-region-org-{{ organisation.name | behat_namify }}">
-                    <td class="govuk-table__cell">{{ organisation.name }}</td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="{{ url('admin_organisation_view', { id: organisation.id }) }}">
+                            {{ organisation.name }}
+                        </a>
+                    </td>
                     <td class="govuk-table__cell">
                         {{ organisation.emailIdentifierDisplay }}
                     </td>

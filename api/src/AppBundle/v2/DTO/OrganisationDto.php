@@ -16,6 +16,9 @@ class OrganisationDto
     /** @var bool */
     private $isActivated;
 
+    /** @var array */
+    private $users;
+
     /**
      * @return int
      */
@@ -85,6 +88,24 @@ class OrganisationDto
     public function setIsActivated(bool $isActivated): OrganisationDto
     {
         $this->isActivated = $isActivated;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param array $users
+     * @return OrganisationDto
+     */
+    public function setUsers(array $users): OrganisationDto
+    {
+        $this->users = $users;
         return $this;
     }
 }
