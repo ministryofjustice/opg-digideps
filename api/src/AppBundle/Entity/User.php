@@ -87,6 +87,7 @@ class User implements UserInterface
     /**
      * @JMS\Type("ArrayCollection<AppBundle\Entity\Organisation>")
      * @JMS\Groups({"user-organisations"})
+     * @JMS\Accessor(getter="getOrganisations")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
@@ -288,6 +289,7 @@ class User implements UserInterface
         $this->clients = new ArrayCollection();
         $this->password = '';
         $this->teams = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
         $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
 
@@ -672,7 +674,9 @@ class User implements UserInterface
      */
     public function getOrganisations()
     {
-        return $this->organisations;
+        return $this->organisations->filter(function ($organisation) {
+            return $organisation->isActivated();
+        });
     }
 
     /**
