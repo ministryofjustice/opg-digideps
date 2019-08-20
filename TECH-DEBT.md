@@ -4,7 +4,6 @@
 - Manage service certificate with terraform
 - Manage service SES config with terraform
 - move preproduction to separate account
-- remove old development environments
 - scheduled scaling for cost saving
 - wkhtmltopdf uses static version
 - file-scanner uses static version
@@ -12,3 +11,5 @@
 - build images concurrently
 - run tests concurrently
 - merge this with docs techdebt
+- makefile deprecated
+- add trufflehog to CI
