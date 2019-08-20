@@ -68,7 +68,7 @@
                     {% endif %}
                 </td>
                 <td class="govuk-table__cell text--right">
-                    {% if user.id != app.user.id %}
+                    {% if user.id != app.user.id and not user.active %}
                         <a class="behat-link-edit" href="{{  path('org_organisation_edit_member', {orgId: organisation.id, userId: user.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a><br>
                     {% endif %}
                     {% if user.id != app.user.id %}
