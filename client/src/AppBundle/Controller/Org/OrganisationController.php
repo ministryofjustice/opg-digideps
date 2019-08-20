@@ -74,14 +74,11 @@ class OrganisationController extends AbstractController
         if ($form->isSubmitted()) {
             $email = $form->getData()->getEmail();
             try {
-                $userInfo = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
+                $user = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
 
-                if ($userInfo->isDeputyProf()) {
-                    $this->getRestClient()->put('team/add-to-team/' . $userInfo->getId(), []);
+                if ($user->getId()) {
+                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
                     return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
-                } else {
-                    $error = new FormError($this->get('translator')->trans('form.email.existingError', [], 'org-organisation'));
-                    $form->get('email')->addError($error);
                 }
             } catch (\Throwable $e) {
 
