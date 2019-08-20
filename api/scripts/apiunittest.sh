@@ -1,5 +1,8 @@
 #!/bin/bash
+# Generate config files so test bootstrap can address the DB
+confd -onetime -backend env
 
+# Export unit test DB config so it can be used in tests
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=digideps_unit_test}
