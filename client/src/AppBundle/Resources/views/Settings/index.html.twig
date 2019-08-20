@@ -16,20 +16,26 @@
 
     {% if 'ROLE_LAY_DEPUTY' == app.user.roleName %}
         {% set transOptions = {'%client%': client.firstname} %}
-        <a href="{{ path('client_show') }}" class="behat-link-client-show">
-            <h2 class="heading-small">{{ 'settings-page.links.client.title' | trans(transOptions) }}</h2>
-        </a>
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('client_show') }}" class="behat-link-client-show">
+                {{ 'settings-page.links.client.title' | trans(transOptions) }}
+            </a>
+        </h2>
         <p class="text text-info">{{ 'settings-page.links.client.description' | trans(transOptions) }}</p>
     {% elseif hasOrganisations %}
-        <a href="{{ path('org_organisation_list') }}">
-            <h2 class="heading-small">{{ 'settings-page.links.organisation.title' | trans }}</h2>
-        </a>
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('org_organisation_list') }}">
+                {{ 'settings-page.links.organisation.title' | trans }}
+            </a>
+        </h2>
         <p class="text text-info">{{ 'settings-page.links.organisation.description' | trans }}</p>
     {% elseif app.user.isDeputyOrg() %}
         {% set transOptions = {} %}
-        <a href="{{ path('org_team') }}" class="behat-link-user-accounts">
-            <h2 class="heading-small">{{ 'settings-page.links.team.title' | trans }}</h2>
-        </a>
+        <h2 class="govuk-heading-m">
+            <a href="{{ path('org_team') }}" class="behat-link-user-accounts">
+                {{ 'settings-page.links.team.title' | trans }}
+            </a>
+        </h2>
         <p class="text text-info">
             {% if app.user.isPaNamedDeputy() or app.user.isPaAdministrator() or
                 app.user.isProfNamedDeputy() or app.user.isProfAdministrator()%}
@@ -40,14 +46,18 @@
         </p>
     {% endif %}
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="behat-link-profile-show">
-        <h2 class="heading-small">{{ 'settings-page.links.profile.title' | trans }}</h2>
-    </a>
+    <h2 class="govuk-heading-m">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_show' : 'user_show') }}" class="behat-link-profile-show">
+            {{ 'settings-page.links.profile.title' | trans }}
+        </a>
+    </h2>
     <p class="text text-info">{{ (app.user.isDeputyOrg() ? 'settings-page.links.profile.pa-description' : 'settings-page.links.profile.description') | trans }}</p>
 
-    <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
-        <h2 class="heading-small">{{ 'settings-page.links.password.title' | trans }}</h2>
-    </a>
+    <h2 class="govuk-heading-m">
+        <a href="{{ path(app.user.isDeputyOrg() ? 'org_profile_password_edit' : 'user_password_edit') }}" class="behat-link-password-edit">
+            {{ 'settings-page.links.password.title' | trans }}
+        </a>
+    </h2>
     <p class="text text-info">{{ 'settings-page.links.password.description' | trans }}</p>
 
 {% endblock %}
