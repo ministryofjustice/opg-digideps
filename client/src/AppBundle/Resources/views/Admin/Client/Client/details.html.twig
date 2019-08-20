@@ -62,6 +62,17 @@
         </dd>
     </div>
     {% endif %}
+    
+    {% if client.organisations is not empty %}
+        {% for org in client.organisations %}
+            <dt class="govuk-summary-list__key">
+                {{ 'orgName' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-discharged-on">
+                {{ org.name }}
+            </dd>
+        {% endfor %}
+    {% endif %}
 </dl>
         
     {# client NDR #}
