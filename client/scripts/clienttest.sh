@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# generate behat.yml
+confd -onetime -backend env
+
 # wait for frontend to come up
 waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure
 
