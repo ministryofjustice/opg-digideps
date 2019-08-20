@@ -3,6 +3,7 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Factory\OrganisationFactory;
 use AppBundle\Service\OrgService;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
@@ -123,7 +124,7 @@ class OrgServiceTest extends WebTestCase
     public function setup()
     {
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
-        $this->pa = new OrgService(self::$em, $logger);
+        $this->pa = new OrgService(self::$em, $logger, new OrganisationFactory([]));
         Fixtures::deleteReportsData(['dd_user', 'client']);
         self::$em->clear();
     }
