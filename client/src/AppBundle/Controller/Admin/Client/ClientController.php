@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,6 +14,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ClientController extends AbstractController
 {
+    /**
+     * @var RestClient
+     */
+    private $restClient;
+
+    public function __construct(RestClient $restClient)
+    {
+        $this->restClient = $restClient;
+    }
+
     /**
      * @Route("/{id}/details", name="admin_client_details", requirements={"id":"\d+"})
      * //TODO define Security group (AD to remove?)
@@ -26,7 +37,7 @@ class ClientController extends AbstractController
      */
     public function detailsAction(Request $request, $id)
     {
-        $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
+        $client = $this->restClient->get('v2/client/' . $id, 'Client');
 
         return [
             'client'   => $client,

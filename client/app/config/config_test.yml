@@ -4,11 +4,38 @@ imports:
 framework:
     test: ~
 
+security:
+    firewalls:
+        secured_area:
+            http_basic: ~
+
 services:
     mail_sender:
         class: AppBundle\Service\Mailer\MailSenderMock
         arguments: [ "@validator", "@snc_redis.default" ]
         calls:
             - [ addSwiftMailer, [ "default", "@mailer.swift_mailers.default"] ]
+
     mailer.transport.smtp.default:
         class: AppBundle\Service\Mailer\Transport\TransportMock
+
+    guzzle_json_http_client:
+        class: AppBundle\Guzzle\MockClient
+        arguments:
+            $config:
+                base_uri: "%api_base_url%"
+                verify: false
+                # force HTTP 1.0 in order to disable HTTP1.1-chunking corrupting JSON decoding
+                version: "1.0"
+                headers:
+                    Content-Type: application/json
+                timeout: 20
+                allow_redirects: false
+
+    rest_client:
+        class:  AppBundle\Service\Client\RestClient
+        arguments: ["@service_container", "@guzzle_json_http_client", "@redis_token_storage", "%api_client_secret%"]
+
+    AppBundle\Controller\Admin\Client\ClientController:
+        arguments:
+            $restClient: '@rest_client'

@@ -48,3 +48,7 @@ services:
     report_section_link_service:
       class: AppBundle\Service\ReportSectionsLinkService
       arguments: [ "@router" ]
+
+    AppBundle\Controller\Admin\Client\ClientController:
+        arguments:
+            $restClient: '@rest_client'
