@@ -1,4 +1,4 @@
-Feature: User-facing organisation management
+Feature: Users can view their organisations
 
   @prof
   Scenario: Without organisation, user cannot access settings pages
