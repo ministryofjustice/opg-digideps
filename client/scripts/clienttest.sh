@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Export DB config so psql CLI can be used
+# generate behat.yml
+confd -onetime -backend env
+
+# export database config so psql CLI can be used
 export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
 export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
 export PGDATABASE=${API_DATABASE_NAME:=api}
