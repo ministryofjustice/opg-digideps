@@ -222,7 +222,7 @@ class Client
      *
      * @var ArrayCollection
      */
-    private $organisationss;
+    private $organisations;
 
     /**
      * @var integer
@@ -965,7 +965,7 @@ class Client
     /**
      * @return ArrayCollection
      */
-    public function getOrganisation(): array
+    public function getOrganisations(): array
     {
         return $this->organisations;
     }
@@ -973,7 +973,7 @@ class Client
     /**
      * @param ArrayCollection $organisations
      */
-    public function setOrganisation(array $organisations): void
+    public function setOrganisations(array $organisations): void
     {
         $this->organisations = $organisations;
     }
