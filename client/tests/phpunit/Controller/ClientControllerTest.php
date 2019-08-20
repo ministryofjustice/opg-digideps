@@ -22,41 +22,10 @@ class ClientControllerTest extends WebTestCase
      */
     public function testOrganisationsAssociatedWithClientAreDisplayed()
     {
-//        $org = new Organisation();
-//        $org->setName('Test Org');
-//
-//        $this->getEntityManager()->persist($org);
-//
-//        $client = new Client();
-//        $client->setId(1);
-//        $client->setCaseNumber('someCaseNumber');
-//        $client->setFirstname('John');
-//        $client->setLastname('Doe');
-//        $client->setTotalReportCount(0);
-//        $client->setOrganisation([$org]);
-//
-//        $this->getEntityManager()->persist($client);
-//        $this->getEntityManager()->flush();
-//
-//        /** @var \Symfony\Component\HttpKernel\Client $client */
-//        $client = $this->getService('test.client');
-//
-//        $crawler = $client->request(
-//            Request::METHOD_GET,
-//            sprintf('/%s/details', $client->getId()),
-//            [],
-//            [],
-//            self::BASIC_AUTH_CREDS
-//        );
-//
-//        print_r($crawler->html());
-
         $kernel = static::bootKernel();
 
         /** @var SymfonyClient $client */
         $client = $kernel->getContainer()->get('test.client');
-
-//        $client = static::createClient();
 
         /** @var MockClient $api */
         $api = $client->getContainer()->get('guzzle_json_http_client');
