@@ -48,7 +48,7 @@
 
         <tbody class="govuk-table__body">
         {% for user in organisation.users %}
-            <tr class="govuk-table__row" class="behat-region-team-user-{{ user.email | behat_namify }}">
+            <tr class="govuk-table__row behat-region-team-user-{{ user.email | behat_namify }}">
                 <td class="govuk-table__cell">
                     <strong>{{ user.firstname }} {{ user.lastname }}</strong>
                     {% if app.user.id == user.id %}
