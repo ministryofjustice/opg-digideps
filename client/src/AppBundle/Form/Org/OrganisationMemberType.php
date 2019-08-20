@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints;
 
 class OrganisationMemberType extends AbstractType
 {
@@ -16,8 +17,18 @@ class OrganisationMemberType extends AbstractType
         $targetUser   = $options['targetUser'];
 
         $builder
-            ->add('firstname', FormTypes\TextType::class, ['required' => true])
-            ->add('lastname', FormTypes\TextType::class, ['required' => true])
+            ->add('firstname', FormTypes\TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'user.firstname.notBlankOtherUser']),
+                ]
+            ])
+            ->add('lastname', FormTypes\TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Constraints\NotBlank(['message' => 'user.lastname.notBlankOtherUser']),
+                ]
+            ])
             ->add('email', FormTypes\TextType::class, ['required' => true])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)]);
