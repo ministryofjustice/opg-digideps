@@ -262,7 +262,7 @@ jobs:
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
           name: Bump version
-          command: semvertag bump patch << parameters.semver_stage >> >> VERSION
+          command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
       - persist_to_workspace:
           root: .
           paths:
@@ -283,14 +283,8 @@ jobs:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
-          name: Build api image
-          command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
+          name: Build images
+          command: docker-compose -f docker-compose.ci.yml build --parallel
       - run:
-          name: Build client image
-          command: docker build -t ${AWS_REGISTRY}/digideps/client:${VERSION} client
-      - run:
-          name: Push api image
-          command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
-      - run:
-          name: Push client image
-          command: docker push ${AWS_REGISTRY}/digideps/client:${VERSION}
+          name: Push images
+          command: docker-compose -f docker-compose.ci.yml push

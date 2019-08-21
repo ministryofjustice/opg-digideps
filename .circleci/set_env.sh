@@ -6,6 +6,6 @@ WORKSPACE=${WORKSPACE,,}
 WORKSPACE=${WORKSPACE:0:14}
 echo "export TF_WORKSPACE=${WORKSPACE}"
 
-VERSION=${VERSION:-$(cat version 2>/dev/null)}
+VERSION=${VERSION:-$(cat ~/project/VERSION 2>/dev/null)}
 echo "export TF_VAR_OPG_DOCKER_TAG=${VERSION}"
 echo "export VERSION=${VERSION}"
