@@ -23,19 +23,16 @@ workflows:
           name: apply environment
           requires: [ apply shared-development ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
 
       - stabilize:
           name: stabilize environment
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
 
       - test:
           name: test environment
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
 
       - cleanup:
           name: approve destroy environment
@@ -47,7 +44,6 @@ workflows:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
           tf_command: destroy
 
   master:
@@ -160,6 +156,7 @@ jobs:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
       tf_tier:
         description: tier to alter - shared or environment
         default: environment
@@ -173,24 +170,19 @@ jobs:
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
       - attach_workspace: { at: . }
       - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
-      - run:
-          name: Show version
-          command: echo ${VERSION}
-      - run:
           name: Initialize
           command: terraform init ${TF_TIER}
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+          command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
 
   test:
     docker:
@@ -199,6 +191,7 @@ jobs:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
     environment:
       TF_VAR_default_role: digideps-ci
     working_directory: ~/project/environment
@@ -209,8 +202,8 @@ jobs:
           name: Bundle install
           command: bundle install
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
@@ -228,6 +221,7 @@ jobs:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
     environment:
       TF_VAR_default_role: digideps-ci
     working_directory: ~/project/environment
@@ -238,8 +232,8 @@ jobs:
           name: Bundle install
           command: bundle install
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Check deployment
           command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
@@ -267,15 +261,15 @@ jobs:
           name: Install semvertag
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
-          name: Set next version
-          command: echo "export VERSION=$(semvertag bump patch << parameters.semver_stage >>)" >> VERSION.sh
+          name: Bump version
+          command: semvertag bump patch << parameters.semver_stage >> >> VERSION
       - persist_to_workspace:
           root: .
           paths:
-            - VERSION.sh
+            - VERSION
       - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Show version
           command: echo ${VERSION}
