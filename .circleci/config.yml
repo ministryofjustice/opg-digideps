@@ -261,6 +261,9 @@ jobs:
           name: Install semvertag
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
+          name: Current version
+          command: semvertag latest << parameters.semver_stage >> >> ~/project/CURRENT
+      - run:
           name: Bump version
           command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
       - persist_to_workspace:
@@ -282,6 +285,9 @@ jobs:
       - run:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
+      - run:
+          name: Pull images
+          command: VERSION=$(cat CURRENT) docker-compose -f docker-compose.ci.yml pull --parallel
       - run:
           name: Build images
           command: docker-compose -f docker-compose.ci.yml build --parallel
