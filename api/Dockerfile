@@ -18,7 +18,7 @@ EXPOSE 443
 ENV TIMEOUT=20
 
 # Install Postgres tools and command line client
-RUN apk add --no-cache openssl nginx su-exec php7-pecl-redis php7-pdo_pgsql php7-opcache
+RUN apk add --no-cache openssl nginx su-exec postgresql-client php7-pecl-redis php7-pdo_pgsql php7-opcache
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
