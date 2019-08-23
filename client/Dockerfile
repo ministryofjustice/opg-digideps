@@ -30,14 +30,18 @@ WORKDIR /var/www
 EXPOSE 80
 EXPOSE 443
 ENV TIMEOUT=60
+ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx su-exec php7-pecl-redis php7-opcache php7-zip
+RUN apk add --no-cache openssl nginx su-exec zlib-dev libzip-dev php7-igbinary php7 php7-pecl-redis
+RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
+RUN docker-php-ext-install zip
 
 # Install Xdebug if directed to with build arg from docker-compose.yml
 ARG REQUIRE_XDEBUG=false
-RUN if [ $REQUIRE_XDEBUG = "true" ] ; then \
+RUN if [[ $REQUIRE_XDEBUG = "true" ]] ; then \
         apk add --no-cache php7-pecl-xdebug; \
+        docker-php-ext-enable $PHP_EXT_DIR/xdebug.so; \
     fi ;
 
 # Route NGINX logs to stdout/stderr
