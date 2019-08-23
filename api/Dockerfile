@@ -1,6 +1,9 @@
 FROM composer AS composer
 WORKDIR /app
 
+# Make composer super fast
+RUN composer global require hirak/prestissimo --no-plugins --no-scripts
+
 # Install composer dependencies
 COPY composer.json .
 COPY composer.lock .
