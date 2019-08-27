@@ -69,7 +69,8 @@
         </dt>
         <dd class="govuk-summary-list__value behat-region-discharged-on">
             {% for org in client.organisations %}
-                {{ org.name }}<br>
+                <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
+                <br>
             {% endfor %}
         </dd>
     {% endif %}
