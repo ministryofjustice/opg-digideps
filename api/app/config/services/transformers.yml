@@ -15,6 +15,7 @@ services:
     arguments:
       - '@AppBundle\v2\Transformer\ReportTransformer'
       - '@AppBundle\v2\Transformer\NdrTransformer'
+      - '@PlainOrganisationTransformer'
 
   AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
@@ -25,4 +26,7 @@ services:
     class: AppBundle\v2\Transformer\OrganisationTransformer
     arguments:
       - '@AppBundle\v2\Transformer\DeputyTransformer'
+
+  PlainOrganisationTransformer:
+    class: AppBundle\v2\Transformer\OrganisationTransformer
 

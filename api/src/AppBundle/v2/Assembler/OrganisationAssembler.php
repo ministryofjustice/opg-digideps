@@ -15,7 +15,7 @@ class OrganisationAssembler
     /**
      * @param DeputyAssembler $deputyDtoAssembler
      */
-    public function __construct(DeputyAssembler $deputyDtoAssembler)
+    public function __construct(DeputyAssembler $deputyDtoAssembler = null)
     {
         $this->deputyDtoAssembler = $deputyDtoAssembler;
     }

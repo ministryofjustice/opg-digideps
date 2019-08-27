@@ -13,7 +13,7 @@ class OrganisationTransformer
     /**
      * @param DeputyTransformer $deputyTransformer
      */
-    public function __construct(DeputyTransformer $deputyTransformer)
+    public function __construct(DeputyTransformer $deputyTransformer = null)
     {
         $this->deputyTransformer = $deputyTransformer;
     }
