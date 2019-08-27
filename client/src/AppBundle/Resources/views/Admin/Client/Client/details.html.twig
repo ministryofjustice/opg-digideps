@@ -64,17 +64,17 @@
     {% endif %}
 
     {% if client.organisations is not empty %}
-        {% for org in client.organisations %}
-            <dt class="govuk-summary-list__key">
-                {{ 'orgName' | trans({}, 'common') }}
-            </dt>
-            <dd class="govuk-summary-list__value behat-region-discharged-on">
-                {{ org.name }}
-            </dd>
-        {% endfor %}
+        <dt class="govuk-summary-list__key">
+            {{ (page ~ '.organisation') | trans }}
+        </dt>
+        <dd class="govuk-summary-list__value behat-region-discharged-on">
+            {% for org in client.organisations %}
+                {{ org.name }}<br>
+            {% endfor %}
+        </dd>
     {% endif %}
 </dl>
-        
+
     {# client NDR #}
 
     {% if client.ndr is not empty %}
