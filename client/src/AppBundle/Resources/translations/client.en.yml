@@ -13,7 +13,6 @@ showClient:
       address: "%client%'s address"
       courtDate: Court order date
   editClient: "Edit %client%'s details"
-  orgName: Organisation name
 
 form:
   editClientForm:

@@ -17,6 +17,7 @@ clientDetails:
   reportsTitle: Submitted reports
   noResults: No reports found
   ndrTitle: NDR report
+  organisation: Organisation
 
 reportManage:
   htmlTitle: Administration - Manage report
