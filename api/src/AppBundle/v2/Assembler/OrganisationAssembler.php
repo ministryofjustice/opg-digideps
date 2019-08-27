@@ -12,12 +12,17 @@ class OrganisationAssembler
     /** @var DeputyAssembler  */
     private $deputyDtoAssembler;
 
+    /** @var ClientAssembler  */
+    private $clientDtoAssembler;
+
     /**
      * @param DeputyAssembler $deputyDtoAssembler
+     * @param ClientAssembler $clientDtoAssembler
      */
-    public function __construct(DeputyAssembler $deputyDtoAssembler = null)
+    public function __construct(DeputyAssembler $deputyDtoAssembler = null, ClientAssembler $clientDtoAssembler = null)
     {
         $this->deputyDtoAssembler = $deputyDtoAssembler;
+        $this->clientDtoAssembler = $clientDtoAssembler;
     }
 
     /**
@@ -34,6 +39,10 @@ class OrganisationAssembler
             $dto->setUsers($this->assembleOrganisationUsers($data['users']));
         }
 
+        if (isset($data['clients'])  && is_array($data['clients'])) {
+            $dto->setClients($this->assembleOrganisationClients($data['clients']));
+        }
+
         return $dto;
     }
 
@@ -47,6 +56,21 @@ class OrganisationAssembler
 
         foreach ($users as $user) {
             $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+        }
+
+        return $dtos;
+    }
+
+    /**
+     * @param array $clients
+     * @return array
+     */
+    private function assembleOrganisationClients(array $clients)
+    {
+        $dtos = [];
+
+        foreach ($clients as $client) {
+            $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
         }
 
         return $dtos;
