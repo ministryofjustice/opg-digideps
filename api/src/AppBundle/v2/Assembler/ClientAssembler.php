@@ -16,14 +16,19 @@ class ClientAssembler
     /** @var NdrAssembler */
     private $ndrDtoAssembler;
 
+    /** @var OrganisationAssembler */
+    private $organisationDtoAssembler;
+
     /**
      * @param ReportAssemblerInterface $reportDtoAssembler
      * @param NdrAssembler $ndrDtoAssembler
+     * @param OrganisationAssembler $organisationDtoAssembler
      */
-    public function __construct(ReportAssemblerInterface $reportDtoAssembler, NdrAssembler $ndrDtoAssembler)
+    public function __construct(ReportAssemblerInterface $reportDtoAssembler, NdrAssembler $ndrDtoAssembler, OrganisationAssembler $organisationDtoAssembler)
     {
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
+        $this->organisationDtoAssembler = $organisationDtoAssembler;
     }
 
     /**
@@ -46,6 +51,10 @@ class ClientAssembler
             $dto->setReportCount(count($data['reports']));
         }
 
+        if (isset($data['organisations']) && is_array($data['organisations'])) {
+            $dto->setOrganisations($this->assembleClientOrganisations($data['organisations']));
+        }
+
         return $dto;
     }
 
@@ -59,6 +68,17 @@ class ClientAssembler
 
         foreach ($reports as $report) {
             $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
+        }
+
+        return $dtos;
+    }
+
+    private function assembleClientOrganisations(array $organisations)
+    {
+        $dtos = [];
+
+        foreach ($organisations as $organisation) {
+            $dtos[] = $this->organisationDtoAssembler->assembleFromArray($organisation);
         }
 
         return $dtos;

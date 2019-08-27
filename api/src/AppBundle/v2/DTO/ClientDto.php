@@ -34,6 +34,9 @@ class ClientDto
     /** @var array */
     private $reports;
 
+    /** @var array */
+    private $organisations;
+
     /**
      * @return int
      */
@@ -112,6 +115,14 @@ class ClientDto
     public function getReports()
     {
         return $this->reports;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
     }
 
     /**
@@ -211,6 +222,16 @@ class ClientDto
     public function setReports(array $reports)
     {
         $this->reports = $reports;
+        return $this;
+    }
+
+    /**
+     * @param array $organisations
+     * @return ClientDto
+     */
+    public function setOrganisations(array $organisations)
+    {
+        $this->organisations = $organisations;
         return $this;
     }
 }
