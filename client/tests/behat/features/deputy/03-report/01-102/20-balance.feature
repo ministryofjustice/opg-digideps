@@ -24,7 +24,6 @@ Feature: Report balance
         Then I should see the "report-ready-banner" region
         Then I should see the "balance-state-done" region
         # assert report can be sumbmitted
-        # When I set the report 1 end date to 3 days ago
         Then the lay report should be submittable
 
     @deputy

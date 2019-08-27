@@ -12,7 +12,6 @@ app/config/parameters.yml
 bin/behat
 bin/doctrine
 bin/doctrine.php
-bin/phpunit
 build
 log
 components/*
