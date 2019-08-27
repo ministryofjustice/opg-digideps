@@ -60,13 +60,13 @@ Feature: Users can edit members of their organisation
     And the last email should contain "/user/activate"
 
   @prof
-  Scenario: Users cannot edit or resend email to activated users
+  Scenario: Users cannot resend email to activated users
     Given emails are sent from "deputy" area
     When I open the "/user/activate/" link from the email
     And I activate the user with password "Abcd1234"
     And I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "/org/settings/organisation"
-    Then I should not see "Edit" in the "team-user-yvonnelacassepublicguardiangovuk" region
+    Then I should see "Edit" in the "team-user-yvonnelacassepublicguardiangovuk" region
     Then I should not see "Resend activation email" in the "team-user-yvonnelacassepublicguardiangovuk" region
 
   @prof
