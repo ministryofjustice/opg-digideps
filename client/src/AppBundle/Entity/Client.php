@@ -965,7 +965,7 @@ class Client
     /**
      * @return ArrayCollection
      */
-    public function getOrganisations(): array
+    public function getOrganisations()
     {
         return $this->organisations;
     }
