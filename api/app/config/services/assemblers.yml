@@ -40,6 +40,7 @@ services:
     class: AppBundle\v2\Assembler\OrganisationAssembler
     arguments:
       - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\ClientAssembler'
 
   PlainOrganisationAssembler:
     class: AppBundle\v2\Assembler\OrganisationAssembler

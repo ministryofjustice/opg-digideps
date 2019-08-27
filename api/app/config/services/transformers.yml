@@ -26,6 +26,7 @@ services:
     class: AppBundle\v2\Transformer\OrganisationTransformer
     arguments:
       - '@AppBundle\v2\Transformer\DeputyTransformer'
+      - '@AppBundle\v2\Transformer\ClientTransformer'
 
   PlainOrganisationTransformer:
     class: AppBundle\v2\Transformer\OrganisationTransformer
