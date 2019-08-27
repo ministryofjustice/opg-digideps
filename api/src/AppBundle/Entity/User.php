@@ -272,9 +272,13 @@ class User implements UserInterface
     private $coDeputyClientConfirmed;
 
     /**
-     * @var Organisation
+     * @var ArrayCollection
+     *
+     * @JMS\Groups({"user-organisations"})
+     *
+     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="users")
      */
-    private $organisation;
+    private $organisations;
 
     /**
      * Constructor.
@@ -284,6 +288,7 @@ class User implements UserInterface
         $this->clients = new ArrayCollection();
         $this->password = '';
         $this->teams = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
         $this->setCoDeputyClientConfirmed($coDeputyClientConfirmed);
     }
 
@@ -1287,20 +1292,34 @@ class User implements UserInterface
     }
 
     /**
-     * @return Organisation
+     * @return ArrayCollection
      */
-    public function getOrganisation()
+    public function getOrganisations()
     {
-        return $this->organisation;
+        return $this->organisations;
     }
 
     /**
      * @param Organisation $organisation
      * @return User
      */
-    public function setOrganisation(Organisation $organisation)
+    public function addOrganisation(Organisation $organisation)
     {
-        $this->organisation = $organisation;
+        if (!$this->organisations->contains($organisation)) {
+            $this->organisations->add($organisation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function removeOrganisation(Organisation $organisation)
+    {
+        $this->organisations->removeElement($organisation);
+
         return $this;
     }
 }

@@ -47,6 +47,11 @@ class OrgService
      */
     protected $warnings = [];
 
+    /**
+     * @var EntityDir\Organisation
+     */
+    private $currentOrganisation;
+
     private $debug = false;
 
 
@@ -230,28 +235,30 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
-        if ($user instanceof EntityDir\User) {
-            if (false === $this->orgRepository->organisationExists($user->getEmail())) {
-                $this->createOrganisationFromUser($user);
-            }
 
+        if ($user instanceof EntityDir\User) {
             $this->em->persist($user);
             $this->em->flush($user);
+        }
+
+        $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
+        if (null === $this->currentOrganisation) {
+            $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
         }
 
         return $user;
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param str $email
      * @return EntityDir\Organisation
      * @throws \Doctrine\ORM\ORMException
      */
-    private function createOrganisationFromUser(EntityDir\User $user)
+    private function createOrganisationFromEmail(string $email)
     {
-        $organisation = $this->orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
-        $organisation->addUser($user);
+        $organisation = $this->orgFactory->createFromFullEmail($email, $email);
         $this->em->persist($organisation);
+        $this->em->flush($organisation);
 
         return $organisation;
     }
@@ -323,9 +330,10 @@ class OrgService
         // Add client to named user (will be done later anyway)
         $client->addUser($userOrgNamed);
 
+        $this->attachClientToOrganisation($client);
+
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
-
         $teams = $userOrgNamed->getTeams();
         $depCount = 0;
         foreach ($teams as $team) {
@@ -476,5 +484,15 @@ class OrgService
         if ($this->debug) {
             $this->logger->warning(__CLASS__ . ':' . $message);
         }
+    }
+
+    /**
+     * @param EntityDir\Client $client
+     */
+    private function attachClientToOrganisation(EntityDir\Client $client): void
+    {
+        $this->currentOrganisation->addClient($client);
+        $client->addOrganisation($this->currentOrganisation);
+        $this->currentOrganisation = null;
     }
 }
