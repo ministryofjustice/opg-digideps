@@ -4,6 +4,7 @@ namespace AppBundle\v2\Transformer;
 
 use AppBundle\v2\DTO\ClientDto;
 use AppBundle\v2\DTO\NdrDto;
+use AppBundle\v2\DTO\OrganisationDto;
 use AppBundle\v2\DTO\ReportDto;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 
@@ -15,14 +16,19 @@ class ClientTransformer
     /** @var NdrTransformer */
     private $ndrTransformer;
 
+    /** @var OrganisationTransformer */
+    private $organisationTransformer;
+
     /**
      * @param ReportTransformer $reportTransformer
      * @param NdrTransformer $ndrTransformer
+     * @param OrganisationTransformer $organisationTransformer
      */
-    public function __construct(ReportTransformer $reportTransformer, NdrTransformer $ndrTransformer)
+    public function __construct(ReportTransformer $reportTransformer, NdrTransformer $ndrTransformer, OrganisationTransformer $organisationTransformer)
     {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
+        $this->organisationTransformer = $organisationTransformer;
     }
 
     /**
@@ -49,6 +55,10 @@ class ClientTransformer
 
         if (!in_array('ndr', $exclude) && $dto->getNdr() instanceof NdrDto) {
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
+        }
+
+        if (!in_array('organisations', $exclude)) {
+            $transformed['organisations'] = $this->transformOrganisations($dto->getOrganisations());
         }
 
         return $transformed;
@@ -88,6 +98,27 @@ class ClientTransformer
         foreach ($reports as $report) {
             if ($report instanceof ReportDto) {
                 $transformed[] = $this->reportTransformer->transform($report);
+            }
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @param array $organisations
+     * @return array
+     */
+    private function transformOrganisations(array $organisations)
+    {
+        if (empty($organisations)) {
+            return [];
+        }
+
+        $transformed = [];
+
+        foreach ($organisations as $organisation) {
+            if ($organisation instanceof OrganisationDto) {
+                $transformed[] = $this->organisationTransformer->transform($organisation, ['users']);
             }
         }
 
