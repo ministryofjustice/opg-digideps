@@ -25,10 +25,18 @@ viewPage:
     supportTitle: Organisations
     addMember: Add someone to this organisation
     noMembers: This organisation doesn't have any members
+    noClients: This organisation doesn't have any clients
     users:
+        caption: Users
         name: Name
         emailAddress: Email address
         active: User account active
+    clients:
+        caption: Clients
+        caseNumber: Case number
+        name: Name
+        reportCount: Reports
+
 
 deletePage:
     htmlTitle: Administration - Remove organisation
