@@ -26,6 +26,10 @@
     </a>
 
     <table class="govuk-table">
+        <caption class="govuk-table__caption">
+            {{ (page ~ '.users.caption') | trans }}
+        </caption>
+
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header" scope="col">{{ (page ~ '.users.name') | trans }}</th>
@@ -61,6 +65,44 @@
                 <tr class="govuk-table__row">
                     <td colspan="4" class="govuk-table__cell text--center">
                         {{ (page ~ '.noMembers') | trans }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption">
+            {{ (page ~ '.clients.caption') | trans }}
+        </caption>
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.caseNumber') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.name') | trans }}</th>
+                <th class="govuk-table__header" scope="col">{{ (page ~ '.clients.reportCount') | trans }}</th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+            {% for client in organisation.clients %}
+                <tr class="govuk-table__row behat-region-org-{{ client.caseNumber | behat_namify }}">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="{{ url('admin_client_details', { id: client.id }) }}">
+                            {{ client.caseNumber }}
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ client.fullName }}
+                    </td>
+                    <td class="govuk-table__cell">
+                        {{ client.totalReportCount }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="govuk-table__row">
+                    <td colspan="3" class="govuk-table__cell text--center">
+                        {{ (page ~ '.noClients') | trans }}
                     </td>
                 </tr>
             {% endfor %}
