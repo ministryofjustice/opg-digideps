@@ -230,28 +230,29 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
-        if ($user instanceof EntityDir\User) {
-            if (false === $this->orgRepository->organisationExists($user->getEmail())) {
-                $this->createOrganisationFromUser($user);
-            }
 
+        if ($user instanceof EntityDir\User) {
             $this->em->persist($user);
             $this->em->flush($user);
+        }
+
+        if (false === $this->orgRepository->organisationExists($csvRow['Email'])) {
+            $this->createOrganisationFromEmail($csvRow['Email']);
         }
 
         return $user;
     }
 
     /**
-     * @param EntityDir\User $user
+     * @param str $email
      * @return EntityDir\Organisation
      * @throws \Doctrine\ORM\ORMException
      */
-    private function createOrganisationFromUser(EntityDir\User $user)
+    private function createOrganisationFromEmail(string $email)
     {
-        $organisation = $this->orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
-        $organisation->addUser($user);
+        $organisation = $this->orgFactory->createFromFullEmail($email, $email);
         $this->em->persist($organisation);
+        $this->em->flush($organisation);
 
         return $organisation;
     }
