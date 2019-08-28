@@ -4,6 +4,8 @@ namespace AppBundle\v2\Assembler;
 
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\v2\DTO\OrganisationDto;
+use AppBundle\Entity\Organisation;
+use AppBundle\Entity\User;
 
 class OrganisationAssembler
 {
@@ -38,15 +40,39 @@ class OrganisationAssembler
     }
 
     /**
-     * @param array $users
+     * @param Organisation $organisation
+     * @return OrganisationDto
+     */
+    public function assembleFromEntity(Organisation $organisation)
+    {
+        $dto = new OrganisationDto();
+
+        $dto->setId($organisation->getId());
+        $dto->setName($organisation->getName());
+        $dto->setEmailIdentifier($organisation->getEmailIdentifier());
+        $dto->setIsActivated($organisation->isActivated());
+
+        if ($organisation->getUsers()) {
+            $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
+        }
+
+        return $dto;
+    }
+
+    /**
+     * @param iterable $users
      * @return array
      */
-    private function assembleOrganisationUsers(array $users)
+    private function assembleOrganisationUsers(iterable $users)
     {
         $dtos = [];
 
         foreach ($users as $user) {
-            $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+            if ($user instanceof User) {
+                $dtos[] = $this->deputyDtoAssembler->assembleFromEntity($user);
+            } else {
+                $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+            }
         }
 
         return $dtos;
