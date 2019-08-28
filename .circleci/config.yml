@@ -79,13 +79,13 @@ workflows:
       - client_integration_test:
           name: client integration test
           requires: [ stabilize master ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - api_unit_test:
           name: api unit test
           requires: [ stabilize master ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - apply:
