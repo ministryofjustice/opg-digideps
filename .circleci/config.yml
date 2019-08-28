@@ -88,12 +88,6 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - api_unit_test:
-          name: api unit test
-          requires: [ stabilize master ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
-
       - apply:
           name: apply training
           requires: [ api unit test, client integration test ]
