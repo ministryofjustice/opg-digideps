@@ -36,7 +36,7 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx su-exec libzip-dev unzip php7-igbinary php7-pecl-redis
+RUN apk add --no-cache openssl nginx su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
 RUN docker-php-ext-install zip
 
