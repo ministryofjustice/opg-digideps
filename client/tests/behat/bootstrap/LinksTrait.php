@@ -29,14 +29,14 @@ trait LinksTrait
 
     public function visitBehatLink($link)
     {
-        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
+        $secret = md5('behat-dd-' . getenv('FRONTEND_SECRET'));
 
         $this->visit("/behat/{$secret}/{$link}");
     }
 
     public function visitBehatAdminLink($link)
     {
-        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
+        $secret = md5('behat-dd-' . getenv('FRONTEND_SECRET'));
 
         $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl . "/behat/{$secret}/{$link}");
