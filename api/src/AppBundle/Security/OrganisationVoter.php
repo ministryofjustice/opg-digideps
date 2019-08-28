@@ -51,8 +51,15 @@ class OrganisationVoter extends Voter
             return false;
         }
 
-        // No matter the attribute, we only have one level of security in organisations
-        return $this->canManage($organisation, $user);
+
+        switch ($attribute) {
+            case self::VIEW:
+            case self::EDIT:
+                return $this->canManage($organisation, $user);
+
+            default:
+                throw new \LogicException('This code should not be reached!');
+        }
     }
 
     /**
