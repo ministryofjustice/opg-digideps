@@ -18,6 +18,7 @@ clientDetails:
   noResults: No reports found
   ndrTitle: NDR report
   organisation: Organisation
+  organisationInactive: (Inactive)
 
 reportManage:
   htmlTitle: Administration - Manage report
