@@ -70,6 +70,10 @@
         <dd class="govuk-summary-list__value behat-region-discharged-on">
             {% for org in client.organisations %}
                 <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
+
+                {% if not org.isActivated %}
+                    {{ (page ~ '.organisationInactive') | trans }}
+                {% endif %}
                 <br>
             {% endfor %}
         </dd>
