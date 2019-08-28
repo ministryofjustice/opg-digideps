@@ -16,3 +16,5 @@ services:
     rest_client:
         class:  AppBundle\Service\Client\RestClient
         arguments: ["@service_container", "@guzzle_json_http_client", "@redis_token_storage", "%api_client_secret%"]
+
+
