@@ -4,13 +4,12 @@ This app is the [Complete the deputy report][service] service. It provides an on
 
 ## Requirements
 
-You must have Docker installed and access to the Ministry of Justice VPN.
+You must have Docker installed.
+Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-scanner-service) into `../opg-file-scanner-service`
 
 ## Installation
 
 - Add `127.0.0.1 digideps-client.local digideps-admin.local digideps-api.local` to `/etc/hosts`
-- Log into the MoJ VPN
-- Run `docker login https://registry.service.opg.digital/` with username `opguk-ro` (ask your team for the password)
 - Navigate to the root directory of this repository and run `docker-compose up -d`
 - Check `https://digideps-client.local/` (Deputy area) and `https://digideps-admin.local/` (Admin area). Your browser will warn you about a self-signed certificate.
 
