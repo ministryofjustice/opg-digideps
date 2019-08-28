@@ -38,11 +38,11 @@ class OrganisationTransformer
             'is_activated' => $dto->isActivated()
         ];
 
-        if (!in_array('users', $exclude)) {
+        if (!in_array('users', $exclude) && $dto->getUsers()) {
             $data['users'] = $this->transformUsers($dto->getUsers());
         }
 
-        if (!in_array('clients', $exclude)) {
+        if (!in_array('clients', $exclude) && $dto->getClients()) {
             $data['clients'] = $this->transformClients($dto->getClients());
         }
 
