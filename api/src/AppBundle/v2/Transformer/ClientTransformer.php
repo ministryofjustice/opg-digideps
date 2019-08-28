@@ -57,7 +57,7 @@ class ClientTransformer
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
-        if (!in_array('organisations', $exclude)) {
+        if (!in_array('organisations', $exclude) && $dto->getOrganisations() !== null) {
             $transformed['organisations'] = $this->transformOrganisations($dto->getOrganisations());
         }
 
