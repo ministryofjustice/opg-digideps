@@ -5,7 +5,7 @@ This app is the [Complete the deputy report][service] service. It provides an on
 ## Requirements
 
 You must have Docker installed.
-git clone git@github.com:ministryofjustice/opg-file-scanner-service.gi into ../opg-file-scanner-service 
+Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-scanner-service) into `../opg-file-scanner-service`
 
 ## Installation
 
