@@ -91,13 +91,7 @@ class OrganisationController
      */
     public function getByIdAction(Organisation $organisation): JsonResponse
     {
-        $id = $organisation->getId();
-
-        if (null === ($data = $this->repository->findArrayById($id))) {
-            return $this->buildNotFoundResponse(sprintf('Organisation id: %d not found', $id));
-        }
-
-        $dto = $this->assembler->assembleFromArray($data);
+        $dto = $this->assembler->assembleFromEntity($organisation);
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
