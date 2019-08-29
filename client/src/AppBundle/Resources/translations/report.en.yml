@@ -9,6 +9,7 @@ homepage:
   reportingPeriod: Reporting period
   submissionDate: Submission date
   attachDocuments: Attach documents
+  downloadPdf: Download PDF
   noActiveReportException: No active report found for this client
   unsubmitted:
     reportPara: |
