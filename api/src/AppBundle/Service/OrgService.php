@@ -38,6 +38,11 @@ class OrgService
     private $debug = false;
 
     /**
+     * @var EntityDir\Repository\NamedDeputyRepository
+     */
+    private $namedDeputyRepository;
+
+    /**
      * @param EntityManager   $em
      * @param LoggerInterface $logger
      */
@@ -48,6 +53,8 @@ class OrgService
         $this->userRepository = $em->getRepository(EntityDir\User::class);
         $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
         $this->clientRepository = $em->getRepository(EntityDir\Client::class);
+        $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
+        $this->namedDeputyRepository = $em->getRepository(EntityDir\NamedDeputy::class);
         $this->log = [];
     }
 
@@ -90,6 +97,11 @@ class OrgService
             $row = array_map('trim', $row);
             try {
                 $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
+
+                $namedDeputy = $this->identifyNamedDeputy($row);
+                $this->em->persist($namedDeputy);
+                $this->em->flush($namedDeputy);
+
                 if ($userOrgNamed instanceof EntityDir\User) {
 
                     $client = $this->upsertClientFromCsv($row, $userOrgNamed);
@@ -443,4 +455,34 @@ class OrgService
             $this->logger->warning(__CLASS__ . ':' . $message);
         }
     }
+
+    /**
+     * @param EntityDir\Client $client
+     */
+    private function attachClientToOrganisation(EntityDir\Client $client): void
+    {
+        $this->currentOrganisation->addClient($client);
+        $client->addOrganisation($this->currentOrganisation);
+        $this->currentOrganisation = null;
+    }
+
+    /**
+     * @param $csvRow
+     * @return EntityDir\NamedDeputy|null|object
+     */
+    private function identifyNamedDeputy($csvRow)
+    {
+        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
+
+        $namedDeputy = $this->namedDeputyRepository->findOneBy([
+            'deputyNo' => $deputyNo,
+        ]);
+
+        if (!$namedDeputy instanceof EntityDir\NamedDeputy) {
+            $namedDeputy = new EntityDir\NamedDeputy($csvRow);
+        }
+
+        return $namedDeputy;
+    }
+
 }
