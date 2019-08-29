@@ -9,36 +9,6 @@ trait ReportTrait
     private static $reportsCache = [];
 
     /**
-     * @Given I set the report :reportId end date to :days days ago
-     */
-    public function iSetTheReportDue($reportId, $days)
-    {
-        $endDate = new \DateTime();
-        $endDate->modify("-{$days} days");
-
-        $this->getRestClient()->put('behat/report/' . $reportId, [
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
-
-        $this->visit('/');
-    }
-
-    /**
-     * @Given I set the report :reportId end date to :days days ahead
-     */
-    public function iSetTheReportNotDue($reportId, $days)
-    {
-        $endDate = new \DateTime();
-        $endDate->modify("+{$days} days");
-
-        $this->getRestClient()->put('behat/report/' . $reportId, [
-            'end_date' => $endDate->format('Y-m-d'),
-        ]);
-
-        $this->visit('/');
-    }
-
-    /**
      * @Then the :arg1 asset group should be :arg2
      */
     public function theAssetGroupShouldBe($index, $text)

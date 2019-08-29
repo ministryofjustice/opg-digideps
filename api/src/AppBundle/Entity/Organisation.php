@@ -23,6 +23,7 @@ class Organisation
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="organisation_id_seq", allocationSize=1, initialValue=1)
+     * @JMS\Groups({"organisation"})
      */
     private $id;
 
@@ -33,6 +34,7 @@ class Organisation
      *
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
+     * @JMS\Groups({"organisation"})
      */
     private $name;
 

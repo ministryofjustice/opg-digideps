@@ -23,31 +23,32 @@ workflows:
           name: apply environment
           requires: [ apply shared-development ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
 
       - stabilize:
           name: stabilize environment
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
 
-      - test:
-          name: test environment
+      - client_integration_test:
+          name: client integration test
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
+
+      - api_unit_test:
+          name: api unit test
+          requires: [ stabilize environment ]
+          filters: { branches: { ignore: [ master ] } }
 
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ test environment ]
+          requires: [ api unit test, client integration test ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
           name: destroy environment
           requires: [ approve destroy environment ]
           filters: { branches: { ignore: [ master ] } }
-          tf_workspace: "${CIRCLE_BRANCH}"
           tf_command: destroy
 
   master:
@@ -75,15 +76,21 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - test:
-          name: test master
+      - client_integration_test:
+          name: client integration test
+          requires: [ stabilize master ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: master
+
+      - api_unit_test:
+          name: api unit test
           requires: [ stabilize master ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - apply:
           name: apply training
-          requires: [ test master ]
+          requires: [ api unit test, client integration test ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
 
@@ -95,7 +102,7 @@ workflows:
 
       - apply:
           name: apply shared-production
-          requires: [ test master ]
+          requires: [ api unit test, client integration test ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
@@ -160,6 +167,7 @@ jobs:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
       tf_tier:
         description: tier to alter - shared or environment
         default: environment
@@ -173,32 +181,28 @@ jobs:
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
       - attach_workspace: { at: . }
       - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
-      - run:
-          name: Show version
-          command: echo ${VERSION}
-      - run:
           name: Initialize
           command: terraform init ${TF_TIER}
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          command: TF_VAR_OPG_DOCKER_TAG=${VERSION} terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+          command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
 
-  test:
+  client_integration_test:
     docker:
       - image: circleci/ruby
     parameters:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
     environment:
       TF_VAR_default_role: digideps-ci
     working_directory: ~/project/environment
@@ -209,17 +213,37 @@ jobs:
           name: Bundle install
           command: bundle install
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
       - run:
-          name: Test API
-          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
-      - run:
           name: Test Client
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
+  api_unit_test:
+    docker:
+      - image: circleci/ruby
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
+    environment:
+      TF_VAR_default_role: digideps-ci
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Bundle install
+          command: bundle install
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Test API
+          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
 
   stabilize:
     docker:
@@ -228,6 +252,7 @@ jobs:
       tf_workspace:
         description: terraform workspace
         type: string
+        default: ""
     environment:
       TF_VAR_default_role: digideps-ci
     working_directory: ~/project/environment
@@ -238,8 +263,8 @@ jobs:
           name: Bundle install
           command: bundle install
       - run:
-          name: Set workspace
-          command: echo export TF_WORKSPACE=$(~/project/fmt_wksp_name.sh << parameters.tf_workspace >>) >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Check deployment
           command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
@@ -267,15 +292,15 @@ jobs:
           name: Install semvertag
           command: sudo pip install https://github.com/ministryofjustice/semvertag/archive/master.zip
       - run:
-          name: Set next version
-          command: echo "export VERSION=$(semvertag bump patch << parameters.semver_stage >>)" >> VERSION.sh
+          name: Bump version
+          command: semvertag bump patch << parameters.semver_stage >> >> ~/project/VERSION
       - persist_to_workspace:
           root: .
           paths:
-            - VERSION.sh
+            - VERSION
       - run:
-          name: Get version
-          command: cat VERSION.sh >> $BASH_ENV
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Show version
           command: echo ${VERSION}
@@ -289,14 +314,8 @@ jobs:
           name: Docker login
           command: eval $(aws ecr get-login --region $AWS_REGION --no-include-email --profile digideps-ci)
       - run:
-          name: Build api image
-          command: docker build -t ${AWS_REGISTRY}/digideps/api:${VERSION} api
+          name: Build images
+          command: docker-compose -f docker-compose.ci.yml build --parallel
       - run:
-          name: Build client image
-          command: docker build -t ${AWS_REGISTRY}/digideps/client:${VERSION} client
-      - run:
-          name: Push api image
-          command: docker push ${AWS_REGISTRY}/digideps/api:${VERSION}
-      - run:
-          name: Push client image
-          command: docker push ${AWS_REGISTRY}/digideps/client:${VERSION}
+          name: Push images
+          command: docker-compose -f docker-compose.ci.yml push

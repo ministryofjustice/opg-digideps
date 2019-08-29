@@ -9,6 +9,7 @@ use AppBundle\v2\Assembler\OrganisationAssembler;
 use AppBundle\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -83,18 +84,14 @@ class OrganisationController
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('view', organisation)")
      *
      * @param int $id
      * @return JsonResponse
      */
-    public function getByIdAction(int $id): JsonResponse
+    public function getByIdAction(Organisation $organisation): JsonResponse
     {
-        if (null === ($data = $this->repository->findArrayById($id))) {
-            return $this->buildNotFoundResponse(sprintf('Organisation id: %d not found', $id));
-        }
-
-        $dto = $this->assembler->assembleFromArray($data);
+        $dto = $this->assembler->assembleFromEntity($organisation);
         $transformedDto = $this->transformer->transform($dto);
 
         return $this->buildSuccessResponse($transformedDto);
@@ -156,7 +153,8 @@ class OrganisationController
     /**
      * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
      * @Method({"PUT"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Entity("organisation", expr="repository.find(orgId)")
+     * @Security("is_granted('edit', organisation)")
      *
      * @param Request $request
      * @param int $orgId
@@ -165,8 +163,9 @@ class OrganisationController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function addUserAction(Request $request, int $orgId, int $userId): JsonResponse
+    public function addUserAction(Request $request, Organisation $organisation, int $userId): JsonResponse
     {
+        $orgId = $organisation->getId();
         $this->restHandler->addUser($orgId, $userId);
 
         return $this->buildSuccessResponse([], 'User added', Response::HTTP_NO_CONTENT);
@@ -175,7 +174,8 @@ class OrganisationController
     /**
      * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
      * @Method({"DELETE"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Entity("organisation", expr="repository.find(orgId)")
+     * @Security("is_granted('edit', organisation)")
      *
      * @param int $orgId
      * @param int $userId
@@ -183,8 +183,9 @@ class OrganisationController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function removeUserAction(int $orgId, int $userId): JsonResponse
+    public function removeUserAction(Organisation $organisation, int $userId): JsonResponse
     {
+        $orgId = $organisation->getId();
         $this->restHandler->removeUser($orgId, $userId);
 
         return $this->buildSuccessResponse([], 'User removed');
