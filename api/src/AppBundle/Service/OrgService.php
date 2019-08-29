@@ -95,23 +95,32 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                $userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
+                //$userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
 
                 $namedDeputy = $this->identifyNamedDeputy($row);
                 $this->em->persist($namedDeputy);
                 $this->em->flush($namedDeputy);
 
-                if ($userOrgNamed instanceof EntityDir\User) {
-
-                    $client = $this->upsertClientFromCsv($row, $userOrgNamed);
-                    if ($client instanceof EntityDir\Client) {
-                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
-                    } else {
-                        throw new \RuntimeException('Client could not be identified or created');
+                $client = $this->upsertClientFromCsv($row, $namedDeputy);
+                if ($client instanceof EntityDir\Client) {
+                    if ($client->hasDeputies()) {
+                        $this->upsertReportFromCsv($row, $client);
                     }
                 } else {
-                    throw new \RuntimeException('Named deputy could not be identified or created');
+                    throw new \RuntimeException('Client could not be identified or created');
                 }
+
+//                if ($userOrgNamed instanceof EntityDir\User) {
+//
+//                    $client = $this->upsertClientFromCsv($row, $userOrgNamed);
+//                    if ($client instanceof EntityDir\Client) {
+//                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
+//                    } else {
+//                        throw new \RuntimeException('Client could not be identified or created');
+//                    }
+//                } else {
+//                    throw new \RuntimeException('Named deputy could not be identified or created');
+//                }
 
             } catch (\Throwable $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
@@ -239,7 +248,7 @@ class OrgService
      *
      * @return EntityDir\Client
      */
-    private function upsertClientFromCsv(array $row, EntityDir\User $userOrgNamed)
+    private function upsertClientFromCsv(array $row, EntityDir\NamedDeputy $namedDeputy)
     {
         // find or create client
         $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
@@ -249,70 +258,34 @@ class OrgService
 
         if ($client) {
             $this->log('FOUND client in database with id: ' . $client->getId());
-            $client->setUsers(new ArrayCollection());
+            //$client->setUsers(new ArrayCollection());
         } else {
             $this->log('Creating client');
             $client = new EntityDir\Client();
-            $client
-                ->setCaseNumber($caseNumber)
-                ->setFirstname(trim($row['Forename']))
-                ->setLastname(trim($row['Surname']));
-
-            // set court date from Last report day
-            $courtDate = new \DateTime($row['Last Report Day']);
-            $client->setCourtDate($courtDate->modify('-1year +1day'));
-
-            if (!empty($row['Client Adrs1'])) {
-                $client->setAddress($row['Client Adrs1']);
-            }
-
-            if (!empty($row['Client Adrs2'])) {
-                $client->setAddress2($row['Client Adrs2']);
-            }
-
-            if (!empty($row['Client Adrs3'])) {
-                $client->setCounty($row['Client Adrs3']);
-            }
-
-            if (!empty($row['Client Postcode'])) {
-                $client->setPostcode($row['Client Postcode']);
-                $client->setCountry('GB'); //postcode given means a UK address is given
-            }
-
-            if (!empty($row['Client Phone'])) {
-                $client->setPhone($row['Client Phone']);
-            }
-
-            if (!empty($row['Client Email'])) {
-                $client->setEmail($row['Client Email']);
-            }
-
-            if (!empty($row['Client Date of Birth'])) {
-                $client->setDateOfBirth(ReportUtils::parseCsvDate($row['Client Date of Birth'], '19') ?: null);
-            }
-
-            $this->added['clients'][] = $client->getCaseNumber();
+            $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+            $this->added['clients'][] = $caseNumber;
 
         }
-        $this->log('Setting named deputy on client to deputy id:' . $userOrgNamed->getId());
-        $client->setNamedDeputy($userOrgNamed);
+
+        // Upsert Client information
+        $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
 
         // Add client to named user (will be done later anyway)
-        $client->addUser($userOrgNamed);
+        //$client->addUser($userOrgNamed);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
 
-        $teams = $userOrgNamed->getTeams();
-        $depCount = 0;
-        foreach ($teams as $team) {
-            $members = $team->getMembers();
-            foreach ($members as $member) {
-                $client->addUser($member);
-                $depCount++;
-            }
-        }
-        $this->log('Assigned ' . $depCount . ' additional deputies to client');
+//        $teams = $userOrgNamed->getTeams();
+//        $depCount = 0;
+//        foreach ($teams as $team) {
+//            $members = $team->getMembers();
+//            foreach ($members as $member) {
+//                $client->addUser($member);
+//                $depCount++;
+//            }
+//        }
+//        $this->log('Assigned ' . $depCount . ' additional deputies to client');
 
         $this->em->persist($client);
 
@@ -322,22 +295,79 @@ class OrgService
     }
 
     /**
+     * Applies any updated information in the csv to new and existing clients
+     *
+     * @param EntityDir\Client $client
+     * @param $row
+     * @return EntityDir\Client
+     */
+    private function upsertClientDetailsFromCsv(EntityDir\Client $client, EntityDir\NamedDeputy $namedDeputy, $row)
+    {
+        $caseNumber = EntityDir\Client::padCaseNumber(strtolower($row['Case']));
+        $client->setCaseNumber($caseNumber);
+        $client->setFirstname(trim($row['Forename']));
+        $client->setLastname(trim($row['Surname']));
+
+        // set court date from Last report day
+        $courtDate = new \DateTime($row['Last Report Day']);
+        $client->setCourtDate($courtDate->modify('-1year +1day'));
+
+        if (!empty($row['Client Adrs1'])) {
+            $client->setAddress($row['Client Adrs1']);
+        }
+
+        if (!empty($row['Client Adrs2'])) {
+            $client->setAddress2($row['Client Adrs2']);
+        }
+
+        if (!empty($row['Client Adrs3'])) {
+            $client->setCounty($row['Client Adrs3']);
+        }
+
+        if (!empty($row['Client Postcode'])) {
+            $client->setPostcode($row['Client Postcode']);
+            $client->setCountry('GB'); //postcode given means a UK address is given
+        }
+
+        if (!empty($row['Client Phone'])) {
+            $client->setPhone($row['Client Phone']);
+        }
+
+        if (!empty($row['Client Email'])) {
+            $client->setEmail($row['Client Email']);
+        }
+
+        if (!empty($row['Client Date of Birth'])) {
+            $client->setDateOfBirth(ReportUtils::parseCsvDate($row['Client Date of Birth'], '19') ?: null);
+        }
+
+        $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
+        $client->setNamedDeputy($namedDeputy);
+
+        return $client;
+    }
+    /**
      * @param array            $csvRow keys: Last Report Day, Typeofrep, }
      * @param EntityDir\Client $client the client the report should belong to
-     * @param EntityDir\User   $user   the user (needed for determine the report type, dependendent on user role)
      *
      * @throws \Doctrine\ORM\OptimisticLockException
      *
      * @return EntityDir\Report\Report
      */
-    private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client, EntityDir\User $user)
+    private function upsertReportFromCsv(array $csvRow, EntityDir\Client $client)
     {
         // find or create reports
         $reportEndDate = ReportUtils::parseCsvDate($csvRow['Last Report Day'], '20');
         if (!$reportEndDate) {
             throw new \RuntimeException("Cannot parse date {$csvRow['Last Report Day']}");
         }
-        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref($csvRow['Typeofrep'], $csvRow['Corref'], $user->getRoleName());
+
+        $reportType = EntityDir\CasRec::getTypeBasedOnTypeofRepAndCorref(
+            $csvRow['Typeofrep'],
+            $csvRow['Corref'],
+            EntityDir\User::$depTypeIdToUserRole[$csvRow['Dep Type']]
+        );
+
         $report = $client->getCurrentReport();
 
         // already existing, just change type
