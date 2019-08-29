@@ -2,7 +2,6 @@ Feature: Report submit
 
     @deputy
     Scenario: report declaration page
-        #Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
         Then I should not see the "report-review" link

@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  api:
+    image: ${AWS_REGISTRY}/digideps/api:${VERSION}
+    build: ./api
+  client:
+    image: ${AWS_REGISTRY}/digideps/client:${VERSION}
+    build: ./client
