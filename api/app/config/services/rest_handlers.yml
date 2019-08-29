@@ -18,3 +18,4 @@ services:
       - '@validator'
       - '@AppBundle\Entity\Repository\OrganisationRepository'
       - '@AppBundle\Entity\Repository\UserRepository'
+      - '@AppBundle\Factory\OrganisationFactory'

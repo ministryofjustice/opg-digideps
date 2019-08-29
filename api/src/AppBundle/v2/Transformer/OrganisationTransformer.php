@@ -2,6 +2,7 @@
 
 namespace AppBundle\v2\Transformer;
 
+use AppBundle\v2\DTO\ClientDto;
 use AppBundle\v2\DTO\DeputyDto;
 use AppBundle\v2\DTO\OrganisationDto;
 
@@ -10,12 +11,17 @@ class OrganisationTransformer
     /** @var DeputyTransformer */
     private $deputyTransformer;
 
+    /** @var ClientTransformer */
+    private $clientTransformer;
+
     /**
      * @param DeputyTransformer $deputyTransformer
+     * @param ClientTransformer $clientTransformer
      */
-    public function __construct(DeputyTransformer $deputyTransformer)
+    public function __construct(DeputyTransformer $deputyTransformer = null, ClientTransformer $clientTransformer = null)
     {
         $this->deputyTransformer = $deputyTransformer;
+        $this->clientTransformer = $clientTransformer;
     }
 
     /**
@@ -32,8 +38,12 @@ class OrganisationTransformer
             'is_activated' => $dto->isActivated()
         ];
 
-        if (!in_array('users', $exclude)) {
+        if (!in_array('users', $exclude) && $dto->getUsers()) {
             $data['users'] = $this->transformUsers($dto->getUsers());
+        }
+
+        if (!in_array('clients', $exclude) && $dto->getClients()) {
+            $data['clients'] = $this->transformClients($dto->getClients());
         }
 
         return $data;
@@ -54,6 +64,27 @@ class OrganisationTransformer
         foreach ($users as $user) {
             if ($user instanceof DeputyDto) {
                 $transformed[] = $this->deputyTransformer->transform($user, ['clients']);
+            }
+        }
+
+        return $transformed;
+    }
+
+    /**
+     * @param array $clients
+     * @return array
+     */
+    private function transformClients(array $clients): array
+    {
+        if (empty($clients)) {
+            return [];
+        }
+
+        $transformed = [];
+
+        foreach ($clients as $client) {
+            if ($client instanceof ClientDto) {
+                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisations']);
             }
         }
 

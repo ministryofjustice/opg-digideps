@@ -50,6 +50,13 @@ class Organisation
     private $users = [];
 
     /**
+     * @var Client[]
+     *
+     * @JMS\Type("array<AppBundle\Entity\Client>")
+     */
+    private $clients = [];
+
+    /**
      * @return int
      */
     public function getId()
@@ -238,6 +245,25 @@ class Organisation
     public function addUser($user)
     {
         $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Client[]
+     */
+    public function getClients()
+    {
+        return $this->clients;
+    }
+
+    /**
+     * @param Client[] $clients
+     * @return $this
+     */
+    public function setClients($clients)
+    {
+        $this->clients = $clients;
 
         return $this;
     }

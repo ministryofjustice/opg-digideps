@@ -4,6 +4,7 @@ namespace AppBundle\v2\Assembler;
 
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\v2\DTO\OrganisationDto;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 
@@ -14,12 +15,17 @@ class OrganisationAssembler
     /** @var DeputyAssembler  */
     private $deputyDtoAssembler;
 
+    /** @var ClientAssembler  */
+    private $clientDtoAssembler;
+
     /**
      * @param DeputyAssembler $deputyDtoAssembler
+     * @param ClientAssembler $clientDtoAssembler
      */
-    public function __construct(DeputyAssembler $deputyDtoAssembler)
+    public function __construct(DeputyAssembler $deputyDtoAssembler = null, ClientAssembler $clientDtoAssembler = null)
     {
         $this->deputyDtoAssembler = $deputyDtoAssembler;
+        $this->clientDtoAssembler = $clientDtoAssembler;
     }
 
     /**
@@ -34,6 +40,10 @@ class OrganisationAssembler
 
         if (isset($data['users'])  && is_array($data['users'])) {
             $dto->setUsers($this->assembleOrganisationUsers($data['users']));
+        }
+
+        if (isset($data['clients'])  && is_array($data['clients'])) {
+            $dto->setClients($this->assembleOrganisationClients($data['clients']));
         }
 
         return $dto;
@@ -56,6 +66,10 @@ class OrganisationAssembler
             $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
         }
 
+        if ($organisation->getClients()) {
+            $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
+        }
+
         return $dto;
     }
 
@@ -72,6 +86,25 @@ class OrganisationAssembler
                 $dtos[] = $this->deputyDtoAssembler->assembleFromEntity($user);
             } else {
                 $dtos[] = $this->deputyDtoAssembler->assembleFromArray($user);
+            }
+        }
+
+        return $dtos;
+    }
+
+    /**
+     * @param array $clients
+     * @return array
+     */
+    private function assembleOrganisationClients(iterable $clients)
+    {
+        $dtos = [];
+
+        foreach ($clients as $client) {
+            if ($client instanceof Client) {
+                $dtos[] = $this->clientDtoAssembler->assembleFromEntity($client);
+            } else {
+                $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
             }
         }
 

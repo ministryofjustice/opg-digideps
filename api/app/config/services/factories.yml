@@ -1,0 +1,28 @@
+parameters:
+  shared_email_domains:
+    - 'aol.com'
+    - 'aol.co.uk'
+    - 'btconnect.com'
+    - 'btinternet.com'
+    - 'gmail.com'
+    - 'googlemail.com'
+    - 'hotmail.com'
+    - 'hotmail.co.uk'
+    - 'icloud.com'
+    - 'live.co.uk'
+    - 'live.com'
+    - 'mac.com'
+    - 'me.com'
+    - 'msn.com'
+    - 'nhs.net'
+    - 'ntlworld.com'
+    - 'outlook.com'
+    - 'sky.com'
+    - 'talktalk.net'
+    - 'yahoo.com'
+    - 'yahoo.co.uk'
+
+services:
+  AppBundle\Factory\OrganisationFactory:
+    class: AppBundle\Factory\OrganisationFactory
+    arguments: ['%shared_email_domains%']

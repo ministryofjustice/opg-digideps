@@ -19,6 +19,9 @@ class OrganisationDto
     /** @var array */
     private $users;
 
+    /** @var array */
+    private $clients;
+
     /**
      * @return int
      */
@@ -106,6 +109,24 @@ class OrganisationDto
     public function setUsers(array $users): OrganisationDto
     {
         $this->users = $users;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getClients()
+    {
+        return $this->clients;
+    }
+
+    /**
+     * @param array $clients
+     * @return OrganisationDto
+     */
+    public function setClients(array $clients): OrganisationDto
+    {
+        $this->clients = $clients;
         return $this;
     }
 }
