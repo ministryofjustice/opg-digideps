@@ -53,7 +53,6 @@ class OrgService
         $this->userRepository = $em->getRepository(EntityDir\User::class);
         $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
         $this->clientRepository = $em->getRepository(EntityDir\Client::class);
-        $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
         $this->namedDeputyRepository = $em->getRepository(EntityDir\NamedDeputy::class);
         $this->log = [];
     }
@@ -454,16 +453,6 @@ class OrgService
         if ($this->debug) {
             $this->logger->warning(__CLASS__ . ':' . $message);
         }
-    }
-
-    /**
-     * @param EntityDir\Client $client
-     */
-    private function attachClientToOrganisation(EntityDir\Client $client): void
-    {
-        $this->currentOrganisation->addClient($client);
-        $client->addOrganisation($this->currentOrganisation);
-        $this->currentOrganisation = null;
     }
 
     /**
