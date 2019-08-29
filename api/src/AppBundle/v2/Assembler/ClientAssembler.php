@@ -5,6 +5,7 @@ namespace AppBundle\v2\Assembler;
 use AppBundle\v2\Assembler\Report\ReportAssemblerInterface;
 use AppBundle\v2\DTO\ClientDto;
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
+use AppBundle\Entity\Client;
 
 class ClientAssembler
 {
@@ -54,6 +55,23 @@ class ClientAssembler
         if (isset($data['organisations']) && is_array($data['organisations'])) {
             $dto->setOrganisations($this->assembleClientOrganisations($data['organisations']));
         }
+
+        return $dto;
+    }
+
+    /**
+     * @param Client $client
+     * @return ClientDto
+     */
+    public function assembleFromEntity(Client $client)
+    {
+        $dto = new ClientDto();
+
+        $dto->setId($client->getId());
+        $dto->setCaseNumber($client->getCaseNumber());
+        $dto->setFirstName($client->getFirstname());
+        $dto->setLastName($client->getLastname());
+        $dto->setReportCount($client->getTotalReportCount());
 
         return $dto;
     }

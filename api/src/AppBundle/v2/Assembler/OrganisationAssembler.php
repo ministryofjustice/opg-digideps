@@ -4,6 +4,7 @@ namespace AppBundle\v2\Assembler;
 
 use AppBundle\v2\DTO\DtoPropertySetterTrait;
 use AppBundle\v2\DTO\OrganisationDto;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 
@@ -65,6 +66,10 @@ class OrganisationAssembler
             $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));
         }
 
+        if ($organisation->getClients()) {
+            $dto->setClients($this->assembleOrganisationClients($organisation->getClients()));
+        }
+
         return $dto;
     }
 
@@ -91,12 +96,16 @@ class OrganisationAssembler
      * @param array $clients
      * @return array
      */
-    private function assembleOrganisationClients(array $clients)
+    private function assembleOrganisationClients(iterable $clients)
     {
         $dtos = [];
 
         foreach ($clients as $client) {
-            $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
+            if ($client instanceof Client) {
+                $dtos[] = $this->clientDtoAssembler->assembleFromEntity($client);
+            } else {
+                $dtos[] = $this->clientDtoAssembler->assembleFromArray($client);
+            }
         }
 
         return $dtos;

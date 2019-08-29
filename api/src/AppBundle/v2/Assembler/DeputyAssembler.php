@@ -57,10 +57,6 @@ class DeputyAssembler
         $dto->setJobTitle($deputy->getJobTitle());
         $dto->setPhoneMain($deputy->getPhoneMain());
 
-        if (isset($data['clients']) && is_array($data['clients'])) {
-            $dto->setClients($this->assembleDeputyClients($data['clients']));
-        }
-
         return $dto;
     }
 
