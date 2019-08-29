@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-WORKSPACE=$1
-WORKSPACE=${WORKSPACE//[^[:alnum:]]/}
-WORKSPACE=${WORKSPACE,,}
-WORKSPACE=${WORKSPACE:0:14}
-echo "${WORKSPACE}"
