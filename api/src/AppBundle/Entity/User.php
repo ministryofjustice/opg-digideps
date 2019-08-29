@@ -282,15 +282,6 @@ class User implements UserInterface
     private $coDeputyClientConfirmed;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Groups({"user-organisations"})
-     *
-     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="users")
-     */
-    private $organisations;
-
-    /**
      * Constructor.
      */
     public function __construct($coDeputyClientConfirmed = false)
@@ -686,6 +677,30 @@ class User implements UserInterface
         return $this->organisations->filter(function ($organisation) {
             return $organisation->isActivated();
         });
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function addOrganisation(Organisation $organisation)
+    {
+        if (!$this->organisations->contains($organisation)) {
+            $this->organisations->add($organisation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function removeOrganisation(Organisation $organisation)
+    {
+        $this->organisations->removeElement($organisation);
+
+        return $this;
     }
 
     /**
@@ -1309,37 +1324,5 @@ class User implements UserInterface
                 $this->setRoleName(User::ROLE_PA_TEAM_MEMBER);
             }
         }
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getOrganisations()
-    {
-        return $this->organisations;
-    }
-
-    /**
-     * @param Organisation $organisation
-     * @return User
-     */
-    public function addOrganisation(Organisation $organisation)
-    {
-        if (!$this->organisations->contains($organisation)) {
-            $this->organisations->add($organisation);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Organisation $organisation
-     * @return User
-     */
-    public function removeOrganisation(Organisation $organisation)
-    {
-        $this->organisations->removeElement($organisation);
-
-        return $this;
     }
 }
