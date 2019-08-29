@@ -206,6 +206,21 @@ class Organisation
     }
 
     /**
+     * @param int $userId
+     * @return User|null
+     */
+    public function getUserById(int $userId)
+    {
+        foreach ($this->users as $user) {
+            if ($user->getId() === $userId) {
+                return $user;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param User[] $users
      * @return $this
      */

@@ -5,6 +5,7 @@ imports:
     - { resource: services/registration.yml }
     - { resource: services/rest_handlers.yml }
     - { resource: services/repositories.yml }
+    - { resource: services/security.yml }
     - { resource: services/transformers.yml }
 
 services:
