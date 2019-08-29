@@ -334,6 +334,14 @@ class User implements AdvancedUserInterface
     private $teamNames = [];
 
     /**
+     * @JMS\Type("array<AppBundle\Entity\Organisation>")
+     * @JMS\Groups({"user_organisations"})
+     *
+     * @var ArrayCollection
+     */
+    private $organisations = [];
+
+    /**
      * @return int $id
      */
     public function getId()
@@ -1149,5 +1157,21 @@ class User implements AdvancedUserInterface
             $this->addressPostcode,
             $this->addressCountry
         ]);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
+    }
+
+    /**
+     * @param ArrayCollection $organisations
+     */
+    public function setOrganisations($organisations)
+    {
+        $this->organisations = $organisations;
     }
 }

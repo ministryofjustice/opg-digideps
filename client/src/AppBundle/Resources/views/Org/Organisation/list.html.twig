@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "org-organisation" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'listPage.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'listPage.pageTitle' | trans }}{% endblock %}
+
+{% block breadcrumbs %}
+    {{ macros.breadcrumbsArray([
+        { href: url('org_dashboard'), text: 'breadcrumbs.dashboard' | trans },
+        { href: url('org_settings'), text: 'breadcrumbs.settings' | trans },
+        { text: 'breadcrumbs.index' | trans }
+    ]) }}
+{% endblock %}
+
+{% block pageContent %}
+
+    <ul class="govuk-list">
+        {% for organisation in organisations %}
+            <li>
+                <a class="govuk-link" href="{{ url('org_organisation_view', {id: organisation.id}) }}">
+                    {{ organisation.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

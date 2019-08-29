@@ -15,8 +15,11 @@ class OrganisationControllerTest extends AbstractTestController
     /** @var EntityManager */
     private static $em;
 
-    /** @var null"string */
+    /** @var null|string */
     private static $tokenAdmin = null;
+
+    /** @var null|string */
+    private static $tokenDeputyInOrg = null;
 
     /**
      * {@inheritDoc}
@@ -24,7 +27,11 @@ class OrganisationControllerTest extends AbstractTestController
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::fixtures()->createOrganisations(3);
+        self::fixtures()->createOrganisations(4);
+        self::fixtures()->flush()->clear();
+
+        $profUser = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
+        self::fixtures()->addUserToOrganisation($profUser->getId(), 4);
         self::fixtures()->flush()->clear();
 
         self::$em = self::$frameworkBundleClient->getContainer()->get('em');
@@ -39,7 +46,12 @@ class OrganisationControllerTest extends AbstractTestController
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 
+        if (null === self::$tokenDeputyInOrg) {
+            self::$tokenDeputyInOrg = $this->loginAsProf();
+        }
+
         $this->headers = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenAdmin];
+        $this->headersDeputy = ['CONTENT_TYPE' => 'application/json', 'HTTP_AuthToken' => self::$tokenDeputyInOrg];
     }
 
     /**
@@ -55,7 +67,7 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertTrue($responseContent['success']);
-        $this->assertCount(3, $responseContent['data']);
+        $this->assertCount(4, $responseContent['data']);
     }
 
     /**
@@ -90,7 +102,30 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Organisation id: 27 not found', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function getByIdActionReturnsForbiddenForDeputiesNotInOrganisation()
+    {
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/1', [], [], $this->headersDeputy);
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function getByIdActionAllowsDeputiesFetchTheirOwnOrganisation()
+    {
+        self::$frameworkBundleClient->request('GET', '/v2/organisation/4', [], [], $this->headersDeputy);
+
+        $response = self::$frameworkBundleClient->getResponse();
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
     /**
@@ -300,7 +335,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function addUserActionReturnsBadRequestOnInvalidOrganisationId()
+    public function addUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
         self::$frameworkBundleClient->request(
             'PUT',
@@ -313,10 +348,9 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Invalid organisation id', $responseContent['message']);
     }
 
     /**
@@ -339,6 +373,40 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
         $this->assertEquals('Invalid user id', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function addUserActionReturnsForbiddenForUsersNotInOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'PUT',
+            '/v2/organisation/1/user/3',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function addUserActionAllowsUsersToAddToTheirOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'PUT',
+            '/v2/organisation/4/user/3',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
     /**
@@ -376,7 +444,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * @test
      */
-    public function removeUserActionReturnsBadRequestOnInvalidOrganisationId()
+    public function removeUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
         self::$frameworkBundleClient->request(
             'DELETE',
@@ -389,10 +457,9 @@ class OrganisationControllerTest extends AbstractTestController
         $response = self::$frameworkBundleClient->getResponse();
         $responseContent = json_decode($response->getContent(), true);
 
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
-        $this->assertEquals('Invalid organisation id', $responseContent['message']);
     }
 
     /**
@@ -415,5 +482,39 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertTrue($response->headers->contains('Content-Type', 'application/json'));
         $this->assertFalse($responseContent['success']);
         $this->assertEquals('Invalid user id', $responseContent['message']);
+    }
+
+    /**
+     * @test
+     */
+    public function removeUserActionReturnsForbiddenForUsersNotInOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/1/user/3',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function removeUserActionAllowsUserRemoveFromTheirOrganisation()
+    {
+        self::$frameworkBundleClient->request(
+            'DELETE',
+            '/v2/organisation/4/user/3',
+            [],
+            [],
+            $this->headersDeputy
+        );
+
+        $response = self::$frameworkBundleClient->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 }

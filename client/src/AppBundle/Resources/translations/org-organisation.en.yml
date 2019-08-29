@@ -1,0 +1,48 @@
+breadcrumbs:
+    dashboard: Dashboard
+    settings: Settings
+    index: Organisations
+
+listPage:
+    htmlTitle: Settings - Organisations
+    pageTitle: Select an organisation to view
+    resendActivation: Resend activation email
+
+viewPage:
+    htmlTitle: Settings - Organisations
+    intro: Add and remove user accounts for your organisation
+    tableHeading: List of users
+    addUser: Add user
+    nameAndJob: Name and job
+    contactInfo: Contact info
+
+addPage:
+    htmlTitle: Settings - Add organisation user
+    pageTitle: Add user to organisation
+
+editPage:
+  htmlTitle: Settings - Edit organisation user
+  pageTitle: Edit user account
+  moreThanOneTeamNotification: This user also works on other deputyships. Any changes you make will update their account across all deputyship teams.
+
+deletePage:
+  htmlTitle: Settings - Remove organisation user
+  subject: user from this organisation
+  summary:
+    fullName: Name
+    email: Email address
+
+form:
+    firstname:
+        label: First name
+    lastname:
+        label: Last name
+    email:
+        label: Email
+        existingError: There's a problem with your email address. Please contact our helpline.
+    jobTitle:
+        label: Job title (optional)
+    phoneMain:
+        label: Phone (optional)
+    save:
+        label: Save
