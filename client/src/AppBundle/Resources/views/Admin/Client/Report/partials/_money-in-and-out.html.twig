@@ -138,7 +138,8 @@
 
 <hr />
 
-{% if report.type not in ['103-5'] %}
+{# Don't show question for professional reports with short money sections #}
+{% if report.type not in ['103-5', '103-4-5'] %}
     {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
         'fieldSetClass' : 'inline',
         'formGroupClass': 'push-half--bottom'
