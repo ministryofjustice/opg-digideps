@@ -86,7 +86,7 @@ class StatsController extends RestController
     /**
      * 'satisfaction' metric
      *
-     * @returns array $specification
+     * @return array $specification
      * $specification[0]    string     The aggregation function
      * $specification[1]    array      Dimensions supported by this metric
      * $specification[2]    string     SQL query to get raw statistic data
@@ -108,7 +108,7 @@ class StatsController extends RestController
     /**
      * 'reportsSubmitted' metric
      *
-     * @returns array $specification
+     * @return array $specification
      * $specification[0]    string     The aggregation function
      * $specification[1]    array      Dimensions supported by this metric
      * $specification[2]    string     SQL query to get raw statistic data
