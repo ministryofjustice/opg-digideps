@@ -83,6 +83,14 @@ class StatsController extends RestController
         return $query->getResult();
     }
 
+    /**
+     * 'satisfaction' metric
+     *
+     * @returns array $specification
+     * $specification[0]    string     The aggregation function
+     * $specification[1]    array      Dimensions supported by this metric
+     * $specification[2]    string     SQL query to get raw statistic data
+     */
     public function getMetricQuerySatisfaction()
     {
         return ["AVG(val)", ['deputyType', 'reportType'], "SELECT
@@ -97,6 +105,14 @@ class StatsController extends RestController
         FROM satisfaction s"];
     }
 
+    /**
+     * 'reportsSubmitted' metric
+     *
+     * @returns array $specification
+     * $specification[0]    string     The aggregation function
+     * $specification[1]    array      Dimensions supported by this metric
+     * $specification[2]    string     SQL query to get raw statistic data
+     */
     public function getMetricQueryReportsSubmitted()
     {
         return ["COUNT(1)", ['deputyType', 'reportType'], "SELECT
