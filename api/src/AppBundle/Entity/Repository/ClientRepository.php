@@ -105,13 +105,13 @@ class ClientRepository extends EntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr WHERE c.id = ?1')
+            ->createQuery('SELECT c, r, ndr, o FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.organisations o WHERE c.id = ?1')
             ->setParameter(1, $id);
 
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class);
         $result = $query->getArrayResult();
         $this->_em->getFilters()->enable('softdeleteable');
-        
+
         return count($result) === 0 ? null : $result[0];
     }
 }

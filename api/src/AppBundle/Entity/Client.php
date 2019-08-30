@@ -239,6 +239,15 @@ class Client implements ClientInterface
     private $archivedAt;
 
     /**
+     * @var ArrayCollection
+     *
+     * @JMS\Groups({"client-organisations"})
+     *
+     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="clients")
+     */
+    private $organisations;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -247,6 +256,7 @@ class Client implements ClientInterface
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
+        $this->organisations = new ArrayCollection();
     }
 
     /**
@@ -1051,5 +1061,38 @@ class Client implements ClientInterface
     public function getActiveTo()
     {
         return $this->getDeletedAt();
+    }
+
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function addOrganisation(Organisation $organisation)
+    {
+        if (!$this->organisations->contains($organisation)) {
+            $this->organisations->add($organisation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function removeOrganisation(Organisation $organisation)
+    {
+        $this->organisations->removeElement($organisation);
+
+        return $this;
     }
 }

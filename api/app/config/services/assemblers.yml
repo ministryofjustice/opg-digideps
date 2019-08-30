@@ -22,12 +22,14 @@ services:
     arguments:
       - '@AppBundle\v2\Assembler\Report\ReportSummaryAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
+      - '@PlainOrganisationAssembler'
 
   ClientAssemblerFromReportEntity:
     class: AppBundle\v2\Assembler\ClientAssembler
     arguments:
       - '@AppBundle\v2\Assembler\Report\FullReportAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
+      - '@PlainOrganisationAssembler'
 
   AppBundle\v2\Assembler\DeputyAssembler:
     class: AppBundle\v2\Assembler\DeputyAssembler
@@ -38,3 +40,7 @@ services:
     class: AppBundle\v2\Assembler\OrganisationAssembler
     arguments:
       - '@AppBundle\v2\Assembler\DeputyAssembler'
+      - '@AppBundle\v2\Assembler\ClientAssembler'
+
+  PlainOrganisationAssembler:
+    class: AppBundle\v2\Assembler\OrganisationAssembler

@@ -6,6 +6,7 @@ use AppBundle\Entity\Organisation;
 use AppBundle\Entity\Repository\OrganisationRepository;
 use AppBundle\Entity\Repository\UserRepository;
 use AppBundle\Entity\User;
+use AppBundle\Factory\OrganisationFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -24,23 +25,29 @@ class OrganisationRestHandler
     /** @var UserRepository */
     private $userRepository;
 
+    /** @var OrganisationFactory */
+    private $organisationFactory;
+
     /**
      * @param EntityManager $em
      * @param ValidatorInterface $validator
      * @param OrganisationRepository $orgRepository
      * @param UserRepository $userRepository
+     * @param OrganisationFactory $organisationFactory
      */
     public function __construct(
         EntityManager $em,
         ValidatorInterface $validator,
         OrganisationRepository $orgRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        OrganisationFactory $organisationFactory
     )
     {
         $this->em = $em;
         $this->validator = $validator;
         $this->orgRepository = $orgRepository;
         $this->userRepository = $userRepository;
+        $this->organisationFactory = $organisationFactory;
     }
 
     /**
@@ -62,8 +69,12 @@ class OrganisationRestHandler
             throw new OrganisationCreationException('Email identifer already in use');
         }
 
-        $organisation = new Organisation();
-        $this->populateOrganisation($data, $organisation);
+        $organisation = $this->organisationFactory->createFromEmailIdentifier(
+            $data['name'],
+            $data['email_identifier'],
+            (bool)$data['is_activated']
+        );
+
         $this->throwExceptionOnInvalidEntity($organisation);
 
         $this->em->persist($organisation);

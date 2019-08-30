@@ -3,8 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 
@@ -16,9 +18,19 @@ class OrgService
     protected $em;
 
     /**
+     * @var EntityDir\Repository\OrganisationRepository
+     */
+    private $orgRepository;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
+
+    /**
+     * @var OrganisationFactory
+     */
+    private $orgFactory;
 
     /**
      * @var array
@@ -35,6 +47,11 @@ class OrgService
      */
     protected $warnings = [];
 
+    /**
+     * @var EntityDir\Organisation
+     */
+    private $currentOrganisation;
+
     private $debug = false;
 
     /**
@@ -43,10 +60,12 @@ class OrgService
     private $namedDeputyRepository;
 
     /**
-     * @param EntityManager   $em
+     * OrgService constructor.
+     * @param EntityManager $em
      * @param LoggerInterface $logger
+     * @param OrganisationFactory $orgFactory
      */
-    public function __construct(EntityManager $em, LoggerInterface $logger)
+    public function __construct(EntityManager $em, LoggerInterface $logger, OrganisationFactory $orgFactory)
     {
         $this->em = $em;
         $this->logger = $logger;
@@ -54,7 +73,9 @@ class OrgService
         $this->reportRepository = $em->getRepository(EntityDir\Report\Report::class);
         $this->clientRepository = $em->getRepository(EntityDir\Client::class);
         $this->namedDeputyRepository = $em->getRepository(EntityDir\NamedDeputy::class);
+        $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
         $this->log = [];
+        $this->orgFactory = $orgFactory;
     }
 
     /**
@@ -235,12 +256,32 @@ class OrgService
             $this->warnings[] = 'Organisation/Team ' . $team->getId() . ' updated to ' . $csvRow['Dep Surname'];
             $this->em->flush($team);
         }
+
         if ($user instanceof EntityDir\User) {
             $this->em->persist($user);
             $this->em->flush($user);
         }
 
+        $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
+        if (null === $this->currentOrganisation) {
+            $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+        }
+
         return $user;
+    }
+
+    /**
+     * @param string $email
+     * @return EntityDir\Organisation
+     * @throws \Doctrine\ORM\ORMException
+     */
+    private function createOrganisationFromEmail($email)
+    {
+        $organisation = $this->orgFactory->createFromFullEmail($email, $email);
+        $this->em->persist($organisation);
+        $this->em->flush($organisation);
+
+        return $organisation;
     }
 
     /**
@@ -273,6 +314,7 @@ class OrgService
 
         // Add client to named user (will be done later anyway)
         //$client->addUser($userOrgNamed);
+        $this->attachClientToOrganisation($client);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
@@ -347,6 +389,7 @@ class OrgService
 
         return $client;
     }
+
     /**
      * @param array            $csvRow keys: Last Report Day, Typeofrep, }
      * @param EntityDir\Client $client the client the report should belong to
@@ -509,4 +552,13 @@ class OrgService
         return $namedDeputy;
     }
 
+    /**
+     * @param EntityDir\Client $client
+     */
+    private function attachClientToOrganisation(EntityDir\Client $client): void
+    {
+        $this->currentOrganisation->addClient($client);
+        $client->addOrganisation($this->currentOrganisation);
+        $this->currentOrganisation = null;
+    }
 }

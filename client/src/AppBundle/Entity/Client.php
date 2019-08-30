@@ -218,6 +218,13 @@ class Client
     private $totalReportCount;
 
     /**
+     * @JMS\Type("ArrayCollection<AppBundle\Entity\Organisation>")
+     *
+     * @var ArrayCollection
+     */
+    private $organisations;
+
+    /**
      * @var integer
      *
      * @JMS\Type("integer")
@@ -953,5 +960,21 @@ class Client
     public function getActiveTo()
     {
         return $this->activeTo;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrganisations()
+    {
+        return $this->organisations;
+    }
+
+    /**
+     * @param ArrayCollection $organisations
+     */
+    public function setOrganisations(array $organisations): void
+    {
+        $this->organisations = $organisations;
     }
 }

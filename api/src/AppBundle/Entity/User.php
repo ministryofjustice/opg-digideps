@@ -680,6 +680,30 @@ class User implements UserInterface
     }
 
     /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function addOrganisation(Organisation $organisation)
+    {
+        if (!$this->organisations->contains($organisation)) {
+            $this->organisations->add($organisation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return User
+     */
+    public function removeOrganisation(Organisation $organisation)
+    {
+        $this->organisations->removeElement($organisation);
+
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getRoleName()
