@@ -52,9 +52,9 @@ class Client
     private $users = [];
 
     /**
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Type("AppBundle\Entity\NamedDeputy")
      *
-     * @var User
+     * @var NamedDeputy
      */
     private $namedDeputy;
 
@@ -269,7 +269,7 @@ class Client
     }
 
     /**
-     * @return User
+     * @return NamedDeputy
      */
     public function getNamedDeputy()
     {
@@ -277,9 +277,9 @@ class Client
     }
 
     /**
-     * @param User $namedDeputy
+     * @param NamedDeputy $namedDeputy
      */
-    public function setNamedDeputy($namedDeputy)
+    public function setNamedDeputy(NamedDeputy $namedDeputy)
     {
         $this->namedDeputy = $namedDeputy;
     }
