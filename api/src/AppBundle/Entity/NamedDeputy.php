@@ -95,6 +95,24 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
+     */
+    private $address4;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
+     */
+    private $address5;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
@@ -122,6 +140,14 @@ class NamedDeputy
         $this->setEmail2($csvRow['Email2']);
         $this->setEmail3($csvRow['Email3']);
         $this->setDepAddrNo($csvRow['DepAddr No']);
+
+        $this->setAddress1($csvRow['Dep Adrs1']);
+        $this->setAddress2($csvRow['Dep Adrs2']);
+        $this->setAddress3($csvRow['Dep Adrs3']);
+        $this->setAddress4($csvRow['Dep Adrs4']);
+        $this->setAddress5($csvRow['Dep Adrs5']);
+        $this->setAddressPostcode($csvRow['Dep Postcode']);
+
     }
 
     /**
@@ -177,7 +203,7 @@ class NamedDeputy
      */
     public function setFirstname($firstname)
     {
-        $this->firstname = $firstname;
+        $this->firstname = trim($firstname);
         return $this;
     }
 
@@ -196,7 +222,7 @@ class NamedDeputy
      */
     public function setLastname($lastname)
     {
-        $this->lastname = $lastname;
+        $this->lastname = trim($lastname);
         return $this;
     }
 
@@ -217,7 +243,7 @@ class NamedDeputy
      */
     public function setEmail1($email1)
     {
-        $this->email1 = $email1;
+        $this->email1 = trim($email1);
         return $this;
     }
 
@@ -236,7 +262,7 @@ class NamedDeputy
      */
     public function setEmail2($email2)
     {
-        $this->email2 = $email2;
+        $this->email2 = trim($email2);
         return $this;
     }
 
@@ -255,7 +281,7 @@ class NamedDeputy
      */
     public function setEmail3($email3)
     {
-        $this->email3 = $email3;
+        $this->email3 = trim($email3);
         return $this;
     }
 
@@ -275,6 +301,82 @@ class NamedDeputy
     public function setDepAddrNo($depAddrNo)
     {
         $this->depAddrNo = User::padDeputyNumber($depAddrNo);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress4()
+    {
+        return $this->address4;
+    }
+
+    /**
+     * @param string $address4
+     *
+     * @return $this
+     */
+    public function setAddress4($address4)
+    {
+        $this->address4 = trim($address4);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress5()
+    {
+        return $this->address5;
+    }
+
+    /**
+     * @param string $address5
+     *
+     * @return $this
+     */
+    public function setAddress5($address5)
+    {
+        $this->address5 = trim($address5);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneMain()
+    {
+        return $this->phoneMain;
+    }
+
+    /**
+     * @param string $phoneMain
+     *
+     * @return $this
+     */
+    public function setPhoneMain($phoneMain)
+    {
+        $this->phoneMain = trim($phoneMain);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneAlternative()
+    {
+        return $this->phoneAlternative;
+    }
+
+    /**
+     * @param string $phoneAlternative
+     *
+     * @return $this
+     */
+    public function setPhoneAlternative($phoneAlternative)
+    {
+        $this->phoneAlternative = trim($phoneAlternative);
         return $this;
     }
 }

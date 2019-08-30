@@ -444,11 +444,16 @@ class IndexController extends AbstractController
                         'Dep Forename',
                         'Dep Surname',
                         'Dep Type', // 23 = PA (but not confirmed)
+                        'DepAddr No',
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
+                        'Dep Adrs4',
+                        'Dep Adrs5',
                         'Dep Postcode',
                         'Email', //mandatory, used as user ID whem uploading
+                        'Email2',
+                        'Email3',
                         'Case', //case number, used as ID when uploading
                         'Forename', 'Surname', //client forename and surname
                         'Corref',
