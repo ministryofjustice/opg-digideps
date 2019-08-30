@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\Traits\AddressTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -14,7 +13,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class NamedDeputy
 {
-    use AddressTrait;
 
     /**
      * @var int
@@ -96,6 +94,33 @@ class NamedDeputy
      *
      * @JMS\Type("string")
      * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
+     */
+    private $address1;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
+     */
+    private $address3;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
      * @ORM\Column(name="address4", type="string", length=200, nullable=true)
      */
     private $address4;
@@ -108,6 +133,24 @@ class NamedDeputy
      * @ORM\Column(name="address5", type="string", length=200, nullable=true)
      */
     private $address5;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
+     */
+    private $addressPostcode;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"user", "team", "report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
+     */
+    private $addressCountry;
 
     /**
      * @var string
@@ -304,6 +347,61 @@ class NamedDeputy
         return $this;
     }
 
+
+    /**
+     * @return string
+     */
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    /**
+     * @param string $address1
+     * @return $this
+     */
+    public function setAddress1($address1)
+    {
+        $this->address1 = trim($address1);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @param string $address2
+     * @return $this
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = trim($address2);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    /**
+     * @param string $address3
+     * @return $this
+     */
+    public function setAddress3($address3)
+    {
+        $this->address3 = trim($address3);
+        return $this;
+    }
+
     /**
      * @return string
      */
@@ -314,7 +412,6 @@ class NamedDeputy
 
     /**
      * @param string $address4
-     *
      * @return $this
      */
     public function setAddress4($address4)
@@ -333,12 +430,47 @@ class NamedDeputy
 
     /**
      * @param string $address5
-     *
      * @return $this
      */
     public function setAddress5($address5)
     {
         $this->address5 = trim($address5);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+
+    /**
+     * @param string $addressPostcode
+     * @return $this
+     */
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = trim($addressPostcode);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    /**
+     * @param $addressCountry
+     * @return $this
+     */
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = trim($addressCountry);
         return $this;
     }
 

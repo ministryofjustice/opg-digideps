@@ -83,7 +83,31 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $address1;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $address2;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $address3;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address4;
 
@@ -91,9 +115,25 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({ "report-submitted-by", "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address5;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $addressPostcode;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $addressCountry;
 
     /**
      * @return int
@@ -246,6 +286,132 @@ class NamedDeputy
     public function setDepAddrNo($depAddrNo)
     {
         $this->depAddrNo = User::padDeputyNumber($depAddrNo);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    /**
+     * @param string $address1
+     * @return $this
+     */
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @param string $address2
+     * @return $this
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    /**
+     * @param string $address3
+     * @return $this
+     */
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress4()
+    {
+        return $this->address4;
+    }
+
+    /**
+     * @param string $address4
+     * @return $this
+     */
+    public function setAddress4($address4)
+    {
+        $this->address4 = $address4;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress5()
+    {
+        return $this->address5;
+    }
+
+    /**
+     * @param string $address5
+     * @return $this
+     */
+    public function setAddress5($address5)
+    {
+        $this->address5 = $address5;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+
+    /**
+     * @param string $addressPostcode
+     * @return $this
+     */
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    /**
+     * @param $addressCountry
+     * @return $this
+     */
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
         return $this;
     }
 }
