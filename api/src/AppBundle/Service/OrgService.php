@@ -90,7 +90,7 @@ class OrgService
     {
         $this->log('Received ' . count($data) . ' records');
 
-        $this->added = ['prof_users' => [],'pa_users' => [], 'clients' => [], 'reports' => []];
+        $this->added = ['prof_users' => [], 'pa_users' => [], 'named_deputies' => [], 'clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
@@ -130,6 +130,7 @@ class OrgService
 
         sort($this->added['prof_users']);
         sort($this->added['pa_users']);
+        sort($this->added['named_deputies']);
         sort($this->added['clients']);
         sort($this->added['reports']);
 
@@ -495,10 +496,14 @@ class OrgService
 
         $namedDeputy = $this->namedDeputyRepository->findOneBy([
             'deputyNo' => $deputyNo,
+            'email1' => $csvRow['Email']
         ]);
+
+        // should we update named deputy details here ?
 
         if (!$namedDeputy instanceof EntityDir\NamedDeputy) {
             $namedDeputy = new EntityDir\NamedDeputy($csvRow);
+            $this->added['named_deputies'][] = $deputyNo;
         }
 
         return $namedDeputy;

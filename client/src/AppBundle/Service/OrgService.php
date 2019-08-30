@@ -31,10 +31,11 @@ class OrgService
         // MOVE TO SERVICE
         $flashBag->add(
             'notice',
-            sprintf('Added %d Prof users, %d PA users, %d clients and %d reports. Go to users tab to enable them',
+            sprintf('Added %d Prof users, %d PA users, %d clients, %d named deputies and %d reports. Go to users tab to enable them',
                 count($ret['added']['prof_users']),
                 count($ret['added']['pa_users']),
                 count($ret['added']['clients']),
+                count($ret['added']['named_deputies']),
                 count($ret['added']['reports'])
             )
         );
