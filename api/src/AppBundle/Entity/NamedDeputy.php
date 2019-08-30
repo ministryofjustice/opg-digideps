@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Traits\AddressTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -13,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class NamedDeputy
 {
+    use AddressTrait;
+
     /**
      * @var int
      * @JMS\Type("integer")
@@ -21,6 +24,7 @@ class NamedDeputy
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="named_deputy_id_seq", allocationSize=1, initialValue=1)
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $id;
 
@@ -28,7 +32,7 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @ORM\Column(name="deputy_no", type="string", length=15, nullable=false)
      */
     private $deputyNo;
@@ -36,7 +40,7 @@ class NamedDeputy
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({ "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      *
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -47,13 +51,13 @@ class NamedDeputy
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      * @JMS\Type("string")
-     * @JMS\Groups({ "named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $lastname;
 
     /**
      * @var string
-     * @JMS\Groups({"named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email1", type="string", length=60, nullable=false, unique=false)
@@ -62,7 +66,7 @@ class NamedDeputy
 
     /**
      * @var string
-     * @JMS\Groups({"named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email2", type="string", length=60, nullable=true, unique=false)
@@ -71,7 +75,7 @@ class NamedDeputy
 
     /**
      * @var string
-     * @JMS\Groups({"named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
@@ -82,10 +86,28 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"named-deputy"})
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @ORM\Column(name="dep_addr_no", type="integer", length=100, nullable=true)
      */
     private $depAddrNo;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
+     */
+    private $phoneMain;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
+     */
+    private $phoneAlternative;
 
     /**
      * NamedDeputy constructor.
