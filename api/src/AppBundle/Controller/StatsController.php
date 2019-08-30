@@ -17,7 +17,7 @@ class StatsController extends RestController
     public function getMetric(Request $request)
     {
         $metric = $request->query->get('metric');
-        $dimension = $request->query->get('dimension');
+        $dimensions = $request->query->get('dimension');
         $startDate = $request->query->get('startDate');
         $endDate = $request->query->get('endDate');
 
@@ -25,7 +25,7 @@ class StatsController extends RestController
             throw new \Exception('Must specify a metric');
         }
 
-        if ($dimension !== null && !in_array($dimension, ['deputyType', 'reportType'])) {
+        if (!is_array($dimensions)) {
             throw new \Exception('Invalid dimension');
         }
 
@@ -52,18 +52,30 @@ class StatsController extends RestController
         }
 
         // Get an aggregation method and a query which pulls back (date, deputyType, reportType)
-        list ($aggregation, $subquery) = $this->$subqueryMethod();
+        list ($aggregation, $supportedDimensions, $subquery) = $this->$subqueryMethod();
 
         $em = $this->getEntityManager();
         $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('dimension', 'dimension');
         $rsm->addScalarResult('amount', 'amount');
+        foreach ($dimensions as $index => $dimensionName) {
+            if (!in_array($dimensionName, $supportedDimensions)) {
+                throw new \Exception("Metric does not support \"$dimensionName\" dimension");
+            }
+
+            $key = "dimension$index";
+            $rsm->addScalarResult($key, $dimensionName);
+            $dimensions["t.$dimensionName"] = $key;
+            $selectDimensions[] = "t.$dimensionName $key";
+            $groupDimensions[] = "t.$dimensionName";
+        }
 
         // Retrieve the data, within the date range and grouped by the dimension
-        if ($dimension === null) {
-            $query = $em->createNativeQuery("SELECT 'all' dimension, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate", $rsm);
+        if (count($dimensions)) {
+            $select = implode(', ', $selectDimensions);
+            $group = implode(', ', $groupDimensions);
+            $query = $em->createNativeQuery("SELECT $select, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate GROUP BY $group", $rsm);
         } else {
-            $query = $em->createNativeQuery("SELECT t.$dimension dimension, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate GROUP BY t.$dimension", $rsm);
+            $query = $em->createNativeQuery("SELECT 'all' dimension, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate", $rsm);
         }
 
         $query->setParameter('startDate', $startDate->format('Y-m-d'));
@@ -73,7 +85,7 @@ class StatsController extends RestController
 
     public function getMetricQuerySatisfaction()
     {
-        return ["AVG(val)", "SELECT
+        return ["AVG(val)", ['deputyType', 'reportType'], "SELECT
             s.created_at date,
             CASE
                 WHEN s.deputy_role LIKE '%_PROF_%' THEN 'prof'
@@ -87,7 +99,7 @@ class StatsController extends RestController
 
     public function getMetricQueryReportsSubmitted()
     {
-        return ["COUNT(1)", "SELECT
+        return ["COUNT(1)", ['deputyType', 'reportType'], "SELECT
             rs.created_on date,
             CASE
                 WHEN u.role_name LIKE '%_PROF_%' THEN 'prof'
