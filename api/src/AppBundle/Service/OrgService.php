@@ -116,11 +116,42 @@ class OrgService
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
             try {
-                //$userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
 
                 $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($row['Email']);
                 if (null === $this->currentOrganisation) {
                     $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
+                    // Create initial user for organisation
+//                    $user = new EntityDir\User();
+//                    $user
+//                        ->setRegistrationDate(new \DateTime())
+//                        ->setDeputyNo(EntityDir\User::padDeputyNumber($row['Deputy No']))
+//                        ->setEmail($row['Email'])
+//                        ->setFirstname($row['Dep Forename'])
+//                        ->setLastname($row['Dep Surname'])
+//                        ->setRoleName(EntityDir\User::$depTypeIdToUserRole[$row['Dep Type']]);
+//
+//                    // update user address, if not set
+//                    // the following could be moved to line 154 if no update is needed (DDPB-2262)
+//                    if (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1()) {
+//                        $user
+//                            ->setAddress1($row['Dep Adrs1'])
+//                            ->setAddress2($row['Dep Adrs2'])
+//                            ->setAddress3($row['Dep Adrs3'])
+//                            ->setAddressPostcode($row['Dep Postcode'])
+//                            ->setAddressCountry('GB')
+//                        ;
+//                    }
+//
+//                    $this->em->persist($user);
+//                    $this->em->flush($user);
+//
+//                    if ($user->isProfDeputy()) {
+//                        $this->added['prof_users'][] = $row['Email'];
+//                    } elseif ($user->isPaDeputy()) {
+//                        $this->added['pa_users'][] = $row['Email'];
+//                    }
+//
+//                    $this->currentOrganisation->addUser($user);
                 }
 
                 $namedDeputy = $this->identifyNamedDeputy($row);
