@@ -14,6 +14,8 @@ trait UserTrait
         'lay deputy' => User::ROLE_LAY_DEPUTY,
         'ad' => User::ROLE_AD,
         'case manager' => User::ROLE_CASE_MANAGER,
+        'pa named' => User::ROLE_PA_NAMED,
+        'prof named' => User::ROLE_PROF_NAMED,
     ];
 
     /**

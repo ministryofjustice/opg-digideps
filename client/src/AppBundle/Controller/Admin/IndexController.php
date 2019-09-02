@@ -64,6 +64,8 @@ class IndexController extends AbstractController
     {
         $availableRoles = [
             EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
+            EntityDir\User::ROLE_PA_NAMED => 'Public Authority Named Deputy',
+            EntityDir\User::ROLE_PROF_NAMED => 'Professional Named Deputy',
             EntityDir\User::ROLE_AD         => 'Assisted Digital',
         ];
         // only admins can add other admins
