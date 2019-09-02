@@ -5,7 +5,6 @@ variable "default_role" {
 variable "accounts" {
   type = map(
     object({
-      domain                = string
       account_id            = string
       cloudtrail_bucket     = string
       cloudformation_bucket = string
