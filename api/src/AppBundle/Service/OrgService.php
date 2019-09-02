@@ -118,6 +118,11 @@ class OrgService
             try {
                 //$userOrgNamed = $this->upsertOrgNamedUserFromCsv($row);
 
+                $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($row['Email']);
+                if (null === $this->currentOrganisation) {
+                    $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
+                }
+
                 $namedDeputy = $this->identifyNamedDeputy($row);
                 $this->em->persist($namedDeputy);
                 $this->em->flush($namedDeputy);
