@@ -18,15 +18,10 @@ Production account:
     subnet: subnet-80cb2dc9
 ```
 
-### Upgrade to PHP 7.3
+### Upgrade to PHP 7.3 and install required libs
 ```bash
 sudo yum remove php*
-sudo yum install php73 php73-pdo php73-pgsql -y
-```
-
-### Install postgres client
-```bash
-sudo yum install postgresql
+sudo yum install php73 php73-pdo php73-pgsql postgresql -y
 ```
 
 ### Install composer
