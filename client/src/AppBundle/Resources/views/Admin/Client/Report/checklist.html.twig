@@ -128,7 +128,7 @@
             {% endif %}
 
             {# Money transfers, Money in and money out #}
-            {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
+            {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') or report.hasSection('paDeputyExpenses') %}
                 {% include 'AppBundle:Admin/Client/Report/partials:_money-in-and-out.html.twig' %}
             {% endif %}
 
