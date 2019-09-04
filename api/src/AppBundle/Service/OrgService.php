@@ -454,7 +454,7 @@ class OrgService
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                $this->log('Changing report type from ' . $report->getType() . ' to ' . $reportType);
+                $this->log('Changing report type from ' . $report->getType() .   ' to ' . $reportType);
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
@@ -581,7 +581,17 @@ class OrgService
         // should we update named deputy details here ?
 
         if (!$namedDeputy instanceof EntityDir\NamedDeputy) {
-            $namedDeputy = new EntityDir\NamedDeputy($csvRow);
+            $namedDeputy = new EntityDir\NamedDeputy(
+                $csvRow['Deputy No'],
+                $csvRow['Email'],
+                $csvRow['Dep Adrs1'],
+                $csvRow['Dep Adrs2'],
+                $csvRow['Dep Adrs3'],
+                $csvRow['Dep Postcode'],
+                $csvRow['Dep Adrs4'],
+                $csvRow['Dep Adrs5'],
+                $csvRow
+            );
             $this->added['named_deputies'][] = $deputyNo;
         }
 

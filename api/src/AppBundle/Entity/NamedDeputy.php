@@ -172,25 +172,43 @@ class NamedDeputy
 
     /**
      * NamedDeputy constructor.
-     * @param array $csvRow
+     *
+     * @param $deputyNo
+     * @param $email
+     * @param $address1
+     * @param $address2
+     * @param $address3
+     * @param $depPostcode
+     * @param null $address4
+     * @param null $address5
+     * @param array $data
      */
-    public function __construct(array $csvRow)
-    {
-        $this->setDeputyNo($csvRow['Deputy No']);
-        $this->setFirstname($csvRow['Dep Forename']);
-        $this->setLastname($csvRow['Dep Surname']);
-        $this->setEmail1($csvRow['Email']);
-        $this->setEmail2($csvRow['Email2']);
-        $this->setEmail3($csvRow['Email3']);
-        $this->setDepAddrNo($csvRow['DepAddr No']);
-
-        $this->setAddress1($csvRow['Dep Adrs1']);
-        $this->setAddress2($csvRow['Dep Adrs2']);
-        $this->setAddress3($csvRow['Dep Adrs3']);
-        $this->setAddress4($csvRow['Dep Adrs4']);
-        $this->setAddress5($csvRow['Dep Adrs5']);
-        $this->setAddressPostcode($csvRow['Dep Postcode']);
-
+    public function __construct($deputyNo,
+                                $email,
+                                $address1,
+                                $address2,
+                                $address3,
+                                $depPostcode,
+                                $address4 = null,
+                                $address5 = null,
+                                $data = []
+    ) {
+        $this->setDeputyNo($deputyNo);
+        $this->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : null);
+        $this->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : null);
+        $this->setEmail1($email);
+        $this->setEmail2(isset($data['Email2']) ? $data['Email2'] : null);
+        $this->setEmail3(isset($data['Email3']) ? $data['Email3'] : null);
+        $this->setDepAddrNo(isset($data['DepAddr No']) ? $data['DepAddr No'] : null);
+        $this->setAddress1($address1);
+        $this->setAddress2($address2);
+        $this->setAddress3($address3);
+        $this->setAddress4($address4);
+        $this->setAddress5($address5);
+        $this->setAddressCountry('GB');
+        $this->setAddressPostcode($depPostcode);
+        $this->setPhoneMain(isset($data['Mobile']) ? $data['Mobile'] : null);
+        $this->setPhoneAlternative(isset($data['Mobile2']) ? $data['Mobile2'] : null);
     }
 
     /**

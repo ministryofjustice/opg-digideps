@@ -14,7 +14,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class NamedDeputy
 {
-    use AddressTrait;
 
     /**
      * @var int
@@ -136,6 +135,22 @@ class NamedDeputy
     private $addressCountry;
 
     /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $phoneMain;
+
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"report-submitted-by", "named-deputy"})
+     */
+    private $phoneAlternative;
+
+    /**
      * @return int
      */
     public function getId()
@@ -169,7 +184,7 @@ class NamedDeputy
      */
     public function setDeputyNo($deputyNo)
     {
-        $this->deputyNo = User::padDeputyNumber($deputyNo);
+        $this->deputyNo =$deputyNo;
         return $this;
     }
 
@@ -412,6 +427,45 @@ class NamedDeputy
     public function setAddressCountry($addressCountry)
     {
         $this->addressCountry = $addressCountry;
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getPhoneMain()
+    {
+        return $this->phoneMain;
+    }
+
+    /**
+     * @param string $phoneMain
+     *
+     * @return $this
+     */
+    public function setPhoneMain($phoneMain)
+    {
+        $this->phoneMain = trim($phoneMain);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneAlternative()
+    {
+        return $this->phoneAlternative;
+    }
+
+    /**
+     * @param string $phoneAlternative
+     *
+     * @return $this
+     */
+    public function setPhoneAlternative($phoneAlternative)
+    {
+        $this->phoneAlternative = trim($phoneAlternative);
         return $this;
     }
 }
