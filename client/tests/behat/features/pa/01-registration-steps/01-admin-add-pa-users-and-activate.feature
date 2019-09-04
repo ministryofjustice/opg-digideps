@@ -1,16 +1,23 @@
 Feature: Add PA users and activate PA user (journey)
 
-  Scenario: add PA users
+#  Scenario: add PA users
+#    Given emails are sent from "admin" area
+#    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+#      # upload PA users
+#    When I click on "admin-upload-pa"
+#    When I attach the file "behat-pa.csv" to "admin_upload_file"
+#    And I press "admin_upload_upload"
+#    Then the form should be valid
+#    #Then I should see "Added 1 PA users"
+#      # activate PA user 1
+#    When I click on "admin-homepage"
+#    And I click on "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
+#    Then the response status code should be 200
+#    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"
+
+  Scenario: Activate PA user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-      # upload PA users
-    When I click on "admin-upload-pa"
-    When I attach the file "behat-pa.csv" to "admin_upload_file"
-    And I press "admin_upload_upload"
-    Then the form should be valid
-    #Then I should see "Added 1 PA users"
-      # activate PA user 1
-    When I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-pa1publicguardiangovuk" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa1@publicguardian.gov.uk"

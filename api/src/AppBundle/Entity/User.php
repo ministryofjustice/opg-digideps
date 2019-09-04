@@ -828,66 +828,6 @@ class User implements UserInterface
     }
 
     /**
-     * @param $address1
-     *
-     * @return $this
-     */
-    public function setAddress1($address1)
-    {
-        $this->address1 = $address1;
-
-        return $this;
-    }
-
-    /**
-     * @param $address2
-     *
-     * @return $this
-     */
-    public function setAddress2($address2)
-    {
-        $this->address2 = $address2;
-
-        return $this;
-    }
-
-    /**
-     * @param $address3
-     *
-     * @return $this
-     */
-    public function setAddress3($address3)
-    {
-        $this->address3 = $address3;
-
-        return $this;
-    }
-
-    /**
-     * @param $addressPostcode
-     *
-     * @return $this
-     */
-    public function setAddressPostcode($addressPostcode)
-    {
-        $this->addressPostcode = $addressPostcode;
-
-        return $this;
-    }
-
-    /**
-     * @param $addressCountry
-     *
-     * @return $this
-     */
-    public function setAddressCountry($addressCountry)
-    {
-        $this->addressCountry = $addressCountry;
-
-        return $this;
-    }
-
-    /**
      * @param $phoneMain
      *
      * @return $this
