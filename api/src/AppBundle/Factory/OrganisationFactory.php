@@ -43,7 +43,7 @@ class OrganisationFactory
     {
         return (new Organisation())
             ->setName($name)
-            ->setEmailIdentifier($emailIdentifier)
+            ->setEmailIdentifier(strtolower($emailIdentifier))
             ->setIsActivated($isActivated);
     }
 }

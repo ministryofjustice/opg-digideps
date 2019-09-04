@@ -61,7 +61,7 @@ class OrganisationRepository extends EntityRepository
     public function organisationExists(string $email): bool
     {
         $queryString = 'SELECT COUNT(o.id) FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
-        $queryParams = [1 => $email];
+        $queryParams = [1 => strtolower($email)];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
             $domain = substr($email, $atSymbolPosition + 1);
@@ -86,7 +86,7 @@ class OrganisationRepository extends EntityRepository
     public function findByEmailIdentifier(string $email): ?Organisation
     {
         $queryString = 'SELECT o FROM AppBundle\Entity\Organisation o WHERE o.emailIdentifier = ?1';
-        $queryParams = [1 => $email];
+        $queryParams = [1 => strtolower($email)];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
             $domain = substr($email, $atSymbolPosition + 1);
