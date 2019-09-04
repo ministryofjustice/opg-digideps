@@ -9,6 +9,16 @@
 
 {% block pageContent %}
 
+    <details class="govuk-details" data-module="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
+        </summary>
+        <div class="govuk-details__text">
+            <p>{{ 'overdueHelpTextParagraph1' | trans }}</p>
+            <p>{{ 'overdueHelpTextParagraph2' | trans }}</p>
+        </div>
+    </details>
+
     <form action="{{ path('org_dashboard') }}" method="GET">
         <div class="govuk-form-group govuk-!-margin-bottom-2">
             <label for="search" class="govuk-label">{{ 'searchBy' | trans }}</label>
