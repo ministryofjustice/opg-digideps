@@ -18,11 +18,10 @@ Production account:
     subnet: subnet-80cb2dc9
 ```
 
-### Install postgres client & php pdo extension
-
-In the Cloud 9 environment, open a terminal tab & install:
+### Upgrade to PHP 7.3 and install required libs
 ```bash
-sudo yum install postgresql php56-pgsql -y
+sudo yum remove php*
+sudo yum install php73 php73-pdo php73-pgsql postgresql -y
 ```
 
 ### Install composer
@@ -31,21 +30,32 @@ sudo yum install postgresql php56-pgsql -y
 cd /tmp && curl -sS https://getcomposer.org/installer | php && sudo mv composer.phar /usr/local/bin/composer
 ```
 
-### Run composer
-
-```bash
-composer install
-```
-It will ask you to set parameters. Set database host to postgres.production02.internal, and add database credentials for production database. Leave the others as default (just press enter)
-
 ### Clone the repo
 
 ```bash
 git clone https://github.com/ministryofjustice/opg-digideps.git
 ```
 
+
+### Run composer
+
+```bash
+cd opg-digideps\api
+composer install
+```
+It will ask you to set parameters. Set database host to postgres.environment-name.internal, and add database credentials for database. Leave the others as default (just press enter)
+
+
 ### Connect to database
 
 ```bash
 psql -h postgres.<environment name>.internal -U digidepsmaster api
+```
+
+### Run migrations 
+#### WARNING: Migrations will execute against whichever database is set in parameters.yml
+```bash
+cd opg-digideps\api
+php app/console doctrine:migrations:status
+php app/console doctrine:migrations:migrate
 ```
