@@ -590,6 +590,8 @@ class OrgService
                 $csvRow['Dep Adrs2'],
                 $csvRow['Dep Adrs3'],
                 $csvRow['Dep Postcode'],
+                $csvRow['Mobile'],
+                $csvRow['Mobile2'],
                 $csvRow['Dep Adrs4'],
                 $csvRow['Dep Adrs5'],
                 $csvRow

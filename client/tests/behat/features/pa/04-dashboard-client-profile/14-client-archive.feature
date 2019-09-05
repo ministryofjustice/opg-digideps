@@ -3,7 +3,7 @@ Feature: PA client archive
   Scenario: PA archives a client
     Given I load the application status from "team-users-complete"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000016" region
+    When I click on "pa-report-open" in the "client-00900009" region
     # archive-cancel
     And I click on "client-archive"
     Then I should see the "confirm-cancel" link
@@ -21,7 +21,7 @@ Feature: PA client archive
     Then the form should be valid
     And the URL should match "/org"
     And I should see "The client has been archived"
-    But I should not see the "client-01000016" region
+    But I should not see the "client-00900009" region
 
   Scenario: CSV re-upload
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -32,4 +32,4 @@ Feature: PA client archive
     Then the form should be valid
       # assert archived is shown in PA dashboard
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should not see the "client-01000016" region
+    Then I should not see the "client-009 00009" region

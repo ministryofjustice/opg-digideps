@@ -27,8 +27,8 @@ Feature: Admin report checklist
       | Hent              | checklist-client-lastname        |
       | B301QL            | checklist-client-address         |
       | 078912345678      | checklist-client-phone           |
-      | John Named        | checklist-deputy-firstname       |
-      | Green             | checklist-deputy-lastname        |
+      | DEP1              | checklist-deputy-firstname       |
+      | SURNAME1          | checklist-deputy-lastname        |
       | 10000000001       | checklist-deputy-phone           |
       | behat-pa1@publicguardian.gov.uk | checklist-deputy-email |
     # check auto-filled answers

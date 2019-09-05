@@ -46,7 +46,7 @@ Feature: PA user edits report sections
     And the step with the following values CAN be submitted:
       | yes_no_noAssetToAdd_1 | 1 |
 
-  Scenario: PA 102  debts
+  Scenario: PA 102 debts
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "pa-report-open" in the "client-01000014" region
     And I click on "edit-debts, start"

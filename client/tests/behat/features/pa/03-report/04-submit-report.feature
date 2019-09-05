@@ -20,8 +20,8 @@ Feature: Report submit (client 01000014)
         And I should see "Ready to submit" in the "report-detail-status" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
-            | John Named                                      | deputy-firstname |
-            | Green                                           | deputy-lastname  |
+            | DEP1                                            | deputy-firstname |
+            | SURNAME1                                        | deputy-lastname  |
             | 10000000001                                     | deputy-phone     |
             | behat-pa1@publicguardian.gov.uk                 | deputy-email     |
         And I click on "declaration-page"
