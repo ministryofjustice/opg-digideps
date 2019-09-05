@@ -241,6 +241,8 @@ class PATestUserFixtures extends AbstractDataFixture
             $namedDeputy = new NamedDeputy(
                 $deputyNo,
                 $data['email'],
+                $data['firstname'],
+                $data['lastname'],
                 $data['address1'],
                 $data['address2'],
                 $data['address3'],

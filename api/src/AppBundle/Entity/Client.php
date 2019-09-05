@@ -221,8 +221,8 @@ class Client implements ClientInterface
      *
      * @var User
      *
-     * @JMS\Groups({"client-named-deputy"})
-     * @JMS\Type("AppBundle\Entity\User")
+     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
+     * @JMS\Type("AppBundle\Entity\NamedDeputy")
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NamedDeputy", fetch="EAGER")
      * @ORM\JoinColumn(name="named_deputy", referencedColumnName="id", onDelete="SET NULL")

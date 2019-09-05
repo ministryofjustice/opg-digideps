@@ -584,6 +584,8 @@ class OrgService
             $namedDeputy = new EntityDir\NamedDeputy(
                 $csvRow['Deputy No'],
                 $csvRow['Email'],
+                $csvRow['Dep Forename'],
+                $csvRow['Dep Surname'],
                 $csvRow['Dep Adrs1'],
                 $csvRow['Dep Adrs2'],
                 $csvRow['Dep Adrs3'],

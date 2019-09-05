@@ -7,10 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Users.
+ * Named Deputy.
  *
- * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NamedDeputyRepository")
  */
 class NamedDeputy
 {
@@ -232,6 +230,16 @@ class NamedDeputy
      * @return $this
      */
     public function getEmail1()
+    {
+        return $this->email1;
+    }
+
+    /**
+     * @return string
+     *
+     * @return $this
+     */
+    public function getEmail()
     {
         return $this->email1;
     }

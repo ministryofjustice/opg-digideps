@@ -68,6 +68,7 @@ class ReportController extends AbstractController
         'moneyTransactionsShortOut',
         'status',
         'report-submitted-by',
+        'client-named-deputy',
         'wish-to-provide-documentation',
         'report-documents',
         'balance-state',
@@ -203,6 +204,7 @@ class ReportController extends AbstractController
         // get all the groups (needed by EntityDir\Report\Status
         /** @var EntityDir\Report\Report $report */
         $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
+
 
         /** @var $client EntityDir\Client */
         $client = $this->generateClient($user, $clientId);

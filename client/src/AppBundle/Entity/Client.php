@@ -53,7 +53,7 @@ class Client
 
     /**
      * @JMS\Type("AppBundle\Entity\NamedDeputy")
-     *
+     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
      * @var NamedDeputy
      */
     private $namedDeputy;

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Users.
+ * Named Deputy.
  *
  * @ORM\Table(name="named_deputy", indexes={@ORM\Index(name="named_deputy_no_idx", columns={"deputy_no"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\NamedDeputyRepository")
@@ -92,14 +92,14 @@ class NamedDeputy
     /**
      * @var string
      *
-     * @JMS\Type("string")
+     * @JMS\Type("integer")
      * @JMS\Groups({ "report-submitted-by", "named-deputy"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
 
     /**
-     * @var string
+     * @var int
      *
      * @JMS\Type("string")
      * @JMS\Groups({ "report-submitted-by", "named-deputy"})
@@ -185,6 +185,8 @@ class NamedDeputy
      */
     public function __construct($deputyNo,
                                 $email,
+                                $firstname,
+                                $lastname,
                                 $address1,
                                 $address2,
                                 $address3,
