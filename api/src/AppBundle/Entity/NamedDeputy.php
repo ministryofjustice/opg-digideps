@@ -196,8 +196,8 @@ class NamedDeputy
                                 $data = []
     ) {
         $this->setDeputyNo($deputyNo);
-        $this->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : null);
-        $this->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : null);
+        $this->setFirstname($firstname);
+        $this->setLastname($lastname);
         $this->setEmail1($email);
         $this->setEmail2(isset($data['Email2']) ? $data['Email2'] : null);
         $this->setEmail3(isset($data['Email3']) ? $data['Email3'] : null);
