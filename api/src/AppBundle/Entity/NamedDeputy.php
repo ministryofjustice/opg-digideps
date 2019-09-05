@@ -92,7 +92,7 @@ class NamedDeputy
     /**
      * @var string
      *
-     * @JMS\Type("integer")
+     * @JMS\Type("string")
      * @JMS\Groups({ "report-submitted-by", "named-deputy"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
@@ -172,13 +172,16 @@ class NamedDeputy
 
     /**
      * NamedDeputy constructor.
-     *
      * @param $deputyNo
      * @param $email
+     * @param $firstname
+     * @param $lastname
      * @param $address1
      * @param $address2
      * @param $address3
      * @param $depPostcode
+     * @param $phoneMain
+     * @param $phoneAlternative
      * @param null $address4
      * @param null $address5
      * @param array $data
@@ -191,6 +194,8 @@ class NamedDeputy
                                 $address2,
                                 $address3,
                                 $depPostcode,
+                                $phoneMain,
+                                $phoneAlternative,
                                 $address4 = null,
                                 $address5 = null,
                                 $data = []
@@ -209,8 +214,8 @@ class NamedDeputy
         $this->setAddress5($address5);
         $this->setAddressCountry('GB');
         $this->setAddressPostcode($depPostcode);
-        $this->setPhoneMain(isset($data['Mobile']) ? $data['Mobile'] : null);
-        $this->setPhoneAlternative(isset($data['Mobile2']) ? $data['Mobile2'] : null);
+        $this->setPhoneMain($phoneMain);
+        $this->setPhoneAlternative($phoneAlternative);
     }
 
     /**

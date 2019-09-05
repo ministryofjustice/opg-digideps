@@ -35,6 +35,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'addressPostcode' => 'SW1',
             'address4' => 'ADD4',
             'address5' => 'ADD5',
+            'phoneMain' => '10000000001',
             'clients' => [
                 [
                     'firstname' => 'CLY1',
@@ -45,7 +46,7 @@ class PATestUserFixtures extends AbstractDataFixture
                     'address2' => 'ADD2',
                     'address3' => 'ADD3',
                     'addressPostcode' => 'B301QL',
-                    'phone' => '78912345678',
+                    'phone' => '078912345678',
                     'email' => 'cly1@hent.com',
                     'dob' => '01/01/1967',
                     'reportType' => 'OPG102',
@@ -60,13 +61,14 @@ class PATestUserFixtures extends AbstractDataFixture
                     'address2' => 'ADD2',
                     'address3' => 'ADD3',
                     'addressPostcode' => 'B301QL',
-                    'phone' => '78912345678',
+                    'phone' => '078912345678',
                     'email' => 'cly7@hent.com',
                     'dob' => '07/07/1967',
                     'reportType' => 'OPG102',
                     'reportVariation' => 'A2'
                 ],
             ],
+            'additionalClients' => 16
         ],
         [
             'id' => '',
@@ -82,6 +84,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'addressPostcode' => 'SW1',
             'address4' => 'ADD4',
             'address5' => 'ADD5',
+            'phoneMain' => '10000000001',
             'clients' => [
                 [
                     'firstname' => 'CLY301',
@@ -92,7 +95,7 @@ class PATestUserFixtures extends AbstractDataFixture
                     'address2' => 'ADD2',
                     'address3' => 'ADD3',
                     'addressPostcode' => 'B301QL',
-                    'phone' => '78912345678',
+                    'phone' => '078912345678',
                     'email' => 'cly201@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG103',
@@ -115,6 +118,7 @@ class PATestUserFixtures extends AbstractDataFixture
             'addressPostcode' => 'SW1',
             'address4' => 'ADD4',
             'address5' => 'ADD5',
+            'phoneMain' => '10000000001',
             'clients' => [
                 [
                     'firstname' => 'CLY201',
@@ -125,7 +129,7 @@ class PATestUserFixtures extends AbstractDataFixture
                     'address2' => 'ADD2',
                     'address3' => 'ADD3',
                     'addressPostcode' => 'B301QL',
-                    'phone' => '78912345678',
+                    'phone' => '078912345678',
                     'email' => 'cly301@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => 'OPG102',
@@ -157,19 +161,19 @@ class PATestUserFixtures extends AbstractDataFixture
 
         // Create user
         $user = (new User())
-            ->setFirstname((isset($data['firstname']) ? $data['firstname'] : 'test'))
-            ->setLastname((isset($data['lastname']) ? $data['lastname'] : $data['id']))
-            ->setEmail((isset($data['email']) ? $data['email'] : $data['id'] . '@example.org'))
-            ->setActive((isset($data['active']) ? $data['active'] : true))
+            ->setFirstname(isset($data['firstname']) ? $data['firstname'] : 'test')
+            ->setLastname(isset($data['lastname']) ? $data['lastname'] : $data['id'])
+            ->setEmail(isset($data['email']) ? $data['email'] : $data['id'] . '@example.org')
+            ->setActive(isset($data['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
-            ->setPhoneMain('07911111111111')
+            ->setPhoneMain(isset($data['phoneMain']) ? $data['phoneMain'] : null)
             ->setAddress1(isset($data['address1']) ? $data['address1'] : 'Victoria Road')
-            ->setAddress2(isset($data['address2']) ? $data['address2'] : NULL)
-            ->setAddress3(isset($data['address3']) ? $data['address3'] : NULL)
+            ->setAddress2(isset($data['address2']) ? $data['address2'] : null)
+            ->setAddress3(isset($data['address3']) ? $data['address3'] : null)
             ->setAddressPostcode(isset($data['addressPostcode']) ? $data['addressPostcode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setDeputyNo(isset($data['deputyNo']) ? $data['deputyNo'] : NULL)
+            ->setDeputyNo(isset($data['deputyNo']) ? $data['deputyNo'] : null)
             ->setRoleName($data['roleName']);
 
         $user->addTeam($team);
@@ -179,46 +183,78 @@ class PATestUserFixtures extends AbstractDataFixture
             foreach ($data['clients'] as $clientData) {
 
                 // Create client
-                $client = new Client();
-                $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-                $dob = \DateTime::createFromFormat('d/m/Y', $clientData['dob']);
-
-                $client
-                    ->setCaseNumber(User::padDeputyNumber($clientData['caseNumber']))
-                    ->setFirstname($clientData['firstname'])
-                    ->setLastname($clientData['lastname'])
-                    ->setCourtDate($courtDate->modify('-1year +1day'))
-                    ->setAddress($clientData['address1'])
-                    ->setAddress2($clientData['address2'])
-                    ->setCounty($clientData['address3'])
-                    ->setPostcode($clientData['addressPostcode'])
-                    ->setCountry('GB')
-                    ->setPhone($clientData['phone'])
-                    ->setEmail($clientData['email'])
-                    ->setDateOfBirth($dob);
-
-                $namedDeputy = $this->upsertNamedDeputy($data, $manager);
-
-                $client->setNamedDeputy($namedDeputy);
-
-                $manager->persist($client);
+                $client = $this->createClient($clientData, $data, $user, $manager);
                 $user->addClient($client);
-
-
-                if (isset($clientData['ndrEnabled']) && $clientData['ndrEnabled']) {
-                    $ndr = new Ndr($client);
-                    $manager->persist($ndr);
-                } else {
-                    $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], $user->getRoleName());
-                    $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
-                    $startDate = ReportUtils::generateReportStartDateFromEndDate($endDate);
-                    $report = new Report($client, $type, $startDate, $endDate);
-
-                    $manager->persist($report);
-                }
-
             }
+            if (isset($data['additionalClients'])) {
+                // add dummy clients for pagination tests
+                for($i=1; $i<=$data['additionalClients']; $i++) {
+                    $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
+                    $user->addClient($client);
+                }
+            }
+
         }
+    }
+
+    private function generateTestClientData($iterator)
+    {
+        return [
+            'lastReportDate' => '01/01/2018',
+            'dob' => '04/05/1977',
+            'caseNumber' => '90000' . $iterator,
+            'firstname' => 'TEST CLY' . $iterator,
+            'lastname' => 'HENT' . $iterator,
+            'address1' => 'Address1_' . $iterator,
+            'address2' => 'Address2_' . $iterator,
+            'address3' => 'Address3_' . $iterator,
+            'addressPostcode' => 'PC_' . $iterator,
+            'phone' => '01234123123',
+            'email' => 'testCly' . $iterator . '@hent.com',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'A2'
+        ];
+    }
+
+    private function createClient($clientData, $userData, $user, $manager)
+    {
+        $client = new Client();
+        $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+        $dob = \DateTime::createFromFormat('d/m/Y', $clientData['dob']);
+
+        $client
+            ->setCaseNumber(User::padDeputyNumber($clientData['caseNumber']))
+            ->setFirstname($clientData['firstname'])
+            ->setLastname($clientData['lastname'])
+            ->setCourtDate($courtDate->modify('-1year +1day'))
+            ->setAddress($clientData['address1'])
+            ->setAddress2($clientData['address2'])
+            ->setCounty($clientData['address3'])
+            ->setPostcode($clientData['addressPostcode'])
+            ->setCountry('GB')
+            ->setPhone($clientData['phone'])
+            ->setEmail($clientData['email'])
+            ->setDateOfBirth($dob);
+
+        $namedDeputy = $this->upsertNamedDeputy($userData, $manager);
+
+        $client->setNamedDeputy($namedDeputy);
+
+        $manager->persist($client);
+
+        if (isset($clientData['ndrEnabled']) && $clientData['ndrEnabled']) {
+            $ndr = new Ndr($client);
+            $manager->persist($ndr);
+        } else {
+            $type = CasRec::getTypeBasedOnTypeofRepAndCorref($clientData['reportType'], $clientData['reportVariation'], $user->getRoleName());
+            $endDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
+            $startDate = ReportUtils::generateReportStartDateFromEndDate($endDate);
+            $report = new Report($client, $type, $startDate, $endDate);
+
+            $manager->persist($report);
+        }
+
+        return $client;
     }
 
     /**
@@ -247,6 +283,8 @@ class PATestUserFixtures extends AbstractDataFixture
                 $data['address2'],
                 $data['address3'],
                 $data['addressPostcode'],
+                $data['phoneMain'],
+                isset($data['phoneAlternative']) ? $data['phoneAlternative'] : null,
                 $data['address4'],
                 $data['address5'],
                 $data
