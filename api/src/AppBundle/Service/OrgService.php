@@ -243,14 +243,18 @@ class OrgService
 
         $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
         if (null === $this->currentOrganisation) {
-            $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+            try {
+                $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+            } catch (\InvalidArgumentException $e) {
+                $this->warnings[] = $e->getMessage();
+            }
         }
 
         return $user;
     }
 
     /**
-     * @param str $email
+     * @param string $email
      * @return EntityDir\Organisation
      * @throws \Doctrine\ORM\ORMException
      */
@@ -330,7 +334,10 @@ class OrgService
         // Add client to named user (will be done later anyway)
         $client->addUser($userOrgNamed);
 
-        $this->attachClientToOrganisation($client);
+        if (null !== $this->currentOrganisation) {
+            $this->attachClientToOrganisation($client);
+            $this->currentOrganisation = null;
+        }
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
@@ -493,6 +500,5 @@ class OrgService
     {
         $this->currentOrganisation->addClient($client);
         $client->addOrganisation($this->currentOrganisation);
-        $this->currentOrganisation = null;
     }
 }

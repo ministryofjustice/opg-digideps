@@ -40,8 +40,12 @@ final class Version217 extends AbstractMigration implements ContainerAwareInterf
 
             // Create a new Organisation if first occurrence of email domain.
             if (null === ($organisation = $orgRepo->findByEmailIdentifier($user->getEmail()))) {
-                $organisation = $orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
-                $em->persist($organisation);
+                try {
+                    $organisation = $orgFactory->createFromFullEmail($user->getEmail(), $user->getEmail());
+                    $em->persist($organisation);
+                } catch (\InvalidArgumentException $e) {
+                    continue;
+                }
             }
 
             $organisation->addUser($user);
