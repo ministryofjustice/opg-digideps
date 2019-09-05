@@ -62,4 +62,40 @@ class OrganisationFactoryTest extends TestCase
         $this->assertEquals('foo.com', $organisation->getEmailIdentifier());
         $this->assertFalse($organisation->isActivated());
     }
+
+    /**
+     * @test
+     * @dataProvider getInvalidInputs
+     * @expectedException \InvalidArgumentException
+     * @param $name
+     * @param $emailIdentifier
+     */
+    public function createFromFullEmail_throwsExceptionIfGivenBadData($name, $emailIdentifier)
+    {
+        $this->factory->createFromFullEmail($name, $emailIdentifier);
+    }
+
+
+    /**
+     * @test
+     * @dataProvider getInvalidInputs
+     * @expectedException \InvalidArgumentException
+     * @param $name
+     * @param $emailIdentifier
+     */
+    public function createFromEmailIdentifier_throwsExceptionIfGivenBadData($name, $emailIdentifier)
+    {
+        $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvalidInputs(): array
+    {
+        return [
+            ['name' => '', 'emailIdentifier' => 'f@test.com'],
+            ['name' => 'name', 'emailIdentifier' => '']
+        ];
+    }
 }
