@@ -3,7 +3,7 @@ Feature: PROF client profile
   Scenario: PROF view client details
     Given I load the application status from "prof-users-uploaded"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000011" region
+    And I click on "pa-report-open" in the "client-31000011" region
     Then each text should be present in the corresponding region:
       | Cly4 Hent4    | client-profile-details |
       | 1967          | client-profile-details |

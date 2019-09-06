@@ -5,20 +5,20 @@ Feature: Prof deputy is discharged
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
     And I save the current URL as "pre-discharged-client"
-    Then I should see "" in the "client-01000010-discharged-on" region
-    And I should not see the "discharged-client-01000010-discharged-on" region
-    And I click on "client-detail-01000010"
+    Then I should see "" in the "client-31000010-discharged-on" region
+    And I should not see the "discharged-client-31000010-discharged-on" region
+    And I click on "client-detail-31000010"
     And I should not see the "discharged-on" region
-    Then I discharge the deputies from case "01000010"
+    Then I discharge the deputies from case "31000010"
     When I go to the URL previously saved as "pre-discharged-client"
-    And I should see "24 Jul 2018" in the "discharged-client-01000010-discharged-on" region
-    And I click on "discharged-client-detail-01000010"
+    And I should see "24 Jul 2018" in the "discharged-client-31000010-discharged-on" region
+    And I click on "discharged-client-detail-31000010"
     And I should see "24 Jul 2018" in the "discharged-on" region
 
 
   Scenario: Admin can amends Prof checklist against a discharged client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, discharged-client-detail-01000010"
+    And I click on "admin-client-search, discharged-client-detail-31000010"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by |
@@ -82,7 +82,7 @@ Feature: Prof deputy is discharged
     When I am on "/register"
     And I add the following users to CASREC:
       | Case     | Surname | Deputy No | Dep Surname | Dep Postcode | Typeofrep |
-      | 01000010 | Hent1   | BEHAT002  | Doe         | P0ST C0D3    | OPG102    |
+      | 31000010 | Hent1   | BEHAT002  | Doe         | P0ST C0D3    | OPG102    |
     And I fill in the following:
       | self_registration_firstname       | John                                 |
       | self_registration_lastname        | Doe                                  |
@@ -91,7 +91,7 @@ Feature: Prof deputy is discharged
       | self_registration_postcode        | P0ST C0D3                            |
       | self_registration_clientFirstname | Cly                                  |
       | self_registration_clientLastname  | Hent1                                 |
-      | self_registration_caseNumber      | 01000010                             |
+      | self_registration_caseNumber      | 31000010                             |
     And I press "self_registration_save"
     Then I should see "Please check your email"
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user2@publicguardian.gov.uk"
@@ -141,7 +141,7 @@ Feature: Prof deputy is discharged
     And the following hidden fields should have the corresponding values:
       | client_firstname  | Cly      |
       | client_lastname   | Hent1     |
-      | client_caseNumber | 01000010 |
+      | client_caseNumber | 31000010 |
     And the following fields should have the corresponding values:
       | client_postcode   |  |
       | client_courtDate_day   |  |
@@ -158,7 +158,7 @@ Feature: Prof deputy is discharged
     Then the following hidden fields should have the corresponding values:
       | client_firstname  | Cly      |
       | client_lastname   | Hent1     |
-      | client_caseNumber | 01000010 |
+      | client_caseNumber | 31000010 |
       | client_postcode   | NG1 2HT  |
       | client_courtDate_day   | 25             |
       | client_courtDate_month | 07             |
@@ -193,23 +193,23 @@ Feature: Prof deputy is discharged
     When I click on "paginator-page-2"
     Then I should see the "client" region exactly 2 times
   # check search
-    When I fill in "search" with "01000010"
+    When I fill in "search" with "31000010"
     And I press "search_submit"
-    Then I should not see the "client-01000010" region
+    Then I should not see the "client-31000010" region
     And I should see the "client" region exactly 0 times
 
   Scenario: Admin can see both Clients one discharged and the new lay deputies client with same case number
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     Then I should be on "/admin/client/search"
     When I fill in the following:
-      | search_clients_q | 01000010 |
+      | search_clients_q | 31000010 |
     And I click on "search_clients_search"
     And I save the current URL as "discharged-client-search"
     Then I should see the "client-row" region exactly "2" times
-    And I should see "" in the "client-01000010-discharged-on" region
-    And I should see "24 Jul 2018" in the "discharged-client-01000010-discharged-on" region
-    When I click on "client-detail-01000010"
+    And I should see "" in the "client-31000010-discharged-on" region
+    And I should see "24 Jul 2018" in the "discharged-client-31000010-discharged-on" region
+    When I click on "client-detail-31000010"
     Then I should not see the "discharged-on" region
     When I go to the URL previously saved as "discharged-client-search"
-    And I click on "discharged-client-detail-01000010"
+    And I click on "discharged-client-detail-31000010"
     And I should see "24 Jul 2018" in the "discharged-on" region

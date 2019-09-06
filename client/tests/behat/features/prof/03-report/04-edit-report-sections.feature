@@ -2,7 +2,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 gifts
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-gifts, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -11,7 +11,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 assets
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-assets, start"
       # chose "no records"
     And the step with the following values CAN be submitted:
@@ -19,7 +19,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5  debts
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-debts, start"
       # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -28,7 +28,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 add current account
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-bank_accounts, start"
     # step 1
     And the step with the following values CAN be submitted:
@@ -53,7 +53,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 add postoffice account (no sort code, no bank name)
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-bank_accounts, add"
     # step 1
     And the step with the following values CAN be submitted:
@@ -74,7 +74,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 add no sortcode account (still requires bank name)
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-bank_accounts, add"
     # step 1
     And the step with the following values CAN be submitted:
@@ -96,7 +96,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 deletes bank account
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
     And I click on "confirm"
@@ -107,7 +107,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 money in
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-money_in, start"
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
@@ -124,7 +124,7 @@ Feature: PROF user edits 102-5 report sections
 
   Scenario: PROF 102-5 money out
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:

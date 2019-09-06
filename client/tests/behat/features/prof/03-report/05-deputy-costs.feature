@@ -2,7 +2,7 @@ Feature: PROF deputy costs
 
   Scenario: add cost fixed, no previous, no interim, other 2 items
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     And I submit the step
     Then the following fields should have an error:
@@ -36,7 +36,7 @@ Feature: PROF deputy costs
   Scenario: all ticked, no previous, no interim, empty breakdown
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:
@@ -73,7 +73,7 @@ Feature: PROF deputy costs
   Scenario: Entering partially completed sections with Fixed costs
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_0 | fixed |
@@ -99,7 +99,7 @@ Feature: PROF deputy costs
   Scenario: Entering partially completed sections with non Fixed costs and has interim
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
@@ -138,7 +138,7 @@ Feature: PROF deputy costs
   Scenario: Entering partially completed sections with non Fixed costs and not interim
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     And the step with the following values CAN be submitted:
       | deputy_costs_profDeputyCostsHowCharged_1 | assessed |
@@ -174,7 +174,7 @@ Feature: PROF deputy costs
   Scenario: all ticked, previous, interim, 2 breakdown
     Given I load the application status from "pre-deputy-costs"
     And I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000010" region
+    And I click on "pa-report-open" in the "client-31000010" region
     And I click on "edit-prof_deputy_costs, start"
     # how charged: all ticked
     Then the step with the following values CAN be submitted:

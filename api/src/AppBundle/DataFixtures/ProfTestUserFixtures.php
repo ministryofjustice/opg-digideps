@@ -27,7 +27,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
             'lastname' => 'SURNAME1',
             'email' => 'behat-prof1@publicguardian.gov.uk',
             'active' => false,
-                'deputyNo' => '9000001',
+            'deputyNo' => '9000001',
             'roleName' => 'ROLE_PROF_NAMED',
             'address1' => 'ADD1',
             'address2' => 'ADD2',
@@ -40,7 +40,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY1',
                     'lastname' => 'HENT1',
-                    'caseNumber' => '3100010',
+                    'caseNumber' => '31000010',
                     'lastReportDate' => '19/03/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -55,7 +55,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY2',
                     'lastname' => 'HENT2',
-                    'caseNumber' => '1138393T',
+                    'caseNumber' => '3138393T',
                     'lastReportDate' => '19/03/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -70,7 +70,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY3',
                     'lastname' => 'HENT3',
-                    'caseNumber' => '11498120',
+                    'caseNumber' => '31498120',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -85,7 +85,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY4',
                     'lastname' => 'HENT4',
-                    'caseNumber' => '3100011',
+                    'caseNumber' => '31000011',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -93,14 +93,14 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'addressPostcode' => 'B301QL',
                     'phone' => '078912345678',
                     'email' => 'cly4@hent.com',
-                    'dob' => '07/07/1967',
+                    'dob' => '04/04/1967',
                     'reportType' => 'OPG103',
                     'reportVariation' => 'A3'
                 ],
                 [
                     'firstname' => 'CLY5    ',
                     'lastname' => 'HENT5',
-                    'caseNumber' => '3100012',
+                    'caseNumber' => '31000012',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -115,7 +115,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY6    ',
                     'lastname' => 'HENT6',
-                    'caseNumber' => '3100013',
+                    'caseNumber' => '31000013',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -130,7 +130,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY7',
                     'lastname' => 'HENT7',
-                    'caseNumber' => '3100014',
+                    'caseNumber' => '31000014',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -145,7 +145,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY8',
                     'lastname' => 'HENT8',
-                    'caseNumber' => '3100015',
+                    'caseNumber' => '31000015',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -160,7 +160,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY9',
                     'lastname' => 'HENT9',
-                    'caseNumber' => '3100016',
+                    'caseNumber' => '31000016',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -175,7 +175,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY10',
                     'lastname' => 'HENT10',
-                    'caseNumber' => '3100017',
+                    'caseNumber' => '31000017',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -190,7 +190,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY11',
                     'lastname' => 'HENT11',
-                    'caseNumber' => '3100018',
+                    'caseNumber' => '31000018',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -205,7 +205,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY12',
                     'lastname' => 'HENT12',
-                    'caseNumber' => '3100019',
+                    'caseNumber' => '31000019',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -220,7 +220,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY13',
                     'lastname' => 'HENT13',
-                    'caseNumber' => '3100020',
+                    'caseNumber' => '31000020',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -235,7 +235,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY14',
                     'lastname' => 'HENT14',
-                    'caseNumber' => '3100021',
+                    'caseNumber' => '31000021',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -250,7 +250,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY15',
                     'lastname' => 'HENT15',
-                    'caseNumber' => '3100022',
+                    'caseNumber' => '31000022',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -265,7 +265,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY16',
                     'lastname' => 'HENT16',
-                    'caseNumber' => '3100023',
+                    'caseNumber' => '31000023',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -299,7 +299,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY201',
                     'lastname' => 'HENT201',
-                    'caseNumber' => '3200001',
+                    'caseNumber' => '32000001',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -314,7 +314,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY202',
                     'lastname' => 'HENT202',
-                    'caseNumber' => '3200002',
+                    'caseNumber' => '32000002',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -329,7 +329,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY301',
                     'lastname' => 'HENT301',
-                    'caseNumber' => '3200003',
+                    'caseNumber' => '32000003',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -363,7 +363,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY301',
                     'lastname' => 'HENT301',
-                    'caseNumber' => '3300001',
+                    'caseNumber' => '33000001',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -378,7 +378,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY302',
                     'lastname' => 'HENT302',
-                    'caseNumber' => '3300002',
+                    'caseNumber' => '33000002',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -393,7 +393,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY303',
                     'lastname' => 'HENT303',
-                    'caseNumber' => '3300003',
+                    'caseNumber' => '33000003',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -426,7 +426,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY401',
                     'lastname' => 'HENT401',
-                    'caseNumber' => '3400025',
+                    'caseNumber' => '34000025',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',

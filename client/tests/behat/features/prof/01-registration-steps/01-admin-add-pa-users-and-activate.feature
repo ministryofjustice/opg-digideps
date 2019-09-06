@@ -52,7 +52,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
     And the URL should match "/org"
     # check I'm in the dashboard
-    And I should see the "client-01000010" region
+    And I should see the "client-31000010" region
 
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -82,7 +82,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-02000001" region
+    And I should see the "client-32000001" region
 
   Scenario: Register PROF3 user
     Given emails are sent from "admin" area
@@ -108,7 +108,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-03000001" region
+    And I should see the "client-33000001" region
 
   Scenario: Edit PROF2 user
     Given I save the application status into "prof-users-uploaded"
@@ -132,7 +132,7 @@ Feature: Add PROF users and activate PROF user (journey)
     When I go to "/logout"
     # try logging in with the new email
     And I am logged in as "behat-prof2-edited@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see the "client-02000001" region
+    Then I should see the "client-32000001" region
 
   Scenario: Edit PROF2 user email to an existing email
     Given I load the application status from "prof-users-uploaded"
