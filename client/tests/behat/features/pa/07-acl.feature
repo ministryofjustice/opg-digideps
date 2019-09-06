@@ -1,5 +1,5 @@
 Feature: PA cannot access other's PA's reports and clients
-# team1 = team with client 1000010
+# team1 = team with client 2100010
 # team2 = team with client 2000003
 
   Scenario: PA reload status from the point where team1 has been fully added
@@ -8,33 +8,33 @@ Feature: PA cannot access other's PA's reports and clients
   Scenario: Assert team1 can only access its reports
     # Named PA
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-02100010" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
-    And I save the current URL as "report-for-client-01000010.url"
+    And I save the current URL as "report-for-client-02100010.url"
     But I should not see the "client-02000003" region
     # Admin
     Given I am logged in as "behat-pa1-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-02100010" region
     Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+    And the current URL should match with the URL previously saved as "report-for-client-02100010.url"
     But I should not see the "client-02000003" region
     # team member
     Given I am logged in as "behat-pa1-team-member@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000010" region
+    When I click on "pa-report-open" in the "client-02100010" region
     Then the response status code should be 200
-    And the current URL should match with the URL previously saved as "report-for-client-01000010.url"
+    And the current URL should match with the URL previously saved as "report-for-client-02100010.url"
     But I should not see the "client-02000003" region
 
   Scenario: team2 can access its client but not team1's data
     # can access team2 reports
     Given I am logged in as "behat-pa2@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-02000001" region
+    When I click on "pa-report-open" in the "client-02200001" region
     Then the response status code should be 200
     And the URL should match "report/\d+/overview"
     # cannot access team1 reports
-    But I should not see the "client-01000010" region
-    When I go to the URL previously saved as "report-for-client-01000010.url"
+    But I should not see the "client-02100010" region
+    When I go to the URL previously saved as "report-for-client-02100010.url"
     Then the response status code should be 500
 
   Scenario: PA user cannot edit client
@@ -50,16 +50,16 @@ Feature: PA cannot access other's PA's reports and clients
     # load "pre-submission" status and save links
     Given I load the application status from "pa-report-completed"
     And I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000014" region
-    And I save the current URL as "client-01000014-report-overview"
+    When I click on "pa-report-open" in the "client-02100014" region
+    And I save the current URL as "client-02100014-report-overview"
     And I click on "edit-report-period"
     Then the response status code should be 200
     # load "after submission" status and re-check the same links
-    And I save the current URL as "client-01000014-report-completed"
+    And I save the current URL as "client-02100014-report-completed"
     When I load the application status from "pa-report-submitted"
-    When I go to the URL previously saved as "client-01000014-report-overview"
+    When I go to the URL previously saved as "client-02100014-report-overview"
     Then the response status code should be 500
-    When I go to the URL previously saved as "client-01000014-report-completed"
+    When I go to the URL previously saved as "client-02100014-report-completed"
     Then the response status code should be 500
 
   Scenario: PA_ADMIN logs in, edits own account and removes admin privilege should be logged out

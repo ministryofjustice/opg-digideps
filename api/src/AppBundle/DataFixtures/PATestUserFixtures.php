@@ -40,7 +40,7 @@ class PATestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY1',
                     'lastname' => 'HENT1',
-                    'caseNumber' => '1000010',
+                    'caseNumber' => '2100010',
                     'lastReportDate' => '19/03/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -55,7 +55,7 @@ class PATestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY7',
                     'lastname' => 'HENT',
-                    'caseNumber' => '1000014',
+                    'caseNumber' => '2100014',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -89,7 +89,7 @@ class PATestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY301',
                     'lastname' => 'HENT301',
-                    'caseNumber' => '2000001',
+                    'caseNumber' => '2200001',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',
@@ -123,7 +123,7 @@ class PATestUserFixtures extends AbstractDataFixture
                 [
                     'firstname' => 'CLY201',
                     'lastname' => 'HENT201',
-                    'caseNumber' => '3000001',
+                    'caseNumber' => '2300001',
                     'lastReportDate' => '28/05/2017',
                     'address1' => 'ADD1',
                     'address2' => 'ADD2',

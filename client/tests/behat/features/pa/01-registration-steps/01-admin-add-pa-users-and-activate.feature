@@ -61,7 +61,7 @@ Feature: Add PA users and activate PA user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-01000010" region
+    And I should see the "client-02100010" region
 
   Scenario: Activation link is removed
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -91,7 +91,7 @@ Feature: Add PA users and activate PA user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-02000001" region
+    And I should see the "client-02200001" region
 
   Scenario: Register PA3 user
     Given emails are sent from "admin" area
@@ -117,7 +117,7 @@ Feature: Add PA users and activate PA user (journey)
     And I press "user_details_save"
     Then the form should be valid
     # check I'm in the dashboard
-    And I should see the "client-03000001" region
+    And I should see the "client-02300001" region
 
   Scenario: Edit PA2 user
     Given I save the application status into "pa-users-uploaded"
@@ -141,7 +141,7 @@ Feature: Add PA users and activate PA user (journey)
     When I go to "/logout"
     # try logging in with the new email
     And I am logged in as "behat-pa2-edited@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should see the "client-02000001" region
+    Then I should see the "client-02200001" region
 
   Scenario: Edit PA2 user email to an existing email
     Given I load the application status from "pa-users-uploaded"

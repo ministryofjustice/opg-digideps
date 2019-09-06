@@ -3,7 +3,7 @@ Feature: Admin report checklist
   Scenario: Case manager submits empty PA checklist for the report
     Given I load the application status from "pa-report-submitted"
     And I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "admin-client-search, client-detail-02100014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then the URL should match "/admin/report/\d+/checklist"
     And I should see the "court-date" region
@@ -76,7 +76,7 @@ Feature: Admin report checklist
 
   Scenario: Case manager saves further information on PA checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "admin-client-search, client-detail-02100014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
       | Not saved yet | last-saved-by |
@@ -109,7 +109,7 @@ Feature: Admin report checklist
 
   Scenario: Admin completes PA checklist
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "admin-client-search, client-detail-02100014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by |
@@ -160,7 +160,7 @@ Feature: Admin report checklist
 
   Scenario: Admin marked as submitted
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search, client-detail-01000014"
+    And I click on "admin-client-search, client-detail-02100014"
     And I click on "checklist" in the "report-2016-to-2017" region
     Then each text should be present in the corresponding region:
       | Case Manager1, Case Manager | last-saved-by     |

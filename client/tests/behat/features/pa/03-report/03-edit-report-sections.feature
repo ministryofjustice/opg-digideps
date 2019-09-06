@@ -2,7 +2,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 deputy expenses (with fees)
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-pa_fee_expense, start"
     # chose "no option"
     Given the step cannot be submitted without making a selection
@@ -31,7 +31,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 gifts
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-gifts, start"
     # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -40,7 +40,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 assets
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-assets, start"
       # chose "no records"
     And the step with the following values CAN be submitted:
@@ -48,7 +48,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 debts
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-debts, start"
       # chose "no records"
     Given the step cannot be submitted without making a selection
@@ -57,7 +57,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 add current account
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-bank_accounts, start"
     # step 1
     And the step with the following values CAN be submitted:
@@ -82,7 +82,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 add postoffice account (no sort code, no bank name)
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-bank_accounts, add"
     # step 1
     And the step with the following values CAN be submitted:
@@ -103,7 +103,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 add no sortcode account (still requires bank name)
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-bank_accounts, add"
     # step 1
     And the step with the following values CAN be submitted:
@@ -125,7 +125,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 deletes bank account
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    When I click on "pa-report-open" in the "client-01000014" region
+    When I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-bank_accounts"
     And I click on "delete" in the "account-2222" region
     And I click on "confirm"
@@ -136,7 +136,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 money in
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-money_in, start"
     # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
@@ -153,7 +153,7 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 money out
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     And I click on "edit-money_out, start"
       # add transaction n.1 and check validation
     And the step with the following values CAN be submitted:
@@ -171,6 +171,6 @@ Feature: PA user edits report sections
 
   Scenario: PA 102 Report should be submittable
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "pa-report-open" in the "client-01000014" region
+    And I click on "pa-report-open" in the "client-02100014" region
     Then the PA report should be submittable
     And I save the application status into "pa-report-completed"
