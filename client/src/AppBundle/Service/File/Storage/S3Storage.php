@@ -199,6 +199,7 @@ class S3Storage implements StorageInterface
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
+                //@todo - check if error thrown due to newline between 203 and 204 not concatenated
                 $this->log('error', 'Unable to remove file from S3 - 
                             Key: ' . $s3Error['Key'] . ', VersionId: ' .
                     $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
