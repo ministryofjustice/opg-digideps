@@ -428,6 +428,7 @@ class OrgService
 
         if (null !== $this->currentOrganisation) {
             $this->attachClientToOrganisation($client);
+            $this->currentOrganisation = null;
         }
 
         return $client;
