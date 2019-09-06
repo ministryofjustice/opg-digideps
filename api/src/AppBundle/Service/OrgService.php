@@ -300,7 +300,11 @@ class OrgService
 
         $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($csvRow['Email']);
         if (null === $this->currentOrganisation) {
-            $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+            try {
+                $this->currentOrganisation = $this->createOrganisationFromEmail($csvRow['Email']);
+            } catch (\InvalidArgumentException $e) {
+                $this->warnings[] = $e->getMessage();
+            }
         }
 
         return $user;
@@ -350,7 +354,6 @@ class OrgService
 
         // Add client to named user (will be done later anyway)
         //$client->addUser($userOrgNamed);
-        $this->attachClientToOrganisation($client);
 
         // Add client to all the team members of all teams the user belongs to
         // (duplicates are auto-skipped)
@@ -422,6 +425,10 @@ class OrgService
 
         $this->log('Setting named deputy on client to deputy id:' . $namedDeputy->getId());
         $client->setNamedDeputy($namedDeputy);
+
+        if (null !== $this->currentOrganisation) {
+            $this->attachClientToOrganisation($client);
+        }
 
         return $client;
     }
@@ -609,6 +616,5 @@ class OrgService
     {
         $this->currentOrganisation->addClient($client);
         $client->addOrganisation($this->currentOrganisation);
-        $this->currentOrganisation = null;
     }
 }
