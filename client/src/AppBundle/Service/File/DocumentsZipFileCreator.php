@@ -4,6 +4,7 @@ namespace AppBundle\Service\File;
 
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\StorageInterface;
 use ZipArchive;
 
@@ -51,11 +52,15 @@ class DocumentsZipFileCreator
             throw new \RuntimeException('No documents found for downloading');
         }
         foreach ($this->reportSubmission->getDocuments() as $document) {
-            $content = $this->s3Storage->retrieve($document->getStorageReference()); //might throw exception
-            $dfile = self::createDocumentTmpFilePath($document);
-            file_put_contents($dfile, $content);
-            unset($content);
-            $filesToAdd[$document->getFileName()] = $dfile;
+            try {
+                $content = $this->s3Storage->retrieve($document->getStorageReference()); //might throw exception
+                $dfile = self::createDocumentTmpFilePath($document);
+                file_put_contents($dfile, $content);
+                unset($content);
+                $filesToAdd[$document->getFileName()] = $dfile;
+            } catch(FileNotFoundException $e) {
+                echo "Error caught";
+            }
         }
 
         // create ZIP files and add previously-stored uploaded documents
