@@ -1,16 +1,23 @@
 Feature: Add PROF users and activate PROF user (journey)
 
-  Scenario: add PROF users
+#  Scenario: add PROF users
+#    Given emails are sent from "admin" area
+#    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+#      # upload PROF users
+#    When I click on "admin-upload-pa"
+#    When I attach the file "behat-prof.csv" to "admin_upload_file"
+#    And I press "admin_upload_upload"
+#    Then the form should be valid
+#    #Then I should see "Added 1 PROF users"
+#      # activate PROF user 1
+#    When I click on "admin-homepage"
+#    And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
+#    Then the response status code should be 200
+#    And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"
+
+  Scenario: Activate Prof user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-      # upload PROF users
-    When I click on "admin-upload-pa"
-    When I attach the file "behat-prof.csv" to "admin_upload_file"
-    And I press "admin_upload_upload"
-    Then the form should be valid
-    #Then I should see "Added 1 PROF users"
-      # activate PROF user 1
-    When I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"

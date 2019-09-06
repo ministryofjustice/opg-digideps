@@ -37,8 +37,8 @@ Feature: Report submit (client 01000010)
         And I click on "pa-report-open" in the "client-01000010" region
         And I click on "edit-report_submit"
         Then each text should be present in the corresponding region:
-            | John Named                            | deputy-firstname |
-            | Green                                 | deputy-lastname |
+            | DEP1                            | deputy-firstname |
+            | SURNAME1                                 | deputy-lastname |
             | ADD1                                  | deputy-address |
             | 10000000001                           | deputy-phone |
             | behat-prof1@publicguardian.gov.uk   | deputy-email |
