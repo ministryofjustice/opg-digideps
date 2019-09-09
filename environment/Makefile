@@ -11,10 +11,6 @@ RUBY := docker-compose run --rm ruby
 .SHELL := /usr/bin/bash
 .PHONY: style check-terraform check-secrets check-compose init deploy docs precommit reset-database test
 
-# Build aws config file
-aws-config:
-	@cat terraform.tfvars.json | $(JQ) -rf aws.jq > .tmp.aws.config
-
 # Check style and lint
 style: check-compose check-terraform lint-terraform
 
