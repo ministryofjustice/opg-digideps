@@ -261,7 +261,7 @@ class DocumentController extends AbstractController
 
         try {
             /** @var DocumentService $documentService */
-            $documentService = $this->get('document_service');
+            $documentService = $this->get('AppBundle\Service\DocumentService');
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
             //@todo this is slightly misleading as the S3 result will always be true while the api delete call could be true or false

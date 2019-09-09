@@ -3,9 +3,9 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use AppBundle\Exception\DisplayableException;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Service\File\MultiDocumentZipFileCreator;
+use AppBundle\Service\DocumentService;
+use AppBundle\Service\File\DocumentsZipFileCreator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,6 +19,16 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
+
+    /**
+     * @var DocumentService
+     */
+    private $documentService;
+
+    public function __construct(DocumentService $documentService)
+    {
+        $this->documentService = $documentService;
+    }
 
     /**
      * @Route("/documents/list", name="admin_documents")
@@ -125,14 +135,22 @@ class ReportSubmissionController extends AbstractController
      */
     private function processDownload(Request $request, $checkedBoxes)
     {
-        $reportSubmissions = [];
-
         try {
+            $zipFiles = [];
+            $missingDocuments = [];
+            $zipFileCreator = new DocumentsZipFileCreator();
+
             foreach ($checkedBoxes as $reportSubmissionId) {
-                $reportSubmissions[] = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+                $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+                [$documents, $missing] = $this->documentService->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+                $zipFiles[] = $zipFileCreator->createZipFileFromDocumentContents($documents, $reportSubmission);
+
+                if (!empty($missing)) {
+                    $missingDocuments[] = $missing;
+                }
             }
-            $zipFileCreator = new MultiDocumentZipFileCreator($this->get('s3_storage'), $reportSubmissions);
-            $filename = $zipFileCreator->createZipFile();
+
+            $filename = $zipFileCreator->createMultiZipFile($zipFiles);
 
             // send ZIP to user
             $response = new Response();

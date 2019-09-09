@@ -5,6 +5,7 @@ namespace AppBundle\Service\File;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\File\Storage\StorageInterface;
@@ -88,15 +89,6 @@ class DocumentZipFileCreatorTest extends TestCase
      */
     public function testGracefullyHandleMissingFiles()
     {
-        /** @var S3Storage|ObjectProphecy $storage */
-        $storage = self::prophesize(S3Storage::class);
-        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn(['some-valid' => 'S3Response-1']);
-        $storage->retrieve('ref-2')->shouldBeCalled()->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
-        $storage->retrieve('ref-3')->shouldBeCalled()->willReturn(['some-valid' => 'S3Response-3']);
-
-        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
-        $reportSubmission = self::prophesize(ReportSubmission::class);
-
         $doc1 = self::prophesize(Document::class);
         $doc1->getStorageReference()->willReturn('ref-1');
         $doc1->getId()->willReturn(1);
@@ -112,20 +104,56 @@ class DocumentZipFileCreatorTest extends TestCase
         $doc3->getId()->willReturn(3);
         $doc3->getFileName()->willReturn('file-name3.pdf');
 
+        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
+        $reportSubmission = self::prophesize(ReportSubmission::class);
         $reportSubmission->isDownloadable()->willReturn(true);
         $reportSubmission->getDocuments()->willReturn(new ArrayCollection([$doc1->reveal(), $doc2->reveal(), $doc3->reveal()]));
         $reportSubmission->getZipName()->willReturn('Report_12345678_2017_2018.zip');
 
-        $sut = new DocumentsZipFileCreator($reportSubmission->reveal(), $storage->reveal());
+        $documentsContents = ['file-name1.pdf' => 'doc1 content', 'file-name3.pdf' => 'doc3 content'];
+        $sut = new DocumentsZipFileCreator();
 
-        $fileName = $sut->createZipFile();
+        $fileName = $sut->createZipFileFromDocumentContents($documentsContents, $reportSubmission->reveal());
 
         self::assertTrue(file_exists($fileName));
 
-        $za = new ZipArchive();
-        $za->open($fileName);
+        $zip = new ZipArchive();
+        $zip->open($fileName);
 
-        self::assertEquals(2, $za->numFiles);
+        self::assertEquals(2, $zip->numFiles);
+    }
+
+    /**
+     * @group acs
+     */
+    public function testcreateMultiZipFile()
+    {
+        $sut = new DocumentsZipFileCreator();
+
+        $zipFileContents = ['some content', 'some different content'];
+        $zipFiles = [];
+
+        $zip = new ZipArchive();
+
+        foreach ($zipFileContents as $content) {
+            $document = $sut::TMP_ROOT_PATH . "test-" . microtime(1);
+            file_put_contents($document, $content);
+
+            $zip->open($document, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
+            $zip->addFile($document, $document);
+
+            $zipFiles[] = $document;
+
+            $zip->close();
+        }
+
+        $zippedZipFiles = $sut->createMultiZipFile($zipFiles);
+
+        $zip->open($zippedZipFiles);
+
+        self::assertEquals(2, $zip->numFiles);
+
+        $zip->close();
     }
 
     public function tearDown(): void
