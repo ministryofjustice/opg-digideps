@@ -9,7 +9,6 @@ use ZipArchive;
 class DocumentsZipFileCreator
 {
     const TMP_ROOT_PATH = '/tmp/';
-    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var array
@@ -25,14 +24,6 @@ class DocumentsZipFileCreator
     {
         // store files locally, for subsequent memory-less ZIP creation
         $filesToAdd = [];
-
-        if ($reportSubmission->isDownloadable() !== true) {
-            throw new \RuntimeException(self::MSG_NOT_DOWNLOADABLE);
-        }
-
-        if (empty($reportSubmission->getDocuments())) {
-            throw new \RuntimeException('No documents found for downloading');
-        }
 
         foreach ($documentsContents as $fileName => $content) {
             $document = self::createDocumentTmpFilePath($fileName);
