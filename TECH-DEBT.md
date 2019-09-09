@@ -4,16 +4,20 @@ This file should be used to record known debt.
 
 If any debt may lead to larger risks, it should be transferred to the risk board. If we have identified an agreed solution to pay down the debt, it should be moved to a ticket in JIRA.
 
+## CI
+- Stabilize runs too soon and may exit before deployment has started
+- Notify channel when environment ready
+
 ## Infra
 - Establish regular check of Trusted Advisor
 - Configure correct email address for Trusted Advisor
-- Manage service certificate with terraform
-- Manage service SES config with terraform
 - scheduled scaling for cost saving
 - remove dependency on semvertag
 - makefile deprecated
-- add trufflehog to CI
-- allow digideps developers read access to management role
+- periodically rotate CI access key & ses users
+- move public routes to main route table
+- Per environment certificates or universal wildcard
+- Move to secrets per account
 
 ## Application
 - Separate config files/entrypoints are inflexible and obfuscating, should use feature flags instead
