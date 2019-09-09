@@ -140,8 +140,10 @@ class ReportSubmissionController extends AbstractController
             $zipFiles = [];
             $missingDocuments = [];
             $zipFileCreator = new DocumentsZipFileCreator();
+            $caseNumber = '';
 
             foreach ($checkedBoxes as $reportSubmissionId) {
+                /** @var EntityDir\Report\ReportSubmission $reportSubmission */
                 $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
 
                 if ($reportSubmission->isDownloadable() !== true) {
@@ -157,25 +159,21 @@ class ReportSubmissionController extends AbstractController
 
                 if (!empty($missing)) {
                     $missingDocuments[] = $missing;
+                    $caseNumber = $reportSubmission->getReport()->getClient()->getCaseNumber();
                 }
             }
 
-            $filename = $zipFileCreator->createMultiZipFile($zipFiles);
+            $fileName = $zipFileCreator->createMultiZipFile($zipFiles);
 
             // send ZIP to user
-            $response = new Response();
-            $response->headers->set('Pragma', 'public');
-            $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-            $response->headers->set('Expires', '0');
-            $response->headers->set('Content-type', 'application/octet-stream');
-            $response->headers->set('Content-Description', 'File Transfer');
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($filename) . '";');
-            // currently disabled as behat goutte driver gets a corrupted file with this setting
-            //$response->headers->set('Content-Length', filesize($filename));
-            $response->sendHeaders();
-            $response->setContent(readfile($filename));
+            $response = self::generateDownloadResponse($fileName);
 
             $zipFileCreator->cleanUp();
+
+            if (!empty($missingDocuments)) {
+                $flashMessage = self::createMissingDocumentsFlashMessage($missingDocuments, $caseNumber);
+                $request->getSession()->getFlashBag()->add('error', $flashMessage);
+            }
 
             return $response;
         } catch (\Throwable $e) {
@@ -204,5 +202,30 @@ class ReportSubmissionController extends AbstractController
             'order'             => $request->get('order', $order),
             'fromDate'          => $request->get('fromDate')
         ];
+    }
+
+    private static function createMissingDocumentsFlashMessage(array $missingDocuments, string $caseNumber)
+    {
+        $missingDocumentBullets = '<ul><li>' .  implode('</li><li>', $missingDocuments) . '</li></ul>';
+        return <<<FLASH
+The following documents for case number $caseNumber could not be downloaded:
+$missingDocumentBullets
+FLASH;
+    }
+
+    private static function generateDownloadResponse(string $fileName)
+    {
+        $response = new Response();
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+        $response->headers->set('Expires', '0');
+        $response->headers->set('Content-type', 'application/octet-stream');
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
+        // currently disabled as behat goutte driver gets a corrupted file with this setting
+        //$response->headers->set('Content-Length', filesize($filename));
+        $response->sendHeaders();
+        $response->setContent(readfile($fileName));
+        return $response;
     }
 }
