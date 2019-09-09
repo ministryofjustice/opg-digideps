@@ -2,10 +2,6 @@ variable "default_role" {
   default = "digideps-ci"
 }
 
-variable "management_role" {
-  default = "digideps-ci"
-}
-
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
 }
