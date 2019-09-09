@@ -4,7 +4,9 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
 
@@ -107,5 +109,32 @@ class DocumentService
         $this->logger->log($level, $message, ['extra' => [
             'service' => 'documents-service',
         ]]);
+    }
+
+    /**
+     * Waiting for PHP core to catch up with allowing return documentation for this cool Golang-like feature.
+     * Returns two arrays utilising list() and array destructuring. When calling this function use the format:
+     *
+     * [$documents, $missing] = retrieveDocumentsFromS3ForReportSubmission($reportSubmission);
+     *
+     * Both values are accessible as variables in code rather than accessing their array index.
+     *
+     * @param ReportSubmission $reportSubmission
+     * @return array
+     */
+    public function retrieveDocumentsFromS3ForReportSubmission(ReportSubmission $reportSubmission)
+    {
+        $documents = [];
+        $missing = [];
+
+        foreach ($reportSubmission->getDocuments() as $document) {
+            try {
+                $documents[$document->getFileName()] = $this->s3Storage->retrieve($document->getStorageReference()); //might throw exception
+            } catch(FileNotFoundException $e) {
+                $missing[] = $document->getFileName();
+            }
+        }
+
+        return [$documents, $missing];
     }
 }
