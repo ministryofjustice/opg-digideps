@@ -89,7 +89,7 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
     /**
      * @group acs
      */
-    public function testRetrieveDocumentsFromS3ForReportSubmission()
+    public function testRetrieveDocumentsFromS3ByReportSubmission()
     {
         $doc1 = self::prophesize(Document::class);
         $doc1->getStorageReference()->willReturn('ref-1');
@@ -116,7 +116,7 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         $restClient = self::prophesize(RestClient::class);
 
         $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ForReportSubmission($reportSubmission->reveal());
+        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         self::assertEquals(['file-name1.pdf' => 'doc1 contents', 'file-name2.pdf' => 'doc2 contents'], $documents);
         self::assertEmpty($missing);
@@ -153,7 +153,7 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         $restClient = self::prophesize(RestClient::class);
 
         $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
-        [$documents, $missing] = $sut->retrieveDocumentsFromS3ForReportSubmission($reportSubmission->reveal());
+        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         self::assertEquals(['file-name1.pdf' => 'doc1 contents'], $documents);
         self::assertEquals(['file-name2.pdf'], $missing);

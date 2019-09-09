@@ -112,17 +112,21 @@ class DocumentService
     }
 
     /**
-     * Waiting for PHP core to catch up with allowing return documentation for this cool Golang-like feature.
-     * Returns two arrays utilising list() and array destructuring. When calling this function use the format:
+     * Waiting for PHP core to catch up with allowing return documentation for this Golang-like feature.
+     * Returns two arrays utilising list() and array destructuring. Both values are accessible as variables
+     * rather than accessing their array index.
      *
-     * [$documents, $missing] = retrieveDocumentsFromS3ForReportSubmission($reportSubmission);
+     * When calling this function use the format:
      *
-     * Both values are accessible as variables in code rather than accessing their array index.
+     * [$documents, $missing] = retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+     *
+     * $documents - The contents of the document from S3 in format [filename => contents]
+     * $missing - Array of filenames that couldn't be retrieved from S3
      *
      * @param ReportSubmission $reportSubmission
      * @return array
      */
-    public function retrieveDocumentsFromS3ForReportSubmission(ReportSubmission $reportSubmission)
+    public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission)
     {
         $documents = [];
         $missing = [];

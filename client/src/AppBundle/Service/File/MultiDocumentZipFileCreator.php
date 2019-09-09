@@ -56,7 +56,7 @@ class MultiDocumentZipFileCreator
         foreach ($this->reportSubmissions as $reportSubmission) {
             try {
                 $zipFileCreator = new DocumentsZipFileCreator($reportSubmission, $this->s3Storage);
-                $filename = $zipFileCreator->createZipFile();
+                $filename = $zipFileCreator->createZipFileFromDocumentContents();
 
                 //store the filename and creator for later use (creator is saved so we can clean up after ourselves)
                 $documents[] = [

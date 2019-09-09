@@ -30,9 +30,12 @@ services:
       class: AppBundle\Service\StepRedirector
       arguments: [ "@router" ]
 
-    document_service:
+    AppBundle\Service\DocumentService:
       class: AppBundle\Service\DocumentService
-      arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+      arguments:
+        $s3Storage: "@s3_storage"
+        $restClient: "@rest_client"
+        $logger: "@logger"
 
     report_fee_service:
       class: AppBundle\Service\ReportFeeService
@@ -48,3 +51,8 @@ services:
     report_section_link_service:
       class: AppBundle\Service\ReportSectionsLinkService
       arguments: [ "@router" ]
+
+    AppBundle\Controller\Admin\ReportSubmissionController:
+        class: AppBundle\Controller\Admin\ReportSubmissionController
+        arguments:
+            $documentService: "@AppBundle\\Service\\DocumentService"
