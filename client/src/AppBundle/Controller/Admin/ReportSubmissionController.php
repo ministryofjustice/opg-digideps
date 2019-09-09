@@ -19,6 +19,7 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
+    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var DocumentService
@@ -142,6 +143,15 @@ class ReportSubmissionController extends AbstractController
 
             foreach ($checkedBoxes as $reportSubmissionId) {
                 $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+
+                if ($reportSubmission->isDownloadable() !== true) {
+                    throw new \RuntimeException(self::MSG_NOT_DOWNLOADABLE);
+                }
+
+                if (empty($reportSubmission->getDocuments())) {
+                    throw new \RuntimeException('No documents found for downloading');
+                }
+
                 [$documents, $missing] = $this->documentService->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
                 $zipFiles[] = $zipFileCreator->createZipFileFromDocumentContents($documents, $reportSubmission);
 
