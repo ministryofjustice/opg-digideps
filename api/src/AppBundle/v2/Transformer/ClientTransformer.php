@@ -71,7 +71,7 @@ class ClientTransformer
         }
 
         if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
-            $transformed['namedDeputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
+            $transformed['named_deputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
         }
 
         return $transformed;

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -25,6 +26,17 @@ class NamedDeputy
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $id;
+
+    /**
+     * Holds the named deputy the client belongs to
+     * Loaded from the CSV upload
+     *
+     * @JMS\Exclude
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client", mappedBy="namedDeputy")
+     * @ORM\JoinColumn(name="id", referencedColumnName="named_deputy_id")
+     */
+    private $clients;
 
     /**
      * @var string
@@ -99,7 +111,7 @@ class NamedDeputy
     private $address1;
 
     /**
-     * @var int
+     * @var string
      *
      * @JMS\Type("string")
      * @JMS\Groups({ "report-submitted-by", "named-deputy"})
