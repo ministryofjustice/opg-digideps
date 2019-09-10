@@ -84,6 +84,11 @@ lastSubmittedOn: Last submitted on
 lastSubmittedBy: Last submitted by
 dischargedOn: Discharged on
 namedDeputy: Named deputy
+namedDeputyAddress: Named deputy address
+namedDeputyContactDetails: Named deputy contact details
+mainPhone: Main phone
+alternativePhone: Alternative Phone
+namedDeputy: Named deputy
 amount: Amount
 totalAmount: Total amount
 firstNames: First names

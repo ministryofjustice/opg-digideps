@@ -86,24 +86,37 @@
             {{ 'namedDeputy' | trans({}, 'common') }}
         </dt>
         <dd class="govuk-summary-list__value behat-region-discharged-on">
-
-            {#{{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}#}
-            {#{{ client.namedDeputy.address1 }}#}
-            {#{{ client.namedDeputy.address2 }}#}
-            {#{{ client.namedDeputy.address3 }}#}
-            {#{{ client.namedDeputy.address4 }}#}
-            {#{{ client.namedDeputy.address5 }}#}
-            {#{{ client.namedDeputy.email1 }}#}
-            {#{{ client.namedDeputy.email2 }}#}
-            {#{{ client.namedDeputy.email3 }}#}
-            {#{{ client.namedDeputy.phone }}#}
-            {#{{ client.namedDeputy.phoneAlternative }}#}
+            {{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}
         </dd>
     </div>
-</dl>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'namedDeputyAddress' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__value behat-region-discharged-on">
+            {{ client.namedDeputy.address1 }}<br />
+            {{ client.namedDeputy.address2 }}<br />
+            {{ client.namedDeputy.address3 }}<br />
+            {{ client.namedDeputy.address4 }}<br />
+            {{ client.namedDeputy.address5 }}<br />
+        </dd>
+    </div>
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'namedDeputyContactDetails' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__value behat-region-discharged-on">
+            {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
+            {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}<br />
+            {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}<br />
+            {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}<br />
+            {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}<br />
+            {{ client.namedDeputy.email2 }}<br />
+            {{ client.namedDeputy.email3 }}<br />
+        </dd>
+    </div>
 
-    {{ dump(client.ndr) }}
-    {{ dump(client.namedDeputy) }}
+</dl>
 
     {# client NDR #}
 
