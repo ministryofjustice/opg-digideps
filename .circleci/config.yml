@@ -205,6 +205,7 @@ jobs:
         default: ""
     environment:
       TF_VAR_default_role: digideps-ci
+      WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
     steps:
       - checkout:
@@ -231,6 +232,7 @@ jobs:
         default: ""
     environment:
       TF_VAR_default_role: digideps-ci
+      WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
     steps:
       - checkout:
@@ -255,6 +257,7 @@ jobs:
         default: ""
     environment:
       TF_VAR_default_role: digideps-ci
+      WORKSPACE: << parameters.tf_workspace >>
     working_directory: ~/project/environment
     steps:
       - checkout:
