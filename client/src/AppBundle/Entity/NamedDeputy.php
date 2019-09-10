@@ -16,7 +16,6 @@ class NamedDeputy
     /**
      * @var int
      * @JMS\Type("integer")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $id;
 
@@ -24,14 +23,12 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $deputyNo;
 
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      *
      */
     private $firstname;
@@ -40,13 +37,11 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $lastname;
 
     /**
      * @var string
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      */
@@ -54,7 +49,6 @@ class NamedDeputy
 
     /**
      * @var string
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      */
@@ -62,7 +56,6 @@ class NamedDeputy
 
     /**
      * @var string
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      * @JMS\Type("string")
      *
      */
@@ -72,7 +65,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $depAddrNo;
 
@@ -80,7 +72,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address1;
 
@@ -88,7 +79,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address2;
 
@@ -96,7 +86,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address3;
 
@@ -104,7 +93,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address4;
 
@@ -112,7 +100,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $address5;
 
@@ -120,7 +107,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $addressPostcode;
 
@@ -128,7 +114,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $addressCountry;
 
@@ -136,7 +121,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $phoneMain;
 
@@ -144,7 +128,6 @@ class NamedDeputy
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"report-submitted-by", "named-deputy"})
      */
     private $phoneAlternative;
 
@@ -182,7 +165,7 @@ class NamedDeputy
      */
     public function setDeputyNo($deputyNo)
     {
-        $this->deputyNo =$deputyNo;
+        $this->deputyNo = $deputyNo;
         return $this;
     }
 
