@@ -18,7 +18,7 @@ class Client
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"edit", "pa-edit"})
-
+     *
      * @var int
      */
     private $id;
@@ -53,7 +53,6 @@ class Client
 
     /**
      * @JMS\Type("AppBundle\Entity\NamedDeputy")
-     * @JMS\Groups({"report-submitted-by", "client-named-deputy"})
      * @var NamedDeputy
      */
     private $namedDeputy;

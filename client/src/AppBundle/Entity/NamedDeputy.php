@@ -42,22 +42,22 @@ class NamedDeputy
 
     /**
      * @var string
-     * @JMS\Type("string")
      *
+     * @JMS\Type("string")
      */
     private $email1;
 
     /**
      * @var string
-     * @JMS\Type("string")
      *
+     * @JMS\Type("string")
      */
     private $email2;
 
     /**
      * @var string
-     * @JMS\Type("string")
      *
+     * @JMS\Type("string")
      */
     private $email3;
 
