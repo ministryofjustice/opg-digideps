@@ -2,6 +2,9 @@ services:
   AppBundle\v2\Transformer\NdrTransformer:
     class: AppBundle\v2\Transformer\NdrTransformer
 
+  AppBundle\v2\Transformer\NamedDeputyTransformer:
+    class: AppBundle\v2\Transformer\NamedDeputyTransformer
+
   AppBundle\v2\Transformer\StatusTransformer:
     class: AppBundle\v2\Transformer\StatusTransformer
 
@@ -16,6 +19,7 @@ services:
       - '@AppBundle\v2\Transformer\ReportTransformer'
       - '@AppBundle\v2\Transformer\NdrTransformer'
       - '@PlainOrganisationTransformer'
+      - '@AppBundle\v2\Transformer\NamedDeputyTransformer'
 
   AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer

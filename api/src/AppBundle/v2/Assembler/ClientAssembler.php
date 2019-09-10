@@ -20,16 +20,27 @@ class ClientAssembler
     /** @var OrganisationAssembler */
     private $organisationDtoAssembler;
 
+    /** @var NamedDeputyAssembler  */
+    private $namedDeputyAssembler;
+
     /**
+     * ClientAssembler constructor.
      * @param ReportAssemblerInterface $reportDtoAssembler
      * @param NdrAssembler $ndrDtoAssembler
      * @param OrganisationAssembler $organisationDtoAssembler
+     * @param NamedDeputyAssembler $namedDeputyDtoAssembler
      */
-    public function __construct(ReportAssemblerInterface $reportDtoAssembler, NdrAssembler $ndrDtoAssembler, OrganisationAssembler $organisationDtoAssembler)
-    {
+    public function __construct(
+        ReportAssemblerInterface $reportDtoAssembler,
+        NdrAssembler $ndrDtoAssembler,
+        OrganisationAssembler $organisationDtoAssembler,
+        NamedDeputyAssembler $namedDeputyDtoAssembler
+    ) {
+
         $this->reportDtoAssembler = $reportDtoAssembler;
         $this->ndrDtoAssembler = $ndrDtoAssembler;
         $this->organisationDtoAssembler = $organisationDtoAssembler;
+        $this->namedDeputyAssembler = $namedDeputyDtoAssembler;
     }
 
     /**
@@ -40,7 +51,7 @@ class ClientAssembler
     {
         $dto = new ClientDto();
 
-        $exclude = ['ndr', 'reports'];
+        $exclude = ['ndr', 'reports', 'namedDeputy'];
         $this->setPropertiesFromData($dto, $data, $exclude);
 
         if (isset($data['ndr']) && is_array($data['ndr'])) {
@@ -54,6 +65,10 @@ class ClientAssembler
 
         if (isset($data['organisations']) && is_array($data['organisations'])) {
             $dto->setOrganisations($this->assembleClientOrganisations($data['organisations']));
+        }
+
+        if (isset($data['namedDeputy']) && is_array($data['namedDeputy'])) {
+            $dto->setNamedDeputy($this->assembleClientNamedDeputy($data['namedDeputy']));
         }
 
         return $dto;
@@ -110,4 +125,14 @@ class ClientAssembler
     {
         return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
+
+    /**
+     * @param array $namedDeputy
+     * @return
+     */
+    private function assembleClientNamedDeputy(array $namedDeputy)
+    {
+        return $this->namedDeputyAssembler->assembleFromArray($namedDeputy);
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\v2\Transformer;
 
 use AppBundle\v2\DTO\ClientDto;
+use AppBundle\v2\DTO\NamedDeputyDto;
 use AppBundle\v2\DTO\NdrDto;
 use AppBundle\v2\DTO\OrganisationDto;
 use AppBundle\v2\DTO\ReportDto;
@@ -19,16 +20,24 @@ class ClientTransformer
     /** @var OrganisationTransformer */
     private $organisationTransformer;
 
+    /** @var NamedDeputyTransformer */
+    private $namedDeputyTransformer;
+
     /**
      * @param ReportTransformer $reportTransformer
      * @param NdrTransformer $ndrTransformer
      * @param OrganisationTransformer $organisationTransformer
      */
-    public function __construct(ReportTransformer $reportTransformer, NdrTransformer $ndrTransformer, OrganisationTransformer $organisationTransformer)
-    {
+    public function __construct(
+        ReportTransformer $reportTransformer,
+        NdrTransformer $ndrTransformer,
+        OrganisationTransformer $organisationTransformer,
+        NamedDeputyTransformer $namedDeputyTransformer
+    ) {
         $this->reportTransformer = $reportTransformer;
         $this->ndrTransformer = $ndrTransformer;
         $this->organisationTransformer = $organisationTransformer;
+        $this->namedDeputyTransformer = $namedDeputyTransformer;
     }
 
     /**
@@ -59,6 +68,10 @@ class ClientTransformer
 
         if (!in_array('organisations', $exclude) && $dto->getOrganisations() !== null) {
             $transformed['organisations'] = $this->transformOrganisations($dto->getOrganisations());
+        }
+
+        if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
+            $transformed['namedDeputy'] = $this->transformNamedDeputy($dto->getNamedDeputy());
         }
 
         return $transformed;
@@ -132,5 +145,14 @@ class ClientTransformer
     private function transformNdr(NdrDto $ndr)
     {
         return $this->ndrTransformer->transform($ndr);
+    }
+
+    /**
+     * @param NamedDeputyDto $namedDeputy
+     * @return array
+     */
+    private function transformNamedDeputy(NamedDeputyDto $namedDeputy)
+    {
+        return $this->namedDeputyTransformer->transform($namedDeputy);
     }
 }
