@@ -64,21 +64,46 @@
     {% endif %}
 
     {% if client.organisations is not empty %}
-        <dt class="govuk-summary-list__key">
-            {{ (page ~ '.organisation') | trans }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {% for org in client.organisations %}
-                <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
+        <div class="govuk-summary-list__row">
 
-                {% if not org.isActivated %}
-                    {{ (page ~ '.organisationInactive') | trans }}
-                {% endif %}
-                <br>
-            {% endfor %}
-        </dd>
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.organisation') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value">
+                {% for org in client.organisations %}
+                    <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
+
+                    {% if not org.isActivated %}
+                        {{ (page ~ '.organisationInactive') | trans }}
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            </dd>
+        </div>
     {% endif %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'namedDeputy' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__value behat-region-discharged-on">
+
+            {#{{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}#}
+            {#{{ client.namedDeputy.address1 }}#}
+            {#{{ client.namedDeputy.address2 }}#}
+            {#{{ client.namedDeputy.address3 }}#}
+            {#{{ client.namedDeputy.address4 }}#}
+            {#{{ client.namedDeputy.address5 }}#}
+            {#{{ client.namedDeputy.email1 }}#}
+            {#{{ client.namedDeputy.email2 }}#}
+            {#{{ client.namedDeputy.email3 }}#}
+            {#{{ client.namedDeputy.phone }}#}
+            {#{{ client.namedDeputy.phoneAlternative }}#}
+        </dd>
+    </div>
 </dl>
+
+    {{ dump(client.ndr) }}
+    {{ dump(client.namedDeputy) }}
 
     {# client NDR #}
 
