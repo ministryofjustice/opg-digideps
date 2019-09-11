@@ -1,5 +1,17 @@
 resource "aws_route53_record" "front" {
-  name    = "${local.account.front_prefix}${local.host_suffix}"
+  name    = local.host_suffix
+  type    = "A"
+  zone_id = data.aws_route53_zone.public.id
+
+  alias {
+    evaluate_target_health = false
+    name                   = aws_lb.front.dns_name
+    zone_id                = aws_lb.front.zone_id
+  }
+}
+
+resource "aws_route53_record" "www" {
+  name    = join(".", compact("www", local.host_suffix))
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
