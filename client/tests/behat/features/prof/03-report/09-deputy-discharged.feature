@@ -1,6 +1,5 @@
 Feature: Prof deputy is discharged
 
-  @shaun
   Scenario: Case manager discharges professional deputy from client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
@@ -16,7 +15,7 @@ Feature: Prof deputy is discharged
     And I should see "24 Jul 2018" in the "discharged-on" region
 
 
-  Scenario: Admin can amends Prof checklist against a discharged client
+  Scenario: Admin can amend Prof checklist against a discharged client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search, discharged-client-detail-31000010"
     And I click on "checklist" in the "report-2016-to-2017" region
