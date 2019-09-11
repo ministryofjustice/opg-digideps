@@ -161,8 +161,7 @@ abstract class RestController extends Controller
      */
     protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
     {
-        if (!$client->userBelongsToClient($this->getUser()->getId()))
-        {
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
     }

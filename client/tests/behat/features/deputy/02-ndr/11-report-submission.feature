@@ -12,7 +12,7 @@ Feature: Admin NDR submitted
     When I fill in the following:
     | search_clients_q | hent3 |
     And I click on "search_clients_search"
-    Then I should see the "client-row" region exactly "8" times
+    Then I should see the "client-row" region exactly "11" times
     And each text should be present in the corresponding region:
     | Cly3 Hent3 | client-33333333 |
     # Test searching by case number
