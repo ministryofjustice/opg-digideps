@@ -2,10 +2,6 @@ variable "default_role" {
   default = "digideps-ci"
 }
 
-variable "management_role" {
-  default = "digideps-ci"
-}
-
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
 }
@@ -16,7 +12,6 @@ variable "accounts" {
       account_id                = string
       account_long_name         = string
       account_name              = string
-      admin_prefix              = string
       admin_whitelist           = list(string)
       domain                    = string
       domain_name               = string
@@ -26,7 +21,6 @@ variable "accounts" {
       email_update_address      = string
       external_certificate_name = string
       force_destroy_bucket      = bool
-      front_prefix              = string
       front_whitelist           = list(string)
       host_suffix_enabled       = bool
       is_production             = number

@@ -215,7 +215,11 @@ class FormFieldsExtension extends \Twig_Extension
 
         //sort hint text translation
         $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-        $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
+        if ($hintTextTrans !== $translationKey . '.hint') {
+            $hintText = $hintTextTrans;
+        } else {
+            $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
+        }
 
         //get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];

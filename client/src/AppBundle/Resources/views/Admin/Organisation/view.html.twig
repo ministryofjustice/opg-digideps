@@ -21,7 +21,7 @@
 
 {% block pageContent %}
 
-    <a href="{{ url('admin_organisation_member_add', { id: organisation.id }) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
+    <a href="{{ url('admin_organisation_member_add', { id: organisation.id }) }}" role="button" data-module="govuk-button" class="govuk-button govuk-button--secondary">
         {{ (page ~ '.addMember') | trans }}
     </a>
 

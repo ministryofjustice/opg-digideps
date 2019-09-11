@@ -56,7 +56,7 @@
         {% do form.retrieve.setRendered %}
         {{ form_submit(form.confirm, 'form.confirm') }}
 
-        <a class="govuk-button govuk-button--secondary govuk-!-margin-left-6" href="{{ backLink }}">
+        <a class="govuk-button govuk-button--secondary govuk-!-margin-left-6" href="{{ backLink }}" role="button" data-module="govuk-button">
             {{ 'cancel' | trans({}, 'common' ) }}
         </a>
     {% else %}
