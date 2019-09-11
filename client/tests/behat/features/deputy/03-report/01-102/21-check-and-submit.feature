@@ -146,6 +146,32 @@ Feature: Report submit
             | AU | report-submission-1 |
 
     @deputy
+    Scenario: Missing documents from S3 are shown in flash message when downloading
+        Given I am logged in as "behat-lay-deputy-103-4@publicguardian.gov.uk" with password "Abcd1234"
+        When I set the report start date to "1/1/2016"
+        And I set the report end date to "31/12/2016"
+        And I click on "report-start, edit-documents, start"
+        And I fill in "document_wishToProvideDocumentation_0" with "yes"
+        And I click on "save-and-continue"
+        When I attach the file "file1.pdf" to "report_document_upload_file"
+        And I click on "attach-file"
+        When I attach the file "file2.pdf" to "report_document_upload_file"
+        And I click on "attach-file"
+        Given the document "file2.pdf" belonging to "behat-lay-deputy-103-4@publicguardian.gov.uk" is deleted from AWS but not updated locally
+        Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+        And I click on "admin-documents"
+        Then I should be on "/admin/documents/list"
+        When I fill in the following:
+            | search | 103-4 |
+            | created_by_role | ROLE_LAY_DEPUTY |
+        And I press "search_submit"
+        When I check "Select 103-4"
+        Then I click on "download"
+        And the page content should be a zip file containing files with the following files:
+            | file-1.pdf | regexpName+sizeAtLeast | 60000 |
+        And I should see "file-2.pdf" in the "error" region
+
+    @deputy
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
         And I click on "report-start"
