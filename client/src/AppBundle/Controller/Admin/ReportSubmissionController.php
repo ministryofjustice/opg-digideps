@@ -158,7 +158,9 @@ class ReportSubmissionController extends AbstractController
                 $zipFiles[] = $zipFileCreator->createZipFileFromDocumentContents($documents, $reportSubmission);
 
                 if (!empty($missing)) {
-                    $missingDocuments[] = $missing;
+                    foreach($missing as $missingDoc) {
+                        $missingDocuments[] = $missingDoc;
+                    }
                     $caseNumber = $reportSubmission->getReport()->getClient()->getCaseNumber();
                 }
             }
