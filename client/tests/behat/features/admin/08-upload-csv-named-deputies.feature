@@ -100,7 +100,7 @@ Feature: admin uploads csv organisations
     And the URL should match "/org"
     # check I'm in the dashboard and can see the two clients of the org
     And I should see the "client-34350001" region
-    And I should see the "client-34350002" region
+    And I should see the "client-34360002" region
 
 
 
