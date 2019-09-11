@@ -4,26 +4,14 @@
 namespace DigidepsBehat;
 
 
-use AppBundle\Entity\Client;
-use AppBundle\Service\Client\RestClient;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Report\Document;
+use Exception;
 
 /**
  * @method Behat\Mink\Session getSession
  */
 trait DocumentTrait
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(RestClient $restClient)
-    {
-        $this->restClient = $restClient;
-    }
-
     /**
      * @Given /^the document "([^"]*)" belonging to "([^"]*)" is deleted from AWS but not updated locally$/
      * @param string $document, the filename of the document
@@ -33,11 +21,19 @@ trait DocumentTrait
     {
         $url = $this->getSession()->getCurrentUrl();
         preg_match_all('/report\/([\d]+)/',$url,$matches);
-        $reportId = $matches[1];
 
-        $report = $this->restClient->get("/report/${reportId}", 'Report\\Report');
+        if (strpos($matches[0][0], 'report') === false) {
+            throw new Exception(
+                "This step can only be run while on a page that includes '/report/{id}'"
+            );
+        }
+
+        $reportId = $matches[1][0];
+
+        $report = $this->getRestClient()->get("/report/${reportId}", 'Report\\Report');
         $docs = $report->getDocuments();
 
+        /** @var Document $documentToAmend */
         $documentToAmend = null;
 
         foreach ($docs as $doc) {
@@ -46,8 +42,6 @@ trait DocumentTrait
             }
         }
 
-        $documentToAmend->setStorageReference('wrong_reference');
-
-        $this->restClient->put("/document/" . $documentToAmend->getId(), );
+        $this->getS3Storage()->delete($documentToAmend->getStorageReference());
     }
 }
