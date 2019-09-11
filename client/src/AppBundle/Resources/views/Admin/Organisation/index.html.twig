@@ -40,14 +40,14 @@
             {% for organisation in organisations %}
                 <tr class="govuk-table__row behat-region-org-{{ organisation.name | behat_namify }}">
                     <td class="govuk-table__cell">
-                        <a class="govuk-link" href="{{ url('admin_organisation_view', { id: organisation.id }) }}">
+                        <a class="govuk-link behat-link-manage" href="{{ url('admin_organisation_view', { id: organisation.id }) }}">
                             {{ organisation.name }}
                         </a>
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell behat-region-org-email-identifier-{{ organisation.name | behat_namify }}">
                         {{ organisation.emailIdentifierDisplay }}
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell behat-region-org-active-{{ organisation.name | behat_namify }}">
                         {% if organisation.isActivated %}
                             <span class="govuk-tag">Active</span>
                         {% endif %}
