@@ -11,7 +11,7 @@ resource "aws_route53_record" "front" {
 }
 
 resource "aws_route53_record" "www" {
-  name    = join(".", compact("www", local.host_suffix))
+  name    = join(".", compact(["www", local.host_suffix]))
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 

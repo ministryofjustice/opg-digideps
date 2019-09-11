@@ -1,6 +1,6 @@
 #TODO: this needed to be in complete-deputy-report.service.gov.uk
 resource "aws_route53_record" "admin" {
-  name    = join(".", compact("admin", local.host_suffix))
+  name    = join(".", compact(["admin", local.host_suffix]))
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
