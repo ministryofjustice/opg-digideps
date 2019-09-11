@@ -160,9 +160,9 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof EntityDir\Client) {
-                    if ($client->hasDeputies()) {
+                    //if ($client->hasDeputies()) {
                         $this->upsertReportFromCsv($row, $client);
-                    }
+                    //}
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
