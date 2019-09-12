@@ -29,7 +29,7 @@
             <dd class="push--bottom">
                 {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                     <p class="push--top">
-                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">
+                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
                             {{ 'reviewAndSubmit' | trans() }}
                             {{ macros.startButtonIcon() }}
                         </a>

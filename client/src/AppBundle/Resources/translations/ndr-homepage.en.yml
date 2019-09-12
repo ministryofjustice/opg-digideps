@@ -20,13 +20,13 @@ history:
     reportingPeriod: Reporting period
     submissionDate: Submission date
   reports:
-    download: Download
+    download: Download PDF
     view: View
     attachDocuments: Attach documents
   ndr:
    title: New deputy report
    reportingPeriod: Start of deputyship
-   download: Download
+   download: Download PDF
    view: View
 
 

@@ -138,47 +138,50 @@
 
 <hr />
 
-{{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{# Don't show question for professional reports with short money sections #}
+{% if report.type not in ['103-5', '103-4-5'] %}
+    {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
+        'fieldSetClass' : 'inline',
+        'formGroupClass': 'push-half--bottom'
+    }) }}
 
-{# Don't show Account Balance Summary for 103 #}
-{% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
-    <details class="govuk-details" data-module="govuk-details">
-        <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
-        </summary>
-        <div class="govuk-details__text">
-            {# Balance table #}
-            {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
-                hideEditLink: true
-            } %}
+    {# Don't show Account Balance Summary for 103 #}
+    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
+            </summary>
+            <div class="govuk-details__text">
+                {# Balance table #}
+                {% include 'AppBundle:Report/Balance:_balance_table.html.twig' with {
+                    hideEditLink: true
+                } %}
 
-            {# Difference table #}
-            {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
-                hideEditLink: true
-            } %}
+                {# Difference table #}
+                {% include 'AppBundle:Report/Balance:_difference_table.html.twig' with {
+                    hideEditLink: true
+                } %}
 
-            {% if not report.totalsMatch %}
-                <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
-                <dl class="govuk-summary-list columns-2 push--bottom">
-                    {{ macros.summaryListHeaderQA(true) }}
-                    <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">
-                            {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            {{ report.balanceMismatchExplanation | nl2br }}
-                        </dd>
-                    </div>
-                </dl>
-            {% endif %}
-        </div>
-    </details>
+                {% if not report.totalsMatch %}
+                    <h3 class="heading-medium">{{ 'form.explanation.label' | trans({}, 'report-balance') }}</h3>
+                    <dl class="govuk-summary-list columns-2 push--bottom">
+                        {{ macros.summaryListHeaderQA(true) }}
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {{ 'cantFind.reasonNotBalancing' | trans({}, 'report-balance') }}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ report.balanceMismatchExplanation | nl2br }}
+                            </dd>
+                        </div>
+                    </dl>
+                {% endif %}
+            </div>
+        </details>
+    {% endif %}
+
+    <hr />
 {% endif %}
-
-<hr />
 
 {{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
     'fieldSetClass' : 'inline',
