@@ -159,6 +159,124 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEquals(['file-name2.pdf'], $missing);
     }
 
+    /**
+     * @group acs
+     */
+    public function testRetrieveDocumentsFromS3ByReportSubmissions()
+    {
+        $doc1 = self::prophesize(Document::class);
+        $doc1->getStorageReference()->willReturn('ref-1');
+        $doc1->getId()->willReturn(1);
+        $doc1->getFileName()->willReturn('file-name1.pdf');
+
+        $doc2 = self::prophesize(Document::class);
+        $doc2->getStorageReference()->willReturn('ref-2');
+        $doc2->getId()->willReturn(2);
+        $doc2->getFileName()->willReturn('file-name2.pdf');
+
+        $doc3 = self::prophesize(Document::class);
+        $doc3->getStorageReference()->willReturn('ref-3');
+        $doc3->getId()->willReturn(3);
+        $doc3->getFileName()->willReturn('file-name3.pdf');
+
+        /** @var S3Storage|ObjectProphecy $storage */
+        $storage = self::prophesize(S3Storage::class);
+        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $storage->retrieve('ref-2')->shouldBeCalled()->willReturn('doc2 contents');
+        $storage->retrieve('ref-3')->shouldBeCalled()->willReturn('doc3 contents');
+
+        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
+        $reportSubmission = self::prophesize(ReportSubmission::class);
+        $reportSubmission->getDocuments()
+            ->shouldBeCalled()
+            ->willReturn(new ArrayCollection([$doc1->reveal(), $doc2->reveal()]));
+
+        /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
+        $reportSubmission2 = self::prophesize(ReportSubmission::class);
+        $reportSubmission2->getDocuments()
+            ->shouldBeCalled()
+            ->willReturn(new ArrayCollection([$doc3->reveal()]));
+
+        $logger = self::prophesize(LoggerInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+
+        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
+            [$reportSubmission->reveal(), $reportSubmission2->reveal()]
+        );
+
+        self::assertEquals([
+            'file-name1.pdf' => 'doc1 contents',
+            'file-name2.pdf' => 'doc2 contents',
+            'file-name3.pdf' => 'doc3 contents',
+        ],
+            $documents
+        );
+        self::assertEmpty($missing);
+    }
+
+    /**
+     * @group acs
+     */
+    public function testRetrieveDocumentsFromS3ByReportSubmissionsMissingDocs()
+    {
+        $doc1 = self::prophesize(Document::class);
+        $doc1->getStorageReference()->willReturn('ref-1');
+        $doc1->getId()->willReturn(1);
+        $doc1->getFileName()->willReturn('file-name1.pdf');
+
+        $doc2 = self::prophesize(Document::class);
+        $doc2->getStorageReference()->willReturn('ref-2');
+        $doc2->getId()->willReturn(2);
+        $doc2->getFileName()->willReturn('file-name2.pdf');
+
+        $doc3 = self::prophesize(Document::class);
+        $doc3->getStorageReference()->willReturn('ref-3');
+        $doc3->getId()->willReturn(3);
+        $doc3->getFileName()->willReturn('file-name3.pdf');
+
+        $doc4 = self::prophesize(Document::class);
+        $doc4->getStorageReference()->willReturn('ref-4');
+        $doc4->getId()->willReturn(4);
+        $doc4->getFileName()->willReturn('file-name4.pdf');
+
+        /** @var S3Storage|ObjectProphecy $storage */
+        $storage = self::prophesize(S3Storage::class);
+        $storage->retrieve('ref-1')->shouldBeCalled()->willReturn('doc1 contents');
+        $storage->retrieve('ref-2')->shouldBeCalled()
+            ->willThrow(new FileNotFoundException("Cannot find file with reference ref-2"));
+        $storage->retrieve('ref-3')->shouldBeCalled()
+            ->willThrow(new FileNotFoundException("Cannot find file with reference ref-3"));
+        $storage->retrieve('ref-4')->shouldBeCalled()->willReturn('doc4 contents');
+
+        /** @var ObjectProphecy|ReportSubmission $reportSubmission */
+        $reportSubmission = self::prophesize(ReportSubmission::class);
+        $reportSubmission->getDocuments()
+            ->shouldBeCalled()
+            ->willReturn(new ArrayCollection([$doc1->reveal(), $doc2->reveal()]));
+
+        /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
+        $reportSubmission2 = self::prophesize(ReportSubmission::class);
+        $reportSubmission2->getDocuments()
+            ->shouldBeCalled()
+            ->willReturn(new ArrayCollection([$doc3->reveal(), $doc4->reveal()]));
+
+        $logger = self::prophesize(LoggerInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+
+        [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
+            [$reportSubmission->reveal(), $reportSubmission2->reveal()]
+        );
+
+        self::assertEquals(['file-name1.pdf' => 'doc1 contents', 'file-name4.pdf' => 'doc4 contents'], $documents);
+        self::assertEquals(['file-name2.pdf', 'file-name3.pdf'], $missing);
+    }
+
+
+
     public function tearDown()
     {
         m::close();
