@@ -4,7 +4,7 @@ data "aws_route53_zone" "public" {
 }
 
 resource "aws_route53_record" "front" {
-  name    = local.host_suffix
+  name    = local.subdomain
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
@@ -17,7 +17,7 @@ resource "aws_route53_record" "front" {
 }
 
 resource "aws_route53_record" "admin" {
-  name    = join(".", compact(["admin", local.host_suffix]))
+  name    = join(".", compact(["admin", local.subdomain]))
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 
@@ -30,7 +30,7 @@ resource "aws_route53_record" "admin" {
 }
 
 resource "aws_route53_record" "www" {
-  name    = join(".", compact(["www", local.host_suffix]))
+  name    = join(".", compact(["www", local.subdomain]))
   type    = "A"
   zone_id = data.aws_route53_zone.public.id
 

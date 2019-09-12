@@ -9,5 +9,4 @@ locals {
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
     is-production          = local.account.is_production
   }
-
 }
