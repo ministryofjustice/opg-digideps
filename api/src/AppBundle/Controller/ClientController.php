@@ -33,7 +33,7 @@ class ClientController extends RestController
             $client->addUser($user);
         } else {
             $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
-            if (!$client->userBelongsToClient($this->getUser()->getId())) {
+            if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
                 throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }
@@ -98,7 +98,7 @@ class ClientController extends RestController
         };
 
 
-        if (!$client->userBelongsToClient($this->getUser()->getId())) {
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 
@@ -137,7 +137,7 @@ class ClientController extends RestController
         /* @var $client EntityDir\Client */
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
-        if (!$client->userBelongsToClient($this->getUser()->getId())) {
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 
