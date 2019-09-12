@@ -6,6 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\DocumentsZipFileCreator;
+use AppBundle\Service\ReportSubmissionService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,9 +27,15 @@ class ReportSubmissionController extends AbstractController
      */
     private $documentService;
 
-    public function __construct(DocumentService $documentService)
+    /**
+     * @var ReportSubmissionService
+     */
+    private $reportSubmissionService;
+
+    public function __construct(DocumentService $documentService, ReportSubmissionService $reportSubmissionService)
     {
         $this->documentService = $documentService;
+        $this->reportSubmissionService = $reportSubmissionService;
     }
 
     /**
@@ -144,7 +151,7 @@ class ReportSubmissionController extends AbstractController
 
             foreach ($checkedBoxes as $reportSubmissionId) {
                 /** @var EntityDir\Report\ReportSubmission $reportSubmission */
-                $reportSubmission = $this->getRestClient()->get("/report-submission/{$reportSubmissionId}", 'Report\\ReportSubmission');
+                $reportSubmission = $this->reportSubmissionService->getReportSubmissionById($reportSubmissionId);
 
                 if ($reportSubmission->isDownloadable() !== true) {
                     throw new \RuntimeException(self::MSG_NOT_DOWNLOADABLE);
