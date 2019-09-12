@@ -11,9 +11,6 @@ variable "accounts" {
     object({
       account_id             = string
       admin_whitelist        = list(string)
-      domain                 = string
-      domain_name            = string
-      email_domain           = string
       email_feedback_address = string
       email_report_address   = string
       email_update_address   = string

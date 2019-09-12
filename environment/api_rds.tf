@@ -55,7 +55,7 @@ resource "aws_db_instance" "api" {
   tags = merge(
     local.default_tags,
     {
-      "Name" = "api.${local.environment}.${local.account.account_id}.${local.account.domain_name}"
+      "Name" = "api.${local.environment}.${local.account.account_id}.${data.aws_route53_zone.public.name}"
     },
   )
 
