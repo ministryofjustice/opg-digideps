@@ -5,3 +5,6 @@ tabClients: Clients
 overdue: Overdue by %overdueDays% days
 dueToday: Due today
 dueIn: Due in %dueDays% days
+overdueHelpTextHeader: If some reports are incorrectly showing as overdue
+overdueHelpTextParagraph1: Some reports that you have already submitted on paper or by email, may incorrectly be appearing on your dashboard, marked as overdue. We're working to fix this problem.
+overdueHelpTextParagraph2: If you wish, you can stop these reports from showing as overdue by going into the reports and changing the reporting period dates to the dates of your current reporting period.
