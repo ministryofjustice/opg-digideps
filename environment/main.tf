@@ -13,9 +13,3 @@ locals {
   db_subnet_group = "rds-private-subnets-${local.account.vpc_name}"
   ec_subnet_group = "ec-pvt-subnets-${local.account.vpc_name}"
 }
-
-data "aws_acm_certificate" "external" {
-  domain      = local.account.external_certificate_name
-  types       = ["AMAZON_ISSUED"]
-  most_recent = true
-}
