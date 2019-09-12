@@ -91,7 +91,7 @@
     </div>
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            {{ 'namedDeputyAddress' | trans({}, 'common') }}
+            {{ page ~ '.namedDeputyAddress') | trans }}
         </dt>
         <dd class="govuk-summary-list__value behat-region-nd-address">
             {{ client.namedDeputy.address1 }}<br />
@@ -103,7 +103,7 @@
     </div>
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            {{ 'namedDeputyContactDetails' | trans({}, 'common') }}
+            {{ page ~ '.namedDeputyContactDetails') | trans }}
         </dt>
         <dd class="govuk-summary-list__value behat-region-nd-contact-details">
             {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
