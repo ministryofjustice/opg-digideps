@@ -9,25 +9,22 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id                = string
-      account_long_name         = string
-      account_name              = string
-      admin_whitelist           = list(string)
-      domain                    = string
-      domain_name               = string
-      email_domain              = string
-      email_feedback_address    = string
-      email_report_address      = string
-      email_update_address      = string
-      external_certificate_name = string
-      force_destroy_bucket      = bool
-      front_whitelist           = list(string)
-      host_suffix_enabled       = bool
-      is_production             = number
-      secrets_prefix            = string
-      task_count                = number
-      test_enabled              = bool
-      vpc_name                  = string
+      account_id             = string
+      admin_whitelist        = list(string)
+      domain                 = string
+      domain_name            = string
+      email_domain           = string
+      email_feedback_address = string
+      email_report_address   = string
+      email_update_address   = string
+      force_destroy_bucket   = bool
+      front_whitelist        = list(string)
+      host_suffix_enabled    = bool
+      is_production          = number
+      secrets_prefix         = string
+      task_count             = number
+      test_enabled           = bool
+      vpc_name               = string
     })
   )
 }
