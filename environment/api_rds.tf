@@ -32,7 +32,7 @@ resource "aws_db_instance" "api" {
   availability_zone       = "eu-west-1a"
   backup_retention_period = "14"
   backup_window           = "00:00-00:30"
-  db_subnet_group_name    = local.db_subnet_group
+  db_subnet_group_name    = local.account.db_subnet_group
   engine                  = "postgres"
   engine_version          = "9.6"
   kms_key_id              = data.aws_kms_key.rds.arn

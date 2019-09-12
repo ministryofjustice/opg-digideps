@@ -10,6 +10,4 @@ locals {
     is-production          = local.account.is_production
   }
 
-  db_subnet_group = "rds-private-subnets-${local.account.vpc_name}"
-  ec_subnet_group = "ec-pvt-subnets-${local.account.vpc_name}"
 }
