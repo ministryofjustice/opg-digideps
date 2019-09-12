@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use AppBundle\Model\Email;
@@ -12,6 +13,7 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\Container;
@@ -29,7 +31,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
     private $mockMailFactory;
     private $mockTemplatingEngine;
     private $mockPdfGenerator;
-    private $mockTranslator;
     private $mockLogger;
     private $mockCsvGenerator;
     private $mockReport;
@@ -45,8 +46,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->mockMailFactory = m::mock(MailFactory::class);
         $this->mockTemplatingEngine = m::mock(TwigEngine::class);
         $this->mockPdfGenerator = m::mock(WkHtmlToPdfGenerator::class);
-        $this->mockTranslator = m::mock(Translator::class);
-        $this->mockLogger = m::mock(\Symfony\Bridge\Monolog\Logger::class);
+        $this->mockLogger = m::mock(Logger::class);
         $this->mockCsvGenerator = m::mock(CsvGeneratorService::class);
 
         $this->mockReport = m::mock(ReportInterface::class);
@@ -67,7 +67,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $mockContainer->shouldReceive('get')->with('mail_factory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
         $mockContainer->shouldReceive('get')->with('wkhtmltopdf')->andReturn($this->mockPdfGenerator);
-        $mockContainer->shouldReceive('get')->with('translator')->andReturn($this->mockTranslator);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
         $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
 
@@ -208,5 +207,21 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut = $this->generateSut();
 
         $this->sut->submit($this->mockReport, $mockUser);
+    }
+
+    /**
+     * @group acs
+     */
+    public function testGetReportSubmissionById()
+    {
+        $id = '123';
+
+        $this->mockRestClient->shouldReceive('get')->once()->with(
+            "report-submission/${id}",
+            'Report\\ReportSubmission'
+        );
+
+        $this->sut = $this->generateSut();
+        $this->sut->getReportSubmissionById($id);
     }
 }

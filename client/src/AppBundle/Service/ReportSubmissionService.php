@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Report\Checklist;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
@@ -69,7 +68,6 @@ class ReportSubmissionService
         $this->mailFactory =$container->get('mail_factory');
         $this->templating = $container->get('templating');
         $this->wkhtmltopdf = $container->get('wkhtmltopdf');
-        $this->translator = $container->get('translator');
         $this->logger =$container->get('logger');
         $this->csvGenerator = $container->get('csv_generator_service');
     }
@@ -161,5 +159,14 @@ class ReportSubmissionService
             }
             $this->mailSender->send($reportConfirmEmail, ['text', 'html']);
         }
+    }
+
+    /**
+     * @param string $id
+     * @return mixed
+     */
+    public function getReportSubmissionById(string $id)
+    {
+        return $this->restClient->get( "report-submission/${id}", 'Report\\ReportSubmission');
     }
 }

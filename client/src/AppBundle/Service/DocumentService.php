@@ -141,4 +141,28 @@ class DocumentService
 
         return [$documents, $missing];
     }
+
+    /**
+     * When calling this function use the format:
+     *
+     * [$documents, $missing] = retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
+     *
+     * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
+     *
+     * @param array $reportSubmissions
+     * @return array
+     */
+    public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions)
+    {
+        $allDocuments = [];
+        $allMissing = [];
+
+        foreach ($reportSubmissions as $reportSubmission) {
+            [$documents, $missing] = $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+            $allDocuments[] = $documents;
+            $allMissing[] = $missing;
+        }
+
+        return [array_merge(...$allDocuments), array_merge(...$allMissing)];
+    }
 }
