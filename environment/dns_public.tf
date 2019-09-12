@@ -1,5 +1,8 @@
+locals {
+  domain = "complete-deputy-report.service.gov.uk"
+}
 data "aws_route53_zone" "public" {
-  name     = "complete-deputy-report.service.gov.uk"
+  name     = local.domain
   provider = "aws.dns"
 }
 

@@ -98,7 +98,7 @@ locals {
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
-      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${data.aws_route53_zone.public.name}" },
+      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.account.email_feedback_address}" },
       { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
       { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
