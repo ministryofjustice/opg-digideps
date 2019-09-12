@@ -111,7 +111,7 @@ class OrgService
     {
         $this->log('Received ' . count($data) . ' records');
 
-        $this->added = ['prof_users' => [], 'pa_users' => [], 'named_deputies' => [], 'clients' => [], 'reports' => []];
+        $this->added = ['named_deputies' => [], 'clients' => [], 'reports' => []];
         $errors = [];
         foreach ($data as $index => $row) {
             $row = array_map('trim', $row);
@@ -120,38 +120,6 @@ class OrgService
                 $this->currentOrganisation = $this->orgRepository->findByEmailIdentifier($row['Email']);
                 if (null === $this->currentOrganisation) {
                     $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
-                    // Create initial user for organisation
-//                    $user = new EntityDir\User();
-//                    $user
-//                        ->setRegistrationDate(new \DateTime())
-//                        ->setDeputyNo(EntityDir\User::padDeputyNumber($row['Deputy No']))
-//                        ->setEmail($row['Email'])
-//                        ->setFirstname($row['Dep Forename'])
-//                        ->setLastname($row['Dep Surname'])
-//                        ->setRoleName(EntityDir\User::$depTypeIdToUserRole[$row['Dep Type']]);
-//
-//                    // update user address, if not set
-//                    // the following could be moved to line 154 if no update is needed (DDPB-2262)
-//                    if (!empty($csvRow['Dep Adrs1']) && !$user->getAddress1()) {
-//                        $user
-//                            ->setAddress1($row['Dep Adrs1'])
-//                            ->setAddress2($row['Dep Adrs2'])
-//                            ->setAddress3($row['Dep Adrs3'])
-//                            ->setAddressPostcode($row['Dep Postcode'])
-//                            ->setAddressCountry('GB')
-//                        ;
-//                    }
-//
-//                    $this->em->persist($user);
-//                    $this->em->flush($user);
-//
-//                    if ($user->isProfDeputy()) {
-//                        $this->added['prof_users'][] = $row['Email'];
-//                    } elseif ($user->isPaDeputy()) {
-//                        $this->added['pa_users'][] = $row['Email'];
-//                    }
-//
-//                    $this->currentOrganisation->addUser($user);
                 }
 
                 $namedDeputy = $this->identifyNamedDeputy($row);
@@ -160,24 +128,10 @@ class OrgService
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof EntityDir\Client) {
-                    //if ($client->hasDeputies()) {
-                        $this->upsertReportFromCsv($row, $client);
-                    //}
+                    $this->upsertReportFromCsv($row, $client);
                 } else {
                     throw new \RuntimeException('Client could not be identified or created');
                 }
-
-//                if ($userOrgNamed instanceof EntityDir\User) {
-//
-//                    $client = $this->upsertClientFromCsv($row, $userOrgNamed);
-//                    if ($client instanceof EntityDir\Client) {
-//                        $this->upsertReportFromCsv($row, $client, $userOrgNamed);
-//                    } else {
-//                        throw new \RuntimeException('Client could not be identified or created');
-//                    }
-//                } else {
-//                    throw new \RuntimeException('Named deputy could not be identified or created');
-//                }
 
             } catch (\Throwable $e) {
                 $message = 'Error for Case: ' . $row['Case'] . ' for Deputy No: ' . $row['Deputy No'] . ': ' . $e->getMessage();
@@ -313,9 +267,8 @@ class OrgService
     /**
      * @param string $email
      * @return EntityDir\Organisation
-     * @throws \Doctrine\ORM\ORMException
      */
-    private function createOrganisationFromEmail($email)
+    private function createOrganisationFromEmail(string $email)
     {
         $organisation = $this->orgFactory->createFromFullEmail($email, $email);
         $this->em->persist($organisation);
@@ -428,7 +381,6 @@ class OrgService
 
         if (null !== $this->currentOrganisation) {
             $this->attachClientToOrganisation($client);
-            $this->currentOrganisation = null;
         }
 
         return $client;
@@ -462,7 +414,7 @@ class OrgService
         if ($report) {
             // change report type if it's not already set AND report is not yet submitted
             if ($report->getType() != $reportType && !$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                $this->log('Changing report type from ' . $report->getType() .   ' to ' . $reportType);
+                $this->log('Changing report type from ' . $report->getType() . ' to ' . $reportType);
                 $report->setType($reportType);
                 $this->em->persist($report);
                 $this->em->flush();
