@@ -141,7 +141,7 @@ return $first ? null : [];
 return $first ? $default : [$default];
 }
 if ($first) {
-return \count($headers[$key]) ? $headers[$key][0] : $default;
+return \count($headers[$key]) ? (string) $headers[$key][0] : $default;
 }
 return $headers[$key];
 }
@@ -278,8 +278,8 @@ protected function convertFileInformation($file)
 if ($file instanceof UploadedFile) {
 return $file;
 }
-$file = $this->fixPhpFilesArray($file);
 if (\is_array($file)) {
+$file = $this->fixPhpFilesArray($file);
 $keys = array_keys($file);
 sort($keys);
 if ($keys == self::$fileKeys) {
@@ -299,9 +299,6 @@ return $file;
 }
 protected function fixPhpFilesArray($data)
 {
-if (!\is_array($data)) {
-return $data;
-}
 $keys = array_keys($data);
 sort($keys);
 if (self::$fileKeys != $keys || !isset($data['name']) || !\is_array($data['name'])) {
@@ -617,6 +614,9 @@ public function __toString()
 try {
 $content = $this->getContent();
 } catch (\LogicException $e) {
+if (\PHP_VERSION_ID >= 70400) {
+throw $e;
+}
 return trigger_error($e, E_USER_ERROR);
 }
 $cookieHeader ='';
@@ -835,8 +835,8 @@ $pos = strpos($host,':', strrpos($host,']'));
 } else {
 $pos = strrpos($host,':');
 }
-if (false !== $pos) {
-return (int) substr($host, $pos + 1);
+if (false !== $pos && $port = substr($host, $pos + 1)) {
+return (int) $port;
 }
 return'https'=== $this->getScheme() ? 443 : 80;
 }
@@ -1026,6 +1026,7 @@ if (null !== $canonicalMimeType && \in_array($canonicalMimeType, (array) $mimeTy
 return $format;
 }
 }
+return null;
 }
 public function setFormat($format, $mimeTypes)
 {

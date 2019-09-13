@@ -13,8 +13,6 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 - [ ] I have performed a self-review of my own code
 - [ ] I have updated documentation (Confluence/GitHub wiki/tech debt doc) where relevant
 - [ ] I have added tests to prove my work, and they follow our [best practices](https://github.com/ministryofjustice/opg-digi-deps-client/wiki/Testing-best-practices)
-- [ ] I have successfully built my branch to a feature environment
-- [ ] New and existing unit tests pass locally with my changes (`docker-compose run --rm test sh scripts/clienttest.sh`)
 - [ ] The product team have tested these changes
 
 ### API
