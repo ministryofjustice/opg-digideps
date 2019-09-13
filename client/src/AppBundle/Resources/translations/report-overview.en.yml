@@ -203,4 +203,6 @@ announcement: |
   We've made some changes to the layout of this page.<br/>
   Use the links on this page to view and edit the different sections of your report.
 
-currentReport: Current report
+overdueHelpTextHeader: Why might this report incorrectly show as overdue?
+overdueHelpTextParagraph1: This report may have already been submitted on paper or by email, and will therefore be incorrectly marked as overdue.
+overdueHelpTextParagraph2: You can stop this report from showing as overdue by clicking 'Edit' and changing the reporting period dates to the dates of your current reporting period.
