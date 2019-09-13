@@ -2,8 +2,6 @@
 
 namespace AppBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Command\Proxy\DoctrineCommandHelper;
-use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -30,32 +28,27 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        DoctrineCommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
+        $infos = $this->dependencyFactory->getMigrationStatusInfosHelper()->getMigrationsInfos();
+        $key = 'Executed Unavailable Migrations';
 
-        $configuration = $this->getMigrationConfiguration($input, $output);
-        DoctrineCommand::configureMigrations($this->getApplication()->getKernel()->getContainer(), $configuration);
+        if (!isset($infos[$key])) {
+            throw new \RuntimeException('Cannot safely identify unavailable migrations');
+        }
 
-        $executedMigrations = $configuration->getMigratedVersions();
-        $availableMigrations = $configuration->getAvailableVersions();
-        $executedUnavailableMigrations = array_diff($executedMigrations, $availableMigrations);
+        /**
+         * @var int
+         */
+        $executedUnavailableMigrations = $infos[$key];
 
-        // not really useful for now.
-        // if re-enabled, enable check comparing the highest numbers and see if the db is ahead of the code
-        $output->writeln('Status check: skipped');
-
-        return;
-
-        if (!empty($executedUnavailableMigrations)) {
+        if ($executedUnavailableMigrations > 0) {
             throw new \RuntimeException(
-            '<error>Status check: ERROR. You have ' . count($executedUnavailableMigrations) . ' previously executed migrations'
+            '<error>Status check: ERROR. You have ' . $executedUnavailableMigrations . ' previously executed migrations'
             . ' in the database that are not registered migrations.</error>');
         }
 
-        $migrationsToExecute = array_diff($availableMigrations, $executedMigrations);
-        $toMigrate = $migrationsToExecute ? implode(',', $migrationsToExecute) : 'none';
-
-        $output->writeln('Status check: OK. Migration to execute:' . $toMigrate);
+        $output->writeln('Status check: OK.');
+        return null;
     }
 }
