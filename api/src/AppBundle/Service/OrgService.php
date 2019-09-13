@@ -139,8 +139,6 @@ class OrgService
             }
         }
 
-        sort($this->added['prof_users']);
-        sort($this->added['pa_users']);
         sort($this->added['named_deputies']);
         sort($this->added['clients']);
         sort($this->added['reports']);
@@ -213,13 +211,6 @@ class OrgService
                     $this->em->persist($team);
                     $this->em->flush($team);
                 }
-
-                if ($user->isProfDeputy()) {
-                    $this->added['prof_users'][] = $csvRow['Email'];
-                } elseif ($user->isPaDeputy()) {
-                    $this->added['pa_users'][] = $csvRow['Email'];
-                }
-
             }
         }
 
