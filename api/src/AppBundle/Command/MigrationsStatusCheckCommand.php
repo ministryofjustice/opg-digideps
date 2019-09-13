@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -30,7 +30,7 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): ?int
     {
         DoctrineCommandHelper::setApplicationEntityManager($this->getApplication(), $input->getOption('em'));
 
@@ -45,7 +45,7 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
         // if re-enabled, enable check comparing the highest numbers and see if the db is ahead of the code
         $output->writeln('Status check: skipped');
 
-        return;
+        return null;
 
         if (!empty($executedUnavailableMigrations)) {
             throw new \RuntimeException(

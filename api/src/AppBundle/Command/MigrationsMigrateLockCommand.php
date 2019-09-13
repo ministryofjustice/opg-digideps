@@ -19,7 +19,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     const LOCK_VALUE = 'locked';
     const LOCK_EXPIRES_SECONDS = 120;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -31,7 +31,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
         ;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): ?int
     {
         // release lock and exit
         if ($input->getOption('release-lock')) {
