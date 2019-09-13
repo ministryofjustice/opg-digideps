@@ -2,8 +2,6 @@
 
 namespace AppBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Command\Proxy\DoctrineCommandHelper;
-use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
