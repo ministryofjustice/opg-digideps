@@ -206,8 +206,8 @@ class NamedDeputy
                                 $address2,
                                 $address3,
                                 $depPostcode,
-                                $phoneMain,
-                                $phoneAlternative,
+                                $phoneMain = null,
+                                $phoneAlternative = null,
                                 $address4 = null,
                                 $address5 = null,
                                 $data = []
@@ -226,8 +226,8 @@ class NamedDeputy
         $this->setAddress5($address5);
         $this->setAddressCountry('GB');
         $this->setAddressPostcode($depPostcode);
-        $this->setPhoneMain($phoneMain);
-        $this->setPhoneAlternative($phoneAlternative);
+        $this->setPhoneMain(isset($data['Phone Main']) ? $data['Phone main'] : null);
+        $this->setPhoneAlternative(isset($data['Phone Alternative']) ? $data['Phone Alternative'] : null);
     }
 
     /**
