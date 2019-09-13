@@ -295,24 +295,7 @@ class OrgService
 
         // Upsert Client information
         $client = $this->upsertClientDetailsFromCsv($client, $namedDeputy, $row);
-
-        // Add client to named user (will be done later anyway)
-        //$client->addUser($userOrgNamed);
-
-        // Add client to all the team members of all teams the user belongs to
-        // (duplicates are auto-skipped)
-
-//        $teams = $userOrgNamed->getTeams();
-//        $depCount = 0;
-//        foreach ($teams as $team) {
-//            $members = $team->getMembers();
-//            foreach ($members as $member) {
-//                $client->addUser($member);
-//                $depCount++;
-//            }
-//        }
-//        $this->log('Assigned ' . $depCount . ' additional deputies to client');
-
+        
         $this->em->persist($client);
 
         $this->em->flush();
