@@ -18,6 +18,7 @@ class NamedDeputyTransformer
             'deputy_no' => $dto->getDeputyNo(),
             'firstname' => $dto->getFirstName(),
             'lastname' => $dto->getLastName(),
+            'email1' => $dto->getEmail1(),
             'email2' => $dto->getEmail2(),
             'email3' => $dto->getEmail3(),
             'deputy_addr_no' => $dto->getDepAddrNo(),

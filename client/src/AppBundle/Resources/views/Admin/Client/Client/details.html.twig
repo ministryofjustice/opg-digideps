@@ -109,7 +109,7 @@
                     {{ client.namedDeputy.address4 }}<br />
                 {% endif %}
                 {% if client.namedDeputy.address5 is not empty %}
-                    {{ client.namedDeputy.address5 }}   
+                    {{ client.namedDeputy.address5 }}
                 {% endif %}
             </dd>
         </div>
@@ -118,13 +118,21 @@
                 {{ (page ~ '.namedDeputyContactDetails') | trans }}
             </dt>
             <dd class="govuk-summary-list__value behat-region-nd-contact-details">
-                {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
-                {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}<br />
-                {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}<br />
-                {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}<br />
-                {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}<br />
-                {{ client.namedDeputy.email2 }}<br />
-                {{ client.namedDeputy.email3 }}<br />
+                {% if client.namedDeputy.phoneMain is not empty %}
+                    {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
+                {% endif %}
+                {% if client.namedDeputy.phoneAlternative is not empty %}
+                    {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}
+                {% endif %}
+                {% if client.namedDeputy.email1 is not empty %}
+                    {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}
+                {% endif %}
+                {% if client.namedDeputy.email2 is not empty %}
+                    {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}
+                {% endif %}
+                {% if client.namedDeputy.email3 is not empty %}
+                    {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}
+                {% endif %}
             </dd>
         </div>
     {% endif %}
