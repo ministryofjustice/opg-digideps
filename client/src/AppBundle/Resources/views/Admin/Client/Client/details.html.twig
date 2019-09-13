@@ -81,41 +81,43 @@
             </dd>
         </div>
     {% endif %}
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'namedDeputy' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-nd-name">
-            {{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ page ~ '.namedDeputyAddress') | trans }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-nd-address">
-            {{ client.namedDeputy.address1 }}<br />
-            {{ client.namedDeputy.address2 }}<br />
-            {{ client.namedDeputy.address3 }}<br />
-            {{ client.namedDeputy.address4 }}<br />
-            {{ client.namedDeputy.address5 }}<br />
-        </dd>
-    </div>
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ page ~ '.namedDeputyContactDetails') | trans }}
-        </dt>
-        <dd class="govuk-summary-list__value behat-region-nd-contact-details">
-            {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
-            {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}<br />
-            {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}<br />
-            {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}<br />
-            {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}<br />
-            {{ client.namedDeputy.email2 }}<br />
-            {{ client.namedDeputy.email3 }}<br />
-        </dd>
-    </div>
+    {% if client.namedDeputy is not empty %}
 
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ 'namedDeputy' | trans({}, 'common') }}
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-nd-name">
+                {{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.namedDeputyAddress') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-nd-address">
+                {{ client.namedDeputy.address1 }}<br />
+                {{ client.namedDeputy.address2 }}<br />
+                {{ client.namedDeputy.address3 }}<br />
+                {{ client.namedDeputy.address4 }}<br />
+                {{ client.namedDeputy.address5 }}<br />
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                {{ (page ~ '.namedDeputyContactDetails') | trans }}
+            </dt>
+            <dd class="govuk-summary-list__value behat-region-nd-contact-details">
+                {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
+                {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}<br />
+                {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}<br />
+                {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}<br />
+                {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}<br />
+                {{ client.namedDeputy.email2 }}<br />
+                {{ client.namedDeputy.email3 }}<br />
+            </dd>
+        </div>
+    {% endif %}
 </dl>
 
     {# client NDR #}
