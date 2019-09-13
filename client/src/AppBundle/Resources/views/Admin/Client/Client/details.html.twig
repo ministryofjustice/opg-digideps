@@ -96,11 +96,21 @@
                 {{ (page ~ '.namedDeputyAddress') | trans }}
             </dt>
             <dd class="govuk-summary-list__value behat-region-nd-address">
-                {{ client.namedDeputy.address1 }}<br />
-                {{ client.namedDeputy.address2 }}<br />
-                {{ client.namedDeputy.address3 }}<br />
-                {{ client.namedDeputy.address4 }}<br />
-                {{ client.namedDeputy.address5 }}<br />
+                {% if client.namedDeputy.address1 is not empty %}
+                    {{ client.namedDeputy.address1 }}<br />
+                {% endif %}
+                {% if client.namedDeputy.address2 is not empty %}
+                    {{ client.namedDeputy.address2 }}<br />
+                {% endif %}
+                {% if client.namedDeputy.address3 is not empty %}
+                    {{ client.namedDeputy.address3 }}<br />
+                {% endif %}
+                {% if client.namedDeputy.address4 is not empty %}
+                    {{ client.namedDeputy.address4 }}<br />
+                {% endif %}
+                {% if client.namedDeputy.address5 is not empty %}
+                    {{ client.namedDeputy.address5 }}   
+                {% endif %}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
