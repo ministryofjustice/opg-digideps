@@ -9,8 +9,8 @@ Feature: admin uploads csv organisations
        When I attach the file "behat-prof.csv" to "admin_upload_file"
        And I press "admin_upload_upload"
        Then the form should be valid
-        And I click on "admin-client-search, client-detail-34350001"
-       Then I should see "NAMED_FN NAMED_SN" in the "nd-name" region
+       Then I click on "admin-client-search, client-detail-34350001"
+       And I should see "NAMED_FN NAMED_SN" in the "nd-name" region
        And each text should be present in the corresponding region:
         | NAMED_ADD1 | nd-address |
         | NAMED_ADD2 | nd-address |
