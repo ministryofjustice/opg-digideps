@@ -5,6 +5,8 @@ namespace AppBundle\Service;
 use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Model\MissingDocument;
+use AppBundle\Model\RetrievedDocument;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
@@ -118,28 +120,39 @@ class DocumentService
      *
      * When calling this function use the format:
      *
-     * [$documents, $missing] = retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+     * [$retrievedDocuments, $missingDocuments] = retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
      *
-     * $documents - The contents of the document from S3 in format [filename => contents]
-     * $missing - Array of filenames that couldn't be retrieved from S3
+     * $retrievedDocuments - Array of RetrievedDocuments from S3
+     * $missingDocuments - Array of MissingDocuments
      *
      * @param ReportSubmission $reportSubmission
      * @return array
      */
     public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission)
     {
-        $documents = [];
-        $missing = [];
+        $retrievedDocuments = [];
+        $missingDocuments = [];
 
         foreach ($reportSubmission->getDocuments() as $document) {
             try {
-                $documents[$document->getFileName()] = $this->s3Storage->retrieve($document->getStorageReference()); //might throw exception
+                $contents = $this->s3Storage->retrieve($document->getStorageReference());
+
+                $retrievedDocument = new RetrievedDocument();
+                $retrievedDocument->setContent($contents);
+                $retrievedDocument->setFileName($document->getFileName());
+                $retrievedDocument->setReportSubmission($reportSubmission);
+
+                $retrievedDocuments[] = $retrievedDocument;
             } catch(FileNotFoundException $e) {
-                $missing[] = $document->getFileName();
+                $missingDocument = new MissingDocument();
+                $missingDocument->setFileName($document->getFileName());
+                $missingDocument->setReportSubmission($reportSubmission);
+
+                $missingDocuments[] = $missingDocument;
             }
         }
 
-        return [$documents, $missing];
+        return [$retrievedDocuments, $missingDocuments];
     }
 
     /**
@@ -149,7 +162,7 @@ class DocumentService
      *
      * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
      *
-     * @param array $reportSubmissions
+     * @param []ReportSubmission $reportSubmissions
      * @return array
      */
     public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions)
@@ -159,10 +172,43 @@ class DocumentService
 
         foreach ($reportSubmissions as $reportSubmission) {
             [$documents, $missing] = $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+
+            if (!empty($missing)) {
+                $allMissing[] = $missing;
+            }
+
             $allDocuments[] = $documents;
-            $allMissing[] = $missing;
         }
 
-        return [array_merge(...$allDocuments), array_merge(...$allMissing)];
+        if (!empty($allMissing)) {
+            $allMissing = array_merge(...$allMissing);
+        }
+
+        return [array_merge(...$allDocuments), $allMissing];
+    }
+
+
+    /**
+     * @param []MissingDocument $missingDocuments
+     * @return string
+     */
+    public function createMissingDocumentsFlashMessage(array $missingDocuments)
+    {
+        $bullets = '<ul>';
+
+        foreach($missingDocuments as $missingDocument) {
+            $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
+            $fileName = $missingDocument->getFileName();
+
+            $bullets .= "<li>${caseNumber} - ${fileName}</li>";
+        }
+
+        $bullets .= '</ul>';
+
+        return <<<FLASH
+The following documents could not be downloaded:
+$bullets
+FLASH;
+
     }
 }
