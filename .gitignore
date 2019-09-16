@@ -8,6 +8,7 @@
 **/.tmp.aws.config
 
 # Common vendor folders
+.terraform/
 bin/
 lib/
 node_modules/
