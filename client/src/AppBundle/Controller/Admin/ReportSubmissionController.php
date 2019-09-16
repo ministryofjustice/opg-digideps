@@ -4,10 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\ReportSubmission;
-use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\DocumentsZipFileCreator;
-use AppBundle\Service\ReportSubmissionService;
+use AppBundle\Service\DocumentDownloader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,32 +18,15 @@ class ReportSubmissionController extends AbstractController
 {
     const ACTION_DOWNLOAD = 'download';
     const ACTION_ARCHIVE = 'archive';
-    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
-
+    
     /**
-     * @var DocumentService
+     * @var DocumentDownloader
      */
-    private $documentService;
+    private $documentDownloader;
 
-    /**
-     * @var ReportSubmissionService
-     */
-    private $reportSubmissionService;
-
-    /**
-     * @var DocumentsZipFileCreator
-     */
-    private $zipFileCreator;
-
-    public function __construct(
-        DocumentService $documentService,
-        ReportSubmissionService $reportSubmissionService,
-        DocumentsZipFileCreator $zipFileCreator
-    )
+    public function __construct(DocumentDownloader $documentDownloader)
     {
-        $this->documentService = $documentService;
-        $this->reportSubmissionService = $reportSubmissionService;
-        $this->zipFileCreator = $zipFileCreator;
+        $this->documentDownloader = $documentDownloader;
     }
 
     /**
@@ -121,7 +101,7 @@ class ReportSubmissionController extends AbstractController
                         break;
 
                     case self::ACTION_DOWNLOAD:
-                        $ret = $this->processDownload($request, $checkedBoxes);
+                        $ret = $this->documentDownloader->processDownload($request, $checkedBoxes);
                         if ($ret instanceof Response) {
                             return $ret;
                         }
@@ -145,56 +125,6 @@ class ReportSubmissionController extends AbstractController
     }
 
     /**
-     * Download multiple documents based on the supplied ids
-     *
-     * @param Request $request      request
-     * @param array   $checkedBoxes ids selected by the user
-     *
-     * @return Response
-     */
-    private function processDownload(Request $request, $checkedBoxes)
-    {
-        try {
-            $reportSubmissions = [];
-
-            foreach ($checkedBoxes as $reportSubmissionId) {
-                /** @var ReportSubmission $reportSubmission */
-                $reportSubmission = $this->reportSubmissionService->getReportSubmissionById($reportSubmissionId);
-
-                if ($reportSubmission->isDownloadable() !== true) {
-                    throw new \RuntimeException(self::MSG_NOT_DOWNLOADABLE);
-                }
-
-                if (empty($reportSubmission->getDocuments())) {
-                    throw new \RuntimeException('No documents found for downloading');
-                }
-
-                $reportSubmissions[] = $reportSubmission;
-            }
-
-            [$retrievedDocuments, $missingDocuments] = $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
-
-            $zipFiles = $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocuments);
-            $fileName = $this->zipFileCreator->createMultiZipFile($zipFiles);
-
-            // send ZIP to user
-            $response = self::generateDownloadResponse($fileName);
-
-            $this->zipFileCreator->cleanUp();
-
-            if (!empty($missingDocuments)) {
-                $flashMessage = $this->documentService->createMissingDocumentsFlashMessage($missingDocuments);
-                $request->getSession()->getFlashBag()->add('error', $flashMessage);
-            }
-
-            return $response;
-        } catch (\Throwable $e) {
-            $this->zipFileCreator->cleanUp();
-            $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
-        }
-    }
-
-    /**
      * @param  Request $request
      * @return array
      */
@@ -212,21 +142,5 @@ class ReportSubmissionController extends AbstractController
             'order'             => $request->get('order', $order),
             'fromDate'          => $request->get('fromDate')
         ];
-    }
-
-    private static function generateDownloadResponse(string $fileName)
-    {
-        $response = new Response();
-        $response->headers->set('Pragma', 'public');
-        $response->headers->set('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-        $response->headers->set('Expires', '0');
-        $response->headers->set('Content-type', 'application/octet-stream');
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
-        // currently disabled as behat goutte driver gets a corrupted file with this setting
-        //$response->headers->set('Content-Length', filesize($filename));
-        $response->sendHeaders();
-        $response->setContent(readfile($fileName));
-        return $response;
     }
 }

@@ -3,8 +3,10 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
 use AppBundle\Service\Mailer\MailFactory;
@@ -14,6 +16,8 @@ use Symfony\Component\DependencyInjection\Container;
 
 class ReportSubmissionService
 {
+    const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
+    const MSG_NO_DOCUMENTS = 'No documents found for downloading';
 
     /**
      * @var FileUploader
@@ -168,5 +172,37 @@ class ReportSubmissionService
     public function getReportSubmissionById(string $id)
     {
         return $this->restClient->get( "report-submission/${id}", 'Report\\ReportSubmission');
+    }
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    public function getReportSubmissionsByIds(array $ids)
+    {
+        $reportSubmissions = [];
+
+        foreach ($ids as $id) {
+            /** @var ReportSubmission $reportSubmission */
+            $reportSubmission = $this->getReportSubmissionById($id);
+            $reportSubmissions[] = $reportSubmission;
+        }
+
+        return $reportSubmissions;
+    }
+
+    /**
+     * @param ReportSubmission $reportSubmission
+     * @throws ReportSubmissionDocumentsNotDownloadableExceptionAlias
+     */
+    public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission)
+    {
+        if ($reportSubmission->isDownloadable() !== true) {
+            throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NOT_DOWNLOADABLE);
+        }
+
+        if (empty($reportSubmission->getDocuments())) {
+            throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NO_DOCUMENTS);
+        }
     }
 }

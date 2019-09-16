@@ -55,5 +55,11 @@ services:
     AppBundle\Controller\Admin\ReportSubmissionController:
         class: AppBundle\Controller\Admin\ReportSubmissionController
         arguments:
+            $documentDownloader: "@AppBundle\\Service\\DocumentDownloader"
+
+    AppBundle\Service\DocumentDownloader:
+        class: AppBundle\Service\DocumentDownloader
+        arguments:
             $documentService: "@AppBundle\\Service\\DocumentService"
             $reportSubmissionService: "@AppBundle\\Service\\ReportSubmissionService"
+            $zipFileCreator: "@AppBundle\\Service\\DocumentsZipFileCreator"

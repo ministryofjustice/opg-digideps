@@ -2,10 +2,12 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
@@ -13,6 +15,7 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
+use RuntimeException;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -224,4 +227,68 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut = $this->generateSut();
         $this->sut->getReportSubmissionById($id);
     }
+
+    /**
+     * @group acss
+     */
+    public function testGetReportSubmissionByIds()
+    {
+        $ids = ['123', '456'];
+
+        $reportSubmission1 = new ReportSubmission();
+        $reportSubmission1->setId(123);
+
+        $reportSubmission2 = new ReportSubmission();
+        $reportSubmission2->setId(456);
+
+        $this->mockRestClient->shouldReceive('get')->with(
+            "report-submission/123",
+            'Report\\ReportSubmission'
+        )->andReturn($reportSubmission1);
+
+        $this->mockRestClient->shouldReceive('get')->with(
+            "report-submission/456",
+            'Report\\ReportSubmission'
+        )->andReturn($reportSubmission2);
+
+        $this->sut = $this->generateSut();
+        $reportSubmissions = $this->sut->getReportSubmissionsByIds($ids);
+
+        self::assertContains($reportSubmission1, $reportSubmissions);
+        self::assertContains($reportSubmission2, $reportSubmissions);
+    }
+
+    /**
+     * @dataProvider downloadableProvider
+     * @group acss
+     */
+    public function testAssertReportSubmissionIsDownloadable($reportSubmission)
+    {
+        self::setExpectedException(ReportSubmissionDocumentsNotDownloadableException::class);
+
+        $this->sut = $this->generateSut();
+        $this->sut->assertReportSubmissionIsDownloadable($reportSubmission);
+    }
+
+    public function downloadableProvider()
+    {
+        $unDownloadable = new ReportSubmission();
+        $unDownloadable->setDownloadable(false);
+        $unDownloadable->setDocuments([new Document()]);
+
+        $missingDocs = new ReportSubmission();
+        $missingDocs->setDownloadable(true);
+        $missingDocs->setDocuments([]);
+
+        $unDownloadableAndMissingDocs = new ReportSubmission();
+        $unDownloadableAndMissingDocs->setDownloadable(false);
+        $unDownloadableAndMissingDocs->setDocuments([]);
+
+        return [
+            'un-downloadable' => [$unDownloadable],
+            'missing docs' => [$missingDocs],
+            'un-downloadable and missing docs' => [$unDownloadableAndMissingDocs],
+        ];
+    }
+
 }
