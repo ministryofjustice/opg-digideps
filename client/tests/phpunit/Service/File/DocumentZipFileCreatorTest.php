@@ -2,17 +2,9 @@
 
 namespace AppBundle\Service\File;
 
-use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\RetrievedDocument;
-use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\Storage\FileNotFoundException;
-use AppBundle\Service\File\Storage\S3Storage;
 use AppBundle\Service\File\Storage\StorageInterface;
-use Aws\Command;
-use Aws\S3\Exception\S3Exception;
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Prophecy\Prophecy\ObjectProphecy;
 use ZipArchive;
