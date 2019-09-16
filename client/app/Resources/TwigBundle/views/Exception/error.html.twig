@@ -1,0 +1,13 @@
+{% trans_default_domain "error" %}
+
+{# displayable exception display the exact message thrown from the controller#}
+{% if exception is defined and exception.code == constant('\\AppBundle\\Exception\\DisplayableException::EXCEPTION_CODE') %}
+    {% set message =  'generic.titleForDisplayableException' | trans({'%message%': exception.message}) | capitalize %}
+ {% else %}
+    {% set message = 'generic.title' | trans %}
+ {% endif %}
+ 
+ {% include 'TwigBundle:Exception:template.html.twig' with {
+    message: message,
+    description: 'generic.description' | trans
+ } %}
