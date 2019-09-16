@@ -22,7 +22,7 @@ Feature: Report submit (client 02100014)
         Then each text should be present in the corresponding region:
             | DEP1                                            | deputy-firstname |
             | SURNAME1                                        | deputy-lastname  |
-            | 10000000001                                     | deputy-phone     |
+            | +4410000000003                                  | deputy-phone     |
             | behat-pa1@publicguardian.gov.uk                 | deputy-email     |
         And I click on "declaration-page"
         When I fill in the following:

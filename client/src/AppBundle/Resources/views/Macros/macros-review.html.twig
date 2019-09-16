@@ -34,7 +34,11 @@
 
             <dt class="label">Telephone number</dt>
             <dd class="value behat-region-deputy-phone">
-                {{ deputy.phoneMain }}
+                {% if deputy.phoneMain %}
+                    {{ deputy.phoneMain }}
+                {% else %}
+                    {{ loggedInDeputy.phoneMain  }}
+                {% endif %}
                 {% if deputy.phoneAlternative %}
                     <br/>{{ deputy.phoneAlternative }}
                 {% endif %}
