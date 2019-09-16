@@ -16,42 +16,39 @@ class DocumentsZipFileCreator
     private $zipFiles;
 
     /**
-     * @param array $documentsContents
-     * @param ReportSubmission $reportSubmission
-     * @return string
+     * @param []RetrievedDocument $retrievedDocuments
+     * @return array
      */
-    public function createZipFileFromDocumentContents(array $documentsContents, ReportSubmission $reportSubmission)
+    public function createZipFilesFromRetrievedDocuments(array $retrievedDocuments)
     {
         // store files locally, for subsequent memory-less ZIP creation
         $filesToAdd = [];
 
-        foreach ($documentsContents as $fileName => $content) {
-            $document = self::createDocumentTmpFilePath($fileName);
-            file_put_contents($document, $content);
-            unset($content);
-            $filesToAdd[$fileName] = $document;
-        }
-
-        // create ZIP files and add previously-stored uploaded documents
-        $zipFileName = self::createZipFilePath($reportSubmission);
         $zip = new ZipArchive();
-        $zip->open($zipFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
 
-        foreach ($filesToAdd as $localName => $filePath) {
-            $zip->addFile($filePath, $localName);
+        foreach ($retrievedDocuments as $retrievedDocument) {
+            // create ZIP files and add previously-stored uploaded documents
+            $localZipFileName = self::createZipFilePath($retrievedDocument->getReportSubmission()->getZipName());
+            $this->zipFiles[] = $localZipFileName;
+
+            $zip->open($localZipFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
+
+            $document = self::createDocumentTmpFilePath($retrievedDocument->getFileName());
+            file_put_contents($document, $retrievedDocument->getContent());
+            $zip->addFile($document, $retrievedDocument->getFileName());
+
+            $filesToAdd[] = $document;
         }
 
         $zip->close();
         unset($zip);
 
         // clean up temp files, as the ZIP has already been created
-        foreach ($filesToAdd as $f) {
-            unlink($f);
+        foreach ($filesToAdd as $file) {
+            unlink($file);
         }
 
-        $this->zipFiles[] = $zipFileName;
-
-        return $zipFileName;
+        return $this->zipFiles;
     }
 
     /**
@@ -103,12 +100,12 @@ class DocumentsZipFileCreator
     }
 
     /**
-     * @param  ReportSubmission $reportSubmission
+     * @param string $zipFileName
      * @return string
      */
-    private static function createZipFilePath(ReportSubmission $reportSubmission)
+    private static function createZipFilePath(string $zipFileName)
     {
-        return self::TMP_ROOT_PATH . $reportSubmission->getZipName();
+        return self::TMP_ROOT_PATH . $zipFileName;
     }
 
     /**
@@ -116,7 +113,7 @@ class DocumentsZipFileCreator
      */
     private static function createMultiZipFilePath()
     {
-        return self::TMP_ROOT_PATH . '/multidownload-' . microtime(1) . '.zip';
+        return self::TMP_ROOT_PATH . 'multidownload-' . microtime(1) . '.zip';
     }
 
     public function __destruct()

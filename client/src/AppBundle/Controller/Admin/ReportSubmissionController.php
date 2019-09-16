@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\DocumentsZipFileCreator;
 use AppBundle\Service\ReportSubmissionService;
@@ -32,10 +33,20 @@ class ReportSubmissionController extends AbstractController
      */
     private $reportSubmissionService;
 
-    public function __construct(DocumentService $documentService, ReportSubmissionService $reportSubmissionService)
+    /**
+     * @var DocumentsZipFileCreator
+     */
+    private $zipFileCreator;
+
+    public function __construct(
+        DocumentService $documentService,
+        ReportSubmissionService $reportSubmissionService,
+        DocumentsZipFileCreator $zipFileCreator
+    )
     {
         $this->documentService = $documentService;
         $this->reportSubmissionService = $reportSubmissionService;
+        $this->zipFileCreator = $zipFileCreator;
     }
 
     /**
@@ -144,13 +155,10 @@ class ReportSubmissionController extends AbstractController
     private function processDownload(Request $request, $checkedBoxes)
     {
         try {
-            $zipFiles = [];
-            $missingDocuments = [];
-            $zipFileCreator = new DocumentsZipFileCreator();
-            $caseNumber = '';
+            $reportSubmissions = [];
 
             foreach ($checkedBoxes as $reportSubmissionId) {
-                /** @var EntityDir\Report\ReportSubmission $reportSubmission */
+                /** @var ReportSubmission $reportSubmission */
                 $reportSubmission = $this->reportSubmissionService->getReportSubmissionById($reportSubmissionId);
 
                 if ($reportSubmission->isDownloadable() !== true) {
@@ -161,34 +169,27 @@ class ReportSubmissionController extends AbstractController
                     throw new \RuntimeException('No documents found for downloading');
                 }
 
-                [$documents, $missing] = $this->documentService->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
-                $zipFiles[] = $zipFileCreator->createZipFileFromDocumentContents($documents, $reportSubmission);
-
-                if (!empty($missing)) {
-                    foreach($missing as $missingDoc) {
-                        $missingDocuments[] = $missingDoc;
-                    }
-                    $caseNumber = $reportSubmission->getReport()->getClient()->getCaseNumber();
-                }
+                $reportSubmissions[] = $reportSubmission;
             }
 
-            $fileName = $zipFileCreator->createMultiZipFile($zipFiles);
+            [$retrievedDocuments, $missingDocuments] = $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
+
+            $zipFiles = $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocuments);
+            $fileName = $this->zipFileCreator->createMultiZipFile($zipFiles);
 
             // send ZIP to user
             $response = self::generateDownloadResponse($fileName);
 
-            $zipFileCreator->cleanUp();
+            $this->zipFileCreator->cleanUp();
 
             if (!empty($missingDocuments)) {
-                $flashMessage = self::createMissingDocumentsFlashMessage($missingDocuments, $caseNumber);
+                $flashMessage = $this->documentService->createMissingDocumentsFlashMessage($missingDocuments);
                 $request->getSession()->getFlashBag()->add('error', $flashMessage);
             }
 
             return $response;
         } catch (\Throwable $e) {
-            if ($zipFileCreator instanceof $zipFileCreator) {
-                $zipFileCreator->cleanUp();
-            }
+            $this->zipFileCreator->cleanUp();
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
         }
     }
@@ -211,15 +212,6 @@ class ReportSubmissionController extends AbstractController
             'order'             => $request->get('order', $order),
             'fromDate'          => $request->get('fromDate')
         ];
-    }
-
-    private static function createMissingDocumentsFlashMessage(array $missingDocuments, string $caseNumber)
-    {
-        $missingDocumentBullets = '<ul><li>' .  implode('</li><li>', $missingDocuments) . '</li></ul>';
-        return <<<FLASH
-The following documents for case number $caseNumber could not be downloaded:
-$missingDocumentBullets
-FLASH;
     }
 
     private static function generateDownloadResponse(string $fileName)
