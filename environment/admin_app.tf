@@ -90,7 +90,8 @@ locals {
     },
     "secrets": [
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_api_client_secret.name}" },
-      { "name": "FRONTEND_GA", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.google_analytics.name}" },
+      { "name": "FRONTEND_GA_DEFAULT", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.google_analytics_default.name}" },
+      { "name": "FRONTEND_GA_GDS", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.google_analytics_gds.arn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.oauth2_client_secret.name}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_frontend_secret.name}" }
     ],

@@ -89,7 +89,7 @@ locals {
       { "name": "API_SECURITY_ANONYMOUS", "value": "true" }
     ]
   }
-  
+
 EOF
 
 
@@ -126,7 +126,7 @@ EOF
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
   }
-  
+
 EOF
 
 
@@ -146,7 +146,8 @@ EOF
     "secrets": [
       { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
-      { "name": "FRONTEND_GA", "valueFrom": "${data.aws_secretsmanager_secret.google_analytics.arn}" },
+      { "name": "FRONTEND_GA_DEFAULT", "valueFrom": "${data.aws_secretsmanager_secret.google_analytics_default.arn}" },
+      { "name": "FRONTEND_GA_GDS", "valueFrom": "${data.aws_secretsmanager_secret.google_analytics_gds.arn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.oauth2_client_secret.arn}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
@@ -194,7 +195,7 @@ EOF
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
-  
+
 EOF
 
 }
