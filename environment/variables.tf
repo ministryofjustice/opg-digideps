@@ -22,6 +22,8 @@ variable "accounts" {
       external_certificate_name = string
       force_destroy_bucket      = bool
       front_whitelist           = list(string)
+      ga_default                = string
+      ga_gds                    = string
       host_suffix_enabled       = bool
       is_production             = number
       secrets_prefix            = string

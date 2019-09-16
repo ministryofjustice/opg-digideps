@@ -33,11 +33,3 @@ data "aws_secretsmanager_secret" "admin_api_client_secret" {
 data "aws_secretsmanager_secret" "front_api_client_secret" {
   name = "${local.account["secrets_prefix"]}/front-api-client-secret"
 }
-
-data "aws_secretsmanager_secret" "google_analytics_default" {
-  name = "${local.account["secrets_prefix"]}/google-analytics"
-}
-
-data "aws_secretsmanager_secret" "google_analytics_gds" {
-  name = "${local.account["secrets_prefix"]}/google-analytics-gds"
-}
