@@ -29,7 +29,7 @@ Feature: Admin report checklist
       | 078912345678      | checklist-client-phone           |
       | DEP1              | checklist-deputy-firstname       |
       | SURNAME1          | checklist-deputy-lastname        |
-      | 10000000001       | checklist-deputy-phone           |
+      | +4410000000003    | checklist-deputy-phone           |
       | behat-pa1@publicguardian.gov.uk | checklist-deputy-email |
     # check auto-filled answers
     And the following fields should have the corresponding values:

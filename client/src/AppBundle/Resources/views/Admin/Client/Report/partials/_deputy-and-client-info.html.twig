@@ -125,10 +125,17 @@
                             </p>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
-                        <td class="behat-region-checklist-deputy-phone">{{ deputy.phoneMain }}</td>
-                    </tr>
+                    {% if deputy.phoneMain %}
+                        <tr>
+                            <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                            <td class="behat-region-checklist-deputy-phone">{{ deputy.phoneMain }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <th scope="row" class="bold">{{ 'phone' | trans({}, 'common') }}</th>
+                            <td class="behat-region-checklist-deputy-phone">{{ report.submittedBy.phoneMain }}</td>
+                        </tr>
+                    {% endif %}
                     {% if (deputy.phoneAlternative is defined) %}
                         <tr>
                             <th scope="row" class="bold">{{ 'alternativePhone' | trans({}, 'common') }}</th>
