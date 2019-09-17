@@ -139,7 +139,8 @@ abstract class RestController extends Controller
      */
     protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\ReportInterface $report)
     {
-        if (!in_array($this->getUser()->getId(), $report->getClient()->getUserIds())) {
+        if (!$report->getClient()->userBelongsToClient($this->getUser()->getId()))
+        {
             throw $this->createAccessDeniedException('Report does not belong to user');
         }
     }

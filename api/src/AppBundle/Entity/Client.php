@@ -1095,4 +1095,35 @@ class Client implements ClientInterface
 
         return $this;
     }
+
+    /**
+     * @return array $userIds
+     */
+    public function getOrganisationUserIds()
+    {
+        $userIds = [];
+
+        $organisations = $this->getOrganisations();
+        if (!empty($organisations)) {
+            /** @var Organisation $org */
+            foreach ($organisations as $org) {
+                $orgUsers = $org->getUsers();
+                foreach ($orgUsers as $orgUser) {
+                    $userIds[] = $orgUser->getId();
+                }
+            }
+        }
+
+        return $userIds;
+    }
+
+    /**
+     * @param $userId
+     * @return bool
+     */
+    public function userBelongsToClient($userId)
+    {
+        $owningUserIds = array_merge($this->getUserIds(), $this->getOrganisationUserIds());
+        return (bool) in_array($userId, $owningUserIds);
+    }
 }
