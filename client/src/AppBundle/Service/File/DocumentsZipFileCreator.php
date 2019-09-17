@@ -3,7 +3,6 @@
 namespace AppBundle\Service\File;
 
 use AppBundle\Entity\Report\Document;
-use AppBundle\Entity\Report\ReportSubmission;
 use ZipArchive;
 
 class DocumentsZipFileCreator
@@ -14,6 +13,11 @@ class DocumentsZipFileCreator
      * @var array
      */
     private $zipFiles;
+
+    public function __construct()
+    {
+        $this->zipFiles = [];
+    }
 
     /**
      * @param []RetrievedDocument $retrievedDocuments
@@ -29,9 +33,12 @@ class DocumentsZipFileCreator
         foreach ($retrievedDocuments as $retrievedDocument) {
             // create ZIP files and add previously-stored uploaded documents
             $localZipFileName = self::createZipFilePath($retrievedDocument->getReportSubmission()->getZipName());
-            $this->zipFiles[] = $localZipFileName;
 
-            $zip->open($localZipFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
+            if (!in_array($localZipFileName, $this->zipFiles)) {
+                $this->zipFiles[] = $localZipFileName;
+            }
+
+            $zip->open($localZipFileName, ZipArchive::CREATE | ZipArchive::CHECKCONS);
 
             $document = self::createDocumentTmpFilePath($retrievedDocument->getFileName());
             file_put_contents($document, $retrievedDocument->getContent());

@@ -28,7 +28,7 @@ class DocumentZipFileCreatorTest extends TestCase
     }
 
     /**
-     * @group acss
+     * @group acsss
      */
     public function testCreateZipFilesFromRetrievedDocuments()
     {
@@ -46,11 +46,16 @@ class DocumentZipFileCreatorTest extends TestCase
         $expectedRetrievedDoc1->setReportSubmission($reportSubmission1->reveal());
 
         $expectedRetrievedDoc2 = new RetrievedDocument();
-        $expectedRetrievedDoc2->setFileName('file-name4.pdf');
-        $expectedRetrievedDoc2->setContent('doc4 contents');
-        $expectedRetrievedDoc2->setReportSubmission($reportSubmission2->reveal());
+        $expectedRetrievedDoc2->setFileName('file-name2.pdf');
+        $expectedRetrievedDoc2->setContent('doc2 contents');
+        $expectedRetrievedDoc2->setReportSubmission($reportSubmission1->reveal());
 
-        $retrievedDocuments = [$expectedRetrievedDoc1, $expectedRetrievedDoc2];
+        $expectedRetrievedDoc3 = new RetrievedDocument();
+        $expectedRetrievedDoc3->setFileName('file-name3.pdf');
+        $expectedRetrievedDoc3->setContent('doc3 contents');
+        $expectedRetrievedDoc3->setReportSubmission($reportSubmission2->reveal());
+
+        $retrievedDocuments = [$expectedRetrievedDoc1, $expectedRetrievedDoc2, $expectedRetrievedDoc3];
 
         $sut = new DocumentsZipFileCreator();
 
@@ -62,16 +67,14 @@ class DocumentZipFileCreatorTest extends TestCase
         foreach($expectedZipFilenames as $zipFileName) {
             self::assertContains($zipFileName, $actualZipFileNames);
             self::assertTrue(file_exists($zipFileName));
-
-            $zip->open($zipFileName);
-            self::assertEquals(1, $zip->numFiles);
         }
 
         $zip->open('/tmp/zip-file-1.zip');
         self::assertInternalType('int', $zip->locateName('file-name1.pdf'));
+        self::assertInternalType('int', $zip->locateName('file-name2.pdf'));
 
         $zip->open('/tmp/zip-file-2.zip');
-        self::assertInternalType('int', $zip->locateName('file-name4.pdf'));
+        self::assertInternalType('int', $zip->locateName('file-name3.pdf'));
 
         $zip->close();
     }
