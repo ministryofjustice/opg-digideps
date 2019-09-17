@@ -2,8 +2,6 @@
 
 namespace DigidepsBehat;
 
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\File\Storage\S3Storage;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;
@@ -30,9 +28,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         RegionTrait,
         ReportTrait,
         SiteNavigationTrait,
-        UserTrait,
-        DocumentTrait;
-
+        UserTrait;
 
     protected static $dbName = 'api';
     protected static $sqlPath = 'tests/behat/sql/';
@@ -41,7 +37,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     public function __construct($options = [])
     {
-
         //$options['session']; // not used
         $maxNestingLevel = isset($options['maxNestingLevel']) ? $options['maxNestingLevel'] : 200;
         ini_set('xdebug.max_nesting_level', $maxNestingLevel);
@@ -163,21 +158,5 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         } else {
             throw new \RuntimeException(__METHOD__ . ': area not valid');
         }
-    }
-
-    /**
-     * @return S3Storage
-     */
-    public function getS3Storage()
-    {
-        return $this->getContainer()->get('s3_storage');
-    }
-
-    /**
-     * @return RestClient
-     */
-    public function getRestClient()
-    {
-        return $this->getContainer()->get('rest_client');
     }
 }
