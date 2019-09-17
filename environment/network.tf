@@ -1,10 +1,7 @@
 data "aws_vpc" "vpc" {
   filter {
-    name = "tag:Name"
-    values = [join(
-      ".",
-      compact([local.account.vpc_name, local.account.account_name, local.account.domain_name]),
-    )]
+    name   = "tag:Name"
+    values = [local.account.vpc_name]
   }
 }
 
@@ -17,13 +14,8 @@ data "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   filter {
-    name = "tag:Name"
-
-    values = [
-      "private-1a.${local.account.vpc_name}",
-      "private-1b.${local.account.vpc_name}",
-      "private-1c.${local.account.vpc_name}",
-    ]
+    name   = "tag:Name"
+    values = ["private*"]
   }
 }
 
@@ -33,13 +25,8 @@ data "aws_subnet" "public" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   filter {
-    name = "tag:Name"
-
-    values = [
-      "public-1a.${local.account.vpc_name}",
-      "public-1b.${local.account.vpc_name}",
-      "public-1c.${local.account.vpc_name}",
-    ]
+    name   = "tag:Name"
+    values = ["public*"]
   }
 }
 

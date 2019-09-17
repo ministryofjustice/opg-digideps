@@ -28,3 +28,13 @@ provider "aws" {
   }
 }
 
+# DD has it's public DNS in production, not management
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "dns"
+
+  assume_role {
+    role_arn     = "arn:aws:iam::515688267891:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}

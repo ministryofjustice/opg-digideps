@@ -9,25 +9,21 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id                = string
-      account_long_name         = string
-      account_name              = string
-      admin_whitelist           = list(string)
-      domain                    = string
-      domain_name               = string
-      email_domain              = string
-      email_feedback_address    = string
-      email_report_address      = string
-      email_update_address      = string
-      external_certificate_name = string
-      force_destroy_bucket      = bool
-      front_whitelist           = list(string)
-      host_suffix_enabled       = bool
-      is_production             = number
-      secrets_prefix            = string
-      task_count                = number
-      test_enabled              = bool
-      vpc_name                  = string
+      account_id             = string
+      admin_whitelist        = list(string)
+      email_feedback_address = string
+      email_report_address   = string
+      email_update_address   = string
+      force_destroy_bucket   = bool
+      front_whitelist        = list(string)
+      subdomain_enabled      = bool
+      is_production          = number
+      secrets_prefix         = string
+      task_count             = number
+      test_enabled           = bool
+      vpc_name               = string
+      db_subnet_group        = string
+      ec_subnet_group        = string
     })
   )
 }
@@ -60,7 +56,7 @@ locals {
   ]
   environment     = lower(terraform.workspace)
   account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
-  host_suffix     = local.account["host_suffix_enabled"] ? local.environment : ""
+  subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
   front_whitelist = length(local.account["front_whitelist"]) > 0 ? local.account["front_whitelist"] : local.default_whitelist
   admin_whitelist = length(local.account["admin_whitelist"]) > 0 ? local.account["admin_whitelist"] : local.default_whitelist
 }
