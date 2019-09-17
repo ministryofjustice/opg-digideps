@@ -62,4 +62,9 @@ services:
         arguments:
             $documentService: "@AppBundle\\Service\\DocumentService"
             $reportSubmissionService: "@AppBundle\\Service\\ReportSubmissionService"
-            $zipFileCreator: "@AppBundle\\Service\\DocumentsZipFileCreator"
+            $zipFileCreator: "@AppBundle\\Service\\File\\DocumentsZipFileCreator"
+
+    AppBundle\Service\File\DocumentsZipFileCreator:
+        class: AppBundle\Service\File\DocumentsZipFileCreator
+
+
