@@ -73,7 +73,6 @@ class DocumentDownloader
 
             return $response;
         } catch (\Throwable $e) {
-            print_r($e->getMessage());
             $this->zipFileCreator->cleanUp();
             $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
         }

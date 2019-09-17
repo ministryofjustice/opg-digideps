@@ -887,10 +887,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_NOT_STARTED, $status);
     }
-
-    /**
-     * @group acs
-     */
+    
     public function testGetStatusIgnoringDueDate_ready_to_submit()
     {
         $report = $this->prophesize(Report::class);
