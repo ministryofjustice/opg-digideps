@@ -122,7 +122,7 @@ class OrgService
                     $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
                 }
 
-                if (null === ($namedDeputy = $this->identifyNamedDeputy($row)) {
+                if (null === ($namedDeputy = $this->identifyNamedDeputy($row))) {
                     $namedDeputy = $this->buildNamedDeputy($row);
                 }
 
