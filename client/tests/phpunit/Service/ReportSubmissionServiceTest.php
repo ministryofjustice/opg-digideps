@@ -212,9 +212,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut->submit($this->mockReport, $mockUser);
     }
 
-    /**
-     * @group acs
-     */
+
     public function testGetReportSubmissionById()
     {
         $id = '123';
@@ -228,9 +226,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->sut->getReportSubmissionById($id);
     }
 
-    /**
-     * @group acss
-     */
+
     public function testGetReportSubmissionByIds()
     {
         $ids = ['123', '456'];

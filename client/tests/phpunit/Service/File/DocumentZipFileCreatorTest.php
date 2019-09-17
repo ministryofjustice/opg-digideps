@@ -1,35 +1,15 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service\File;
 
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\RetrievedDocument;
-use AppBundle\Service\File\Storage\StorageInterface;
-use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use ZipArchive;
 
 class DocumentZipFileCreatorTest extends TestCase
 {
-    /**
-     * @var DocumentsZipFileCreator
-     */
-    private $object;
-
-    public function setUp(): void
-    {
-        $this->storage = m::mock(StorageInterface::class);
-        $this->reportSubmission = m::mock(ReportSubmission::class, [
-            'getDocuments' => [],
-        ]);
-
-        $this->object = new DocumentsZipFileCreator($this->reportSubmission, $this->storage);
-    }
-
-    /**
-     * @group acsss
-     */
     public function testCreateZipFilesFromRetrievedDocuments()
     {
         /** @var ObjectProphecy|ReportSubmission $reportSubmission1 */
@@ -79,9 +59,6 @@ class DocumentZipFileCreatorTest extends TestCase
         $zip->close();
     }
 
-    /**
-     * @group acss
-     */
     public function testCreateMultiZipFile()
     {
         $sut = new DocumentsZipFileCreator();
@@ -96,11 +73,10 @@ class DocumentZipFileCreatorTest extends TestCase
 
         self::assertEquals(2, $zip->numFiles);
         self::assertInternalType('int', $zip->locateName('zip1'));
-        self::assertInternalType('int', $zip->locateName('zip1'));
+        self::assertInternalType('int', $zip->locateName('zip2'));
 
         $zip->close();
     }
-
 
     protected function generateTestZipFiles(ZipArchive $zip, array $zipFileContent)
     {
@@ -119,10 +95,5 @@ class DocumentZipFileCreatorTest extends TestCase
         }
 
         return $zipFiles;
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }
