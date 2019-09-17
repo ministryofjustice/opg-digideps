@@ -129,9 +129,6 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
     }
 
-    /**
-     * @group acss
-     */
     public function testRetrieveDocumentsFromS3ByReportSubmission()
     {
         /** @var S3Storage|ObjectProphecy $storage */
@@ -165,9 +162,6 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEmpty($missing);
     }
 
-    /**
-     * @group acss
-     */
     public function testMissingDocumentsFileNamesAreReturnedIfNotRetrievable()
     {
         /** @var S3Storage|ObjectProphecy $storage */
@@ -201,9 +195,6 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEquals([$expectedMissingDoc], $missing);
     }
 
-    /**
-     * @group acss
-     */
     public function testRetrieveDocumentsFromS3ByReportSubmissions()
     {
         /** @var S3Storage|ObjectProphecy $storage */
@@ -252,9 +243,6 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEmpty($missing);
     }
 
-    /**
-     * @group acss
-     */
     public function testRetrieveDocumentsFromS3ByReportSubmissionsMissingDocs()
     {
         /** @var S3Storage|ObjectProphecy $storage */
@@ -310,9 +298,7 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEquals([$expectedMissingDoc1, $expectedMissingDoc2], $missing);
     }
 
-    /**
-     * @group acss
-     */
+
     public function testCreateMissingDocumentsFlashMessage()
     {
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */

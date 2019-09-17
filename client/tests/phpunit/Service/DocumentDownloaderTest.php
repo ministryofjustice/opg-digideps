@@ -15,9 +15,6 @@ use ZipArchive;
 
 class DocumentDownloaderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @group acss
-     */
     public function testGenerateDownloadResponse()
     {
         $documentService = self::prophesize(DocumentService::class);
@@ -36,9 +33,6 @@ class DocumentDownloaderTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('attachment; filename="test-file.zip";', $response->headers->get('Content-Disposition'));
     }
 
-    /**
-     * @group acss
-     */
     public function testProcessDownload()
     {
         $request = new Request();
@@ -82,9 +76,6 @@ class DocumentDownloaderTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('attachment; filename="zipped-parent-file.zip";', $response->headers->get('Content-Disposition'));
     }
 
-    /**
-     * @group acss
-     */
     public function testProcessDownloadMissingDocument()
     {
         $request = new Request();
