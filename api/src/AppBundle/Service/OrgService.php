@@ -122,9 +122,9 @@ class OrgService
                     $this->currentOrganisation = $this->createOrganisationFromEmail($row['Email']);
                 }
 
-                $namedDeputy = $this->identifyNamedDeputy($row);
-                $this->em->persist($namedDeputy);
-                $this->em->flush($namedDeputy);
+                if (null === ($namedDeputy = $this->identifyNamedDeputy($row)) {
+                    $namedDeputy = $this->buildNamedDeputy($row);
+                }
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
                 if ($client instanceof EntityDir\Client) {
@@ -512,26 +512,36 @@ class OrgService
             'email1' => $csvRow['Email']
         ]);
 
-        // should we update named deputy details here ?
+        return $namedDeputy;
+    }
 
-        if (!$namedDeputy instanceof EntityDir\NamedDeputy) {
-            $namedDeputy = new EntityDir\NamedDeputy(
-                $csvRow['Deputy No'],
-                $csvRow['Email'],
-                $csvRow['Dep Forename'],
-                $csvRow['Dep Surname'],
-                $csvRow['Dep Adrs1'],
-                $csvRow['Dep Adrs2'],
-                $csvRow['Dep Adrs3'],
-                $csvRow['Dep Postcode'],
-                $csvRow['Mobile'],
-                $csvRow['Mobile2'],
-                $csvRow['Dep Adrs4'],
-                $csvRow['Dep Adrs5'],
-                $csvRow
-            );
-            $this->added['named_deputies'][] = $deputyNo;
-        }
+    /**
+     * @param $csvRow
+     * @return EntityDir\NamedDeputy
+     */
+    private function buildNamedDeputy($csvRow)
+    {
+        $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
+
+        $namedDeputy = new EntityDir\NamedDeputy(
+            $csvRow['Deputy No'],
+            $csvRow['Email'],
+            $csvRow['Dep Forename'],
+            $csvRow['Dep Surname'],
+            $csvRow['Dep Adrs1'],
+            $csvRow['Dep Adrs2'],
+            $csvRow['Dep Adrs3'],
+            $csvRow['Dep Postcode'],
+            $csvRow['Mobile'],
+            $csvRow['Mobile2'],
+            $csvRow['Dep Adrs4'],
+            $csvRow['Dep Adrs5'],
+            $csvRow
+        );
+        $this->em->persist($namedDeputy);
+        $this->em->flush($namedDeputy);
+
+        $this->added['named_deputies'][] = $deputyNo;
 
         return $namedDeputy;
     }
