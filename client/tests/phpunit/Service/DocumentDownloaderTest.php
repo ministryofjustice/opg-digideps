@@ -27,8 +27,11 @@ class DocumentDownloaderTest extends \PHPUnit_Framework_TestCase
         $sut = new DocumentDownloader($documentService->reveal(), $reportSubmissionService->reveal(), $zipFileCreator->reveal());
 
         $zipFile = "/tmp/test-file.zip";
+        file_put_contents($zipFile, 'some content');
 
         $response = $sut::generateDownloadResponse($zipFile);
+
+        unset($zipFile);
 
         self::assertEquals('attachment; filename="test-file.zip";', $response->headers->get('Content-Disposition'));
     }
