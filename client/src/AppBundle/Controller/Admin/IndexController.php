@@ -446,7 +446,6 @@ class IndexController extends AbstractController
                         'Dep Forename',
                         'Dep Surname',
                         'Dep Type', // 23 = PA (but not confirmed)
-                        'DepAddr No',
                         'Dep Adrs1',
                         'Dep Adrs2',
                         'Dep Adrs3',
@@ -470,6 +469,10 @@ class IndexController extends AbstractController
                         'Client Phone',
                         'Client Email',
                         'Client Date of Birth',
+                        'Phone Main',
+                        'Phone Alternative',
+                        'Fee Payer',
+                        'Corres'
                     ])
                     ->setUnexpectedColumns([
                         'NDR'
