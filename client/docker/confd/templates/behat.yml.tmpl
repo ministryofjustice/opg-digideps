@@ -91,7 +91,7 @@ default:
           {{ if exists "/frontend/nonadmin/host" }}
               base_url: {{ getv "/frontend/nonadmin/host" }}
           {{ else }}
-              base_url: "https://digideps-client.local/"
+              base_url: "https://digideps.local/"
           {{ end }}
         Behatch\Extension: ~
 
@@ -196,6 +196,6 @@ headless:
         {{ if exists "/frontend/nonadmin/host" }}
             base_url: {{ getv "/frontend/nonadmin/host" }}
         {{ else }}
-            base_url: "https://digideps-client.local/"
+            base_url: "https://digideps.local/"
         {{ end }}
 

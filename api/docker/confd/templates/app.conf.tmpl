@@ -5,7 +5,7 @@ server {
 
 server {
     listen     443 ssl;
-    server_name digideps-api.local;
+    server_name api.digideps.local;
     root /var/www/web;
 
     {{ if exists "/opg/nginx/clientmaxbodysize" }}

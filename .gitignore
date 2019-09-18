@@ -18,3 +18,4 @@ vendor/
 # Repo-specific excludes
 docker/log
 terraform/to_import\.sh
+.certs
