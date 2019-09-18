@@ -174,17 +174,13 @@ class DocumentService
             [$documents, $missing] = $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
 
             if (!empty($missing)) {
-                $allMissing[] = $missing;
+                $allMissing = array_merge($allMissing, $missing);
             }
 
-            $allDocuments[] = $documents;
+            $allDocuments = array_merge($allDocuments, $documents);
         }
 
-        if (!empty($allMissing)) {
-            $allMissing = array_merge(...$allMissing);
-        }
-
-        return [array_merge(...$allDocuments), $allMissing];
+        return [$allDocuments, $allMissing];
     }
 
 
