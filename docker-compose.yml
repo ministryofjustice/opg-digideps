@@ -5,21 +5,17 @@ version: '2'
 
 services:
     router:
-        image: registry.service.opg.digital/opguk/nginx-router
+        image: jwilder/nginx-proxy
         ports:
-            - 80:80
             - 443:443
         depends_on:
             - admin
             - localstack
-        env_file:
-            - ./client/docker/env/router.env
         restart: always
-        networks:
-            default:
-                aliases:
-                    - digideps-admin.local
-                    - digideps-client.local
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./.certs:/etc/nginx/certs
+            - ./docker/router/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
 
     aws:
         image: infrastructureascode/aws-cli
@@ -69,11 +65,18 @@ services:
             - ./client/src:/var/www/src:ro
             - ./client/scripts:/var/www/scripts
             - ./client/tests:/var/www/tests
-
+        environment:
+            VIRTUAL_HOST: www.digideps.local,digideps.local
+            VIRTUAL_PROTO: https
+            VIRTUAL_PORT: 443
         env_file:
             - ./client/docker/env/frontend.env
         restart: always
-
+        networks:
+            default:
+                aliases:
+                    - www.digideps.local
+                    - digideps.local
     admin:
         build:
             context: ./client
@@ -92,11 +95,18 @@ services:
             - ./client/src:/var/www/src:ro
             - ./client/scripts:/var/www/scripts
             - ./client/tests:/var/www/tests
+        environment:
+            VIRTUAL_HOST: admin.digideps.local
+            VIRTUAL_PROTO: https
+            VIRTUAL_PORT: 443
         env_file:
             - ./client/docker/env/frontend.env
             - ./client/docker/env/admin.env
         restart: always
-
+        networks:
+            default:
+                aliases:
+                    - admin.digideps.local
     api:
         build:
             context: ./api

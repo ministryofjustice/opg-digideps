@@ -32,7 +32,7 @@ trait DebugTrait
         echo '- Url: ' . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         $file = basename($filename);
-        echo "- Response: saved into {$file} ({$bytes} bytes). View locally at https://digideps-client.local/behat-debugger.php?frame=page&f={$file} .\n";
+        echo "- Response: saved into {$file} ({$bytes} bytes). View locally at https://digideps.local/behat-debugger.php?frame=page&f={$file} .\n";
     }
 
     /**
