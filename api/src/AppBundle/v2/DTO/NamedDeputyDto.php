@@ -75,7 +75,7 @@ class NamedDeputyDto
     }
 
     /**
-     * @return strings
+     * @return string
      */
     public function getDeputyNo(): string
     {
@@ -153,7 +153,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getEmail2(): string
+    public function getEmail2(): ?string
     {
         return $this->email2;
     }
@@ -172,7 +172,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getEmail3(): string
+    public function getEmail3(): ?string
     {
         return $this->email3;
     }
@@ -191,14 +191,13 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getDepAddrNo(): string
+    public function getDepAddrNo(): ?string
     {
         return $this->depAddrNo;
     }
 
     /**
-     * @param string $depAddressNo
-     *
+     * @param string $depAddrNo
      * @return $this
      */
     public function setDepAddrNo(string $depAddrNo)
@@ -210,7 +209,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getPhoneMain(): string
+    public function getPhoneMain(): ?string
     {
         return $this->phoneMain;
     }
@@ -229,7 +228,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getPhoneAlterrnative()
+    public function getPhoneAlterrnative(): ?string
     {
         return $this->phoneAlterrnative;
     }
@@ -248,7 +247,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddress1(): string
+    public function getAddress1(): ?string
     {
         return $this->address1;
     }
@@ -267,7 +266,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddress2(): string
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
@@ -286,7 +285,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddress3(): string
+    public function getAddress3(): ?string
     {
         return $this->address3;
     }
@@ -305,7 +304,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddress4(): string
+    public function getAddress4(): ?string
     {
         return $this->address4;
     }
@@ -324,7 +323,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddress5(): string
+    public function getAddress5(): ?string
     {
         return $this->address5;
     }
@@ -343,7 +342,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddressPostcode(): string
+    public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
     }
@@ -362,7 +361,7 @@ class NamedDeputyDto
     /**
      * @return string
      */
-    public function getAddressCountry(): string
+    public function getAddressCountry(): ?string
     {
         return $this->addressCountry;
     }
