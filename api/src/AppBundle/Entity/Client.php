@@ -1099,7 +1099,7 @@ class Client implements ClientInterface
     /**
      * @return array $userIds
      */
-    public function getOrganisationUserIds()
+    private function getOrganisationUserIds()
     {
         $userIds = [];
 
@@ -1107,9 +1107,11 @@ class Client implements ClientInterface
         if (!empty($organisations)) {
             /** @var Organisation $org */
             foreach ($organisations as $org) {
-                $orgUsers = $org->getUsers();
-                foreach ($orgUsers as $orgUser) {
-                    $userIds[] = $orgUser->getId();
+                if ($org->isActivated()) {
+                    $orgUsers = $org->getUsers();
+                    foreach ($orgUsers as $orgUser) {
+                        $userIds[] = $orgUser->getId();
+                    }
                 }
             }
         }
