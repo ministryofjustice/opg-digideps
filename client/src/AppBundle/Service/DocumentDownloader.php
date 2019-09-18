@@ -87,8 +87,6 @@ class DocumentDownloader
         $response->headers->set('Content-type', 'application/octet-stream');
         $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
-        // currently disabled as behat goutte driver gets a corrupted file with this setting
-        //$response->headers->set('Content-Length', filesize($filename));
         $response->sendHeaders();
         $response->setContent(readfile($fileName));
         return $response;
