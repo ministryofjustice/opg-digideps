@@ -1,0 +1,14 @@
+pageTitle: Cookies
+htmlTitle: Cookies
+
+form:
+    usage:
+        label: Cookies that measure website use
+        hint: |
+            "We use Google Analytics to measure how you use the website so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:
+                how you got to the site
+                the pages you visit on GOV.UK and how long you spend on each page
+                what you click on while you're visiting the site
+            We do not allow Google to use or share the data about how you use this site."
+    confirm:
+        label: Save changes
