@@ -26,3 +26,6 @@ services:
   AppBundle\Factory\OrganisationFactory:
     class: AppBundle\Factory\OrganisationFactory
     arguments: ['%shared_email_domains%']
+
+  AppBundle\Factory\NamedDeputyFactory:
+    class: AppBundle\Factory\NamedDeputyFactory
