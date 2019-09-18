@@ -144,7 +144,8 @@ class DocumentService
 
         foreach ($reportSubmission->getDocuments() as $document) {
             try {
-                $contents = $this->s3Storage->retrieve($document->getStorageReference());
+                // AWS returns a object here - typecasting to string
+                $contents = (string) $this->s3Storage->retrieve($document->getStorageReference());
 
                 $retrievedDocument = new RetrievedDocument();
                 $retrievedDocument->setContent($contents);
