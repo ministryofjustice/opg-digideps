@@ -37,20 +37,26 @@
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-            ga('create', '{{ga}}', 'auto');
-            {% if app.user %}
-                ga('set', '&uid','{{app.user.gaTrackingId()}}');
-            {% endif %}
 
-            {% if gaCustomUrl is defined %}
-                ga('send', 'pageview', '{{gaCustomUrl}}');
-            {% else %}
-                ga('send', 'pageview');
-                {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
-                {#{% if app.request is defined and app.request %}#}
-                  {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
-                {#{% endif %}#}
-            {% endif %}
+            // Check we have permission
+            var cookiePolicyJSON = document.cookie.replace(/(?:(?:^|.*;\s*)cookie_policy\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            var cookiePolicy = JSON.parse(decodeURIComponent(cookiePolicyJSON));
+            if (cookiePolicy.usage) {
+                ga('create', '{{ga}}', 'auto');
+                {% if app.user %}
+                    ga('set', '&uid','{{app.user.gaTrackingId()}}');
+                {% endif %}
+
+                {% if gaCustomUrl is defined %}
+                    ga('send', 'pageview', '{{gaCustomUrl}}');
+                {% else %}
+                    ga('send', 'pageview');
+                    {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
+                    {#{% if app.request is defined and app.request %}#}
+                    {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
+                    {#{% endif %}#}
+                {% endif %}
+            }
         </script>
        {% endif %}
 
@@ -58,9 +64,11 @@
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <div class="opg-cookie-banner">
-        {% block cookieMessage %}{% endblock %}
-    </div>
+    {% if not app.request.cookies.has('cookie_policy') %}
+        <div class="opg-cookie-banner" data-module="opg-cookie-banner">
+            {% block cookieMessage %}{% endblock %}
+        </div>
+    {% endif %}
 
 
     <header class="govuk-header" role="banner" data-module="govuk-header">
