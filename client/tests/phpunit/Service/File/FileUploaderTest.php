@@ -7,16 +7,17 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class FileUploaderTest extends \PHPUnit_Framework_TestCase
+class FileUploaderTest extends TestCase
 {
     /**
      * @var FileUploader
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->storage = m::mock(StorageInterface::class);
         $this->restClient = m::mock(RestClient::class);
@@ -30,8 +31,8 @@ class FileUploaderTest extends \PHPUnit_Framework_TestCase
         $fileName = 'dd_fileuploadertest.pdf';
         $fileContent = 'testcontent';
 
-        $this->storage->shouldReceive('store')->once()->with(matchesPattern('/^dd_doc_1_\d+$/'), $fileContent);
-        $this->restClient->shouldReceive('post')->once()->with('/document/report/1', anInstanceOf(Document::class), ['document']);
+        $this->storage->shouldReceive('store')->once()->with(\Mockery::pattern('/^dd_doc_1_\d+$/'), $fileContent);
+        $this->restClient->shouldReceive('post')->once()->with('/document/report/1', \Mockery::type(Document::class), ['document']);
 
         $report = m::mock(Report::class, ['getId'=>1]);
         $doc = $this->object->uploadFile($report, $fileContent, $fileName, false); /* @var $document Document */
@@ -41,7 +42,7 @@ class FileUploaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $doc->isReportPdf());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

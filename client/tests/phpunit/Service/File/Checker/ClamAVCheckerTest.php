@@ -92,7 +92,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $file->setUploadedFile($uploadedFile);
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $result = $this->sut->checkFile($file);
     }
@@ -128,7 +128,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $file->setUploadedFile($uploadedFile);
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $result = $this->sut->checkFile($file);
     }
@@ -168,7 +168,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $file->setUploadedFile($uploadedFile);
 
-        $this->setExpectedException(VirusFoundException::class);
+        $this->expectException(VirusFoundException::class);
 
         $result = $this->sut->checkFile($file);
     }
@@ -208,7 +208,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $file->setUploadedFile($uploadedFile);
 
-        $this->setExpectedException(RiskyFileException::class);
+        $this->expectException(RiskyFileException::class);
 
         $result = $this->sut->checkFile($file);
     }

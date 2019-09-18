@@ -29,7 +29,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
     /**
      * Set up the mockservies
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockTranslator = m::mock(Translator::class);
         $this->mockLogger = m::mock(Logger::class);
@@ -45,7 +45,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         $this->mockReport = $this->generateMockReport(99, 0, 0, 0, 0);
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertContains('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
     }
 
     public function testGenerateTransactionsCsvWtihTransactions()
@@ -59,7 +59,7 @@ class CsvGeneratorServiceTest extends MockeryTestCase
         );
 
         $csvString = $this->sut->generateTransactionsCsv($this->mockReport);
-        $this->assertContains('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
+        $this->assertStringContainsString('Type,Category,Amount,"Bank name","Account details",Description', $csvString);
         $this->assertEquals(20, preg_match_all('/Gift/', $csvString));
         $this->assertEquals(20, preg_match_all('/Expense/', $csvString));
         $this->assertEquals(50, preg_match_all('/Money out/', $csvString));

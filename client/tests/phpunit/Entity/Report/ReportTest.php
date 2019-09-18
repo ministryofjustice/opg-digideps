@@ -3,8 +3,9 @@
 namespace AppBundle\Entity\Report;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ReportTest extends \PHPUnit_Framework_TestCase
+class ReportTest extends TestCase
 {
     /** @var Report $report */
     private $report;
@@ -12,13 +13,13 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @var Account $account */
     private $account;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->report = new Report();
         $this->account = m::mock('AppBundle\Entity\Report\BankAccount');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -146,7 +147,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             // PA
             ['102-6', ''],
             ['103-6', ''],
-            ['104-6', ''-104],
+            ['104-6', '-104'],
             ['102-4-6', '-4'],
             ['103-4-6', '-4'],
 

@@ -7,10 +7,11 @@ use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\HttpFoundation\Response;
 
-class RestClientTest extends \PHPUnit_Framework_TestCase
+class RestClientTest extends TestCase
 {
     /**
      * @var RestClient
@@ -37,7 +38,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
         $this->tokenStorage = m::mock('AppBundle\Service\Client\TokenStorage\TokenStorageInterface');
@@ -274,7 +275,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $endpointUrl = '/path/to/endpoint';
         $expectedResponseType = 'User';
         $responseData = ['b'];
-        $responseDataJson = json_encode('b');
+        $responseDataJson = json_encode($responseData);
         $responseArray = ['success' => true, 'data' => $responseData];
         $responseJson = json_encode($responseArray);
         $user = m::mock('AppBundle\Entity\User');
@@ -335,11 +336,10 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($user2, $actual[2]);
     }
 
-    /**
-     * @expectedException AppBundle\Service\Client\Exception\NoSuccess
-     */
     public function testGetNoSuccess()
     {
+        $this->expectException(\AppBundle\Service\Client\Exception\NoSuccess::class);
+
         $endpointUrl = '/path/to/endpoint';
         $expectedResponseType = 'array';
         $responseData = ['b'];
@@ -363,11 +363,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->object->get($endpointUrl, $expectedResponseType);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testGetWrongExpectedType()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $endpointUrl = '/path/to/endpoint';
         $expectedResponseType = 'InvalidTypeWithNonexistingClass';
         $responseData = [];
@@ -396,11 +394,10 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($user2, $actual[2]);
     }
 
-    /**
-     * @expectedException AppBundle\Exception\RestClientException
-     */
     public function testNetworkExceptionIsLoggedAndReThrown()
     {
+        $this->expectException(\AppBundle\Exception\RestClientException::class);
+
         $endpointUrl = '/path/to/endpoint';
 
         $this->tokenStorage
@@ -492,15 +489,15 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($endpointUrl, $actual[0]['url']);
         $this->assertEquals('delete', $actual[0]['method']);
-        $this->assertContains($this->sessionToken, $actual[0]['options']);
+        $this->assertStringContainsString($this->sessionToken, $actual[0]['options']);
         $this->assertEquals(Response::HTTP_OK, $actual[0]['responseCode']);
-        $this->assertContains('bbbbb', $actual[0]['responseBody']);
+        $this->assertStringContainsString('bbbbb', $actual[0]['responseBody']);
 
         $this->assertTrue($actual[0]['time'] > 0);
         $this->assertTrue($actual[0]['time'] < 1);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

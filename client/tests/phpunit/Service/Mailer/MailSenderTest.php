@@ -12,7 +12,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
      */
     private $mailSender;
 
-    public function setup()
+    public function setup(): void
     {
         $this->validator = m::mock('Symfony\Component\Validator\Validator\ValidatorInterface');
         $this->logger = m::mock('Psr\Log\LoggerInterface');
@@ -22,7 +22,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->mailSender = new MailSender($this->validator, $this->logger, $this->redis);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
@@ -43,11 +43,10 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         }
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSendValidateMissingTransport()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->validator->shouldReceive('validate')->andReturn([]);
 
         $this->mailSender->send($this->email, ['text']);
