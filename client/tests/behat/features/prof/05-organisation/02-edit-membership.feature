@@ -70,6 +70,11 @@ Feature: Users can edit members of their organisation
     Then I should not see "Resend activation email" in the "team-user-yvonnelacassepublicguardiangovuk" region
 
   @prof
+  Scenario: Org user can log in and see org client
+    Given I am logged in as "yvonne.lacasse@publicguardian.gov.uk" with password "Abcd1234"
+    And I should see the "client-01000010" region
+
+  @prof
   Scenario: Users can delete colleagues in their organisation
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/settings/organisation"
