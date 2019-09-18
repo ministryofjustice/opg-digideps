@@ -36,6 +36,7 @@ services:
         $s3Storage: "@s3_storage"
         $restClient: "@rest_client"
         $logger: "@logger"
+        $twig: "@Twig\\Environment"
 
     report_fee_service:
       class: AppBundle\Service\ReportFeeService
@@ -66,5 +67,4 @@ services:
 
     AppBundle\Service\File\DocumentsZipFileCreator:
         class: AppBundle\Service\File\DocumentsZipFileCreator
-
 

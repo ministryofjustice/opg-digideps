@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service;
 
@@ -14,6 +14,8 @@ use Mockery\Exception;
 use Mockery as m;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 {
@@ -22,9 +24,20 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
      */
     protected $object;
 
+    /**
+     * @var m\MockInterface|S3Storage
+     */
     private $s3Storage;
 
+    /**
+     * @var m\MockInterface|RestClient
+     */
     private $restClient;
+
+    /**
+     * @var m\MockInterface|Environment
+     */
+    private $twig;
 
     /**
      * @var LoggerInterface
@@ -58,8 +71,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         $this->restClient = m::mock(RestClient::class);
         $this->logger = m::mock(LoggerInterface::class);
         $this->logger->shouldIgnoreMissing();
+        $this->twig = m::mock(Environment::class);
 
-        $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger);
+        $this->object = new DocumentService($this->s3Storage, $this->restClient, $this->logger, $this->twig);
 
         $this->doc1 = self::prophesize(Document::class);
         $this->doc1->getStorageReference()->willReturn('ref-1');
@@ -144,8 +158,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
+        $twig = self::prophesize(Environment::class);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc1 = new RetrievedDocument();
@@ -178,8 +193,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
+        $twig = self::prophesize(Environment::class);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
         $expectedRetrievedDoc = new RetrievedDocument();
@@ -217,8 +233,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
+        $twig = self::prophesize(Environment::class);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
 
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
@@ -268,8 +285,9 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $logger = self::prophesize(LoggerInterface::class);
         $restClient = self::prophesize(RestClient::class);
+        $twig = self::prophesize(Environment::class);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
 
         [$documents, $missing] = $sut->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
@@ -298,8 +316,28 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         self::assertEquals([$expectedMissingDoc1, $expectedMissingDoc2], $missing);
     }
 
-
     public function testCreateMissingDocumentsFlashMessage()
+    {
+        $missingDoc = new MissingDocument();
+        $missingDocuments = [$missingDoc];
+
+        $expectedFlash = 'some flash message here';
+
+        $storage = self::prophesize(S3Storage::class);
+        $logger = self::prophesize(LoggerInterface::class);
+        $restClient = self::prophesize(RestClient::class);
+        $twig = self::prophesize(Environment::class);
+        $twig->render('AppBundle:FlashMessages:missing-documents.html.twig', ['missingDocuments' => $missingDocuments])
+            ->shouldBeCalled()
+            ->willReturn($expectedFlash);
+
+        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal(), $twig->reveal());
+        $actualFlash = $sut->createMissingDocumentsFlashMessage($missingDocuments);
+
+        self::assertEquals($expectedFlash, $actualFlash);
+    }
+
+    public function testTwigTemplate()
     {
         /** @var ObjectProphecy|ReportSubmission $reportSubmission */
         $reportSubmission1 = self::prophesize(ReportSubmission::class);
@@ -323,19 +361,19 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
 
-        $expectedFlash = <<<FLASH
-The following documents could not be downloaded:
-<ul><li>CaseNumber1 - file-name1.pdf</li><li>CaseNumber2 - file-name2.pdf</li><li>CaseNumber1 - file-name3.pdf</li></ul>
-FLASH;
+        $loader = new FilesystemLoader([__DIR__ . '/../../../src/AppBundle/Resources/views/FlashMessages']);
+        $sut = new Environment($loader);
+        $renderedTwig = $sut->render('missing-documents.html.twig', ['missingDocuments' => $missingDocuments]);
 
-        $storage = self::prophesize(S3Storage::class);
-        $logger = self::prophesize(LoggerInterface::class);
-        $restClient = self::prophesize(RestClient::class);
+        self::assertContains('The following documents could not be downloaded:', $renderedTwig);
 
-        $sut = new DocumentService($storage->reveal(), $restClient->reveal(), $logger->reveal());
-        $actualFlash = $sut->createMissingDocumentsFlashMessage($missingDocuments);
+        foreach($missingDocuments as $missingDocument) {
+            $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
+            $fileName = $missingDocument->getFileName();
 
-        self::assertEquals($expectedFlash, $actualFlash);
+            $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
+            self::assertContains($expectedListItem, $renderedTwig);
+        }
     }
 
     public function tearDown(): void

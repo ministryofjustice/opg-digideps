@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service;
 
@@ -11,6 +11,8 @@ use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
+use Throwable;
+use Twig\Environment;
 
 class DocumentService
 {
@@ -31,16 +33,23 @@ class DocumentService
     private $logger;
 
     /**
-     * DocumentService constructor.
-     * @param S3Storage       $s3Storage
-     * @param RestClient      $restClient
-     * @param LoggerInterface $logger
+     * @var Environment
      */
-    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger)
+    private $twig;
+
+    /**
+     * DocumentService constructor.
+     * @param S3Storage $s3Storage
+     * @param RestClient $restClient
+     * @param LoggerInterface $logger
+     * @param Environment $twig
+     */
+    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
     {
         $this->s3Storage = $s3Storage;
         $this->restClient = $restClient;
         $this->logger = $logger;
+        $this->twig = $twig;
     }
 
     /**
@@ -67,7 +76,7 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 
@@ -190,21 +199,9 @@ class DocumentService
      */
     public function createMissingDocumentsFlashMessage(array $missingDocuments)
     {
-        $bullets = '<ul>';
-
-        foreach($missingDocuments as $missingDocument) {
-            $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
-            $fileName = $missingDocument->getFileName();
-
-            $bullets .= "<li>${caseNumber} - ${fileName}</li>";
-        }
-
-        $bullets .= '</ul>';
-
-        return <<<FLASH
-The following documents could not be downloaded:
-$bullets
-FLASH;
-
+        return $this->twig->render(
+            'AppBundle:FlashMessages:missing-documents.html.twig',
+            ['missingDocuments' => $missingDocuments]
+        );
     }
 }
