@@ -90,7 +90,6 @@ locals {
     },
     "secrets": [
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_api_client_secret.name}" },
-      { "name": "FRONTEND_GA", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.google_analytics.name}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.oauth2_client_secret.name}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.admin_frontend_secret.name}" }
     ],
@@ -104,6 +103,8 @@ locals {
       { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
+      { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
+      { "name": "FRONTEND_GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
       { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },

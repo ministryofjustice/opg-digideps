@@ -18,7 +18,9 @@ parameters:
     session_cookie_secure: false
 
     session_prefix: application_session
-    ga: null
+    ga:
+        default: null
+        gds: null
     opg_docker_tag: 0.0.0
     behat_controller_enabled: true
     log_level: warning
@@ -31,7 +33,7 @@ parameters:
     email_report_submit:
       from_email: no-reply@digideps.dsd.io
       to_email: behat-digideps@digital.justice.gov.uk
-    # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
+    # feedback email (Amazon SES, needs @digideps.dsd.io sender )
     email_feedback_send:
       from_email: no-reply@digideps.dsd.io
       to_email: behat-digideps@digital.justice.gov.uk
