@@ -72,6 +72,15 @@ default:
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
 
+        security:
+            description: Tests to assert on the apps security features
+            paths: [ %paths.base%/features/security ]
+            filters:
+                tags: "@security"
+            contexts:
+                - behatch:context:rest
+                - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
+
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
@@ -84,6 +93,7 @@ default:
           {{ else }}
               base_url: "https://digideps-client.local/"
           {{ end }}
+        Behatch\Extension: ~
 
 chrome:
     extensions:
