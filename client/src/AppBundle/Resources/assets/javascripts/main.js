@@ -46,6 +46,8 @@ $(document).ready(function() {
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
 
+    // Cookie banner
+    new GOVUK.cookieBanner();
 });
 
 GOVUKFrontend.initAll();
