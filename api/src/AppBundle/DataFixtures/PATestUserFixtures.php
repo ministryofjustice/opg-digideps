@@ -9,6 +9,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Repository\NamedDeputyRepository;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
+use AppBundle\Service\OrgService;
 use AppBundle\Service\ReportUtils;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -19,22 +20,28 @@ class PATestUserFixtures extends AbstractDataFixture
      */
     private $namedDeputyRepository;
 
+    /**
+     * @var OrgService
+     */
+    private $orgService;
+
     private $userData = [
         // CSV replacement fixtures for behat
         [
             'id' => '',
-            'firstname' => 'DEP1',
-            'lastname' => 'SURNAME1',
-            'email' => 'behat-pa1@publicguardian.gov.uk',
+            'Dep Forename' => 'DEP1',
+            'Dep Surname' => 'SURNAME1',
+            'Email' => 'behat-pa1@publicguardian.gov.uk',
             'active' => false,
-            'deputyNo' => '1000001',
+            'Deputy No' => '1000001',
+            'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'address1' => 'ADD1',
-            'address2' => 'ADD2',
-            'address3' => 'ADD3',
-            'addressPostcode' => 'SW1',
-            'address4' => 'ADD4',
-            'address5' => 'ADD5',
+            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs2' => 'ADD2',
+            'Dep Adrs3' => 'ADD3',
+            'Dep Postcode' => 'SW1',
+            'Dep Adrs4' => 'ADD4',
+            'Dep Adrs5' => 'ADD5',
             'phoneMain' => '10000000001',
             'clients' => [
                 [
@@ -72,18 +79,19 @@ class PATestUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => '',
-            'firstname' => 'DEP1',
-            'lastname' => 'SURNAME1',
-            'email' => 'behat-pa2@publicguardian.gov.uk',
+            'Dep Forename' => 'DEP1',
+            'Dep Surname' => 'SURNAME1',
+            'Email' => 'behat-pa2@publicguardian.gov.uk',
             'active' => false,
-            'deputyNo' => '9000002',
+            'Deputy No' => '9000002',
+            'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'address1' => 'ADD1',
-            'address2' => 'ADD2',
-            'address3' => 'ADD3',
-            'addressPostcode' => 'SW1',
-            'address4' => 'ADD4',
-            'address5' => 'ADD5',
+            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs2' => 'ADD2',
+            'Dep Adrs3' => 'ADD3',
+            'Dep Postcode' => 'SW1',
+            'Dep Adrs4' => 'ADD4',
+            'Dep Adrs5' => 'ADD5',
             'phoneMain' => '10000000001',
             'clients' => [
                 [
@@ -106,18 +114,19 @@ class PATestUserFixtures extends AbstractDataFixture
         ],
         [
             'id' => '',
-            'firstname' => 'DEP1',
-            'lastname' => 'SURNAME1',
-            'email' => 'behat-pa3@publicguardian.gov.uk',
+            'Dep Forename' => 'DEP1',
+            'Dep Surname' => 'SURNAME1',
+            'Email' => 'behat-pa3@publicguardian.gov.uk',
             'active' => false,
-            'deputyNo' => '9000003',
+            'Deputy No' => '9000003',
+            'Dep Type' => 23,
             'roleName' => 'ROLE_PA_NAMED',
-            'address1' => 'ADD1',
-            'address2' => 'ADD2',
-            'address3' => 'ADD3',
-            'addressPostcode' => 'SW1',
-            'address4' => 'ADD4',
-            'address5' => 'ADD5',
+            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs2' => 'ADD2',
+            'Dep Adrs3' => 'ADD3',
+            'Dep Postcode' => 'SW1',
+            'Dep Adrs4' => 'ADD4',
+            'Dep Adrs5' => 'ADD5',
             'phoneMain' => '10000000001',
             'clients' => [
                 [
@@ -143,6 +152,8 @@ class PATestUserFixtures extends AbstractDataFixture
 
     public function doLoad(ObjectManager $manager)
     {
+        $this->orgService = $this->container->get('org_service');
+
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
 
         // Add users from array
@@ -156,14 +167,14 @@ class PATestUserFixtures extends AbstractDataFixture
     private function addUser($data, $manager)
     {
 
-        $team = new Team($data['email'] . ' Team');
+        $team = new Team($data['Email'] . ' Team');
         $manager->persist($team);
 
         // Create user
         $user = (new User())
-            ->setFirstname(isset($data['firstname']) ? $data['firstname'] : 'test')
-            ->setLastname(isset($data['lastname']) ? $data['lastname'] : $data['id'])
-            ->setEmail(isset($data['email']) ? $data['email'] : $data['id'] . '@example.org')
+            ->setFirstname(isset($data['Dep Forename']) ? $data['Dep Forename'] : 'test')
+            ->setLastname(isset($data['Dep Surname']) ? $data['Dep Surname'] : $data['id'])
+            ->setEmail(isset($data['Email']) ? $data['Email'] : $data['id'] . '@example.org')
             ->setActive(isset($data['active']) ? $data['active'] : true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
@@ -173,7 +184,7 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setAddress3(isset($data['address3']) ? $data['address3'] : null)
             ->setAddressPostcode(isset($data['addressPostcode']) ? $data['addressPostcode'] : 'SW1')
             ->setAddressCountry('GB')
-            ->setDeputyNo(isset($data['deputyNo']) ? $data['deputyNo'] : null)
+            ->setDeputyNo(isset($data['Deputy No']) ? $data['Deputy No'] : null)
             ->setRoleName($data['roleName']);
 
         $user->addTeam($team);
@@ -236,7 +247,9 @@ class PATestUserFixtures extends AbstractDataFixture
             ->setEmail($clientData['email'])
             ->setDateOfBirth($dob);
 
-        $namedDeputy = $this->upsertNamedDeputy($userData, $manager);
+        if (null === ($namedDeputy = $this->orgService->identifyNamedDeputy($userData))) {
+            $namedDeputy = $this->orgService->createNamedDeputy($userData);
+        }
 
         $client->setNamedDeputy($namedDeputy);
 
@@ -255,45 +268,6 @@ class PATestUserFixtures extends AbstractDataFixture
         }
 
         return $client;
-    }
-
-    /**
-     * @param $data
-     * @return NamedDeputy|null|object
-     */
-
-    private function upsertNamedDeputy($data, $manager)
-    {
-        $namedDeputy = null;
-        $deputyNo = User::padDeputyNumber($data['deputyNo']);
-
-        if (isset($data['deputyNo'])) {
-            $namedDeputy = $this->namedDeputyRepository->findOneBy([
-                'deputyNo' => $deputyNo,
-                'email1' => $data['email']
-            ]);
-        }
-        if (!$namedDeputy instanceof NamedDeputy) {
-            $namedDeputy = new NamedDeputy(
-                $deputyNo,
-                $data['email'],
-                $data['firstname'],
-                $data['lastname'],
-                $data['address1'],
-                $data['address2'],
-                $data['address3'],
-                $data['addressPostcode'],
-                $data['phoneMain'],
-                isset($data['phoneAlternative']) ? $data['phoneAlternative'] : null,
-                $data['address4'],
-                $data['address5'],
-                $data
-            );
-
-            $manager->persist($namedDeputy);
-        }
-
-        return $namedDeputy;
     }
 
     protected function getEnvironments()
