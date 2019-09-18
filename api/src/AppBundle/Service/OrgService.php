@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Factory\NamedDeputyFactory;
 use AppBundle\Factory\OrganisationFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -31,6 +32,11 @@ class OrgService
      * @var OrganisationFactory
      */
     private $orgFactory;
+
+    /**
+     * @var NamedDeputyFactory
+     */
+    private $namedDeputyFactory;
 
     /**
      * @var array
@@ -65,8 +71,12 @@ class OrgService
      * @param LoggerInterface $logger
      * @param OrganisationFactory $orgFactory
      */
-    public function __construct(EntityManager $em, LoggerInterface $logger, OrganisationFactory $orgFactory)
-    {
+    public function __construct(
+        EntityManager $em,
+        LoggerInterface $logger,
+        OrganisationFactory $orgFactory,
+        NamedDeputyFactory $namedDeputyFactory
+    ) {
         $this->em = $em;
         $this->logger = $logger;
         $this->userRepository = $em->getRepository(EntityDir\User::class);
@@ -76,6 +86,7 @@ class OrgService
         $this->orgRepository = $em->getRepository(EntityDir\Organisation::class);
         $this->log = [];
         $this->orgFactory = $orgFactory;
+        $this->namedDeputyFactory = $namedDeputyFactory;
     }
 
     /**
@@ -123,7 +134,7 @@ class OrgService
                 }
 
                 if (null === ($namedDeputy = $this->identifyNamedDeputy($row))) {
-                    $namedDeputy = $this->buildNamedDeputy($row);
+                    $namedDeputy = $this->createNamedDeputy($row);
                 }
 
                 $client = $this->upsertClientFromCsv($row, $namedDeputy);
@@ -503,7 +514,7 @@ class OrgService
      * @param $csvRow
      * @return EntityDir\NamedDeputy|null|object
      */
-    private function identifyNamedDeputy($csvRow)
+    public function identifyNamedDeputy($csvRow)
     {
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
 
@@ -519,25 +530,11 @@ class OrgService
      * @param $csvRow
      * @return EntityDir\NamedDeputy
      */
-    private function buildNamedDeputy($csvRow)
+    public function createNamedDeputy($csvRow)
     {
         $deputyNo = EntityDir\User::padDeputyNumber($csvRow['Deputy No']);
 
-        $namedDeputy = new EntityDir\NamedDeputy(
-            $csvRow['Deputy No'],
-            $csvRow['Email'],
-            $csvRow['Dep Forename'],
-            $csvRow['Dep Surname'],
-            $csvRow['Dep Adrs1'],
-            $csvRow['Dep Adrs2'],
-            $csvRow['Dep Adrs3'],
-            $csvRow['Dep Postcode'],
-            $csvRow['Mobile'],
-            $csvRow['Mobile2'],
-            $csvRow['Dep Adrs4'],
-            $csvRow['Dep Adrs5'],
-            $csvRow
-        );
+        $namedDeputy = $this->namedDeputyFactory->createFromOrgCsv($csvRow);
         $this->em->persist($namedDeputy);
         $this->em->flush($namedDeputy);
 

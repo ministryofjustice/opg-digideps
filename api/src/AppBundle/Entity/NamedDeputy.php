@@ -49,6 +49,14 @@ class NamedDeputy
 
     /**
      * @var string
+     *
+     * @JMS\Type("string")
+     * @ORM\Column(name="deputy_type", type="string", length=5, nullable=true)
+     */
+    private $deputyType;
+
+    /**
+     * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"report-submitted-by", "named-deputy"})
      *
@@ -183,6 +191,22 @@ class NamedDeputy
     private $phoneAlternative;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="fee_payer", type="boolean", nullable=true)
+     */
+    private $feePayer;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="corres", type="boolean", nullable=true)
+     */
+    private $corres;
+
+    /**
      * NamedDeputy constructor.
      * @param $deputyNo
      * @param $email
@@ -198,36 +222,9 @@ class NamedDeputy
      * @param null $address5
      * @param array $data
      */
-    public function __construct($deputyNo,
-                                $email,
-                                $firstname,
-                                $lastname,
-                                $address1,
-                                $address2,
-                                $address3,
-                                $depPostcode,
-                                $phoneMain = null,
-                                $phoneAlternative = null,
-                                $address4 = null,
-                                $address5 = null,
-                                $data = []
+    public function __construct($data = []
     ) {
-        $this->setDeputyNo($deputyNo);
-        $this->setFirstname($firstname);
-        $this->setLastname($lastname);
-        $this->setEmail1($email);
-        $this->setEmail2(isset($data['Email2']) ? $data['Email2'] : null);
-        $this->setEmail3(isset($data['Email3']) ? $data['Email3'] : null);
-        $this->setDepAddrNo(isset($data['DepAddr No']) ? $data['DepAddr No'] : null);
-        $this->setAddress1($address1);
-        $this->setAddress2($address2);
-        $this->setAddress3($address3);
-        $this->setAddress4($address4);
-        $this->setAddress5($address5);
-        $this->setAddressCountry('GB');
-        $this->setAddressPostcode($depPostcode);
-        $this->setPhoneMain(isset($data['Phone Main']) ? $data['Phone main'] : null);
-        $this->setPhoneAlternative(isset($data['Phone Alternative']) ? $data['Phone Alternative'] : null);
+
     }
 
     /**
@@ -265,6 +262,23 @@ class NamedDeputy
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = User::padDeputyNumber($deputyNo);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeputyType(): string
+    {
+        return $this->deputyType;
+    }
+
+    /**
+     * @param string $deputyType
+     */
+    public function setDeputyType(string $deputyType)
+    {
+        $this->deputyType = $deputyType;
         return $this;
     }
 
@@ -546,6 +560,26 @@ class NamedDeputy
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
+        return $this;
+    }
+
+    /**
+     * @param bool $feePayer
+     * @return $this
+     */
+    public function setFeePayer($feePayer)
+    {
+        $this->feePayer = $feePayer;
+        return $this;
+    }
+
+    /**
+     * @param bool $corres
+     * @return $this
+     */
+    public function setCorres($corres)
+    {
+        $this->corres = $corres;
         return $this;
     }
 }

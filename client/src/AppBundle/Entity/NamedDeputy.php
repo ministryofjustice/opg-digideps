@@ -28,6 +28,13 @@ class NamedDeputy
 
     /**
      * @var string
+     *
+     * @JMS\Type("string")
+     */
+    private $deputyType;
+
+    /**
+     * @var string
      * @JMS\Type("string")
      *
      */
@@ -130,6 +137,20 @@ class NamedDeputy
      * @JMS\Type("string")
      */
     private $phoneAlternative;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    private $feePayer;
+
+    /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    private $corres;
 
     /**
      * @return int
@@ -457,6 +478,42 @@ class NamedDeputy
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = trim($phoneAlternative);
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFeePayer(): bool
+    {
+        return $this->feePayer;
+    }
+
+    /**
+     * @param bool $feePayer
+     * @return $this
+     */
+    public function setFeePayer(bool $feePayer)
+    {
+        $this->feePayer = $feePayer;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCorres(): bool
+    {
+        return $this->corres;
+    }
+
+    /**
+     * @param bool $corres
+     * @return $this
+     */
+    public function setCorres(bool $corres)
+    {
+        $this->corres = $corres;
         return $this;
     }
 }
