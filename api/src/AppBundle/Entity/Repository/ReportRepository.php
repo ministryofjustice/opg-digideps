@@ -138,7 +138,7 @@ class ReportRepository extends EntityRepository
         ;
 
         if ($exclude_submitted) {
-            $qb->andWhere('r.submitted != false OR r.submitted is null');
+            $qb->andWhere('r.submitted = false OR r.submitted is null');
         }
 
         if ($q) {
