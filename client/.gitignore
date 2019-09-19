@@ -9,3 +9,5 @@ app/check.php
 app/config/parameters.yml
 
 tests/behat/behat.yml
+
+.phpunit.result.cache

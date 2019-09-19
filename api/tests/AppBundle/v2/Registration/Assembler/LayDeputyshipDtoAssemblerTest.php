@@ -13,14 +13,13 @@ class LayDeputyshipDtoAssemblerTest extends TestCase
     private $sut;
 
     /** {@inheritDoc} */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sut = new CasRecToLayDeputyshipDtoAssembler(new DataNormaliser());
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      * @dataProvider getMissingDataVariations
      * @param $itemToRemove
      */
@@ -28,6 +27,8 @@ class LayDeputyshipDtoAssemblerTest extends TestCase
     {
         $input = $this->getInput();
         unset($input[$itemToRemove]);
+
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->sut->assembleFromArray($input);
     }

@@ -13,12 +13,12 @@ class CasrecVerificationServiceTest extends WebTestCase
      */
     private $casrecVerificationService;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::createClient(['environment' => 'test', 'debug' => false,]);
     }
 
-    public function setup()
+    public function setUp(): void
     {
         $crLayHasPC = m::mock('\AppBundle\Entity\Casrec')
             ->shouldIgnoreMissing(true)
@@ -102,7 +102,7 @@ class CasrecVerificationServiceTest extends WebTestCase
         $this->casrecVerificationService = new CasrecVerificationService($em);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

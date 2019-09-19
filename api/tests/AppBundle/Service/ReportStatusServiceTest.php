@@ -12,8 +12,9 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
+class ReportStatusServiceTest extends TestCase
 {
     /** @var Report | \PHPUnit_Framework_MockObject_MockObject */
     private $report;
