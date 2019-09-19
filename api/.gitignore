@@ -2,5 +2,3 @@ app/SymfonyRequirements.php
 app/bootstrap.php.cache
 app/check.php
 app/config/parameters.yml
-
-.phpunit.result.cache
