@@ -223,4 +223,10 @@
         <p>{{ 'page.resultsTable.noDocumentsFound' | trans }}</p>
     {% endif %}
 
+    <script>
+        $().ready(function () {
+            new PageReloader().addReloaderClickListener('action-download');
+        });
+    </script>
+
 {% endblock %}
