@@ -239,13 +239,13 @@ class Client implements ClientInterface
     private $archivedAt;
 
     /**
-     * @var ArrayCollection
+     * @var Organisation
      *
      * @JMS\Groups({"client-organisations"})
      *
-     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="clients")
+     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
-    private $organisations;
+    private $organisation;
 
     /**
      * Constructor.
@@ -256,7 +256,6 @@ class Client implements ClientInterface
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
-        $this->organisations = new ArrayCollection();
     }
 
     /**
@@ -1065,67 +1064,30 @@ class Client implements ClientInterface
 
 
     /**
-     * @return ArrayCollection
+     * @return Organisation
      */
-    public function getOrganisations()
+    public function getOrganisation()
     {
-        return $this->organisations;
+        return $this->organisation;
     }
 
     /**
      * @param Organisation $organisation
-     * @return User
+     * @return $this
      */
-    public function addOrganisation(Organisation $organisation)
+    public function setOrganisation(Organisation $organisation)
     {
-        if (!$this->organisations->contains($organisation)) {
-            $this->organisations->add($organisation);
-        }
+        $this->organisation = $organisation;
 
         return $this;
     }
 
     /**
-     * @param Organisation $organisation
-     * @return User
-     */
-    public function removeOrganisation(Organisation $organisation)
-    {
-        $this->organisations->removeElement($organisation);
-
-        return $this;
-    }
-
-    /**
-     * @return array $userIds
-     */
-    private function getOrganisationUserIds()
-    {
-        $userIds = [];
-
-        $organisations = $this->getOrganisations();
-        if (!empty($organisations)) {
-            /** @var Organisation $org */
-            foreach ($organisations as $org) {
-                if ($org->isActivated()) {
-                    $orgUsers = $org->getUsers();
-                    foreach ($orgUsers as $orgUser) {
-                        $userIds[] = $orgUser->getId();
-                    }
-                }
-            }
-        }
-
-        return $userIds;
-    }
-
-    /**
-     * @param $userId
+     * @param User $user
      * @return bool
      */
-    public function userBelongsToClient($userId)
+    public function userBelongsToClientsOrganisation(User $user)
     {
-        $owningUserIds = array_merge($this->getUserIds(), $this->getOrganisationUserIds());
-        return (bool) in_array($userId, $owningUserIds);
+        return $this->organisation->containsUser($user);
     }
 }
