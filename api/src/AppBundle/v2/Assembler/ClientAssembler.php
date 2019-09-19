@@ -52,8 +52,8 @@ class ClientAssembler
             $dto->setReportCount(count($data['reports']));
         }
 
-        if (isset($data['organisations']) && is_array($data['organisations'])) {
-            $dto->setOrganisations($this->assembleClientOrganisations($data['organisations']));
+        if (isset($data['organisation']) && is_array($data['organisation'])) {
+            $dto->setOrganisation($this->assembleClientOrganisation($data['organisation']));
         }
 
         return $dto;
@@ -91,15 +91,11 @@ class ClientAssembler
         return $dtos;
     }
 
-    private function assembleClientOrganisations(array $organisations)
+    private function assembleClientOrganisation(array $organisation)
     {
-        $dtos = [];
+        $dto[] = $this->organisationDtoAssembler->assembleFromArray($organisation);
 
-        foreach ($organisations as $organisation) {
-            $dtos[] = $this->organisationDtoAssembler->assembleFromArray($organisation);
-        }
-
-        return $dtos;
+        return $dto;
     }
 
     /**

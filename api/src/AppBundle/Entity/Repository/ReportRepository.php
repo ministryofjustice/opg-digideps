@@ -131,7 +131,7 @@ class ReportRepository extends EntityRepository
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
-            ->leftJoin('c.organisations', 'o', 'WITH', 'o.isActivated = true')
+            ->leftJoin('c.organisation', 'o', 'WITH', 'o.isActivated = true')
             ->leftJoin('o.users', 'ou')
             ->where('u.id = ' . $userId . ' OR ou.id = ' . $userId)
             ->andWhere('c.archivedAt IS NULL')
