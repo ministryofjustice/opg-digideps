@@ -12,12 +12,13 @@ use AppBundle\Service\File\Storage\S3Storage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery\Exception;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
+class DocumentServiceTest extends TestCase
 {
     /**
      * @var DocumentService
@@ -365,14 +366,14 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
         $sut = new Environment($loader);
         $renderedTwig = $sut->render('missing-documents.html.twig', ['missingDocuments' => $missingDocuments]);
 
-        self::assertContains('The following documents could not be downloaded:', $renderedTwig);
+        self::assertStringContainsString('The following documents could not be downloaded:', $renderedTwig);
 
         foreach($missingDocuments as $missingDocument) {
             $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();
             $fileName = $missingDocument->getFileName();
 
             $expectedListItem = "<li>${caseNumber} - ${fileName}</li>";
-            self::assertContains($expectedListItem, $renderedTwig);
+            self::assertStringContainsString($expectedListItem, $renderedTwig);
         }
     }
 

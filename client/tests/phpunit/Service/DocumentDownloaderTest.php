@@ -7,13 +7,14 @@ use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Model\MissingDocument;
 use AppBundle\Model\RetrievedDocument;
 use AppBundle\Service\File\DocumentsZipFileCreator;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use ZipArchive;
 
-class DocumentDownloaderTest extends \PHPUnit_Framework_TestCase
+class DocumentDownloaderTest extends TestCase
 {
     public function testGenerateDownloadResponse()
     {

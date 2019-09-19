@@ -15,13 +15,14 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\Container;
 
-class ReportSubmissionServiceTest extends MockeryTestCase
+class ReportSubmissionServiceTest extends TestCase
 {
     /**
      * @var ReportSubmissionService
@@ -256,11 +257,10 @@ class ReportSubmissionServiceTest extends MockeryTestCase
 
     /**
      * @dataProvider downloadableProvider
-     * @group acss
      */
     public function testAssertReportSubmissionIsDownloadable($reportSubmission)
     {
-        self::setExpectedException(ReportSubmissionDocumentsNotDownloadableException::class);
+        self::expectException(ReportSubmissionDocumentsNotDownloadableException::class);
 
         $this->sut = $this->generateSut();
         $this->sut->assertReportSubmissionIsDownloadable($reportSubmission);

@@ -50,11 +50,11 @@ class DocumentZipFileCreatorTest extends TestCase
         }
 
         $zip->open('/tmp/zip-file-1.zip');
-        self::assertInternalType('int', $zip->locateName('file-name1.pdf'));
-        self::assertInternalType('int', $zip->locateName('file-name2.pdf'));
+        self::assertIsInt($zip->locateName('file-name1.pdf'));
+        self::assertIsInt($zip->locateName('file-name2.pdf'));
 
         $zip->open('/tmp/zip-file-2.zip');
-        self::assertInternalType('int', $zip->locateName('file-name3.pdf'));
+        self::assertIsInt($zip->locateName('file-name3.pdf'));
 
         $zip->close();
     }
@@ -72,8 +72,8 @@ class DocumentZipFileCreatorTest extends TestCase
         $zip->open($zippedZipFiles);
 
         self::assertEquals(2, $zip->numFiles);
-        self::assertInternalType('int', $zip->locateName('zip1'));
-        self::assertInternalType('int', $zip->locateName('zip2'));
+        self::assertIsInt($zip->locateName('zip1'));
+        self::assertIsInt($zip->locateName('zip2'));
 
         $zip->close();
     }
