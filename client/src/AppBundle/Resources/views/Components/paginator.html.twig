@@ -18,7 +18,7 @@
 
 <div>
     {% if totalRecords <= recordsPerPage %}
-        <p data-test-id="pager-summary">
+        <p data-test-id="pager-summary" class="behat-pager-summary">
             {{ messages.singlePage | transchoice(totalRecords) | raw }}
         </p>
     {% else %}
@@ -70,7 +70,7 @@
         {# summary #}
         {% set firstRecordDisplayed = currentOffset + 1 %}
         {% set lastRecordDisplayed = (currentOffset + recordsPerPage) > totalRecords ? totalRecords : (currentOffset + recordsPerPage) %}
-        <p data-test-id="pager-summary">
+        <p data-test-id="pager-summary" class="behat-pager-summary">
             {{ messages.multiPage | trans({'%from%': firstRecordDisplayed, '%to%': lastRecordDisplayed, '%total%': totalRecords}) | raw }}
         </p>
     {% endif %}

@@ -118,6 +118,15 @@ trait DbTrait
         $query = "UPDATE client SET deleted_at = '2018-07-24 14:03:00' WHERE case_number = '{$caseNumber}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
+    }
 
+    /**
+     * @Given I remove all the old team database entries
+     */
+    public function iRemoveAllTheOldTeamDatabaseEntries()
+    {
+        $query = "DELETE FROM user_team";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
     }
 }
