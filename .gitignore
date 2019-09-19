@@ -21,3 +21,5 @@ terraform/to_import\.sh
 
 api/tests/.phpunit.result.cache
 client/tests/phpunit/.phpunit.result.cache
+
+.certs
