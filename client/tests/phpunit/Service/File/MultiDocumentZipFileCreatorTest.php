@@ -87,7 +87,7 @@ class MultiDocumentZipFileCreatorTest extends m\Adapter\Phpunit\MockeryTestCase
 
     public function testExceptionNoDocuments()
     {
-        $this->setExpectedException(\Exception::class, DocumentsZipFileCreator::MSG_NOT_DOWNLOADABLE);
+        $this->expectException(\Exception::class, DocumentsZipFileCreator::MSG_NOT_DOWNLOADABLE);
 
         $storage = m::mock(StorageInterface::class);
         $reportSubmission = m::mock(ReportSubmission::class);

@@ -22,7 +22,7 @@ class PdfCheckerTest extends MockeryTestCase
      */
     private $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new PdfChecker();
     }
@@ -60,7 +60,7 @@ class PdfCheckerTest extends MockeryTestCase
 
         $file->setUploadedFile($uploadedFile);
 
-        $this->setExpectedException(RiskyFileException::class);
+        $this->expectException(RiskyFileException::class);
 
         $result = $this->sut->checkFile($file);
     }

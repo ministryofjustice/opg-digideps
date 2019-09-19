@@ -5,9 +5,10 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\ReportInterface;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Routing\RouterInterface;
 
-class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
+class ReportSectionLinksServiceTest extends TestCase
 {
     /**
      * @var ReportSectionsLinkService
@@ -17,7 +18,7 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Set up the mockservies
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->router = m::mock(RouterInterface::class);
         $this->router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
@@ -95,7 +96,7 @@ class ReportSectionLinksServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('profDeputyCostsEstimate', $actual['section']);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

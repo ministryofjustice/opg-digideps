@@ -3,9 +3,10 @@
 namespace AppBundle\Service\Client\TokenStorage;
 
 use Mockery as m;
-use Predis\Client as PredisClient;
+use PHPUnit\Framework\TestCase;
+use Predis\Client;
 
-class RedisStorageTest extends \PHPUnit_Framework_TestCase
+class RedisStorageTest extends TestCase
 {
     /**
      * @var RedisStorage
@@ -13,13 +14,13 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
     private $object;
 
     /**
-     * @var PredisClient
+     * @var Client
      */
     private $redis;
 
-    public function __construct()
+    public function setUp(): void
     {
-        $this->redis = m::mock('Predis\Client');
+        $this->redis = m::mock(Client::class);
         $this->prefix = 'prefix';
 
         $this->object = new RedisStorage($this->redis, $this->prefix);

@@ -4,9 +4,10 @@ namespace AppBundle\Service;
 
 use AppBundle\Service\Client\RestClient;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
 
-class DeputyProviderTest extends \PHPUnit_Framework_TestCase
+class DeputyProviderTest extends TestCase
 {
     /**
      * @var DeputyProvider
@@ -23,7 +24,7 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
@@ -49,11 +50,10 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
         $this->object->login($credentials);
     }
 
-    /**
-     * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
-     */
     public function testLoginFail()
     {
+        $this->expectException(\Symfony\Component\Security\Core\Exception\UsernameNotFoundException::class);
+
         $credentials = ['email' => 'Peter', 'password' => 'p'];
 
         $this->restClient->shouldReceive('login')->once()->with($credentials)->andThrow(new \Exception('e'));
@@ -76,7 +76,7 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->object->supportsClass('AppBundle\Entity\Report'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

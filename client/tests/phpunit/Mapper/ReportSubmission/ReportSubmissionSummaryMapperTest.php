@@ -21,7 +21,7 @@ class ReportSubmissionSummaryMapperTest extends TestCase
     /** @var mixed */
     private $result;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->restClient = $this->getMockBuilder(RestClient::class)
             ->disableOriginalConstructor()
