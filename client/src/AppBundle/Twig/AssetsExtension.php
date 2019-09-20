@@ -24,7 +24,7 @@ class AssetsExtension extends \Twig_Extension
     }
 
     /** Get the version name for assets add it to the url to give a versioned url
-     * Like assetic except The minification and versioning is done with gulp.
+     * Like assetic except The minification and versioning is done with Webpack.
      *
      * @return string
      */
