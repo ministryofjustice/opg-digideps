@@ -1,4 +1,5 @@
 var path = require('path');
+var del = require('del')
 var CopyPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -55,6 +56,13 @@ module.exports = {
         }
     },
     plugins: [
+        {
+            apply: function(compiler) {
+                compiler.hooks.compilation.tap('CleanPlugin', () => {
+                    del(['web/assets/*']);
+                })
+            }
+        },
         new CopyPlugin([
             { from: 'node_modules/jquery/dist/jquery.min.js', to: 'javascripts' },
             { from: 'node_modules/govuk-frontend/govuk/assets/fonts', to: 'stylesheets/fonts' },
