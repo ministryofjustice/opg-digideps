@@ -1,7 +1,8 @@
+/* globals $, ga */
 var Ga = function (options) {
-    options = options || {};
-    this.timeout = options.hasOwnProperty('timeout') ? options.timeout : 250;
-};
+  options = options || {}
+  this.timeout = Object.prototype.hasOwnProperty.call(options, 'timeout') ? options.timeout : 250
+}
 
 /**
  * Allow to track downloaded in Google analytics:
@@ -12,24 +13,23 @@ var Ga = function (options) {
  * @param integer timeoutMs milliseconds
  */
 Ga.prototype.trackDownloadableLink = function (element) {
-    var _this = this;
+  var _this = this
 
-    element.click(function(e) {
-        e.preventDefault();
-        var link = $(e.target).attr('href');
+  element.click(function (e) {
+    e.preventDefault()
+    var link = $(e.target).attr('href')
 
-        // track page view with the "href" link
-        ga('send', 'pageview', link);
-        //console.log("tracking GA link " + link);
+    // track page view with the "href" link
+    ga('send', 'pageview', link)
+    // console.log("tracking GA link " + link);
 
-        // continue to load page
-        setTimeout(function(){
-            location.href = link;
-        }, _this.timeout);
+    // continue to load page
+    setTimeout(function () {
+      window.location.href = link
+    }, _this.timeout)
 
-        return false;
-    });
+    return false
+  })
+}
 
-};
-
-module.exports = Ga;
+module.exports = Ga

@@ -1,5 +1,4 @@
-/* jshint unused: false */
-/* globals $, window, document */
+/* globals $ */
 // SESSION TIMEOUT POPUP LOGIC
 /**
  * @param element
@@ -8,49 +7,42 @@
  * @param refreshUrl
  */
 module.exports = function (options) {
-    var that = this;
-    this.element = options.element;
-    this.sessionExpiresMs = options.sessionExpiresMs;
-    this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs;
-    this.keepSessionAliveUrl = options.keepSessionAliveUrl;
-    this.redirectAfterMs = 3000;
+  var that = this
+  this.element = options.element
+  this.sessionExpiresMs = options.sessionExpiresMs
+  this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs
+  this.keepSessionAliveUrl = options.keepSessionAliveUrl
+  this.redirectAfterMs = 3000
 
-    //debugger;
+  var $okButton = that.element.find('[data-js="ok-button"]')
 
-    var $okButton = that.element.find('[data-js="ok-button"]');
+  // attach click event
+  $okButton.click(function (e) {
+    e.preventDefault()
+    that.hidePopupAndRestartCountdown()
+  })
 
-    // attach click event
-    $okButton.click(function (e) {
-        e.preventDefault();
-        that.hidePopupAndRestartCountdown();
-    });
+  this.startCountdown = function () {
+    this.countDownPopup = window.setInterval(function () {
+      that.element.css('display', 'block')
+    }, this.sessionPopupShowAfterMs)
 
-    this.startCountdown = function () {
+    this.countDownLogout = window.setInterval(function () {
+      window.location.reload()
+    }, this.sessionExpiresMs + this.redirectAfterMs)
+  }
 
-        this.countDownPopup = window.setInterval(function () {
-            that.element.css('display', 'block');
+  this.hidePopupAndRestartCountdown = function () {
+    this.element.hide()
 
-        }, this.sessionPopupShowAfterMs);
+    this.keepSessionAlive()
+    // restart countdown
+    window.clearInterval(this.countDownPopup)
+    window.clearInterval(this.countDownLogout)
+    this.startCountdown()
+  }
 
-        this.countDownLogout = window.setInterval(function () {
-            window.location.reload();
-
-        }, this.sessionExpiresMs + this.redirectAfterMs);
-    };
-
-    this.hidePopupAndRestartCountdown = function () {
-        this.element.hide();
-        $underlay.hide();
-
-        this.keepSessionAlive();
-        // restart countdown
-        window.clearInterval(this.countDownPopup);
-        window.clearInterval(this.countDownLogout);
-        this.startCountdown();
-    };
-
-    this.keepSessionAlive = function () {
-        $.get(this.keepSessionAliveUrl + '?refresh=' + Date.now());
-    };
-
-};
+  this.keepSessionAlive = function () {
+    $.get(this.keepSessionAliveUrl + '?refresh=' + Date.now())
+  }
+}
