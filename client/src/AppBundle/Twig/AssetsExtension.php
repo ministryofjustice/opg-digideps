@@ -49,7 +49,7 @@ class AssetsExtension extends \Twig_Extension
         if (!$this->tag) {
             // List the files in the web/assets folder
             $assetRoot = $this->rootDir . '/../web/assets';
-            $assetContents = array_diff(scandir($assetRoot), ['..', '.']);
+            $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_DESCENDING), ['..', '.']);
 
             // set the value to the folder we find.
             $this->tag = array_values($assetContents)[0];
