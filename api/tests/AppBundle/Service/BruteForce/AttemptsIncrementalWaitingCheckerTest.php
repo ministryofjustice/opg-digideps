@@ -4,19 +4,20 @@ namespace Tests\AppBundle\Service\BruteForce;
 
 use AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
 // create a simple predis Mock to just return keys
 
 require_once __DIR__ . '/PredisMock.php';
 
-class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
+class AttemptsIncrementalWaitingCheckerTest extends TestCase
 {
     /**
      * @var AttemptsInTime
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->redis = new PredisMock();
         $this->object = new AttemptsIncrementalWaitingChecker($this->redis, 'prefix');
@@ -96,7 +97,7 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertAccessible();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

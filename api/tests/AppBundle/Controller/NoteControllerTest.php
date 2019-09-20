@@ -28,7 +28,7 @@ class NoteControllerTest extends AbstractTestController
     private static $pa3;
     private static $pa3Client1;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -54,14 +54,14 @@ class NoteControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenDeputy = $this->loginAsDeputy();

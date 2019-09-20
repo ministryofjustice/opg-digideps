@@ -3,8 +3,9 @@
 namespace Tests\AppBundle\Service;
 
 use AppBundle\Service\ReportUtils;
+use PHPUnit\Framework\TestCase;
 
-class ReportUtilsTest extends \PHPUnit_Framework_TestCase
+class ReportUtilsTest extends TestCase
 {
     /**
      * Data providor for reporting periods, end date and expected start date

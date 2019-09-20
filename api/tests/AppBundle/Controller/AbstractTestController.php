@@ -22,7 +22,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * Create static client and fixtures.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
@@ -43,7 +43,7 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
     }
@@ -234,7 +234,7 @@ abstract class AbstractTestController extends WebTestCase
         return $this->login('casemanager@example.org', 'Abcd1234', API_TOKEN_ADMIN);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

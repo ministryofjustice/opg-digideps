@@ -6,6 +6,7 @@
 .env
 **/secrets.json
 **/.tmp.aws.config
+.phpunit.result.cache
 
 # Common vendor folders
 .terraform/
@@ -18,4 +19,5 @@ vendor/
 # Repo-specific excludes
 docker/log
 terraform/to_import\.sh
+
 .certs

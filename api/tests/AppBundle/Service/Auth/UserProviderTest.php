@@ -4,15 +4,16 @@ namespace Tests\AppBundle\Service\Auth;
 
 use AppBundle\Service\Auth\UserProvider;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
-class UserProviderTest extends \PHPUnit_Framework_TestCase
+class UserProviderTest extends TestCase
 {
     /**
      * @var UserProvider
      */
     private $userProvider;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->repo = m::stub('Doctrine\ORM\EntityRepository');
         $this->em = m::stub('Doctrine\ORM\EntityManager', [
@@ -31,7 +32,7 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
     public function testloadUserByUsernameRedisNotFound()
     {
         $this->redis->shouldReceive('get')->with('token')->andReturn(null);
-        $this->logger->shouldReceive('warning')->with(matchesPattern('/Token.*not.*found/'));
+        $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/Token.*not.*found/'));
 
         $this->userProvider->loadUserByUsername('token');
     }
@@ -96,7 +97,7 @@ class UserProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('redisReturn', $this->userProvider->removeToken('token'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

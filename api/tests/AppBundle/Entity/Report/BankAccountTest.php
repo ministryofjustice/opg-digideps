@@ -3,8 +3,9 @@
 namespace Tests\AppBundle\Entity\Report;
 
 use AppBundle\Entity\Report\BankAccount;
+use PHPUnit\Framework\TestCase;
 
-class BankAccountTest extends \PHPUnit_Framework_TestCase
+class BankAccountTest extends TestCase
 {
     public function testSetterGetters()
     {
