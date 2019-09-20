@@ -6,10 +6,10 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tag = (new Date()).getTime();
 
 module.exports = {
-    entry: [
-        './src/AppBundle/Resources/assets/javascripts/main.js',
-        './src/AppBundle/Resources/assets/scss/formatted-report.scss',
-    ],
+    entry: {
+        application: './src/AppBundle/Resources/assets/javascripts/main.js',
+        'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss',
+    },
     devtool: 'source-map',
     module: {
         rules: [
@@ -45,22 +45,10 @@ module.exports = {
         filename: 'javascripts/[name].js',
         path: path.resolve(__dirname, 'web/assets/' + tag)
     },
-    optimization: {
-        splitChunks: {
-            cacheGroups: {
-                'formatted-report': {
-                    name: 'formatted-report',
-                    test: /formatted-report/,
-                    priority: -10,
-                    chunks: 'all',
-                    enforce: true
-                }
-            }
-        }
-    },
     plugins: [
         {
             apply: function(compiler) {
+                // Delete contents of 'web/assets' before building new files
                 compiler.hooks.compilation.tap('CleanPlugin', () => {
                     del(['web/assets/*']);
                 })
@@ -74,8 +62,7 @@ module.exports = {
             { from: 'src/AppBundle/Resources/assets/images', to: path.resolve(__dirname, 'web/images') },
         ]),
         new MiniCssExtractPlugin({
-            filename: 'stylesheets/application.css',
-            chunkFilename: 'stylesheets/[name].css',
+            filename: 'stylesheets/[name].css'
         }),
     ]
 };
