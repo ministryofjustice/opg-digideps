@@ -1,6 +1,22 @@
 // ====================================================================================
 // INITITALISE ALL MODULES
+require('../scss/application.scss');
+require('../scss/formatted-report.scss');
 
+require('./modules/bind.js');
+require('./modules/characterLimiter.js');
+require('./modules/detailsExpander.js');
+require('./modules/fix-sidebar.js');
+require('./modules/formatcurrency.js');
+require('./modules/ga.js');
+require('./modules/moneyTransfer.js');
+require('./modules/returnHTML.js');
+require('./modules/sessionTimeoutDialog.js');
+require('./modules/show-hide-content.js');
+require('./modules/submit.js');
+require('./modules/table-multiselect.js');
+require('./modules/textarea-autosize.js');
+require('./modules/upload.js');
 
 $(document).ready(function() {
 
