@@ -40,7 +40,7 @@ class ReportRepositoryTest extends WebTestCase
 
     private $mockMetaClass;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockEm = m::mock(EntityManagerInterface::class);
         $this->mockMetaClass = m::mock(ClassMetadata::class);

@@ -37,7 +37,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
     /**
      * Set up the mockservies
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockFileUploader = m::mock(FileUploader::class);
         $this->mockRestClient = m::mock(RestClient::class);

@@ -16,6 +16,8 @@ variable "accounts" {
       email_update_address   = string
       force_destroy_bucket   = bool
       front_whitelist        = list(string)
+      ga_default             = string
+      ga_gds                 = string
       subdomain_enabled      = bool
       is_production          = number
       secrets_prefix         = string

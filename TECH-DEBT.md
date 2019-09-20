@@ -7,6 +7,7 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 ## CI
 - Stabilize runs too soon and may exit before deployment has started
 - Notify channel when environment ready
+- use python/ruby image + install terraform
 
 ## Infra
 - Establish regular check of Trusted Advisor

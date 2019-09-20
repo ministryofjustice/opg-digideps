@@ -4,9 +4,10 @@ namespace Tests\AppBundle\Service\Auth;
 
 use AppBundle\Service\Auth\AuthService;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class AuthServiceTest extends \PHPUnit_Framework_TestCase
+class AuthServiceTest extends TestCase
 {
     /**
      * @var AuthService
@@ -25,7 +26,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         'layDeputySecretWrongFormat' => 'IShouldBeAnArray',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->userRepo = m::stub('Doctrine\ORM\EntityRepository');
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
@@ -40,11 +41,9 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->authService = new AuthService($this->encoderFactory, $this->logger, $this->container);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testMissingSecrets()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $container = m::stub('Symfony\Component\DependencyInjection\Container', [
                 'getParameter(client_secrets)' => [],
         ]);
@@ -79,7 +78,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     public function testgetUserByEmailAndPasswordUserNotFound()
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(matchesPattern('/not found/'))->once();
+        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -97,7 +96,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         ]);
         $this->encoderFactory->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
 
-        $this->logger->shouldReceive('info')->with(matchesPattern('/password mismatch/'))->once();
+        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -160,7 +159,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResult, $this->authService->isSecretValidForRole($role, $request));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

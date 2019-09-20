@@ -31,7 +31,7 @@ class LayDeputyshipUploaderTest extends TestCase
     private $sut;
 
     /** {@inheritDoc} */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
         $this->reportRepository = $this->getMockBuilder(ReportRepository::class)->disableOriginalConstructor()->getMock();
@@ -46,10 +46,10 @@ class LayDeputyshipUploaderTest extends TestCase
 
     /**
      * @test
-     * @expectedException \RuntimeException
      */
     public function throwsExceptionIfDataSetTooLarge()
     {
+        $this->expectException(\RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; $i++) {

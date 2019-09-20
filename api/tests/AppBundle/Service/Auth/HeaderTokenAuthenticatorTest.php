@@ -4,27 +4,26 @@ namespace Tests\AppBundle\Service\Auth;
 
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class HeaderTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class HeaderTokenAuthenticatorTest extends TestCase
 {
     /**
      * @var HeaderTokenAuthenticator
      */
     private $headerTokenAuth;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->headerTokenAuth = new HeaderTokenAuthenticator();
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testcreateTokenNotFound()
     {
         $request = new Request();
 
+        $this->expectException(\RuntimeException::class);
         $this->headerTokenAuth->createToken($request, 'providerKey');
     }
 
@@ -40,11 +39,9 @@ class HeaderTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('AuthTokenValue', $preAuthToken->getCredentials());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testauthenticateTokenWrongProvider()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $token = m::mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $user = m::mock('Symfony\Component\Security\Core\User\UserProviderInterface');
 
@@ -83,7 +80,7 @@ class HeaderTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->headerTokenAuth->supportsToken($preAuthToken, 'providerKey'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

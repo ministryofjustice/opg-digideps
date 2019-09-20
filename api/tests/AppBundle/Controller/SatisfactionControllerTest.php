@@ -12,7 +12,7 @@ class SatisfactionControllerTest extends AbstractTestController
     private static $tokenProf;
     private static $tokenPa;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();

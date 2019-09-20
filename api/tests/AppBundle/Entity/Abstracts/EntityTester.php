@@ -16,7 +16,7 @@ abstract class EntityTester extends MockeryTestCase
      */
     protected $entity;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (empty($this->entityClass)) {
             $this->markTestSkipped('Entity not defined');
@@ -26,7 +26,7 @@ abstract class EntityTester extends MockeryTestCase
         $this->entity = new $entityClass();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->entity);
     }

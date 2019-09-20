@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 
-class StringUtilsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class StringUtilsTest extends TestCase
 {
     public static function secondsToHoursMinutesProvider()
     {

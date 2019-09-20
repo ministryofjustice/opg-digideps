@@ -16,7 +16,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
@@ -47,7 +47,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();

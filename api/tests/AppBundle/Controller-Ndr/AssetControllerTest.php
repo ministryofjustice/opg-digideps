@@ -18,7 +18,7 @@ class AssetControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -41,14 +41,14 @@ class AssetControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -201,7 +201,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertInstanceOf('AppBundle\Entity\Ndr\AssetProperty', $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
-        $this->assertEquals('51', $asset->getOwnedPercentage());
+        $this->assertEquals('51.00', $asset->getOwnedPercentage());
         $this->assertEquals(true, $asset->getIsSubjectToEquityRelease());
         $this->assertEquals(true, $asset->getHasMortgage());
         $this->assertEquals(187500, $asset->getMortgageOutstandingAmount());

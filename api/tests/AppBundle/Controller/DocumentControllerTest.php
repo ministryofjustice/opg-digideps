@@ -24,7 +24,7 @@ class DocumentControllerTest extends AbstractTestController
     private static $report1;
     private static $ndr1;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -42,14 +42,14 @@ class DocumentControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
     }
 
-    public function setup()
+    public function setUp(): void
     {
         $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();

@@ -3,20 +3,21 @@
 namespace AppBundle\Entity\Ndr;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class NdrTest extends \PHPUnit_Framework_TestCase
+class NdrTest extends TestCase
 {
     /** @var Ndr $report */
     private $ndr;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->ndr = new Ndr();
         $this->incomeTicked = new StateBenefit('t1', true);
         $this->incomeUnticked = new StateBenefit('t2', false);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
