@@ -20,7 +20,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
     private $result;
 
     /** {@inheritDoc} */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->layDeputyshipDtoAssembler = $this
             ->getMockBuilder(LayDeputyshipDtoAssemblerInterface::class)
@@ -37,8 +37,6 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ['alpha' => 'alpha-data'],
             ['beta' => 'beta-data']
         ];
-
-        $this->layDeputyshipDtoAssembler->method('canAssemble')->willReturn(true);
 
         $this->assertEachItemWillBeAssembled($input);
         $this->result = $this->sut->assembleFromArray($input);

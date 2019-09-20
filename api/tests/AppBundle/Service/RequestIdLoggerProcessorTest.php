@@ -4,10 +4,11 @@ namespace Tests\AppBundle\Service;
 
 use AppBundle\Service\RequestIdLoggerProcessor;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
+class RequestIdLoggerProcessorTest extends TestCase
 {
     /**
      * @var RequestIdLoggerProcessor
@@ -16,7 +17,7 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
 
     private $record = ['key1' => 'abc', 'key2' => 2];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->container = m::mock('Symfony\Component\DependencyInjection\Container');
         $this->reqStack = m::mock('Symfony\Component\HttpFoundation\RequestStack');
@@ -60,7 +61,7 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->record + ['extra' => ['request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

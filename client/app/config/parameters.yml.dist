@@ -4,14 +4,14 @@
 parameters:
     locale:   en
     secret:   setme
-    api_base_url: http://digideps-api.local/
+    api_base_url: http://api.digideps.local/
     # START variables different for admin area, using the same codebase but running on a different container
     api_client_secret: setme
     env:    setme
     redis_dsn: redis://setme
     # END
-    non_admin_host: https://digideps-client.local
-    admin_host: https://digideps-admin.local
+    non_admin_host: https://digideps.local
+    admin_host: https://admin.digideps.local
     # for the following two settings, use a multiple of 60
     session_expire_seconds: 3900
     session_popup_show_after: 3600
@@ -39,8 +39,8 @@ parameters:
       to_email: behat-digideps@digital.justice.gov.uk
     email:
       base_url:
-        frontend: https://digideps-client.local
-        admin: https://digideps-admin.local
+        frontend: https://digideps.local
+        admin: https://admin.digideps.local
         routes:
           user_activate:  /user/activate/{token}
           password_reset:  /user/password-reset/{token}

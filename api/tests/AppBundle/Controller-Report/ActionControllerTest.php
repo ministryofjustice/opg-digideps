@@ -16,7 +16,7 @@ class ActionControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -36,14 +36,14 @@ class ActionControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();

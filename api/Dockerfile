@@ -22,7 +22,7 @@ ENV TIMEOUT=20
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install Postgres tools and command line client
-RUN apk add --no-cache openssl nginx su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql
+RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client php7-igbinary php7-pecl-redis php7-pdo_pgsql
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so $PHP_EXT_DIR/pdo_pgsql.so
 
 # Install Xdebug if directed to with build arg from docker-compose.yml

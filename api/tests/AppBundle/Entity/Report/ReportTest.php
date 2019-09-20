@@ -20,15 +20,16 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
-class ReportTest extends \PHPUnit_Framework_TestCase
+class ReportTest extends TestCase
 {
     /**
      * @var Report
      */
     private $report;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports'=>new ArrayCollection(), 'getSubmittedReports'=>new ArrayCollection()]);
         $this->validReportCtorArgs = [$this->client, Report::TYPE_102, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
@@ -70,7 +71,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             $client->addReport($report);
         }
 
-        $this->setExpectedException(\RuntimeException::class, $expectedTextInException);
+        $this->expectException(\RuntimeException::class);
 
         new Report($client, Report::TYPE_102, new \DateTime($startDate), new \DateTime($endDate));
     }
@@ -420,7 +421,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidAgreedBehalfOption()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 

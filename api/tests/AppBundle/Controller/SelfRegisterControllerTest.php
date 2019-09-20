@@ -13,13 +13,13 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @var SelfRegisterController */
     private $selfRegisterController;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->selfRegisterController = new SelfRegisterController();
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
         parent::tearDown();
@@ -181,7 +181,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $this->assertContains('no matching record in casrec', $responseArray['message']);
+        $this->assertStringContainsString('no matching record in casrec', $responseArray['message']);
     }
 
     /**

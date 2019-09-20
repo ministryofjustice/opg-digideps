@@ -4,19 +4,20 @@ namespace Tests\AppBundle\Service\BruteForce;
 
 use AppBundle\Service\BruteForce\AttemptsInTimeChecker;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
 // create a simple predis Mock to just return keys
 
 require_once __DIR__ . '/PredisMock.php';
 
-class AttemptsInTimeCheckerTest extends \PHPUnit_Framework_TestCase
+class AttemptsInTimeCheckerTest extends TestCase
 {
     /**
      * @var AttemptsInTime
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->redis = new PredisMock();
         $this->object = new AttemptsInTimeChecker($this->redis, 'prefix');
@@ -66,7 +67,7 @@ class AttemptsInTimeCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->object->maxAttemptsReached($this->key));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }
