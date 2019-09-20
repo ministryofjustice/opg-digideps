@@ -1,14 +1,9 @@
-var PageReloader = function() {
-    // "use strict";
+"use strict";
 
-    var that = this;
-
-    this.addReloaderClickListener = function (elementId) {
-        var btn = document.getElementById(elementId);
-
-        btn.addEventListener('click', function() {
-            setTimeout(window.location.reload.bind(window.location), 5000)
-        });
-    }
-
+var PageReloader = function(selector) {
+    $(selector).on('click', function() {
+        setTimeout(function() {
+            window.location.reload()
+        },5000)
+    });
 };

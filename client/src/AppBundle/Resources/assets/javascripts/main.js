@@ -46,6 +46,8 @@ $(document).ready(function() {
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
 
+    // Initialise page reloader
+    new PageReloader('[data-module="opg-reload-page"]');
 });
 
 GOVUKFrontend.initAll();

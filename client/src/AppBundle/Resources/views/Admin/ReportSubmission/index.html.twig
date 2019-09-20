@@ -83,7 +83,14 @@
     <form name="multiForm" id="multiForm" action="{{ path(baseRoute, {'status': filters.status} | merge(filtersToPreserveInTabs)) }}" method="POST">
         {% if nOfdownloadableSubmissions > 0 %}
             {% for action in postActions %}
-                <input type="submit" id="action-{{ action }}" value="{{ ('page.postactions.' ~ action) | trans }}" name="multiAction" class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled">
+                <input
+                    type="submit"
+                    id="action-{{ action }}"
+                    value="{{ ('page.postactions.' ~ action) | trans }}"
+                    name="multiAction"
+                    class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled"
+                    {% if action == 'download' %}data-module="opg-reload-page"{% endif %}
+                />
             {% endfor %}
             <p class="right text--right"><span id="numberOfCases">0 cases</span> selected</p>
         {% endif %}
@@ -222,11 +229,5 @@
     {% else %}
         <p>{{ 'page.resultsTable.noDocumentsFound' | trans }}</p>
     {% endif %}
-
-    <script>
-        $().ready(function () {
-            new PageReloader().addReloaderClickListener('action-download');
-        });
-    </script>
 
 {% endblock %}
