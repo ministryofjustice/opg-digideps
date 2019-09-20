@@ -1088,6 +1088,9 @@ class Client implements ClientInterface
      */
     public function userBelongsToClientsOrganisation(User $user)
     {
-        return $this->organisation->containsUser($user);
+        if ($this->organisation instanceof Organisation) {
+            return $this->organisation->containsUser($user);
+        }
+        return false;
     }
 }
