@@ -6,7 +6,10 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tag = (new Date()).getTime();
 
 module.exports = {
-    entry: './src/AppBundle/Resources/assets/javascripts/main.js',
+    entry: [
+        './src/AppBundle/Resources/assets/javascripts/main.js',
+        './src/AppBundle/Resources/assets/scss/formatted-report.scss',
+    ],
     devtool: 'source-map',
     module: {
         rules: [
@@ -39,7 +42,7 @@ module.exports = {
         ]
     },
     output: {
-        filename: 'javascripts/application.js',
+        filename: 'javascripts/[name].js',
         path: path.resolve(__dirname, 'web/assets/' + tag)
     },
     optimization: {

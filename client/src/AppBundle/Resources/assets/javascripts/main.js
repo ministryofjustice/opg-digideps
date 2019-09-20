@@ -1,7 +1,6 @@
 // ====================================================================================
 // INITITALISE ALL MODULES
 require('../scss/application.scss');
-require('../scss/formatted-report.scss');
 
 require('./modules/bind.js');
 require('./modules/characterLimiter.js');
