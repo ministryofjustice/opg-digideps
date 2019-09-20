@@ -7,7 +7,7 @@
  * @param sessionPopupShowAfterMs
  * @param refreshUrl
  */
-var SessionTimeoutDialog = function (options) {
+module.exports = function (options) {
     var that = this;
     this.element = options.element;
     this.sessionExpiresMs = options.sessionExpiresMs;

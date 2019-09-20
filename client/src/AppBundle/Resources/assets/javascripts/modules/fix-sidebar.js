@@ -2,37 +2,22 @@
 // Use the class name of .js-side-bar fix on the sidebar under the column div.
 // Note that associated styles live under _panel.scss.
 
-(function () {
-    // "use strict";
+module.exports = function () {
+    var $sidebar = $('.js-sidebar');
+    if (!$sidebar.length) return;
 
-    var root = this,
-        $ = root.jQuery;
+    var sidebarOffset = $sidebar.offset().top;
 
-    if (typeof GOVUK === 'undefined') {
-        root.GOVUK = {};
-    }
+    $(window).scroll(function(){
+        scrollTop = $(window).scrollTop();
 
-    var fixSidebar = function () {
+        if (scrollTop >= sidebarOffset) {
+        $('.js-sidebar').addClass('opg-related-items--fixed');
+        }
 
-        var $sidebar = $('.js-sidebar');
-        if (!$sidebar.length) return;
+        if (scrollTop < sidebarOffset) {
+        $('.js-sidebar').removeClass('opg-related-items--fixed');
+        }
 
-        var sidebarOffset = $sidebar.offset().top;
-
-        $(window).scroll(function(){
-          scrollTop = $(window).scrollTop();
-
-          if (scrollTop >= sidebarOffset) {
-            $('.js-sidebar').addClass('opg-related-items--fixed');
-          }
-
-          if (scrollTop < sidebarOffset) {
-            $('.js-sidebar').removeClass('opg-related-items--fixed');
-          }
-
-        });
-    };
-
-    root.GOVUK.fixSidebar = fixSidebar;
-
-}).call(this);
+    });
+};
