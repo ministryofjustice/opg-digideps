@@ -1,4 +1,6 @@
 $path: '/images/';
+$govuk-assets-path: './';
+$govuk-images-path: '/images/';
 $govuk-global-styles: true;
 @import "node_modules/govuk-frontend/govuk/all";
 @import "govuk-elements";
