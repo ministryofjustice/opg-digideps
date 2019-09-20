@@ -28,7 +28,7 @@ Feature: Users can access the correct clients
     Then I click on "pa-report-open" in the "client-02000001" region
     Then the response status code should be 200
     And I save the report as "02000001-report"
-    When I go to the report URL "overview" for "01000010 report"
+    When I go to the report URL "overview" for "01000010-report"
     Then the response status code should be 500
     Then I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I go to the report URL "overview" for "02000001-report"
