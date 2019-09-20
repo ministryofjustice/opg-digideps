@@ -82,7 +82,6 @@ class ClientVoter extends Voter
             $permission = true;
         }
 
-        // @to-do move tto ArrayCollection and use contains
         if (in_array($user->getId(), $client->getUserIds()) || $permission) {
             return true;
         }

@@ -85,6 +85,7 @@ class ClientAssembler
         $dtos = [];
 
         foreach ($reports as $report) {
+
             $dtos[] = $this->reportDtoAssembler->assembleFromArray($report);
         }
 
@@ -93,9 +94,7 @@ class ClientAssembler
 
     private function assembleClientOrganisation(array $organisation)
     {
-        $dto[] = $this->organisationDtoAssembler->assembleFromArray($organisation);
-
-        return $dto;
+        return $this->organisationDtoAssembler->assembleFromArray($organisation);
     }
 
     /**

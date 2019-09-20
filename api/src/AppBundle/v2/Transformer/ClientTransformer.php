@@ -105,22 +105,12 @@ class ClientTransformer
     }
 
     /**
-     * @param $organisation
+     * @param OrganisationDto $organisation
      * @return array
      */
-    private function transformOrganisation(array $organisation)
+    private function transformOrganisation(OrganisationDto $organisation)
     {
-        if (empty($organisation)) {
-            return [];
-        }
-
-        $transformed = [];
-
-        if ($organisation instanceof OrganisationDto) {
-            $transformed[] = $this->organisationTransformer->transform($organisation, ['users']);
-        }
-
-        return $transformed;
+        return $this->organisationTransformer->transform($organisation, ['users']);
     }
 
     /**
