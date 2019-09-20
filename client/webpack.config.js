@@ -2,16 +2,7 @@ var path = require('path');
 var CopyPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-function recursiveIssuer(m) {
-    console.log(m.issuer);
-    if (m.issuer) {
-        return recursiveIssuer(m.issuer);
-    } else if (m.name) {
-        return m.name;
-    } else {
-        return false;
-    }
-}
+const tag = (new Date()).getTime();
 
 module.exports = {
     entry: './src/AppBundle/Resources/assets/javascripts/main.js',
@@ -48,7 +39,7 @@ module.exports = {
     },
     output: {
         filename: 'javascripts/application.js',
-        path: path.resolve(__dirname, 'web/assets/gt')
+        path: path.resolve(__dirname, 'web/assets/' + tag)
     },
     optimization: {
         splitChunks: {
