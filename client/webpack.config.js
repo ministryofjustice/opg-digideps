@@ -38,7 +38,7 @@ module.exports = {
                         }
                     }
                 ]
-            },
+            }
         ]
     },
     output: {
