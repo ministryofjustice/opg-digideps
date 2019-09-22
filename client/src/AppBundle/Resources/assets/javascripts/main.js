@@ -45,9 +45,6 @@ $(document).ready(function() {
     // Initialising the Show Hide Content GOVUK module
     var showHideContent = new GOVUK.ShowHideContent();
     showHideContent.init();
-
-    // Initialise page reloader
-    new PageReloader('[data-module="opg-reload-page"]');
 });
 
 GOVUKFrontend.initAll();

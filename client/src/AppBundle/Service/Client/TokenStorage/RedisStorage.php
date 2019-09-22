@@ -37,9 +37,4 @@ class RedisStorage implements TokenStorageInterface
         $this->redis->set($this->prefix . $id, null);
         $this->redis->expire($this->prefix . $id, 0);
     }
-
-    public function has($id)
-    {
-        $this->redis->exists($this->prefix . $id);
-    }
 }
