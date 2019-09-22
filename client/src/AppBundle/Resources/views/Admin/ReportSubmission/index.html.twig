@@ -89,7 +89,6 @@
                     value="{{ ('page.postactions.' ~ action) | trans }}"
                     name="multiAction"
                     class="behat-link-{{ action }} button button-secondary push-half--bottom push-half--right js-disabled"
-                    {% if action == 'download' %}data-module="opg-reload-page"{% endif %}
                 />
             {% endfor %}
             <p class="right text--right"><span id="numberOfCases">0 cases</span> selected</p>

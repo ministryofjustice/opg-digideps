@@ -16,7 +16,7 @@ class RedisStorage implements TokenStorageInterface
      */
     private $prefix;
 
-    public function __construct(PredisClient $redis, $prefix)
+    public function __construct(PredisClient $redis, string $prefix)
     {
         $this->redis = $redis;
         $this->prefix = $prefix;
@@ -36,5 +36,10 @@ class RedisStorage implements TokenStorageInterface
     {
         $this->redis->set($this->prefix . $id, null);
         $this->redis->expire($this->prefix . $id, 0);
+    }
+
+    public function has($id)
+    {
+        $this->redis->exists($this->prefix . $id);
     }
 }

@@ -363,10 +363,12 @@ class DocumentServiceTest extends TestCase
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
 
         $loader = new FilesystemLoader([__DIR__ . '/../../../src/AppBundle/Resources/views/FlashMessages']);
+
         $sut = new Environment($loader);
+
         $renderedTwig = $sut->render('missing-documents.html.twig', ['missingDocuments' => $missingDocuments]);
 
-        self::assertStringContainsString('The following documents could not be downloaded:', $renderedTwig);
+        self::assertStringContainsString('<p>The following documents could not be downloaded:</p>', $renderedTwig);
 
         foreach($missingDocuments as $missingDocument) {
             $caseNumber = $missingDocument->getReportSubmission()->getCaseNumber();

@@ -7,6 +7,7 @@ namespace AppBundle\Service;
 use AppBundle\Service\File\DocumentsZipFileCreator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class DocumentDownloader
 {
@@ -45,9 +46,9 @@ class DocumentDownloader
      * @param Request $request
      * @param []string $reportSubmissionIds, an Array of ReportSubmission ids to be downloaded
      *
-     * @return Response
+     * @return array
      */
-    public function processDownload(Request $request, array $reportSubmissionIds)
+    public function retrieveDocumentsFromS3ByReportSubmissionIds(Request $request, array $reportSubmissionIds)
     {
         try {
             $reportSubmissions = $this->reportSubmissionService->getReportSubmissionsByIds($reportSubmissionIds);
@@ -56,29 +57,28 @@ class DocumentDownloader
                 $this->reportSubmissionService->assertReportSubmissionIsDownloadable($reportSubmission);
             }
 
-            [$retrievedDocuments, $missingDocuments] = $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
-
-            $zipFiles = $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocuments);
-            $fileName = $this->zipFileCreator->createMultiZipFile($zipFiles);
-
-            // send ZIP to user
-            $response = self::generateDownloadResponse($fileName);
-
-            $this->zipFileCreator->cleanUp();
-
-            if (!empty($missingDocuments)) {
-                $flashMessage = $this->documentService->createMissingDocumentsFlashMessage($missingDocuments);
-                $request->getSession()->getFlashBag()->add('error', $flashMessage);
-            }
-
-            return $response;
+            return [$retrievedDocuments, $missingDocuments] = $this->documentService->retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
         } catch (\Throwable $e) {
             $this->zipFileCreator->cleanUp();
-            $request->getSession()->getFlashBag()->add('error', 'Cannot download documents. Details: ' . $e->getMessage());
+            throw $e;
         }
     }
 
-    public static function generateDownloadResponse(string $fileName)
+    public function setMissingDocsFlashMessage(Request $request, array $missingDocuments)
+    {
+        $flashMessage = $this->documentService->createMissingDocumentsFlashMessage($missingDocuments);
+        $this->getFlashBag($request)->add('error', $flashMessage);
+    }
+
+    public function zipDownloadedDocuments(array $retrievedDocuments)
+    {
+        $zipFiles = $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocuments);
+        $fileName = $this->zipFileCreator->createMultiZipFile($zipFiles);
+
+        return $fileName;
+    }
+
+    public function generateDownloadResponse(string $fileName)
     {
         $response = new Response();
         $response->headers->set('Pragma', 'public');
@@ -89,6 +89,18 @@ class DocumentDownloader
         $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
         $response->sendHeaders();
         $response->setContent(readfile($fileName));
+
+        $this->zipFileCreator->cleanUp();
+
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return FlashBag
+     */
+    public function getFlashBag(Request $request)
+    {
+        return $request->getSession()->getFlashBag();
     }
 }
