@@ -1,0 +1,7 @@
+<p>The following documents could not be downloaded:</p>
+
+<ul>
+    {% for missingDocument in missingDocuments %}
+        <li>{{ missingDocument.reportSubmission.caseNumber }} - {{ missingDocument.fileName }}</li>
+    {% endfor %}
+</ul>

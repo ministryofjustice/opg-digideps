@@ -1,12 +1,18 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace AppBundle\Service;
 
 use AppBundle\Entity\DocumentInterface;
 use AppBundle\Entity\Report\Document;
+use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Model\MissingDocument;
+use AppBundle\Model\RetrievedDocument;
 use AppBundle\Service\Client\RestClient;
+use AppBundle\Service\File\Storage\FileNotFoundException;
 use AppBundle\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
+use Throwable;
+use Twig\Environment;
 
 class DocumentService
 {
@@ -27,16 +33,23 @@ class DocumentService
     private $logger;
 
     /**
-     * DocumentService constructor.
-     * @param S3Storage       $s3Storage
-     * @param RestClient      $restClient
-     * @param LoggerInterface $logger
+     * @var Environment
      */
-    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger)
+    private $twig;
+
+    /**
+     * DocumentService constructor.
+     * @param S3Storage $s3Storage
+     * @param RestClient $restClient
+     * @param LoggerInterface $logger
+     * @param Environment $twig
+     */
+    public function __construct(S3Storage $s3Storage, RestClient $restClient, LoggerInterface $logger, Environment $twig)
     {
         $this->s3Storage = $s3Storage;
         $this->restClient = $restClient;
         $this->logger = $logger;
+        $this->twig = $twig;
     }
 
     /**
@@ -63,7 +76,7 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $message = "can't delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 
@@ -107,5 +120,89 @@ class DocumentService
         $this->logger->log($level, $message, ['extra' => [
             'service' => 'documents-service',
         ]]);
+    }
+
+    /**
+     * Waiting for PHP core to catch up with allowing return documentation for this Golang-like feature.
+     * Returns two arrays utilising list() and array destructuring. Both values are accessible as variables
+     * rather than accessing their array index.
+     *
+     * When calling this function use the format:
+     *
+     * [$retrievedDocuments, $missingDocuments] = retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+     *
+     * $retrievedDocuments - Array of RetrievedDocuments from S3
+     * $missingDocuments - Array of MissingDocuments
+     *
+     * @param ReportSubmission $reportSubmission
+     * @return array
+     */
+    public function retrieveDocumentsFromS3ByReportSubmission(ReportSubmission $reportSubmission)
+    {
+        $retrievedDocuments = [];
+        $missingDocuments = [];
+
+        foreach ($reportSubmission->getDocuments() as $document) {
+            try {
+                // AWS returns a object here - typecasting to string
+                $contents = (string) $this->s3Storage->retrieve($document->getStorageReference());
+
+                $retrievedDocument = new RetrievedDocument();
+                $retrievedDocument->setContent($contents);
+                $retrievedDocument->setFileName($document->getFileName());
+                $retrievedDocument->setReportSubmission($reportSubmission);
+
+                $retrievedDocuments[] = $retrievedDocument;
+            } catch(FileNotFoundException $e) {
+                $missingDocument = new MissingDocument();
+                $missingDocument->setFileName($document->getFileName());
+                $missingDocument->setReportSubmission($reportSubmission);
+
+                $missingDocuments[] = $missingDocument;
+            }
+        }
+
+        return [$retrievedDocuments, $missingDocuments];
+    }
+
+    /**
+     * When calling this function use the format:
+     *
+     * [$documents, $missing] = retrieveDocumentsFromS3ByReportSubmissions($reportSubmissions);
+     *
+     * See retrieveDocumentsFromS3ByReportSubmission() docblock for background.
+     *
+     * @param []ReportSubmission $reportSubmissions
+     * @return array
+     */
+    public function retrieveDocumentsFromS3ByReportSubmissions(array $reportSubmissions)
+    {
+        $allDocuments = [];
+        $allMissing = [];
+
+        foreach ($reportSubmissions as $reportSubmission) {
+            [$documents, $missing] = $this->retrieveDocumentsFromS3ByReportSubmission($reportSubmission);
+
+            if (!empty($missing)) {
+                $allMissing = array_merge($allMissing, $missing);
+            }
+
+            $allDocuments = array_merge($allDocuments, $documents);
+        }
+
+        return [$allDocuments, $allMissing];
+    }
+
+
+    /**
+     * @param []MissingDocument $missingDocuments
+     * @return string
+     */
+    public function createMissingDocumentsFlashMessage(array $missingDocuments)
+    {
+        return $this->twig->render(
+            'AppBundle:FlashMessages:missing-documents.html.twig',
+            ['missingDocuments' => $missingDocuments]
+        );
     }
 }

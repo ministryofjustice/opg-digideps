@@ -196,4 +196,12 @@ class ReportSubmission
             . '_' . $this->getId()
             . '.zip';
     }
+
+    /**
+     * @return string
+     */
+    public function getCaseNumber()
+    {
+        $this->getReport()->getClient()->getCaseNumber();
+    }
 }
