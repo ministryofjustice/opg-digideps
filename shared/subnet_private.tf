@@ -23,3 +23,13 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.nat[count.index].id
   }
 }
+
+resource "aws_elasticache_subnet_group" "private" {
+  name       = "private"
+  subnet_ids = aws_subnet.private[*].id
+}
+
+resource "aws_db_subnet_group" "private" {
+  name       = "private"
+  subnet_ids = aws_subnet.private[*].id
+}
