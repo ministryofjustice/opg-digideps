@@ -60,7 +60,6 @@ class Satisfaction
      * @JMS\Groups({"satisfaction"})
      *
      * @ORM\Column(type="string", name="report_type", length=9)
-     * @Assert\Regex("/^10[0-9-]+$/")
      */
     private $reportType;
 

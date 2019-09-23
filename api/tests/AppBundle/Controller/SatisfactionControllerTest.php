@@ -38,56 +38,63 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
     }
 
-    public function testSatisfactionFailsOnInvalidData()
+    /**
+     * @dataProvider getInvalidInputs
+     * @param $data
+     */
+    public function testSatisfactionFailsOnInvalidData($data)
     {
-        $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => false,
-            'AuthToken'   => self::$tokenDeputy,
-            'data'        => [
-                'score' => 4,
-            ],
-        ]);
-
-        $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => false,
-            'AuthToken'   => self::$tokenDeputy,
-            'data'        => [
-                'reportType' => '102-5',
-            ],
-        ]);
-
-        $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => false,
-            'AuthToken'   => self::$tokenDeputy,
-            'data'        => [
-                'score'      => 4,
-                'reportType' => 'incorrect',
-            ],
+        $this->assertJsonRequest('POST', '/satisfaction', [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => $data,
         ]);
     }
 
-    public function testSatisfactionAcceptsValidData()
+    /**
+     * @return array
+     */
+    public function getInvalidInputs()
     {
-        $scores = range(1, 5);
-        $reportTypes = [
-            'ndr',
-            '102', '103', '104', '102-4', '103-4',
-            '102-5', '103-5', '104-5', '102-4-5', '103-4-5',
-            '102-6', '103-6', '104-6', '102-4-6', '103-4-6'
+        return [
+            ['data' => ['score' => 4, 'comments' => 'foo']],
+            ['data' =>['reportType' => '102-5', 'comments' => 'foo']]
         ];
+    }
 
-        foreach ($scores as $score) {
-            foreach ($reportTypes as $reportType) {
-                $this->assertJsonRequest('POST', $url, [
-                    'mustSucceed' => true,
-                    'AuthToken'   => self::$tokenDeputy,
-                    'data'        => [
-                        'score'      => $score,
-                        'reportType' => $reportType,
-                    ],
-                ]);
-            }
+    /**
+     * @dataProvider getValidInputs
+     * @param $data
+     */
+    public function testSatisfactionAcceptsValidData($data)
+    {
+        $response = $this->assertJsonRequest('POST', '/satisfaction', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => $data,
+        ]);
+
+        $em = self::$frameworkBundleClient->getContainer()->get('em');
+        $persistedEntity = $em->getRepository('AppBundle\Entity\Satisfaction')->find($response['data']);
+
+        $this->assertEquals($data['score'], $persistedEntity->getScore());
+        $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
+
+        if (array_key_exists('comments', $data)) {
+            $this->assertEquals($data['comments'], $persistedEntity->getComments());
+        } else {
+            $this->assertNull($persistedEntity->getComments());
         }
+    }
 
+    /**
+     * @return array
+     */
+    public function getValidInputs()
+    {
+        return [
+            ['data' => ['score' => 4, 'reportType' => 'foo', 'comments' => 'bar']],
+            ['data' => ['score' => 4, 'reportType' => 'foo']]
+        ];
     }
 }
