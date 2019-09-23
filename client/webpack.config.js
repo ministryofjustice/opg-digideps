@@ -10,6 +10,7 @@ module.exports = {
     application: './src/AppBundle/Resources/assets/javascripts/main.js',
     'formatted-report': './src/AppBundle/Resources/assets/scss/formatted-report.scss'
   },
+  mode: 'production',
   devtool: 'source-map',
   module: {
     rules: [
