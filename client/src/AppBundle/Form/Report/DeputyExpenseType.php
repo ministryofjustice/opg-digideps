@@ -14,7 +14,7 @@ class DeputyExpenseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('explanation', FormTypes\TextType::class, [
+            ->add('explanation', FormTypes\TextareaType::class, [
                 'required' => true,
             ])
             ->add('amount', FormTypes\NumberType::class, [
