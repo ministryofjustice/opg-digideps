@@ -20,7 +20,7 @@
         usage: true
       }
 
-      document.cookie = 'cookie_policy=' + JSON.stringify(policy) + '; expires=' + expires + '; secure'
+      document.cookie = 'cookie_policy=' + JSON.stringify(policy) + '; path=/; expires=' + expires + '; secure'
       $banner.addClass('hidden')
       event.preventDefault()
     })
