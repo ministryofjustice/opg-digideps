@@ -5,13 +5,14 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class RedirectorTest extends \PHPUnit_Framework_TestCase
+class RedirectorTest extends TestCase
 {
     /**
      * @var Redirector
@@ -38,7 +39,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
      */
     protected $session;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->user = m::mock(User::class)->makePartial();
         $this->tokenStorage = m::mock('Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface');
@@ -162,7 +163,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedRoute, $correctRoute);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

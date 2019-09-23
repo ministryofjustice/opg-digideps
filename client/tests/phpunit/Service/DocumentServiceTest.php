@@ -26,7 +26,7 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
      */
     private $logger;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->s3Storage = m::mock(S3Storage::class);
         $this->restClient = m::mock(RestClient::class);
@@ -77,13 +77,13 @@ class DocumentServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 
         $this->restClient->shouldReceive('apiCall')->never()->with('DELETE', 'document/1', null, 'array', [], false);
 
-        $this->setExpectedException('Exception');
+        $this->expectException('Exception');
 
         $this->object->removeDocumentFromS3($document);
 
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

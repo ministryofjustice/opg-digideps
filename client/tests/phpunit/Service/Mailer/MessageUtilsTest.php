@@ -12,7 +12,7 @@ class MessageUtilsTest extends TestCase
         /** @var Swift_Message | \PHPUnit_Framework_MockObject_MockObject $message */
         $message = $this->getMockBuilder(Swift_Message::class)->disableOriginalConstructor()->getMock();
 
-        $child = $this->getMock('stdClass', ['getBody', 'getContentType']);
+        $child = $this->createMock('\Swift_Mime_SimpleMimeEntity', ['getBody', 'getContentType']);
         $child->expects($this->once())->method('getBody')->will($this->returnValue('b'));
         $child->expects($this->once())->method('getContentType')->will($this->returnValue('ct'));
 
@@ -52,11 +52,11 @@ class MessageUtilsTest extends TestCase
         /** @var Swift_Message | \PHPUnit_Framework_MockObject_MockObject $message */
         $message = $this->getMockBuilder(Swift_Message::class)->disableOriginalConstructor()->getMock();
 
-        $child1 = $this->getMock('stdClass', ['getBody', 'getContentType']);
+        $child1 = $this->createMock('\Swift_Mime_SimpleMimeEntity', ['getBody', 'getContentType']);
         $child1->expects($this->once())->method('getBody')->will($this->returnValue('<b>test</b>'));
         $child1->expects($this->once())->method('getContentType')->will($this->returnValue('text/html'));
 
-        $child2 = $this->getMock('stdClass', ['getBody', 'getContentType']);
+        $child2 = $this->createMock('\Swift_Mime_SimpleMimeEntity', ['getBody', 'getContentType']);
         $child2->expects($this->once())->method('getBody')->will($this->returnValue('testPlain'));
         $child2->expects($this->once())->method('getContentType')->will($this->returnValue('text/plain'));
 
@@ -70,8 +70,8 @@ class MessageUtilsTest extends TestCase
 
         $messageString = MessageUtils::messageToString($message);
 
-        $this->assertContains('subject1', $messageString);
-        $this->assertContains('<b>test</b>', $messageString);
-        $this->assertContains('testPlain', $messageString);
+        $this->assertStringContainsString('subject1', $messageString);
+        $this->assertStringContainsString('<b>test</b>', $messageString);
+        $this->assertStringContainsString('testPlain', $messageString);
     }
 }

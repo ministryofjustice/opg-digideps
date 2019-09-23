@@ -23,20 +23,18 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->data = new Report();
 
-        $this->context = $this->getMock(ExecutionContextInterface::class);
+        $this->context = $this->createMock(ExecutionContextInterface::class);
         $this->sut = new CostBreakdownNotGreaterThanTotalValidator();
         $this->sut->initialize($this->context);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThrowsExceptionOnIncorrectDataType()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->sut->validate(new \stdClass(), new CostBreakdownNotGreaterThanTotal());
     }
 

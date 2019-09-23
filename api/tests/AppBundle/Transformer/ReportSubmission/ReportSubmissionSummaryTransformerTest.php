@@ -26,9 +26,9 @@ class ReportSubmissionSummaryTransformerTest extends TestCase
     /** @var array */
     private $result;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->dateTimeProvider = $this->getMock(DateTimeProvider::class);
+        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
 
         $this->sut = new ReportSubmissionSummaryTransformer($this->dateTimeProvider);
 

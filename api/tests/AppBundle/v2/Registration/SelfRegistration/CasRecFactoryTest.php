@@ -24,20 +24,20 @@ class CasRecFactoryTest extends TestCase
     private $dateTimeProvider;
 
     /** {@inheritDoc} */
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->validator = $this->getMock(ValidatorInterface::class);
-        $this->dateTimeProvider = $this->getMock(DateTimeProvider::class);
+        $this->validator = $this->createMock(ValidatorInterface::class);
+        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
 
         $this->factory = new CasRecFactory($this->validator, $this->dateTimeProvider);
     }
 
     /**
      * @test
-     * @expectedException \AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException
      */
     public function throwsExceptionIfCreatesInvalidEntity()
     {
+        $this->expectException(\AppBundle\v2\Registration\SelfRegistration\Factory\CasRecCreationException::class);
         $constraintList = new ConstraintViolationList([
             new ConstraintViolation('Bad casenumber given', '', [], '', '', ''),
             new ConstraintViolation('Bad postcode given', '', [], '', '', '')

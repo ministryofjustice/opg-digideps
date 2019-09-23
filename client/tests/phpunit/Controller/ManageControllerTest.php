@@ -80,7 +80,7 @@ class ManageControllerTest extends AbstractControllerTestCase
         $response = $this->httpRequest('GET', '/manage/availability');
         $this->assertEquals($statusCode, $response->getStatusCode(), $response->getContent());
         foreach ($mustContain as $m) {
-            $this->assertContains($m, $response->getContent());
+            $this->assertStringContainsString($m, $response->getContent());
         }
     }
 
@@ -89,10 +89,10 @@ class ManageControllerTest extends AbstractControllerTestCase
         $response = $this->httpRequest('GET', '/manage/elb');
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertContains('OK', $response->getContent());
+        $this->assertStringContainsString('OK', $response->getContent());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

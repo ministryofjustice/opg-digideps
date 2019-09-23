@@ -7,7 +7,7 @@ use Mockery as m;
 
 class AuthControllerTest extends AbstractTestController
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
     }
@@ -36,7 +36,7 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 403,
             'assertResponseCode' => 403,
         ]);
-        $this->assertContains('client secret not accepted', $return['message']);
+        $this->assertStringContainsString('client secret not accepted', $return['message']);
 
         // assert I'm not logged
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -58,7 +58,7 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 498,
             'assertResponseCode' => 498,
         ]);
-        $this->assertContains('Cannot find user', $return['message']);
+        $this->assertStringContainsString('Cannot find user', $return['message']);
 
         // assert I'm still not logged
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -80,7 +80,7 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 403,
             'assertResponseCode' => 403,
         ]);
-        $this->assertContains('not allowed from this client', $return['message']);
+        $this->assertStringContainsString('not allowed from this client', $return['message']);
 
         // assert I'm still not logged
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [

@@ -3,14 +3,15 @@
 namespace AppBundle\EventListener;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Act on session on each request.
  */
-class SessionListenerTest extends \PHPUnit_Framework_TestCase
+class SessionListenerTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
@@ -19,10 +20,10 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
      */
     public function onKernelRequestNoMasterWrongCtor()
     {
+        $this->expectException(\InvalidArgumentException::class);
         new SessionListener($this->router, $this->logger, ['idleTimeout' => 0]);
     }
 
@@ -106,7 +107,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
         $object->onKernelRequest($this->event);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

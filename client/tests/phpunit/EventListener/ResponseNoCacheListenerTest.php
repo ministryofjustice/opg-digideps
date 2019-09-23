@@ -3,11 +3,12 @@
 namespace AppBundle\EventListener;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Act on session on each request.
  */
-class ResponseNoCacheListenerTest extends \PHPUnit_Framework_TestCase
+class ResponseNoCacheListenerTest extends TestCase
 {
     /**
      * @test

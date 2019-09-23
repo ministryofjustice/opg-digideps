@@ -42,15 +42,22 @@
             var cookiePolicyJSON = document.cookie.replace(/(?:(?:^|.*;\s*)cookie_policy\s*\=\s*([^;]*).*$)|^.*$/, "$1");
             var cookiePolicy = JSON.parse(decodeURIComponent(cookiePolicyJSON));
             if (cookiePolicy.usage) {
-                ga('create', '{{ga}}', 'auto');
+                ga('create', '{{ga.default}}', 'auto');
+                ga('create', '{{ga.gds}}', 'auto', 'govuk_shared', {'allowLinker': true});
+                ga('govuk_shared.require', 'linker');
+                ga('govuk_shared.linker.set', 'anonymizeIp', true);
+                ga('govuk_shared.linker:autoLink', ['www.gov.uk']);
+
                 {% if app.user %}
                     ga('set', '&uid','{{app.user.gaTrackingId()}}');
                 {% endif %}
 
                 {% if gaCustomUrl is defined %}
                     ga('send', 'pageview', '{{gaCustomUrl}}');
+                    ga('govuk_shared.send', 'pageview', '{{gaCustomUrl}}');
                 {% else %}
                     ga('send', 'pageview');
+                    ga('govuk_shared.send', 'pageview');
                     {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
                     {#{% if app.request is defined and app.request %}#}
                     {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}

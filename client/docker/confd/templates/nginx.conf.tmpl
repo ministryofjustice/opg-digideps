@@ -2,6 +2,9 @@
 #   * Official English Documentation: http://nginx.org/en/docs/
 #   * Official Russian Documentation: http://nginx.org/ru/docs/
 
+# Load config files for modules
+include /etc/nginx/modules/*.conf;
+
 worker_processes  1;
 pid /tmp/nginx.pid;
 daemon off;

@@ -112,7 +112,7 @@ class OrgServiceTest extends WebTestCase
      */
     private $pa = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
                                                              'debug'       => false,]);
@@ -121,7 +121,7 @@ class OrgServiceTest extends WebTestCase
         self::$fixtures = new Fixtures(self::$em);
     }
 
-    public function setup()
+    public function setUp(): void
     {
         $logger = m::mock(LoggerInterface::class)->shouldIgnoreMissing();
         $this->pa = new OrgService(self::$em, $logger, new OrganisationFactory([]));
@@ -391,7 +391,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $report->getType());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

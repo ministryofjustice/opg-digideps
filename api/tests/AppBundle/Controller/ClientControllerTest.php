@@ -51,7 +51,7 @@ class ClientControllerTest extends AbstractTestController
         'date_of_birth' => '1947-1-31',
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -76,7 +76,7 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -89,7 +89,7 @@ class ClientControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 

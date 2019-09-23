@@ -10,15 +10,16 @@ use AppBundle\Service\UserRegistrationService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
+class UserRegistrationServiceTest extends TestCase
 {
     /**
      * @var UserRegistrationService
      */
     private $userRegistrationService;
 
-    public function setup()
+    public function setUp(): void
     {
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
@@ -264,7 +265,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService->selfRegisterUser($data);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

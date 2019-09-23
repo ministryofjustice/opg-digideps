@@ -6,15 +6,16 @@ use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Service\File\Storage\StorageInterface;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
+class DocumentZipFileCreatorTest extends TestCase
 {
     /**
      * @var DocumentsZipFileCreator
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->storage = m::mock(StorageInterface::class);
         $this->reportSubmission = m::mock(ReportSubmission::class, [
@@ -29,7 +30,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
         $this->reportSubmission->shouldReceive('isDownloadable')->once()->withNoArgs()->andReturn(true);
         $this->reportSubmission->shouldReceive('getDocuments')->andReturn([]);
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
         $this->object->createZipFile();
     }
 
@@ -37,7 +38,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->reportSubmission->shouldReceive('isDownloadable')->once()->withNoArgs()->andReturn(false);
 
-        $this->setExpectedException('RuntimeException', DocumentsZipFileCreator::MSG_NOT_DOWNLOADABLE);
+        $this->expectException('RuntimeException', DocumentsZipFileCreator::MSG_NOT_DOWNLOADABLE);
         $this->object->createZipFile();
     }
 
@@ -65,7 +66,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
 
         $fileName = $this->object->createZipFile();
 
-        $this->assertContains($zipFileName, $fileName);
+        $this->assertStringContainsString($zipFileName, $fileName);
         $this->assertEquals('doc1-content', exec("unzip -c $fileName file1.pdf"));
         $this->assertEquals('doc2-content', exec("unzip -c $fileName file2.pdf"));
 
@@ -74,7 +75,7 @@ class DocumentZipFileCreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(file_exists($fileName));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

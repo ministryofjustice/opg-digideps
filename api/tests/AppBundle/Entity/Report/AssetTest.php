@@ -5,8 +5,9 @@ namespace Tests\AppBundle\Entity\Report;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\AssetOther;
 use AppBundle\Entity\Report\AssetProperty;
+use PHPUnit\Framework\TestCase;
 
-class AssetTest extends \PHPUnit_Framework_TestCase
+class AssetTest extends TestCase
 {
     /**
      * @var Asset
@@ -18,7 +19,7 @@ class AssetTest extends \PHPUnit_Framework_TestCase
      */
     protected $property;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new AssetOther();
         $this->property = new AssetProperty();

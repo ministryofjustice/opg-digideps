@@ -24,7 +24,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::fixtures()->createOrganisations(4);
@@ -40,7 +40,7 @@ class OrganisationControllerTest extends AbstractTestController
     /**
      * {@inheritDoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
