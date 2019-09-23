@@ -41,6 +41,15 @@ class Satisfaction
      * @JMS\Type("string")
      * @JMS\Groups({"satisfaction"})
      *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $comments;
+
+    /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"satisfaction"})
+     *
      * @ORM\Column(type="string", name="deputy_role", length=50)
      */
     private $deputyRole;
@@ -98,6 +107,24 @@ class Satisfaction
     public function setScore(int $score): Satisfaction
     {
         $this->score = $score;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param string $comments
+     * @return Satisfaction
+     */
+    public function setComments(string $comments): Satisfaction
+    {
+        $this->comments = $comments;
         return $this;
     }
 

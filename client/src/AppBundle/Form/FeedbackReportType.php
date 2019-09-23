@@ -19,12 +19,13 @@ class FeedbackReportType extends AbstractType
         }, $satisfactionScores);
 
         $builder
-                 ->add('satisfactionLevel', FormTypes\ChoiceType::class, [
-                    'choices' => array_combine($satisfactionLabels, $satisfactionScores),
-                    'expanded' => true,
-                    'multiple' => false,
-                  ])
-                   ->add('save', FormTypes\SubmitType::class);
+            ->add('satisfactionLevel', FormTypes\ChoiceType::class, [
+                'choices' => array_combine($satisfactionLabels, $satisfactionScores),
+                'expanded' => true,
+                'multiple' => false,
+            ])
+            ->add('comments', FormTypes\TextareaType::class)
+            ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
