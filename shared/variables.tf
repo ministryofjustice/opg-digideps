@@ -5,9 +5,7 @@ variable "DEFAULT_ROLE" {
 variable "accounts" {
   type = map(
     object({
-      account_id            = string
-      cloudtrail_bucket     = string
-      cloudformation_bucket = string
+      account_id = string
     })
   )
 }
