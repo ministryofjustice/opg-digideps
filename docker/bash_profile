@@ -4,7 +4,7 @@ dd-start() {
 }
 
 # run command/bash into container
-# e.g. `dd-exec api bash` or `dd-exec frontend gulp`
+# e.g. `dd-exec api sh` or `dd-exec frontend ls`
 dd-exec() {
   CONTAINER=$1
   shift
