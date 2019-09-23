@@ -70,19 +70,16 @@ class ClientVoter extends Voter
      */
     private function canManage(Client $client, User $user)
     {
-        // using permission flag ensures both checks are made
-        $permission = false;
-
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
 
         if ($client->userBelongsToClientsOrganisation($user)) {
-            $permission = true;
+            return true;
         }
 
-        if (in_array($user->getId(), $client->getUserIds()) || $permission) {
+        if (in_array($user->getId(), $client->getUserIds())) {
             return true;
         }
 
