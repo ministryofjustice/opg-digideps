@@ -1,15 +1,15 @@
-FROM node:8-alpine AS gulp
+FROM node:8-alpine AS webpack
 WORKDIR /app
 
 COPY package.json .
 COPY package-lock.json .
-COPY Gulpfile.js .
+COPY webpack.config.js .
 COPY src src
 
 # Install NPM dependencies
 RUN npm install
 
-# Build assets with Gulp
+# Build assets
 RUN NODE_ENV=production npm run build
 
 FROM composer AS composer
@@ -84,6 +84,6 @@ COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web
-COPY --from=gulp /app/web/assets web/assets
-COPY --from=gulp /app/web/images web/images
+COPY --from=webpack /app/web/assets web/assets
+COPY --from=webpack /app/web/images web/images
 COPY docker/confd /etc/confd
