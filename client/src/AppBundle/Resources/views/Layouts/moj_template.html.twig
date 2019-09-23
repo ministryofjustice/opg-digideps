@@ -72,7 +72,7 @@
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
     {% if not app.request.cookies.has('cookie_policy') %}
-        <div class="opg-cookie-banner" data-module="opg-cookie-banner">
+        <div class="opg-cookie-banner behat-region-cookie-banner" data-module="opg-cookie-banner">
             {% block cookieMessage %}{% endblock %}
         </div>
     {% endif %}
