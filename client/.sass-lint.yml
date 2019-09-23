@@ -13,3 +13,6 @@ rules:
             order: smacss
     no-vendor-prefixes:
         - 0
+
+files:
+    include: './src/**/*.scss'
