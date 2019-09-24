@@ -1,9 +1,9 @@
 locals {
-  project = "digideps"
+  project = "digi-deps"
 
   default_tags = {
     business-unit          = "OPG"
-    application            = "Digideps"
+    application            = "Digi-Deps"
     environment-name       = local.environment
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"

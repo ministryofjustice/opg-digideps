@@ -13,7 +13,7 @@ provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn     = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${var.accounts[terraform.workspace].account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
