@@ -14,14 +14,6 @@
 
 {% block htmlTitle %}Deputy Report{% endblock %}
 
-{% block cookieMessage %}
-    <p class="govuk-width-container">
-        This service uses cookies to make the site simpler.
-        <a href="/cookies?accept=all" data-js="accept-all">Accept cookies</a>
-        <a href="/cookies">Cookie settings</a>
-    </p>
-{% endblock %}
-
 {% block proposition_content %}
     <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
         {% block proposition_title %}Complete the deputy report{% endblock %}
