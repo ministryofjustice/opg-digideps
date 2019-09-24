@@ -1,4 +1,4 @@
-variable "default_role" {
+variable "DEFAULT_ROLE" {
   default = "digideps-ci"
 }
 
