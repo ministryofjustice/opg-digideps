@@ -1,4 +1,3 @@
-@gt
 Feature: Cookie Policy
 
     @deputy
