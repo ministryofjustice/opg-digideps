@@ -2,8 +2,6 @@
 
 namespace AppBundle\Service\Stats;
 
-use Symfony\Component\HttpFoundation\Request;
-
 class StatsQueryParameters
 {
     public $metric;
@@ -11,12 +9,12 @@ class StatsQueryParameters
     public $startDate;
     public $endDate;
 
-    public function __construct(Request $request)
+    public function __construct($parameters)
     {
-        $this->metric = $request->query->get('metric');
-        $this->dimensions = $request->query->get('dimension');
-        $this->startDate = $request->query->get('startDate');
-        $this->endDate = $request->query->get('endDate');
+        $this->metric = $parameters['metric'];
+        $this->dimensions = $parameters['dimension'];
+        $this->startDate = $parameters['startDate'];
+        $this->endDate = $parameters['endDate'];
 
         if ($this->metric === null) {
             throw new \Exception('Must specify a metric');

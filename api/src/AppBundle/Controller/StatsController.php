@@ -17,7 +17,7 @@ class StatsController extends RestController
      */
     public function getMetric(Request $request)
     {
-        $params = new StatsQueryParameters($request);
+        $params = new StatsQueryParameters($request->query->all());
         $query = (new MetricQueryFactory($this->getEntityManager()))->create($params);
 
         return $query->execute($params);
