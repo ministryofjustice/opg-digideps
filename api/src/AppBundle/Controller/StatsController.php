@@ -25,7 +25,7 @@ class StatsController extends RestController
             throw new \Exception('Must specify a metric');
         }
 
-        if (!is_array($dimensions)) {
+        if (!is_array($dimensions) && !is_null($dimensions)) {
             throw new \Exception('Invalid dimension');
         }
 
@@ -60,20 +60,23 @@ class StatsController extends RestController
         $em = $this->getEntityManager();
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('amount', 'amount');
-        foreach ($dimensions as $index => $dimensionName) {
-            if (!in_array($dimensionName, $supportedDimensions)) {
-                throw new \Exception("Metric does not support \"$dimensionName\" dimension");
-            }
 
-            $key = "dimension$index";
-            $rsm->addScalarResult($key, $dimensionName);
-            $dimensions["t.$dimensionName"] = $key;
-            $selectDimensions[] = "t.$dimensionName $key";
-            $groupDimensions[] = "t.$dimensionName";
+        if (!is_null($dimensions)) {
+            foreach ($dimensions as $index => $dimensionName) {
+                if (!in_array($dimensionName, $supportedDimensions)) {
+                    throw new \Exception("Metric does not support \"$dimensionName\" dimension");
+                }
+
+                $key = "dimension$index";
+                $rsm->addScalarResult($key, $dimensionName);
+                $dimensions["t.$dimensionName"] = $key;
+                $selectDimensions[] = "t.$dimensionName $key";
+                $groupDimensions[] = "t.$dimensionName";
+            }
         }
 
         // Retrieve the data, within the date range and grouped by the dimension
-        if (count($dimensions)) {
+        if (!is_null($dimensions)) {
             $select = implode(', ', $selectDimensions);
             $group = implode(', ', $groupDimensions);
             $query = $em->createNativeQuery("SELECT $select, $aggregation amount FROM ($subquery) t WHERE t.date >= :startDate AND t.date <= :endDate GROUP BY $group", $rsm);
