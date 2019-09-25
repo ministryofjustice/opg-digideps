@@ -203,7 +203,7 @@ jobs:
       - attach_workspace: { at: . }
       - run:
           name: Initialize
-          command: terraform init ${TF_TIER} -upgrade=true
+          command: terraform init ${TF_TIER}
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
