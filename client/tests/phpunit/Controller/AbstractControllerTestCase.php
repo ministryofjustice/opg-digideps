@@ -18,7 +18,7 @@ abstract class AbstractControllerTestCase extends WebTestCase
      */
     protected $frameworkBundleClient;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
 

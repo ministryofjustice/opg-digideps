@@ -2,9 +2,12 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
+use AppBundle\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Service\File\FileUploader;
@@ -12,11 +15,14 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\Container;
 
-class ReportSubmissionServiceTest extends MockeryTestCase
+class ReportSubmissionServiceTest extends TestCase
 {
     /**
      * @var ReportSubmissionService
@@ -29,7 +35,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
     private $mockMailFactory;
     private $mockTemplatingEngine;
     private $mockPdfGenerator;
-    private $mockTranslator;
     private $mockLogger;
     private $mockCsvGenerator;
     private $mockReport;
@@ -37,7 +42,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
     /**
      * Set up the mockservies
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockFileUploader = m::mock(FileUploader::class);
         $this->mockRestClient = m::mock(RestClient::class);
@@ -45,8 +50,7 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $this->mockMailFactory = m::mock(MailFactory::class);
         $this->mockTemplatingEngine = m::mock(TwigEngine::class);
         $this->mockPdfGenerator = m::mock(WkHtmlToPdfGenerator::class);
-        $this->mockTranslator = m::mock(Translator::class);
-        $this->mockLogger = m::mock(\Symfony\Bridge\Monolog\Logger::class);
+        $this->mockLogger = m::mock(Logger::class);
         $this->mockCsvGenerator = m::mock(CsvGeneratorService::class);
 
         $this->mockReport = m::mock(ReportInterface::class);
@@ -67,7 +71,6 @@ class ReportSubmissionServiceTest extends MockeryTestCase
         $mockContainer->shouldReceive('get')->with('mail_factory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
         $mockContainer->shouldReceive('get')->with('wkhtmltopdf')->andReturn($this->mockPdfGenerator);
-        $mockContainer->shouldReceive('get')->with('translator')->andReturn($this->mockTranslator);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
         $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
 
@@ -209,4 +212,79 @@ class ReportSubmissionServiceTest extends MockeryTestCase
 
         $this->sut->submit($this->mockReport, $mockUser);
     }
+
+
+    public function testGetReportSubmissionById()
+    {
+        $id = '123';
+
+        $this->mockRestClient->shouldReceive('get')->once()->with(
+            "report-submission/${id}",
+            'Report\\ReportSubmission'
+        );
+
+        $this->sut = $this->generateSut();
+        $this->sut->getReportSubmissionById($id);
+    }
+
+
+    public function testGetReportSubmissionByIds()
+    {
+        $ids = ['123', '456'];
+
+        $reportSubmission1 = new ReportSubmission();
+        $reportSubmission1->setId(123);
+
+        $reportSubmission2 = new ReportSubmission();
+        $reportSubmission2->setId(456);
+
+        $this->mockRestClient->shouldReceive('get')->with(
+            "report-submission/123",
+            'Report\\ReportSubmission'
+        )->andReturn($reportSubmission1);
+
+        $this->mockRestClient->shouldReceive('get')->with(
+            "report-submission/456",
+            'Report\\ReportSubmission'
+        )->andReturn($reportSubmission2);
+
+        $this->sut = $this->generateSut();
+        $reportSubmissions = $this->sut->getReportSubmissionsByIds($ids);
+
+        self::assertContains($reportSubmission1, $reportSubmissions);
+        self::assertContains($reportSubmission2, $reportSubmissions);
+    }
+
+    /**
+     * @dataProvider downloadableProvider
+     */
+    public function testAssertReportSubmissionIsDownloadable($reportSubmission)
+    {
+        self::expectException(ReportSubmissionDocumentsNotDownloadableException::class);
+
+        $this->sut = $this->generateSut();
+        $this->sut->assertReportSubmissionIsDownloadable($reportSubmission);
+    }
+
+    public function downloadableProvider()
+    {
+        $unDownloadable = new ReportSubmission();
+        $unDownloadable->setDownloadable(false);
+        $unDownloadable->setDocuments([new Document()]);
+
+        $missingDocs = new ReportSubmission();
+        $missingDocs->setDownloadable(true);
+        $missingDocs->setDocuments([]);
+
+        $unDownloadableAndMissingDocs = new ReportSubmission();
+        $unDownloadableAndMissingDocs->setDownloadable(false);
+        $unDownloadableAndMissingDocs->setDocuments([]);
+
+        return [
+            'un-downloadable' => [$unDownloadable],
+            'missing docs' => [$missingDocs],
+            'un-downloadable and missing docs' => [$unDownloadableAndMissingDocs],
+        ];
+    }
+
 }

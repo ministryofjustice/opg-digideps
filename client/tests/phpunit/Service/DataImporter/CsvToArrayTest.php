@@ -3,8 +3,9 @@
 namespace AppBundle\Service\DataImporter;
 
 use JMS\Serializer\Exception\RuntimeException;
+use PHPUnit\Framework\TestCase;
 
-class CsvToArrayTest extends \PHPUnit_Framework_TestCase
+class CsvToArrayTest extends TestCase
 {
     private $columns = ['Case', 'Surname', 'Deputy No', 'Dep Surname'];
     private $optionalColumns = ['Dep Postcode'];
@@ -45,19 +46,16 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
         ]], $data);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testgetDataMissingFile()
     {
+        $this->expectException(\RuntimeException::class);
+
         new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv', false);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testgetDataInvalidFormat()
     {
+        $this->expectException(\RuntimeException::class);
         $object = new CsvToArray(__DIR__ . '/invalid.csv', false);
         $object->setExpectedColumns($this->columns);
         $object->getData();
@@ -80,16 +78,14 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
             $object->getData();
             $this->fail(__METHOD__ . ': expected exception');
         } catch (\RuntimeException $e) {
-            $this->assertContains('Surname', $e->getMessage());
-            $this->assertContains('Dep Surname', $e->getMessage());
+            $this->assertStringContainsString('Surname', $e->getMessage());
+            $this->assertStringContainsString('Dep Surname', $e->getMessage());
         }
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testOneLineMissesRequiredColumn()
     {
+        $this->expectException(\RuntimeException::class);
         $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', false);
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();

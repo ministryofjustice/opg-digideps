@@ -9,9 +9,10 @@ Clone [opg-file-scanner-service](https://github.com/ministryofjustice/opg-file-s
 
 ## Installation
 
-- Add `127.0.0.1 digideps-client.local digideps-admin.local digideps-api.local` to `/etc/hosts`
+- Add `127.0.0.1 digideps.local admin.digideps.local api.digideps.local www.digideps.local` to `/etc/hosts`
 - Navigate to the root directory of this repository and run `docker-compose up -d`
-- Check `https://digideps-client.local/` (Deputy area) and `https://digideps-admin.local/` (Admin area). Your browser will warn you about a self-signed certificate.
+- Check `https://digideps.local/` (Deputy area) and `https://admin.digideps.local/` (Admin area). Your browser will warn you about a self-signed certificate.
+- Run `./generate_certs.sh` to populate your certs directory
 
 ### Reset the database
 

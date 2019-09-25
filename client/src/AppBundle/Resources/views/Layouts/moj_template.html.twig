@@ -27,7 +27,7 @@
 
     {% block head %}{% endblock %}
 
-    <script src="{{ '/javascripts/jquery.min.js' | assetUrl }}"></script>
+    <script src="{{ 'javascripts/jquery.min.js' | assetUrl }}"></script>
   </head>
 
   <body class="govuk-template__body">
@@ -37,15 +37,23 @@
                 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-            ga('create', '{{ga}}', 'auto');
+
+            ga('create', '{{ga.default}}', 'auto');
+            ga('create', '{{ga.gds}}', 'auto', 'govuk_shared', {'allowLinker': true});
+            ga('govuk_shared.require', 'linker');
+            ga('govuk_shared.linker.set', 'anonymizeIp', true);
+            ga('govuk_shared.linker:autoLink', ['www.gov.uk']);
+
             {% if app.user %}
                 ga('set', '&uid','{{app.user.gaTrackingId()}}');
             {% endif %}
 
             {% if gaCustomUrl is defined %}
                 ga('send', 'pageview', '{{gaCustomUrl}}');
+                ga('govuk_shared.send', 'pageview', '{{gaCustomUrl}}');
             {% else %}
                 ga('send', 'pageview');
+                ga('govuk_shared.send', 'pageview');
                 {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
                 {#{% if app.request is defined and app.request %}#}
                   {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}

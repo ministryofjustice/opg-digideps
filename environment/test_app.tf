@@ -89,7 +89,7 @@ locals {
       { "name": "API_SECURITY_ANONYMOUS", "value": "true" }
     ]
   }
-  
+
 EOF
 
 
@@ -126,7 +126,7 @@ EOF
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
   }
-  
+
 EOF
 
 
@@ -146,7 +146,6 @@ EOF
     "secrets": [
       { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
-      { "name": "FRONTEND_GA", "valueFrom": "${data.aws_secretsmanager_secret.google_analytics.arn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.oauth2_client_secret.arn}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
@@ -158,12 +157,14 @@ EOF
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.account.email_domain}" },
+      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.domain}" },
       { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.account.email_feedback_address}" },
       { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
       { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
+      { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
+      { "name": "FRONTEND_GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
       { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },
@@ -186,7 +187,7 @@ EOF
       { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
-      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${local.account.domain_name} *.${local.environment}.internal ~.*" },
+      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${data.aws_route53_zone.public.name} *.${local.environment}.internal ~.*" },
       { "name": "OPG_NGINX_SSL_FORCE_REDIRECT", "value": "1" },
       { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
       { "name": "OPG_SERVICE", "value": "front" },
@@ -194,7 +195,7 @@ EOF
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
-  
+
 EOF
 
 }

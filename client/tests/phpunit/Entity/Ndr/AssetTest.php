@@ -3,8 +3,9 @@
 namespace AppBundle\Entity\Ndr;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class AssetTest extends \PHPUnit_Framework_TestCase
+class AssetTest extends TestCase
 {
     /**
      * @var AssetOther
@@ -16,13 +17,13 @@ class AssetTest extends \PHPUnit_Framework_TestCase
      */
     private $assetProp;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->assetOther = new AssetOther();
         $this->assetProp = new AssetProperty();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

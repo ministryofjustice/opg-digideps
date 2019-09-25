@@ -27,7 +27,7 @@
             <dd class="push--bottom">
                 {% if report.submitted == false and reportStatus.isReadyToSubmit and report.isDue %}
                     <p class="push--top">
-                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">
+                        <a class="behat-link-edit-report_submit govuk-button govuk-button--start" id="edit-report_submit{{ incompleteAppend }}" href="{{ path('report_review', {'reportId': report.id}) }}" role="button" data-module="govuk-button">
                             {{ 'reviewAndSubmit' | trans() }}
                             {{ macros.startButtonIcon() }}
                         </a>
@@ -48,6 +48,16 @@
                 <span class="push--right">{{ report.startDate | date(" j F Y") }} to {{ report.endDate | date(" j F Y") }}</span>
                 <a href="{{ path('report_edit', {'reportId': report.id}) }}" class="right behat-link-edit-report-period">{{ 'edit' | trans }}</a>
             </dd>
+
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">{{ 'overdueHelpTextHeader' | trans }}</span>
+                </summary>
+                <div class="govuk-details__text">
+                    <p>{{ 'overdueHelpTextParagraph1' | trans }}</p>
+                    <p>{{ 'overdueHelpTextParagraph2' | trans }}</p>
+                </div>
+            </details>
 
             <dt>
                 <strong class="bold">{{ 'reportDueDate' | trans() }}</strong>

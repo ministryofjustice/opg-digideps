@@ -10,11 +10,12 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Ndr\VisitsCare;
 use AppBundle\Service\NdrStatusService as StatusService;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 /**
  * //TODO consider using traits to re-use logic in ReportStatusServiceTest for common sections
  */
-class NdrStatusServiceTest extends \PHPUnit_Framework_TestCase
+class NdrStatusServiceTest extends TestCase
 {
     /**
      * @param array $ndrMethods

@@ -1,14 +1,11 @@
-variable "default_role" {
+variable "DEFAULT_ROLE" {
   default = "digideps-ci"
 }
 
 variable "accounts" {
   type = map(
     object({
-      domain                = string
-      account_id            = string
-      cloudtrail_bucket     = string
-      cloudformation_bucket = string
+      account_id = string
     })
   )
 }
@@ -21,6 +18,6 @@ locals {
     application            = "Digideps"
     environment-name       = terraform.workspace
     owner                  = "OPG Supervision"
-    infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
+    infrastructure-support = "OPG WebOps: opgteam+digideps@digital.justice.gov.uk"
   }
 }

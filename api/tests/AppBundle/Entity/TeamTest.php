@@ -15,7 +15,7 @@ class TeamTest extends EntityTester
     /**
      * Override as ctor args are needed
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->entity = new Team('t1');
     }

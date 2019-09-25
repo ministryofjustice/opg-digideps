@@ -4,15 +4,16 @@ namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity\User;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
-class MailFactoryTest extends \PHPUnit_Framework_TestCase
+class MailFactoryTest extends TestCase
 {
     /**
      * @var MailFactory
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->router = m::mock('Symfony\Component\Routing\Router');
         $this->translator = m::mock('Symfony\Component\Translation\DataCollectorTranslator');

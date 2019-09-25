@@ -4,17 +4,23 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\Command;
 use Aws\Exception\AwsException;
+use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class S3StorageTest extends \PHPUnit_Framework_TestCase
+class S3StorageTest extends TestCase
 {
     /**
      * @var S3Storage
      */
     private $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         // connect to localstack
         // see docker-composer.yml for params
@@ -114,7 +120,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // try retrieve after deletion (Exception expected)
-        $this->setExpectedException(FileNotFoundException::class);
+        $this->expectException(FileNotFoundException::class);
         $this->object->retrieve($key);
     }
 
@@ -245,7 +251,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->setExpectedException('RuntimeException', 'Could not remove file');
+        $this->expectException('RuntimeException', 'Could not remove file');
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
@@ -277,7 +283,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->setExpectedException('RuntimeException', 'Could not remove file: No results returned');
+        $this->expectException('RuntimeException', 'Could not remove file: No results returned');
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
@@ -292,7 +298,7 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
         $awsClient = m::mock(\Aws\S3\S3ClientInterface::class);
 
-        $this->setExpectedException('RuntimeException', 'Could not remove file');
+        $this->expectException('RuntimeException', 'Could not remove file');
 
         $awsClient->shouldNotReceive('deleteObjects')->never();
 
@@ -329,12 +335,78 @@ class S3StorageTest extends \PHPUnit_Framework_TestCase
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
-        $this->setExpectedException('RuntimeException', 'Could not remove file');
+        $this->expectException('RuntimeException', 'Could not remove file');
 
         $result = $this->object->removeFromS3($key);
         $this->assertEquals(
             '',
             $result['objectsToDelete']
         );
+    }
+
+    public function testRetrieveFromS3WhenNoSuchKey()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'The specified key does not exist.',
+            new Command('getObject'), ['code' => 'NoSuchKey']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(FileNotFoundException::class, "Cannot find file with reference ${key}");
+
+        $this->object->retrieve($key);
+    }
+
+    public function testRetrieveFromS3WhenAccessDenied()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'Access Denied.',
+            new Command('getObject'), ['code' => 'AccessDenied']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(FileNotFoundException::class, "Cannot find file with reference ${key}");
+
+        $this->object->retrieve($key);
+    }
+
+    public function testRetrieveFromS3NotMissingFileError()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'Some other error message',
+            new Command('getObject'), ['code' => 'InvalidRequest']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(S3Exception::class, 'Some other error message');
+
+        $this->object->retrieve($key);
     }
 }

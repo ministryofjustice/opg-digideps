@@ -3,7 +3,7 @@ data "aws_kms_alias" "secretmanager" {
 }
 
 data "aws_secretsmanager_secret" "database_password" {
-  name = "${local.account["secrets_prefix"]}/database-password"
+  name = join("/", compact([local.account.secrets_prefix, "database-password"]))
 }
 
 data "aws_secretsmanager_secret_version" "database_password" {
@@ -11,29 +11,25 @@ data "aws_secretsmanager_secret_version" "database_password" {
 }
 
 data "aws_secretsmanager_secret" "api_secret" {
-  name = "${local.account["secrets_prefix"]}/api-secret"
+  name = join("/", compact([local.account.secrets_prefix, "api-secret"]))
 }
 
 data "aws_secretsmanager_secret" "front_frontend_secret" {
-  name = "${local.account["secrets_prefix"]}/front-frontend-secret"
+  name = join("/", compact([local.account.secrets_prefix, "front-frontend-secret"]))
 }
 
 data "aws_secretsmanager_secret" "admin_frontend_secret" {
-  name = "${local.account["secrets_prefix"]}/admin-frontend-secret"
+  name = join("/", compact([local.account.secrets_prefix, "admin-frontend-secret"]))
 }
 
 data "aws_secretsmanager_secret" "oauth2_client_secret" {
-  name = "${local.account["secrets_prefix"]}/oauth2-client-secret"
+  name = join("/", compact([local.account.secrets_prefix, "oauth2-client-secret"]))
 }
 
 data "aws_secretsmanager_secret" "admin_api_client_secret" {
-  name = "${local.account["secrets_prefix"]}/admin-api-client-secret"
+  name = join("/", compact([local.account.secrets_prefix, "admin-api-client-secret"]))
 }
 
 data "aws_secretsmanager_secret" "front_api_client_secret" {
-  name = "${local.account["secrets_prefix"]}/front-api-client-secret"
-}
-
-data "aws_secretsmanager_secret" "google_analytics" {
-  name = "${local.account["secrets_prefix"]}/google-analytics"
+  name = join("/", compact([local.account.secrets_prefix, "front-api-client-secret"]))
 }

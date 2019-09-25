@@ -13,8 +13,9 @@ use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
-class ReportServiceTest extends \PHPUnit_Framework_TestCase
+class ReportServiceTest extends TestCase
 {
     /**
      * @var EntityDir\User
@@ -31,7 +32,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->user = new EntityDir\User();
         $client = new EntityDir\Client();
@@ -84,7 +85,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
     public function testSubmitInvalid()
     {
         $this->report->setAgreedBehalfDeputy(false);
-        $this->setExpectedException(\RuntimeException::class, 'agreed');
+        $this->expectException(\RuntimeException::class);
         $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
     }
 
@@ -281,7 +282,7 @@ class ReportServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

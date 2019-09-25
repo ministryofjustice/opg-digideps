@@ -1,51 +1,70 @@
-// ====================================================================================
-// INITITALISE ALL MODULES
+/* globals $ */
+require('../scss/application.scss')
+require('./modules/bind.js')
 
+var GOVUKFrontend = require('govuk-frontend')
+var limitChars = require('./modules/characterLimiter.js')
+var detailsExpander = require('./modules/detailsExpander.js')
+var fixSidebar = require('./modules/fix-sidebar.js')
+var formatCurrency = require('./modules/formatcurrency.js')
+var Ga = require('./modules/ga.js')
+var moneyTransfer = require('./modules/moneyTransfer.js')
+var returnHTML = require('./modules/returnHTML.js')
+var SessionTimeoutDialog = require('./modules/SessionTimeoutDialog.js')
+var ShowHideContent = require('./modules/show-hide-content.js')
+var tableMultiSelect = require('./modules/table-multiselect.js')
+var textAreaAutoSize = require('./modules/textarea-autosize.js')
+var uploadFile = require('./modules/uploadFile.js')
+var uploadProgressPA = require('./modules/uploadProgressPA.js')
+var uploadProgress = require('./modules/uploadProgress.js')
 
-$(document).ready(function() {
+window.opg = {
+  Ga: Ga,
+  SessionTimeoutDialog: SessionTimeoutDialog
+}
 
-    // JS induced disabling of elements
-    $('.js-disabled').attr('disabled', 'disabled');
+$(document).ready(function () {
+  // JS induced disabling of elements
+  $('.js-disabled').attr('disabled', 'disabled')
 
-	// Format currency module
-	$('.js-format-currency').on('blur', function (event) {
-        GOVUK.formatCurrency(event.target);
-    });
+  // Format currency module
+  $('.js-format-currency').on('blur', function (event) {
+    formatCurrency(event.target)
+  })
 
-    // Character limiter module
-    new GOVUK.limitChars('form');
+  // Character limiter module
+  limitChars('form')
 
-    // Text area autoSize module
-    new GOVUK.textAreaAutoSize('form');
+  // Text area autoSize module
+  textAreaAutoSize('form')
 
-    // Sidebar fixing to top module
-    new GOVUK.fixSidebar();
+  // Sidebar fixing to top module
+  fixSidebar()
 
-    // Details expander
-    new GOVUK.detailsExpander('.js-details-expander');
-    new GOVUK.detailsExpander('.js-details-expander-travel-costs');
-    new GOVUK.detailsExpander('.js-details-expander-specialist-service');
+  // Details expander
+  detailsExpander('.js-details-expander')
+  detailsExpander('.js-details-expander-travel-costs')
+  detailsExpander('.js-details-expander-specialist-service')
 
-    // Upload Files
-    new GOVUK.uploadFile('.js-uploading');
+  // Upload Files
+  uploadFile('.js-uploading')
 
-    // Return HTML with ajax
-    new GOVUK.returnHTML('.js-return-html');
+  // Return HTML with ajax
+  returnHTML('.js-return-html')
 
-    // Money transfer
-    new GOVUK.moneyTransfer('.js-transfer-from');
+  // Money transfer
+  moneyTransfer('.js-transfer-from')
 
-    // Check upload progress
-    new GOVUK.uploadProgress('.js-upload-progress');
-    new GOVUK.uploadProgressPA('.js-upload-progress-pa');
+  // Check upload progress
+  uploadProgress('.js-upload-progress')
+  uploadProgressPA('.js-upload-progress-pa')
 
-    // Table Multi Select
-    new GOVUK.tableMultiSelect();
+  // Table Multi Select
+  tableMultiSelect()
 
-    // Initialising the Show Hide Content GOVUK module
-    var showHideContent = new GOVUK.ShowHideContent();
-    showHideContent.init();
+  // Initialising the Show Hide Content GOVUK module
+  var showHideContent = new ShowHideContent()
+  showHideContent.init()
+})
 
-});
-
-GOVUKFrontend.initAll();
+GOVUKFrontend.initAll()
