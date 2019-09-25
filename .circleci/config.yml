@@ -153,10 +153,18 @@ orbs:
     commands:
       install:
         steps:
-          - run: curl -sfSO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-          - run: echo "${TF_SHA256SUM} terraform_${TF_VERSION}_linux_amd64.zip" > SHA256SUMS
-          - run: sha256sum -c --status SHA256SUMS
-          - run: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
+          - run:
+              name: Download Terraform
+              command: curl -sfSO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+          - run:
+              name: Add Terraform SHA256SUM
+              command: echo "${TF_SHA256SUM} terraform_${TF_VERSION}_linux_amd64.zip" > SHA256SUMS
+          - run:
+              name: Check Terraform SHA256SUM
+              command: sha256sum -c --status SHA256SUMS
+          - run: 
+              name: Install Terraform
+              command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
 jobs:
   lint:
     docker:
