@@ -7,7 +7,7 @@ intro:
 
 form:
     title: Cookie settings
-    intro: We use 2 types of cookie. You can choose which cookies you're happy for us to use.
+    intro: We use 2 types of cookie. One type is strictly necessary and the other type of cookie is optional.
     usage:
         label: Cookies that measure website use
         hint:
