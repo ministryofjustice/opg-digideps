@@ -37,7 +37,7 @@ class StatsController extends RestController
             } else {
                 $endDate = new \DateTime($endDate);
                 $startDate = clone $endDate;
-                $startDate->subtract(new \DateInterval('P30D'));
+                $startDate->sub(new \DateInterval('P30D'));
             }
         } elseif ($endDate === null) {
             $startDate = new \DateTime($startDate);
