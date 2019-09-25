@@ -133,7 +133,8 @@ class ReportRepository extends EntityRepository
             ->leftJoin('c.users', 'u')
             ->leftJoin('c.organisation', 'o', 'WITH', 'o.isActivated = true')
             ->leftJoin('o.users', 'ou', 'WITH', 'ou.id = ' . $userId)
-            ->where('u.id = ' . $userId . ' OR ou.id = ' . $userId)
+            ->where('o.isActivated = false AND u.id = ' . $userId)
+            ->orWhere('o.isActivated = true AND ou.id = ' . $userId)
             ->andWhere('c.archivedAt IS NULL')
         ;
 
