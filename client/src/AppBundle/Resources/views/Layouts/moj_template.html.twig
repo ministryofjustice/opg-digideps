@@ -40,7 +40,7 @@
 
             // Check we have permission
             var cookiePolicyJSON = document.cookie.replace(/(?:(?:^|.*;\s*)cookie_policy\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-            var cookiePolicy = JSON.parse(decodeURIComponent(cookiePolicyJSON));
+            var cookiePolicy = cookiePolicyJSON ? JSON.parse(decodeURIComponent(cookiePolicyJSON)) : {};
             if (cookiePolicy.usage) {
                 ga('create', '{{ga.default}}', 'auto');
                 ga('create', '{{ga.gds}}', 'auto', 'govuk_shared', {'allowLinker': true});
