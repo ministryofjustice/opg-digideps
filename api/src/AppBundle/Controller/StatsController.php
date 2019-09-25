@@ -45,6 +45,9 @@ class StatsController extends RestController
             $endDate->add(new \DateInterval('P30D'));
         }
 
+        $startDate->setTime(0, 0, 0);
+        $endDate->setTime(23, 59, 59);
+
         // Identify the subquery to retrieve the data
         $subqueryMethod = 'getMetricQuery'. ucfirst($metric);
         if (!method_exists($this, $subqueryMethod)) {
@@ -73,13 +76,13 @@ class StatsController extends RestController
         if (count($dimensions)) {
             $select = implode(', ', $selectDimensions);
             $group = implode(', ', $groupDimensions);
-            $query = $em->createNativeQuery("SELECT $select, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate GROUP BY $group", $rsm);
+            $query = $em->createNativeQuery("SELECT $select, $aggregation amount FROM ($subquery) t WHERE t.date >= :startDate AND t.date <= :endDate GROUP BY $group", $rsm);
         } else {
-            $query = $em->createNativeQuery("SELECT 'all' dimension, $aggregation amount FROM ($subquery) t WHERE t.date > :startDate AND t.date < :endDate", $rsm);
+            $query = $em->createNativeQuery("SELECT 'all' dimension, $aggregation amount FROM ($subquery) t WHERE t.date >= :startDate AND t.date <= :endDate", $rsm);
         }
 
-        $query->setParameter('startDate', $startDate->format('Y-m-d'));
-        $query->setParameter('endDate', $endDate->format('Y-m-d'));
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
         return $query->getResult();
     }
 
