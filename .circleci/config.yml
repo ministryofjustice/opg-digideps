@@ -175,7 +175,7 @@ jobs:
 
   apply:
     docker:
-      - image: hashicorp/terraform:full
+      - image: circleci/ruby
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -190,6 +190,8 @@ jobs:
         default: apply
         type: string
     environment:
+      TF_VERSION: 0.12.9
+      TF_SHA256SUM: 69712c6216cc09b7eca514b9fb137d4b1fead76559c66f338b4185e1c347ace5
       TF_CLI_ARGS_apply: -input=false -auto-approve
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
@@ -197,6 +199,7 @@ jobs:
       WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
+      - terraform/install
       - attach_workspace: { at: . }
       - run:
           name: Initialize
