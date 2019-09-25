@@ -21,40 +21,67 @@ abstract class MetricQuery
     }
 
     /**
-     * @param StatsQueryParameters $sq
-     * @return mixed
+     * Check all requested are supported by the requested metric
      * @throws \Exception
      */
-    public function execute(StatsQueryParameters $sq)
+    protected function checkDimensions($dimensions)
     {
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('amount', 'amount');
+        if (!is_array($dimensions)) return [];
 
-        if (!is_null($sq->dimensions)) {
-            foreach ($sq->dimensions as $index => $dimensionName) {
-                if (!in_array($dimensionName, $this->supportedDimensions)) {
-                    throw new \Exception("Metric does not support \"$dimensionName\" dimension");
-                }
+        foreach ($dimensions as $index => $dimensionName) {
+            if (!in_array($dimensionName, $this->supportedDimensions)) {
+                throw new \Exception("Metric does not support \"$dimensionName\" dimension");
+            }
+        }
+    }
 
-                $key = "dimension$index";
-                $rsm->addScalarResult($key, $dimensionName);
-                $dimensions["t.$dimensionName"] = $key;
-                $selectDimensions[] = "t.$dimensionName $key";
-                $groupDimensions[] = "t.$dimensionName";
+    /**
+     * Build an SQL query
+     * @param mixed $dimensions The dimensions to group results by
+     * @return string
+     */
+    protected function constructQuery($dimensions)
+    {
+        $columns = [
+            $this->aggregation . ' amount'
+        ];
+
+        if (is_array($dimensions)) {
+            foreach ($dimensions as $dimension) {
+                $columns[] = "t.{$dimension} \"{$dimension}\"";
             }
         }
 
-        // Retrieve the data, within the date range and grouped by the dimension
-        $subQuery = $this->getSubquery();
-        //$aggregation = $this->aggregation;
-        if (!is_null($dimensions)) {
-            $select = implode(', ', $selectDimensions);
-            $group = implode(', ', $groupDimensions);
-            $query = $this->em->createNativeQuery("SELECT $select, $this->aggregation amount FROM ($subQuery) t WHERE t.date >= :startDate AND t.date <= :endDate GROUP BY $group", $rsm);
-        } else {
-            $query = $this->em->createNativeQuery("SELECT 'all' dimension, $this->aggregation amount FROM ($subQuery) t WHERE t.date >= :startDate AND t.date <= :endDate", $rsm);
+        $select = implode(', ', $columns);
+        $sql = "SELECT $select FROM ({$this->getSubquery()}) t WHERE t.date >= :startDate AND t.date <= :endDate";
+
+        if (is_array($dimensions)) {
+            $sql .= " GROUP BY " . implode(', ', $dimensions);
         }
 
+        return $sql;
+    }
+
+    /**
+     * @param StatsQueryParameters $sq
+     * @return array
+     */
+    public function execute(StatsQueryParameters $sq)
+    {
+        $dimensions = $this->checkDimensions($sq->dimensions);
+
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('amount', 'amount');
+
+        if (is_array($sq->dimensions)) {
+            foreach ($sq->dimensions as $dimension) {
+                $rsm->addScalarResult($dimension, $dimension);
+            }
+        }
+
+        $sql = $this->constructQuery($sq->dimensions);
+
+        $query = $this->em->createNativeQuery($sql, $rsm);
         $query->setParameter('startDate', $sq->startDate->format('Y-m-d H:i:s'));
         $query->setParameter('endDate', $sq->endDate->format('Y-m-d H:i:s'));
 
