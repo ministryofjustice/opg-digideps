@@ -1,14 +1,22 @@
 pageTitle: Cookies
 htmlTitle: Cookies
 
+intro:
+    para01: Cookies are files saved on your phone, tablet or computer when you visit a website.
+    para02: We use cookies to store information about how you use the the Complete the deputy report service, such as the pages you visit.
+
 form:
+    title: Cookie settings
+    intro: We use 2 types of cookie. You can choose which cookies you're happy for us to use.
     usage:
         label: Cookies that measure website use
-        hint: |
-            "We use Google Analytics to measure how you use the website so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:
-                how you got to the site
-                the pages you visit on GOV.UK and how long you spend on each page
-                what you click on while you're visiting the site
-            We do not allow Google to use or share the data about how you use this site."
+        hint:
+            para01: "We use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:"
+            bullet01: what pages you visit and how long you spend on each
+            bullet02: what you click on while you're visiting the site
+            para02: We do not allow Google to use or share the data about how you use this site.
+    necessary:
+        label: Strictly necessary cookies
+        description: These essential cookies allow you to log in to the service. They always need to be on.
     confirm:
         label: Save changes

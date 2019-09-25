@@ -12,20 +12,29 @@
         <div class="govuk-grid-column-two-thirds">
             {{ form_start(form) }}
 
-            <p>Cookies are files saved on your phone, tablet or computer when you visit a website.</p>
-            <p>We use cookies to store information about how you use the the Complete the deputy report service, such as the pages you visit.</p>
+            <p>{{ 'intro.para01' | trans }}</p>
+            <p>{{ 'intro.para02' | trans }}</p>
 
-            <h2 class="govuk-heading-l">Cookie settings</h2>
+            <h2 class="govuk-heading-l">{{ 'form.title' | trans }}</h2>
 
-            <p>We use 2 types of cookie. You can choose which cookies you're happy for us to use.</p>
+            <p>{{ 'form.intro' | trans }}</p>
+
+            <h3 class="govuk-heading-m">{{ 'form.usage.label' | trans }}</h3>
+
+            <p class="govuk-hint">{{ 'form.usage.hint.para01' | trans }}</p>
+            <ul class="govuk-hint govuk-list govuk-list--bullet">
+                <li>{{ 'form.usage.hint.bullet01' | trans }}</li>
+                <li>{{ 'form.usage.hint.bullet02' | trans }}</li>
+            </ul>
+            <p class="govuk-hint">{{ 'form.usage.hint.para02' | trans }}</p>
 
             {{ form_checkbox_group(form.usage, 'form.usage', {
-                'legendClass' : 'govuk-fieldset__legend--m'
+                'legendClass' : 'govuk-visually-hidden'
             }) }}
 
-            <h3 class="govuk-heading-m">Strictly necessary cookies</h3>
+            <h3 class="govuk-heading-m">{{ 'form.necessary.label' | trans }}</h3>
 
-            <p>These essential cookies allow you to log in to the service. They always need to be on.</p>
+            <p>{{ 'form.necessary.description' | trans }}</p>
 
             {{ form_submit(form.confirm, 'form.confirm') }}
 
