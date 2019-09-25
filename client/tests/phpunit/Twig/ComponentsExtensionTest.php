@@ -4,10 +4,11 @@ namespace AppBundle\Twig;
 
 use AppBundle\Entity\User;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
+class ComponentsExtensionTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('AppBundle\Service\ReportSectionsLinkService');

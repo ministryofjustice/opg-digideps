@@ -12,8 +12,9 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\VisitsCare;
 use AppBundle\Service\ReportStatusService as StatusService;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
+class ReportStatusServiceTest extends TestCase
 {
     /** @var Report | \PHPUnit_Framework_MockObject_MockObject */
     private $report;
@@ -887,10 +888,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase
         $status = $sut->getStatus();
         self::assertEquals(Report::STATUS_NOT_STARTED, $status);
     }
-
-    /**
-     * @group acs
-     */
+    
     public function testGetStatusIgnoringDueDate_ready_to_submit()
     {
         $report = $this->prophesize(Report::class);

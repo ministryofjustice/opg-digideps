@@ -261,7 +261,7 @@ class DocumentController extends AbstractController
 
         try {
             /** @var DocumentService $documentService */
-            $documentService = $this->get('document_service');
+            $documentService = $this->get('AppBundle\Service\DocumentService');
             $result = $documentService->removeDocumentFromS3($document); // rethrows any exception
 
             if ($result) {

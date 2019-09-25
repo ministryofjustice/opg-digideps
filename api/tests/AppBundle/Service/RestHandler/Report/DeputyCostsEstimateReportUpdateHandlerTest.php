@@ -24,7 +24,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)

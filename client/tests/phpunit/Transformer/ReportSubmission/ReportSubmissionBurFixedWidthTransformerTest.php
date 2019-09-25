@@ -16,7 +16,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
     /** @var array */
     private $formattedResult;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->sut = new ReportSubmissionBurFixedWidthTransformer();
     }

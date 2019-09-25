@@ -3,10 +3,11 @@
 namespace AppBundle\Form\Report\Asset;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
+class AssetTypeTitleTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
         $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function ($a) {
@@ -33,7 +34,7 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedOutput, $this->object->getTitleChoices());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
     }

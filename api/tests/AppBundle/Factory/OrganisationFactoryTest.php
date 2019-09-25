@@ -14,7 +14,7 @@ class OrganisationFactoryTest extends TestCase
     /** @var string[] */
     private $sharedDomains;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->sharedDomains = ['foo.com', 'bar.co.uk'];
 
@@ -66,12 +66,12 @@ class OrganisationFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider getInvalidInputs
-     * @expectedException \InvalidArgumentException
      * @param $name
      * @param $emailIdentifier
      */
     public function createFromFullEmail_throwsExceptionIfGivenBadData($name, $emailIdentifier)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->factory->createFromFullEmail($name, $emailIdentifier);
     }
 
@@ -79,12 +79,12 @@ class OrganisationFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider getInvalidInputs
-     * @expectedException \InvalidArgumentException
      * @param $name
      * @param $emailIdentifier
      */
     public function createFromEmailIdentifier_throwsExceptionIfGivenBadData($name, $emailIdentifier)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
     }
 

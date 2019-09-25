@@ -29,7 +29,7 @@
                 sessionShowPopupMs = {{ session_popup_show_after|default(1200) }},
                 keepAliveUrl = '{{ path('session-keep-alive') }}';
 
-        new SessionTimeoutDialog({
+        new opg.SessionTimeoutDialog({
             'element': $('[data-module="app-timeout-popup"]'),
             'sessionExpiresMs': sessionExpires * 1000,
             'sessionPopupShowAfterMs': sessionShowPopupMs * 1000,

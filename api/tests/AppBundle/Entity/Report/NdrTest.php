@@ -5,15 +5,16 @@ namespace Tests\AppBundle\Entity\Report;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use MockeryStub as m;
+use PHPUnit\Framework\TestCase;
 
-class NdrTest extends \PHPUnit_Framework_TestCase
+class NdrTest extends TestCase
 {
     /**
      * @var Ndr
      */
     private $ndr;
 
-    public function setUp()
+    public function setUp(): void
     {
         $client = m::mock(Client::class);
         $this->ndr = new Ndr($client);
@@ -21,7 +22,7 @@ class NdrTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidAgreedBehalfOption()
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->ndr->setAgreedBehalfDeputy('BAD_VALUE');
     }
 

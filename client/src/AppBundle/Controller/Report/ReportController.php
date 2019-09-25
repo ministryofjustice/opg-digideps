@@ -293,7 +293,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $reportSubmissionService = $this->get('report_submission_service'); /* @var $reportSubmissionService ReportSubmissionService */
+        $reportSubmissionService = $this->get('AppBundle\Service\ReportSubmissionService'); /* @var $reportSubmissionService ReportSubmissionService */
 
         $report = $this->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -443,7 +443,7 @@ class ReportController extends AbstractController
     public function pdfViewAction($reportId)
     {
         $report = $this->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $this->get('report_submission_service')->getPdfBinaryContent($report);
+        $pdfBinary = $this->get('AppBundle\Service\ReportSubmissionService')->getPdfBinaryContent($report);
 
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');

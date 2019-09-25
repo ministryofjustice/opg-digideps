@@ -40,7 +40,7 @@ class FormattedTest extends WebTestCase
     /** @var Crawler */
     private $crawler;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
         $request = new Request();
@@ -175,22 +175,22 @@ class FormattedTest extends WebTestCase
         $crawler = $this->renderTemplateAndGetCrawler();
 
         $this->assertEquals('1234567t', $this->html($crawler, '#caseNumber'));
-        $this->assertContains('01 / 01 / 2015', $this->html($crawler, '#report-start-date'));
-        $this->assertContains('31 / 12 / 2015', $this->html($crawler, '#report-end-date'));
+        $this->assertStringContainsString('01 / 01 / 2015', $this->html($crawler, '#report-start-date'));
+        $this->assertStringContainsString('31 / 12 / 2015', $this->html($crawler, '#report-end-date'));
     }
 
     public function testDeputy()
     {
         $crawler = $this->renderTemplateAndGetCrawler();
 
-        $this->assertContains('John', $this->html($crawler, '#deputy-details-subsection'));
+        $this->assertStringContainsString('John', $this->html($crawler, '#deputy-details-subsection'));
     }
 
     public function testClient()
     {
         $crawler = $this->renderTemplateAndGetCrawler();
 
-        $this->assertContains('Jones', $this->html($crawler, '#client-details-subsection'));
+        $this->assertStringContainsString('Jones', $this->html($crawler, '#client-details-subsection'));
     }
 
     public function testAssets()
@@ -202,11 +202,11 @@ class FormattedTest extends WebTestCase
 
         $this->report->setAssets([$this->asset1, $this->asset2, $this->assetProp, $this->assetProp2]);
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertContains('monna lisa', $this->html($crawler, '#assets-section'));
-        $this->assertContains('chest of drawers', $this->html($crawler, '#assets-section'));
-        $this->assertContains('plat house', $this->html($crawler, '#assets-section'));
-        $this->assertContains('sw1', $this->html($crawler, '#assets-section'));
-        //$this->assertContains('£560,000.00', $this->html($crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
+        $this->assertStringContainsString('monna lisa', $this->html($crawler, '#assets-section'));
+        $this->assertStringContainsString('chest of drawers', $this->html($crawler, '#assets-section'));
+        $this->assertStringContainsString('plat house', $this->html($crawler, '#assets-section'));
+        $this->assertStringContainsString('sw1', $this->html($crawler, '#assets-section'));
+        //$this->assertStringContainsString('£560,000.00', $this->html($crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
     }
 
     public function testDecisions()
@@ -217,10 +217,10 @@ class FormattedTest extends WebTestCase
 
         $this->report->setDecisions([$this->decision1, $this->decision2]);
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertContains('sold the flat in SW2', $this->html($crawler, '#decisions-section'));
-        $this->assertContains('he wanted to leave this area', $this->html($crawler, '#decisions-section'));
-        $this->assertContains('bought flat in E1', $this->html($crawler, '#decisions-section'));
-        $this->assertContains('he wanted to live here', $this->html($crawler, '#decisions-section'));
+        $this->assertStringContainsString('sold the flat in SW2', $this->html($crawler, '#decisions-section'));
+        $this->assertStringContainsString('he wanted to leave this area', $this->html($crawler, '#decisions-section'));
+        $this->assertStringContainsString('bought flat in E1', $this->html($crawler, '#decisions-section'));
+        $this->assertStringContainsString('he wanted to live here', $this->html($crawler, '#decisions-section'));
     }
 
     public function testMoneyTransfers()
@@ -243,7 +243,7 @@ class FormattedTest extends WebTestCase
             ->setMoneyTransfers([]); //should not happen but enforce assertion
         $crawler = $this->renderTemplateAndGetCrawler();
         $this->assertCount(1, $crawler->filter('#money-transfers'));
-        $this->assertNotContains('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
+        $this->assertStringNotContainsString('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
 
         // no transfers
         $this->report
@@ -251,7 +251,7 @@ class FormattedTest extends WebTestCase
             ->setNoTransfersToAdd(true)
             ->setMoneyTransfers([]); //should not happen but enforce assertion
         $crawler = $this->renderTemplateAndGetCrawler();
-        $this->assertContains('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
+        $this->assertStringContainsString('X', $this->html($crawler, '#money-transfers-no-transfers-add'));
 
         // 2 transfers should be rendered properly, and "no transfers hidden"
         $this->report
@@ -261,8 +261,8 @@ class FormattedTest extends WebTestCase
         $crawler = $this->renderTemplateAndGetCrawler();
         $this->assertCount(0, $crawler->filter('#money-transfers-no-transfers-add'));
         $html = $this->html($crawler, '#money-transfers');
-        $this->assertContains('10,500.60', $html);
-        $this->assertContains('45,123.00', $html);
+        $this->assertStringContainsString('10,500.60', $html);
+        $this->assertStringContainsString('45,123.00', $html);
     }
 
     public function testAction()
@@ -270,8 +270,8 @@ class FormattedTest extends WebTestCase
         $this->report->setAction($this->action1);
         $crawler = $this->renderTemplateAndGetCrawler();
 
-        $this->assertContains('sell both flats', $this->html($crawler, '#action-section'));
-        $this->assertContains('not able next year', $this->html($crawler, '#action-section'));
+        $this->assertStringContainsString('sell both flats', $this->html($crawler, '#action-section'));
+        $this->assertStringContainsString('not able next year', $this->html($crawler, '#action-section'));
     }
 
     public function testDebts()
@@ -450,7 +450,7 @@ class FormattedTest extends WebTestCase
             ->setProfDeputyCostsHasInterim(null);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
         unset($this->frameworkBundleClient);

@@ -15,7 +15,9 @@ parameters:
     session_engine: redis
     log_level: notice
     log_path: /var/log/app/application.log
-    ga: {{ getv "/frontend/ga" }}
+    ga:
+        default: {{ getv "/frontend/ga/default" }}
+        gds: {{ getv "/frontend/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
     behat_controller_enabled: {{ getv "/frontend/behat/controller/enabled" }}
     email_send:

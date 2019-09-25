@@ -1,15 +1,15 @@
-FROM node:8-alpine AS gulp
+FROM node:8-alpine AS webpack
 WORKDIR /app
 
 COPY package.json .
 COPY package-lock.json .
-COPY Gulpfile.js .
+COPY webpack.config.js .
 COPY src src
 
 # Install NPM dependencies
 RUN npm install
 
-# Build assets with Gulp
+# Build assets
 RUN NODE_ENV=production npm run build
 
 FROM composer AS composer
@@ -36,7 +36,7 @@ ENV TIMEOUT=60
 ENV PHP_EXT_DIR=/usr/lib/php7/modules
 
 # Install core PHP extensions
-RUN apk add --no-cache openssl nginx su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
+RUN apk add --no-cache openssl nginx nginx-mod-http-headers-more su-exec postgresql-client libzip-dev unzip php7-igbinary php7-pecl-redis
 RUN docker-php-ext-enable opcache $PHP_EXT_DIR/igbinary.so $PHP_EXT_DIR/redis.so
 RUN docker-php-ext-install zip
 
@@ -84,6 +84,6 @@ COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web
-COPY --from=gulp /app/web/assets web/assets
-COPY --from=gulp /app/web/images web/images
+COPY --from=webpack /app/web/assets web/assets
+COPY --from=webpack /app/web/images web/images
 COPY docker/confd /etc/confd

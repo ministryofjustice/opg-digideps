@@ -31,7 +31,7 @@ class NdrFormattedTest extends WebTestCase
     protected $contacts;
     protected $twig;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         $request = new Request();
@@ -106,29 +106,29 @@ class NdrFormattedTest extends WebTestCase
 
     public function testDeputy()
     {
-        $this->assertContains('John', $this->html($this->crawler, '#deputy-details-subsection'));
+        $this->assertStringContainsString('John', $this->html($this->crawler, '#deputy-details-subsection'));
     }
 
     public function testClient()
     {
-        $this->assertContains('Jones', $this->html($this->crawler, '#client-details-subsection'));
+        $this->assertStringContainsString('Jones', $this->html($this->crawler, '#client-details-subsection'));
     }
 
     public function testBankAccount()
     {
-        $this->assertContains('barclays', $this->html($this->crawler, '#account-summary'));
+        $this->assertStringContainsString('barclays', $this->html($this->crawler, '#account-summary'));
     }
 
     public function testAssets()
     {
-        $this->assertContains('monna lisa', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('chest of drawers', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('plat house', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('sw1', $this->html($this->crawler, '#assets-section'));
-        $this->assertContains('£560,000.00', $this->html($this->crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
+        $this->assertStringContainsString('monna lisa', $this->html($this->crawler, '#assets-section'));
+        $this->assertStringContainsString('chest of drawers', $this->html($this->crawler, '#assets-section'));
+        $this->assertStringContainsString('plat house', $this->html($this->crawler, '#assets-section'));
+        $this->assertStringContainsString('sw1', $this->html($this->crawler, '#assets-section'));
+        $this->assertStringContainsString('£560,000.00', $this->html($this->crawler, '#assetsTotal', 'asset total must be 500k + 60% of 100k'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         m::close();
         unset($this->frameworkBundleClient);

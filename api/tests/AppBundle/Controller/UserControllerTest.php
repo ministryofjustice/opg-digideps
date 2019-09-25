@@ -13,7 +13,7 @@ class UserControllerTest extends AbstractTestController
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -27,14 +27,14 @@ class UserControllerTest extends AbstractTestController
     /**
      * clear fixtures.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
         self::fixtures()->clear();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -63,10 +63,10 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertContains('role_name', $errorMessage);
-        $this->assertContains('email', $errorMessage);
-        $this->assertContains('firstname', $errorMessage);
-        $this->assertContains('lastname', $errorMessage);
+        $this->assertStringContainsString('role_name', $errorMessage);
+        $this->assertStringContainsString('email', $errorMessage);
+        $this->assertStringContainsString('firstname', $errorMessage);
+        $this->assertStringContainsString('lastname', $errorMessage);
     }
 
     public function testAdd()
@@ -210,7 +210,7 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertContains('password_plain', $errorMessage);
+        $this->assertStringContainsString('password_plain', $errorMessage);
     }
 
     public function testChangePasswordNoEmail()

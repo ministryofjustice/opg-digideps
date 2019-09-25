@@ -15,7 +15,7 @@ class PaginatorTest extends WebTestCase
     protected $crawler;
     protected $twig;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->mockRouter = m::mock(RouterInterface::class);
         $this->mockRouter->shouldReceive('generate')->with('route', m::any(), 1)->andReturnUsing(function ($a, $b) {
@@ -62,9 +62,9 @@ class PaginatorTest extends WebTestCase
             'recordsPerPage' => 15,
         ]);
 
-        $this->assertContains($expectedText, $html);
-        $this->assertNotContains('Prev', $html);
-        $this->assertNotContains('Next', $html);
+        $this->assertStringContainsString($expectedText, $html);
+        $this->assertStringNotContainsString('Prev', $html);
+        $this->assertStringNotContainsString('Next', $html);
     }
 
     public static function multiPageProvider()
@@ -121,6 +121,6 @@ class PaginatorTest extends WebTestCase
         ksort($actualLinks);
 
         $this->assertEquals($expectedLink, $actualLinks);
-        $this->assertContains($expectedText, $crawler->filter('[data-test-id="pager-summary"]')->eq(0)->html());
+        $this->assertStringContainsString($expectedText, $crawler->filter('[data-test-id="pager-summary"]')->eq(0)->html());
     }
 }

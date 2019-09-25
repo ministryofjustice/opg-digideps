@@ -6,12 +6,13 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @ORM\Table(name="casrec")
  * @ORM\Entity
  */
-class CasRecTest extends \PHPUnit_Framework_TestCase
+class CasRecTest extends TestCase
 {
     public static function normalizeSurnameProvider()
     {
