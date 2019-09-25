@@ -30,14 +30,18 @@ services:
       class: AppBundle\Service\StepRedirector
       arguments: [ "@router" ]
 
-    document_service:
+    AppBundle\Service\DocumentService:
       class: AppBundle\Service\DocumentService
-      arguments: [ "@s3_storage", "@rest_client", "@logger" ]
+      arguments:
+        $s3Storage: "@s3_storage"
+        $restClient: "@rest_client"
+        $logger: "@logger"
+        $twig: "@Twig\\Environment"
 
     report_fee_service:
       class: AppBundle\Service\ReportFeeService
 
-    report_submission_service:
+    AppBundle\Service\ReportSubmissionService:
       class: AppBundle\Service\ReportSubmissionService
       arguments: [ "@service_container" ]
 
@@ -48,3 +52,19 @@ services:
     report_section_link_service:
       class: AppBundle\Service\ReportSectionsLinkService
       arguments: [ "@router" ]
+
+    AppBundle\Controller\Admin\ReportSubmissionController:
+        class: AppBundle\Controller\Admin\ReportSubmissionController
+        arguments:
+            $documentDownloader: "@AppBundle\\Service\\DocumentDownloader"
+
+    AppBundle\Service\DocumentDownloader:
+        class: AppBundle\Service\DocumentDownloader
+        arguments:
+            $documentService: "@AppBundle\\Service\\DocumentService"
+            $reportSubmissionService: "@AppBundle\\Service\\ReportSubmissionService"
+            $zipFileCreator: "@AppBundle\\Service\\File\\DocumentsZipFileCreator"
+
+    AppBundle\Service\File\DocumentsZipFileCreator:
+        class: AppBundle\Service\File\DocumentsZipFileCreator
+
