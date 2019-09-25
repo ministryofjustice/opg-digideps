@@ -82,8 +82,12 @@ abstract class MetricQuery
         $sql = $this->constructQuery($sq->dimensions);
 
         $query = $this->em->createNativeQuery($sql, $rsm);
-        $query->setParameter('startDate', $sq->startDate->format('Y-m-d H:i:s'));
-        $query->setParameter('endDate', $sq->endDate->format('Y-m-d H:i:s'));
+
+        $startDate = (clone $sq->startDate)->setTime(0, 0, 0);
+        $endDate = (clone $sq->endDate)->setTime(23, 59, 59);
+
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
 
         return $query->getResult();
     }

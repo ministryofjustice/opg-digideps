@@ -41,8 +41,5 @@ class StatsQueryParameters
             $this->startDate = new \DateTime($this->startDate);
             $this->endDate = new \DateTime($this->endDate);
         }
-
-        $this->startDate->setTime(0, 0, 0);
-        $this->endDate->setTime(23, 59, 59);
     }
 }
