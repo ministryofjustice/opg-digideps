@@ -1087,8 +1087,8 @@ class Client implements ClientInterface
      * @return bool
      */
     public function userBelongsToClientsOrganisation(User $user)
-    {
-        if ($this->organisation instanceof Organisation) {
+    {   
+        if ($this->organisation instanceof Organisation && $this->organisation->isActivated()) {
             return $this->organisation->containsUser($user);
         }
         return false;
