@@ -17,11 +17,11 @@ class StatsQueryParameters
         $this->endDate = $parameters['endDate'];
 
         if ($this->metric === null) {
-            throw new \Exception('Must specify a metric');
+            throw new \InvalidArgumentException('Must specify a metric');
         }
 
         if (!is_array($this->dimensions) && !is_null($this->dimensions)) {
-            throw new \Exception('Invalid dimension');
+            throw new \InvalidArgumentException('Invalid dimension');
         }
 
         if ($this->startDate === null) {
@@ -29,14 +29,17 @@ class StatsQueryParameters
                 $this->endDate = new \DateTime();
                 $this->startDate = new \DateTime('-30 days');
             } else {
-                $endDate = new \DateTime($this->endDate);
-                $this->startDate = clone $endDate;
+                $this->endDate = new \DateTime($this->endDate);
+                $this->startDate = clone $this->endDate;
                 $this->startDate->sub(new \DateInterval('P30D'));
             }
         } elseif ($this->endDate === null) {
             $this->startDate = new \DateTime($this->startDate);
             $this->endDate = clone $this->startDate;
             $this->endDate->add(new \DateInterval('P30D'));
+        } else {
+            $this->startDate = new \DateTime($this->startDate);
+            $this->endDate = new \DateTime($this->endDate);
         }
 
         $this->startDate->setTime(0, 0, 0);
