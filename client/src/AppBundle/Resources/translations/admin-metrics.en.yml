@@ -23,15 +23,19 @@ metrics:
     clients:
         label: Clients
         totalLabel: Total clients
+        format: '%value%'
     registeredDeputies:
         label: Registered deputies
         totalLabel: Total registered deputies
+        format: '%value%'
     reportsSubmitted:
         label: Reports submitted
         totalLabel: Total reports submitted
+        format: '%value%'
     satisfaction:
         label: Satisfaction
         totalLabel: Overall satisfaction
+        format: '%value%%'
 
 dimensions:
     deputyType:
