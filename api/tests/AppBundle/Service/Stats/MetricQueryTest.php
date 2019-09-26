@@ -38,10 +38,11 @@ class MetricQueryTest extends WebTestCase
 
     public function addUserWithRegistrationDate($date)
     {
+        $id = mt_rand();
         $user = new User();
         $user->setFirstname('Firstname');
         $user->setLastname('Lastname');
-        $user->setEmail("metric-test@publicguardian.gov.uk");
+        $user->setEmail("metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
         $user->setRegistrationDate(new \DateTime($date));
         self::$em->persist($user);
