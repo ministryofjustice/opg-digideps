@@ -12,9 +12,6 @@ use Symfony\Component\Security\Core\Security;
 
 class OrganisationVoterTest extends TestCase
 {
-    /**
-     * @group acs
-     */
     public function testOrganisationContainsLoggedInUser()
     {
         $orgMemberUser = new User();
@@ -32,10 +29,7 @@ class OrganisationVoterTest extends TestCase
         
         self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
     }
-
-    /**
-     * @group acs
-     */
+    
     public function testOrganisationDoesNotContainsLoggedInUser()
     {
         $user = new User();
@@ -52,10 +46,7 @@ class OrganisationVoterTest extends TestCase
 
         self::assertEquals($sut::ACCESS_DENIED, $voteResult);
     }
-
-    /**
-     * @group acs
-     */
+    
     public function testUnrecognisedAttribute()
     {
         $user = new User();
@@ -72,10 +63,7 @@ class OrganisationVoterTest extends TestCase
 
         self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
     }
-
-    /**
-     * @group acs
-     */
+    
     public function testSubjectIsNotOrganisation()
     {
         $subject = new DateTime();
