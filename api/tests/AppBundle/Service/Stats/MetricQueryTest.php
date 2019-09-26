@@ -138,8 +138,8 @@ class MetricQueryTest extends WebTestCase
 
         $result1 = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
-            'startDate' => '2016-05-04',
-            'endDate' => '2016-05-31',
+            'startDate' => '2016-05-01',
+            'endDate' => '2016-05-04',
         ]));
 
         $this->assertEquals(1, $result1[0]['amount']);

@@ -68,23 +68,23 @@ abstract class MetricQuery
      */
     public function execute(StatsQueryParameters $sq)
     {
-        $dimensions = $this->checkDimensions($sq->dimensions);
+        $dimensions = $this->checkDimensions($sq->getDimensions());
 
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('amount', 'amount');
 
-        if (is_array($sq->dimensions)) {
-            foreach ($sq->dimensions as $dimension) {
+        if (is_array($sq->getDimensions())) {
+            foreach ($sq->getDimensions() as $dimension) {
                 $rsm->addScalarResult($dimension, $dimension);
             }
         }
 
-        $sql = $this->constructQuery($sq->dimensions);
+        $sql = $this->constructQuery($sq->getDimensions());
 
         $query = $this->em->createNativeQuery($sql, $rsm);
 
-        $startDate = (clone $sq->startDate)->setTime(0, 0, 0);
-        $endDate = (clone $sq->endDate)->setTime(23, 59, 59);
+        $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
+        $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
 
         $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
         $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));

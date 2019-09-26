@@ -16,7 +16,7 @@ class MetricQueryFactory
 
     public function create(StatsQueryParameters $sq): MetricQuery
     {
-        $className = 'AppBundle\Service\Stats\Metrics\Metric'. ucfirst($sq->metric) . 'Query';
+        $className = 'AppBundle\Service\Stats\Metrics\Metric'. ucfirst($sq->getMetric()) . 'Query';
 
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Bad');

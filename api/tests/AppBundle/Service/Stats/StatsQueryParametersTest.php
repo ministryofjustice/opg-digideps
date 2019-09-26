@@ -20,14 +20,14 @@ class StatsQueryParametersTest extends TestCase
             'endDate' => '2015-06-10'
         ]);
 
-        $this->assertEquals('metric', $params->metric);
-        $this->assertIsArray($params->dimensions);
-        $this->assertContains('dimension1', $params->dimensions);
-        $this->assertContains('dimension2', $params->dimensions);
-        $this->assertInstanceOf(\DateTime::class, $params->startDate);
-        $this->assertEquals('04-04-2015', $params->startDate->format('d-m-Y'));
-        $this->assertInstanceOf(\DateTime::class, $params->endDate);
-        $this->assertEquals('10-06-2015', $params->endDate->format('d-m-Y'));
+        $this->assertEquals('metric', $params->getMetric());
+        $this->assertIsArray($params->getDimensions());
+        $this->assertContains('dimension1', $params->getDimensions());
+        $this->assertContains('dimension2', $params->getDimensions());
+        $this->assertInstanceOf(\DateTime::class, $params->getStartDate());
+        $this->assertEquals('04-04-2015', $params->getStartDate()->format('d-m-Y'));
+        $this->assertInstanceOf(\DateTime::class, $params->getEndDate());
+        $this->assertEquals('10-06-2015', $params->getEndDate()->format('d-m-Y'));
     }
 
     /**
@@ -36,7 +36,11 @@ class StatsQueryParametersTest extends TestCase
     public function requiresMetric()
     {
         $this->expectException(\InvalidArgumentException::class);
-        new StatsQueryParameters([]);
+        new StatsQueryParameters([
+            'dimension' => ['dimension1'],
+            'startDate' => '2019-05-04',
+            'endDate' => '2019-05-31'
+        ]);
     }
 
     /**
@@ -47,7 +51,9 @@ class StatsQueryParametersTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         new StatsQueryParameters([
             'metric' => 'metric',
-            'dimension' => 'dimension'
+            'dimension' => 'dimension',
+            'startDate' => '2019-05-04',
+            'endDate' => '2019-05-31'
         ]);
     }
 
@@ -64,8 +70,8 @@ class StatsQueryParametersTest extends TestCase
         $expectedStartDate = (new \DateTime())->sub(new \DateInterval('P30D'));
         $expectedEndDate = new \DateTime();
 
-        $this->assertEquals($expectedStartDate->format('d-m-Y'), $params->startDate->format('d-m-Y'));
-        $this->assertEquals($expectedEndDate->format('d-m-Y'), $params->endDate->format('d-m-Y'));
+        $this->assertEquals($expectedStartDate->format('d-m-Y'), $params->getStartDate()->format('d-m-Y'));
+        $this->assertEquals($expectedEndDate->format('d-m-Y'), $params->getEndDate()->format('d-m-Y'));
     }
 
     /**
@@ -79,7 +85,7 @@ class StatsQueryParametersTest extends TestCase
             'startDate' => '2016-08-04'
         ]);
 
-        $this->assertEquals('03-09-2016', $params->endDate->format('d-m-Y'));
+        $this->assertEquals('03-09-2016', $params->getEndDate()->format('d-m-Y'));
     }
 
     /**
@@ -93,6 +99,6 @@ class StatsQueryParametersTest extends TestCase
             'endDate' => '2018-03-26'
         ]);
 
-        $this->assertEquals('24-02-2018', $params->startDate->format('d-m-Y'));
+        $this->assertEquals('24-02-2018', $params->getStartDate()->format('d-m-Y'));
     }
 }

@@ -4,12 +4,12 @@ namespace AppBundle\Service\Stats;
 
 class StatsQueryParameters
 {
-    public $metric;
-    public $dimensions;
-    public $startDate;
-    public $endDate;
+    private $metric;
+    private $dimensions;
+    private $startDate;
+    private $endDate;
 
-    public function __construct($parameters)
+    public function __construct(array $parameters)
     {
         $this->metric = $parameters['metric'];
         $this->dimensions = $parameters['dimension'];
@@ -39,5 +39,21 @@ class StatsQueryParameters
             $this->startDate = new \DateTime($this->startDate);
             $this->endDate = new \DateTime($this->endDate);
         }
+    }
+
+    public function getMetric() {
+        return $this->metric;
+    }
+
+    public function getDimensions() {
+        return $this->dimensions;
+    }
+
+    public function getStartDate() {
+        return $this->startDate;
+    }
+
+    public function getEndDate() {
+        return $this->endDate;
     }
 }

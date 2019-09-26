@@ -23,13 +23,23 @@ class MetricQueryFactoryTest extends TestCase
     }
 
     /**
+     * Provider of metric names
+     */
+    public function metricNameProvider()
+    {
+        return [['satisfaction'], ['reportsSubmitted']];
+    }
+
+    /**
      * @test
+     * @dataProvider metricNameProvider
      * Initialises real metric queries
      */
-    public function initialiseMetricQueries()
+    public function initialiseMetricQueries($metric)
     {
-        $sq = m::mock(StatsQueryParameters::class)->makePartial();
-        $sq->metric = 'satisfaction';
+        $sq = new StatsQueryParameters([
+            'metric' => $metric
+        ]);
 
         $query = $this->factory->create($sq);
         $this->assertInstanceOf(MetricQuery::class, $query);
@@ -41,8 +51,9 @@ class MetricQueryFactoryTest extends TestCase
      */
     public function throwIfQueryDoesntExist()
     {
-        $sq = m::mock(StatsQueryParameters::class);
-        $sq->metric = 'aMetricWeDoNotSupport';
+        $sq = new StatsQueryParameters([
+            'metric' => 'aMetricWeDoNotSupport'
+        ]);
 
         $this->expectException(\InvalidArgumentException::class);
         $query = $this->factory->create($sq);
