@@ -162,7 +162,7 @@ orbs:
           - run:
               name: Check Terraform SHA256SUM
               command: sha256sum -c --status SHA256SUMS
-          - run: 
+          - run:
               name: Install Terraform
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
 jobs:
