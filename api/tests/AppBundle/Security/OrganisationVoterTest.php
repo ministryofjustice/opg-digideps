@@ -15,8 +15,8 @@ class OrganisationVoterTest extends TestCase
     public function testOrganisationContainsLoggedInUser()
     {
         $orgMemberUser = new User();
-        $org = new Organisation();
-        $org->addUser($orgMemberUser);
+        $subject = new Organisation();
+        $subject->addUser($orgMemberUser);
         
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($orgMemberUser);
@@ -25,7 +25,7 @@ class OrganisationVoterTest extends TestCase
         $sut = new OrganisationVoter($security->reveal());
         
         $attributes = [$sut::VIEW];
-        $voteResult = $sut->vote($token->reveal(), $org, $attributes);
+        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
         
         self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
     }
@@ -33,7 +33,7 @@ class OrganisationVoterTest extends TestCase
     public function testOrganisationDoesNotContainsLoggedInUser()
     {
         $user = new User();
-        $org = new Organisation();
+        $subject = new Organisation();
 
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($user);
@@ -42,7 +42,7 @@ class OrganisationVoterTest extends TestCase
         $sut = new OrganisationVoter($security->reveal());
 
         $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $org, $attributes);
+        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
 
         self::assertEquals($sut::ACCESS_DENIED, $voteResult);
     }
@@ -50,7 +50,7 @@ class OrganisationVoterTest extends TestCase
     public function testUnrecognisedAttribute()
     {
         $user = new User();
-        $org = new Organisation();
+        $subject = new Organisation();
 
         $token = self::prophesize(TokenInterface::class);
         $token->getUser()->willReturn($user);
@@ -59,7 +59,7 @@ class OrganisationVoterTest extends TestCase
         $sut = new OrganisationVoter($security->reveal());
 
         $attributes = ['some-other-attribute'];
-        $voteResult = $sut->vote($token->reveal(), $org, $attributes);
+        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
 
         self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
     }
@@ -73,7 +73,7 @@ class OrganisationVoterTest extends TestCase
         $security = self::prophesize(Security::class);
         $sut = new OrganisationVoter($security->reveal());
 
-        $attributes = ['some-other-attribute'];
+        $attributes = [$sut::VIEW, $sut::EDIT];
         $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
 
         self::assertEquals($sut::ACCESS_ABSTAIN, $voteResult);
