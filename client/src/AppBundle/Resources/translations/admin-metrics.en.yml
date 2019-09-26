@@ -13,3 +13,7 @@ form:
             custom: Custom
     update:
         label: Update date range
+    startDate:
+        label: Start date
+    endDate:
+        label: End date

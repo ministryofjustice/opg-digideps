@@ -26,8 +26,20 @@ class StatPeriodType extends AbstractType
                 'multiple' => false,
                 'data' => 'last-30'
             ])
-            ->add('startDate', FormTypes\DateType::class)
-            ->add('endDate', FormTypes\DateType::class)
+            ->add('startDate', FormTypes\DateType::class, [
+                'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
+                'data' => new \DateTime('-30 days')
+            ])
+            ->add('endDate', FormTypes\DateType::class, [
+                'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
+                'data' => new \DateTime()
+            ])
             ->add('update', FormTypes\SubmitType::class);
     }
 

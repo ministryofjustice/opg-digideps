@@ -21,12 +21,19 @@
         {{ form_start(form) }}
 
         {% set customDateRange %}
-            {{ form_known_date(form.startDate, 'form.startDate') }}
-            {{ form_known_date(form.endDate, 'form.endDate') }}
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+                    {{ form_known_date(form.startDate, 'form.startDate') }}
+                </div>
+                <div class="govuk-grid-column-one-third">
+                    {{ form_known_date(form.endDate, 'form.endDate') }}
+                </div>
+            </div>
         {% endset %}
 
         {{ form_checkbox_group(form.period, 'form.period', {
-            'legendClass' : 'govuk-visually-hidden',
+            classes: 'govuk-radios--small',
+            legendClass: 'govuk-visually-hidden',
             items: [
                 {},
                 {},
@@ -35,7 +42,7 @@
             ]
         }) }}
 
-        {{ form_submit(form.update, 'form.update') }}
+        {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
 
         {{ form_end(form) }}
       </div>
