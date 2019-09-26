@@ -24,15 +24,13 @@ class StatsQueryParameters
             throw new \InvalidArgumentException('Invalid dimension');
         }
 
-        if ($this->startDate === null) {
-            if ($this->endDate === null) {
-                $this->endDate = new \DateTime();
-                $this->startDate = new \DateTime('-30 days');
-            } else {
-                $this->endDate = new \DateTime($this->endDate);
-                $this->startDate = clone $this->endDate;
-                $this->startDate->sub(new \DateInterval('P30D'));
-            }
+        if ($this->startDate === null && $this->endDate === null) {
+            $this->endDate = new \DateTime();
+            $this->startDate = new \DateTime('-30 days');
+        } elseif ($this->startDate === null) {
+            $this->endDate = new \DateTime($this->endDate);
+            $this->startDate = clone $this->endDate;
+            $this->startDate->sub(new \DateInterval('P30D'));
         } elseif ($this->endDate === null) {
             $this->startDate = new \DateTime($this->startDate);
             $this->endDate = clone $this->startDate;
