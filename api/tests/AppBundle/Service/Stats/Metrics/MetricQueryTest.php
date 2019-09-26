@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats;
+namespace Tests\AppBundle\Service\Stats\Metrics;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\Stats\Metrics\MetricQuery;

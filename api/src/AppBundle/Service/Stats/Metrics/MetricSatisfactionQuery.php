@@ -4,11 +4,17 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricSatisfactionQuery extends MetricQuery
 {
+    /**
+     * @return string
+     */
     protected function getAggregation(): string
     {
         return 'AVG(val)';
     }
 
+    /**
+     * @return array
+     */
     protected function getSupportedDimensions(): array
     {
         return ['deputyType', 'reportType'];

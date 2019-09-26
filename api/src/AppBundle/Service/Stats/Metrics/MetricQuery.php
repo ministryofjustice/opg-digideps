@@ -8,25 +8,60 @@ use AppBundle\Service\Stats\StatsQueryParameters;
 
 abstract class MetricQuery
 {
+    /** @var EntityManager */
     private $em;
 
     abstract protected function getAggregation(): string;
     abstract protected function getSupportedDimensions(): array;
     abstract protected function getSubquery(): string;
 
+    /**
+     * @param EntityManager $em
+     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
 
     /**
-     * Check all requested are supported by the requested metric
+     * @param StatsQueryParameters $sq
+     * @return array
      * @throws \Exception
      */
-    protected function checkDimensions($dimensions)
+    public function execute(StatsQueryParameters $sq)
     {
-        if (!is_array($dimensions)) return [];
+        if (is_array($sq->getDimensions())) {
+            $this->checkDimensions($sq->getDimensions());
+        }
 
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('amount', 'amount');
+
+        if (is_array($sq->getDimensions())) {
+            foreach ($sq->getDimensions() as $dimension) {
+                $rsm->addScalarResult($dimension, $dimension);
+            }
+        }
+
+        $sql = $this->constructQuery($sq->getDimensions());
+        $query = $this->em->createNativeQuery($sql, $rsm);
+
+        $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
+        $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
+
+        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+
+        return $query->getResult();
+    }
+
+    /**
+     * Check all requested are supported by the requested metric
+     * @param array $dimensions
+     * @throws \Exception
+     */
+    protected function checkDimensions(array $dimensions)
+    {
         foreach ($dimensions as $index => $dimensionName) {
             if (!in_array($dimensionName, $this->getSupportedDimensions())) {
                 throw new \Exception("Metric does not support \"$dimensionName\" dimension");
@@ -60,35 +95,4 @@ abstract class MetricQuery
 
         return $sql;
     }
-
-    /**
-     * @param StatsQueryParameters $sq
-     * @return array
-     */
-    public function execute(StatsQueryParameters $sq)
-    {
-        $dimensions = $this->checkDimensions($sq->getDimensions());
-
-        $rsm = new ResultSetMapping();
-        $rsm->addScalarResult('amount', 'amount');
-
-        if (is_array($sq->getDimensions())) {
-            foreach ($sq->getDimensions() as $dimension) {
-                $rsm->addScalarResult($dimension, $dimension);
-            }
-        }
-
-        $sql = $this->constructQuery($sq->getDimensions());
-
-        $query = $this->em->createNativeQuery($sql, $rsm);
-
-        $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
-        $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
-
-        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
-        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
-
-        return $query->getResult();
-    }
-
 }

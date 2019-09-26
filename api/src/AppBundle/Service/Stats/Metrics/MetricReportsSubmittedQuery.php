@@ -4,11 +4,17 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricReportsSubmittedQuery extends MetricQuery
 {
+    /**
+     * @return string
+     */
     protected function getAggregation(): string
     {
         return 'COUNT(1)';
     }
 
+    /**
+     * @return array
+     */
     protected function getSupportedDimensions(): array
     {
         return ['deputyType', 'reportType'];
