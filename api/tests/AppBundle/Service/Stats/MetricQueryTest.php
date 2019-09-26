@@ -8,10 +8,20 @@ use AppBundle\Service\Stats\StatsQueryParameters;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricUsersQuery extends MetricQuery {
-    public $supportedDimensions = ['roleName', 'ndrEnabled'];
+class MetricUsersQuery extends MetricQuery
+{
+    protected function getAggregation(): string
+    {
+        return 'COUNT(1)';
+    }
 
-    public function getSubquery() {
+    protected function getSupportedDimensions(): array
+    {
+        return ['roleName', 'ndrEnabled'];
+    }
+
+    public function getSubquery(): string
+    {
         return "
             SELECT
                 id,

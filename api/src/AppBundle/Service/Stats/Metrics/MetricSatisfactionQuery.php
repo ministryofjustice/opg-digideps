@@ -4,13 +4,20 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricSatisfactionQuery extends MetricQuery
 {
-    protected $aggregation = 'AVG(val)';
-    protected $supportedDimensions = ['deputyType', 'reportType'];
+    protected function getAggregation(): string
+    {
+        return 'AVG(val)';
+    }
+
+    protected function getSupportedDimensions(): array
+    {
+        return ['deputyType', 'reportType'];
+    }
 
     /**
      * @return string
      */
-    protected function getSubquery()
+    protected function getSubquery(): string
     {
         return "SELECT
             s.created_at date,

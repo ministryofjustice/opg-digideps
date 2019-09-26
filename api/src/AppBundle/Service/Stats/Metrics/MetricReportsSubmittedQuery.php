@@ -4,13 +4,20 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricReportsSubmittedQuery extends MetricQuery
 {
-    protected $aggregation = 'COUNT(1)';
-    protected $supportedDimensions = ['deputyType', 'reportType'];
+    protected function getAggregation(): string
+    {
+        return 'COUNT(1)';
+    }
+
+    protected function getSupportedDimensions(): array
+    {
+        return ['deputyType', 'reportType'];
+    }
 
     /**
      * @return string
      */
-    protected function getSubquery()
+    protected function getSubquery(): string
     {
         return "SELECT
             rs.created_on date,

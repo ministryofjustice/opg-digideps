@@ -10,10 +10,9 @@ abstract class MetricQuery
 {
     private $em;
 
-    protected $aggregation = 'COUNT(1)';
-    protected $supportedDimensions = [];
-
-    abstract protected function getSubquery();
+    abstract protected function getAggregation(): string;
+    abstract protected function getSupportedDimensions(): array;
+    abstract protected function getSubquery(): string;
 
     public function __construct(EntityManager $em)
     {
@@ -29,7 +28,7 @@ abstract class MetricQuery
         if (!is_array($dimensions)) return [];
 
         foreach ($dimensions as $index => $dimensionName) {
-            if (!in_array($dimensionName, $this->supportedDimensions)) {
+            if (!in_array($dimensionName, $this->getSupportedDimensions())) {
                 throw new \Exception("Metric does not support \"$dimensionName\" dimension");
             }
         }
@@ -43,7 +42,7 @@ abstract class MetricQuery
     protected function constructQuery($dimensions)
     {
         $columns = [
-            $this->aggregation . ' amount'
+            $this->getAggregation() . ' amount'
         ];
 
         if (is_array($dimensions)) {
