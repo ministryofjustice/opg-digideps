@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
+use AppBundle\Form\Admin\StatPeriodType;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -74,21 +75,33 @@ class StatsController extends AbstractController
      * @param Request $request
      * @return array|Response
      */
-    public function metricsAction()
+    public function metricsAction(Request $request)
     {
+        $form = $this->createForm(StatPeriodType::class);
+        $form->handleRequest($request);
+
+        $append = '';
+
+        if ($form->isValid()) {
+            $startDate = $form->get('startDate')->getData();
+            $endDate = $form->get('endDate')->getData();
+            $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+        }
+
         $stats = [
-            'satisfaction' => $this->getRestClient()->get('stats?metric=satisfaction', 'array'),
-            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted', 'array')
+            'satisfaction' => $this->getRestClient()->get('stats?metric=satisfaction' . $append, 'array'),
+            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted' . $append, 'array')
         ];
 
         $statsByRole = [
-            'satisfaction' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=satisfaction&dimension[]=deputyType', 'array')),
-            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType', 'array'))
+            'satisfaction' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=satisfaction&dimension[]=deputyType' . $append, 'array')),
+            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType' . $append, 'array'))
         ];
 
         return [
             'stats' => $stats,
-            'statsByRole' =>  $statsByRole
+            'statsByRole' =>  $statsByRole,
+            'form' => $form->createView()
         ];
     }
 

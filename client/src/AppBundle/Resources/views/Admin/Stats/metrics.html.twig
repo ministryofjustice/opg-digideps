@@ -14,122 +14,27 @@
           Change reporting period
         </span>
       </summary>
-      <div class="govuk-details__text" id="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-hidden="true">
-<div class="govuk-form-group">
-  <fieldset class="govuk-fieldset" aria-describedby="how-contacted-conditional-hint">
-  <span id="how-contacted-conditional-hint" class="govuk-hint">
-  </span>
-  <div class="govuk-radios govuk-radios--small govuk-radios--conditional" data-module="govuk-radios">
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="how-contacted-conditional" name="date-range" type="radio" value="30days" checked="">
-      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional">
-        Last 30 days
-      </label>
-    </div>
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="how-contacted-conditional-2" name="date-range" type="radio" value="thisyear">
-      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-2">
-        This year
-      </label>
-    </div>
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="how-contacted-conditional-3" name="date-range" type="radio" value="alltime">
-      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-3">
-        All time
-      </label>
-    </div>
-    <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="how-contacted-conditional-4" name="date-range" type="radio" value="customdates" aria-controls="conditional-how-contacted-conditional-4" aria-expanded="false">
-      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-4">
-        Custom dates
-      </label>
-    </div>
-      <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-how-contacted-conditional-4">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-third">
-<div class="govuk-form-group">
-<fieldset class="govuk-fieldset" aria-describedby="undefined-hint" role="group">
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-    Start date
-  </legend>
-  <span id="undefined-hint" class="govuk-hint">
-    For example, 12 11 2007
-  </span>
-  <div class="govuk-date-input">
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-day">
-          Day
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-day" name="day" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-month">
-          Month
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-month" name="month" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-year">
-          Year
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="undefined-year" name="year" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-  </div>
-  </fieldset>
-</div>
-                </div>
-                <div class="govuk-grid-column-one-third">
-<div class="govuk-form-group">
-<fieldset class="govuk-fieldset" aria-describedby="undefined-hint" role="group">
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-    End date
-  </legend>
-  <span id="undefined-hint" class="govuk-hint">
-    For example, 12 11 2007
-  </span>
-  <div class="govuk-date-input">
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-day">
-          Day
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-day" name="day" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-month">
-          Month
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-month" name="month" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="undefined-year">
-          Year
-        </label>
-        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="undefined-year" name="year" type="number" pattern="[0-9]*">
-      </div>
-    </div>
-  </div>
-  </fieldset>
-</div>
-                </div>
-            </div>
-      </div>
-  </div>
-  </fieldset>
-</div>
-<button type="submit" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">
-  Update date range
-</button>
+      <div class="govuk-details__text">
+        {{ form_start(form) }}
+
+        {% set customDateRange %}
+            {{ form_known_date(form.startDate, (page ~ '.form.startDate')) }}
+            {{ form_known_date(form.endDate, (page ~ '.form.endDate')) }}
+        {% endset %}
+
+        {{ form_checkbox_group(form.period, (page ~ '.form.period'), {
+            'legendClass' : 'govuk-visually-hidden',
+            items: [
+                {},
+                {},
+                {},
+                { conditional: customDateRange }
+            ]
+        }) }}
+
+        {{ form_submit(form.update, (page ~ '.form.update')) }}
+
+        {{ form_end(form) }}
       </div>
     </details>
     <div class="govuk-grid-row">

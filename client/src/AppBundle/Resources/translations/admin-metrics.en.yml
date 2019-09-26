@@ -1,3 +1,8 @@
 indexPage:
     htmlTitle: Administration - Statistics
     pageTitle: Statistics
+    form:
+        period:
+            label: Reporting period
+        update:
+            label: Update date range
