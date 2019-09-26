@@ -9,7 +9,7 @@ class MetricSatisfactionQuery extends MetricQuery
      */
     protected function getAggregation(): string
     {
-        return 'AVG(val)';
+        return 'ROUND(AVG(val - 1)*100/4)';
     }
 
     /**
