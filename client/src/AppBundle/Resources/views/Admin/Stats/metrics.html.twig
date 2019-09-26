@@ -59,7 +59,8 @@
       </span>
     </div>
   </div>
-  <div class="govuk-grid-row govuk-!-margin-bottom-5">
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-9">
     <div class="govuk-grid-column-one-third text--center">
       <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
         {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
@@ -96,8 +97,12 @@
           {{ ('metrics.' ~ metric  ~ '.label') | trans }}
         </span>
         <span class="govuk-heading-l govuk-!-margin-bottom-0" aria-labelledby="metric-{{metric}}-{{dimension}}-{{value}}-label">
-          {% set val = statsByRole[metric][value] | default('-') %}
-          {{ ('metrics.' ~ metric  ~ '.format') | trans({ '%value%': val }) }}
+        {% set val = statsByRole[metric][value] | default('-') %}
+          {% if (val == '-') %}
+            -
+          {% else %}
+            {{ ('metrics.' ~ metric  ~ '.format') | trans({ '%value%': val }) }}
+          {% endif %}
         </span>
       {% endfor %}
     </div>
