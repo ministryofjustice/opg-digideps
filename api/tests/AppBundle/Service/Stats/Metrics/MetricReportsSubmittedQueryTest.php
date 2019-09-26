@@ -40,7 +40,7 @@ class MetricReportsSubmittedQueryTest extends WebTestCase
             'dimension' => ['deputyType']
         ]));
 
-        // Assert an array result for each report type submitted.
+        // Assert an array result for each deputy type submitted.
         $this->assertCount(3, $result);
 
         // Assert correct amount is returned for each deputy type.
