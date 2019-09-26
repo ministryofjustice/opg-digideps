@@ -25,11 +25,11 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_elasticache_subnet_group" "private" {
-  name       = "private"
+  name       = local.account.ec_subnet_group
   subnet_ids = aws_subnet.private[*].id
 }
 
 resource "aws_db_subnet_group" "private" {
-  name       = "private"
+  name       = local.account.db_subnet_group
   subnet_ids = aws_subnet.private[*].id
 }
