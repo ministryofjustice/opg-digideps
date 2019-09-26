@@ -24,6 +24,7 @@ class StatsController extends RestController
     /**
      * @Route("/stats")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getMetric(Request $request)
     {
