@@ -13,7 +13,7 @@ abstract class MetricQuery
     protected $aggregation = 'COUNT(1)';
     protected $supportedDimensions = [];
 
-    abstract protected function getSubQuery();
+    abstract protected function getSubquery();
 
     public function __construct(EntityManager $em)
     {

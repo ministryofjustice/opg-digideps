@@ -10,7 +10,7 @@ class MetricSatisfactionQuery extends MetricQuery
     /**
      * @return string
      */
-    protected function getSubQuery()
+    protected function getSubquery()
     {
         return "SELECT
             s.created_at date,

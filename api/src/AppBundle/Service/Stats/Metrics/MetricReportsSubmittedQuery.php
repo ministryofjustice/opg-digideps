@@ -10,7 +10,7 @@ class MetricReportsSubmittedQuery extends MetricQuery
     /**
      * @return string
      */
-    protected function getSubQuery()
+    protected function getSubquery()
     {
         return "SELECT
             rs.created_on date,
