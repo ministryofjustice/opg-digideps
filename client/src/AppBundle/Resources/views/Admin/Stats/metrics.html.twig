@@ -55,7 +55,7 @@
         {{ 'metrics.satisfaction.totalLabel' | trans }}
       </span>
       <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80" aria-labelledby="metric-satisfaction-total-label">
-        {{ stats.satisfaction[0].amount | default('-') }}%
+        {{ stats.satisfaction.all | default('-') }}%
       </span>
     </div>
   </div>
@@ -65,8 +65,8 @@
       <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
         {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
       </span>
-      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-reportsSubmitted-total-label">
-        {{ stats.reportsSubmitted[0].amount | default('-') }}
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-reportsSubmitted-total-label">
+        {{ stats.reportsSubmitted.all | default('-') }}
       </span>
     </div>
 
@@ -74,8 +74,8 @@
       <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-registeredDeputies-total-label">
         {{ 'metrics.registeredDeputies.totalLabel' | trans }}
       </span>
-      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-registeredDeputies-total-label">
-        {{ stats.registeredDeputies[0].amount | default('-') }}
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-registeredDeputies-total-label">
+        {{ stats.registeredDeputies.all | default('-') }}
       </span>
     </div>
 
@@ -83,21 +83,21 @@
       <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-clients-total-label">
         {{ 'metrics.clients.totalLabel' | trans }}
       </span>
-      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-clients-total-label">
-        {{ stats.clients[0].amount | default('-') }}
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-clients-total-label">
+        {{ stats.clients.all | default('-') }}
       </span>
     </div>
   </div>
 
-  {% macro dimensionBox(dimension, value, metrics, statsByRole) %}
+  {% macro dimensionBox(dimension, value, metrics, stats) %}
     <div class="govuk-grid-column-one-third">
       <h3 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">{{ ('dimensions.' ~ dimension ~ '.' ~ value) | trans }}</h3>
       {% for metric in metrics %}
         <span class="govuk-caption-m govuk-!-margin-top-5" id="metric-{{metric}}-{{dimension}}-{{value}}-label">
           {{ ('metrics.' ~ metric  ~ '.label') | trans }}
         </span>
-        <span class="govuk-heading-l govuk-!-margin-bottom-0" aria-labelledby="metric-{{metric}}-{{dimension}}-{{value}}-label">
-        {% set val = statsByRole[metric][value] | default('-') %}
+        <span class="govuk-heading-l govuk-!-margin-bottom-4" aria-labelledby="metric-{{metric}}-{{dimension}}-{{value}}-label">
+        {% set val = stats[metric][value] | default('-') %}
           {% if (val == '-') %}
             -
           {% else %}
@@ -109,8 +109,8 @@
   {% endmacro %}
 
   <div class="govuk-grid-row">
-    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
-    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
-    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
+    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
+    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
   </div>
 {% endblock %}

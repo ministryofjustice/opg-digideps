@@ -88,28 +88,28 @@ class StatsController extends AbstractController
             $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
         }
 
-        $stats = [
-            'satisfaction' => $this->getRestClient()->get('stats?metric=satisfaction' . $append, 'array'),
-            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted' . $append, 'array'),
-            'clients'  => $this->getRestClient()->get('stats?metric=clients' . $append, 'array'),
-            'registeredDeputies'  => $this->getRestClient()->get('stats?metric=registeredDeputies' . $append, 'array'),
-        ];
+        $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
 
-        $statsByRole = [
-            'satisfaction' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=satisfaction&dimension[]=deputyType' . $append, 'array')),
-            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType' . $append, 'array')),
-            'clients'  => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=clients&dimension[]=deputyType' . $append, 'array')),
-            'registeredDeputies'  => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=registeredDeputies&dimension[]=deputyType' . $append, 'array')),
-        ];
+        foreach ($metrics as $metric) {
+            $all = $this->getRestClient()->get('stats?metric=' . $metric . $append, 'array');
+            $byRole = $this->getRestClient()->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+
+            $stats[$metric] = array_merge(
+                ['all' => $all[0]['amount']],
+                $this->mapToDeputyType($byRole)
+            );
+        }
 
         return [
             'stats' => $stats,
-            'statsByRole' =>  $statsByRole,
             'form' => $form->createView()
         ];
     }
 
-    private function mapToDeputyType(array $result) {
+    /**
+     * Map an array of metric responses to be addressible by deputyType
+     */
+    private function mapToDeputyType(array $result): array {
         $resultByDeputyType = [];
 
         foreach ($result as $resultBit) {
