@@ -66,4 +66,39 @@ class StatsController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/metrics", name="admin_metrics")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Stats:metrics.html.twig")
+     * @param Request $request
+     * @return array|Response
+     */
+    public function metricsAction()
+    {
+        $stats = [
+            'satisfaction' => $this->getRestClient()->get('stats?metric=satisfaction', 'array'),
+            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted', 'array')
+        ];
+
+        $statsByRole = [
+            'satisfaction' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=satisfaction&dimension[]=deputyType', 'array')),
+            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType', 'array'))
+        ];
+
+        return [
+            'stats' => $stats,
+            'statsByRole' =>  $statsByRole
+        ];
+    }
+
+    private function mapToDeputyType(array $result) {
+        $resultByDeputyType = [];
+
+        foreach ($result as $resultBit) {
+            $resultByDeputyType[$resultBit['deputyType']] = $resultBit['amount'];
+        }
+
+        return $resultByDeputyType;
+    }
 }

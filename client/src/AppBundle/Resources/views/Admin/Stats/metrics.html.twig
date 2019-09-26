@@ -1,0 +1,189 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-metrics" %}
+{% set page = 'indexPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+     <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">Last 30 days</h3>
+    <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
+      <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
+        <span class="govuk-details__summary-text">
+          Change reporting period
+        </span>
+      </summary>
+      <div class="govuk-details__text" id="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-hidden="true">
+<div class="govuk-form-group">
+  <fieldset class="govuk-fieldset" aria-describedby="how-contacted-conditional-hint">
+  <span id="how-contacted-conditional-hint" class="govuk-hint">
+  </span>
+  <div class="govuk-radios govuk-radios--small govuk-radios--conditional" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="how-contacted-conditional" name="date-range" type="radio" value="30days" checked="">
+      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional">
+        Last 30 days
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="how-contacted-conditional-2" name="date-range" type="radio" value="thisyear">
+      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-2">
+        This year
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="how-contacted-conditional-3" name="date-range" type="radio" value="alltime">
+      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-3">
+        All time
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="how-contacted-conditional-4" name="date-range" type="radio" value="customdates" aria-controls="conditional-how-contacted-conditional-4" aria-expanded="false">
+      <label class="govuk-label govuk-radios__label" for="how-contacted-conditional-4">
+        Custom dates
+      </label>
+    </div>
+      <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-how-contacted-conditional-4">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-third">
+<div class="govuk-form-group">
+<fieldset class="govuk-fieldset" aria-describedby="undefined-hint" role="group">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+    Start date
+  </legend>
+  <span id="undefined-hint" class="govuk-hint">
+    For example, 12 11 2007
+  </span>
+  <div class="govuk-date-input">
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-day">
+          Day
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-day" name="day" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-month">
+          Month
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-month" name="month" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-year">
+          Year
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="undefined-year" name="year" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+  </div>
+  </fieldset>
+</div>
+                </div>
+                <div class="govuk-grid-column-one-third">
+<div class="govuk-form-group">
+<fieldset class="govuk-fieldset" aria-describedby="undefined-hint" role="group">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+    End date
+  </legend>
+  <span id="undefined-hint" class="govuk-hint">
+    For example, 12 11 2007
+  </span>
+  <div class="govuk-date-input">
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-day">
+          Day
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-day" name="day" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-month">
+          Month
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="undefined-month" name="month" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+    <div class="govuk-date-input__item">
+      <div class="govuk-form-group">
+        <label class="govuk-label govuk-date-input__label" for="undefined-year">
+          Year
+        </label>
+        <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="undefined-year" name="year" type="number" pattern="[0-9]*">
+      </div>
+    </div>
+  </div>
+  </fieldset>
+</div>
+                </div>
+            </div>
+      </div>
+  </div>
+  </fieldset>
+</div>
+<button type="submit" class="govuk-button govuk-!-margin-bottom-0" data-module="govuk-button">
+  Update date range
+</button>
+      </div>
+    </details>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full textcentre">
+          <span class="govuk-caption-l govuk-!-margin-top-2">Overall satisfaction</span>
+          <h3 class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80">{{ stats.satisfaction[0].amount }}</h3>
+          <p class="govuk-body govuk-!-font-weight-bold positive-change">+2%</p>
+      </div>
+    </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-5">
+      <div class="govuk-grid-column-one-third textcentre">
+          <span class="govuk-caption-l govuk-!-margin-top-2">Total reports submitted</span>
+          <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">{{ stats.reportsSubmitted[0].amount }}</h3>
+          <p class="govuk-body govuk-!-font-weight-bold positive-change">+22</p>
+      </div>
+        <div class="govuk-grid-column-one-third textcentre">
+            <span class="govuk-caption-l govuk-!-margin-top-2">Total registered deputies</span>
+            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+            <p class="govuk-body govuk-!-font-weight-bold positive-change">+3,161</p>
+        </div>
+        <div class="govuk-grid-column-one-third textcentre">
+            <span class="govuk-caption-l govuk-!-margin-top-2">Total clients</span>
+            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+            <p class="govuk-body govuk-!-font-weight-bold positive-change">+150</p>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+          <div class="card-body">
+            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Lay deputies</h2>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.lay | default('-') }}%</h3>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.lay | default('-') }}</h3>
+          </div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <div class="card-body">
+            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Professional deputies</h2>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.prof | default('-') }}%</h3>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.prof | default('-') }}</h3>
+          </div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          <div class="card-body">
+            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Public authority deputies</h2>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.pa | default('-') }}%</h3>
+            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
+            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.pa | default('-') }}</h3>
+          </div>
+        </div>
+    </div>
+<br>
+{% endblock %}
