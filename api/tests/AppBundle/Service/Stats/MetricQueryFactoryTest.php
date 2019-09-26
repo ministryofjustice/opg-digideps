@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class MetricQueryFactoryTest extends TestCase
 {
     /**
-     * @var EntityManager
+     * @var MetricQueryFactory
      */
     public $factory;
 
