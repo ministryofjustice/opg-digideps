@@ -8,9 +8,9 @@
 {% block supportTitleTop %}{{ (page ~ '.subTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
-  <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
       {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
-  </h3>
+  </h2>
 
   <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
     <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
@@ -51,33 +51,54 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.satisfaction.totalLabel' | trans }}</span>
-      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80">{{ stats.satisfaction[0].amount }}</h3>
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-satisfaction-total-label">
+        {{ 'metrics.satisfaction.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80" aria-labelledby="metric-satisfaction-total-label">
+        {{ stats.satisfaction[0].amount | default('-') }}%
+      </span>
     </div>
   </div>
   <div class="govuk-grid-row govuk-!-margin-bottom-5">
     <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.reportsSubmitted.totalLabel' | trans }}</span>
-      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">{{ stats.reportsSubmitted[0].amount }}</h3>
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
+        {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-reportsSubmitted-total-label">
+        {{ stats.reportsSubmitted[0].amount | default('-') }}
+      </span>
     </div>
 
     <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.registeredDeputies.totalLabel' | trans }}</span>
-      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-registeredDeputies-total-label">
+        {{ 'metrics.registeredDeputies.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-registeredDeputies-total-label">
+        {{ stats.registeredDeputies[0].amount | default('-') }}
+      </span>
     </div>
 
     <div class="govuk-grid-column-one-third text--center">
-      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.clients.totalLabel' | trans }}</span>
-      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-clients-total-label">
+        {{ 'metrics.clients.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-0" aria-labelledby="metric-clients-total-label">
+        {{ stats.clients[0].amount | default('-') }}
+      </span>
     </div>
   </div>
 
   {% macro dimensionBox(dimension, value, metrics, statsByRole) %}
     <div class="govuk-grid-column-one-third">
-      <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">{{ ('dimensions.' ~ dimension ~ '.' ~ value) | trans }}</h2>
+      <h3 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">{{ ('dimensions.' ~ dimension ~ '.' ~ value) | trans }}</h3>
       {% for metric in metrics %}
-        <span class="govuk-caption-m govuk-!-margin-top-5">{{ ('metrics.' ~ metric  ~ '.label') | trans }}</span>
-        <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole[metric][value] | default('-') }}%</h3>
+        <span class="govuk-caption-m govuk-!-margin-top-5" id="metric-{{metric}}-{{dimension}}-{{value}}-label">
+          {{ ('metrics.' ~ metric  ~ '.label') | trans }}
+        </span>
+        <span class="govuk-heading-l govuk-!-margin-bottom-0" aria-labelledby="metric-{{metric}}-{{dimension}}-{{value}}-label">
+          {% set val = statsByRole[metric][value] | default('-') %}
+          {{ ('metrics.' ~ metric  ~ '.format') | trans({ '%value%': val }) }}
+        </span>
       {% endfor %}
     </div>
   {% endmacro %}
