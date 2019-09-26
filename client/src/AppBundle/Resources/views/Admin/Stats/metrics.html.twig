@@ -8,97 +8,83 @@
 {% block supportTitleTop %}{{ (page ~ '.subTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
-     <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">
-        {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
-    </h3>
-    <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
-      <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
-        <span class="govuk-details__summary-text">
-          Change reporting period
-        </span>
-      </summary>
-      <div class="govuk-details__text">
-        {{ form_start(form) }}
+  <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">
+      {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
+  </h3>
 
-        {% set customDateRange %}
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-third">
-                    {{ form_known_date(form.startDate, 'form.startDate') }}
-                </div>
-                <div class="govuk-grid-column-one-third">
-                    {{ form_known_date(form.endDate, 'form.endDate') }}
-                </div>
-            </div>
-        {% endset %}
+  <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
+    <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
+      <span class="govuk-details__summary-text">
+        {{ 'form.title' | trans }}
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      {{ form_start(form) }}
 
-        {{ form_checkbox_group(form.period, 'form.period', {
-            classes: 'govuk-radios--small',
-            legendClass: 'govuk-visually-hidden',
-            items: [
-                {},
-                {},
-                {},
-                { conditional: customDateRange }
-            ]
-        }) }}
-
-        {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
-
-        {{ form_end(form) }}
-      </div>
-    </details>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full textcentre">
-          <span class="govuk-caption-l govuk-!-margin-top-2">Overall satisfaction</span>
-          <h3 class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80">{{ stats.satisfaction[0].amount }}</h3>
-          <p class="govuk-body govuk-!-font-weight-bold positive-change">+2%</p>
-      </div>
-    </div>
-    <div class="govuk-grid-row govuk-!-margin-bottom-5">
-      <div class="govuk-grid-column-one-third textcentre">
-          <span class="govuk-caption-l govuk-!-margin-top-2">Total reports submitted</span>
-          <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">{{ stats.reportsSubmitted[0].amount }}</h3>
-          <p class="govuk-body govuk-!-font-weight-bold positive-change">+22</p>
-      </div>
-        <div class="govuk-grid-column-one-third textcentre">
-            <span class="govuk-caption-l govuk-!-margin-top-2">Total registered deputies</span>
-            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
-            <p class="govuk-body govuk-!-font-weight-bold positive-change">+3,161</p>
-        </div>
-        <div class="govuk-grid-column-one-third textcentre">
-            <span class="govuk-caption-l govuk-!-margin-top-2">Total clients</span>
-            <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
-            <p class="govuk-body govuk-!-font-weight-bold positive-change">+150</p>
-        </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-third">
-          <div class="card-body">
-            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Lay deputies</h2>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.lay | default('-') }}%</h3>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.lay | default('-') }}</h3>
+      {% set customDateRange %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-third">
+            {{ form_known_date(form.startDate, 'form.startDate') }}
+          </div>
+          <div class="govuk-grid-column-one-third">
+            {{ form_known_date(form.endDate, 'form.endDate') }}
           </div>
         </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="card-body">
-            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Professional deputies</h2>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.prof | default('-') }}%</h3>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.prof | default('-') }}</h3>
-          </div>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="card-body">
-            <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">Public authority deputies</h2>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Satisfaction</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.satisfaction.pa | default('-') }}%</h3>
-            <span class="govuk-caption-m govuk-!-margin-top-5">Reports submitted</span>
-            <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole.reportsSubmitted.pa | default('-') }}</h3>
-          </div>
-        </div>
+      {% endset %}
+
+      {{ form_checkbox_group(form.period, 'form.period', {
+        classes: 'govuk-radios--small',
+        legendClass: 'govuk-visually-hidden',
+        items: [
+          {},
+          {},
+          {},
+          { conditional: customDateRange }
+        ]
+      }) }}
+
+      {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
+
+      {{ form_end(form) }}
     </div>
-<br>
+  </details>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.satisfaction.totalLabel' | trans }}</span>
+      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0 govuk-!-font-size-80">{{ stats.satisfaction[0].amount }}</h3>
+    </div>
+  </div>
+  <div class="govuk-grid-row govuk-!-margin-bottom-5">
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.reportsSubmitted.totalLabel' | trans }}</span>
+      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">{{ stats.reportsSubmitted[0].amount }}</h3>
+    </div>
+
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.registeredDeputies.totalLabel' | trans }}</span>
+      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+    </div>
+
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2">{{ 'metrics.clients.totalLabel' | trans }}</span>
+      <h3 class="govuk-heading-xl govuk-!-margin-bottom-0">-</h3>
+    </div>
+  </div>
+
+  {% macro dimensionBox(dimension, value, metrics, statsByRole) %}
+    <div class="govuk-grid-column-one-third">
+      <h2 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">{{ ('dimensions.' ~ dimension ~ '.' ~ value) | trans }}</h2>
+      {% for metric in metrics %}
+        <span class="govuk-caption-m govuk-!-margin-top-5">{{ ('metrics.' ~ metric  ~ '.label') | trans }}</span>
+        <h3 class="govuk-heading-l govuk-!-margin-bottom-0">{{ statsByRole[metric][value] | default('-') }}%</h3>
+      {% endfor %}
+    </div>
+  {% endmacro %}
+
+  <div class="govuk-grid-row">
+    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
+  </div>
 {% endblock %}

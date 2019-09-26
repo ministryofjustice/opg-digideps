@@ -4,6 +4,7 @@ indexPage:
     subTitle: Admin
 
 form:
+    title: Change reporting period
     period:
         label: Reporting period
         options:
@@ -17,3 +18,23 @@ form:
         label: Start date
     endDate:
         label: End date
+
+metrics:
+    clients:
+        label: Clients
+        totalLabel: Total clients
+    registeredDeputies:
+        label: Registered deputies
+        totalLabel: Total registered deputies
+    reportsSubmitted:
+        label: Reports submitted
+        totalLabel: Total reports submitted
+    satisfaction:
+        label: Satisfaction
+        totalLabel: Overall satisfaction
+
+dimensions:
+    deputyType:
+        lay: Lay deputies
+        pa: Public authority deputies
+        prof: Professional deputies
