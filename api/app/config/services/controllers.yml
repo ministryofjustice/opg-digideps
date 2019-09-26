@@ -8,6 +8,11 @@ services:
         - '@rest_handler.report.deputy_costs_report_update_handler'
         - '@rest_handler.report.pa_fees_expenses_report_update_handler'
 
+  AppBundle\Controller\StatsController:
+    public: true
+    class: AppBundle\Controller\StatsController
+    arguments:
+      - '@AppBundle\Service\Stats\MetricQueryFactory'
 
   AppBundle\v2\Controller\DeputyController:
     class: AppBundle\v2\Controller\DeputyController

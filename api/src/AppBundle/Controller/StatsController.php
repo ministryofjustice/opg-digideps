@@ -12,13 +12,23 @@ use Symfony\Component\HttpFoundation\Request;
 class StatsController extends RestController
 {
     /**
+     * @var MetricQueryFactory
+     */
+    private $metricQueryFactory;
+
+    public function __construct(MetricQueryFactory $metricQueryFactory)
+    {
+        $this->metricQueryFactory = $metricQueryFactory;
+    }
+
+    /**
      * @Route("/stats")
      * @Method({"GET"})
      */
     public function getMetric(Request $request)
     {
         $params = new StatsQueryParameters($request->query->all());
-        $query = (new MetricQueryFactory($this->getEntityManager()))->create($params);
+        $query = $this->metricQueryFactory->create($params);
 
         return $query->execute($params);
     }
