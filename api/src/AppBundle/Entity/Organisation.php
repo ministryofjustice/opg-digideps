@@ -67,7 +67,7 @@ class Organisation
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Client", inversedBy="organisations")
+     * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
      */
     private $clients;
 
@@ -213,5 +213,14 @@ class Organisation
     {
         $this->clients->removeElement($client);
         return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function containsUser(User $user)
+    {
+        return $this->users->contains($user);
     }
 }
