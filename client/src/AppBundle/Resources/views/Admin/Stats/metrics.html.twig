@@ -5,9 +5,12 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.subTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
-     <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">Last 30 days</h3>
+     <h3 class="govuk-heading-m  govuk-!-margin-bottom-1">
+        {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
+    </h3>
     <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
       <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
         <span class="govuk-details__summary-text">
@@ -18,11 +21,11 @@
         {{ form_start(form) }}
 
         {% set customDateRange %}
-            {{ form_known_date(form.startDate, (page ~ '.form.startDate')) }}
-            {{ form_known_date(form.endDate, (page ~ '.form.endDate')) }}
+            {{ form_known_date(form.startDate, 'form.startDate') }}
+            {{ form_known_date(form.endDate, 'form.endDate') }}
         {% endset %}
 
-        {{ form_checkbox_group(form.period, (page ~ '.form.period'), {
+        {{ form_checkbox_group(form.period, 'form.period', {
             'legendClass' : 'govuk-visually-hidden',
             items: [
                 {},
@@ -32,7 +35,7 @@
             ]
         }) }}
 
-        {{ form_submit(form.update, (page ~ '.form.update')) }}
+        {{ form_submit(form.update, 'form.update') }}
 
         {{ form_end(form) }}
       </div>

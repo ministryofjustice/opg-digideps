@@ -1,8 +1,15 @@
 indexPage:
     htmlTitle: Administration - Statistics
     pageTitle: Statistics
-    form:
-        period:
-            label: Reporting period
-        update:
-            label: Update date range
+    subTitle: Admin
+
+form:
+    period:
+        label: Reporting period
+        options:
+            last-30: Last 30 days
+            this-year: This year
+            all-time: All time
+            custom: Custom
+    update:
+        label: Update date range

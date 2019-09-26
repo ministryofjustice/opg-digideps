@@ -13,15 +13,18 @@ class StatPeriodType extends AbstractType
     {
         $builder
             ->add('period', FormTypes\ChoiceType::class, [
-                'choices' => array_flip([
-                    'last-30' => 'Last 30 days',
-                    'this-year' => 'This year',
-                    'all-time' => 'All time',
-                    'custom' => 'Custom',
-                ]),
-                'mapped' => false,
+                'choices' => [
+                    'last-30'=> 'last-30',
+                    'this-year'=> 'this-year',
+                    'all-time'=> 'all-time',
+                    'custom'=> 'custom',
+                ],
+                'choice_label' => function ($choice) {
+                    return 'form.period.options.' . $choice;
+                },
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
+                'data' => 'last-30'
             ])
             ->add('startDate', FormTypes\DateType::class)
             ->add('endDate', FormTypes\DateType::class)
