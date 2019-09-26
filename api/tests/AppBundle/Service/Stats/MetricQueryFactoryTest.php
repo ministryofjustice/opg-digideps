@@ -27,7 +27,7 @@ class MetricQueryFactoryTest extends TestCase
      */
     public function metricNameProvider()
     {
-        return [['satisfaction'], ['reportsSubmitted']];
+        return [['satisfaction'], ['reportsSubmitted'], ['clients'], ['registeredDeputies']];
     }
 
     /**

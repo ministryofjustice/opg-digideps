@@ -90,12 +90,16 @@ class StatsController extends AbstractController
 
         $stats = [
             'satisfaction' => $this->getRestClient()->get('stats?metric=satisfaction' . $append, 'array'),
-            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted' . $append, 'array')
+            'reportsSubmitted' => $this->getRestClient()->get('stats?metric=reportsSubmitted' . $append, 'array'),
+            'clients'  => $this->getRestClient()->get('stats?metric=clients' . $append, 'array'),
+            'registeredDeputies'  => $this->getRestClient()->get('stats?metric=registeredDeputies' . $append, 'array'),
         ];
 
         $statsByRole = [
             'satisfaction' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=satisfaction&dimension[]=deputyType' . $append, 'array')),
-            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType' . $append, 'array'))
+            'reportsSubmitted' => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=reportsSubmitted&dimension[]=deputyType' . $append, 'array')),
+            'clients'  => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=clients&dimension[]=deputyType' . $append, 'array')),
+            'registeredDeputies'  => $this->mapToDeputyType($this->getRestClient()->get('stats?metric=registeredDeputies&dimension[]=deputyType' . $append, 'array')),
         ];
 
         return [

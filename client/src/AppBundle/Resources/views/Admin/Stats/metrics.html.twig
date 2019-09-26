@@ -109,8 +109,8 @@
   {% endmacro %}
 
   <div class="govuk-grid-row">
-    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
-    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
-    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
+    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], statsByRole) }}
   </div>
 {% endblock %}
