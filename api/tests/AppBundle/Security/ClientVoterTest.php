@@ -241,24 +241,4 @@ class ClientVoterTest extends TestCase
 
         self::assertEquals($expectedPermission, $voteResult);
     }
-
-    public function testVoterGrantsPermissionToAdmin() {
-        $loggedInUser = m::mock(User::class);
-        $loggedInUser->shouldReceive('getId')->andReturn(33);
-
-        $token = m::mock(TokenInterface::class)->makePartial();
-        $token->shouldReceive('getUser')->andReturn($loggedInUser);
-
-        $subject = m::mock(Client::class)->makePartial();
-        
-        $security = m::mock(Security::class);
-        $security->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturnTrue();
-
-        $sut = new ClientVoter($security);
-
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token, $subject, $attributes);
-
-        self::assertEquals(VoterInterface::ACCESS_GRANTED, $voteResult);
-    }
 }
