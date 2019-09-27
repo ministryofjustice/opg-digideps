@@ -2,7 +2,6 @@
 
 namespace DigidepsBehat;
 
-use AppBundle\Service\Client\RestClient;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelDictionary;

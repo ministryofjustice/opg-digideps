@@ -69,6 +69,9 @@ class S3Storage implements StorageInterface
      */
     public function retrieve($key)
     {
+        // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
+        $missingFileAWSErrorCodes = ['NoSuchKey', 'AccessDenied'];
+
         try {
             $result = $this->s3Client->getObject([
                 'Bucket' => $this->bucketName,
@@ -77,7 +80,7 @@ class S3Storage implements StorageInterface
 
             return $result['Body'];
         } catch (S3Exception $e) {
-            if ($e->getAwsErrorCode() === 'NoSuchKey') {
+            if (in_array($e->getAwsErrorCode(), $missingFileAWSErrorCodes)) {
                 throw new FileNotFoundException("Cannot find file with reference $key");
             }
             throw $e;
