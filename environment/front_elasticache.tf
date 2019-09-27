@@ -18,7 +18,6 @@ resource "aws_security_group_rule" "front_cache_task_in" {
   source_security_group_id = aws_security_group.front.id
 }
 
-# TODO: switch to data source subnet group
 resource "aws_elasticache_cluster" "front" {
   cluster_id           = "front-${local.environment}"
   engine               = "redis"
