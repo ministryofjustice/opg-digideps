@@ -11,8 +11,6 @@ abstract class MetricQuery
     /** @var EntityManager */
     private $em;
 
-    protected $useDates = true;
-
     abstract protected function getAggregation(): string;
     abstract protected function getSupportedDimensions(): array;
     abstract protected function getSubquery(): string;
@@ -45,14 +43,15 @@ abstract class MetricQuery
             }
         }
 
-        $sql = $this->constructQuery($sq->getDimensions());
-        $query = $this->em->createNativeQuery($sql, $rsm);
+        $query = $this->em->createNativeQuery($this->constructQuery($sq), $rsm);
 
-        $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
-        $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
+        if ($sq->queryHasDateConstraint()) {
+            $startDate = (clone $sq->getStartDate())->setTime(0, 0, 0);
+            $endDate = (clone $sq->getEndDate())->setTime(23, 59, 59);
 
-        $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
-        $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+            $query->setParameter('startDate', $startDate->format('Y-m-d H:i:s'));
+            $query->setParameter('endDate', $endDate->format('Y-m-d H:i:s'));
+        }
 
         return $query->getResult();
     }
@@ -73,33 +72,32 @@ abstract class MetricQuery
 
     /**
      * Build an SQL query
-     * @param mixed $dimensions The dimensions to group results by
+     * @param StatsQueryParameters $sq
      * @return string
      */
-    protected function constructQuery($dimensions)
+    protected function constructQuery(StatsQueryParameters $sq)
     {
         $columns = [
             $this->getAggregation() . ' amount'
         ];
 
-        if (is_array($dimensions)) {
-            foreach ($dimensions as $dimension) {
+        if (is_array($sq->getDimensions())) {
+            foreach ($sq->getDimensions() as $dimension) {
                 $columns[] = "t.{$dimension} \"{$dimension}\"";
             }
         }
 
         $select = implode(', ', $columns);
 
-        if ($this->useDates) {
-            $whereClause = 't.date >= :startDate AND t.date <= :endDate';
-        } else {
-            $whereClause = '1 = 1';
+        $sql = "SELECT $select FROM ({$this->getSubquery()}) t";
+
+        if ($sq->queryHasDateConstraint()) {
+            $sql .= " WHERE t.date >= :startDate AND t.date <= :endDate";
         }
 
-        $sql = "SELECT $select FROM ({$this->getSubquery()}) t WHERE $whereClause";
 
-        if (is_array($dimensions)) {
-            $sql .= " GROUP BY " . implode(', ', $dimensions);
+        if (is_array($sq->getDimensions())) {
+            $sql .= " GROUP BY " . implode(', ', $sq->getDimensions());
         }
 
         return $sql;

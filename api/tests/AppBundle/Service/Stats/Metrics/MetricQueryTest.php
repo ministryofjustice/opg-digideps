@@ -33,11 +33,6 @@ class MetricUsersQuery extends MetricQuery
     }
 };
 
-class MetricTimelessUsersQuery extends MetricUsersQuery
-{
-    protected $useDates = false;
-}
-
 class MetricQueryTest extends WebTestCase
 {
     /**
@@ -138,7 +133,7 @@ class MetricQueryTest extends WebTestCase
         $this->addUserWithRegistrationDate('2016-11-27');
 
         $result = $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
+            'metric' => 'satisfaction',
             'startDate' => '2016-05-01',
             'endDate' => '2016-05-31',
         ]));
@@ -153,7 +148,7 @@ class MetricQueryTest extends WebTestCase
         $query = new MetricUsersQuery($this::$em);
 
         $result1 = $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
+            'metric' => 'satisfaction',
             'startDate' => '2016-05-01',
             'endDate' => '2016-05-04',
         ]));
@@ -161,7 +156,7 @@ class MetricQueryTest extends WebTestCase
         $this->assertEquals(1, $result1[0]['amount']);
 
         $result2 = $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
+            'metric' => 'satisfaction',
             'startDate' => '2016-05-04',
             'endDate' => '2016-05-31',
         ]));
@@ -172,11 +167,11 @@ class MetricQueryTest extends WebTestCase
     /**
      * @test
      */
-    public function ignoresDateRangeIfSpecified() {
-        $query = new MetricTimelessUsersQuery($this::$em);
+    public function ignoresDateRangeIfMetricNotConstrainedByDate() {
+        $query = new MetricUsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
-            'metric' => 'users',
+            'metric' => 'not-constrained',
             'startDate' => '2016-05-01',
             'endDate' => '2016-05-31',
         ]));

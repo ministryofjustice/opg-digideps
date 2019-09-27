@@ -4,8 +4,6 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricClientsQuery extends MetricQuery
 {
-    protected $useDates = false;
-
     /**
      * @return string
      */
