@@ -206,14 +206,12 @@ class ClientVoterTest extends TestCase
         $loggedInUser->shouldReceive('getId')->andReturn(33);
 
         $org = m::mock(OrganisationInterface::class)->makePartial();
+        $org->shouldReceive('isActivated')->andReturn($orgIsActive);
+
+        $token = m::mock(TokenInterface::class)->makePartial();
+        $token->shouldReceive('getUser')->andReturn($loggedInUser);
 
         $subject = m::mock(Client::class)->makePartial();
-
-        $token = self::prophesize(TokenInterface::class);
-
-        $token->getUser()->willReturn($loggedInUser);
-
-        $org->shouldReceive('isActivated')->andReturn($orgIsActive);
 
         if ($deputyBelongsToOrg) {
             $org->shouldReceive('containsUser')->with($loggedInUser)->andReturnTrue();
@@ -233,12 +231,34 @@ class ClientVoterTest extends TestCase
             $subject->shouldReceive('getOrganisation')->zeroOrMoreTimes()->andReturnNull();
         }
 
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
+        $security = m::mock(Security::class);
+        $security->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturnFalse();
+
+        $sut = new ClientVoter($security);
 
         $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
+        $voteResult = $sut->vote($token, $subject, $attributes);
 
         self::assertEquals($expectedPermission, $voteResult);
+    }
+
+    public function testVoterGrantsPermissionToAdmin() {
+        $loggedInUser = m::mock(User::class);
+        $loggedInUser->shouldReceive('getId')->andReturn(33);
+
+        $token = m::mock(TokenInterface::class)->makePartial();
+        $token->shouldReceive('getUser')->andReturn($loggedInUser);
+
+        $subject = m::mock(Client::class)->makePartial();
+        
+        $security = m::mock(Security::class);
+        $security->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturnTrue();
+
+        $sut = new ClientVoter($security);
+
+        $attributes = [$sut::VIEW, $sut::EDIT];
+        $voteResult = $sut->vote($token, $subject, $attributes);
+
+        self::assertEquals(VoterInterface::ACCESS_GRANTED, $voteResult);
     }
 }
