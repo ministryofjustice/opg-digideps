@@ -4,6 +4,10 @@
     box-sizing: border-box;
     color: govuk-colour('green');
 
+    &__text  {
+        color: govuk-colour('green');
+    }
+
     &__button {
         margin-bottom: 0;
         border-color: govuk-colour('green');
