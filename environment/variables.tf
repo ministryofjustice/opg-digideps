@@ -31,7 +31,7 @@ variable "accounts" {
 }
 
 locals {
-  default_whitelist = [
+  default_whitelist = concat([
     "157.203.176.138/32",
     "157.203.176.139/32",
     "157.203.176.140/32",
@@ -55,7 +55,8 @@ locals {
     "62.25.109.203/32",
     "81.134.202.29/32",
     "94.30.9.148/32",
-  ]
+  ], formatlist("%s/32", data.aws_nat_gateway.nat[*].public_ip))
+
   environment     = lower(terraform.workspace)
   account         = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   subdomain       = local.account["subdomain_enabled"] ? local.environment : ""
