@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Client.
@@ -1086,10 +1087,10 @@ class Client implements ClientInterface
      * @param User $user
      * @return bool
      */
-    public function userBelongsToClientsOrganisation(User $user)
-    {   
-        if ($this->organisation instanceof Organisation && $this->organisation->isActivated()) {
-            return $this->organisation->containsUser($user);
+    public function userBelongsToClientsOrganisation(UserInterface $user)
+    {
+        if ($this->getOrganisation() instanceof OrganisationInterface && $this->getOrganisation()->isActivated()) {
+            return $this->getOrganisation()->containsUser($user);
         }
         return false;
     }

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\OrganisationRepository")
  */
-class Organisation
+class Organisation implements OrganisationInterface
 {
     /**
      * @var int
