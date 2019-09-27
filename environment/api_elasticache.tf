@@ -28,7 +28,6 @@ resource "aws_security_group_rule" "api_cache_task_in" {
   source_security_group_id = aws_security_group.api_task.id
 }
 
-# TODO: switch to data source subnet group
 resource "aws_elasticache_cluster" "api" {
   cluster_id           = "api-${local.environment}"
   engine               = "redis"

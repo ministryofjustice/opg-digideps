@@ -1,7 +1,7 @@
 data "aws_vpc" "vpc" {
   filter {
     name   = "tag:Name"
-    values = [local.account.vpc_name]
+    values = [local.account.vpc_name, "private"]
   }
 }
 
@@ -29,4 +29,3 @@ data "aws_subnet" "public" {
     values = ["public*"]
   }
 }
-
