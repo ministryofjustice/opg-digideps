@@ -4,8 +4,13 @@ namespace AppBundle\Service\File\Storage;
 
 use Aws\Command;
 use Aws\Exception\AwsException;
+use Aws\S3\Exception\S3Exception;
+use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class S3StorageTest extends TestCase
@@ -337,5 +342,71 @@ class S3StorageTest extends TestCase
             '',
             $result['objectsToDelete']
         );
+    }
+
+    public function testRetrieveFromS3WhenNoSuchKey()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'The specified key does not exist.',
+            new Command('getObject'), ['code' => 'NoSuchKey']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(FileNotFoundException::class, "Cannot find file with reference ${key}");
+
+        $this->object->retrieve($key);
+    }
+
+    public function testRetrieveFromS3WhenAccessDenied()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'Access Denied.',
+            new Command('getObject'), ['code' => 'AccessDenied']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(FileNotFoundException::class, "Cannot find file with reference ${key}");
+
+        $this->object->retrieve($key);
+    }
+
+    public function testRetrieveFromS3NotMissingFileError()
+    {
+        $key = 'nonExistentFile.png';
+
+        /** @var ObjectProphecy|S3Client $awsClient */
+        $awsClient = self::prophesize(S3Client::class);
+        $s3Exception = new S3Exception(
+            'Some other error message',
+            new Command('getObject'), ['code' => 'InvalidRequest']
+        );
+
+        $awsClient->getObject(['Bucket' => 'unit_test_bucket', 'Key' => $key])->willThrow($s3Exception);
+
+        $logger = self::prophesize(LoggerInterface::class);
+
+        $this->object = new S3Storage($awsClient->reveal(), 'unit_test_bucket', $logger->reveal());
+
+        $this->expectException(S3Exception::class, 'Some other error message');
+
+        $this->object->retrieve($key);
     }
 }
