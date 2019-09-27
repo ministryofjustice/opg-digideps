@@ -11,6 +11,8 @@ abstract class MetricQuery
     /** @var EntityManager */
     private $em;
 
+    protected $useDates = true;
+
     abstract protected function getAggregation(): string;
     abstract protected function getSupportedDimensions(): array;
     abstract protected function getSubquery(): string;
@@ -87,7 +89,14 @@ abstract class MetricQuery
         }
 
         $select = implode(', ', $columns);
-        $sql = "SELECT $select FROM ({$this->getSubquery()}) t WHERE t.date >= :startDate AND t.date <= :endDate";
+
+        if ($this->useDates) {
+            $whereClause = 't.date >= :startDate AND t.date <= :endDate';
+        } else {
+            $whereClause = '1 = 1';
+        }
+
+        $sql = "SELECT $select FROM ({$this->getSubquery()}) t WHERE $whereClause";
 
         if (is_array($dimensions)) {
             $sql .= " GROUP BY " . implode(', ', $dimensions);

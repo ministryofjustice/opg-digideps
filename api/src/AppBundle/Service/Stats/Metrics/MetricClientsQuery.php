@@ -4,6 +4,8 @@ namespace AppBundle\Service\Stats\Metrics;
 
 class MetricClientsQuery extends MetricQuery
 {
+    protected $useDates = false;
+
     /**
      * @return string
      */
@@ -26,7 +28,6 @@ class MetricClientsQuery extends MetricQuery
     protected function getSubquery(): string
     {
         return "SELECT
-            c.court_date date,
             CASE
                 WHEN EXISTS(SELECT 1 FROM odr WHERE client_id = c.id) THEN 'lay'
                 WHEN r.type LIKE '%-5' THEN 'prof'

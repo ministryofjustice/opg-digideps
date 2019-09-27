@@ -33,6 +33,11 @@ class MetricUsersQuery extends MetricQuery
     }
 };
 
+class MetricTimelessUsersQuery extends MetricUsersQuery
+{
+    protected $useDates = false;
+}
+
 class MetricQueryTest extends WebTestCase
 {
     /**
@@ -130,6 +135,7 @@ class MetricQueryTest extends WebTestCase
         $query = new MetricUsersQuery($this::$em);
 
         $this->addUserWithRegistrationDate('2016-05-04');
+        $this->addUserWithRegistrationDate('2016-11-27');
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
@@ -161,5 +167,20 @@ class MetricQueryTest extends WebTestCase
         ]));
 
         $this->assertEquals(1, $result2[0]['amount']);
+    }
+
+    /**
+     * @test
+     */
+    public function ignoresDateRangeIfSpecified() {
+        $query = new MetricTimelessUsersQuery($this::$em);
+
+        $result = $query->execute(new StatsQueryParameters([
+            'metric' => 'users',
+            'startDate' => '2016-05-01',
+            'endDate' => '2016-05-31',
+        ]));
+
+        $this->assertGreaterThanOrEqual(2, $result[0]['amount']);
     }
 }
