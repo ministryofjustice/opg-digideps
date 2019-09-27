@@ -5,7 +5,9 @@ variable "DEFAULT_ROLE" {
 variable "accounts" {
   type = map(
     object({
-      account_id = string
+      account_id      = string
+      db_subnet_group = string
+      ec_subnet_group = string
     })
   )
 }

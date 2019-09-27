@@ -149,23 +149,41 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
-
+  terraform:
+    commands:
+      install:
+        steps:
+          - run:
+              name: Download Terraform
+              command: curl -sfSO https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+          - run:
+              name: Add Terraform SHA256SUM
+              command: echo "${TF_SHA256SUM} terraform_${TF_VERSION}_linux_amd64.zip" > SHA256SUMS
+          - run:
+              name: Check Terraform SHA256SUM
+              command: sha256sum -c --status SHA256SUMS
+          - run:
+              name: Install Terraform
+              command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
 jobs:
   lint:
     docker:
-      - image: hashicorp/terraform:full
+      - image: circleci/ruby
     environment:
+      TF_VERSION: 0.12.9
+      TF_SHA256SUM: 69712c6216cc09b7eca514b9fb137d4b1fead76559c66f338b4185e1c347ace5
       TF_CLI_ARGS_plan: -input=false -lock=false
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
     steps:
       - checkout
+      - terraform/install
       - run:
           name: terraform lint
           command: terraform fmt -diff -check -recursive
 
   apply:
     docker:
-      - image: hashicorp/terraform:full
+      - image: circleci/ruby
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -180,6 +198,8 @@ jobs:
         default: apply
         type: string
     environment:
+      TF_VERSION: 0.12.9
+      TF_SHA256SUM: 69712c6216cc09b7eca514b9fb137d4b1fead76559c66f338b4185e1c347ace5
       TF_CLI_ARGS_apply: -input=false -auto-approve
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
@@ -187,6 +207,7 @@ jobs:
       WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
+      - terraform/install
       - attach_workspace: { at: . }
       - run:
           name: Initialize

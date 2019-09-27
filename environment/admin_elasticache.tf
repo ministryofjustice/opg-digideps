@@ -14,7 +14,6 @@ resource "aws_security_group_rule" "admin_cache_task_in" {
   source_security_group_id = aws_security_group.admin.id
 }
 
-# TODO: switch to data source subnet group
 resource "aws_elasticache_cluster" "admin" {
   cluster_id           = "admin-${local.environment}"
   engine               = "redis"
