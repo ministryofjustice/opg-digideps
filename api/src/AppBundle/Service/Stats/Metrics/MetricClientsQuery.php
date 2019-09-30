@@ -37,6 +37,6 @@ class MetricClientsQuery extends MetricQuery
                 ELSE r.type
             END reportType
         FROM client c
-        INNER JOIN report r ON r.client_id = c.id";
+        LEFT JOIN report r ON r.client_id = c.id";
     }
 }
