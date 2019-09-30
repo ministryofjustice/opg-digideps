@@ -24,7 +24,7 @@ class StatsQueryParameters
         }
 
         if (!is_array($this->dimensions) && !is_null($this->dimensions)) {
-            throw new \InvalidArgumentException('Invalid dimension');
+            throw new \InvalidArgumentException('Dimension should be an array');
         }
 
         if ($this->queryHasDateConstraint()) {
