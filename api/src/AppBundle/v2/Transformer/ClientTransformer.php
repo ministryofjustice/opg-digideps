@@ -66,8 +66,8 @@ class ClientTransformer
             $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
-        if (!in_array('organisations', $exclude) && $dto->getOrganisations() !== null) {
-            $transformed['organisations'] = $this->transformOrganisations($dto->getOrganisations());
+        if (!in_array('organisation', $exclude) && $dto->getOrganisation() !== null) {
+            $transformed['organisation'] = $this->transformOrganisation($dto->getOrganisation());
         }
 
         if (!in_array('namedDeputy', $exclude) && $dto->getNamedDeputy() instanceof NamedDeputyDto) {
@@ -118,24 +118,12 @@ class ClientTransformer
     }
 
     /**
-     * @param array $organisations
+     * @param OrganisationDto $organisation
      * @return array
      */
-    private function transformOrganisations(array $organisations)
+    private function transformOrganisation(OrganisationDto $organisation)
     {
-        if (empty($organisations)) {
-            return [];
-        }
-
-        $transformed = [];
-
-        foreach ($organisations as $organisation) {
-            if ($organisation instanceof OrganisationDto) {
-                $transformed[] = $this->organisationTransformer->transform($organisation, ['users']);
-            }
-        }
-
-        return $transformed;
+        return $this->organisationTransformer->transform($organisation, ['users']);
     }
 
     /**

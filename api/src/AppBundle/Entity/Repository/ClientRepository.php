@@ -103,9 +103,10 @@ class ClientRepository extends EntityRepository
      */
     public function getArrayById($id)
     {
+        // called by ADMIN users so must include active and inactive orgs
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr, o, nd FROM AppBundle\Entity\Client c LEFT JOIN c.namedDeputy nd LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.organisations o WHERE c.id = ?1')
+            ->createQuery('SELECT c, r, ndr, o, nd FROM AppBundle\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.namedDeputy nd LEFT JOIN c.organisation o WHERE c.id = ?1')
             ->setParameter(1, $id);
 
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class);

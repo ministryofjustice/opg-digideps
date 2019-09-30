@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Client.
@@ -238,13 +239,13 @@ class Client implements ClientInterface
     private $archivedAt;
 
     /**
-     * @var ArrayCollection
+     * @var Organisation
      *
      * @JMS\Groups({"client-organisations"})
      *
-     * @ORM\ManyToMany(targetEntity="Organisation", mappedBy="clients")
+     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
-    private $organisations;
+    private $organisation;
 
     /**
      * Constructor.
@@ -255,7 +256,6 @@ class Client implements ClientInterface
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
-        $this->organisations = new ArrayCollection();
     }
 
     /**
@@ -1064,34 +1064,33 @@ class Client implements ClientInterface
 
 
     /**
-     * @return ArrayCollection
+     * @return Organisation
      */
-    public function getOrganisations()
+    public function getOrganisation()
     {
-        return $this->organisations;
+        return $this->organisation;
     }
 
     /**
      * @param Organisation $organisation
-     * @return User
+     * @return $this
      */
-    public function addOrganisation(Organisation $organisation)
+    public function setOrganisation(Organisation $organisation)
     {
-        if (!$this->organisations->contains($organisation)) {
-            $this->organisations->add($organisation);
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function userBelongsToClientsOrganisation(UserInterface $user)
+    {
+        if ($this->getOrganisation() instanceof OrganisationInterface && $this->getOrganisation()->isActivated()) {
+            return $this->getOrganisation()->containsUser($user);
         }
-
-        return $this;
-    }
-
-    /**
-     * @param Organisation $organisation
-     * @return User
-     */
-    public function removeOrganisation(Organisation $organisation)
-    {
-        $this->organisations->removeElement($organisation);
-
-        return $this;
+        return false;
     }
 }
