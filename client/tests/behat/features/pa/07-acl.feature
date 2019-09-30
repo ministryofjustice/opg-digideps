@@ -86,3 +86,169 @@ Feature: PA cannot access other's PA's reports and clients
     And the response status code should be 200
     And I go to "/org/team"
 
+  Scenario: CSV org-upload
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    # upload PA users
+    When I click on "admin-upload-pa"
+    And I attach the file "behat-pa-orgs.csv" to "admin_upload_file"
+    And I press "admin_upload_upload"
+    Then the form should be valid
+
+  Scenario: Admin activates PA Org 1 deputy
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And emails are sent from "admin" area
+    # activate PA Org 1 user
+    When I click on "admin-homepage"
+    And I click on "send-activation-email" in the "user-behat-pa-org1pa-org1govuk" region
+    Then the response status code should be 200
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa-org1@pa-org1.gov.uk"
+    And I open the "/user/activate/" link from the email
+    # terms
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+    # password step
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    And I click on "save"
+    Then the form should be valid
+    When I fill in the following:
+      | user_details_jobTitle   | Case worker      |
+      | user_details_phoneMain  | 40000000001 |
+    And I press "user_details_save"
+    Then the form should be valid
+
+  Scenario: Admin activates PA Org 2 deputy
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And emails are sent from "admin" area
+   # activate PA Org 1 user
+    When I click on "admin-homepage"
+    And I click on "send-activation-email" in the "user-behat-pa-org2pa-org2govuk" region
+    Then the response status code should be 200
+    And the last email containing a link matching "/user/activate/" should have been sent to "behat-pa-org2@pa-org2.gov.uk"
+    And I open the "/user/activate/" link from the email
+   # terms
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+   # password step
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    And I click on "save"
+    Then the form should be valid
+    When I fill in the following:
+      | user_details_jobTitle   | Case worker      |
+      | user_details_phoneMain  | 40000000002 |
+    And I press "user_details_save"
+    Then the form should be valid
+
+  Scenario: PA Org 1 can access own reports and clients
+    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    # access report and save for future feature tests
+    Then I click on "pa-report-open" in the "client-40000041" region
+    And I save the report as "40000041-report"
+    And I click on "client-edit"
+    And the response status code should be 200
+    And I save the current URL as "client-40000041-edit"
+    Then I go to "/logout"
+
+  Scenario: PA Org 2 can access own reports and clients
+    Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
+    # access report and save for future feature tests
+    Then I click on "pa-report-open" in the "client-40000042" region
+    And I save the report as "40000042-report"
+    And I click on "client-edit"
+    And the response status code should be 200
+    And I save the current URL as "client-40000042-edit"
+    Then I go to "/logout"
+
+  Scenario: PA Org 1 user logs in and should only see their clients and reports (from the existing team structure)
+    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    # check I'm in the dashboard and I see only my own client
+    And I should see the "client-40000041" region
+    And I should not see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 500
+    Then I go to the URL previously saved as "client-40000042-edit"
+    And the response status code should be 500
+
+  Scenario: Admin adds PA org 2 deputy to PA Org 1 but org 1 does not get PA org 2's clients
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to admin page "/admin/organisations"
+    And I follow "behat-pa-org1@pa-org1.gov.uk"
+    And I follow "Add someone to this organisation"
+    And I fill in "organisation_add_user_email" with "behat-pa-org2@pa-org2.gov.uk"
+    And I press "Find user"
+    And I press "Add user to organisation"
+    # Check org shows org 1's client but does not show org 2's own client
+    And I should see the "org-40000041" region
+    And I should not see the "org-40000042" region
+
+  Scenario: PA org 1 deputy logs in and should still only access their own client (from existing team structure)
+    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    Then I should see the "client-40000041" region
+    And I should not see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
+    Then I go to the URL previously saved as "client-40000041-edit"
+    And the response status code should be 200
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 500
+    Then I go to the URL previously saved as "client-40000042-edit"
+    And the response status code should be 500
+
+  Scenario: PA org 1 is activated
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I go to admin page "/admin/organisations"
+    When I click on "edit" in the "org-behat-pa-org1pa-org1govuk" region
+    And I fill in "organisation_isActivated_0" with "1"
+    And I press "Save organisation"
+
+  Scenario: PA org 1 deputy logs in and should now see their existing client (from existing team structure) but not org 2's client
+    # log in shown in PA dashboard
+    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    Then I should see the "client-40000041" region
+    And I should not see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 500
+
+  Scenario: PA org 2 deputy logs in and should now see their existing client (from existing team structure) and new org 1 client
+    # log in shown in PA dashboard
+    Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
+    Then I should see the "client-40000041" region
+    And I should see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 200
+
+
+  # Activate Org 2 should not change anything
+  Scenario: PA org 2 is activated
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I go to admin page "/admin/organisations"
+    When I click on "edit" in the "org-behat-pa-org2pa-org2govuk" region
+    And I fill in "organisation_isActivated_0" with "1"
+    And I press "Save organisation"
+
+  Scenario: PA org 1 deputy logs in and should STILL see their existing client (from existing team structure) but NOT org 2's client
+    # log in shown in PA dashboard
+    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+    Then I should see the "client-40000041" region
+    And I should not see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 500
+
+  Scenario: PA org 2 deputy logs in and should STILL see their existing client (from existing team structure) and new org 1 client
+    # log in shown in PA dashboard
+    Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
+    Then I should see the "client-40000041" region
+    And I should see the "client-40000042" region
+    Then I go to the report URL "overview" for "40000041-report"
+    And the response status code should be 200
+    Then I go to the report URL "overview" for "40000042-report"
+    And the response status code should be 200

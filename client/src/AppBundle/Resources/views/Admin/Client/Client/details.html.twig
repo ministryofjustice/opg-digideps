@@ -63,78 +63,18 @@
     </div>
     {% endif %}
 
-    {% if client.organisations is not empty %}
-        <div class="govuk-summary-list__row">
+    {% if client.organisation is not empty %}
+        <dt class="govuk-summary-list__key">
+            {{ (page ~ '.organisation') | trans }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
 
-            <dt class="govuk-summary-list__key">
-                {{ (page ~ '.organisation') | trans }}
-            </dt>
-            <dd class="govuk-summary-list__value">
-                {% for org in client.organisations %}
-                    <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
-
-                    {% if not org.isActivated %}
-                        {{ (page ~ '.organisationInactive') | trans }}
-                    {% endif %}
-                    <br>
-                {% endfor %}
-            </dd>
-        </div>
-    {% endif %}
-    {% if client.namedDeputy is not empty %}
-
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {{ 'namedDeputy' | trans({}, 'common') }}
-            </dt>
-            <dd class="govuk-summary-list__value behat-region-nd-name">
-                {{ client.namedDeputy.firstname }} {{ client.namedDeputy.lastname }}
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {{ (page ~ '.namedDeputyAddress') | trans }}
-            </dt>
-            <dd class="govuk-summary-list__value behat-region-nd-address">
-                {% if client.namedDeputy.address1 is not empty %}
-                    {{ client.namedDeputy.address1 }}<br />
-                {% endif %}
-                {% if client.namedDeputy.address2 is not empty %}
-                    {{ client.namedDeputy.address2 }}<br />
-                {% endif %}
-                {% if client.namedDeputy.address3 is not empty %}
-                    {{ client.namedDeputy.address3 }}<br />
-                {% endif %}
-                {% if client.namedDeputy.address4 is not empty %}
-                    {{ client.namedDeputy.address4 }}<br />
-                {% endif %}
-                {% if client.namedDeputy.address5 is not empty %}
-                    {{ client.namedDeputy.address5 }}
-                {% endif %}
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                {{ (page ~ '.namedDeputyContactDetails') | trans }}
-            </dt>
-            <dd class="govuk-summary-list__value behat-region-nd-contact-details">
-                {% if client.namedDeputy.phoneMain is not empty %}
-                    {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br />
-                {% endif %}
-                {% if client.namedDeputy.phoneAlternative is not empty %}
-                    {{ 'alternativePhone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneAlternative }}
-                {% endif %}
-                {% if client.namedDeputy.email1 is not empty %}
-                    {{ 'email' | trans({}, 'common') }}1: {{ client.namedDeputy.email1 }}
-                {% endif %}
-                {% if client.namedDeputy.email2 is not empty %}
-                    {{ 'email' | trans({}, 'common') }}2: {{ client.namedDeputy.email2 }}
-                {% endif %}
-                {% if client.namedDeputy.email3 is not empty %}
-                    {{ 'email' | trans({}, 'common') }}3: {{ client.namedDeputy.email3 }}
-                {% endif %}
-            </dd>
-        </div>
+            {% if not client.organisation.isActivated %}
+                {{ (page ~ '.organisationInactive') | trans }}
+            {% endif %}
+            <br>
+        </dd>
     {% endif %}
 </dl>
 

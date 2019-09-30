@@ -33,7 +33,7 @@ class ClientController extends RestController
             $client->addUser($user);
         } else {
             $client = $this->findEntityBy(EntityDir\Client::class, $data['id'], 'Client not found');
-            if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+            if (!$this->isGranted('edit', $client)) {
                 throw $this->createAccessDeniedException('Client does not belong to user');
             }
         }
@@ -97,8 +97,7 @@ class ClientController extends RestController
             throw $this->createAccessDeniedException('Cannot access archived reports');
         };
 
-
-        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+        if (!$this->isGranted('view', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 
@@ -137,7 +136,7 @@ class ClientController extends RestController
         /* @var $client EntityDir\Client */
         $client = $this->findEntityBy(EntityDir\Client::class, $id);
 
-        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+        if (!$this->isGranted('edit', $client)) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
 

@@ -549,6 +549,6 @@ class OrgService
     private function attachClientToOrganisation(EntityDir\Client $client): void
     {
         $this->currentOrganisation->addClient($client);
-        $client->addOrganisation($this->currentOrganisation);
+        $client->setOrganisation($this->currentOrganisation);
     }
 }
