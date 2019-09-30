@@ -3,3 +3,5 @@ Overall, how did you feel about the service you received today ?<br/>
 <br/>
 {{ userRole }}: {{ ('satisfactionLevelsChoices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}<br/>
 <br/>
+Comments:<br />
+{{ response.comments }}

@@ -30,6 +30,10 @@ class SatisfactionController extends RestController
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
+        if (isset($data['comments'])) {
+            $satisfaction->setComments($data['comments']);
+        }
+
         $this->persistAndFlush($satisfaction);
 
         return $satisfaction->getId();
