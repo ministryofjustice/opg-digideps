@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Stats\StatsQueryParameters;
-use AppBundle\Service\Stats\MetricQueryFactory;
+use AppBundle\Service\Stats\QueryFactory;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,13 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 class StatsController extends RestController
 {
     /**
-     * @var MetricQueryFactory
+     * @var QueryFactory
      */
-    private $metricQueryFactory;
+    private $QueryFactory;
 
-    public function __construct(MetricQueryFactory $metricQueryFactory)
+    public function __construct(QueryFactory $QueryFactory)
     {
-        $this->metricQueryFactory = $metricQueryFactory;
+        $this->QueryFactory = $QueryFactory;
     }
 
     /**
@@ -29,7 +29,7 @@ class StatsController extends RestController
     public function getMetric(Request $request)
     {
         $params = new StatsQueryParameters($request->query->all());
-        $query = $this->metricQueryFactory->create($params);
+        $query = $this->QueryFactory->create($params);
 
         return $query->execute($params);
     }

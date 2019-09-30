@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Metrics;
+namespace Tests\AppBundle\Service\Stats\Query;
 
 use AppBundle\Entity\Satisfaction;
-use AppBundle\Service\Stats\Metrics\MetricSatisfactionQuery;
+use AppBundle\Service\Stats\Query\SatisfactionQuery;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricSatisfactionQueryTest extends WebTestCase
+class SatisfactionQueryTest extends WebTestCase
 {
     /** @var EntityManager */
     protected static $em;
@@ -35,7 +35,7 @@ class MetricSatisfactionQueryTest extends WebTestCase
 
     public function testReturnsSatisfactionAverageByDeputyType()
     {
-        $query = new MetricSatisfactionQuery($this::$em);
+        $query = new SatisfactionQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -63,7 +63,7 @@ class MetricSatisfactionQueryTest extends WebTestCase
 
     public function testReturnsSatisfactionAverageByReportType()
     {
-        $query = new MetricSatisfactionQuery($this::$em);
+        $query = new SatisfactionQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',

@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Metrics;
+namespace Tests\AppBundle\Service\Stats\Query;
 
 use AppBundle\Entity\User;
 use AppBundle\Entity\Satisfaction;
-use AppBundle\Service\Stats\Metrics\MetricRegisteredDeputiesQuery;
+use AppBundle\Service\Stats\Query\RegisteredDeputiesQuery;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricRegisteredDeputiesQueryTest extends WebTestCase
+class RegisteredDeputiesQueryTest extends WebTestCase
 {
     /** @var EntityManager */
     protected static $em;
@@ -37,7 +37,7 @@ class MetricRegisteredDeputiesQueryTest extends WebTestCase
 
     public function testReturnsDeputiesByType()
     {
-        $query = new MetricRegisteredDeputiesQuery($this::$em);
+        $query = new RegisteredDeputiesQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',
@@ -65,7 +65,7 @@ class MetricRegisteredDeputiesQueryTest extends WebTestCase
 
     public function testReturnsDeputiesCollated()
     {
-        $query = new MetricRegisteredDeputiesQuery($this::$em);
+        $query = new RegisteredDeputiesQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies'
@@ -80,7 +80,7 @@ class MetricRegisteredDeputiesQueryTest extends WebTestCase
 
     public function testAdheresToDates()
     {
-        $query = new MetricRegisteredDeputiesQuery($this::$em);
+        $query = new RegisteredDeputiesQuery($this::$em);
 
         $twoWeeksAgo = (new \DateTime('-14 days'))->format('Y-m-d');
         $oneWeeksAgo = (new \DateTime('-7 days'))->format('Y-m-d');

@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\Stats\Metrics;
+namespace AppBundle\Service\Stats\Query;
 
-class MetricRegisteredDeputiesQuery extends MetricQuery
+class ReportsSubmittedQuery extends Query
 {
     /**
      * @return string
@@ -17,7 +17,7 @@ class MetricRegisteredDeputiesQuery extends MetricQuery
      */
     protected function getSupportedDimensions(): array
     {
-        return ['deputyType'];
+        return ['deputyType', 'reportType'];
     }
 
     /**
@@ -26,12 +26,18 @@ class MetricRegisteredDeputiesQuery extends MetricQuery
     protected function getSubquery(): string
     {
         return "SELECT
-            u.registration_date date,
+            rs.created_on date,
             CASE
                 WHEN u.role_name LIKE '%_PROF_%' THEN 'prof'
                 WHEN u.role_name LIKE '%_PA_%' THEN 'pa'
                 ELSE 'lay'
-            END deputyType
-        FROM dd_user u";
+            END deputyType,
+            CASE
+                WHEN rs.ndr_id IS NOT NULL THEN 'ndr'
+                ELSE r.type
+            END reportType
+        FROM report_submission rs
+        INNER JOIN dd_user u ON u.id = rs.created_by
+        LEFT JOIN report r ON r.id = rs.report_id";
     }
 }

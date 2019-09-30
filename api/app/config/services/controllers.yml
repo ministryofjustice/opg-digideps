@@ -12,7 +12,7 @@ services:
     public: true
     class: AppBundle\Controller\StatsController
     arguments:
-      - '@AppBundle\Service\Stats\MetricQueryFactory'
+      - '@AppBundle\Service\Stats\QueryFactory'
 
   AppBundle\v2\Controller\DeputyController:
     class: AppBundle\v2\Controller\DeputyController

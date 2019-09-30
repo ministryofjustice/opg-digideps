@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Service\Stats\Metrics;
+namespace AppBundle\Service\Stats\Query;
 
-class MetricSatisfactionQuery extends MetricQuery
+class SatisfactionQuery extends Query
 {
     /**
      * @return string

@@ -3,12 +3,12 @@
 namespace Tests\AppBundle\Service\Stats\Metrics;
 
 use AppBundle\Entity\User;
-use AppBundle\Service\Stats\Metrics\MetricQuery;
+use AppBundle\Service\Stats\Query\Query;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricUsersQuery extends MetricQuery
+class UsersQuery extends Query
 {
     protected function getAggregation(): string
     {
@@ -33,7 +33,7 @@ class MetricUsersQuery extends MetricQuery
     }
 };
 
-class MetricQueryTest extends WebTestCase
+class QueryTest extends WebTestCase
 {
     /**
      * @var EntityManager
@@ -67,7 +67,7 @@ class MetricQueryTest extends WebTestCase
     public function identifiesUnsupportedDimensions()
     {
         $this->expectException(\Exception::class);
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $query->execute(new StatsQueryParameters([
             'metric' => 'users',
@@ -81,7 +81,7 @@ class MetricQueryTest extends WebTestCase
      */
     public function identifiesSupportedDimensions()
     {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $query->execute(new StatsQueryParameters([
             'metric' => 'users',
@@ -93,7 +93,7 @@ class MetricQueryTest extends WebTestCase
      * @test
      */
     public function returnsArrayOfDimensions() {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
@@ -112,7 +112,7 @@ class MetricQueryTest extends WebTestCase
      * @test
      */
     public function returnsValueIfNoDimension() {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users'
@@ -127,7 +127,7 @@ class MetricQueryTest extends WebTestCase
      * @test
      */
     public function adheresToDateRange() {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $this->addUserWithRegistrationDate('2016-05-04');
         $this->addUserWithRegistrationDate('2016-11-27');
@@ -145,7 +145,7 @@ class MetricQueryTest extends WebTestCase
      * @test
      */
     public function includesDataFromBothEndDays() {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $result1 = $query->execute(new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -168,7 +168,7 @@ class MetricQueryTest extends WebTestCase
      * @test
      */
     public function ignoresDateRangeIfMetricNotConstrainedByDate() {
-        $query = new MetricUsersQuery($this::$em);
+        $query = new UsersQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'not-constrained',

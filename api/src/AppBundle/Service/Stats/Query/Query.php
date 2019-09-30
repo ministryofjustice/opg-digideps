@@ -1,12 +1,12 @@
 <?php
 
-namespace AppBundle\Service\Stats\Metrics;
+namespace AppBundle\Service\Stats\Query;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\ResultSetMapping;
 use AppBundle\Service\Stats\StatsQueryParameters;
 
-abstract class MetricQuery
+abstract class Query
 {
     /** @var EntityManager */
     private $em;

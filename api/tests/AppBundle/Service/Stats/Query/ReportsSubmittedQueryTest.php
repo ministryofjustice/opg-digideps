@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Metrics;
+namespace Tests\AppBundle\Service\Stats\Query;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
 use AppBundle\Entity\User;
-use AppBundle\Service\Stats\Metrics\MetricReportsSubmittedQuery;
+use AppBundle\Service\Stats\Query\ReportsSubmittedQuery;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricReportsSubmittedQueryTest extends WebTestCase
+class ReportsSubmittedQueryTest extends WebTestCase
 {
     /** @var EntityManager */
     protected static $em;
@@ -33,7 +33,7 @@ class MetricReportsSubmittedQueryTest extends WebTestCase
 
     public function testReturnsTotalReportsSubmittedByDeputyType()
     {
-        $query = new MetricReportsSubmittedQuery($this::$em);
+        $query = new ReportsSubmittedQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'reportsSubmitted',
@@ -61,7 +61,7 @@ class MetricReportsSubmittedQueryTest extends WebTestCase
 
     public function testReturnsTotalReportsSubmittedByReportType()
     {
-        $query = new MetricReportsSubmittedQuery($this::$em);
+        $query = new ReportsSubmittedQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'reportsSubmitted',

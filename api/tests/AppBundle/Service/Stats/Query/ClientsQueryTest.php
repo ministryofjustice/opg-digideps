@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\AppBundle\Service\Stats\Metrics;
+namespace Tests\AppBundle\Service\Stats\Query;
 
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
-use AppBundle\Service\Stats\Metrics\MetricClientsQuery;
+use AppBundle\Service\Stats\Query\ClientsQuery;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class MetricClientsQueryTest extends WebTestCase
+class ClientsQueryTest extends WebTestCase
 {
     /** @var EntityManager */
     protected static $em;
@@ -36,7 +36,7 @@ class MetricClientsQueryTest extends WebTestCase
 
     public function testReturnsTotalClientsByDeputyType()
     {
-        $query = new MetricClientsQuery($this::$em);
+        $query = new ClientsQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'clients',
@@ -64,7 +64,7 @@ class MetricClientsQueryTest extends WebTestCase
 
     public function testReturnsTotalClientByReportType()
     {
-        $query = new MetricClientsQuery($this::$em);
+        $query = new ClientsQuery($this::$em);
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'clients',

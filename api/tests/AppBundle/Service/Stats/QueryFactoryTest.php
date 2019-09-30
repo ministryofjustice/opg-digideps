@@ -2,24 +2,24 @@
 
 namespace Tests\AppBundle\Service\Stats;
 
-use AppBundle\Service\Stats\Metrics\MetricQuery;
-use AppBundle\Service\Stats\MetricQueryFactory;
+use AppBundle\Service\Stats\Query\Query;
+use AppBundle\Service\Stats\QueryFactory;
 use AppBundle\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class MetricQueryFactoryTest extends TestCase
+class QueryFactoryTest extends TestCase
 {
     /**
-     * @var MetricQueryFactory
+     * @var QueryFactory
      */
     public $factory;
 
     public function setUp(): void
     {
         $em = m::mock(EntityManager::class)->makePartial();
-        $this->factory = new MetricQueryFactory($em);
+        $this->factory = new QueryFactory($em);
     }
 
     /**
@@ -42,7 +42,7 @@ class MetricQueryFactoryTest extends TestCase
         ]);
 
         $query = $this->factory->create($sq);
-        $this->assertInstanceOf(MetricQuery::class, $query);
+        $this->assertInstanceOf(Query::class, $query);
     }
 
     /**
