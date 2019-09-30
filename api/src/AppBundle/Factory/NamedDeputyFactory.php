@@ -17,7 +17,7 @@ class NamedDeputyFactory
         $data['deputyType'] = $csvRow['Dep Type'];
         $data['deputyFirstname'] = $csvRow['Dep Forename'];
         $data['deputyLastname'] = $csvRow['Dep Surname'];
-        $data['deputyEmail1'] = $csvRow['Email'];
+        $data['deputyEmail1'] = strtolower($csvRow['Email']);
         $data['deputyAddress1'] = $csvRow['Dep Adrs1'];
         $data['deputyAddress2'] = $csvRow['Dep Adrs2'];
         $data['deputyAddress3'] = $csvRow['Dep Adrs3'];
@@ -25,8 +25,8 @@ class NamedDeputyFactory
         $data['deputyAddress5'] = $csvRow['Dep Adrs5'];
         $data['deputyAddressPostcode'] = $csvRow['Dep Postcode'];
         $data['deputyAddressCountry'] = 'GB';
-        $data['deputyEmail2'] = isset($csvRow['Email2']) ? $csvRow['Email2'] : null;
-        $data['deputyEmail3'] = isset($csvRow['Email3']) ? $csvRow['Email3'] : null;
+        $data['deputyEmail2'] = isset($csvRow['Email2']) ? strtolower($csvRow['Email2']) : null;
+        $data['deputyEmail3'] = isset($csvRow['Email3']) ? strtolower($csvRow['Email3']) : null;
         $data['deputyAddressNo'] = isset($csvRow['DepAddr No']) ? $csvRow['DepAddr No'] : null;
         $data['deputyPhoneMain'] = isset($csvRow['Phone Main']) ? $csvRow['Phone Main'] : null;
         $data['deputyPhoneAlternative'] = isset($csvRow['Phone Alternative']) ? $csvRow['Phone Alternative'] : null;
