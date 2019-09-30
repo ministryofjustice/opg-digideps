@@ -23,3 +23,15 @@ resource "aws_cloudwatch_metric_alarm" "ses_complaint_1h" {
   namespace           = "AWS/SES"
   alarm_actions       = [aws_sns_topic.alerts.arn]
 }
+
+resource "aws_cloudwatch_log_metric_filter" "php_errors" {
+  name           = HTTP5xxError
+  pattern        = "[..., status_code=5*]"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name      = "FatalPHPErrors"
+    namespace = "DigiDeps/Error"
+    value     = "1"
+  }
+}
