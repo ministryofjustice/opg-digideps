@@ -25,7 +25,7 @@ resource "aws_cloudwatch_metric_alarm" "ses_complaint_1h" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
-  name           = HTTP5xxError
+  name           = "HTTP5xxError"
   pattern        = "[..., status_code=5*]"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
