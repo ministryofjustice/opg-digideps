@@ -121,13 +121,22 @@ class ReportRepository extends EntityRepository
         if ($select == 'reports') {
             $qb
                 ->select('r,c,u')
-                ->leftJoin('r.submittedBy', 'sb');
+                ->leftJoin('r.submittedBy', 'sb')
+                ->distinct();
         } elseif ($select == 'count') {
-            $qb->select('COUNT(r)');
+            $qb->select('COUNT(DISTINCT r)');
+
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": first must be reports|count");
         }
 
+//        $qb
+//            ->innerJoin('r.client', 'c', 'WITH', 'c.archivedAt IS NULL' )
+//            ->leftJoin('c.organisation', 'o', 'WITH', 'o.isActivated = true')
+//            ->leftJoin('c.users', 'u')
+//            ->leftJoin('o.users', 'ou')
+//        ;
+//        $qb->where('u.id = ' . $userId);
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
@@ -166,7 +175,8 @@ class ReportRepository extends EntityRepository
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
-
+//        $qb->groupBy('r')
+//var_dump($qb->getQuery()->getSQL());exit;
         return $qb;
     }
 
