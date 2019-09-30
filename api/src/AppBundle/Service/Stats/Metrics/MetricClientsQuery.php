@@ -9,7 +9,7 @@ class MetricClientsQuery extends MetricQuery
      */
     protected function getAggregation(): string
     {
-        return 'COUNT(1)';
+        return 'COUNT(DISTINCT t.clientId)';
     }
 
     /**
@@ -26,6 +26,7 @@ class MetricClientsQuery extends MetricQuery
     protected function getSubquery(): string
     {
         return "SELECT
+            c.id as clientId,
             CASE
                 WHEN EXISTS(SELECT 1 FROM odr WHERE client_id = c.id) THEN 'lay'
                 WHEN r.type LIKE '%-5' THEN 'prof'

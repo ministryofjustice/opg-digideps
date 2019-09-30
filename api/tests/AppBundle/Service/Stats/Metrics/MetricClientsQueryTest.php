@@ -19,17 +19,17 @@ class MetricClientsQueryTest extends WebTestCase
         $frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         self::$em = $frameworkBundleClient->getContainer()->get('em');
 
-        static::givenClientWithReportOfType('NDR');
-        static::givenClientWithReportOfType('NDR');
-        static::givenClientWithReportOfType('102');
-        static::givenClientWithReportOfType('103');
-        static::givenClientWithReportOfType('103');
-        static::givenClientWithReportOfType('102-5');
-        static::givenClientWithReportOfType('102-5');
-        static::givenClientWithReportOfType('102-6');
-        static::givenClientWithReportOfType('102-6');
-        static::givenClientWithReportOfType('103-5');
-        static::givenClientWithReportOfType('103-6');
+        static::givenClientWithReportsOfType(['NDR', '102']);
+        static::givenClientWithReportsOfType(['NDR', '102']);
+        static::givenClientWithReportsOfType(['102', '102']);
+        static::givenClientWithReportsOfType(['103']);
+        static::givenClientWithReportsOfType(['103']);
+        static::givenClientWithReportsOfType(['102-5']);
+        static::givenClientWithReportsOfType(['102-5']);
+        static::givenClientWithReportsOfType(['103-5']);
+        static::givenClientWithReportsOfType(['102-6']);
+        static::givenClientWithReportsOfType(['102-6']);
+        static::givenClientWithReportsOfType(['103-6']);
 
         self::$em->flush();
     }
@@ -71,6 +71,7 @@ class MetricClientsQueryTest extends WebTestCase
             'dimension' => ['reportType']
         ]));
 
+        print_r($result);
         // Assert an array result for each report type submitted
         $this->assertCount(7, $result);
 
@@ -81,7 +82,7 @@ class MetricClientsQueryTest extends WebTestCase
                     $this->assertEquals(2, $metric['amount']);
                     break;
                 case '102':
-                    $this->assertEquals(1, $metric['amount']);
+                    $this->assertEquals(3, $metric['amount']);
                     break;
                 case '103':
                     $this->assertEquals(2, $metric['amount']);
@@ -102,18 +103,25 @@ class MetricClientsQueryTest extends WebTestCase
         }
     }
 
-    private static function givenClientWithReportOfType($reportType)
+    private static function givenClientWithReportsOfType(array $reportTypes)
     {
-        if ('NDR' === $reportType) {
-            $client = new Client();
-            $report = new Ndr($client);
-        } else {
-            $client = new Client();
-            $report = new Report($client, $reportType, new \DateTime('2019-08-01'), new \DateTime('2020-08-01'));
+        $client = new Client();
+        foreach ($reportTypes as $reportType) {
+            if (('NDR' === $reportType)) {
+                $report = new Ndr($client);
+            } else {
 
+                $report = new Report(
+                    $client,
+                    $reportType,
+                    new \DateTime('2019-08-01'),
+                    new \DateTime('2020-08-01')
+                );
+            }
+
+            self::$em->persist($report);
         }
 
         self::$em->persist($client);
-        self::$em->persist($report);
     }
 }
