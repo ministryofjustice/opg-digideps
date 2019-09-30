@@ -17,6 +17,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     use AuthenticationTrait,
         DebugTrait,
         DbTrait,
+        CookieTrait,
         EmailTrait,
         ExpressionTrait,
         FileTrait,

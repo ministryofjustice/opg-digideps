@@ -38,27 +38,32 @@
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            ga('create', '{{ga.default}}', 'auto');
-            ga('create', '{{ga.gds}}', 'auto', 'govuk_shared', {'allowLinker': true});
-            ga('govuk_shared.require', 'linker');
-            ga('govuk_shared.linker.set', 'anonymizeIp', true);
-            ga('govuk_shared.linker:autoLink', ['www.gov.uk']);
+            // Check we have permission
+            var cookiePolicyJSON = document.cookie.replace(/(?:(?:^|.*;\s*)cookie_policy\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            var cookiePolicy = cookiePolicyJSON ? JSON.parse(decodeURIComponent(cookiePolicyJSON)) : {};
+            if (cookiePolicy.usage) {
+                ga('create', '{{ga.default}}', 'auto');
+                ga('create', '{{ga.gds}}', 'auto', 'govuk_shared', {'allowLinker': true});
+                ga('govuk_shared.require', 'linker');
+                ga('govuk_shared.linker.set', 'anonymizeIp', true);
+                ga('govuk_shared.linker:autoLink', ['www.gov.uk']);
 
-            {% if app.user %}
-                ga('set', '&uid','{{app.user.gaTrackingId()}}');
-            {% endif %}
+                {% if app.user %}
+                    ga('set', '&uid','{{app.user.gaTrackingId()}}');
+                {% endif %}
 
-            {% if gaCustomUrl is defined %}
-                ga('send', 'pageview', '{{gaCustomUrl}}');
-                ga('govuk_shared.send', 'pageview', '{{gaCustomUrl}}');
-            {% else %}
-                ga('send', 'pageview');
-                ga('govuk_shared.send', 'pageview');
-                {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
-                {#{% if app.request is defined and app.request %}#}
-                  {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
-                {#{% endif %}#}
-            {% endif %}
+                {% if gaCustomUrl is defined %}
+                    ga('send', 'pageview', '{{gaCustomUrl}}');
+                    ga('govuk_shared.send', 'pageview', '{{gaCustomUrl}}');
+                {% else %}
+                    ga('send', 'pageview');
+                    ga('govuk_shared.send', 'pageview');
+                    {# DISABLE all the query strings to be sent to GA. Not needed for Assets and bank accounts, as already customised #}
+                    {#{% if app.request is defined and app.request %}#}
+                    {#ga('send', 'pageview', {{ app.request.schemeAndHttpHost() ~ app.request.baseUrl() ~ app.request.pathInfo() }});#}
+                    {#{% endif %}#}
+                {% endif %}
+            }
         </script>
        {% endif %}
 
@@ -66,9 +71,17 @@
 
     <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <div class="opg-cookie-banner">
-        {% block cookieMessage %}{% endblock %}
-    </div>
+    {% if not app.request.cookies.has('cookie_policy') %}
+        <div class="opg-cookie-banner behat-region-cookie-banner" data-module="opg-cookie-banner">
+            <div class="govuk-width-container">
+                <p class="opg-cookie-banner__text govuk-!-font-size-19">This service uses cookies which are essential for the site to work. We also use non-essential cookies to help us improve government digital services. Any data collected is anonymised.</p>
+                <div>
+                    <a class="govuk-button opg-cookie-banner__button" href="/cookies?accept=all" data-js="accept-all">Accept cookies</a>
+                    <a class="govuk-button opg-cookie-banner__button" href="/cookies">Cookie settings</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
 
     <header class="govuk-header" role="banner" data-module="govuk-header">
