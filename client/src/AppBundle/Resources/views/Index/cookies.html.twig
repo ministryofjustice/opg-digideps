@@ -1,0 +1,45 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "cookies" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ form_start(form) }}
+
+            <p>{{ 'intro.para01' | trans }}</p>
+            <p>{{ 'intro.para02' | trans }}</p>
+
+            <h2 class="govuk-heading-l">{{ 'form.title' | trans }}</h2>
+
+            <p>{{ 'form.intro' | trans }}</p>
+
+            <h3 class="govuk-heading-m">{{ 'form.usage.label' | trans }}</h3>
+
+            <p class="govuk-hint">{{ 'form.usage.hint.para01' | trans }}</p>
+            <ul class="govuk-hint govuk-list govuk-list--bullet">
+                <li>{{ 'form.usage.hint.bullet01' | trans }}</li>
+                <li>{{ 'form.usage.hint.bullet02' | trans }}</li>
+            </ul>
+            <p class="govuk-hint">{{ 'form.usage.hint.para02' | trans }}</p>
+
+            {{ form_checkbox_group(form.usage, 'form.usage', {
+                'legendClass' : 'govuk-visually-hidden'
+            }) }}
+
+            <h3 class="govuk-heading-m">{{ 'form.necessary.label' | trans }}</h3>
+
+            <p>{{ 'form.necessary.description' | trans }}</p>
+
+            {{ form_submit(form.confirm, 'form.confirm') }}
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

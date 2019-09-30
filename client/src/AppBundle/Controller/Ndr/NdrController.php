@@ -240,6 +240,7 @@ class NdrController extends AbstractController
             // Store in database
             $this->getRestClient()->post('satisfaction', [
                 'score' => $form->get('satisfactionLevel')->getData(),
+                'comments' => $form->get('comments')->getData(),
                 'reportType' => $ndr->getType(),
             ]);
 

@@ -1,6 +1,8 @@
 satisfactionLevel:
   legend: Overall, how did you feel about the process of completing your deputy report online?
   hint: ""
+comments:
+  label: How could we improve this service?
 send:
   label: Send feedback
 

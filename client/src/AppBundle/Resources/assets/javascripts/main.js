@@ -4,6 +4,7 @@ require('./modules/bind.js')
 
 var GOVUKFrontend = require('govuk-frontend')
 var limitChars = require('./modules/characterLimiter.js')
+var cookieBanner = require('./modules/cookieBanner.js')
 var detailsExpander = require('./modules/detailsExpander.js')
 var fixSidebar = require('./modules/fix-sidebar.js')
 var formatCurrency = require('./modules/formatcurrency.js')
@@ -40,6 +41,9 @@ $(document).ready(function () {
 
   // Sidebar fixing to top module
   fixSidebar()
+
+  // Cookie banner
+  cookieBanner()
 
   // Details expander
   detailsExpander('.js-details-expander')

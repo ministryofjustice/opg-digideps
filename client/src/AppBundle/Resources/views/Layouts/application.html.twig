@@ -14,13 +14,6 @@
 
 {% block htmlTitle %}Deputy Report{% endblock %}
 
-{% block cookieMessage %}
-    <p class="govuk-width-container">
-        GOV.UK uses cookies to make the site simpler.
-        <a href="https://www.gov.uk/help/cookie-details">Find out more about cookies</a>
-    </p>
-{% endblock %}
-
 {% block proposition_content %}
     <a href="{{ (app.user and app.user.isDeputyOrg()) ? path('org_dashboard') : '/' }}" class="govuk-header__link govuk-header__link--service-name">
         {% block proposition_title %}Complete the deputy report{% endblock %}
@@ -196,7 +189,7 @@
         </a>
     </li>
     <li class="govuk-footer__inline-list-item">
-        <a href="https://www.gov.uk/help/cookie-details" class="govuk-footer__link">
+        <a href="{{ path('cookies') }}" class="govuk-footer__link">
             Cookies
         </a>
     </li>

@@ -12,16 +12,8 @@ workflows:
           semver_stage: --stage dev
           filters: { branches: { ignore: [ master ] } }
 
-#      - apply:
-#          name: apply shared-development
-#          requires: [ build pr, lint terraform ]
-#          filters: { branches: { ignore: [ master ] } }
-#          tf_tier: shared
-#          tf_workspace: development
-
       - apply:
           name: apply environment
-#          requires: [ apply shared-development ]
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
 
@@ -58,17 +50,16 @@ workflows:
           name: build master
           filters: { branches: { only: [ master ] } }
 
-#      - apply:
-#          name: apply shared-development
-#          requires: [ build master ]
-#          filters: { branches: { only: [ master ] } }
-#          tf_tier: shared
-#          tf_workspace: development
+      - apply:
+          name: apply shared-development
+          requires: [ build master ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: development
 
       - apply:
           name: apply master
-#          requires: [ apply shared-development ]
-          requires: [ build master ]
+          requires: [ apply shared-development ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
@@ -102,17 +93,16 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
 
-#      - apply:
-#          name: apply shared-production
-#          requires: [ api unit test, client integration test ]
-#          filters: { branches: { only: [ master ] } }
-#          tf_tier: shared
-#          tf_workspace: production
+      - apply:
+          name: apply shared-production
+          requires: [ api unit test, client integration test ]
+          filters: { branches: { only: [ master ] } }
+          tf_tier: shared
+          tf_workspace: production
 
       - apply:
           name: apply preproduction
-          requires: [ api unit test, client integration test ]
-#          requires: [ apply shared-production ]
+          requires: [ apply shared-production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: preprod
 
