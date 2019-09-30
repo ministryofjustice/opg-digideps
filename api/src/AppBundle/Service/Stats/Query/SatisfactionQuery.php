@@ -9,7 +9,8 @@ class SatisfactionQuery extends Query
      */
     protected function getAggregation(): string
     {
-        return 'ROUND(AVG(val - 1)*100/4)';
+        // Convert scores from 1-5 to 0-100 (Government standard)
+        return 'ROUND(AVG(val - 1)*25)';
     }
 
     /**
