@@ -33,11 +33,8 @@ class MetricClientsQuery extends MetricQuery
                 WHEN r.type LIKE '%-6' THEN 'pa'
                 ELSE 'lay'
             END deputyType,
-            CASE
-                WHEN EXISTS(SELECT 1 FROM odr WHERE client_id = c.id) THEN 'ndr'
-                ELSE r.type
-            END reportType
+            r.type reportType
         FROM client c
-        LEFT JOIN report r ON r.client_id = c.id";
+        LEFT JOIN (SELECT client_id, type FROM report r UNION SELECT client_id, 'ndr' FROM odr o) r ON r.client_id = c.id";
     }
 }

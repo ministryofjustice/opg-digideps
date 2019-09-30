@@ -71,7 +71,6 @@ class MetricClientsQueryTest extends WebTestCase
             'dimension' => ['reportType']
         ]));
 
-        print_r($result);
         // Assert an array result for each report type submitted
         $this->assertCount(7, $result);
 
