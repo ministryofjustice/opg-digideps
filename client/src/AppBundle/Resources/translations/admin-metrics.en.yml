@@ -2,6 +2,7 @@ indexPage:
     htmlTitle: Administration - Statistics
     pageTitle: Statistics
     subTitle: Admin
+    downloadDAT: Download DAT file
 
 form:
     title: Change reporting period

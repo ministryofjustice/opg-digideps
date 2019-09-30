@@ -8,46 +8,56 @@
 {% block supportTitleTop %}{{ (page ~ '.subTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
-  <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
-      {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
-  </h2>
 
-  <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
-    <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
-      <span class="govuk-details__summary-text">
-        {{ 'form.title' | trans }}
-      </span>
-    </summary>
-    <div class="govuk-details__text">
-      {{ form_start(form) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
+        {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
+      </h2>
 
-      {% set customDateRange %}
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-third">
-            {{ form_known_date(form.startDate, 'form.startDate') }}
-          </div>
-          <div class="govuk-grid-column-one-third">
-            {{ form_known_date(form.endDate, 'form.endDate') }}
-          </div>
+      <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
+        <span class="govuk-details__summary-text">
+            {{ 'form.title' | trans }}
+        </span>
+        </summary>
+        <div class="govuk-details__text">
+        {{ form_start(form) }}
+
+        {% set customDateRange %}
+            <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-third">
+                {{ form_known_date(form.startDate, 'form.startDate') }}
+            </div>
+            <div class="govuk-grid-column-one-third">
+                {{ form_known_date(form.endDate, 'form.endDate') }}
+            </div>
+            </div>
+        {% endset %}
+
+        {{ form_checkbox_group(form.period, 'form.period', {
+            classes: 'govuk-radios--small',
+            legendClass: 'govuk-visually-hidden',
+            items: [
+            {},
+            {},
+            {},
+            { conditional: customDateRange }
+            ]
+        }) }}
+
+        {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
+
+        {{ form_end(form) }}
         </div>
-      {% endset %}
-
-      {{ form_checkbox_group(form.period, 'form.period', {
-        classes: 'govuk-radios--small',
-        legendClass: 'govuk-visually-hidden',
-        items: [
-          {},
-          {},
-          {},
-          { conditional: customDateRange }
-        ]
-      }) }}
-
-      {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
-
-      {{ form_end(form) }}
+      </details>
     </div>
-  </details>
+    <div class="govuk-grid-column-one-half text--right">
+      <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+        {{ (page ~ '.downloadDAT') | trans }}
+      </a>
+    </div>
+  </div>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full text--center">
