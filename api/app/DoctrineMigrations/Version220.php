@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Application\Migrations;
 
@@ -10,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version219 extends AbstractMigration
+final class Version220 extends AbstractMigration
 {
     public function getDescription() : string
     {
