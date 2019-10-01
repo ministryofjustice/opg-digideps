@@ -72,11 +72,13 @@ Feature: Users can edit members of their organisation
   @prof
   Scenario: Org user can log in and see org client
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Then I go to "/org/?limit=50"
     And I should see the "client-103-5" region
     And I should see the "client-102-5" region
     And I should see the "client-104-5" region
     And I should see the "client-102-4-5" region
     And I should see the "client-103-4-5" region
+    And I should see the "client" region exactly "29" times
 
   @prof
   Scenario: Users can delete colleagues in their organisation
