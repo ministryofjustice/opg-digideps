@@ -49,7 +49,7 @@ class StatPeriodType extends AbstractType
 
             if ($data['period'] === 'last-30') {
                 $startDate = new \DateTime('-30 days');
-                $data['startDate'] = ['day' => date('d', $startDate), 'month' => date('m', $startDate), 'year' => date('Y', $startDate)];
+                $data['startDate'] = ['day' => $startDate->format('d'), 'month' => $startDate->format('m'), 'year' => $startDate->format('Y')];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
             } elseif ($data['period'] === 'this-year') {
                 $data['startDate'] = ['day' => 1, 'month' => 1, 'year' => date('Y')];
