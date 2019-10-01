@@ -39,7 +39,7 @@ resource "aws_cloudwatch_log_metric_filter" "php_errors" {
 resource "aws_cloudwatch_metric_alarm" "php_errors" {
   alarm_name          = "CriticalPHPErrors"
   statistic           = "SampleCount"
-  metric_name         = aws_cloudwatch_log_metric_filter.php_errors.name
+  metric_name         = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
   period              = 3600
@@ -63,7 +63,7 @@ resource "aws_cloudwatch_log_metric_filter" "nginx_errors" {
 resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   alarm_name          = "CriticalNginxErrors"
   statistic           = "SampleCount"
-  metric_name         = aws_cloudwatch_log_metric_filter.nginx_errors.name
+  metric_name         = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].name
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = 1
   period              = 3600
