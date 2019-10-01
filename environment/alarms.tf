@@ -25,13 +25,49 @@ resource "aws_cloudwatch_metric_alarm" "ses_complaint_1h" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
-  name           = "HTTP5xxError"
-  pattern        = "[..., status_code=5*]"
+  name           = "CriticalPHPErrorFilter"
+  pattern        = "CRITICAL"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
-    name      = "FatalPHPErrors"
+    name      = "CriticalPHPErrors"
     namespace = "DigiDeps/Error"
     value     = "1"
   }
+}
+
+resource "aws_cloudwatch_metric_alarm" "php_errors" {
+  alarm_name          = "CriticalPHPErrors"
+  statistic           = "SampleCount"
+  metric_name         = aws_cloudwatch_log_metric_filter.php_errors.name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
+  namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "nginx_errors" {
+  name           = "CriticalNginxErrorFilter"
+  pattern        = "?error ?crit ?alert ?emerg"
+  log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
+
+  metric_transformation {
+    name      = "CriticalNginxErrors"
+    namespace = "DigiDeps/Error"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
+  alarm_name          = "CriticalNginxErrors"
+  statistic           = "SampleCount"
+  metric_name         = aws_cloudwatch_log_metric_filter.nginx_errors.name
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  threshold           = 1
+  period              = 3600
+  evaluation_periods  = 1
+  namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
+  alarm_actions       = [aws_sns_topic.alerts.arn]
 }
