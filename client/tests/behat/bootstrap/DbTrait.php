@@ -129,4 +129,16 @@ trait DbTrait
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
+
+    /**
+     * @Given I add the client with case number :caseNumber to be deputised by email :deputyEmail
+     */
+    public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
+    {
+        $query = "INSERT INTO deputy_case (client_id, user_id) VALUES (
+                    (SELECT id from client where case_number = '" . $caseNumber . "'), 
+                    (SELECT id from dd_user where email = '" . $deputyEmail . "')
+                  )";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);    }
 }
