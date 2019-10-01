@@ -10,7 +10,7 @@
 {% block pageContent %}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
+    <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
         {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
       </h2>
@@ -26,10 +26,10 @@
 
         {% set customDateRange %}
             <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-third">
+            <div class="govuk-grid-column-one-half">
                 {{ form_known_date(form.startDate, 'form.startDate') }}
             </div>
-            <div class="govuk-grid-column-one-third">
+            <div class="govuk-grid-column-one-half">
                 {{ form_known_date(form.endDate, 'form.endDate') }}
             </div>
             </div>
@@ -52,7 +52,7 @@
         </div>
       </details>
     </div>
-    <div class="govuk-grid-column-one-half text--right">
+    <div class="govuk-grid-column-one-third text--right">
       <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
         {{ (page ~ '.downloadDAT') | trans }}
       </a>
