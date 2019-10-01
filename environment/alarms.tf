@@ -19,7 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   period              = 3600
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
-  alarm_actions       = [aws_sns_topic.alerts.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
 
 resource "aws_cloudwatch_log_metric_filter" "nginx_errors" {
@@ -43,5 +43,5 @@ resource "aws_cloudwatch_metric_alarm" "nginx_errors" {
   period              = 3600
   evaluation_periods  = 1
   namespace           = aws_cloudwatch_log_metric_filter.nginx_errors.metric_transformation[0].namespace
-  alarm_actions       = [aws_sns_topic.alerts.arn]
+  alarm_actions       = [data.aws_sns_topic.alerts.arn]
 }
