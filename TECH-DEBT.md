@@ -16,6 +16,7 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 - move public routes to main route table
 - Per environment certificates or universal wildcard
 - Move to secrets per account
+- Nginx timeout is universally high to allow for some use cases (e.g. compiling zips)
 
 ## Application
 - Separate config files/entrypoints are inflexible and obfuscating, should use feature flags instead
