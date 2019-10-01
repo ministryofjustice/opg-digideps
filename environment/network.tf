@@ -1,7 +1,7 @@
 data "aws_vpc" "vpc" {
   filter {
     name   = "tag:Name"
-    values = [local.account.vpc_name, "private"]
+    values = ["private"]
   }
 }
 
