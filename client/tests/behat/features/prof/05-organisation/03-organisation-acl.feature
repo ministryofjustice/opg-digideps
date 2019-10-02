@@ -41,18 +41,14 @@ Feature: Users can access the correct clients
 
   @prof
   Scenario: Team user added to existing org should enable visibility of new client
-    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
-    And emails are sent from "deputy" area
-    When I go to "/org/settings/organisation"
-    And I follow "Add user"
-    And I press "Save"
-    Then the form should be invalid
-    When I fill in the following:
-      | organisation_member_email     | existing-deputy1@abc-solicitors.uk |
-    And I press "Save"
-    And the last email should have been sent to "existing-deputy1@abc-solicitors.uk"
-    And the last email should contain "Activate your account"
-    And the last email should contain "/user/activate"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to admin page "/admin/organisations"
+    And I follow "abc-solicitors.uk"
+    #And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-pa-org1@pa-org1.gov.uk" and postcode "SW1"
+    And I follow "Add someone to this organisation"
+    And I fill in "organisation_add_user_email" with "existing-deputy1@abc-solicitors.uk"
+    And I press "Find user"
+    And I press "Add user to organisation"
 
   @prof
   Scenario: Active organisation permits visibility of new client
@@ -66,42 +62,13 @@ Feature: Users can access the correct clients
     Then the response status code should be 200
 
   @prof
-  Scenario: Users from Org A should not see clients from Org B
-#    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
-#    # Existing clients from org
-#    And I should see the "client-102-5" region
-#    And I should see the "client-103-5" region
-#    And I should see the "client-104-5" region
-#    And I should see the "client-102-4-5" region
-#    And I should see the "client-103-4-5" region
-#    And I should see the "client" region exactly 5 times
-#    Then I click on "pa-report-open" in the "client-102-5" region
-#    Then the response status code should be 200
-#    When I go to "/org/?limit=50"
-#    # `given x-client is in x-org and I log into y-org I should NOT see x-client`
-#    And I should not see the "client-02000001" region
-#    And I should not see the "client-01000010" region
-#    When I go to the report URL "overview" for "32000001-report"
-#    And the response status code should be 500
-
-  @prof
   Scenario: Removing team member entries should seemlessly work
-    Given I remove all the old team database entries
-    # Given x-client is in x-org and I log into x-org I should see x-client`
-    Then I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
-    And I should see the "client-01000010" region
-    And I should see the "client-01000011" region
-    And I should see the "client-01000012" region
-    And I should see the "client-01000013" region
-    # Given x-client is NOT in x-org and I log into x-org I should NOT see x-client`
-    And I should not see the "client-02000001" region
-    And I should not see the "client-02000002" region
-    And I should not see the "client-02000003" region
-    And I should not see the "client-03000001" region
-    Then I click on "pa-report-open" in the "client-01000010" region
-    Then the response status code should be 200
+    Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/?limit=50"
-    Then I should see the "client" region exactly 17 times
-    # try to access client 02000001 report
-    When I go to the report URL "overview" for "32000001-report"
-    And the response status code should be 500
+    Then I should see the "client" region exactly 18 times
+    When I remove all the old team database entries
+    When I go to "/org/?limit=50"
+    Then I should see the "client" region exactly 18 times
+    Then I click on "pa-report-open" in the "client-31000010" region
+    And I click on "client-edit"
+    Then the response status code should be 200
