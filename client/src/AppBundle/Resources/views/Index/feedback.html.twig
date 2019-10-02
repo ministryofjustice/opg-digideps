@@ -1,0 +1,18 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% set translationDomain = "feedback" %}
+{% trans_default_domain translationDomain %}
+
+{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block pageContent %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            Feedback...
+            {{ form(form) }}
+        </div>
+    </div>
+
+{% endblock %}
