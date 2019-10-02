@@ -6,6 +6,8 @@ resource "aws_vpc" "main" {
     local.default_tags,
     { Name = "private" },
   )
+  enable_dns_hostnames = true
+  enable_dns_support = true
 }
 
 resource "aws_internet_gateway" "igw" {
