@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Service\Mailer\MailFactory;
 use Monolog\Logger;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;

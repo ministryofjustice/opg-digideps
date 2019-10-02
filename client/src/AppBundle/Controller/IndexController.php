@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StringUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;

@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use AppBundle\Exception as AppException;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 

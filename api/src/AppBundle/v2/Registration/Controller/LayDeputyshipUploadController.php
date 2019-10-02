@@ -5,7 +5,6 @@ namespace AppBundle\v2\Registration\Controller;
 use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
 use AppBundle\Service\DataCompression;
 use AppBundle\v2\Registration\Uploader\LayDeputyshipUploader;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

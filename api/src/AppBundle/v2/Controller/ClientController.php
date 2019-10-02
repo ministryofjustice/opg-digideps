@@ -5,7 +5,6 @@ namespace AppBundle\v2\Controller;
 use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\v2\Assembler\ClientAssembler;
 use AppBundle\v2\Transformer\ClientTransformer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
