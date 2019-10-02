@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_metric_filter" "php_errors" {
   name           = "CriticalPHPErrorFilter.${local.environment}"
-  pattern        = "CRITICAL"
+  pattern        = "app.CRITICAL"
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
 
 resource "aws_cloudwatch_log_metric_filter" "nginx_errors" {
   name           = "CriticalNginxErrorFilter.${local.environment}"
-  pattern        = "?error ?crit ?alert ?emerg"
+  pattern        = "?\"[error]\" ?\"[crit]\" ?\"[alert]\" ?\"[emerg]\""
   log_group_name = aws_cloudwatch_log_group.opg_digi_deps.name
 
   metric_transformation {
