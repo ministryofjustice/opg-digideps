@@ -12,7 +12,7 @@ class FeedbackController extends AbstractController
 {
     /**
      * @Route("/feedback", name="feedback")
-     * @Template("AppBundle:Index:feedback.html.twig")
+     * @Template("AppBundle:Feedback:index.html.twig")
      */
     public function indexAction(Request $request)
     {
@@ -32,7 +32,7 @@ class FeedbackController extends AbstractController
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
-            $request->getSession()->getFlashBag()->add('notice', 'Thank you for your feedback');
+            return $this->render('AppBundle:Feedback:sent.html.twig');
         }
 
         return [
