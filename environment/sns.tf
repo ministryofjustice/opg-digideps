@@ -1,7 +1,3 @@
-resource "aws_sns_topic" "alerts" {
-  name = "alerts-${local.environment}"
-}
-
 resource "aws_sns_topic" "notifications_info" {
   name = "notifications-info-${local.environment}"
 }
@@ -13,6 +9,10 @@ resource "aws_sns_topic" "notifications_minor" {
 resource "aws_sns_topic_policy" "notifications_minor" {
   arn    = aws_sns_topic.notifications_minor.arn
   policy = data.aws_iam_policy_document.notifications_minor.json
+}
+
+data "aws_sns_topic" "alerts" {
+  name = "alerts"
 }
 
 data "aws_iam_policy_document" "notifications_minor" {
@@ -91,4 +91,3 @@ data "aws_iam_policy_document" "notifications_major" {
     }
   }
 }
-

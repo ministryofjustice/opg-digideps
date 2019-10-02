@@ -85,6 +85,14 @@ Feature: admin / admin
     And I click on "submit-and-download"
     Then I should see "Check the end date: it can't be before the start date"
 
+  Scenario: Can access metrics and set a period
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I go to admin page "/admin/stats/metrics"
+    Then the response status code should be 200
+    When I fill in "admin_period_1" with "this-year"
+    And I press "Update date range"
+    Then the response status code should be 200
+
   Scenario: change user password on admin area
     Given I am logged in to admin as "behat-admin-user@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "user-account"

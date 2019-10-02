@@ -1,0 +1,45 @@
+indexPage:
+    htmlTitle: Administration - Statistics
+    pageTitle: Statistics
+    subTitle: Admin
+    downloadDAT: Download DAT file
+
+form:
+    title: Change reporting period
+    period:
+        label: Reporting period
+        options:
+            last-30: Last 30 days
+            this-year: This year
+            all-time: All time
+            custom: Custom
+    update:
+        label: Update date range
+    startDate:
+        label: Start date
+    endDate:
+        label: End date
+
+metrics:
+    clients:
+        label: Clients
+        totalLabel: Total clients
+        format: '%value%'
+    registeredDeputies:
+        label: Registered deputies
+        totalLabel: Total registered deputies
+        format: '%value%'
+    reportsSubmitted:
+        label: Reports submitted
+        totalLabel: Total reports submitted
+        format: '%value%'
+    satisfaction:
+        label: Satisfaction
+        totalLabel: Overall satisfaction
+        format: '%value%%'
+
+dimensions:
+    deputyType:
+        lay: Lay deputies
+        pa: Public authority deputies
+        prof: Professional deputies
