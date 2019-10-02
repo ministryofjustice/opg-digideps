@@ -19,8 +19,6 @@ default:
         admin:
             description: End to end journey for Admin user
             paths:    [ %paths.base%/features/admin ]
-            filters:
-                tags: "~@javascript"
             contexts:
             {{ if exists "/api/database/name" }}
                 - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
@@ -32,7 +30,7 @@ default:
             description: End to end journey for Lay deputy user
             paths:    [ %paths.base%/features/deputy ]
             filters:
-                tags: "@deputy&&~@javascript"
+                tags: "@deputy"
             contexts:
             {{ if exists "/api/database/name" }}
                 - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]

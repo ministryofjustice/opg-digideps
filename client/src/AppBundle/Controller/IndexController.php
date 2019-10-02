@@ -216,4 +216,40 @@ class IndexController extends AbstractController
             $this->generateUrl('homepage')
         );
     }
+
+    /**
+     * @Route("/cookies", name="cookies")
+     */
+    public function cookiesAction(Request $request)
+    {
+        $form = $this->createForm(FormDir\CookiePermissionsType::class);
+
+        if ($request->cookies->has('cookie_policy')) {
+            $policy = json_decode($request->cookies->get('cookie_policy'));
+            $form->get('usage')->setData($policy->usage);
+        } else if ($request->query->get('accept') === 'all') {
+            $form->get('usage')->setData(true);
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isValid() || $request->query->get('accept') === 'all') {
+            $settings = [
+                'essential' => true,
+                'usage' => $form->get('usage')->getData()
+            ];
+            setcookie(
+                'cookie_policy',
+                json_encode($settings),
+                time() + (60 * 60 * 24 * 365),
+                '',
+                '',
+                true
+            );
+        }
+
+        return $this->render('AppBundle:Index:cookies.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 }

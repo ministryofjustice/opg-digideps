@@ -117,7 +117,7 @@ trait LinksTrait
     /**
      * Click on element with attribute [behat-link=:link].
      *
-     * @When I press :text in the :region
+     * @When I press :text in the :region region
      */
     public function clickOnLinkWithTextInRegion($text, $region)
     {

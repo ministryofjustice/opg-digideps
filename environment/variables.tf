@@ -23,7 +23,6 @@ variable "accounts" {
       secrets_prefix         = string
       task_count             = number
       test_enabled           = bool
-      vpc_name               = string
       db_subnet_group        = string
       ec_subnet_group        = string
     })

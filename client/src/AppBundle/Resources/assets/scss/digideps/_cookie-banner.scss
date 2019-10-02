@@ -1,9 +1,23 @@
 .opg-cookie-banner {
-    background-color: #d5e8f3;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 20px 0;
+    background-color: govuk-colour('white');
+    box-sizing: border-box;
+    color: govuk-colour('green');
 
-    .js-enabled & {
-        display: none;
+    &__text  {
+        color: govuk-colour('green');
+    }
+
+    &__button {
+        margin-bottom: 0;
+        border-color: govuk-colour('green');
+        color: govuk-colour('green') !important;
+        background-color: govuk-colour('white') !important;
+        box-shadow: none;
+    }
+
+    &__button:hover {
+        background-color: govuk-colour('light-grey') !important;
+        text-decoration: none;
     }
 }

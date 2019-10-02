@@ -13,6 +13,13 @@ class FeedbackReport
      */
     private $satisfactionLevel;
 
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     */
+    private $comments;
+
     public function getSatisfactionLevel()
     {
         return $this->satisfactionLevel;
@@ -21,6 +28,25 @@ class FeedbackReport
     public function setSatisfactionLevel($satisfactionLevel)
     {
         $this->satisfactionLevel = $satisfactionLevel;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getComments(): ?string
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param string $comments
+     * @return FeedbackReport
+     */
+    public function setComments(string $comments): FeedbackReport
+    {
+        $this->comments = $comments;
 
         return $this;
     }

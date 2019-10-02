@@ -163,53 +163,6 @@ trait RegionTrait
     }
 
     /**
-     * @Then I should see the cookie warning banner
-     */
-    public function seeCookieBanner()
-    {
-        $driver = $this->getSession()->getDriver();
-
-        if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
-            $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
-            if (count($elementsFound) === 0) {
-                throw new \RuntimeException('Cookie banner not found');
-            }
-
-            foreach ($elementsFound as $node) {
-                // Note: getText() will return an empty string when using Selenium2D. This
-                // is ok since it will cause a failed step.
-                if ($node->getText() != '' && $node->isVisible()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * @Then I should not see the cookie warning banner
-     */
-    public function dontSeeCookieBanner()
-    {
-        $driver = $this->getSession()->getDriver();
-
-        if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
-            $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
-
-            if (count($elementsFound) === 0) {
-                return;
-            }
-
-            foreach ($elementsFound as $node) {
-                // Note: getText() will return an empty string when using Selenium2D. This
-                // is ok since it will cause a failed step.
-                if ($node->getText() != '' && $node->isVisible()) {
-                    throw new \RuntimeException('Cookie banner Visible');
-                }
-            }
-        }
-    }
-
-    /**
      * @Then I should see :text in the page header
      */
     public function iShouldSeeInThePageHeader($text)

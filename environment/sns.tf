@@ -1,7 +1,3 @@
-resource "aws_sns_topic" "alerts" {
-  name = "alerts-${local.environment}"
-}
-
 resource "aws_sns_topic" "notifications_info" {
   name = "notifications-info-${local.environment}"
 }
