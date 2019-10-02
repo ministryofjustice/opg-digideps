@@ -8,7 +8,7 @@ use AppBundle\Entity\Report;
 use AppBundle\Form as FormDir;
 
 use AppBundle\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

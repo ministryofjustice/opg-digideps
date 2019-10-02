@@ -11,7 +11,7 @@ use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportChecklistType;
 use AppBundle\Form\Admin\UnsubmitReportType;
 use AppBundle\Form\Admin\UnsubmitReportConfirmType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\SubmitButton;

@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Service\Availability as ServiceAvailability;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**

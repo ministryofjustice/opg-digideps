@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Model\SelfRegisterData;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

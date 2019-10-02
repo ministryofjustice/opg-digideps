@@ -6,7 +6,7 @@ use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;

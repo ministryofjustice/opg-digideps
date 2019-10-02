@@ -6,7 +6,7 @@ use AppBundle\Entity\Repository\ClientRepository;
 use AppBundle\v2\Assembler\ClientAssembler;
 use AppBundle\v2\Transformer\ClientTransformer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
