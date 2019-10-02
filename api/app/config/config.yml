@@ -72,3 +72,7 @@ monolog:
             path: php://stderr
             level: "%log_level%"
             formatter: logstash_formatter
+
+sensio_framework_extra:
+    router:
+        annotations: false
