@@ -86,8 +86,7 @@ class NoteController extends RestController
     /**
      * Delete note.
      *
-     * @Method({"DELETE"})
-     * @Route("{id}")
+     * @Route("{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param int $id

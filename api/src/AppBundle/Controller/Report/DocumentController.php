@@ -75,8 +75,7 @@ class DocumentController extends RestController
      * Delete document.
      * Accessible only from deputy area
      *
-     * @Method({"DELETE"})
-     * @Route("/document/{id}")
+     * @Route("/document/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
