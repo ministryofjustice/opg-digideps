@@ -40,8 +40,7 @@ class ClientController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_CASE_MANAGER')")
      *
      * @param $id

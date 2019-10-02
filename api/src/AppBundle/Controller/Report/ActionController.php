@@ -14,8 +14,7 @@ class ActionController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
 
     /**
-     * @Route("/report/{reportId}/action")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/action", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $reportId)
@@ -40,9 +39,8 @@ class ActionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/action")
-     * @Method({"GET"})
-     *  @Security("has_role('ROLE_DEPUTY')")
+     * @Route("/report/{reportId}/action", methods={"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */

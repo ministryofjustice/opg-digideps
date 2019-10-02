@@ -12,8 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class NdrController extends RestController
 {
     /**
-     * @Route("/ndr/{id}")
-     * @Method({"GET"})
+     * @Route("/ndr/{id}", methods={"GET"})
      *
      * @param int $id
      */
@@ -34,8 +33,7 @@ class NdrController extends RestController
     }
 
     /**
-     * @Route("/ndr/{id}/submit")
-     * @Method({"PUT"})
+     * @Route("/ndr/{id}/submit", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
@@ -77,8 +75,7 @@ class NdrController extends RestController
     }
 
     /**
-     * @Route("/ndr/{id}")
-     * @Method({"PUT"})
+     * @Route("/ndr/{id}", methods={"PUT"})
      */
     public function update(Request $request, $id)
     {

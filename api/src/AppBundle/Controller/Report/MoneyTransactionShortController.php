@@ -17,8 +17,7 @@ class MoneyTransactionShortController extends RestController
     ];
 
     /**
-     * @Route("/report/{reportId}/money-transaction-short")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/money-transaction-short", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -47,8 +46,7 @@ class MoneyTransactionShortController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -71,8 +69,7 @@ class MoneyTransactionShortController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}")
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -92,8 +89,7 @@ class MoneyTransactionShortController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"})
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/money-transaction-short/{transactionId}", requirements={"reportId":"\d+", "transactionId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById($reportId, $transactionId)

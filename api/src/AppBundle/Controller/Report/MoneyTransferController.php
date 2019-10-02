@@ -14,8 +14,7 @@ class MoneyTransferController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_MONEY_TRANSFERS];
 
     /**
-     * @Route("/report/{reportId}/money-transfers")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/money-transfers", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addMoneyTransferAction(Request $request, $reportId)
@@ -45,8 +44,7 @@ class MoneyTransferController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transfers/{transferId}")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/money-transfers/{transferId}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function editMoneyTransferAction(Request $request, $reportId, $transferId)
@@ -72,8 +70,7 @@ class MoneyTransferController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transfers/{transferId}")
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/money-transfers/{transferId}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransferAction(Request $request, $reportId, $transferId)

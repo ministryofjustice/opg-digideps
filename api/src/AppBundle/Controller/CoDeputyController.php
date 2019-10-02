@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CoDeputyController extends RestController
 {
     /**
-     * @route("{count}")
-     * @Method({"GET"})
+     * @Route("{count}", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function countMld(Request $request)
@@ -33,8 +32,7 @@ class CoDeputyController extends RestController
     }
 
     /**
-     * @Route("add")
-     * @Method({"POST"})
+     * @Route("add", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)
@@ -60,8 +58,7 @@ class CoDeputyController extends RestController
     }
 
     /**
-     * @Route("{id}")
-     * @Method({"PUT"})
+     * @Route("{id}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
@@ -90,8 +87,7 @@ class CoDeputyController extends RestController
      * Max 10k otherwise failing (memory reach 128M).
      * Borrows heavily from CasRecController:addBulk
      *
-     * @Route("{mldupgrade}")
-     * @Method({"POST"})
+     * @Route("{mldupgrade}", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function upgradeToMld(Request $request)

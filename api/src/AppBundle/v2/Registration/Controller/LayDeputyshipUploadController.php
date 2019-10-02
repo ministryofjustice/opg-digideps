@@ -40,8 +40,7 @@ class LayDeputyshipUploadController
     }
 
     /**
-     * @Route("/upload")
-     * @Method({"POST"})
+     * @Route("/upload", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request

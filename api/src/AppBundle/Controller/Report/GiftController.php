@@ -14,8 +14,7 @@ class GiftController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_GIFTS];
 
     /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $giftId)
@@ -34,8 +33,7 @@ class GiftController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/gift", requirements={"reportId":"\d+"})
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/gift", requirements={"reportId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
@@ -62,8 +60,7 @@ class GiftController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $giftId)
@@ -95,8 +92,7 @@ class GiftController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/gift/{giftId}", requirements={"reportId":"\d+", "giftId":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($reportId, $giftId)

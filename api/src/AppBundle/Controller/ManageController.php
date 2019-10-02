@@ -11,8 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ManageController extends RestController
 {
     /**
-     * @Route("/availability")
-     * @Method({"GET"})
+     * @Route("/availability", methods={"GET"})
      */
     public function availabilityAction()
     {
@@ -28,8 +27,7 @@ class ManageController extends RestController
     }
 
     /**
-     * @Route("/elb", name="manage-elb")
-     * @Method({"GET"})
+     * @Route("/elb", name="manage-elb", methods={"GET"})
      */
     public function elbAction()
     {

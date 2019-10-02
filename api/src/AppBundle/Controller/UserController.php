@@ -17,8 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends RestController
 {
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD') or has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function add(Request $request)
@@ -46,8 +45,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/{id}")
-     * @Method({"PUT"})
+     * @Route("/{id}", methods={"PUT"})
      */
     public function update(Request $request, $id)
     {
@@ -77,8 +75,7 @@ class UserController extends RestController
     /**
      * //TODO take user from logged user.
      *
-     * @Route("/{id}/is-password-correct")
-     * @Method({"POST"})
+     * @Route("/{id}/is-password-correct", methods={"POST"})
      */
     public function isPasswordCorrect(Request $request, $id)
     {
@@ -107,8 +104,7 @@ class UserController extends RestController
     /**
      * change password, activate user and send remind email.
      *
-     * @Route("/{id}/set-password")
-     * @Method({"PUT"})
+     * @Route("/{id}/set-password", methods={"PUT"})
      */
     public function changePassword(Request $request, $id)
     {
@@ -139,8 +135,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      */
     public function getOneById(Request $request, $id)
     {
@@ -150,8 +145,7 @@ class UserController extends RestController
     /**
      * @Route("/get-one-by/{what}/{filter}", requirements={
      *   "what" = "(user_id|email|case_number)"
-     * })
-     * @Method({"GET"})
+     * }, methods={"GET"})
      */
     public function getOneByFilter(Request $request, $what, $filter)
     {
@@ -199,8 +193,7 @@ class UserController extends RestController
      * Only for ROLE_PROF named and admin, when adding users to multiple teams.
      * Returns empty if user doesn't exist
      *
-     * @Route("/get-team-names-by-email/{email}")
-     * @Method({"GET"})
+     * @Route("/get-team-names-by-email/{email}", methods={"GET"})
      * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      */
     public function getUserTeamNames(Request $request, $email)
@@ -216,8 +209,7 @@ class UserController extends RestController
      * Delete user with clients.
      * //TODO move to UserService
      *
-     * @Route("/{id}")
-     * @Method({"DELETE"})
+     * @Route("/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param int $id
@@ -252,8 +244,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/get-all")
-     * @Method({"GET"})
+     * @Route("/get-all", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
      */
     public function getAll(Request $request)
@@ -312,8 +303,7 @@ class UserController extends RestController
      *
      * @Route("/recreate-token/{email}/{type}", defaults={"email": "none"}, requirements={
      *   "type" = "(activate|pass-reset)"
-     * })
-     * @Method({"PUT"})
+     * }, methods={"PUT"})
      */
     public function recreateToken(Request $request, $email, $type)
     {
@@ -340,8 +330,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/get-by-token/{token}")
-     * @Method({"GET"})
+     * @Route("/get-by-token/{token}", methods={"GET"})
      */
     public function getByToken(Request $request, $token)
     {
@@ -363,8 +352,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/agree-terms-use/{token}")
-     * @Method({"PUT"})
+     * @Route("/agree-terms-use/{token}", methods={"PUT"})
      */
     public function agreeTermsUSe(Request $request, $token)
     {
@@ -439,8 +427,7 @@ class UserController extends RestController
     }
 
     /**
-     * @Route("/{id}/team", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}/team", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getTeamByUserId(Request $request, $id)

@@ -167,8 +167,7 @@ class IndexController extends AbstractController
     /**
      * keep session alive. Called from session timeout dialog.
      *
-     * @Route("session-keep-alive", name="session-keep-alive")
-     * @Method({"GET"})
+     * @Route("session-keep-alive", name="session-keep-alive", methods={"GET"})
      */
     public function sessionKeepAliveAction(Request $request)
     {

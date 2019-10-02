@@ -17,8 +17,7 @@ class DocumentController extends RestController
      * @Route("/document/{reportType}/{reportId}", requirements={
      *     "reportId":"\d+",
      *     "reportType" = "(report|ndr)"
-     * })
-     * @Method({"POST"})
+     * }, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportType, $reportId)
@@ -56,8 +55,7 @@ class DocumentController extends RestController
     /**
      * GET document by id
      *
-     * @Route("/document/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)

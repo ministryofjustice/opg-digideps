@@ -14,8 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SettingController extends RestController
 {
     /**
-     * @Route("/{id}")
-     * @Method({"GET"})
+     * @Route("/{id}", methods={"GET"})
      */
     public function getSetting(Request $request, $id)
     {
@@ -27,8 +26,7 @@ class SettingController extends RestController
     }
 
     /**
-     * @Route("/{id}")
-     * @Method({"PUT"})
+     * @Route("/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function upsertSetting(Request $request, $id)

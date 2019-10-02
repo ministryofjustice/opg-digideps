@@ -13,8 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SelfRegisterController extends RestController
 {
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      */
     public function register(Request $request)
     {
@@ -49,8 +48,7 @@ class SelfRegisterController extends RestController
     }
 
     /**
-     * @Route("/verifycodeputy")
-     * @Method({"POST"})
+     * @Route("/verifycodeputy", methods={"POST"})
      */
     public function verifyCoDeputy(Request $request)
     {

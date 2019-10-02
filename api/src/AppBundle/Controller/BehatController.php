@@ -26,8 +26,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/client/{caseNumber}")
-     * @Method({"PUT"})
+     * @Route("/client/{caseNumber}", methods={"PUT"})
      */
     public function clientEditAction(Request $request, $caseNumber)
     {
@@ -64,8 +63,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}", methods={"PUT"})
      */
     public function reportEditAction(Request $request, $reportId)
     {
@@ -94,8 +92,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/user/{email}")
-     * @Method({"PUT"})
+     * @Route("/user/{email}", methods={"PUT"})
      */
     public function editUser(Request $request, $email)
     {

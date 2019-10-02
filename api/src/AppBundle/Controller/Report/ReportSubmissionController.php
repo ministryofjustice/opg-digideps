@@ -33,8 +33,7 @@ class ReportSubmissionController extends RestController
     ];
 
     /**
-     * @Route("")
-     * @Method({"GET"})
+     * @Route("", methods={"GET"})
      * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function getAll(Request $request)
@@ -57,8 +56,7 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function getOneById(Request $request, $id)
@@ -74,8 +72,7 @@ class ReportSubmissionController extends RestController
      * Update documents
      * return array of storage references, for admin area to delete if needed
      *
-     * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{reportSubmissionId}", requirements={"reportSubmissionId":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function update(Request $request, $reportSubmissionId)
@@ -97,8 +94,7 @@ class ReportSubmissionController extends RestController
      * Get old report submissions.
      * Called from ADMIN cron
      *
-     * @Route("/old")
-     * @Method({"GET"})
+     * @Route("/old", methods={"GET"})
      */
     public function getOld(Request $request)
     {
@@ -119,8 +115,7 @@ class ReportSubmissionController extends RestController
      * Set report undownloadable (and remove the storage reference for the files.
      * Called from ADMIN cron
      *
-     * @Route("/{id}/set-undownloadable", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}/set-undownloadable", requirements={"id":"\d+"}, methods={"PUT"})
      */
     public function setUndownloadable($id, Request $request)
     {
@@ -141,8 +136,7 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @Route("/casrec_data", name="casrec_data")
-     * @Method({"GET"})
+     * @Route("/casrec_data", name="casrec_data", methods={"GET"})
      * @Security("has_role('ROLE_DOCUMENT_MANAGE')")
      */
     public function getCasrecData(Request $request)

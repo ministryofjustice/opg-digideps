@@ -14,9 +14,7 @@ class ProfDeputyPrevCostController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_DEPUTY_COSTS];
 
     /**
-     *
-     * @Route("/report/{reportId}/prof-deputy-previous-cost")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/prof-deputy-previous-cost", methods={"POST"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function addAction(Request $request, $reportId)
@@ -41,8 +39,7 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     /**
-     * @Route("/prof-deputy-previous-cost/{id}")
-     * @Method({"PUT"})
+     * @Route("/prof-deputy-previous-cost/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function updateAction(Request $request, $id)
@@ -63,8 +60,7 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     /**
-     * @Route("/prof-deputy-previous-cost/{id}")
-     * @Method({"GET"})
+     * @Route("/prof-deputy-previous-cost/{id}", methods={"GET"})
      * @Security("has_role('ROLE_PROF')")
 
      * @param Request $request
@@ -85,8 +81,7 @@ class ProfDeputyPrevCostController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/prof-deputy-previous-cost/{id}")
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/prof-deputy-previous-cost/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function deleteProfDeputyPreviousCost($id)

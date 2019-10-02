@@ -40,8 +40,7 @@ class DeputyController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      *
      * @param $id
      * @return JsonResponse

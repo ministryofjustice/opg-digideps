@@ -16,8 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class CasRecController extends RestController
 {
     /**
-     * @Route("/truncate")
-     * @Method({"DELETE"})
+     * @Route("/truncate", methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function truncateTable(Request $request)
@@ -31,8 +30,7 @@ class CasRecController extends RestController
     /**
      * Verify Deputy & Client last names, Postcode, and Case Number
      *
-     * @Route("/verify")
-     * @Method({"POST"})
+     * @Route("/verify", methods={"POST"})
      */
     public function verify(Request $request)
     {
@@ -47,8 +45,7 @@ class CasRecController extends RestController
     }
 
     /**
-     * @Route("/count")
-     * @Method({"GET"})
+     * @Route("/count", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function userCount()

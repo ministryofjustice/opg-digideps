@@ -58,8 +58,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/list")
-     * @Method({"GET"})
+     * @Route("/list", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @return JsonResponse
@@ -82,8 +81,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("is_granted('view', organisation)")
      *
      * @param int $id
@@ -98,8 +96,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
@@ -116,8 +113,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request
@@ -133,8 +129,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param $int id
@@ -151,8 +146,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"}, methods={"PUT"})
      * @Entity("organisation", expr="repository.find(orgId)")
      * @Security("is_granted('edit', organisation)")
      *
@@ -172,8 +166,7 @@ class OrganisationController
     }
 
     /**
-     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/{orgId}/user/{userId}", requirements={"orgId":"\d+", "userId":"\d+"}, methods={"DELETE"})
      * @Entity("organisation", expr="repository.find(orgId)")
      * @Security("is_granted('edit', organisation)")
      *

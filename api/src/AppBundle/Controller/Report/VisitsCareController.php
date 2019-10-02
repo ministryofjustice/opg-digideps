@@ -17,8 +17,7 @@ class VisitsCareController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_VISITS_CARE];
 
     /**
-     * @Route("/visits-care")
-     * @Method({"POST"})
+     * @Route("/visits-care", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -42,8 +41,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/visits-care/{id}")
-     * @Method({"PUT"})
+     * @Route("/visits-care/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
@@ -63,8 +61,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/{reportId}/visits-care")
-     * @Method({"GET"})
+     * @Route("/{reportId}/visits-care", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $reportId
@@ -80,8 +77,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/visits-care/{id}")
-     * @Method({"GET"})
+     * @Route("/visits-care/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -99,8 +95,7 @@ class VisitsCareController extends RestController
     }
 
     /**
-     * @Route("/visits-care/{id}")
-     * @Method({"DELETE"})
+     * @Route("/visits-care/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteVisitsCare($id)

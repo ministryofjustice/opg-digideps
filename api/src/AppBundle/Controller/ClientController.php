@@ -17,8 +17,7 @@ class ClientController extends RestController
      * Add/Edit a client.
      * When added, the current logged used will be added
      *
-     * @Route("/upsert")
-     * @Method({"POST", "PUT"})
+     * @Route("/upsert", methods={"POST", "PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function upsertAction(Request $request)
@@ -78,8 +77,7 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", name="client_find_by_id", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param Request $request
@@ -106,8 +104,7 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}/details", name="client_details", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      *
      * @param Request $request
@@ -126,8 +123,7 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}/archive", name="client_archive", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param int $id
@@ -150,8 +146,7 @@ class ClientController extends RestController
     }
 
     /**
-     * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"})
-     * @Method({"GET"})
+     * @Route("/get-all", defaults={"order_by" = "lastname", "sort_order" = "ASC"}, methods={"GET"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function getAllAction(Request $request)

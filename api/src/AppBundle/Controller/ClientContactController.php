@@ -14,8 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ClientContactController extends RestController
 {
     /**
-     * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add")
-     * @Method({"POST"})
+     * @Route("/clients/{clientId}/clientcontacts", name="clientcontact_add", methods={"POST"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function add(Request $request, $clientId)
@@ -50,8 +49,7 @@ class ClientContactController extends RestController
      * Update contact
      * Only the creator can update the note
      *
-     * @Route("/clientcontacts/{id}")
-     * @Method({"PUT"})
+     * @Route("/clientcontacts/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function update(Request $request, $id)
@@ -78,8 +76,7 @@ class ClientContactController extends RestController
     }
 
     /**
-     * @Route("/clientcontacts/{id}")
-     * @Method({"GET"})
+     * @Route("/clientcontacts/{id}", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getOneById(Request $request, $id)
@@ -99,8 +96,7 @@ class ClientContactController extends RestController
      * Delete contact
      * Only the creator can delete the note
      *
-     * @Route("/clientcontacts/{id}")
-     * @Method({"DELETE"})
+     * @Route("/clientcontacts/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function delete($id)

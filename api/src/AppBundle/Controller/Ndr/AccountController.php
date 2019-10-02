@@ -12,8 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class AccountController extends RestController
 {
     /**
-     * @Route("/ndr/{ndrId}/account")
-     * @Method({"POST"})
+     * @Route("/ndr/{ndrId}/account", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAccountAction(Request $request, $ndrId)
@@ -35,8 +34,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/ndr/account/{id}")
-     * @Method({"GET"})
+     * @Route("/ndr/account/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
@@ -54,8 +52,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/ndr/account/{id}")
-     * @Method({"PUT"})
+     * @Route("/ndr/account/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function editAccountAction(Request $request, $id)
@@ -75,8 +72,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/ndr/account/{id}")
-     * @Method({"DELETE"})
+     * @Route("/ndr/account/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function accountDelete($id)

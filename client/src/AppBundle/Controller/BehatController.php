@@ -32,8 +32,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/{secret}/email-get-last")
-     * @Method({"GET"})
+     * @Route("/behat/{secret}/email-get-last", methods={"GET"})
      */
     public function getLastEmailAction(Request $request)
     {
@@ -44,8 +43,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/{secret}/email-reset")
-     * @Method({"GET"})
+     * @Route("/behat/{secret}/email-reset", methods={"GET"})
      */
     public function emailResetAction(Request $request)
     {
@@ -56,8 +54,7 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/behat/emails")
-     * @Method({"GET"})
+     * @Route("/behat/emails", methods={"GET"})
      * @Template("AppBundle:Behat:emails.html.twig")
      */
     public function emailsAction(Request $request)

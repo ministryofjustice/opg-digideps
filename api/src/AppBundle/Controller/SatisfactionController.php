@@ -14,8 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SatisfactionController extends RestController
 {
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)

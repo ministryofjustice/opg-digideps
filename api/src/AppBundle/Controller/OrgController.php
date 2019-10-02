@@ -17,8 +17,7 @@ class OrgController extends RestController
      * Bulk insert
      * Max 10k otherwise failing (memory reach 128M).
      *
-     * @Route("/bulk-add")
-     * @Method({"POST"})
+     * @Route("/bulk-add", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addBulk(Request $request)

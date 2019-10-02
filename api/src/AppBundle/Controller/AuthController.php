@@ -19,8 +19,7 @@ class AuthController extends RestController
      * expected keys in body: 'token' or ('email' and 'password').
      *
      *
-     * @Route("/login")
-     * @Method({"POST"})
+     * @Route("/login", methods={"POST"})
      */
     public function login(Request $request)
     {
@@ -98,8 +97,7 @@ class AuthController extends RestController
      * Return the user by email and hashed password (or exception if not found).
      *
      *
-     * @Route("/logout")
-     * @Method({"POST"})
+     * @Route("/logout", methods={"POST"})
      */
     public function logout(Request $request)
     {
@@ -111,8 +109,7 @@ class AuthController extends RestController
     /**
      * Test endpoint used for testing to check auth permissions.
      *
-     * @Route("/get-logged-user")
-     * @Method({"GET"})
+     * @Route("/get-logged-user", methods={"GET"})
      */
     public function getLoggedUser()
     {
