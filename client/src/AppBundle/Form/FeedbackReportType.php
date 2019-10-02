@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Constraints;
 
 class FeedbackReportType extends AbstractType
 {
@@ -24,14 +25,29 @@ class FeedbackReportType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ])
-            ->add('comments', FormTypes\TextareaType::class)
-            ->add('save', FormTypes\SubmitType::class);
+            ->add('comments', FormTypes\TextareaType::class);
+
+        if ($options['include_contact_information']) {
+            $builder
+                ->add('name', FormTypes\TextType::class, [
+                    'required' => false,
+                ])
+                ->add('email', FormTypes\EmailType::class, [
+                    'required' => false,
+                    'constraints' => [
+                        new Constraints\Email(['message' => 'login.email.inValid'])
+                    ]
+                ]);
+        }
+
+        $builder->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-              'translation_domain' => 'feedback',
+            'translation_domain' => 'feedback',
+            'include_contact_information' => false,
         ]);
     }
 
