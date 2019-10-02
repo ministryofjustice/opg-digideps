@@ -33,4 +33,3 @@ services:
   AppBundle\Service\Stats\QueryFactory:
     class: AppBundle\Service\Stats\QueryFactory
     arguments: ['@em']
-s
