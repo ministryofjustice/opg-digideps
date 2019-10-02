@@ -449,9 +449,43 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'reportType' => '',
                     'reportVariation' => 'hw'
                 ],
+            ],
+        ],
+        [
+            'id' => '',
+            'Dep Forename' => 'ED',
+            'Dep Surname' => 'SURNAME1',
+            'Email' => 'existing-deputy1@abc-solicitors.uk',
+            'active' => true,
+            'Deputy No' => '50',
+            'Dep Type' => 23,
+            'roleName' => 'ROLE_PROF_NAMED',
+            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs2' => 'ADD2',
+            'Dep Adrs3' => 'ADD3',
+            'Dep Postcode' => 'SW1',
+            'Dep Adrs4' => 'ADD4',
+            'Dep Adrs5' => 'ADD5',
+            'phoneMain' => '012345123123',
+            'organisation' => 'abc-solicitors.uk',
+            'clients' => [
+                [
+                    'firstname' => 'EXISTING_CLY',
+                    'lastname' => 'HENT1',
+                    'caseNumber' => '50000050',
+                    'lastReportDate' => '19/03/2017',
+                    'address1' => 'ADD1',
+                    'address2' => 'ADD2',
+                    'address3' => 'ADD3',
+                    'addressPostcode' => 'B301QL',
+                    'phone' => '078912345678',
+                    'email' => 'existing_cly1@hent.com',
+                    'dob' => '01/01/1967',
+                    'reportType' => 'OPG102',
+                    'reportVariation' => 'A2'
+                ]
             ]
         ]
-
     ];
 
     /**
@@ -460,7 +494,8 @@ class ProfTestUserFixtures extends AbstractDataFixture
     public function doLoad(ObjectManager $manager)
     {
         $this->orgService = $this->container->get('org_service');
-
+        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
         $this->namedDeputyRepository = $manager->getRepository(NamedDeputy::class);
 
         // Add users from array
@@ -473,7 +508,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
 
     private function addUser($data, $manager)
     {
-
+        $organisation = null;
         $team = new Team($data['Email'] . ' Team');
         $manager->persist($team);
 
@@ -497,22 +532,33 @@ class ProfTestUserFixtures extends AbstractDataFixture
         $user->addTeam($team);
         $manager->persist($user);
 
+        $organisation = $this->orgRepository->findByEmailIdentifier($data['Email']);
+        if (null === $organisation) {
+            $organisation = $this->orgFactory->createFromFullEmail($data['Email'], $data['Email']);
+            $manager->persist($organisation);
+            $manager->flush($organisation);
+        }
+
         if (isset($data['clients'])) {
             foreach ($data['clients'] as $clientData) {
 
                 // Create client
-                $client = $this->createClient($clientData, $data, $user, $manager);
+                $client = $this->createClient($clientData, $data, $user, $manager, $organisation);
                 $user->addClient($client);
             }
             if (isset($data['additionalClients'])) {
                 // add dummy clients for pagination tests
                 for($i=1; $i<=$data['additionalClients']; $i++) {
-                    $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager);
+                    $client = $this->createClient($this->generateTestClientData($i), $data, $user, $manager, $organisation);
                     $user->addClient($client);
+                    $organisation->addClient($client);
+                    $client->setOrganisation($organisation);
                 }
             }
 
         }
+
+
     }
 
     private function generateTestClientData($iterator)
@@ -534,7 +580,7 @@ class ProfTestUserFixtures extends AbstractDataFixture
         ];
     }
 
-    private function createClient($clientData, $userData, $user, $manager)
+    private function createClient($clientData, $userData, $user, $manager, $organisation)
     {
         $client = new Client();
         $courtDate = \DateTime::createFromFormat('d/m/Y', $clientData['lastReportDate']);
@@ -559,6 +605,9 @@ class ProfTestUserFixtures extends AbstractDataFixture
         }
 
         $client->setNamedDeputy($namedDeputy);
+
+        $organisation->addClient($client);
+        $client->setOrganisation($organisation);
 
         $manager->persist($client);
 
