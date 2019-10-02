@@ -18,7 +18,6 @@ framework:
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
-    trusted_proxies: ~
     session:
       handler_id: snc_redis.session.handler
       name: digideps
@@ -99,4 +98,7 @@ monolog:
            path: php://stderr
            level: "%log_level%"
            formatter: logstash_formatter
- 
+
+sensio_framework_extra:
+    router:
+        annotations: false

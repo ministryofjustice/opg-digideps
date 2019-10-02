@@ -17,7 +17,6 @@ framework:
     templating:
       engines: ['php']
     default_locale:  "%locale%"
-    trusted_proxies: ~
     session:         ~
     fragments:       ~
     http_method_override: true
