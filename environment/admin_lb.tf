@@ -35,6 +35,7 @@ resource "aws_lb" "admin" {
   internal           = false
   load_balancer_type = "application"
   subnets            = data.aws_subnet.public.*.id
+  idle_timeout       = 300
 
   security_groups = [
     aws_security_group.admin_elb.id,
