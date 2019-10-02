@@ -1,0 +1,128 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% trans_default_domain "admin-metrics" %}
+{% set page = 'indexPage' %}
+
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.subTitle') | trans }}{% endblock %}
+
+{% block pageContent %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">
+        {{ ('form.period.options.' ~ form.period.vars.value) | trans }}
+      </h2>
+
+      <details class="govuk-details govuk-!-margin-bottom-4" data-module="govuk-details" role="group">
+        <summary class="govuk-details__summary" role="button" aria-controls="details-content-16e5bdaa-a396-45cd-97cf-035235053ee4" aria-expanded="false">
+        <span class="govuk-details__summary-text">
+            {{ 'form.title' | trans }}
+        </span>
+        </summary>
+        <div class="govuk-details__text">
+        {{ form_start(form) }}
+
+        {% set customDateRange %}
+            <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                {{ form_known_date(form.startDate, 'form.startDate') }}
+            </div>
+            <div class="govuk-grid-column-one-half">
+                {{ form_known_date(form.endDate, 'form.endDate') }}
+            </div>
+            </div>
+        {% endset %}
+
+        {{ form_checkbox_group(form.period, 'form.period', {
+            classes: 'govuk-radios--small',
+            legendClass: 'govuk-visually-hidden',
+            items: [
+            {},
+            {},
+            {},
+            { conditional: customDateRange }
+            ]
+        }) }}
+
+        {{ form_submit(form.update, 'form.update', { buttonClass: 'govuk-!-margin-bottom-0' }) }}
+
+        {{ form_end(form) }}
+        </div>
+      </details>
+    </div>
+    <div class="govuk-grid-column-one-third text--right">
+      <a href="{{ path('admin_stats') }}" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+        {{ (page ~ '.downloadDAT') | trans }}
+      </a>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-satisfaction-total-label">
+        {{ 'metrics.satisfaction.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-font-size-80" aria-labelledby="metric-satisfaction-total-label">
+        {{ stats.satisfaction.all | default('-') }}%
+      </span>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row govuk-!-margin-bottom-9">
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-reportsSubmitted-total-label">
+        {{ 'metrics.reportsSubmitted.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-reportsSubmitted-total-label">
+        {{ stats.reportsSubmitted.all | default('-') }}
+      </span>
+    </div>
+
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-registeredDeputies-total-label">
+        {{ 'metrics.registeredDeputies.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-registeredDeputies-total-label">
+        {{ stats.registeredDeputies.all | default('-') }}
+      </span>
+    </div>
+
+    <div class="govuk-grid-column-one-third text--center">
+      <span class="govuk-caption-l govuk-!-margin-top-2" id="metric-clients-total-label">
+        {{ 'metrics.clients.totalLabel' | trans }}
+      </span>
+      <span class="govuk-heading-xl govuk-!-margin-bottom-4" aria-labelledby="metric-clients-total-label">
+        {{ stats.clients.all | default('-') }}
+      </span>
+    </div>
+  </div>
+
+  <hr />
+
+  {% macro dimensionBox(dimension, value, metrics, stats) %}
+    <div class="govuk-grid-column-one-third">
+      <h3 class="govuk-heading-m govuk-!-padding-top-3 govuk-!-padding-bottom-4">{{ ('dimensions.' ~ dimension ~ '.' ~ value) | trans }}</h3>
+      {% for metric in metrics %}
+        <span class="govuk-caption-m govuk-!-margin-top-5" id="metric-{{metric}}-{{dimension}}-{{value}}-label">
+          {{ ('metrics.' ~ metric  ~ '.label') | trans }}
+        </span>
+        <span class="govuk-heading-l govuk-!-margin-bottom-4" aria-labelledby="metric-{{metric}}-{{dimension}}-{{value}}-label">
+        {% set val = stats[metric][value] | default('-') %}
+          {% if (val == '-') %}
+            -
+          {% else %}
+            {{ ('metrics.' ~ metric  ~ '.format') | trans({ '%value%': val }) }}
+          {% endif %}
+        </span>
+      {% endfor %}
+    </div>
+  {% endmacro %}
+
+  <div class="govuk-grid-row">
+    {{ _self.dimensionBox('deputyType', 'lay', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
+    {{ _self.dimensionBox('deputyType', 'prof', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
+    {{ _self.dimensionBox('deputyType', 'pa', [ 'satisfaction', 'reportsSubmitted', 'registeredDeputies', 'clients' ], stats) }}
+  </div>
+{% endblock %}

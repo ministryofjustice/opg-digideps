@@ -29,3 +29,8 @@ services:
 
   AppBundle\Factory\NamedDeputyFactory:
     class: AppBundle\Factory\NamedDeputyFactory
+
+  AppBundle\Service\Stats\QueryFactory:
+    class: AppBundle\Service\Stats\QueryFactory
+    arguments: ['@em']
+s
