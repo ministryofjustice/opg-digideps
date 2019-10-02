@@ -41,16 +41,7 @@ class Satisfaction
      * @JMS\Type("string")
      * @JMS\Groups({"satisfaction"})
      *
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $comments;
-
-    /**
-     * @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"satisfaction"})
-     *
-     * @ORM\Column(type="string", name="deputy_role", length=50)
+     * @ORM\Column(type="string", name="deputy_role", length=50, nullable=true)
      */
     private $deputyRole;
 
@@ -59,7 +50,7 @@ class Satisfaction
      * @JMS\Type("string")
      * @JMS\Groups({"satisfaction"})
      *
-     * @ORM\Column(type="string", name="report_type", length=9)
+     * @ORM\Column(type="string", name="report_type", length=9, nullable=true)
      */
     private $reportType;
 
