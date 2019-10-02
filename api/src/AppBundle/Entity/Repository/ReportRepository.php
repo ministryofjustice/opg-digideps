@@ -136,6 +136,7 @@ class ReportRepository extends EntityRepository
             ->where('u.id = ' . $userId)
             ->orWhere('o.isActivated = true AND ou.id = ' . $userId)
             ->andWhere('c.archivedAt IS NULL')
+            ->andWhere('c.deletedAt IS NULL')
         ;
 
         if ($exclude_submitted) {

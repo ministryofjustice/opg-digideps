@@ -78,7 +78,7 @@ Feature: Users can edit members of their organisation
     And I should see the "client-104-5" region
     And I should see the "client-102-4-5" region
     And I should see the "client-103-4-5" region
-    And I should see the "client" region exactly "29" times
+    And I should see the "client" region exactly "30" times
 
   @prof
   Scenario: Users can delete colleagues in their organisation

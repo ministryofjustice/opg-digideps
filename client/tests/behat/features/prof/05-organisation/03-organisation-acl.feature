@@ -65,10 +65,10 @@ Feature: Users can access the correct clients
   Scenario: Removing team member entries should seemlessly work
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/?limit=50"
-    Then I should see the "client" region exactly 18 times
+    Then I should see the "client" region exactly 17 times
     When I remove all the old team database entries
     When I go to "/org/?limit=50"
-    Then I should see the "client" region exactly 18 times
+    Then I should see the "client" region exactly 17 times
     Then I click on "pa-report-open" in the "client-31000010" region
     And I click on "client-edit"
     Then the response status code should be 200
