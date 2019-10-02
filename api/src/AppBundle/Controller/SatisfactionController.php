@@ -16,7 +16,6 @@ class SatisfactionController extends RestController
     /**
      * @Route("")
      * @Method({"POST"})
-     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
@@ -28,8 +27,8 @@ class SatisfactionController extends RestController
         $satisfaction->setScore($data['score']);
 
         if (isset($data['reportType'])) {
-        $satisfaction->setReportType($data['reportType']);
-        $satisfaction->setDeputyRole($this->getUser()->getRoleName());
+            $satisfaction->setReportType($data['reportType']);
+            $satisfaction->setDeputyRole($this->getUser()->getRoleName());
         }
 
         if (isset($data['comments'])) {
