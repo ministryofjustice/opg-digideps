@@ -7,7 +7,7 @@ resource "aws_vpc" "main" {
     { Name = "private" },
   )
   enable_dns_hostnames = true
-  enable_dns_support = true
+  enable_dns_support   = true
 }
 
 resource "aws_internet_gateway" "igw" {
