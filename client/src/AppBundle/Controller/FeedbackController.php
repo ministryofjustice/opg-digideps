@@ -33,17 +33,13 @@ class FeedbackController extends AbstractController
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
             $this->getMailSender()->send($feedbackEmail, ['html']);
 
-            return $this->redirectToRoute('feedback_sent');
+            $confirmation = $this->get('translator')->trans('collectionPage.confirmation', [], 'feedback');
+            $request->getSession()->getFlashBag()->add('notice', $confirmation);
+            return $this->redirectToRoute('feedback');
         }
 
         return [
             'form' => $form->createView(),
         ];
     }
-
-    /**
-     * @Route("/feedback/sent", name="feedback_sent")
-     * @Template("AppBundle:Feedback:sent.html.twig")
-     */
-    public function sentAction(Request $request) {}
 }
