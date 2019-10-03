@@ -125,7 +125,6 @@ class ReportRepository extends EntityRepository
                 ->distinct('c');
         } elseif ($select == 'count') {
             $qb->select('COUNT(DISTINCT c)');
-
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": first must be reports|count");
         }
@@ -169,7 +168,8 @@ class ReportRepository extends EntityRepository
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
-
+//        $qb->groupBy('r')
+//var_dump($qb->getQuery()->getSQL());exit;
         return $qb;
     }
 
