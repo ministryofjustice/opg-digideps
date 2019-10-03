@@ -101,27 +101,9 @@ class Satisfaction
     }
 
     /**
-     * @return string|null
-     */
-    public function getComments(): ?string
-    {
-        return $this->comments;
-    }
-
-    /**
-     * @param string $comments
-     * @return Satisfaction
-     */
-    public function setComments(string $comments): Satisfaction
-    {
-        $this->comments = $comments;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getDeputyRole(): string
+    public function getDeputyRole(): ?string
     {
         return $this->deputyRole;
     }
@@ -139,7 +121,7 @@ class Satisfaction
     /**
      * @return string
      */
-    public function getReportType(): string
+    public function getReportType(): ?string
     {
         return $this->reportType;
     }
