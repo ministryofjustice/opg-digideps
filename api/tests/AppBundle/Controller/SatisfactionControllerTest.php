@@ -53,9 +53,9 @@ class SatisfactionControllerTest extends AbstractTestController
      * @dataProvider getInvalidInputs
      * @param $data
      */
-    public function testSatisfactionFailsOnInvalidData($data)
+    public function testSatisfactionFailsOnInvalidData($url, $data)
     {
-        $this->assertJsonRequest('POST', '/satisfaction', [
+        $this->assertJsonRequest('POST', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => $data,
@@ -68,7 +68,9 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getInvalidInputs()
     {
         return [
-            ['data' => ['reportType' => '102-5']]
+            ['url' => '/satisfaction', 'data' => ['score' => 1]],
+            ['url' => '/satisfaction', 'data' => ['reportType' => '102-5']],
+            ['url' => '/satisfaction/public', 'data' => []],
         ];
     }
 
@@ -76,9 +78,9 @@ class SatisfactionControllerTest extends AbstractTestController
      * @dataProvider getValidInputs
      * @param $data
      */
-    public function testSatisfactionAcceptsValidData($data)
+    public function testSatisfactionAcceptsValidData($url, $data)
     {
-        $response = $this->assertJsonRequest('POST', '/satisfaction', [
+        $response = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => $data,
@@ -91,9 +93,13 @@ class SatisfactionControllerTest extends AbstractTestController
 
         if (array_key_exists('reportType', $data)) {
             $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
-            $this->assertEquals('ROLE_LAY_DEPUTY', $persistedEntity->getDeputyRole());
         } else {
             $this->assertNull($persistedEntity->getReportType());
+        }
+
+        if ($url === '/satisfaction') {
+            $this->assertEquals('ROLE_LAY_DEPUTY', $persistedEntity->getDeputyRole());
+        } else {
             $this->assertNull($persistedEntity->getDeputyRole());
         }
     }
@@ -104,8 +110,8 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getValidInputs()
     {
         return [
-            ['data' => ['score' => 4]],
-            ['data' => ['score' => 4, 'reportType' => 'foo']]
+            ['url' => '/satisfaction', 'data' => ['score' => 4, 'reportType' => 'foo']],
+            ['url' => '/satisfaction/public', 'data' => ['score' => 4]],
         ];
     }
 }
