@@ -26,3 +26,7 @@ services:
   AppBundle\Factory\OrganisationFactory:
     class: AppBundle\Factory\OrganisationFactory
     arguments: ['%shared_email_domains%']
+
+  AppBundle\Service\Stats\QueryFactory:
+    class: AppBundle\Service\Stats\QueryFactory
+    arguments: ['@em']

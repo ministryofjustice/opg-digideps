@@ -11,6 +11,10 @@ resource "aws_sns_topic_policy" "notifications_minor" {
   policy = data.aws_iam_policy_document.notifications_minor.json
 }
 
+data "aws_sns_topic" "alerts" {
+  name = "alerts"
+}
+
 data "aws_iam_policy_document" "notifications_minor" {
   policy_id = "__default_policy_ID"
 
@@ -87,4 +91,3 @@ data "aws_iam_policy_document" "notifications_major" {
     }
   }
 }
-

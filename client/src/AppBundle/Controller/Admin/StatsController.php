@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Form\Admin\ReportSubmissionDownloadFilterType;
+use AppBundle\Form\Admin\StatPeriodType;
 use AppBundle\Mapper\ReportSubmission\ReportSubmissionSummaryQuery;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -65,5 +66,56 @@ class StatsController extends AbstractController
         $response->sendHeaders();
 
         return $response;
+    }
+
+    /**
+     * @Route("/metrics", name="admin_metrics")
+     * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
+     * @Template("AppBundle:Admin/Stats:metrics.html.twig")
+     * @param Request $request
+     * @return array|Response
+     */
+    public function metricsAction(Request $request)
+    {
+        $form = $this->createForm(StatPeriodType::class);
+        $form->handleRequest($request);
+
+        $append = '';
+
+        if ($form->isValid()) {
+            $startDate = $form->get('startDate')->getData();
+            $endDate = $form->get('endDate')->getData();
+            $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
+        }
+
+        $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies'];
+
+        foreach ($metrics as $metric) {
+            $all = $this->getRestClient()->get('stats?metric=' . $metric . $append, 'array');
+            $byRole = $this->getRestClient()->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
+
+            $stats[$metric] = array_merge(
+                ['all' => $all[0]['amount']],
+                $this->mapToDeputyType($byRole)
+            );
+        }
+
+        return [
+            'stats' => $stats,
+            'form' => $form->createView()
+        ];
+    }
+
+    /**
+     * Map an array of metric responses to be addressible by deputyType
+     */
+    private function mapToDeputyType(array $result): array {
+        $resultByDeputyType = [];
+
+        foreach ($result as $resultBit) {
+            $resultByDeputyType[$resultBit['deputyType']] = $resultBit['amount'];
+        }
+
+        return $resultByDeputyType;
     }
 }
