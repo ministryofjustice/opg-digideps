@@ -32,16 +32,13 @@ class SatisfactionController extends RestController
     {
         $data = $this->deserializeBodyContent($request, [
             'score' => 'notEmpty',
-            'reportType' => 'notEmpty'
+            'reportType' => 'notEmpty',
         ]);
 
         $satisfaction = $this->addSatisfactionScore($data['score']);
 
+        $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
-
-        if (isset($data['reportType'])) {
-            $satisfaction->setReportType($data['reportType']);
-        }
 
         return $satisfaction->getId();
     }
