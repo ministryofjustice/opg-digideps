@@ -2,7 +2,7 @@
 Overall, how did you feel about the service you received today ?<br/>
 <br/>
 {% if userRole is defined %}{{ userRole }}: {% endif %}
-{{ ('satisfactionLevelsChoices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}
+{{ ('form.satisfactionLevel.choices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}
 <br/>
 {% if response.name is defined %}Name: {{ response.name }}<br/>{% endif %}
 {% if response.email is defined %}Email: {{ response.email }}<br/>{% endif %}
