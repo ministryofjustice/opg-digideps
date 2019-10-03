@@ -6,6 +6,7 @@ Overall, how did you feel about the service you received today ?<br/>
 <br/>
 {% if response.name is defined %}Name: {{ response.name }}<br/>{% endif %}
 {% if response.email is defined %}Email: {{ response.email }}<br/>{% endif %}
+{% if response.phone is defined %}Phone: {{ response.phone }}<br/>{% endif %}
 {% if response.page is defined %}Page: {{ response.page }}<br/>{% endif %}
 <br/>
 Comments:<br />
