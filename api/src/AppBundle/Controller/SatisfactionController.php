@@ -13,6 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SatisfactionController extends RestController
 {
+    public function addSatisfactionScore($score)
+    {
+        $satisfaction = new Satisfaction();
+        $satisfaction->setScore($score);
+
+        $this->persistAndFlush($satisfaction);
+
+        return $satisfaction;
+    }
+
     /**
      * @Route("")
      * @Method({"POST"})
@@ -22,17 +32,16 @@ class SatisfactionController extends RestController
     {
         $data = $this->deserializeBodyContent($request, [
             'score' => 'notEmpty',
+            'reportType' => 'notEmpty'
         ]);
 
-        $satisfaction = new Satisfaction();
-        $satisfaction->setScore($data['score']);
+        $satisfaction = $this->addSatisfactionScore($data['score']);
+
+        $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
         if (isset($data['reportType'])) {
             $satisfaction->setReportType($data['reportType']);
-            $satisfaction->setDeputyRole($this->getUser()->getRoleName());
         }
-
-        $this->persistAndFlush($satisfaction);
 
         return $satisfaction->getId();
     }
@@ -43,6 +52,12 @@ class SatisfactionController extends RestController
      */
     public function publicAdd(Request $request)
     {
-        return $this->add($request);
+        $data = $this->deserializeBodyContent($request, [
+            'score' => 'notEmpty'
+        ]);
+
+        $satisfaction = $this->addSatisfactionScore($data['score']);
+
+        return $satisfaction->getId();
     }
 }
