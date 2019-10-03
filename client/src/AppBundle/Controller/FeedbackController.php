@@ -24,9 +24,12 @@ class FeedbackController extends AbstractController
 
         if ($form->isValid()) {
             // Store in database
-            $this->getRestClient()->post('satisfaction/public', [
-                'score' => $form->get('satisfactionLevel')->getData(),
-            ]);
+            $score = $form->get('satisfactionLevel')->getData();
+            if ($score) {
+                $this->getRestClient()->post('satisfaction/public', [
+                    'score' => $score,
+                ]);
+            }
 
             // Send notification email
             $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($form->getData());
