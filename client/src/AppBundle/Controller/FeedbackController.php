@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\FeedbackReportType;
+use AppBundle\Form\FeedbackType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -16,10 +16,7 @@ class FeedbackController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(FeedbackReportType::class, null, [
-            'include_contact_information' => true,
-            'include_page_information' => true,
-        ]);
+        $form = $this->createForm(FeedbackType::class);
 
         $form->handleRequest($request);
 
