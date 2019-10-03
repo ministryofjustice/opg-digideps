@@ -45,7 +45,7 @@ class UserProviderTest extends TestCase
         $this->redis->shouldReceive('get')->with('token')->andReturn(1);
         $this->repo->shouldReceive('find')->with(1)->andReturn(null);
 
-        $this->logger->shouldReceive('warning')->with(matchesPattern('/not found/'));
+        $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/not found/'));
 
         $this->userProvider->loadUserByUsername('token');
     }
@@ -80,8 +80,8 @@ class UserProviderTest extends TestCase
 
         $tokenMatchPattern = '/^123_' . '[0-9a-f]{5,40}' . '[\d]{1,}/';
 
-        $this->redis->shouldReceive('set')->with(matchesPattern($tokenMatchPattern), 123)->atLeast(1);
-        $this->redis->shouldReceive('expire')->with(matchesPattern($tokenMatchPattern), 7)->atLeast(1);
+        $this->redis->shouldReceive('set')->with(\Mockery::pattern($tokenMatchPattern), 123)->atLeast(1);
+        $this->redis->shouldReceive('expire')->with(\Mockery::pattern($tokenMatchPattern), 7)->atLeast(1);
 
         $token = $this->userProvider->generateRandomTokenAndStore($user);
         $this->assertRegExp($tokenMatchPattern, $token);
