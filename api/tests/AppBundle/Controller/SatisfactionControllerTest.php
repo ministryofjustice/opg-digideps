@@ -38,6 +38,17 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
     }
 
+    public function testPublicEndpointHasSuitablePermissions()
+    {
+        $this->assertJsonRequest('POST', '/satisfaction/public', [
+            'mustSucceed' => true,
+            'data' => [
+                'score' => 4
+            ],
+            'assertResponseCode' => 200,
+        ]);
+    }
+
     /**
      * @dataProvider getInvalidInputs
      * @param $data
@@ -57,8 +68,7 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getInvalidInputs()
     {
         return [
-            ['data' => ['score' => 4, 'comments' => 'foo']],
-            ['data' =>['reportType' => '102-5', 'comments' => 'foo']]
+            ['data' => ['reportType' => '102-5']]
         ];
     }
 
@@ -78,12 +88,13 @@ class SatisfactionControllerTest extends AbstractTestController
         $persistedEntity = $em->getRepository('AppBundle\Entity\Satisfaction')->find($response['data']);
 
         $this->assertEquals($data['score'], $persistedEntity->getScore());
-        $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
 
-        if (array_key_exists('comments', $data)) {
-            $this->assertEquals($data['comments'], $persistedEntity->getComments());
+        if (array_key_exists('reportType', $data)) {
+            $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
+            $this->assertEquals('ROLE_LAY_DEPUTY', $persistedEntity->getDeputyRole());
         } else {
-            $this->assertNull($persistedEntity->getComments());
+            $this->assertNull($persistedEntity->getReportType());
+            $this->assertNull($persistedEntity->getDeputyRole());
         }
     }
 
@@ -93,7 +104,7 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getValidInputs()
     {
         return [
-            ['data' => ['score' => 4, 'reportType' => 'foo', 'comments' => 'bar']],
+            ['data' => ['score' => 4]],
             ['data' => ['score' => 4, 'reportType' => 'foo']]
         ];
     }
