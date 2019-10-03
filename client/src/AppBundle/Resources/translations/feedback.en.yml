@@ -1,4 +1,18 @@
+collectionPage:
+    htmlTitle: Send us feedback
+    pageTitle: Send us feedback
+    intro:
+        para1: We will not respond to your feedback directly but will use it to improve this service. If you're happy to be contacted to give further feedback, please leave your email address or phone number.
+        para2: If you have a question about your deputyship, please email <a href="mailto:customerservices@publicguardian.gov.uk">customerservices@publicguardian.gov.uk</a> who will be able to help.
+    reply:
+        title: Do you want a reply?
+        explanation: If you'd like us to get back to you, please leave your details below.
+
 form:
+    specificPage:
+        legend: What's it to do with?
+    page:
+        label: Enter URL or name of page
     satisfactionLevel:
         legend: Overall, how did you feel about the process of completing your deputy report online?
         hint: ""
@@ -10,5 +24,16 @@ form:
             1: Very dissatisfied
     comments:
         label: How could we improve this service?
+    commentsGeneral:
+        label: What are the details?
+        hint: Don’t include personal or financial information, for example your National Insurance number or credit card details.
+    name:
+        label: Name
+    email:
+        label: Email
+        hint:  We'll only use this to reply to your message.
+    phone:
+        label: Phone number
+        hint: Optional, only required if you'd prefer we call you.
     send:
         label: Send feedback

@@ -2,16 +2,51 @@
 
 {% set translationDomain = "feedback" %}
 {% trans_default_domain translationDomain %}
+{% set page = "collectionPage" %}
 
-{% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            Feedback...
-            {{ form(form) }}
+            <p class="govuk-body">{{ (page ~ '.intro.para1') | trans }}</p>
+            <p class="govuk-body">{{ (page ~ '.intro.para2') | trans | raw }}</p>
+
+            {{ form_start(form) }}
+
+            {% set pageUrlField %}
+                {{ form_input(form.page, 'form.page') }}
+            {% endset %}
+
+            {{ form_checkbox_group(form.specificPage, 'form.specificPage', {
+                legendClass: 'govuk-label--m',
+                items: [
+                    {},
+                    { conditional: pageUrlField },
+                ]
+            }) }}
+
+            {{ form_input(form.comments, 'form.commentsGeneral', {
+                labelClass: 'govuk-label--m',
+                inputClass: 'govuk-!-width-full'
+            }) }}
+
+            <h3 class="govuk-heading-m">{{ (page ~ '.reply.title') | trans }}</h3>
+            <p class="govuk-body">{{ (page ~ '.reply.explanation') | trans }}</p>
+
+            {{ form_input(form.name, 'form.name') }}
+            {{ form_input(form.email, 'form.email') }}
+            {{ form_input(form.phone, 'form.phone') }}
+
+            {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
+                legendClass: 'govuk-label--m'
+            }) }}
+
+            {{ form_submit(form.save, 'form.send') }}
+
+            {{ form_end(form) }}
         </div>
     </div>
 

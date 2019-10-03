@@ -49,6 +49,7 @@ class FeedbackType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => false,
+                'placeholder' => false,
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
