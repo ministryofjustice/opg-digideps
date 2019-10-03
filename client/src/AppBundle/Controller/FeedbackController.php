@@ -24,7 +24,7 @@ class FeedbackController extends AbstractController
 
         if ($form->isValid()) {
             // Store in database
-            $this->getRestClient()->post('satisfaction', [
+            $this->getRestClient()->post('satisfaction/public', [
                 'score' => $form->get('satisfactionLevel')->getData(),
             ]);
 
