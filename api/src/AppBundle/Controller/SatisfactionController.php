@@ -16,6 +16,7 @@ class SatisfactionController extends RestController
     /**
      * @Route("")
      * @Method({"POST"})
+     * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)
     {
@@ -31,12 +32,17 @@ class SatisfactionController extends RestController
             $satisfaction->setDeputyRole($this->getUser()->getRoleName());
         }
 
-        if (isset($data['comments'])) {
-            $satisfaction->setComments($data['comments']);
-        }
-
         $this->persistAndFlush($satisfaction);
 
         return $satisfaction->getId();
+    }
+
+    /**
+     * @Route("/public")
+     * @Method({"POST"})
+     */
+    public function publicAdd(Request $request)
+    {
+        return $this->add($request);
     }
 }

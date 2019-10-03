@@ -97,7 +97,7 @@ security:
            security: false
            #methods: [PUT]
         satisfaction:
-           pattern: ^/satisfaction
+           pattern: ^/satisfaction/public
            security: false
            methods: [POST]
         settingServiceNotification:
