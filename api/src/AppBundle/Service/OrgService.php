@@ -520,7 +520,9 @@ class OrgService
 
         $namedDeputy = $this->namedDeputyRepository->findOneBy([
             'deputyNo' => $deputyNo,
-            'email1' => strtolower($csvRow['Email'])
+            'email1' => strtolower($csvRow['Email']),
+            'firstname' => $csvRow['Dep Forename'],
+            'lastname' => $csvRow['Dep Surname'],
         ]);
 
         return $namedDeputy;
