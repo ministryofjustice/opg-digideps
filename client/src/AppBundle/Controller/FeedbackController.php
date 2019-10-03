@@ -17,7 +17,8 @@ class FeedbackController extends AbstractController
     public function indexAction(Request $request)
     {
         $form = $this->createForm(FeedbackReportType::class, null, [
-            'include_contact_information' => true
+            'include_contact_information' => true,
+            'include_page_information' => true,
         ]);
 
         $form->handleRequest($request);

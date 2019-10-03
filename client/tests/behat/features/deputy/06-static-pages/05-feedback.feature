@@ -1,3 +1,4 @@
+@gt
 Feature: Generic feedback page
 
     @deputy
@@ -20,13 +21,15 @@ Feature: Generic feedback page
     Scenario: Extra details are included in the email
         Given I am on "/feedback"
         And emails are sent from "deputy" area
-        When I fill in "feedback_report_satisfactionLevel_4" with "1"
+        When I fill in "feedback_report_page" with "Title of page"
         And I fill in "feedback_report_comments" with "Test comment"
         And I fill in "feedback_report_name" with "My name"
         And I fill in "feedback_report_email" with "myemail@emailhost.com"
+        And I fill in "feedback_report_satisfactionLevel_4" with "1"
         And I press "Save"
         Then the last email should have been sent to "digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "Very dissatisfied"
         And the last email should contain "Test comment"
         And the last email should contain "My name"
+        And the last email should contain "Title of page"
         And the last email should contain "myemail@emailhost.com"

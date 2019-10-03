@@ -27,6 +27,13 @@ class FeedbackReportType extends AbstractType
             ])
             ->add('comments', FormTypes\TextareaType::class);
 
+        if ($options['include_page_information']) {
+            $builder
+                ->add('page', FormTypes\TextType::class, [
+                    'required' => false,
+                ]);
+        }
+
         if ($options['include_contact_information']) {
             $builder
                 ->add('name', FormTypes\TextType::class, [
@@ -37,6 +44,9 @@ class FeedbackReportType extends AbstractType
                     'constraints' => [
                         new Constraints\Email(['message' => 'login.email.inValid'])
                     ]
+                ])
+                ->add('phone', FormTypes\TextType::class, [
+                    'required' => false,
                 ]);
         }
 
@@ -48,6 +58,7 @@ class FeedbackReportType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'feedback',
             'include_contact_information' => false,
+            'include_page_information' => false,
         ]);
     }
 

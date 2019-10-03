@@ -4,11 +4,9 @@ Overall, how did you feel about the service you received today ?<br/>
 {% if userRole is defined %}{{ userRole }}: {% endif %}
 {{ ('satisfactionLevelsChoices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}
 <br/>
+{% if response.name is defined %}Name: {{ response.name }}<br/>{% endif %}
+{% if response.email is defined %}Email: {{ response.email }}<br/>{% endif %}
+{% if response.page is defined %}Page: {{ response.page }}<br/>{% endif %}
 <br/>
-{% if response.name is defined or response.email is defined %}
-    {% if response.name is defined %}Name: {{ response.name }}<br/>{% endif %}
-    {% if response.email is defined %}Email: {{ response.email }}<br/>{% endif %}
-    <br/>
-{% endif  %}
 Comments:<br />
 {{ response.comments }}
