@@ -13,7 +13,7 @@ Feature: Generic feedback page
         And emails are sent from "deputy" area
         When I fill in "feedback_comments" with "Test comment"
         And I press "Send feedback"
-        Then the response should contain " Thank you for your feedback"
+        Then the response should contain "Thank you for your feedback"
         And the last email should have been sent to "digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "Test comment"
 
@@ -23,15 +23,16 @@ Feature: Generic feedback page
         And emails are sent from "deputy" area
         When I fill in "feedback_specificPage_1" with "0"
         And I fill in "feedback_page" with "Title of page"
-        And I fill in "feedback_comments" with "Test comment"
+        And I fill in "feedback_comments" with "A longer comment"
         And I fill in "feedback_name" with "My name"
         And I fill in "feedback_email" with "myemail@emailhost.com"
         And I fill in "feedback_phone" with "054863476384"
         And I fill in "feedback_satisfactionLevel_4" with "1"
         And I press "Send feedback"
-        Then the last email should have been sent to "digideps+feedback@digital.justice.gov.uk"
+        Then the response should contain "Thank you for your feedback"
+        And the last email should have been sent to "digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "Very dissatisfied"
-        And the last email should contain "Test comment"
+        And the last email should contain "A longer comment"
         And the last email should contain "My name"
         And the last email should contain "Title of page"
         And the last email should contain "054863476384"
