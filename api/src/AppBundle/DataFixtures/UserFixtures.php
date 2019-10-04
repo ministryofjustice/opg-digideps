@@ -115,6 +115,13 @@ class UserFixtures extends AbstractDataFixture
             'reportVariation' => 'L2',
             'codeputyEnabled' => true,
         ],
+        [
+            'id' => 'example',
+            'email' => 'jo.smith@example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
     ];
 
     public function doLoad(ObjectManager $manager)
@@ -132,7 +139,7 @@ class UserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname(ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname('User')
-            ->setEmail('behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
+            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(isset($data['ndr']))
