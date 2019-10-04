@@ -26,26 +26,22 @@ class UserProviderTest extends TestCase
         $this->userProvider = new UserProvider($this->em, $this->redis, $this->logger, $options);
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testloadUserByUsernameRedisNotFound()
     {
         $this->redis->shouldReceive('get')->with('token')->andReturn(null);
         $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/Token.*not.*found/'));
+        $this->expectException(\RuntimeException::class);
 
         $this->userProvider->loadUserByUsername('token');
     }
 
-    /**
-     * @expectedException RuntimeException
-     */
     public function testloadUserByUsernameDbNotFound()
     {
         $this->redis->shouldReceive('get')->with('token')->andReturn(1);
         $this->repo->shouldReceive('find')->with(1)->andReturn(null);
 
         $this->logger->shouldReceive('warning')->with(\Mockery::pattern('/not found/'));
+        $this->expectException(\RuntimeException::class);
 
         $this->userProvider->loadUserByUsername('token');
     }

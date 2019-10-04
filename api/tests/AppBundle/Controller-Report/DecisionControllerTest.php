@@ -141,9 +141,9 @@ class DecisionControllerTest extends AbstractTestController
                 'AuthToken' => self::$tokenDeputy,
                 'assertResponseCode' => 400,
             ])['message'];
-        $this->assertContains('description', $errorMessage);
-        $this->assertContains('client_involved_boolean', $errorMessage);
-        $this->assertContains('client_involved_details', $errorMessage);
+        $this->assertStringContainsString('description', $errorMessage);
+        $this->assertStringContainsString('client_involved_boolean', $errorMessage);
+        $this->assertStringContainsString('client_involved_details', $errorMessage);
     }
 
     public function testupsertDecisionPut()
