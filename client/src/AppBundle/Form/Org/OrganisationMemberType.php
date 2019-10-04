@@ -4,6 +4,8 @@ namespace AppBundle\Form\Org;
 
 use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
+use AppBundle\Validator\Constraints\EmailSameDomain;
+use AppBundle\Validator\Constraints\EmailSameDomainValidator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +31,13 @@ class OrganisationMemberType extends AbstractType
                     new Constraints\NotBlank(['message' => 'user.lastname.notBlankOtherUser']),
                 ]
             ])
-            ->add('email', FormTypes\TextType::class, ['required' => true])
+            ->add('email', FormTypes\TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new EmailSameDomain(['message' => 'user.email.notOrgEmailError', 'groups' => 'email_same_domain']),
+                    //new EmailPublicDomainValidator(['message' => 'user.email.emailInPublicDomainError']),
+                ]
+            ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
             ->add('phoneMain', FormTypes\TextType::class, ['required' => !empty($targetUser)]);
 
@@ -41,6 +49,7 @@ class OrganisationMemberType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'org-organisation',
             'data_class'         => User::class,
+            'validation_groups'      => ['email_same_domain'],
             'targetUser'         => null
         ]);
     }

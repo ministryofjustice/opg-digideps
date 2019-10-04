@@ -71,7 +71,7 @@ class OrganisationController extends AbstractController
         $form->handleRequest($request);
 
         // If the email belong to a prof user, just add the user to the team
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->getData()->getEmail();
             try {
                 $user = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
