@@ -56,7 +56,7 @@ class ClientsQueryTest extends WebTestCase
                     $this->assertEquals(3, $metric['amount']);
                     break;
                 case 'prof':
-                    $this->assertEquals(3, $metric['amount']);
+                    $this->assertEquals(6, $metric['amount']);
                     break;
             }
         }
@@ -96,7 +96,7 @@ class ClientsQueryTest extends WebTestCase
                     $this->assertEquals(2, $metric['amount']);
                     break;
                 case '103-5':
-                    $this->assertEquals(1, $metric['amount']);
+                    $this->assertEquals(4, $metric['amount']);
                     break;
             }
         }
