@@ -267,4 +267,14 @@ class Organisation
 
         return $this;
     }
+
+    /**
+     * Orgs with public domain identifier contain the @ symbol
+     *
+     * @return bool|int
+     */
+    public function hasPublicDomain()
+    {
+        return strpos($this->getEmailIdentifier(), '@');
+    }
 }

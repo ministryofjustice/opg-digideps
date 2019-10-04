@@ -23,6 +23,7 @@ form:
         notFoundError: Could not find user with specified email address
         notOrgUserError: User has unsuitable role to be in this organisation
         notOrgEmailError: User does not have an email address from this organisation
+        emailInPublicDomainError: You cannot add a user to an organisation with a public domain
         alreadyInOrgError: User is already in this organisation
     retrieve:
         label: Find user
