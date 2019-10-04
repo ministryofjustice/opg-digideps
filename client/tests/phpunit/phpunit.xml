@@ -9,6 +9,10 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
+        stopOnError="true"
+        stopOnFailure="true"
+        stopOnRisky="true"
+        stopOnWarning="true"
 >
     <testsuites>
         <testsuite name="Client unit tests">
