@@ -117,14 +117,14 @@ class UserFixtures extends AbstractDataFixture
         ],
         [
             'id' => 'example',
-            'email' => 'jo.smith@example.com',
+            'email' => 'jo.brown@example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
         [
-            'id' => 'gmail',
-            'email' => 'example37434582232@gmail.com',
+            'id' => 'abc-example',
+            'email' => 'john.smith@abc-solicitors.example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
@@ -133,6 +133,9 @@ class UserFixtures extends AbstractDataFixture
 
     public function doLoad(ObjectManager $manager)
     {
+        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
+
         // Add users from array
         foreach ($this->userData as $data) {
             $this->addUser($data, $manager);
@@ -202,6 +205,15 @@ class UserFixtures extends AbstractDataFixture
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
+
+            if (isset($data['email'])) {
+                $organisation = $this->orgRepository->findByEmailIdentifier($data['email']);
+                if (null === $organisation) {
+                    $organisation = $this->orgFactory->createFromFullEmail($data['email'], $data['email']);
+                    $manager->persist($organisation);
+                    $manager->flush($organisation);
+                }
+            }
         }
 
         // If codeputy was enabled, add a secondary account
