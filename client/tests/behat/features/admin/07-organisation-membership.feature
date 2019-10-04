@@ -58,6 +58,26 @@ Feature: Organisation membership
     Then I should see "User is already in this organisation"
 
   @admin
+  Scenario: Admin cannot add users to a public domain organisation
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations"
+    And I follow "jo.brown@example.com"
+    And I follow "Add someone to this organisation"
+    When I fill in "organisation_add_user_email" with "jo.brown@example.com"
+    And I press "Find user"
+    Then I should see "You cannot add a user to an organisation with a public domain"
+
+  @admin
+  Scenario: Admin cannot add users witth different email domain to that of the organisation
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations"
+    And I follow "john.smith@abc-solicitors.example.com"
+    And I follow "Add someone to this organisation"
+    When I fill in "organisation_add_user_email" with "jo.brown@example.com"
+    And I press "Find user"
+    Then I should see "User does not have an email address from this organisation"
+
+  @admin
   Scenario: Admin can remove users from an organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"

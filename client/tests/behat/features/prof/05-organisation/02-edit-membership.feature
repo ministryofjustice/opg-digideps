@@ -12,15 +12,21 @@ Feature: Users can edit members of their organisation
     And I should see "behat-prof-team-member@publicguardian.gov.uk"
 
   @prof
-  Scenario: Users can add new users to their organisation
+  Scenario: Users can only add new users if they share the same org domain (not public)
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
     When I go to "/org/settings/organisation"
     And I follow "Add user"
+    When I fill in the following:
+      | organisation_member_firstname | Yvonne                          |
+      | organisation_member_lastname  | Lacasse                         |
+      | organisation_member_email     | john.smith@abc-solicitors.example.com |
     And I press "Save"
     Then the form should be invalid
     When I fill in the following:
-      | organisation_member_email     | y.lacasse@publicguardian.gov.uk |
+      | organisation_member_firstname | Yvonne                          |
+      | organisation_member_lastname  | Lacasse                         |
+      | organisation_member_email     | jo.brown@example.com            |
     And I press "Save"
     Then the form should be invalid
     When I fill in the following:
