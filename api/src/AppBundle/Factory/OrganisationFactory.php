@@ -29,7 +29,7 @@ class OrganisationFactory
             return $this->create($name, $email, $isActivated);
         }
 
-        $domain = substr($email, strpos($email, '@') + 1);
+        $domain = substr($email, $atSymbolPosition + 1);
         $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
 
         return $this->create($name, $emailIdentifier, $isActivated);
