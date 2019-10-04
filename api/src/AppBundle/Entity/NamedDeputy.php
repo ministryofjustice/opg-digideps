@@ -207,27 +207,6 @@ class NamedDeputy
     private $corres;
 
     /**
-     * NamedDeputy constructor.
-     * @param $deputyNo
-     * @param $email
-     * @param $firstname
-     * @param $lastname
-     * @param $address1
-     * @param $address2
-     * @param $address3
-     * @param $depPostcode
-     * @param $phoneMain
-     * @param $phoneAlternative
-     * @param null $address4
-     * @param null $address5
-     * @param array $data
-     */
-    public function __construct($data = []
-    ) {
-
-    }
-
-    /**
      * @return int
      */
     public function getId()
