@@ -90,6 +90,7 @@ class UserRegistrationServiceTest extends TestCase
 
     /**
      * @test
+     * @doesNotPerformAssertions
      */
     public function saveUserAndClientAndJoinThem()
     {
@@ -127,7 +128,6 @@ class UserRegistrationServiceTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Doctrine\ORM\ORMInvalidArgumentException
      */
     public function rollbackWhenSavingUserWithError()
     {
@@ -158,6 +158,8 @@ class UserRegistrationServiceTest extends TestCase
         $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
+        $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
+
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
@@ -165,7 +167,6 @@ class UserRegistrationServiceTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Doctrine\ORM\ORMInvalidArgumentException
      */
     public function rollbackWhenSavingClientWithError()
     {
@@ -197,12 +198,17 @@ class UserRegistrationServiceTest extends TestCase
         $mockCasrecVerificationService = m::mock('\AppBundle\Service\CasrecVerificationService');
         $mockCasrecVerificationService->shouldIgnoreMissing(true);
 
+        $this->expectException(\Doctrine\ORM\ORMInvalidArgumentException::class);
+
         $this->userRegistrationService = new UserRegistrationService($em, $mockCasrecVerificationService);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
     }
 
-    /** @test */
+    /**
+     * @test
+     * @doesNotPerformAssertions
+     */
     public function renderRegistrationHtmlEmail()
     {
         $data = new SelfRegisterData();

@@ -161,14 +161,14 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 400,
         ])['message'];
-        $this->assertContains('contact_name', $errorMessage);
-        $this->assertContains('address', $errorMessage);
-        $this->assertContains('address2', $errorMessage);
-        $this->assertContains('county', $errorMessage);
-        $this->assertContains('postcode', $errorMessage);
-        $this->assertContains('country', $errorMessage);
-        $this->assertContains('explanation', $errorMessage);
-        $this->assertContains('relationship', $errorMessage);
+        $this->assertStringContainsString('contact_name', $errorMessage);
+        $this->assertStringContainsString('address', $errorMessage);
+        $this->assertStringContainsString('address2', $errorMessage);
+        $this->assertStringContainsString('county', $errorMessage);
+        $this->assertStringContainsString('postcode', $errorMessage);
+        $this->assertStringContainsString('country', $errorMessage);
+        $this->assertStringContainsString('explanation', $errorMessage);
+        $this->assertStringContainsString('relationship', $errorMessage);
     }
 
     public function testupsertContactPut()

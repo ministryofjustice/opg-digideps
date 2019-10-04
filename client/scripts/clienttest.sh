@@ -1,4 +1,6 @@
 #!/bin/bash
+# exit on error
+set -e
 
 # generate behat.yml
 confd -onetime -backend env

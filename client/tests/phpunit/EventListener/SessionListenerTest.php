@@ -82,6 +82,7 @@ class SessionListenerTest extends TestCase
     /**
      * @test
      * @dataProvider provider
+     * @doesNotPerformAssertions
      */
     public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire)
     {

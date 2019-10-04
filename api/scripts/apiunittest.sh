@@ -1,4 +1,7 @@
 #!/bin/bash
+# exit on error
+set -e
+
 # Generate config files so test bootstrap can address the DB
 confd -onetime -backend env
 
