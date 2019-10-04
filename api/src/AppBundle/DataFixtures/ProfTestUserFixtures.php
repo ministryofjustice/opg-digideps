@@ -49,13 +49,47 @@ class ProfTestUserFixtures extends AbstractDataFixture
                     'address3' => 'ADD3',
                     'addressPostcode' => 'B301QL',
                     'phone' => '078912345678',
-                    'email' => 'cly401@hent.com',
+                    'email' => 'cly7061@hent.com',
                     'dob' => '02/02/1967',
                     'reportType' => '',
                     'reportVariation' => 'hw'
                 ],
             ],
         ],
+        [
+            'id' => '',
+            'Dep Forename' => 'Gmail',
+            'Dep Surname' => 'Jo',
+            'Email' => 'example8472838294@gmail.com',
+            'active' => true,
+            'Deputy No' => '7000027',
+            'Dep Type' => 23,
+            'roleName' => 'ROLE_PROF_NAMED',
+            'Dep Adrs1' => 'ADD1',
+            'Dep Adrs2' => 'ADD2',
+            'Dep Adrs3' => 'ADD3',
+            'Dep Postcode' => 'SW1',
+            'Dep Adrs4' => 'ADD4',
+            'Dep Adrs5' => 'ADD5',
+            'phoneMain' => '10000000001',
+            'clients' => [
+                [
+                    'firstname' => 'CLY701',
+                    'lastname' => 'HENT701',
+                    'caseNumber' => '74000027',
+                    'lastReportDate' => '28/05/2017',
+                    'address1' => 'ADD1',
+                    'address2' => 'ADD2',
+                    'address3' => 'ADD3',
+                    'addressPostcode' => 'B301QL',
+                    'phone' => '078912345678',
+                    'email' => 'cly4707@hent.com',
+                    'dob' => '02/02/1967',
+                    'reportType' => '',
+                    'reportVariation' => 'hw'
+                ],
+            ],
+        ]
     ];
 
     /**

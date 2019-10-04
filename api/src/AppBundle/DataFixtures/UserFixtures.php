@@ -122,6 +122,13 @@ class UserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
+        [
+            'id' => 'gmail',
+            'email' => 'example37434582232@gmail.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
     ];
 
     public function doLoad(ObjectManager $manager)
