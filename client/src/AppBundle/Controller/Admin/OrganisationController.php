@@ -161,14 +161,21 @@ class OrganisationController extends AbstractController
         if ($form->get('email')->getData()) {
             try {
                 $email = $form->get('email')->getData();
-                $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
 
-                if (!$user->isDeputyOrg()) {
-                    $error = 'form.email.notOrgUserError';
-                }
+                $domain = substr($email, strpos($email, '@') + 1);
+                if ($domain !== $organisation->getEmailIdentifier()) {
+                    $error = 'form.email.notOrgEmailError';
+                } else {
 
-                if ($organisation->hasUser($user)) {
-                    $error = 'form.email.alreadyInOrgError';
+                    $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
+
+                    if (!$user->isDeputyOrg()) {
+                        $error = 'form.email.notOrgUserError';
+                    }
+
+                    if ($organisation->hasUser($user)) {
+                        $error = 'form.email.alreadyInOrgError';
+                    }
                 }
             } catch (RestClientException $e) {
                 $error = 'form.email.notFoundError';
