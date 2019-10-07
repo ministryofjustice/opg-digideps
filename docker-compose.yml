@@ -156,8 +156,7 @@ services:
         restart: always
 
     test:
-        build: ./client
-        command: tail -f /dev/null
+        build: ./behat
         depends_on:
             - postgres
             - frontend
@@ -165,16 +164,8 @@ services:
         volumes_from:
             - testresults
         volumes:
-            - ./client/app/config/security.yml:/var/www/app/config/security.yml
-            - ./client/app/config/config.yml:/var/www/app/config/config.yml
-            - ./client/app/config/services.yml:/var/www/app/config/services.yml
-            - ./client/app/config/services:/var/www/app/config/services
-            - ./client/src:/var/www/src:ro
-            - ./client/scripts:/var/www/scripts
-            - ./client/tests:/var/www/tests
-        env_file:
-            - ./client/docker/env/frontend.env
-            - ./client/docker/env/test.env
+            - ./behat/tests:/var/www/tests
+        env_file: ./behat/test.env
 
     testresults:
         image: busybox
