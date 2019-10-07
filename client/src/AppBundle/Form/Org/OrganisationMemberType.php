@@ -34,7 +34,7 @@ class OrganisationMemberType extends AbstractType
             ->add('email', FormTypes\TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new EmailSameDomain(['message' => 'user.email.notOrgEmailError', 'groups' => 'email_same_domain']),
+                    new EmailSameDomain(['message' => '', 'groups' => ['email_same_domain']]),
                     //new EmailPublicDomainValidator(['message' => 'user.email.emailInPublicDomainError']),
                 ]
             ])
@@ -49,7 +49,7 @@ class OrganisationMemberType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'org-organisation',
             'data_class'         => User::class,
-            'validation_groups'      => ['email_same_domain'],
+            'validation_groups'  => ['email_same_domain'],
             'targetUser'         => null
         ]);
     }
