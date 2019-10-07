@@ -218,11 +218,11 @@ class Client
     private $totalReportCount;
 
     /**
-     * @JMS\Type("ArrayCollection<AppBundle\Entity\Organisation>")
+     * @JMS\Type("AppBundle\Entity\Organisation")
      *
-     * @var ArrayCollection
+     * @var Organisation
      */
-    private $organisations;
+    private $organisation;
 
     /**
      * @var integer
@@ -963,18 +963,18 @@ class Client
     }
 
     /**
-     * @return ArrayCollection
+     * @return Organisation
      */
-    public function getOrganisations()
+    public function getOrganisation()
     {
-        return $this->organisations;
+        return $this->organisation;
     }
 
     /**
-     * @param ArrayCollection $organisations
+     * @param Organisation $organisation
      */
-    public function setOrganisations(array $organisations): void
+    public function setOrganisation(Organisation $organisation): void
     {
-        $this->organisations = $organisations;
+        $this->organisation = $organisation;
     }
 }

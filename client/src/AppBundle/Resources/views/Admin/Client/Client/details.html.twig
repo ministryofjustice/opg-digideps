@@ -63,19 +63,17 @@
     </div>
     {% endif %}
 
-    {% if client.organisations is not empty %}
+    {% if client.organisation is not empty %}
         <dt class="govuk-summary-list__key">
             {{ (page ~ '.organisation') | trans }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {% for org in client.organisations %}
-                <a href="{{ path('admin_organisation_view', {id: org.id}) }}">{{ org.name }}</a>
+            <a href="{{ path('admin_organisation_view', {id: client.organisation.id}) }}">{{ client.organisation.name }}</a>
 
-                {% if not org.isActivated %}
-                    {{ (page ~ '.organisationInactive') | trans }}
-                {% endif %}
-                <br>
-            {% endfor %}
+            {% if not client.organisation.isActivated %}
+                {{ (page ~ '.organisationInactive') | trans }}
+            {% endif %}
+            <br>
         </dd>
     {% endif %}
 </dl>
