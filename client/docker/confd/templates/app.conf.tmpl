@@ -46,6 +46,8 @@ server {
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
 
+        fastcgi_request_buffering off;
+
         {{ if eq (getv "/frontend/role") "admin" }}
         fastcgi_read_timeout 300s;
         {{ end }}
