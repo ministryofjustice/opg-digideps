@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/org/settings/organisation")
@@ -62,6 +63,11 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+            if ($organisation->hasPublicDomain()) {
+                throw $this->createAccessDeniedException('Organisation not permitted to add users');
+            }
+        } catch (AccessDeniedException $e) {
+            throw ($e);
         } catch (RestClientException $e) {
             throw $this->createNotFoundException('Organisation not found');
         }

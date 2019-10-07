@@ -25,6 +25,7 @@
                 <div class="govuk-grid-column-one-half">
                     {{ 'viewPage.tableHeading' | trans }}
                 </div>
+                {% if not organisation.hasPublicDomain %}
                 <div class="govuk-grid-column-one-half text--right">
                     <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
                         <strong>
@@ -33,6 +34,7 @@
                         </strong>
                     </a>
                 </div>
+                {% endif %}
             </div>
         </caption>
 

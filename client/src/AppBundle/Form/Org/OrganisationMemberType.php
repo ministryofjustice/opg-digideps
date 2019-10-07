@@ -35,7 +35,6 @@ class OrganisationMemberType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new EmailSameDomain(['message' => '', 'groups' => ['email_same_domain']]),
-                    //new EmailPublicDomainValidator(['message' => 'user.email.emailInPublicDomainError']),
                 ]
             ])
             ->add('jobTitle', FormTypes\TextType::class, ['required' => !empty($targetUser)])
