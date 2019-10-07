@@ -2,19 +2,16 @@
 
 namespace DigidepsBehat;
 
-use AppBundle\Entity\Role;
-use AppBundle\Entity\User;
 use Behat\Gherkin\Node\TableNode;
 
 trait UserTrait
 {
     // added here for simplicity
     private static $roleStringToRoleName = [
-        'admin' => User::ROLE_ADMIN,
-        'lay deputy' => User::ROLE_LAY_DEPUTY,
-        'ad' => User::ROLE_AD,
-        'case manager' => User::ROLE_CASE_MANAGER,
-        'prof named' => User::ROLE_PROF_NAMED
+        'admin' => 'ROLE_ADMIN',
+        'lay deputy' => 'ROLE_LAY_DEPUTY',
+        'ad' => 'ROLE_AD',
+        'case manager' => 'ROLE_CASE_MANAGER',
     ];
 
     /**
@@ -32,25 +29,17 @@ trait UserTrait
             $this->fillField('admin_addressPostcode', $postcode);
         }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
-
-        if ($roleName === User::ROLE_LAY_DEPUTY || $roleName === User::ROLE_PA_NAMED || $roleName === User::ROLE_PROF_NAMED) {
-            $this->fillField('admin_roleType_0', 'deputy');
-            $this->fillField('admin_roleNameDeputy', $roleName);
-            switch ($ndrType) {
-                case 'NDR-enabled':
-                    $this->checkOption('admin_ndrEnabled');
-                    break;
-                case 'NDR-disabled':
-                    $this->uncheckOption('admin_ndrEnabled');
-                    break;
-                default:
-                    throw new \RuntimeException("$ndrType not a valid NDR type");
-            }
-        } else {
-            $this->fillField('admin_roleType_1', 'staff');
-            $this->fillField('admin_roleNameStaff', $roleName);
+        $this->fillField('admin_roleName', $roleName);
+        switch ($ndrType) {
+            case 'NDR-enabled':
+                $this->checkOption('admin_ndrEnabled');
+                break;
+            case 'NDR-disabled':
+                $this->uncheckOption('admin_ndrEnabled');
+                break;
+            default:
+                throw new \RuntimeException("$ndrType not a valid NDR type");
         }
-
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
@@ -80,28 +69,6 @@ trait UserTrait
         $this->fillField('set_password_password_second', $password);
         $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
-    /**
-     * @When I activate the named deputy with password :password
-     */
-    public function iActivateTheNamedDeputyAndSetThePasswordTo($password)
-    {
-        $this->visit('/logout');
-        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
-        $this->assertResponseStatus(200);
-        $this->checkOption('agree_terms_agreeTermsUse');
-        $this->pressButton('agree_terms_save');
-        $this->fillField('set_password_password_first', $password);
-        $this->fillField('set_password_password_second', $password);
-        $this->checkOption('set_password_showTermsAndConditions');
-        $this->pressButton('set_password_save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-        $this->fillField('user_details_jobTitle', 'Main org contact');
-        $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

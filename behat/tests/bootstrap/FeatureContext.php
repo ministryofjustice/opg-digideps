@@ -4,7 +4,6 @@ namespace DigidepsBehat;
 
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Behat context class.
@@ -23,7 +22,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         FileTrait,
         FormStepTrait,
         FormTrait,
-        KernelDictionary,
         LinksTrait,
         LinksPreviouslySavedTrait,
         RegionTrait,
@@ -45,11 +43,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
         // set this to true for temporary local debugging
-    }
-
-    public function setKernel(\AppKernel $kernel)
-    {
-        $this->kernel = $kernel;
     }
 
     /**
