@@ -2,18 +2,16 @@
 
 namespace DigidepsBehat;
 
-use AppBundle\Entity\Role;
-use AppBundle\Entity\User;
 use Behat\Gherkin\Node\TableNode;
 
 trait UserTrait
 {
     // added here for simplicity
     private static $roleStringToRoleName = [
-        'admin' => User::ROLE_ADMIN,
-        'lay deputy' => User::ROLE_LAY_DEPUTY,
-        'ad' => User::ROLE_AD,
-        'case manager' => User::ROLE_CASE_MANAGER,
+        'admin' => 'ROLE_ADMIN',
+        'lay deputy' => 'ROLE_LAY_DEPUTY',
+        'ad' => 'ROLE_AD',
+        'case manager' => 'ROLE_CASE_MANAGER',
     ];
 
     /**

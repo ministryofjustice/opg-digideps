@@ -1,0 +1,65 @@
+default:
+    gherkin:
+        cache: ~
+    autoload:
+        '': "%paths.base%/bootstrap"
+    suites:
+        infra:
+            description: Minimal test suite to check infrastructure
+            paths: [ "%paths.base%/features" ]
+            filters:
+                tags: "@infra"
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        admin:
+            description: End to end journey for Admin user
+            paths:    [ "%paths.base%/features/admin" ]
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        lay:
+            description: End to end journey for Lay deputy user
+            paths:    [ "%paths.base%/features/deputy" ]
+            filters:
+                tags: "@deputy"
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        ndr:
+            description: End to end journey for NDR-enabled Lay deputy user (fewer checks than deputy suite for common functionalities)
+            paths:    [ "%paths.base%/features/deputy" ]
+            filters:
+                tags: "@ndr"
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        pa:
+            description: End to end journey for Pub Authority users
+            paths:    [ "%paths.base%/features/pa" ]
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        prof:
+            description: End to end journey for Professional Deputy users
+            paths:    [ "%paths.base%/features/prof" ]
+            contexts:
+                - DigidepsBehat\FeatureContext
+
+        security:
+            description: Tests to assert on the apps security features
+            paths: [ "%paths.base%/features/security" ]
+            filters:
+                tags: "@security"
+            contexts:
+                - behatch:context:rest
+                - DigidepsBehat\FeatureContext
+
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+              goutte:
+                  guzzle_parameters:
+                    verify: false
+              files_path: "%paths.base%/fixtures/"
+              base_url: https://digideps.local
+        Behatch\Extension: ~
