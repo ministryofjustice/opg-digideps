@@ -14,7 +14,7 @@ trait DbTrait
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
-        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, dd_team, casrec, setting, user_team, client, satisfaction cascade;" > ' . $sqlFile);
+        exec('echo "SET client_min_messages TO WARNING; truncate dd_user, satisfaction, dd_team, organisation, casrec, setting, user_team, client cascade;" > ' . $sqlFile);
         exec('pg_dump ' . self::$dbName . "  --data-only  --inserts --exclude-table='migrations' | sed '/EXTENSION/d' >> {$sqlFile}", $output, $return);
         if (!file_exists($sqlFile) || filesize($sqlFile) < 100) {
             throw new \RuntimeException("SQL snapshot $sqlFile not created or not valid");
@@ -118,6 +118,15 @@ trait DbTrait
         $query = "UPDATE client SET deleted_at = '2018-07-24 14:03:00' WHERE case_number = '{$caseNumber}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
+    }
 
+    /**
+     * @Given I remove all the old team database entries
+     */
+    public function iRemoveAllTheOldTeamDatabaseEntries()
+    {
+        $query = "DELETE FROM user_team";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
     }
 }
