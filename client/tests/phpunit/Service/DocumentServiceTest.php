@@ -106,6 +106,9 @@ class DocumentServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testRemoveDocumentFromS3()
     {
         $docId = 1;

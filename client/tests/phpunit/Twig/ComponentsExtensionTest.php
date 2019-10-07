@@ -78,6 +78,7 @@ class ComponentsExtensionTest extends TestCase
     /**
      * @test
      * @dataProvider formatLastLoginProvider
+     * @doesNotPerformAssertions
      */
     public function formatTimeDifference($input, $expectedMethodCalled, $methodArgs)
     {

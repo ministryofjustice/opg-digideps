@@ -98,7 +98,7 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testgetOneById
      */
-    public function testgetVisitsCareAuth()
+    public function testgetVisitsCaresAuth()
     {
         $url = '/report/' . self::$report1->getId() . '/visits-care';
 
@@ -109,7 +109,7 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testgetVisitsCaresAuth
      */
-    public function testgetVisitsCareAcl()
+    public function testgetVisitsCaresAcl()
     {
         $url2 = '/report/' . self::$report2->getId() . '/visits-care';
 
@@ -119,15 +119,15 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testgetVisitsCaresAcl
      */
-    public function testgetVisitsCare()
+    public function testgetVisitsCares()
     {
         $url = '/report/' . self::$report1->getId() . '/visits-care';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
 
         $this->assertCount(1, $data);
         $this->assertEquals(self::$visitsCare1->getId(), $data[0]['id']);
@@ -141,9 +141,7 @@ class VisitsCareControllerTest extends AbstractTestController
     {
         $url = '/report/visits-care';
         $this->assertEndpointNeedsAuth('POST', $url);
-        $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     /**

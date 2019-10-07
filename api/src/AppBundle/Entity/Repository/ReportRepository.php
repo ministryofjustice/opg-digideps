@@ -168,8 +168,7 @@ class ReportRepository extends EntityRepository
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
-//        $qb->groupBy('r')
-//var_dump($qb->getQuery()->getSQL());exit;
+
         return $qb;
     }
 
