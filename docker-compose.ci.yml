@@ -6,3 +6,6 @@ services:
   client:
     image: ${AWS_REGISTRY}/digideps/client:${VERSION}
     build: ./client
+  test:
+    image: ${AWS_REGISTRY}/digideps/test:${VERSION}
+    build: ./behat

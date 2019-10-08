@@ -2,6 +2,7 @@ locals {
   images = {
     api          = "${data.aws_ecr_repository.api.repository_url}:${var.OPG_DOCKER_TAG}"
     client       = "${data.aws_ecr_repository.client.repository_url}:${var.OPG_DOCKER_TAG}"
+    test         = "${data.aws_ecr_repository.test.repository_url}:${var.OPG_DOCKER_TAG}"
     file_scanner = "${data.aws_ecr_repository.file_scanner.repository_url}:latest"
     wkhtmltopdf  = "${data.aws_ecr_repository.wkhtmltopdf.repository_url}:latest"
   }
@@ -14,6 +15,11 @@ data "aws_ecr_repository" "api" {
 
 data "aws_ecr_repository" "client" {
   name     = "digideps/client"
+  provider = "aws.management"
+}
+
+data "aws_ecr_repository" "test" {
+  name     = "digideps/test"
   provider = "aws.management"
 }
 
