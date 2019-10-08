@@ -9,13 +9,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DocumentUploadType extends AbstractType
+class UploadType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file', FileType::class, [
-                'required' => false
+            ->add('files', FileType::class, [
+                'required' => false,
+                'multiple' => true
             ])
             ->add('save', FormTypes\SubmitType::class);
     }
@@ -24,8 +25,7 @@ class DocumentUploadType extends AbstractType
     {
         $resolver->setDefaults([
             'validation_groups' => ['document'],
-            'translation_domain' => 'report-documents',
-            'data_class' => Document::class
+            'translation_domain' => 'report-documents'
         ]);
     }
 

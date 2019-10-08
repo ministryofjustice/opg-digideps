@@ -22,12 +22,26 @@ services:
         timeout: 10
         allow_redirects: false
 
-  scanner_endpoint_resolver:
-    class: AppBundle\Service\File\Scanner\ScannerEndpointResolver
+  upload_verifier:
+    class: AppBundle\Service\File\Verifier\CompositeVerifier
+    calls:
+      - [ addVerifier, ['@constraint_verifier'] ]
+      - [ addVerifier, ['@scanner_verifier'] ]
+
+  constraint_verifier:
+    class: AppBundle\Service\File\Verifier\ConstraintVerifier
+    arguments: ['@validator']
+
+  scanner_verifier:
+    class: AppBundle\Service\File\Verifier\ScannerVerifier
+    arguments: ['@file_scanner', '@translator', '@logger']
 
   file_scanner:
     class: AppBundle\Service\File\Scanner\FileScanner
     arguments: [ "@guzzle_file_scanner_client", "@logger" , "@scanner_endpoint_resolver" ]
+
+  scanner_endpoint_resolver:
+    class: AppBundle\Service\File\Scanner\ScannerEndpointResolver
 
   file_uploader:
     class: AppBundle\Service\File\FileUploader
