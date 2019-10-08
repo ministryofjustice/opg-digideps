@@ -129,8 +129,8 @@ EOF
   test_front_container = <<EOF
   {
     "name": "test_front",
-    "image": "${local.images.client}",
-    "command": [ "sh", "scripts/clienttest.sh" ],
+    "image": "${local.images.test}",
+    "command": [ "bin/behat", "--config=tests/behat/behat.yml", "--stop-on-failure" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -140,32 +140,15 @@ EOF
       }
     },
     "secrets": [
-      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
-      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
+      { "name": "PGPASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
-      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
-      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
-      { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
-      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "ROLE", "value": "front" },
-      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
-      { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
-      { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
-      { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
+      { "name": "PGHOST", "value": "${aws_db_instance.api.address}" },
+      { "name": "PGDATABASE", "value": "${aws_db_instance.api.name}" },
+      { "name": "PGUSER", "value": "digidepsmaster" },
+      { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
+      { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
     ]
   }
 
