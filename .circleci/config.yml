@@ -27,6 +27,11 @@ workflows:
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
 
+      - client_unit_test:
+          name: client unit test
+          requires: [ stabilize environment ]
+          filters: { branches: { ignore: [ master ] } }
+
       - api_unit_test:
           name: api unit test
           requires: [ stabilize environment ]
@@ -35,7 +40,7 @@ workflows:
       - cleanup:
           name: approve destroy environment
           type: approval
-          requires: [ api unit test, client integration test ]
+          requires: [ api unit test, client unit test, client integration test ]
           filters: { branches: { ignore: [ master ] } }
 
       - apply:
@@ -82,6 +87,12 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
+      - client_unit_test:
+          name: client unit test
+          requires: [ stabilize master ]
+          filters: { branches: { only: [ master ] } }
+          tf_workspace: master
+
       - api_unit_test:
           name: api unit test
           requires: [ stabilize master ]
@@ -102,7 +113,7 @@ workflows:
 
       - apply:
           name: apply shared-production
-          requires: [ api unit test, client integration test ]
+          requires: [ api unit test, client unit test, client integration test ]
           filters: { branches: { only: [ master ] } }
           tf_tier: shared
           tf_workspace: production
@@ -240,6 +251,30 @@ jobs:
       - run:
           name: Reset database
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} reset-database-${TF_WORKSPACE}
+      - run:
+          name: Test Client
+          command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-integration-${TF_WORKSPACE}
+  client_unit_test:
+    docker:
+      - image: circleci/ruby
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
+    environment:
+      TF_VAR_default_role: digideps-ci
+      WORKSPACE: << parameters.tf_workspace >>
+    working_directory: ~/project/environment
+    steps:
+      - checkout:
+          path: ~/project
+      - run:
+          name: Bundle install
+          command: bundle install
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Test Client
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-front-${TF_WORKSPACE}
