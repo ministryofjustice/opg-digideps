@@ -1,4 +1,7 @@
 #!/bin/bash
+# exit on error
+set -e
+
 # Generate config files so test bootstrap can address the DB
 confd -onetime -backend env
 
@@ -16,3 +19,4 @@ php bin/phpunit -c tests tests/AppBundle/Controller-Ndr/
 php bin/phpunit -c tests tests/AppBundle/Service/
 php bin/phpunit -c tests tests/AppBundle/Entity/
 php bin/phpunit -c tests tests/AppBundle/Transformer/
+php bin/phpunit -c tests tests/AppBundle/Security/

@@ -169,6 +169,9 @@ class ReportServiceTest extends TestCase
         $this->assertEquals($newYearReport, $nextReport);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testResubmitPersistenceRequiresReport()
     {
         $report = $this->report;
@@ -198,6 +201,9 @@ class ReportServiceTest extends TestCase
         $reportService->submit($report, $this->user, new \DateTime());
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testPersistentResourcesCloned()
     {
         $client = $this->report->getClient();
@@ -223,6 +229,9 @@ class ReportServiceTest extends TestCase
         $this->sut->clonePersistentResources($newReport, $this->report);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testDuplicateResourcesNotPersisted()
     {
         $client = $this->report->getClient();

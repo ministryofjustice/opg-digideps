@@ -32,6 +32,9 @@ class DeputyProviderTest extends TestCase
         $this->object = new DeputyProvider($this->restClient, $this->logger);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testLogin()
     {
         $credentials = ['email' => 'Peter', 'password' => 'p'];

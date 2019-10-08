@@ -2,6 +2,8 @@
 
 namespace AppBundle\v2\DTO;
 
+use AppBundle\Entity\Organisation;
+
 class ClientDto
 {
     /** @var int */
@@ -34,8 +36,8 @@ class ClientDto
     /** @var array */
     private $reports;
 
-    /** @var array */
-    private $organisations;
+    /** @var Organisation */
+    private $organisation;
 
     /**
      * @return int
@@ -120,9 +122,9 @@ class ClientDto
     /**
      * @return array
      */
-    public function getOrganisations()
+    public function getOrganisation()
     {
-        return $this->organisations;
+        return $this->organisation;
     }
 
     /**
@@ -226,12 +228,12 @@ class ClientDto
     }
 
     /**
-     * @param array $organisations
+     * @param $organisation
      * @return ClientDto
      */
-    public function setOrganisations(array $organisations)
+    public function setOrganisation($organisation)
     {
-        $this->organisations = $organisations;
+        $this->organisation = $organisation;
         return $this;
     }
 }

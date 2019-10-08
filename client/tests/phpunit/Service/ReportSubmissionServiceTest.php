@@ -77,6 +77,9 @@ class ReportSubmissionServiceTest extends TestCase
         return new ReportSubmissionService($mockContainer);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testGenerateReportDocuments()
     {
         $this->mockReport->shouldReceive('createAttachmentName')->with(m::type('String'))->andReturn('DigidepsFile');
@@ -121,6 +124,9 @@ class ReportSubmissionServiceTest extends TestCase
         $this->assertEquals('PDF CONTENT', $this->sut->getPdfBinaryContent($this->mockReport, true));
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testFirstTimeSubmitForDeputyOrg()
     {
         $reportId = 99;
@@ -158,6 +164,9 @@ class ReportSubmissionServiceTest extends TestCase
         $this->sut->submit($this->mockReport, $mockUser);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testSubsequentSubmitAllDeputies()
     {
         $reportId = 99;
@@ -176,6 +185,9 @@ class ReportSubmissionServiceTest extends TestCase
         $this->sut->submit($this->mockReport, $mockUser);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testFirstTimeSubmitForNonDeputyOrg()
     {
         $reportId = 99;
@@ -214,6 +226,9 @@ class ReportSubmissionServiceTest extends TestCase
     }
 
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testGetReportSubmissionById()
     {
         $id = '123';

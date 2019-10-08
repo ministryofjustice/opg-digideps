@@ -94,7 +94,7 @@ locals {
       { "name": "NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "OPG_NGINX_CLIENTBODYTIMEOUT", "value": "240s" },
-      { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
+      { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "0" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
       { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${data.aws_route53_zone.public.name} *.${local.environment}.internal ~.*" },

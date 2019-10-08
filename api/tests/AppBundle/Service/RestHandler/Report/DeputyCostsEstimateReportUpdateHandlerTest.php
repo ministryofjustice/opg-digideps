@@ -99,10 +99,10 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     /**
      * @dataProvider getInvalidCostEstimateInputs
-     * @expectedException \InvalidArgumentException
      */
     public function testThrowsExceptionUpdatingCostEstimatesWithInsufficientData($data)
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->invokeHandler($data);
     }
 

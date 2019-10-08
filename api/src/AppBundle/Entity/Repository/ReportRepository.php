@@ -121,9 +121,11 @@ class ReportRepository extends EntityRepository
         if ($select == 'reports') {
             $qb
                 ->select('r,c,u')
-                ->leftJoin('r.submittedBy', 'sb');
+                ->leftJoin('r.submittedBy', 'sb')
+                ->distinct();
         } elseif ($select == 'count') {
-            $qb->select('COUNT(r)');
+            $qb->select('COUNT(DISTINCT r)');
+
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": first must be reports|count");
         }
@@ -131,7 +133,10 @@ class ReportRepository extends EntityRepository
         $qb
             ->leftJoin('r.client', 'c')
             ->leftJoin('c.users', 'u')
+            ->leftJoin('c.organisation', 'o')
+            ->leftJoin('o.users', 'ou', 'WITH', 'ou.id = ' . $userId)
             ->where('u.id = ' . $userId)
+            ->orWhere('o.isActivated = true AND ou.id = ' . $userId)
             ->andWhere('c.archivedAt IS NULL')
         ;
 

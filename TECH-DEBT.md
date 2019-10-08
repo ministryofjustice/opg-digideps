@@ -24,6 +24,8 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 - `behat-debugger.php` requires specific nginx configuration and isn't very useful
 - `web/assets` being generated in frontend image means it can't be mounted for live-editing
 - Turning off `logout_on_user_change` is deprecated
+- Change Client Users relationship from array to ArrayCollection ?
+- Remove team code from application once organisation has replaced and stabalised.
 
 ## Design
 - Status label texts are variously defined in `common.en.yml`, `ndr-overview.en.yml` and `report-overview.en.yml`

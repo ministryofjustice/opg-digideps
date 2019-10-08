@@ -67,6 +67,8 @@ class VisitsCareController extends RestController
      */
     public function findByReportIdAction($reportId)
     {
+        $this->setJmsSerialiserGroups(['visits-care']);
+
         $report = $this->findEntityBy(EntityDir\Report\Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -104,7 +106,6 @@ class VisitsCareController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         $this->getEntityManager()->remove($visitsCare);
-        $this->getEntityManager()->flush();
 
         $report->updateSectionsStatusCache($this->sectionIds);
         $this->getEntityManager()->flush();
