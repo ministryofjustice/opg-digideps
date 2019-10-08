@@ -46,6 +46,19 @@ resource "aws_ecs_task_definition" "test_api" {
   tags                     = local.default_tags
 }
 
+resource "aws_ecs_task_definition" "test_integration" {
+  count                    = local.account.test_enabled ? 1 : 0
+  family                   = "test-integration-${local.environment}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  container_definitions    = "[${local.test_integration_container}]"
+  task_role_arn            = aws_iam_role.test.arn
+  execution_role_arn       = aws_iam_role.execution_role.arn
+  tags                     = local.default_tags
+}
+
 resource "aws_ecs_task_definition" "reset_database" {
   count                    = local.account.test_enabled ? 1 : 0
   family                   = "reset-database-${local.environment}"
@@ -129,8 +142,24 @@ EOF
 
 EOF
 
-
   test_front_container = <<EOF
+  {
+    "name": "test_front",
+    "image": "${local.images.client}",
+    "command": [ "bin/phpunit", "-c", "tests/phpunit/" ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${aws_cloudwatch_log_group.opg_digi_deps.name}",
+        "awslogs-region": "eu-west-1",
+        "awslogs-stream-prefix": "${aws_iam_role.test.name}"
+      }
+    }
+  }
+
+EOF
+
+  test_integration_container = <<EOF
   {
     "name": "test_front",
     "image": "${local.images.test}",
