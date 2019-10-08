@@ -8,9 +8,9 @@ use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
-use AppBundle\Service\File\Checker\FileCheckerInterface;
+use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
+use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
+use AppBundle\Service\File\Scanner\FileCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -106,6 +106,52 @@ class DocumentController extends AbstractController
     public function step2Action(Request $request, $reportId)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
+
+        $document = new Document();
+        $document->setReport($report);
+        $formAction = $this->generateUrl('report_documents', ['reportId'=>$reportId]);
+        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document, ['action' =>  $formAction]);
+
+        if ($request->get('error') == 'tooBig') {
+            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
+            $form->get('file')->addError(new FormError($message));
+        }
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $file = $document->getFile();
+            $fileScanner = $this->get('file_scanner');
+
+            try {
+                $fileScanner->scanFile($file);
+                $this->get('file_uploader')->uploadFile($report, file_get_contents($file->getPathName()), $file->getClientOriginalName(), false);
+                $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
+
+                return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+            } catch (\Throwable $e) {
+                $message = $this->buildErrorMessage($request, $e);
+                $form->get('file')->addError(new FormError($message));
+                $this->get('logger')->error($e->getMessage());
+            }
+        }
+
+        return [
+            'report'   => $report,
+            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
+            'backLink' => $backLink,
+            'nextLink' => $nextLink,
+            'form'     => $form->createView(),
+        ];
+    }
+
+    /**
+     * @param EntityDir\Report\Report $report
+     * @return array
+     * @throws \Exception
+     */
+    private function buildNavigationLinks(EntityDir\Report\Report $report): array
+    {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
@@ -118,68 +164,43 @@ class DocumentController extends AbstractController
             }
         }
 
-        $fileUploader = $this->get('file_uploader');
+        return [$nextLink, $backLink];
+    }
 
-        // fake documents. remove when the upload is implemented
-        $document = new Document();
-        $document->setReport($report);
-        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document, [
-            'action' => $this->generateUrl('report_documents', ['reportId'=>$reportId]) //needed to reset possible JS errors
-        ]);
-        if ($request->get('error') == 'tooBig') {
-            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
-            $form->get('file')->addError(new FormError($message));
+    /**
+     * @param Request $request
+     * @param $e
+     * @return mixed
+     */
+    private function buildErrorMessage(Request $request, \Throwable $e)
+    {
+        $errorKey = $this->determineErrorType($e);
+        $message = $this
+            ->get('translator')
+            ->trans(
+                "document.file.errors.{$errorKey}",
+                [
+                    '%techDetails%' => $this->getParameter('kernel.debug') ? $e->getMessage() : $request->headers->get('x-request-id')
+                ],
+                'validators'
+            );
+        return $message;
+    }
+
+    /**
+     * @param $e
+     * @return string
+     */
+    private function determineErrorType($e): string
+    {
+        switch (get_class($e)) {
+            case RiskyFileException::class:
+                return 'risky';
+            case VirusFoundException::class:
+                return 'virusFound';
+            default:
+                return 'generic';
         }
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            /* @var $uploadedFile UploadedFile */
-            $uploadedFile = $document->getFile();
-
-            /** @var FileCheckerInterface $fileChecker */
-            $fileChecker = $this->get('file_checker_factory')->factory($uploadedFile);
-
-            try {
-                $fileChecker->checkFile();
-                if ($fileChecker->isSafe()) {
-                    $fileUploader->uploadFile(
-                        $report,
-                        file_get_contents($uploadedFile->getPathName()),
-                        $uploadedFile->getClientOriginalName(),
-                        false
-                    );
-                    $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
-
-                } else {
-                    $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
-                }
-
-                return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
-            } catch (\Throwable $e) {
-                $errorToErrorTranslationKey = [
-                    RiskyFileException::class => 'risky',
-                    VirusFoundException::class => 'virusFound',
-                ];
-                $errorClass = get_class($e);
-                if (isset($errorToErrorTranslationKey[$errorClass])) {
-                    $errorKey = $errorToErrorTranslationKey[$errorClass];
-                } else {
-                    $errorKey = 'generic';
-                }
-                $message = $this->get('translator')->trans("document.file.errors.{$errorKey}", [
-                    '%techDetails%' => $this->getParameter('kernel.debug') ? $e->getMessage() : $request->headers->get('x-request-id'),
-                ], 'validators');
-                $form->get('file')->addError(new FormError($message));
-                $this->get('logger')->error($e->getMessage()); //fully log exceptions
-            }
-        }
-
-        return [
-            'report'   => $report,
-            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $backLink,
-            'nextLink' => $nextLink,
-            'form'     => $form->createView(),
-        ];
     }
 
     /**
