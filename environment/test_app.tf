@@ -163,7 +163,6 @@ EOF
   {
     "name": "test_front",
     "image": "${local.images.test}",
-    "command": [ "vendor/bin/behat", "--config=tests/behat/behat.yml", "--stop-on-failure" ],
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
