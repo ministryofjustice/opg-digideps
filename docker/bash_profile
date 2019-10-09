@@ -69,7 +69,6 @@ dd-cache-clear()
 {
     dd-exec api sh -c "rm -rf var/cache/*"
     dd-exec frontend sh -c "rm -rf var/cache/*"
-    dd-exec test sh -c "rm -rf var/cache/*"
     dd-exec admin sh -c "rm -rf var/cache/*"
     echo "Cache reset"
 }
