@@ -299,7 +299,7 @@ class OrgService
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
 
         // If existing client has lay deputies, create a new one
-        if ($client->hasDeputies()) {
+        if ($client && $this->clientHasLayDeputy($client)) {
             $client = null;
         }
 
