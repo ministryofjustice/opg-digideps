@@ -271,7 +271,7 @@ class OrgService
      * @param EntityDir\Client $client
      * @return bool
      */
-    private function clientHasLayDeputy(Client $client)
+    private function clientHasLayDeputy(EntityDir\Client $client)
     {
         if (!$client->hasDeputies()) return false;
 
