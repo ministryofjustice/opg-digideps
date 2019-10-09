@@ -60,5 +60,5 @@ default:
               goutte:
                   guzzle_parameters:
                     verify: false
-              files_path: "%paths.base%/fixtures/"s
+              files_path: "%paths.base%/fixtures/"
         Behatch\Extension: ~
