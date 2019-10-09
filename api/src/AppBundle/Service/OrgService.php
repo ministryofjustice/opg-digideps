@@ -268,6 +268,23 @@ class OrgService
     }
 
     /**
+     * @param EntityDir\Client $client
+     * @return bool
+     */
+    private function clientHasLayDeputy(Client $client)
+    {
+        if (!$client->hasDeputies()) return false;
+
+        foreach ($client->getUsers() as $user) {
+            if ($user->isLayDeputy()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param array          $row          keys: Case, caseNumber, Forename, Surname, Client Adrs1...
      * @param EntityDir\User $userOrgNamed the user the client should belong to
      *
@@ -280,6 +297,11 @@ class OrgService
 
         /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
+
+        // If existing client has lay deputies, create a new one
+        if ($client->hasDeputies()) {
+            $client = null;
+        }
 
         if ($client) {
             $this->log('FOUND client in database with id: ' . $client->getId());
