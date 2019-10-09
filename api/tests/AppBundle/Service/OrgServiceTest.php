@@ -391,6 +391,36 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $report->getType());
     }
 
+    public function testDontOverrideLayDeputies()
+    {
+        // Set up a lay deputy and client
+        $deputy1 = self::$fixtures->createUser(['setRolename' => 'ROLE_LAY_DEPUTY']);
+        $client1 = self::$fixtures->createClient($deputy1, ['setCaseNumber' => '38973539']);
+        self::$fixtures->flush()->clear();
+
+        // Add professional deputy with same case number
+        $row = [
+            'Deputy No'    => '00000002',
+            'Dep Forename' => 'Dep2',
+            'Dep Surname'  => 'Uty2',
+            'Dep Type'     => '21',
+            'Email'        => 'dep2@provider.com',
+            'Case'         => '38973539',
+            'Forename'     => 'Cly2',
+            'Surname'      => 'Hent2',
+            'Corref'       => 'L3',
+            'Typeofrep'    => 'OPG103',
+            'Last Report Day' => '04-Feb-2015',
+        ];
+        $out = $this->pa->addFromCasrecRows([$row]);
+        $this->assertEmpty($out['errors']);
+
+        $clients = self::$fixtures->getRepo('Client')->findBy(['caseNumber' => '38973539']);
+
+        $this->assertCount(2, $clients);
+        $this->assertCount(1, $client1->getUsers());
+    }
+
     public function tearDown(): void
     {
         m::close();
