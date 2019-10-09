@@ -7,8 +7,6 @@ use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
 use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
 use AppBundle\Service\File\Scanner\FileScanner;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ScannerVerifier implements VerifierInterface
@@ -37,19 +35,16 @@ class ScannerVerifier implements VerifierInterface
     /**
      * {@inheritDoc}
      */
-    public function verify(Document $document, Form $form): bool
+    public function verify(Document $document, VerificationStatus $status): VerificationStatus
     {
         try {
             $this->scanner->scanFile($document->getFile());
         } catch (\Throwable $e) {
-            $message = $this->buildErrorMessage($e);
-            $form->get('files')->addError(new FormError($message));
             $this->logger->error($e->getMessage());
-
-            return false;
+            $status->addError($this->buildErrorMessage($e));
         }
 
-        return true;
+        return $status;
     }
 
     /**

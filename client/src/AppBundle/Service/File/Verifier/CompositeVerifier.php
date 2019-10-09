@@ -3,7 +3,6 @@
 namespace AppBundle\Service\File\Verifier;
 
 use AppBundle\Entity\Report\Document;
-use Symfony\Component\Form\Form;
 
 class CompositeVerifier implements VerifierInterface
 {
@@ -13,16 +12,18 @@ class CompositeVerifier implements VerifierInterface
     /**
      * {@inheritDoc}
      */
-    public function verify(Document $document, Form $form): bool
+    public function verify(Document $document, VerificationStatus $status): VerificationStatus
     {
         foreach ($this->verifiers as $verifier) {
-            // Only add one constraint at a time so return on first error.
-            if (false === $verifier->verify($document, $form)) {
-                return false;
+            // Return on first error to prevent multiple form errors displaying for one file.
+            if ($status->hasError()) {
+                return $status;
             }
+
+            $status = $verifier->verify($document, $status);
         }
 
-        return true;
+        return $status;
     }
 
     /**

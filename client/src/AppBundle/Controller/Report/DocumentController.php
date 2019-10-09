@@ -8,12 +8,10 @@ use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
+use AppBundle\Service\File\Verifier\VerificationStatus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends AbstractController
@@ -116,18 +114,19 @@ class DocumentController extends AbstractController
         }
 
         $form->handleRequest($request);
+
         if ($form->isValid()) {
             $files = $request->files->get('report_document_upload')['files'];
+            $documents = $this->container->get('multi_file_form_upload_handler')->handle($files, $form, $report);
 
-            try {
-                if ($this->allFilesAreVerified($files, $report, $form)) {
-                    $this->uploadFiles($files, $report);
+            if (count($form->getErrors(true)) === 0) {
+                try {
+                    $this->uploadDocuments($documents, $report);
                     $request->getSession()->getFlashBag()->add('notice', 'Files uploaded');
                     return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+                } catch (\Throwable $e) {
+                    $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                 }
-            } catch (\Throwable $e) {
-                $message = 'Cannot upload file, please try again later';
-                $form->get('files')->addError(new FormError($message));
             }
         }
 
@@ -163,39 +162,23 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @param $files
-     * @param EntityDir\Report\Report $report
-     * @param \Symfony\Component\Form\FormInterface $form
-     * @return bool
-     */
-    private function allFilesAreVerified($files, EntityDir\Report\Report $report, FormInterface $form): bool
-    {
-        $verified = true;
-        foreach ($files as $file) {
-            $document = (new Document())->setFile($file)->setReport($report);
-            $verified = $this->container->get('upload_verifier')->verify($document, $form);
-        }
-
-        return $verified;
-    }
-
-    /**
-     * @param $files
+     * @param array $documents
      * @param EntityDir\Report\Report $report
      */
-    private function uploadFiles($files, EntityDir\Report\Report $report): void
+    private function uploadDocuments(array $documents, EntityDir\Report\Report $report): void
     {
-        foreach ($files as $file) {
-            $this->uploadFile($file, $report);
+        foreach ($documents as $document) {
+            $this->uploadDocument($document, $report);
         }
     }
 
     /**
-     * @param UploadedFile $file
+     * @param Document $document
      * @param EntityDir\Report\Report $report
      */
-    private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
+    private function uploadDocument(Document $document, EntityDir\Report\Report $report): void
     {
+        $file = $document->getFile();
         $this
             ->get('file_uploader')
             ->uploadFile($report, file_get_contents($file->getPathName()), $file->getClientOriginalName(), false);
@@ -381,5 +364,3 @@ class DocumentController extends AbstractController
         return 'documents';
     }
 }
-
-

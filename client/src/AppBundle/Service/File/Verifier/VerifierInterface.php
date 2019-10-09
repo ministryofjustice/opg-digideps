@@ -3,14 +3,13 @@
 namespace AppBundle\Service\File\Verifier;
 
 use AppBundle\Entity\Report\Document;
-use Symfony\Component\Form\Form;
 
 interface VerifierInterface
 {
     /**
      * @param Document $document
-     * @param Form $form
-     * @return bool
+     * @param VerificationStatus $status
+     * @return VerificationStatus
      */
-    public function verify(Document $document, Form $form): bool;
+    public function verify(Document $document, VerificationStatus $status): VerificationStatus;
 }

@@ -3,8 +3,6 @@
 namespace AppBundle\Service\File\Verifier;
 
 use AppBundle\Entity\Report\Document;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConstraintVerifier implements VerifierInterface
@@ -23,7 +21,7 @@ class ConstraintVerifier implements VerifierInterface
     /**
      * {@inheritDoc}
      */
-    public function verify(Document $document, Form $form): bool
+    public function verify(Document $document, VerificationStatus $status): VerificationStatus
     {
         $errors = $this->validator->validate($document, null, ['document']);
 
@@ -34,11 +32,9 @@ class ConstraintVerifier implements VerifierInterface
                 $errors->offsetGet(0)->getMessage()
             );
 
-            $form->get('files')->addError(new FormError($message));
-
-            return false;
+            $status->addError($message);
         }
 
-        return true;
+        return $status;
     }
 }
