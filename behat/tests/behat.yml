@@ -60,6 +60,5 @@ default:
               goutte:
                   guzzle_parameters:
                     verify: false
-              files_path: "%paths.base%/fixtures/"
-              base_url: https://digideps.local
+              files_path: "%paths.base%/fixtures/"s
         Behatch\Extension: ~
