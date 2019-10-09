@@ -1,0 +1,37 @@
+FROM alpine:latest
+
+# install pg_dump and s3
+RUN apk add --no-cache postgresql python py2-pip
+
+RUN pip install awscli
+
+RUN apk del py2-pip
+
+ADD backup.sh backup.sh
+RUN chmod +x /backup.sh
+
+ADD restore.sh restore.sh
+RUN chmod +x /restore.sh
+
+ADD run.sh run.sh
+RUN chmod +x /run.sh
+
+ENV POSTGRES_DATABASE_SOURCE **None**
+ENV POSTGRES_HOST_SOURCE **None**
+ENV POSTGRES_PORT_SOURCE 5432
+ENV POSTGRES_USER_SOURCE **None**
+ENV POSTGRES_PASSWORD_SOURCE **None**
+ENV POSTGRES_DATABASE_DESTINATION **None**
+ENV POSTGRES_HOST_DESTINATION **None**
+ENV POSTGRES_PORT_DESTINATION 5432
+ENV POSTGRES_USER_DESTINATION **None**
+ENV POSTGRES_PASSWORD_DESTINATION **None**
+ENV POSTGRES_EXTRA_OPTS ''
+ENV S3_ACCESS_KEY_ID **None**
+ENV S3_SECRET_ACCESS_KEY **None**
+ENV S3_BUCKET **None**
+ENV S3_REGION eu-west-1
+ENV S3_ENDPOINT **None**
+ENV S3_PREFIX **None**
+ENV S3_S3V4 yes
+
