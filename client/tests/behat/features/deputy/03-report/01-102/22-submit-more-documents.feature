@@ -13,13 +13,13 @@ Feature: Add more documents after report has been submitted
       | good.png        | previous-submitted-document-list |
 
     # check duplicate file error
-    When I attach the file "good.jpg" to "report_document_upload_file"
+    When I attach the file "good.jpg" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
     # add brand new file
-    When I attach the file "small.jpg" to "report_document_upload_file"
+    When I attach the file "small.jpg" to "report_document_upload_files"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:

@@ -2,7 +2,7 @@
 module.exports = function (containerSelector) {
   // Show in progress message
   $(containerSelector).on('click', function () {
-    var fileName = $('#report_document_upload_file').val()
+    var fileName = $('#report_document_upload_files').val()
     if (fileName) {
       $('#upload-progress').removeClass('hidden')
     }
