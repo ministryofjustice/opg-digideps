@@ -62,6 +62,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
 
     /**
+     * @BeforeScenario
+     */
+    public function before(\Behat\Behat\Hook\Scope\BeforeScenarioScope $scope)
+    {
+        $this->setMinkParameter('base_url', $this->getSiteUrl());
+    }
+
+    /**
      * @BeforeSuite
      */
     public static function prepare(\Behat\Testwork\Hook\Scope\BeforeSuiteScope $scope)
