@@ -8,16 +8,16 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class MutliFileFormUploadVerifier
+class MultiFileFormUploadVerifier
 {
     /** @var VerifierInterface[] */
     private $verifiers;
 
     /**
      * @param VerifierInterface $verifier
-     * @return MutliFileFormUploadVerifier
+     * @return MultiFileFormUploadVerifier
      */
-    public function addVerifier(VerifierInterface $verifier): MutliFileFormUploadVerifier
+    public function addVerifier(VerifierInterface $verifier): MultiFileFormUploadVerifier
     {
         $this->verifiers[] = $verifier;
 

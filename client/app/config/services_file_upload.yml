@@ -23,7 +23,7 @@ services:
         allow_redirects: false
 
   multi_file_form_upload_verifier:
-    class: AppBundle\Service\File\Verifier\MutliFileFormUploadVerifier
+    class: AppBundle\Service\File\Verifier\MultiFileFormUploadVerifier
     calls:
       - [ addVerifier, ['@constraint_verifier'] ]
       - [ addVerifier, ['@scanner_verifier'] ]
