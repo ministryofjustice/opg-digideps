@@ -179,7 +179,7 @@ EOF
       { "name": "PGHOST", "value": "${aws_db_instance.api.address}" },
       { "name": "PGDATABASE", "value": "${aws_db_instance.api.name}" },
       { "name": "PGUSER", "value": "digidepsmaster" },
-      { "name": "BEHAT_PARAMS", "value": "{\"extensions\": {\"Behat\\MinkExtension\\ServiceContainer\\MinkExtension\": {\"base_url\": \"https://${aws_route53_record.front.fqdn}\"}}}" },
+      { "name": "BEHAT_PARAMS", "value": "{\"extensions\": {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\": {\"base_url\": \"https://${aws_route53_record.front.fqdn}\"}}}" },
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" }
     ]
