@@ -8,7 +8,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -45,18 +44,17 @@ class ScannerVerifierTest extends TestCase
         $file = $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock();
         $file->method('getClientOriginalName')->willReturn('file.txt');
         $this->document = (new Document())->setFile($file);
-        $this->form = $this->getMockBuilder(Form::class)->disableOriginalConstructor()->getMock();
     }
 
     /**
      * @test
      */
-    public function returnsTrueWhenGivenValidDocument()
+    public function verificationPassesWhenGivenValidDocument()
     {
         $this
             ->ensureDocumentWillBeValid()
             ->invokeTest()
-            ->assertResultIsTrue();
+            ->assertStatusIsPassed();
     }
 
     /**
@@ -66,9 +64,9 @@ class ScannerVerifierTest extends TestCase
     {
         $this
             ->ensureDocumentWillBeInvalid()
-            ->assertErrorsWillBeAddedToForm()
+            ->ensureErrorWillBeTranslated()
             ->invokeTest()
-            ->assertResultIsFalse();
+            ->assertStatusIsFailed();
     }
 
     /**
@@ -101,15 +99,11 @@ class ScannerVerifierTest extends TestCase
     }
 
     /**
-     * @return ConstraintVerifierTest
+     * @return ScannerVerifierTest
      */
-    private function assertErrorsWillBeAddedToForm(): ScannerVerifierTest
+    private function ensureErrorWillBeTranslated(): ScannerVerifierTest
     {
         $this->translator->method('trans')->willReturn('error message');
-        $childForm = $this->getMockBuilder(Form::class)->disableOriginalConstructor()->getMock();
-
-        $this->form->method('get')->with('files')->willReturn($childForm);
-        $childForm->expects($this->once())->method('addError')->with($this->isInstanceOf(FormError::class));
 
         return $this;
     }
@@ -119,18 +113,20 @@ class ScannerVerifierTest extends TestCase
      */
     private function invokeTest(): ScannerVerifierTest
     {
-        $this->result = $this->verifier->verify($this->document, $this->form);
+        $this->result = $this->verifier->verify($this->document, new VerificationStatus());
 
         return $this;
     }
 
-    private function assertResultIsTrue(): void
+    private function assertStatusIsPassed(): void
     {
-        $this->assertTrue($this->result);
+        $this->assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
+        $this->assertNull($this->result->getError());
     }
 
-    private function assertResultIsFalse(): void
+    private function assertStatusIsFailed(): void
     {
-        $this->assertFalse($this->result);
+        $this->assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
+        $this->assertNotNull($this->result->getError());
     }
 }

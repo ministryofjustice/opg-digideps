@@ -4,14 +4,13 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\Verifier\VerificationStatus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends AbstractController
@@ -117,11 +116,11 @@ class DocumentController extends AbstractController
 
         if ($form->isValid()) {
             $files = $request->files->get('report_document_upload')['files'];
-            $documents = $this->container->get('multi_file_form_upload_handler')->handle($files, $form, $report);
+            $verified = $this->container->get('multi_file_form_upload_verifier')->verify($files, $form, $report);
 
-            if (count($form->getErrors(true)) === 0) {
+            if ($verified) {
                 try {
-                    $this->uploadDocuments($documents, $report);
+                    $this->uploadFiles($files, $report);
                     $request->getSession()->getFlashBag()->add('notice', 'Files uploaded');
                     return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
                 } catch (\Throwable $e) {
@@ -162,23 +161,22 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @param array $documents
+     * @param array $files
      * @param EntityDir\Report\Report $report
      */
-    private function uploadDocuments(array $documents, EntityDir\Report\Report $report): void
+    private function uploadFiles(array $files, EntityDir\Report\Report $report): void
     {
-        foreach ($documents as $document) {
-            $this->uploadDocument($document, $report);
+        foreach ($files as $file) {
+            $this->uploadFile($file, $report);
         }
     }
 
     /**
-     * @param Document $document
+     * @param UploadedFile $file
      * @param EntityDir\Report\Report $report
      */
-    private function uploadDocument(Document $document, EntityDir\Report\Report $report): void
+    private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
     {
-        $file = $document->getFile();
         $this
             ->get('file_uploader')
             ->uploadFile($report, file_get_contents($file->getPathName()), $file->getClientOriginalName(), false);

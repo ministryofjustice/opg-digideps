@@ -22,12 +22,8 @@ services:
         timeout: 10
         allow_redirects: false
 
-  multi_file_form_upload_handler:
-    class: AppBundle\Service\File\MutliFileFormUploadHandler
-    arguments: ['@upload_verifier']
-
-  upload_verifier:
-    class: AppBundle\Service\File\Verifier\CompositeVerifier
+  multi_file_form_upload_verifier:
+    class: AppBundle\Service\File\Verifier\MutliFileFormUploadVerifier
     calls:
       - [ addVerifier, ['@constraint_verifier'] ]
       - [ addVerifier, ['@scanner_verifier'] ]

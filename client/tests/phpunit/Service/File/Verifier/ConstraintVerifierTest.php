@@ -5,8 +5,6 @@ namespace AppBundle\Service\File\Verifier;
 use AppBundle\Entity\Report\Document;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -23,10 +21,7 @@ class ConstraintVerifierTest extends TestCase
     /** @var Document */
     private $document;
 
-    /** @var Form | MockObject */
-    private $form;
-
-    /** @var bool */
+    /** @var VerificationStatus */
     private $result;
 
     public function setUp(): void
@@ -37,31 +32,29 @@ class ConstraintVerifierTest extends TestCase
         $file = $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock();
         $file->method('getClientOriginalName')->willReturn('file.txt');
         $this->document = (new Document())->setFile($file);
-        $this->form = $this->getMockBuilder(Form::class)->disableOriginalConstructor()->getMock();
     }
 
 
     /**
      * @test
      */
-    public function returnsTrueWhenGivenValidDocument()
+    public function verificationPassesWhenGivenValidDocument()
     {
         $this
             ->ensureDocumentWillBeValid()
             ->invokeTest()
-            ->assertResultIsTrue();
+            ->assertStatusIsPassed();
     }
 
     /**
      * @test
      */
-    public function returnsFalseWhenGivenInvalidDocument()
+    public function verificationFailsWhenGivenInvalidDocument()
     {
         $this
             ->ensureDocumentWillBeInvalid()
-            ->assertErrorsWillBeAddedToForm()
             ->invokeTest()
-            ->assertResultIsFalse();
+            ->assertStatusIsFailed();
     }
 
     /**
@@ -100,33 +93,22 @@ class ConstraintVerifierTest extends TestCase
     /**
      * @return ConstraintVerifierTest
      */
-    private function assertErrorsWillBeAddedToForm(): ConstraintVerifierTest
-    {
-        $childForm = $this->getMockBuilder(Form::class)->disableOriginalConstructor()->getMock();
-
-        $this->form->method('get')->with('files')->willReturn($childForm);
-        $childForm->expects($this->once())->method('addError')->with($this->isInstanceOf(FormError::class));
-
-        return $this;
-    }
-
-    /**
-     * @return ConstraintVerifierTest
-     */
     private function invokeTest(): ConstraintVerifierTest
     {
-        $this->result = $this->verifier->verify($this->document, $this->form);
+        $this->result = $this->verifier->verify($this->document, new VerificationStatus());
 
         return $this;
     }
 
-    private function assertResultIsTrue(): void
+    private function assertStatusIsPassed(): void
     {
-        $this->assertTrue($this->result);
+        $this->assertEquals(VerificationStatus::PASSED, $this->result->getStatus());
+        $this->assertNull($this->result->getError());
     }
 
-    private function assertResultIsFalse(): void
+    private function assertStatusIsFailed(): void
     {
-        $this->assertFalse($this->result);
+        $this->assertEquals(VerificationStatus::FAILED, $this->result->getStatus());
+        $this->assertNotNull($this->result->getError());
     }
 }
