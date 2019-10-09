@@ -17,6 +17,7 @@ php bin/phpunit -c tests tests/AppBundle/Controller/
 php bin/phpunit -c tests tests/AppBundle/Controller-Report/
 php bin/phpunit -c tests tests/AppBundle/Controller-Ndr/
 php bin/phpunit -c tests tests/AppBundle/Service/
+php bin/phpunit -c tests tests/AppBundle/Stats/
 php bin/phpunit -c tests tests/AppBundle/Entity/
 php bin/phpunit -c tests tests/AppBundle/Transformer/
 php bin/phpunit -c tests tests/AppBundle/Security/
