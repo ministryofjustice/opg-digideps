@@ -7,28 +7,29 @@ This application uses two main testing technologies:
 
 ## How to run the tests
 
-### API
+### Unit tests
 
 You can run all tests via the docker container. Note that the first command sets up the database and only needs to be run once.
 
 ```sh
 docker-compose run --rm api sh scripts/phpunitdb.sh
 docker-compose run --rm api sh scripts/apiunittest.sh
+docker-compose run --rm frontend bin/phpunit -c tests/phpunit
 ```
 
-### Frontend
+### Integration tests
 
-To run the entire test suite, use the container script. Note that this resets the database first.
+To run the entire test suite, reset the database and run the `test` image.
 
 ```sh
 docker-compose run --rm api sh scripts/resetdb.sh
-docker-compose run --rm test sh scripts/clienttest.sh
+docker-compose run --rm test
 ```
 
-You can run an individual Behat test suite by calling Behat directly in the test container. For example, to run the `admin` tests:
+You can supply additional commands to Behat to run individual suites or tags.
 
 ```sh
-docker-compose run --rm test bin/behat --config=tests/behat/behat.yml --stop-on-failure --suite=admin
+docker-compose run --rm test --suite=admin
 ```
 
 ## PHPUnit
