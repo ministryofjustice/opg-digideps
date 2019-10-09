@@ -394,7 +394,10 @@ class OrgServiceTest extends WebTestCase
     public function testDontOverrideLayDeputies()
     {
         // Set up a lay deputy and client
-        $deputy1 = self::$fixtures->createUser(['setRolename' => 'ROLE_LAY_DEPUTY']);
+        $deputy1 = self::$fixtures->createUser([
+            'setRolename' => 'ROLE_LAY_DEPUTY',
+            'setEmail' => 'testlaydeputy@digital.justice.gov.uk',
+        ]);
         $client1 = self::$fixtures->createClient($deputy1, ['setCaseNumber' => '38973539']);
         self::$fixtures->flush()->clear();
 
@@ -419,6 +422,7 @@ class OrgServiceTest extends WebTestCase
 
         $this->assertCount(2, $clients);
         $this->assertCount(1, $client1->getUsers());
+        $this->assertEquals('testlaydeputy@digital.justice.gov.uk', $client1->getUsers()[0]->getEmail());
     }
 
     public function tearDown(): void
