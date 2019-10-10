@@ -300,7 +300,7 @@ class OrgService
 
         // If existing client has lay deputies, create a new one
         if ($client && $this->clientHasLayDeputy($client)) {
-            $client = null;
+            throw new \RuntimeException('Case number already used');
         }
 
         if ($client) {
