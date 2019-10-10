@@ -50,7 +50,7 @@
 
     <ul id="overview-sections" class="push--bottom">
 
-        <li id="planning-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
             {% if report.hasSection('decisions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -77,7 +77,7 @@
             {% endif %}
         </li>
 
-        <li id="welfare-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -103,7 +103,7 @@
             {% endif %}
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
-            <li id="finances-section">
+            <li>
                 <h2 class="opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('bankAccounts') %}
@@ -247,7 +247,7 @@
         {% endif %}
 
 
-        <li id="report-submit-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
             {% if report.hasSection('actions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -273,7 +273,7 @@
                 } %}
             {% endif %}
 
-        <li id="report-submit-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
             {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {

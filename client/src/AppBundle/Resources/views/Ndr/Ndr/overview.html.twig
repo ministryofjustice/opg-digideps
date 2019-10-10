@@ -48,7 +48,7 @@
 
     <ul id="overview-sections" class="push--bottom">
 
-        <li id="visits-and-actions">
+        <li>
             <h2 class="opg-overview-section__divider">Health and welfare</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -62,7 +62,7 @@
         </li>
 
 
-        <li id="finances-and-assets">
+        <li>
             <h2 class="opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -111,7 +111,7 @@
             } %}
         </li>
 
-        <li id="visits-and-actions">
+        <li>
             <h2 class="opg-overview-section__divider">Other information</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
