@@ -27,4 +27,9 @@ class OrganisationEditType extends AbstractType
             'translation_domain' => 'admin-organisations',
         ]);
     }
+
+    public function getBlockPrefix()
+    {
+        return 'organisation';
+    }
 }
