@@ -43,6 +43,13 @@ class Organisation
     private $isActivated;
 
     /**
+     * @var bool
+     *
+     * @JMS\Type("boolean")
+     */
+    private $isPublicDomain;
+
+    /**
      * @var User[]
      *
      * @JMS\Type("array<AppBundle\Entity\User>")
@@ -184,6 +191,24 @@ class Organisation
     public function setIsActivated($isActivated)
     {
         $this->isActivated = $isActivated;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublicDomain(): bool
+    {
+        return $this->isPublicDomain;
+    }
+
+    /**
+     * @param bool $isPublicDomain
+     * @return Organisation
+     */
+    public function setIsPublicDomain(bool $isPublicDomain)
+    {
+        $this->isPublicDomain = $isPublicDomain;
         return $this;
     }
 
