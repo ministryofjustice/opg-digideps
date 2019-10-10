@@ -4,8 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StringUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -167,8 +166,7 @@ class IndexController extends AbstractController
     /**
      * keep session alive. Called from session timeout dialog.
      *
-     * @Route("session-keep-alive", name="session-keep-alive")
-     * @Method({"GET"})
+     * @Route("session-keep-alive", name="session-keep-alive", methods={"GET"})
      */
     public function sessionKeepAliveAction(Request $request)
     {

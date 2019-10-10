@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ class MentalCapacityController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
 
     /**
-     * @Route("/report/{reportId}/mental-capacity")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/mental-capacity", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $reportId)
@@ -41,8 +39,7 @@ class MentalCapacityController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/mental-capacity")
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/mental-capacity", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id

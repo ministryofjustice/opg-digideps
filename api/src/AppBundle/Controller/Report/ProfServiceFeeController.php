@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,9 +13,7 @@ class ProfServiceFeeController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_PROF_CURRENT_FEES];
 
     /**
-     *
-     * @Route("/report/{reportId}/prof-service-fee")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/prof-service-fee", methods={"POST"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function addAction(Request $request, $reportId)
@@ -40,8 +37,7 @@ class ProfServiceFeeController extends RestController
     }
 
     /**
-     * @Route("/prof-service-fee/{id}")
-     * @Method({"PUT"})
+     * @Route("/prof-service-fee/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function updateAction(Request $request, $id)
@@ -62,8 +58,7 @@ class ProfServiceFeeController extends RestController
     }
 
     /**
-     * @Route("/prof-service-fee/{id}")
-     * @Method({"GET"})
+     * @Route("/prof-service-fee/{id}", methods={"GET"})
      * @Security("has_role('ROLE_PROF')")
 
      * @param Request $request
@@ -84,8 +79,7 @@ class ProfServiceFeeController extends RestController
     }
 
     /**
-     * @Route("/prof-service-fee/{id}")
-     * @Method({"DELETE"})
+     * @Route("/prof-service-fee/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_PROF')")
      */
     public function deleteProfServiceFee($id)

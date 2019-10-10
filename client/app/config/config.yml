@@ -18,7 +18,6 @@ framework:
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
-    trusted_proxies: ~
     session:
       handler_id: snc_redis.session.handler
       name: digideps
@@ -27,22 +26,22 @@ framework:
       gc_probability: 1
       gc_divisor: 100
       # session timeout (when GC kicks in)
-      gc_maxlifetime: %session_expire_seconds%
+      gc_maxlifetime: "%session_expire_seconds%"
       # true:  cookie won't be accessible by Javascript, safer for XSS
       cookie_httponly: true
       # set this only HTTPS environments to force cookie only to be sent over HTTPS (when true, login won't work on non-HTTPS domains)
-      cookie_secure: %session_cookie_secure%
+      cookie_secure: "%session_cookie_secure%"
     fragments:       ~
     http_method_override: true
 
 # Twig Configuration
 twig:
     globals:
-        env: %env%
-        opg_docker_tag: %opg_docker_tag%
-        session_expires_seconds: %session_expire_seconds%
-        session_popup_show_after: %session_popup_show_after%
-        ga: %ga%
+        env: "%env%"
+        opg_docker_tag: "%opg_docker_tag%"
+        session_expires_seconds: "%session_expire_seconds%"
+        session_popup_show_after: "%session_popup_show_after%"
+        ga: "%ga%"
         feedbackUrl: "http://www.smartsurvey.co.uk/s/GOR7N/"
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
@@ -63,10 +62,10 @@ snc_redis:
         default:
             type: predis
             alias: default
-            dsn: %redis_dsn%
+            dsn: "%redis_dsn%"
     session:
         client: default
-        prefix: %session_prefix%
+        prefix: "%session_prefix%"
 
 parameters:
     # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
@@ -97,5 +96,9 @@ monolog:
        main:
            type: stream
            path: php://stderr
-           level: %log_level%
+           level: "%log_level%"
            formatter: logstash_formatter
+
+sensio_framework_extra:
+    router:
+        annotations: false

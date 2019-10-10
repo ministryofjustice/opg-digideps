@@ -10,8 +10,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\CsvUploader;
 use AppBundle\Service\DataImporter\CsvToArray;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
@@ -110,9 +109,8 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/edit-user", name="admin_editUser")
+     * @Route("/edit-user", name="admin_editUser", methods={"GET", "POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Method({"GET", "POST"})
      * @Template("AppBundle:Admin/Index:editUser.html.twig")
      *
      * @param Request $request
@@ -208,9 +206,8 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/edit-ndr/{id}", name="admin_editNdr")
+     * @Route("/edit-ndr/{id}", name="admin_editNdr", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Method({"POST"})
      *
      * @param Request $request
      * @param $id
@@ -237,9 +234,8 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/delete-confirm/{id}", name="admin_delete_confirm")
+     * @Route("/delete-confirm/{id}", name="admin_delete_confirm", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Method({"GET"})
      * @Template("AppBundle:Admin/Index:deleteConfirm.html.twig")
      *
      * @param int $id
@@ -262,9 +258,8 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/delete/{id}", name="admin_delete")
+     * @Route("/delete/{id}", name="admin_delete", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Method({"GET"})
      *
      * @param int $id
      *
