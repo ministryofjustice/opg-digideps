@@ -61,7 +61,7 @@ Feature: Administration of organisations
     And I press "Save organisation"
     Then I should see "Email identifer already in use"
 
-  @admin @gt
+  @admin
   Scenario: Organisations cannot be created as known public email domains
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations/add"
@@ -73,7 +73,7 @@ Feature: Administration of organisations
     Then I should see "Cannot set up organisation with specified domain"
 
   @admin
-  Scenario: Admin can edit an organisation's name
+  Scenario: Admin can edit an organisation's name and activate them
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     When I click on "edit" in the "org-email-address-owning-organisation" region
@@ -86,9 +86,9 @@ Feature: Administration of organisations
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
     Then each text should be present in the corresponding region:
-        | SomeSolicitors.org   | org-somesolicitorsorg |
-        | *@somesolicitors.org | org-somesolicitorsorg |
-        | Active               | org-somesolicitorsorg |
+        | SomeSolicitors.org | org-somesolicitorsorg |
+        | test@gmail.com     | org-somesolicitorsorg |
+        | Active             | org-somesolicitorsorg |
 
   @admin
   Scenario: Admin can delete an organisation
@@ -97,7 +97,7 @@ Feature: Administration of organisations
     When I click on "delete" in the "org-somesolicitorsorg" region
     Then I should see "Are you sure you want to remove this organisation?"
     And I should see "SomeSolicitors.org"
-    And I should see "*@somesolicitors.org"
+    And I should see "test@gmail.com"
     When I click on "confirm"
     Then I should not see the "org-somesolicitorsorg" region
     And I should see the "org-domain-owning-organisation" region
