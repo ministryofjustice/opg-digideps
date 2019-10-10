@@ -22,7 +22,7 @@ final class Version221 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE organisation ADD is_public_domain BOOLEAN DEFAULT \'true\' NOT NULL');
+        $this->addSql('ALTER TABLE organisation ADD is_public_domain BOOLEAN DEFAULT \'false\' NOT NULL');
     }
 
     public function down(Schema $schema) : void
