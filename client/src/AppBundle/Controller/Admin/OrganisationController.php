@@ -97,17 +97,9 @@ class OrganisationController extends AbstractController
         $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
 
         $form = $this->createForm(
-            FormDir\Admin\OrganisationType::class,
+            FormDir\Admin\OrganisationEditType::class,
             $organisation
         );
-
-        if ($organisation->getIsDomainIdentifier()) {
-            $form->get('emailIdentifierType')->setData('domain');
-            $form->get('emailDomain')->setData($organisation->getEmailIdentifier());
-        } else {
-            $form->get('emailIdentifierType')->setData('address');
-            $form->get('emailAddress')->setData($organisation->getEmailIdentifier());
-        }
 
         $form->handleRequest($request);
 
