@@ -56,8 +56,14 @@ if [ "${S3_S3V4}" = "yes" ]; then
     aws configure set default.s3.signature_version s3v4
 fi
 
+if [ "${S3_ENDPOINT}" == "**None**" ]; then
+  AWS_ARGS=""
+else
+  AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
+fi
+
 FILE_NAME=${POSTGRES_DATABASE}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz
 
-cat dump.sql.gz | aws --endpoint-url $S3_ENDPOINT s3 cp - s3://$S3_BUCKET/$S3_PREFIX/${FILE_NAME} || exit 2
+cat dump.sql.gz | aws $AWS_ARGS s3 cp - s3://$S3_BUCKET/$S3_PREFIX/${FILE_NAME} || exit 2
 
 echo "SQL backup uploaded successfully"
