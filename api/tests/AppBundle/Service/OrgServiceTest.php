@@ -391,7 +391,7 @@ class OrgServiceTest extends WebTestCase
         $this->assertEquals(EntityDir\Report\Report::TYPE_103_5, $report->getType());
     }
 
-    public function testDontOverrideLayDeputies()
+    public function testIgnoreClientsWithLayDeputies()
     {
         // Set up a lay deputy and client
         $deputy1 = self::$fixtures->createUser([
@@ -416,11 +416,13 @@ class OrgServiceTest extends WebTestCase
             'Last Report Day' => '04-Feb-2015',
         ];
         $out = $this->pa->addFromCasrecRows([$row]);
-        $this->assertEmpty($out['errors']);
+
+        $this->assertCount(1, $out['errors']);
+        $this->assertStringContainsString('Case number already used', $out['errors'][0]);
 
         $clients = self::$fixtures->getRepo('Client')->findBy(['caseNumber' => '38973539']);
 
-        $this->assertCount(2, $clients);
+        $this->assertCount(1, $clients);
         $this->assertCount(1, $client1->getUsers());
         $this->assertEquals('testlaydeputy@digital.justice.gov.uk', $client1->getUsers()[0]->getEmail());
     }
