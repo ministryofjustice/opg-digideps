@@ -197,7 +197,7 @@ class Organisation
     /**
      * @return bool
      */
-    public function isPublicDomain(): bool
+    public function getIsPublicDomain(): bool
     {
         return $this->isPublicDomain;
     }
