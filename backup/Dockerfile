@@ -8,13 +8,8 @@ RUN pip install awscli
 RUN apk del py2-pip
 
 ADD backup.sh backup.sh
-RUN chmod +x /backup.sh
-
 ADD restore.sh restore.sh
-RUN chmod +x /restore.sh
-
 ADD run.sh run.sh
-RUN chmod +x /run.sh
 
 ENV POSTGRES_DATABASE_SOURCE **None**
 ENV POSTGRES_HOST_SOURCE **None**
