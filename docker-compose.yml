@@ -247,8 +247,6 @@ services:
           - ./sync/backup.env
           - ./sync/s3.env
         command: ./backup.sh
-        volumes:
-          - ./sync:/app
 
     restore:
         build: ./sync
