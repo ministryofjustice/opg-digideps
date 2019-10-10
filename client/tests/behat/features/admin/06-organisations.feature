@@ -61,22 +61,28 @@ Feature: Administration of organisations
     And I press "Save organisation"
     Then I should see "Email identifer already in use"
 
+  @admin @gt
+  Scenario: Organisations cannot be created as known public email domains
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations/add"
+    And I fill in "organisation_name" with "Gmail organisation"
+    And I fill in "organisation_isActivated_0" with "0"
+    When I fill in "organisation_emailIdentifierType_0" with "domain"
+    And I fill in "organisation_emailDomain" with "gmail.com"
+    And I press "Save organisation"
+    Then I should see "Cannot set up organisation with specified domain"
+
   @admin
-  Scenario: Admin can edit an organisation
+  Scenario: Admin can edit an organisation's name
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     When I click on "edit" in the "org-email-address-owning-organisation" region
     # Data should be prefilled
     Then I should see "Email address-owning organisation"
     And the "organisation_name" field should contain "Email address-owning organisation"
-    And the "organisation_emailIdentifierType_0" field should contain "address"
-    And the "organisation_emailAddress" field should contain "test@gmail.com"
-    And the "organisation_emailDomain" field should contain ""
     And the "organisation_isActivated_0" field should contain "0"
     # Data can be changed
     When I fill in "organisation_name" with "SomeSolicitors.org"
-    And I fill in "organisation_emailIdentifierType_0" with "domain"
-    And I fill in "organisation_emailDomain" with "somesolicitors.org"
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
     Then each text should be present in the corresponding region:
