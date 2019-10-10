@@ -10,7 +10,8 @@
 {% set reportStatus = report.status %}
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{% endblock %}
+{% block pageTitle %}{{ report.period }} {{ 'report.header.report' | trans({}, 'report-common') }}{% endblock %}
+{% block supportTitleBottom %}{{ report.client.fullname }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
