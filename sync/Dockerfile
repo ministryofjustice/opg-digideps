@@ -9,7 +9,6 @@ RUN apk del py2-pip
 
 ADD backup.sh backup.sh
 ADD restore.sh restore.sh
-ADD run.sh run.sh
 
 ENV POSTGRES_DATABASE_SOURCE **None**
 ENV POSTGRES_HOST_SOURCE **None**
