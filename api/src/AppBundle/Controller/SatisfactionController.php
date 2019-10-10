@@ -44,8 +44,7 @@ class SatisfactionController extends RestController
     }
 
     /**
-     * @Route("/public")
-     * @Method({"POST"})
+     * @Route("/public", methods={"POST"})
      */
     public function publicAdd(Request $request)
     {
