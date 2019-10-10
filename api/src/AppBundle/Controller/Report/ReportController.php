@@ -644,14 +644,14 @@ class ReportController extends RestController
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function getReponseByDeterminant(Request $request, $userId, int $determinant): array
+    private function getReponseByDeterminant(Request $request, $id, int $determinant): array
     {
-        $data = $this->repository->getAllByDeterminant($userId, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $data = $this->repository->getAllByDeterminant($id, $determinant, $request->query, 'reports', $request->query->get('status'));
         $this->updateReportStatusCache($this->getUser()->getId());
 
         $result = [];
         $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
-        $result['counts'] = $this->getReportCountsByStatus($request, $userId, EntityDir\Repository\ReportRepository::USER_DETERMINANT);
+        $result['counts'] = $this->getReportCountsByStatus($request, $id, $determinant);
 
         return $result;
     }
