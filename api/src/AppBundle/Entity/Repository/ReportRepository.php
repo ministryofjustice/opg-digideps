@@ -10,6 +10,7 @@ use AppBundle\Entity\ReportInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * ReportRepository.
@@ -19,6 +20,9 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ReportRepository extends EntityRepository
 {
+    const USER_DETERMINANT = 1;
+    const ORG_DETERMINANT = 2;
+
     /**
      * add empty Debts to Report.
      * Called from doctrine listener.
@@ -187,5 +191,81 @@ class ReportRepository extends EntityRepository
             ->setParameter('roleName', $role);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param $id
+     * @param $determinant
+     * @param ParameterBag $query
+     * @param $select
+     * @param null $status
+     * @return array|mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status = null)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb
+            ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
+            ->leftJoin('r.client', 'c');
+
+        switch ($determinant) {
+            case self::USER_DETERMINANT:
+                $qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
+                break;
+            case self::ORG_DETERMINANT:
+                $qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid query determinant');
+                break;
+        };
+            $qb
+                ->andWhere('c.archivedAt IS NULL')
+                ->andWhere('r.submitted = false OR r.submitted is null')
+        ;
+
+        if ($q = $query->get('q')) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('q', $q);
+        }
+
+        $endOfToday = new \DateTime('today midnight');
+
+        switch ($status) {
+            case Report::STATUS_READY_TO_SUBMIT:
+                $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
+                    ->setParameter('status', $status)
+                    ->setParameter('endOfToday', $endOfToday);
+                break;
+            case Report::STATUS_NOT_FINISHED:
+                $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
+                    ->setParameter('status', $status)
+                    ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
+                    ->setParameter('endOfToday', $endOfToday);
+                break;
+            case Report::STATUS_NOT_STARTED:
+                $qb->andWhere('r.reportStatusCached = :status')
+                    ->setParameter('status', $status);
+                break;
+            default:
+                // Apply no filter
+                break;
+        }
+
+        if ($select === 'count') {
+            return $qb->getQuery()->getSingleScalarResult();
+        }
+
+        $qb
+            ->setFirstResult($query->get('offset', 0))
+            ->setMaxResults($query->get('limit', 15))
+            ->addOrderBy('r.endDate', 'ASC')
+            ->addOrderBy('c.caseNumber', 'ASC');
+
+        $result = $qb->getQuery()->getArrayResult();
+
+        return count($result) === 0 ? null : $result;
     }
 }

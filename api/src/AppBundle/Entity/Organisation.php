@@ -17,24 +17,20 @@ class Organisation implements OrganisationInterface
     /**
      * @var int
      *
-     * @JMS\Groups({"user-organisations", "client-organisations"})
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="organisation_id_seq", allocationSize=1, initialValue=1)
-     * @JMS\Groups({"organisation"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
      */
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Groups({"user-organisations", "client-organisations"})
-     *
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=256, nullable=false)
-     * @JMS\Groups({"organisation"})
+     * @JMS\Groups({"organisation", "user-organisations", "client-organisations"})
      */
     private $name;
 

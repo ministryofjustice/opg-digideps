@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
@@ -21,12 +22,22 @@ class ReportController extends RestController
     /** @var array */
     private $updateHandlers;
 
+    /** @var EntityDir\Repository\ReportRepository */
+    private $repository;
+
+    /** @var ReportService */
+    private $reportService;
+
     /**
      * @param array $updateHandlers
+     * @param EntityDir\Repository\ReportRepository $repository
+     * @param ReportService $reportService
      */
-    public function __construct(array $updateHandlers)
+    public function __construct(array $updateHandlers, EntityDir\Repository\ReportRepository $repository, ReportService $reportService)
     {
         $this->updateHandlers = $updateHandlers;
+        $this->repository = $repository;
+        $this->reportService = $reportService;
     }
 
     /**
@@ -574,29 +585,6 @@ class ReportController extends RestController
             $qb->addOrderBy('c.caseNumber', 'ASC');
         }
 
-        /* @var $records Report[] */
-        $reports = [];
-        $reportArrays = $qb->getQuery()->getArrayResult();
-        foreach ($reportArrays as $reportArray) {
-            $reports[] = [
-                'id' => $reportArray['id'],
-                'type' => $reportArray['type'],
-                'un_submit_date' => $reportArray['unSubmitDate'] instanceof \DateTime ?
-                    $reportArray['unSubmitDate']->format('Y-m-d') : null,
-                'status' => [
-                    // adjust report status cached using end date
-                    'status' => $rs->adjustReportStatus($reportArray['reportStatusCached'], $reportArray['endDate'])
-                ],
-                'due_date' => $reportArray['dueDate']->format('Y-m-d'),
-                'client' => [
-                    'id' => $reportArray['client']['id'],
-                    'firstname' => $reportArray['client']['firstname'],
-                    'lastname' => $reportArray['client']['lastname'],
-                    'case_number' => $reportArray['client']['caseNumber'],
-                ]
-            ];
-        }
-
         /**
          * @to-do the code below is intended to remove all other reports for a given client in the event that their last
          * report is rejected by a case manager. We need to check that this is still required since currently a client
@@ -617,8 +605,120 @@ class ReportController extends RestController
 
         return [
             'counts' => $counts,
-            'reports' => $reports,
+            'reports' => $this->transformReports($qb->getQuery()->getArrayResult()),
         ];
+    }
+
+    /**
+     * @Route("/get-all-by-user/{userId}", methods={"GET"})
+     * @Security("has_role('ROLE_ORG')")
+     *
+     * @param Request $request
+     * @param $userId
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAllByUser(Request $request, $userId)
+    {
+        return $this->getReponseByDeterminant($request, $userId, ReportRepository::USER_DETERMINANT);
+    }
+
+    /**
+     * @Route("/get-all-by-org/{orgId}", methods={"GET"})
+     * @Security("has_role('ROLE_ORG')")
+     *
+     * @param Request $request
+     * @param $orgId
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllByOrg(Request $request, $orgId)
+    {
+        return $this->getReponseByDeterminant($request, $orgId, ReportRepository::ORG_DETERMINANT);
+    }
+
+    /**
+     * @param Request $request
+     * @param $userId
+     * @param int $determinant
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getReponseByDeterminant(Request $request, $userId, int $determinant): array
+    {
+        $data = $this->repository->getAllByDeterminant($userId, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $this->updateReportStatusCache($this->getUser()->getId());
+
+        $result = [];
+        $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
+        $result['counts'] = $this->getReportCountsByStatus($request, $userId, EntityDir\Repository\ReportRepository::USER_DETERMINANT);
+
+        return $result;
+    }
+
+    /**
+     * @param array $reportData
+     * @return array
+     */
+    private function transformReports(array $reportData): array
+    {
+        $reports = [];
+        foreach ($reportData as $reportDatum) {
+            $reports[] = [
+                'id' => $reportDatum['id'],
+                'type' => $reportDatum['type'],
+                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof \DateTime ?
+                    $reportDatum['unSubmitDate']->format('Y-m-d') : null,
+                'status' => [
+                    // adjust report status cached using end date
+                    'status' => $this->reportService->adjustReportStatus($reportDatum['reportStatusCached'], $reportDatum['endDate'])
+                ],
+                'due_date' => $reportDatum['dueDate']->format('Y-m-d'),
+                'client' => [
+                    'id' => $reportDatum['client']['id'],
+                    'firstname' => $reportDatum['client']['firstname'],
+                    'lastname' => $reportDatum['client']['lastname'],
+                    'case_number' => $reportDatum['client']['caseNumber'],
+                ]
+            ];
+        }
+
+        return $reports;
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @param $determinant
+     * @return array
+     * @throws \Exception
+     */
+    private function getReportCountsByStatus(Request $request, $id, $determinant): array
+    {
+
+        $counts = [
+            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $id, $determinant, $request),
+            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $id, $determinant, $request),
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $id, $determinant, $request)
+        ];
+
+        $counts['total'] = array_sum($counts);
+
+        return $counts;
+    }
+
+    /**
+     * @param $status
+     * @param $orgId
+     * @param Request $request
+     * @return array|null
+     * @throws \Exception
+     */
+    private function getCountOfReportsByStatus($status, $id, $determinant, Request $request)
+    {
+        return $this
+            ->repository
+            ->getAllByDeterminant($id, $determinant, $request->query, 'count', $status);
     }
 
     /**

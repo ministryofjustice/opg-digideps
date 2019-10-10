@@ -31,21 +31,26 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $ret = $this->getRestClient()->get(
-            '/report/get-all?' . http_build_query($currentFilters),
+        $user = $this->getUser();
+        $endpoint = $user->belongsToActiveOrganisation()
+            ? sprintf('/report/get-all-by-org/%s', $user->getOrganisations()[0]->getId())
+            : sprintf('report/get-all-by-user/%s', $user->getId());
+
+        $response = $this->getRestClient()->get(
+            sprintf('%s?%s', $endpoint, http_build_query($currentFilters)),
             'array'
         );
-        /* @var $clients EntityDir\Client[] */
-        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
+
+        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $response['reports']);
 
         return [
             'filters' => $currentFilters,
             'reports' => $reports,
             'counts'  => [
-                'total'         => $ret['counts']['total'],
-                'notStarted'    => $ret['counts']['notStarted'],
-                'notFinished'   => $ret['counts']['notFinished'],
-                'readyToSubmit' => $ret['counts']['readyToSubmit'],
+                'total' => $response['counts']['total'],
+                'notStarted' => $response['counts']['notStarted'],
+                'notFinished' => $response['counts']['notFinished'],
+                'readyToSubmit' => $response['counts']['readyToSubmit'],
             ],
         ];
     }

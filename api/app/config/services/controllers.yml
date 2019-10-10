@@ -7,6 +7,8 @@ services:
         - '@rest_handler.report.deputy_costs_estimate_report_update_handler'
         - '@rest_handler.report.deputy_costs_report_update_handler'
         - '@rest_handler.report.pa_fees_expenses_report_update_handler'
+      - '@AppBundle\Entity\Repository\ReportRepository'
+      - '@opg_digideps.report_service'
 
   AppBundle\Controller\StatsController:
     public: true
