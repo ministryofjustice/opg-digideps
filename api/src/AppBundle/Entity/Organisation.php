@@ -62,7 +62,7 @@ class Organisation implements OrganisationInterface
      *
      * @JMS\Groups({"user-organisations"})
      *
-     * @ORM\Column(name="is_public_domain", type="boolean", options={ "default": true}, nullable=false)
+     * @ORM\Column(name="is_public_domain", type="boolean", options={ "default": false}, nullable=false)
      */
     private $isPublicDomain;
 
@@ -177,6 +177,8 @@ class Organisation implements OrganisationInterface
     public function setIsPublicDomain(bool $isPublicDomain)
     {
         $this->isPublicDomain = $isPublicDomain;
+
+        return $this;
     }
 
     /**

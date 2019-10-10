@@ -16,6 +16,9 @@ class OrganisationDto
     /** @var bool */
     private $isActivated;
 
+    /** @var bool */
+    private $isPublicDomain;
+
     /** @var array */
     private $users;
 
@@ -91,6 +94,24 @@ class OrganisationDto
     public function setIsActivated(bool $isActivated): OrganisationDto
     {
         $this->isActivated = $isActivated;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPublicDomain(): bool
+    {
+        return $this->isPublicDomain;
+    }
+
+    /**
+     * @param bool $isPublicDomain
+     * @return OrganisationDto
+     */
+    public function setIsPublicDomain(bool $isPublicDomain): OrganisationDto
+    {
+        $this->isPublicDomain = $isPublicDomain;
         return $this;
     }
 
