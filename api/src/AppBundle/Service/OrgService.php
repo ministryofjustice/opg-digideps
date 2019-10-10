@@ -298,7 +298,6 @@ class OrgService
         /** @var EntityDir\Client $client */
         $client = $this->clientRepository->findOneBy(['caseNumber' => $caseNumber]);
 
-        // If existing client has lay deputies, create a new one
         if ($client && $this->clientHasLayDeputy($client)) {
             throw new \RuntimeException('Case number already used');
         }
