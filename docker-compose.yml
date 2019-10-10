@@ -238,22 +238,10 @@ services:
         volumes:
             - ./client/:/app
 
-    backup:
+    sync:
         build: ./sync
         depends_on:
           - localstack
           - postgres
         env_file:
-          - ./sync/backup.env
-          - ./sync/s3.env
-        command: ./backup.sh
-
-    restore:
-        build: ./sync
-        depends_on:
-            - localstack
-            - postgres
-        env_file:
-            - ./sync/restore.env
-            - ./sync/s3.env
-        command: ./restore.sh
+          - sync/sync.env
