@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Model\SelfRegisterData;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,8 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SelfRegisterController extends RestController
 {
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      */
     public function register(Request $request)
     {
@@ -49,8 +47,7 @@ class SelfRegisterController extends RestController
     }
 
     /**
-     * @Route("/verifycodeputy")
-     * @Method({"POST"})
+     * @Route("/verifycodeputy", methods={"POST"})
      */
     public function verifyCoDeputy(Request $request)
     {

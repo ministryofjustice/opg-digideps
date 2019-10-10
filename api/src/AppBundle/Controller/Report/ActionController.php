@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ class ActionController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_ACTIONS];
 
     /**
-     * @Route("/report/{reportId}/action")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/action", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $reportId)
@@ -40,9 +38,8 @@ class ActionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/action")
-     * @Method({"GET"})
-     *  @Security("has_role('ROLE_DEPUTY')")
+     * @Route("/report/{reportId}/action", methods={"GET"})
+     * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
      */

@@ -7,7 +7,7 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\StepRedirector;
 use AppBundle\Service\StringUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 

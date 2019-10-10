@@ -9,7 +9,6 @@ services:
             version: "1.0"
             headers:
                 Content-Type: application/json
-            verify: false
             timeout: 20
             allow_redirects: false
 

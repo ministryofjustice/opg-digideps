@@ -4,16 +4,14 @@ namespace AppBundle\Controller\Ndr;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExpenseController extends RestController
 {
     /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
-     * @Method({"GET"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById($ndrId, $expenseId)
@@ -30,8 +28,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/expense", requirements={"ndrId":"\d+"})
-     * @Method({"POST"})
+     * @Route("/ndr/{ndrId}/expense", requirements={"ndrId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $ndrId)
@@ -56,8 +53,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $ndrId, $expenseId)
@@ -78,8 +74,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/ndr/{ndrId}/expense/{expenseId}", requirements={"ndrId":"\d+", "expenseId":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($ndrId, $expenseId)

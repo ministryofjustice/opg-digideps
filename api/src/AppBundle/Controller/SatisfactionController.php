@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Satisfaction;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,8 +23,7 @@ class SatisfactionController extends RestController
     }
 
     /**
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request)

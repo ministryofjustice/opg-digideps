@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,8 +16,7 @@ class MoneyTransactionController extends RestController
     ];
 
     /**
-     * @Route("/report/{reportId}/money-transaction")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/money-transaction", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addMoneyTransactionAction(Request $request, $reportId)
@@ -64,8 +62,7 @@ class MoneyTransactionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction/{transactionId}")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateMoneyTransactionAction(Request $request, $reportId, $transactionId)
@@ -101,8 +98,7 @@ class MoneyTransactionController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/money-transaction/{transactionId}")
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/money-transaction/{transactionId}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteMoneyTransactionAction(Request $request, $reportId, $transactionId)
