@@ -2,8 +2,10 @@ Feature: Users can edit members of their organisation
 
   @prof
   Scenario: Org domains: Users can add existing users to their organisation
-    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I go to "/org/settings/organisation"
+    Given the organisation "publicguardian.gov.uk" is active
+    And "behat-prof-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
+    When I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I go to "/org/settings/organisation"
     And I follow "Add user"
     And I fill in "organisation_member_email" with "behat-prof-team-member@publicguardian.gov.uk"
     And I press "Save"
@@ -13,7 +15,7 @@ Feature: Users can edit members of their organisation
 
   @prof
   Scenario: Org domains: Users can only add new users if they share the same org domain
-    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "bessshat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
     When I go to "/org/settings/organisation"
     And I follow "Add user"
@@ -22,14 +24,14 @@ Feature: Users can edit members of their organisation
       | organisation_member_lastname  | Lacasse                         |
       | organisation_member_email     | john.smith@abc-solicitors.example.com |
     And I press "Save"
-    Then I should see "User does not have an email address from this organisation"
+    Then I should see "Email doesn't match the organisation domain: @publicguardian.gov.uk"
     And the form should be invalid
     When I fill in the following:
       | organisation_member_firstname | Yvonne                          |
       | organisation_member_lastname  | Lacasse                         |
       | organisation_member_email     | jo.brown@example.com            |
     And I press "Save"
-    Then I should see "User does not have an email address from this organisation"
+    Then I should see "Email doesn't match the organisation domain: @publicguardian.gov.uk"
     And the form should be invalid
     When I fill in the following:
       | organisation_member_firstname | Yvonne                          |
