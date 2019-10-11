@@ -62,9 +62,9 @@ Feature: Users can view their organisations
     And I should see "Main org contact"
 
   @prof
-  Scenario: Clean up additional organisation
+  Scenario: Admin can remove organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
-    When I click on "delete" in the "org-stears-and-co" region
+    When I click on "delete" in the "org-leever-partners" region
     And I click on "confirm"
-    Then I should not see "Stears and Co."
+    Then I should not see "Leever Partners"
