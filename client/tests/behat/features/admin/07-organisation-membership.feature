@@ -58,14 +58,40 @@ Feature: Organisation membership
     Then I should see "User is already in this organisation"
 
   @admin
-  Scenario: Admin cannot add users to a public domain organisation
+  Scenario: Public domains: Admin cannot add users from different domains
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations"
+    And I follow "jo.brown@example.com"
+    And I follow "Add someone to this organisation"
+    When I fill in "organisation_add_user_email" with "john.smith@abc-solicitors.example.com"
+    And I press "Find user"
+    Then I should see "User does not have an email address from this organisation"
+
+  @admin
+  Scenario: Public domains: Admin can only add initial user to a public domain organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
     And I follow "jo.brown@example.com"
     And I follow "Add someone to this organisation"
     When I fill in "organisation_add_user_email" with "jo.brown@example.com"
     And I press "Find user"
+    Then I should see "PROF Deputy 102-5 User"
+    And I should see "jo.brown@example.com"
+    And I should see "PROF Deputy Example User will be able to see and report on all clients in the organisation"
+    When I press "Add user to organisation"
+    Then the URL should match "admin/organisations/\d+"
+    And I should see "PROF Deputy Example"
+
+  @admin
+  Scenario: Public domains: Admin cannot add additional users to a public domain organisation
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I am on admin page "/admin/organisations"
+    And I follow "jo.brown@example.com"
+    And I follow "Add someone to this organisation"
+    When I fill in "organisation_add_user_email" with "bobby.blue@example.com"
+    And I press "Find user"
     Then I should see "You cannot add a user to an organisation with a public domain"
+
 
   @admin
   Scenario: Admin cannot add users witth different email domain to that of the organisation
