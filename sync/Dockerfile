@@ -1,15 +1,5 @@
 FROM alpine:latest
 
-# install pg_dump and s3
-RUN apk add --no-cache postgresql python py2-pip
-
-RUN pip install awscli
-
-RUN apk del py2-pip
-
-ADD backup.sh backup.sh
-ADD restore.sh restore.sh
-
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_HOST **None**
 ENV POSTGRES_PORT 5432
@@ -21,3 +11,13 @@ ENV S3_ENDPOINT **None**
 ENV S3_PREFIX **None**
 ENV S3_S3V4 yes
 
+# install pg_dump and s3
+RUN apk add --no-cache postgresql python py2-pip
+
+RUN pip install awscli
+
+RUN apk del py2-pip
+
+ADD backup.sh backup.sh
+ADD restore.sh restore.sh
+ADD common.sh common.sh
