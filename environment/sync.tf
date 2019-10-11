@@ -1,5 +1,5 @@
 data "aws_s3_bucket" "sync" {
-  bucket = "backup.complete-deputy-report.service.gov.uk"
+  bucket   = "backup.complete-deputy-report.service.gov.uk"
   provider = "aws.management"
 }
 
