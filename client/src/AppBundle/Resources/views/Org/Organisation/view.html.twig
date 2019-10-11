@@ -17,8 +17,11 @@
 {% endblock %}
 
 {% block pageContent %}
+    {% if organisation.hasPublicDomain %}
+    <p>{{ 'viewPage.introPublicDomain' | trans }}</p>
+    {% else %}
     <p>{{ 'viewPage.intro' | trans }}</p>
-
+    {% endif %}
     <table class="govuk-table">
         <caption class="govuk-table__caption">
             <div class="govuk-grid-row">
