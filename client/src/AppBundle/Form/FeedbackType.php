@@ -6,8 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Constraints;
 
-class FeedbackReportType extends AbstractType
+class FeedbackType extends AbstractType
 {
     use Traits\HasTranslatorTrait;
 
@@ -19,12 +20,37 @@ class FeedbackReportType extends AbstractType
         }, $satisfactionScores);
 
         $builder
+            ->add('specificPage', FormTypes\ChoiceType::class, [
+                'choices' => [
+                    'The whole site' => true,
+                    'A specific page' => false
+                ],
+                'expanded' => true,
+                'multiple' => false,
+            ])
+            ->add('page', FormTypes\TextType::class, [
+                'required' => false,
+            ])
+            ->add('comments', FormTypes\TextareaType::class)
+            ->add('name', FormTypes\TextType::class, [
+                'required' => false,
+            ])
+            ->add('email', FormTypes\EmailType::class, [
+                'required' => false,
+                'constraints' => [
+                    new Constraints\Email(['message' => 'login.email.inValid'])
+                ]
+            ])
+            ->add('phone', FormTypes\TextType::class, [
+                'required' => false,
+            ])
             ->add('satisfactionLevel', FormTypes\ChoiceType::class, [
                 'choices' => array_combine($satisfactionLabels, $satisfactionScores),
                 'expanded' => true,
                 'multiple' => false,
+                'required' => false,
+                'placeholder' => false,
             ])
-            ->add('comments', FormTypes\TextareaType::class)
             ->add('save', FormTypes\SubmitType::class);
     }
 
@@ -37,6 +63,6 @@ class FeedbackReportType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'feedback_report';
+        return 'feedback';
     }
 }

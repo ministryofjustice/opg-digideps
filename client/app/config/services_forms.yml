@@ -18,6 +18,13 @@ services:
         tags:
             - { name: form.type }
 
+    app.form.type.feedback:
+        class: AppBundle\Form\FeedbackType
+        calls:
+            - [ setTranslator, ["@translator"] ]
+        tags:
+            - { name: form.type }
+
     app.form.validator.email_same_domain:
         class: AppBundle\Validator\Constraints\EmailSameDomainValidator
         calls:
