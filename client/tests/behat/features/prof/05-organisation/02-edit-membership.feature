@@ -13,9 +13,9 @@ Feature: Users can edit members of their organisation
     And I should see "Professional Team Member"
     And I should see "behat-prof-team-member@publicguardian.gov.uk"
 
-  @prof
+  @prof @shaun
   Scenario: Org domains: Users can only add new users if they share the same org domain
-    Given I am logged in as "bessshat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
     When I go to "/org/settings/organisation"
     And I follow "Add user"
