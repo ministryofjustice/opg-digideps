@@ -1,7 +1,7 @@
 Feature: Users can edit members of their organisation
 
   @prof
-  Scenario: Users can add existing users to their organisation
+  Scenario: Org domains: Users can add existing users to their organisation
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/settings/organisation"
     And I follow "Add user"
@@ -12,7 +12,7 @@ Feature: Users can edit members of their organisation
     And I should see "behat-prof-team-member@publicguardian.gov.uk"
 
   @prof
-  Scenario: Users can only add new users if they share the same org domain (not public)
+  Scenario: Org domains: Users can only add new users if they share the same org domain
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
     When I go to "/org/settings/organisation"
@@ -22,13 +22,15 @@ Feature: Users can edit members of their organisation
       | organisation_member_lastname  | Lacasse                         |
       | organisation_member_email     | john.smith@abc-solicitors.example.com |
     And I press "Save"
-    Then the form should be invalid
+    Then I should see "User does not have an email address from this organisation"
+    And the form should be invalid
     When I fill in the following:
       | organisation_member_firstname | Yvonne                          |
       | organisation_member_lastname  | Lacasse                         |
       | organisation_member_email     | jo.brown@example.com            |
     And I press "Save"
-    Then the form should be invalid
+    Then I should see "User does not have an email address from this organisation"
+    And the form should be invalid
     When I fill in the following:
       | organisation_member_firstname | Yvonne                          |
       | organisation_member_lastname  | Lacasse                         |
@@ -40,6 +42,18 @@ Feature: Users can edit members of their organisation
     And the last email should have been sent to "y.lacasse@publicguardian.gov.uk"
     And the last email should contain "Activate your account"
     And the last email should contain "/user/activate"
+
+  @prof
+  Scenario: Public domains: Cannot add users to their organisation
+    Given the organisation "jo.brown@example.com" is active
+    And "jo.brown@example.com" has been added to the "jo.brown@example.com" organisation
+    Given I am logged in as "jo.brown@example.com" with password "Abcd1234"
+    When I go to "/org/settings"
+    And I follow "User accounts"
+    Then I should not see the "Add" link
+# assert direct access denied
+    When I go to "/org/settings/organisation/add-user"
+    Then the response status code should be 500
 
   @prof
   Scenario: Users can edit non-activated users
