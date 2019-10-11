@@ -4,6 +4,8 @@ Feature: Organisation membership
   Scenario: Set up organisation fixture
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations"
+    And I create a new "NDR-disabled" "prof named" user "Main" "ERZ Contact" with email "main.contact@erz.example" and postcode "HA4"
+
     When I follow "Add a new organisation"
     And I fill in "organisation_name" with "ERZ Solicitors"
     And I fill in "organisation_emailIdentifierType_0" with "domain"
@@ -14,18 +16,18 @@ Feature: Organisation membership
 
   @admin
   Scenario: Admin can add members to an organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"s
     And I am on admin page "/admin/organisations"
     And I follow "ERZ Solicitors"
     When I follow "Add someone to this organisation"
-    And I fill in "organisation_add_user_email" with "behat-prof-deputy-102-5@publicguardian.gov.uk"
+    And I fill in "organisation_add_user_email" with "main.contact@erz.example"
     And I press "Find user"
-    Then I should see "PROF Deputy 102-5 User"
-    And I should see "behat-prof-deputy-102-5@publicguardian.gov.uk"
-    And I should see "PROF Deputy 102-5 User will be able to see and report on all clients in the organisation"
+    Then I should see "Main ERZ contact"
+    And I should see "main.contact@erz.example"
+    And I should see "Main ERZ contact will be able to see and report on all clients in the organisation"
     When I press "Add user to organisation"
     Then the URL should match "admin/organisations/\d+"
-    And I should see "PROF Deputy 102-5 User"
+    And I should see "Main ERZ contact"
 
   @admin
   Scenario: Admin cannot add non-registered users to an organisation
