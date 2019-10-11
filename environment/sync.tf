@@ -19,6 +19,26 @@ resource "aws_ecs_task_definition" "sync" {
   tags                     = local.default_tags
 }
 
+resource "aws_security_group" "sync" {
+  name_prefix = aws_ecs_task_definition.sync.family
+  vpc_id      = data.aws_vpc.vpc.id
+  tags        = local.default_tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_security_group_rule" "sync_out" {
+  type      = "egress"
+  protocol  = "-1"
+  from_port = 0
+  to_port   = 0
+
+  security_group_id = aws_security_group.sync.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 locals {
   sync_container = <<EOF
 {
