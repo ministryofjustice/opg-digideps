@@ -6,3 +6,6 @@ services:
   client:
     image: ${AWS_REGISTRY}/digideps/client:${VERSION}
     build: ./client
+  sync:
+    image: ${AWS_REGISTRY}/digideps/sync:${VERSION}
+    build: ./sync
