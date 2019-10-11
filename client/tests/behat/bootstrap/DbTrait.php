@@ -130,19 +130,19 @@ trait DbTrait
         exec($command);
     }
 
-    private function theOrganisationActiveIs($organisationName, $active)
+    private function theOrganisationActiveIs($organisationEmailIdentifier, $active)
     {
-        $query = "UPDATE organisation SET is_activated = '{$active}' WHERE name = '{$organisationName}'";
+        $query = "UPDATE organisation SET is_activated = '{$active}' WHERE email_identifier = '{$organisationEmailIdentifier}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
 
     /**
-     * @Given the organisation :organisationName is active
+     * @Given the organisation :organisationEmailIdentifier is active
      */
-    public function theOrganisationIsActive($organisationName)
+    public function theOrganisationIsActive($organisationEmailIdentifier)
     {
-        $this->theOrganisationActiveIs($organisationName, true);
+        $this->theOrganisationActiveIs($organisationEmailIdentifier, true);
     }
 
     /**
