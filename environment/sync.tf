@@ -1,5 +1,6 @@
 data "aws_s3_bucket" "sync" {
   bucket = "backup.complete-deputy-report.service.gov.uk"
+  provider = "aws.management"
 }
 
 data "aws_iam_role" "sync" {
