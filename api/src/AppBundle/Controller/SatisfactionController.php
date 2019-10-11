@@ -12,6 +12,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SatisfactionController extends RestController
 {
+    private function addSatisfactionScore($score)
+    {
+        $satisfaction = new Satisfaction();
+        $satisfaction->setScore($score);
+
+        $this->persistAndFlush($satisfaction);
+
+        return $satisfaction;
+    }
+
     /**
      * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
@@ -23,16 +33,26 @@ class SatisfactionController extends RestController
             'reportType' => 'notEmpty',
         ]);
 
-        $satisfaction = new Satisfaction();
-        $satisfaction->setScore($data['score']);
+        $satisfaction = $this->addSatisfactionScore($data['score']);
+
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
-        if (isset($data['comments'])) {
-            $satisfaction->setComments($data['comments']);
-        }
-
         $this->persistAndFlush($satisfaction);
+
+        return $satisfaction->getId();
+    }
+
+    /**
+     * @Route("/public", methods={"POST"})
+     */
+    public function publicAdd(Request $request)
+    {
+        $data = $this->deserializeBodyContent($request, [
+            'score' => 'notEmpty'
+        ]);
+
+        $satisfaction = $this->addSatisfactionScore($data['score']);
 
         return $satisfaction->getId();
     }
