@@ -14,6 +14,7 @@ trait UserTrait
         'lay deputy' => User::ROLE_LAY_DEPUTY,
         'ad' => User::ROLE_AD,
         'case manager' => User::ROLE_CASE_MANAGER,
+        'prof named' => User::ROLE_PROF_NAMED
     ];
 
     /**
@@ -71,6 +72,28 @@ trait UserTrait
         $this->fillField('set_password_password_second', $password);
         $this->checkOption('set_password_showTermsAndConditions');
         $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @When I activate the named deputy with password :password
+     */
+    public function iActivateTheNamedDeputyAndSetThePasswordTo($password)
+    {
+        $this->visit('/logout');
+        $this->iOpenTheSpecificLinkOnTheEmail('/user/activate/');
+        $this->assertResponseStatus(200);
+        $this->checkOption('agree_terms_agreeTermsUse');
+        $this->pressButton('agree_terms_save');
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
+        $this->checkOption('set_password_showTermsAndConditions');
+        $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+        $this->fillField('user_details_jobTitle', 'Main org contact');
+        $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

@@ -129,4 +129,34 @@ trait DbTrait
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
     }
+
+    private function theOrganisationActiveIs($organisationName, $active)
+    {
+        $query = "UPDATE organisation SET is_activated = '{$active}' WHERE name = '{$organisationName}'";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
+
+    /**
+     * @Given the organisation :organisationName is active
+     */
+    public function theOrganisationIsActive($organisationName)
+    {
+        $this->theOrganisationActiveIs($organisationName, true);
+    }
+
+    /**
+     * @Given :userEmail has been added to the :organisationEmailIdentifier organisation
+     */
+    public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier)
+    {
+        $query = "INSERT INTO organisation_user (user_id, organisation_id) VALUES  
+          (
+            (SELECT id FROM dd_user WHERE email = '{$userEmail}'), 
+            (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
+          )";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        exec($command);
+    }
+
 }

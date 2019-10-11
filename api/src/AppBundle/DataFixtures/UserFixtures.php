@@ -123,12 +123,40 @@ class UserFixtures extends AbstractDataFixture
             'reportVariation' => 'HW',
         ],
         [
+            'id' => 'example',
+            'email' => 'bobby.blue@example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
             'id' => 'abc-example',
             'email' => 'john.smith@abc-solicitors.example.com',
             'deputyType' => 'PROF',
             'reportType' => 'OPG102',
             'reportVariation' => 'HW',
         ],
+        [
+            'id' => 'abc-example',
+            'email' => 'kieth.willis@abc-solicitors.example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
+            'id' => 'abcd-example',
+            'email' => 'marjorie.watkins@abcd-solicitors.example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+//        [
+//            'id' => 'leever-example',
+//            'email' => 'main.contact@leever.example',
+//            'deputyType' => 'PROF',
+//            'reportType' => 'OPG102',
+//            'reportVariation' => 'HW',
+//        ],
     ];
 
     public function doLoad(ObjectManager $manager)
