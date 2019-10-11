@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\CsvUploader;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,8 +16,7 @@ class OrgController extends RestController
      * Bulk insert
      * Max 10k otherwise failing (memory reach 128M).
      *
-     * @Route("/bulk-add")
-     * @Method({"POST"})
+     * @Route("/bulk-add", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function addBulk(Request $request)

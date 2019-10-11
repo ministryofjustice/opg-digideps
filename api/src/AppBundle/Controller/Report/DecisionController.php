@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,8 +16,7 @@ class DecisionController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_DECISIONS];
 
     /**
-     * @Route("/decision")
-     * @Method({"POST", "PUT"})
+     * @Route("/decision", methods={"POST", "PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function upsertDecision(Request $request)
@@ -66,8 +64,7 @@ class DecisionController extends RestController
     }
 
     /**
-     * @Route("/decision/{id}")
-     * @Method({"GET"})
+     * @Route("/decision/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -84,8 +81,7 @@ class DecisionController extends RestController
     }
 
     /**
-     * @Route("/decision/{id}")
-     * @Method({"DELETE"})
+     * @Route("/decision/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteDecision($id)

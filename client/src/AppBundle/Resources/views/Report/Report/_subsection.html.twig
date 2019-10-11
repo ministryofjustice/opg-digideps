@@ -10,7 +10,7 @@
     {% set linkToSubSection = path(subSection, {reportId: report.id}) %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--error') : '' }}">
+<div href="{{ linkToSubSection }}" class="opg-overview-section {{ sectionNeedsAttention ? ('behat-region-section-' ~ sectionId ~ '-needs-attention opg-overview-section--error') : '' }}">
     <div class="opg-overview-section__header">
         <h3 class="govuk-heading-m opg-overview-section__label">
             <a href="{{ linkToSubSection }}" class="opg-overview-section__label-link">

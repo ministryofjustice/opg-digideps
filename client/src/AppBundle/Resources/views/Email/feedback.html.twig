@@ -1,7 +1,16 @@
-
-Overall, how did you feel about the service you received today ?<br/>
+{% if response.satisfactionLevel is not empty %}
+    Overall, how did you feel about the service you received today ?<br/>
+    <br/>
+    {% if userRole is not empty %}{{ userRole }}: {% endif %}
+    {{ ('form.satisfactionLevel.choices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}
+{% else %}
+    A user has left feedback about the service.
+{% endif %}
 <br/>
-{{ userRole }}: {{ ('satisfactionLevelsChoices.' ~ response.satisfactionLevel) | trans({}, 'feedback') }}<br/>
+{% if response.name is not empty %}Name: {{ response.name }}<br/>{% endif %}
+{% if response.email is not empty %}Email: {{ response.email }}<br/>{% endif %}
+{% if response.phone is not empty %}Phone: {{ response.phone }}<br/>{% endif %}
+{% if response.page is not empty %}Page: {{ response.page }}<br/>{% endif %}
 <br/>
 Comments:<br />
 {{ response.comments }}

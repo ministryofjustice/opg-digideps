@@ -96,8 +96,7 @@ security:
                 invalidate_session: false
             anonymous: ~
             switch_user: true
-            #http_basic:
-            #    realm: "Secured Demo Area"
+            logout_on_user_change: false
 
     access_control:
         # /admin accessible only from ADMIN, super users and AD users

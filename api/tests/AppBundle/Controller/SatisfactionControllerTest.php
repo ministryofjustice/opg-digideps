@@ -38,13 +38,24 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $okayData);
     }
 
+    public function testPublicEndpointHasSuitablePermissions()
+    {
+        $this->assertJsonRequest('POST', '/satisfaction/public', [
+            'mustSucceed' => true,
+            'data' => [
+                'score' => 4
+            ],
+            'assertResponseCode' => 200,
+        ]);
+    }
+
     /**
      * @dataProvider getInvalidInputs
      * @param $data
      */
-    public function testSatisfactionFailsOnInvalidData($data)
+    public function testSatisfactionFailsOnInvalidData($url, $data)
     {
-        $this->assertJsonRequest('POST', '/satisfaction', [
+        $this->assertJsonRequest('POST', $url, [
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => $data,
@@ -57,8 +68,9 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getInvalidInputs()
     {
         return [
-            ['data' => ['score' => 4, 'comments' => 'foo']],
-            ['data' =>['reportType' => '102-5', 'comments' => 'foo']]
+            ['url' => '/satisfaction', 'data' => ['score' => 1]],
+            ['url' => '/satisfaction', 'data' => ['reportType' => '102-5']],
+            ['url' => '/satisfaction/public', 'data' => []],
         ];
     }
 
@@ -66,9 +78,9 @@ class SatisfactionControllerTest extends AbstractTestController
      * @dataProvider getValidInputs
      * @param $data
      */
-    public function testSatisfactionAcceptsValidData($data)
+    public function testSatisfactionAcceptsValidData($url, $data)
     {
-        $response = $this->assertJsonRequest('POST', '/satisfaction', [
+        $response = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => $data,
@@ -78,12 +90,17 @@ class SatisfactionControllerTest extends AbstractTestController
         $persistedEntity = $em->getRepository('AppBundle\Entity\Satisfaction')->find($response['data']);
 
         $this->assertEquals($data['score'], $persistedEntity->getScore());
-        $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
 
-        if (array_key_exists('comments', $data)) {
-            $this->assertEquals($data['comments'], $persistedEntity->getComments());
+        if (array_key_exists('reportType', $data)) {
+            $this->assertEquals($data['reportType'], $persistedEntity->getReportType());
         } else {
-            $this->assertNull($persistedEntity->getComments());
+            $this->assertNull($persistedEntity->getReportType());
+        }
+
+        if ($url === '/satisfaction') {
+            $this->assertEquals('ROLE_LAY_DEPUTY', $persistedEntity->getDeputyRole());
+        } else {
+            $this->assertNull($persistedEntity->getDeputyRole());
         }
     }
 
@@ -93,8 +110,8 @@ class SatisfactionControllerTest extends AbstractTestController
     public function getValidInputs()
     {
         return [
-            ['data' => ['score' => 4, 'reportType' => 'foo', 'comments' => 'bar']],
-            ['data' => ['score' => 4, 'reportType' => 'foo']]
+            ['url' => '/satisfaction', 'data' => ['score' => 4, 'reportType' => 'foo']],
+            ['url' => '/satisfaction/public', 'data' => ['score' => 4]],
         ];
     }
 }

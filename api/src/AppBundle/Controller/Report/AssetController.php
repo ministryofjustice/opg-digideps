@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ class AssetController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_ASSETS];
 
     /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $assetId)
@@ -34,8 +32,7 @@ class AssetController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"})
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
@@ -63,8 +60,7 @@ class AssetController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $assetId)
@@ -87,8 +83,7 @@ class AssetController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($reportId, $assetId)

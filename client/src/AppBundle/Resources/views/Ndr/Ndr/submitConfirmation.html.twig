@@ -26,19 +26,19 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'push--bottom' } }) }}
 
-    {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
+    {{ form_checkbox_group(form.satisfactionLevel, 'form.satisfactionLevel', {
         'legendClass' : 'text   form-label-bold',
         'legend': 'satisfactionLevel'
     }) }}
 
-    {{ form_input(form.comments, 'comments', {
+    {{ form_input(form.comments, 'form.comments', {
         'labelClass' : 'form-label-bold'
     }) }}
 
     <p class="text">{{ 'page.feedback.limit' | trans }}</p>
     <p class="text">{{ 'page.feedback.disclaimer' | trans }}</p>
 
-    {{ form_submit(form.save, 'send') }}
+    {{ form_submit(form.save, 'form.send') }}
 
     {{ form_end(form) }}
     {# end feedback form #}
