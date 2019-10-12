@@ -9,6 +9,7 @@ use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -610,31 +611,35 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/get-all-by-user/{userId}", methods={"GET"})
+     * @Route("/get-all-by-user", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param Request $request
-     * @param $userId
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAllByUser(Request $request, $userId)
+    public function getAllByUser(Request $request)
     {
-        return $this->getReponseByDeterminant($request, $userId, ReportRepository::USER_DETERMINANT);
+        return $this->getReponseByDeterminant($request, $this->getUser()->getId(), ReportRepository::USER_DETERMINANT);
     }
 
     /**
-     * @Route("/get-all-by-org/{orgId}", methods={"GET"})
+     * @Route("/get-all-by-org", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param Request $request
-     * @param $orgId
      * @return array
      * @throws \Exception
      */
-    public function getAllByOrg(Request $request, $orgId)
+    public function getAllByOrg(Request $request)
     {
-        return $this->getReponseByDeterminant($request, $orgId, ReportRepository::ORG_DETERMINANT);
+        $organisation = $this->getUser()->getOrganisations()->first();
+
+        if (null === $organisation) {
+            throw new NotFoundHttpException('Organisation not found');
+        }
+
+        return $this->getReponseByDeterminant($request, $organisation->getId(), ReportRepository::ORG_DETERMINANT);
     }
 
     /**

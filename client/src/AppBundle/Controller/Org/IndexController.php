@@ -31,15 +31,13 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $user = $this->getUser();
-        $endpoint = $user->belongsToActiveOrganisation()
-            ? sprintf('/report/get-all-by-org/%s', $user->getOrganisations()[0]->getId())
-            : sprintf('report/get-all-by-user/%s', $user->getId());
-
-        $response = $this->getRestClient()->get(
-            sprintf('%s?%s', $endpoint, http_build_query($currentFilters)),
-            'array'
+        $endpoint = sprintf(
+            '%s?%s',
+            $this->getUser()->belongsToActiveOrganisation() ?'/report/get-all-by-org' : 'report/get-all-by-user',
+            http_build_query($currentFilters)
         );
+
+        $response = $this->getRestClient()->get($endpoint, 'array');
 
         $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $response['reports']);
 
