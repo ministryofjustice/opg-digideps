@@ -40,10 +40,18 @@ addUserForm:
   addressPostcode:
     label: Postcode
     hint: ""
+  roleType:
+    label: Role
+    staff: OPG staff user
+    deputy: Deputy user
   roleName:
     label: Role
     hint: ""
     defaultOption: Please select ...
+  roleNameDeputy:
+    label: Role
+  roleNameStaff:
+    label: Role
   ndrEnabled:
     label: Enable NDR for this user (Lay deputy only)
   submit:
