@@ -13,6 +13,7 @@ locals {
     "client",
     "file-scanner",
     "sync",
+    "test",
     "wkhtmltopdf",
   ]
 }
