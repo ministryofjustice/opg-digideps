@@ -1,4 +1,3 @@
-@gt
 Feature: Generic feedback page
 
     @deputy

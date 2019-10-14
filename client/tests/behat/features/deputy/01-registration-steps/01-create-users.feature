@@ -54,5 +54,3 @@ Feature: deputy / user / add user
     Then I should see "behat-user-ndr@publicguardian.gov.uk" in the "users" region
     And I should see "yes" in the "behat-user-ndrpublicguardiangovuk-ndr-enabled" region
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-user-ndr@publicguardian.gov.uk"
-
-

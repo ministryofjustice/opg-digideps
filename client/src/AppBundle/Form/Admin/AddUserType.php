@@ -15,7 +15,7 @@ class AddUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $deputyRoles = [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED];
-        $staffRoles = [User::ROLE_ADMIN, User::ROLE_CASE_MANAGER];
+        $staffRoles = [User::ROLE_ADMIN, User::ROLE_AD, User::ROLE_CASE_MANAGER];
 
         $builder->add('email', FormTypes\TextType::class)
             ->add('firstname', FormTypes\TextType::class)
@@ -53,7 +53,7 @@ class AddUserType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if (in_array($user->getRoleName(), $staffRoles) || $user->getRoleName() === User::ROLE_AD) {
+            if (in_array($user->getRoleName(), $staffRoles)) {
                 $form->get('roleType')->setData('staff');
                 $form->get('roleNameStaff')->setData($user->getRoleName());
             } else {

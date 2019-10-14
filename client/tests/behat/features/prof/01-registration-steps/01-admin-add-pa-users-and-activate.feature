@@ -108,10 +108,10 @@ Feature: Add PROF users and activate PROF user (journey)
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "user-behat-prof2publicguardiangovuk" in the "user-behat-prof2publicguardiangovuk" region
     Then the following fields should have the corresponding values:
-      | admin_email      | behat-prof2@publicguardian.gov.uk |
-      | admin_firstname  | Pa User                             |
-      | admin_lastname   | Two                                 |
-      | admin_roleName   | ROLE_PROF_NAMED                       |
+      | admin_email          | behat-prof2@publicguardian.gov.uk |
+      | admin_firstname      | Pa User                           |
+      | admin_lastname       | Two                               |
+      | admin_roleNameDeputy | ROLE_PROF_NAMED                   |
     When I fill in the following:
       | admin_email      | behat-prof2-edited@publicguardian.gov.uk |
       | admin_firstname  | Edited Pa User                             |
