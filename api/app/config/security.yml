@@ -1,7 +1,7 @@
 parameters:
     # set this param to a higher value than session_expire_seconds on the client
     user_provider_timeout_seconds: 3901
-    
+
 services:
     # authenticator
     authenticator.token_header:
@@ -35,14 +35,14 @@ services:
             - [ addFreezingRule, [  20, 3600 ] ]
             # after further 10 attempts. freeze for 2h
             - [ addFreezingRule, [  30, 7200 ] ]
-    
-    
+
+
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
         AppBundle\Entity\User: sha512
-       
-    
+
+
     providers:
         user_provider_redis:
             id: user_provider
@@ -96,6 +96,10 @@ security:
            pattern: ^/report-submission/\d+/set-undownloadable
            security: false
            #methods: [PUT]
+        satisfaction:
+           pattern: ^/satisfaction/public
+           security: false
+           methods: [POST]
         settingServiceNotification:
            pattern: ^/setting/service-notification
            security: false

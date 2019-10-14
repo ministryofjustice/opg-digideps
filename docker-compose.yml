@@ -238,3 +238,10 @@ services:
         volumes:
             - ./client/:/app
 
+    sync:
+        build: ./sync
+        depends_on:
+          - localstack
+          - postgres
+        env_file:
+          - sync/sync.env

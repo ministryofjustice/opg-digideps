@@ -5,8 +5,7 @@ namespace AppBundle\v2\Registration\Controller;
 use AppBundle\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
 use AppBundle\Service\DataCompression;
 use AppBundle\v2\Registration\Uploader\LayDeputyshipUploader;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -40,8 +39,7 @@ class LayDeputyshipUploadController
     }
 
     /**
-     * @Route("/upload")
-     * @Method({"POST"})
+     * @Route("/upload", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN')")
      *
      * @param Request $request

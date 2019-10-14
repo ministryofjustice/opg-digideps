@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,8 +16,7 @@ class DocumentController extends RestController
      * @Route("/document/{reportType}/{reportId}", requirements={
      *     "reportId":"\d+",
      *     "reportType" = "(report|ndr)"
-     * })
-     * @Method({"POST"})
+     * }, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportType, $reportId)
@@ -56,8 +54,7 @@ class DocumentController extends RestController
     /**
      * GET document by id
      *
-     * @Route("/document/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/document/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
@@ -78,8 +75,7 @@ class DocumentController extends RestController
      * Delete document.
      * Accessible only from deputy area
      *
-     * @Method({"DELETE"})
-     * @Route("/document/{id}")
+     * @Route("/document/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id

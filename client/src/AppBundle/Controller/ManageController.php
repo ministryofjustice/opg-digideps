@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Availability as ServiceAvailability;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
@@ -13,8 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ManageController extends AbstractController
 {
     /**
-     * @Route("/availability")
-     * @Method({"GET"})
+     * @Route("/availability", methods={"GET"})
      */
     public function availabilityAction()
     {
@@ -32,8 +30,7 @@ class ManageController extends AbstractController
     }
 
     /**
-     * @Route("/availability/pingdom")
-     * @Method({"GET"})
+     * @Route("/availability/pingdom", methods={"GET"})
      */
     public function healthCheckXmlAction()
     {
@@ -50,8 +47,7 @@ class ManageController extends AbstractController
     }
 
     /**
-     * @Route("/elb", name="manage-elb")
-     * @Method({"GET"})
+     * @Route("/elb", name="manage-elb", methods={"GET"})
      * @Template("AppBundle:Manage:elb.html.twig")
      */
     public function elbAction()

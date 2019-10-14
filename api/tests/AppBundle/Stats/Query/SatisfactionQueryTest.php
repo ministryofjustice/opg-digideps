@@ -17,6 +17,16 @@ class SatisfactionQueryTest extends WebTestCase
         $frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         self::$em = $frameworkBundleClient->getContainer()->get('em');
 
+        // Clear up old data
+        $scores = self::$em
+            ->getRepository(Satisfaction::class)
+            ->findAll();
+
+        foreach ($scores as $score) {
+            self::$em->remove($score);
+        }
+
+        // Add test data
         static::givenSatisfactionScoreForReportOfTypeAndRole(3, '102', 'LAY');
         static::givenSatisfactionScoreForReportOfTypeAndRole(4, '102', 'LAY');
         static::givenSatisfactionScoreForReportOfTypeAndRole(5, '103', 'LAY');
@@ -30,7 +40,23 @@ class SatisfactionQueryTest extends WebTestCase
         static::givenSatisfactionScoreForReportOfTypeAndRole(3, '103-5', 'PROF');
         static::givenSatisfactionScoreForReportOfTypeAndRole(3, '103-5', 'PROF');
 
+        static::givenSatisfactionScoreForReportOfTypeAndRole(1);
+        static::givenSatisfactionScoreForReportOfTypeAndRole(1);
+        static::givenSatisfactionScoreForReportOfTypeAndRole(3);
+
         self::$em->flush();
+    }
+
+    public function testReturnsOverallSatisfaction()
+    {
+        $query = new SatisfactionQuery($this::$em);
+
+        $result = $query->execute(new StatsQueryParameters([
+            'metric' => 'satisfaction'
+        ]));
+
+        $this->assertCount(1, $result);
+        $this->assertEquals(53, $result[0]['amount']);
     }
 
     public function testReturnsSatisfactionAverageByDeputyType()
@@ -43,7 +69,7 @@ class SatisfactionQueryTest extends WebTestCase
         ]));
 
         // Assert an array result for each deputy type submitted.
-        $this->assertCount(3, $result);
+        $this->assertCount(4, $result);
 
         // Assert correct amount is returned for each deputy type.
         foreach ($result as $metric) {
@@ -56,6 +82,9 @@ class SatisfactionQueryTest extends WebTestCase
                     break;
                 case 'prof':
                     $this->assertEquals(63, $metric['amount']);
+                    break;
+                case 'none':
+                    $this->assertEquals(17, $metric['amount']);
                     break;
             }
         }
@@ -71,7 +100,7 @@ class SatisfactionQueryTest extends WebTestCase
         ]));
 
         // Assert an array result for each report type submitted
-        $this->assertCount(6, $result);
+        $this->assertCount(7, $result);
 
         // Assert correct amount is returned for each report type
         foreach ($result as $metric) {
@@ -94,16 +123,25 @@ class SatisfactionQueryTest extends WebTestCase
                 case '103-5':
                     $this->assertEquals(50, $metric['amount']);
                     break;
+                case 'none':
+                    $this->assertEquals(17, $metric['amount']);
+                    break;
             }
         }
     }
 
-    private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType, $deputyType)
+    private static function givenSatisfactionScoreForReportOfTypeAndRole($score, $reportType = null, $deputyType = null)
     {
         $satisfaction = (new Satisfaction())
-            ->setScore($score)
-            ->setReportType($reportType)
-            ->setDeputyRole('ROLE_'.$deputyType.'_DEPUTY');
+            ->setScore($score);
+
+        if (isset($reportType)) {
+            $satisfaction->setReportType($reportType);
+        }
+
+        if (isset($deputyType)) {
+            $satisfaction->setDeputyRole('ROLE_'.$deputyType.'_DEPUTY');
+        }
 
         self::$em->persist($satisfaction);
     }

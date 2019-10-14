@@ -4,8 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Service\Stats\StatsQueryParameters;
 use AppBundle\Service\Stats\QueryFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,8 +21,7 @@ class StatsController extends RestController
     }
 
     /**
-     * @Route("/stats")
-     * @Method({"GET"})
+     * @Route("/stats", methods={"GET"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function getMetric(Request $request)

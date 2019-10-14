@@ -8,8 +8,7 @@ use AppBundle\Entity\Report\Report;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,8 +34,7 @@ class ReportController extends RestController
      * Currently only used by Lay deputy during registration steps
      * Pa report are instead created via OrgService::createReport()
      *
-     * @Route("")
-     * @Method({"POST"})
+     * @Route("", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -66,8 +64,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY') or has_role('ROLE_CASE_MANAGER')")
      *
      * @param int $id
@@ -95,8 +92,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}/submit", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}/submit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function submit(Request $request, $id)
@@ -133,8 +129,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function update(Request $request, $id)
@@ -467,8 +462,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}/unsubmit", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}/unsubmit", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function unsubmit(Request $request, $id)
@@ -539,9 +533,7 @@ class ReportController extends RestController
     /**
      * Get list of reports, currently only for PA users
      *
-     *
-     * @Route("/get-all")
-     * @Method({"GET"})
+     * @Route("/get-all", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getAll(Request $request)
@@ -630,8 +622,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @Route("/{id}/submit-documents", requirements={"id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{id}/submit-documents", requirements={"id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function submitDocuments(Request $request, $id)
@@ -653,8 +644,7 @@ class ReportController extends RestController
     /**
      * Add a checklist for the report
      *
-     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
-     * @Method({"POST"})
+     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function insertChecklist(Request $request, $report_id)
@@ -686,8 +676,7 @@ class ReportController extends RestController
     /**
      * Update a checklist for the report
      *
-     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/{report_id}/checked", requirements={"report_id":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_CASE_MANAGER')")
      */
     public function updateChecklist(Request $request, $report_id)

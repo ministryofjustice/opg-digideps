@@ -6,7 +6,8 @@
 {% trans_default_domain translationDomain %}
 
 {% block htmlTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block pageTitle %}{% endblock %}
+{% block pageTitle %}{{ 'heading.title' | trans }}{% endblock %}
+{% block supportTitleBottom %}{{ client.fullname }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
@@ -16,13 +17,13 @@
         {% include 'AppBundle:Ndr/Ndr:_header.html.twig' %}
     {% endblock %}
 
-    <div class="grid-row">
-        <div class="column-one-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <ul>
                 {% if ndr.getSubmitted %}
                     <li>
                         Submitted:
-                        <span class="bold-small">{{ ndr.submitDate | date("j F Y") }}</span>
+                        <strong>{{ ndr.submitDate | date("j F Y") }}</strong>
 
                         <p class="flush--bottom">
                             <a href="{{ path('ndr_pdf', {'ndrId': ndr.id}) }}" class="push-half--right">{{ 'status.downloadACopy' | trans({}, 'ndr-submitted') }}</a>
@@ -31,7 +32,7 @@
                     </li>
                 {% else %}
                     <li>Report status:
-                        <span class="bold-small">{{ ('status.' ~ ndrStatus.status) | trans() }}</span>
+                        <strong>{{ ('status.' ~ ndrStatus.status) | trans() }}</strong>
                     </li>
                 {% endif %}
             </ul>
@@ -47,7 +48,7 @@
 
     <ul id="overview-sections" class="push--bottom">
 
-        <li id="visits-and-actions">
+        <li>
             <h2 class="opg-overview-section__divider">Health and welfare</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -61,7 +62,7 @@
         </li>
 
 
-        <li id="finances-and-assets">
+        <li>
             <h2 class="opg-overview-section__divider">{{ client.firstname }}'s property and finances</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -110,7 +111,7 @@
             } %}
         </li>
 
-        <li id="visits-and-actions">
+        <li>
             <h2 class="opg-overview-section__divider">Other information</h2>
             {% include 'AppBundle:Ndr/Ndr:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -138,11 +139,11 @@
         <div class="push--top">
             {{ macros.notification('info', 'previewNotice' | trans()) }}
         </div>
-        <a id="edit-report-preview" class="button left" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'options.previewReport' | trans() }}</a>
+        <a id="edit-report-preview" class="govuk-button" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
 
     {% else %}
 
-        <a id="edit-report-review" class="button push--top" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+        <a id="edit-report-review" class="govuk-button push--top" href="{{ path('ndr_review', {'ndrId': ndr.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
 
     {% endif %}
 
