@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ class ExpenseController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_DEPUTY_EXPENSES];
 
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $reportId, $expenseId)
@@ -34,8 +32,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/expense", requirements={"reportId":"\d+"})
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/expense", requirements={"reportId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function add(Request $request, $reportId)
@@ -62,8 +59,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function edit(Request $request, $reportId, $expenseId)
@@ -86,8 +82,7 @@ class ExpenseController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"})
-     * @Method({"DELETE"})
+     * @Route("/report/{reportId}/expense/{expenseId}", requirements={"reportId":"\d+", "expenseId":"\d+"}, methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function delete($reportId, $expenseId)

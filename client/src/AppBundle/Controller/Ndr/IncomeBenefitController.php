@@ -7,7 +7,7 @@ use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\NdrStatusService;
 use AppBundle\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 

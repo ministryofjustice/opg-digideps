@@ -5,8 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,8 +17,7 @@ class ContactController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_CONTACTS];
 
     /**
-     * @Route("/contact/{id}")
-     * @Method({"GET"})
+     * @Route("/contact/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
@@ -35,8 +33,7 @@ class ContactController extends RestController
     }
 
     /**
-     * @Route("/contact/{id}")
-     * @Method({"DELETE"})
+     * @Route("/contact/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteContact($id)
@@ -55,8 +52,7 @@ class ContactController extends RestController
     }
 
     /**
-     * @Route("/contact")
-     * @Method({"POST", "PUT"})
+     * @Route("/contact", methods={"POST", "PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      **/
     public function upsertContact(Request $request)
@@ -113,8 +109,7 @@ class ContactController extends RestController
     }
 
     /**
-     * @Route("/{id}/contacts")
-     * @Method({"GET"})
+     * @Route("/{id}/contacts", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getContacts($id)

@@ -227,12 +227,15 @@ class MailFactory
      *
      * @return ModelDir\Email
      */
-    public function createFeedbackEmail($response, EntityDir\User $user)
+    public function createFeedbackEmail($response, EntityDir\User $user = null)
     {
         $viewParams = [
-            'response' => $response,
-            'userRole' => $user->getRoleFullName()
+            'response' => $response
         ];
+
+        if ($user) {
+            $viewParams['userRole'] = $user->getRoleFullName();
+        }
 
         $email = new ModelDir\Email();
         $email

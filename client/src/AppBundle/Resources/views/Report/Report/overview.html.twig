@@ -10,7 +10,8 @@
 {% set reportStatus = report.status %}
 {# TODO REPLACE those two using report.hasSection() #}
 {% block htmlTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
-{% block pageTitle %}{% endblock %}
+{% block pageTitle %}{{ report.period }} {{ 'report.header.report' | trans({}, 'report-common') }}{% endblock %}
+{% block supportTitleBottom %}{{ report.client.fullname }}{% endblock %}
 
 {% block breadcrumbs %}{{ macros.homepage }}{% endblock %}
 
@@ -19,17 +20,17 @@
         {% include 'AppBundle:Report/Report:_header.html.twig' %}
     {% endblock %}
 
-    <div class="grid-row">
-        <div class="column-one-half">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
             <ul>
                 <li>{{ 'reportingPeriod' | trans() }}:
-                    <span class="bold-small">{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</span>
+                    <strong>{{ report.startDate | date("j F Y") }} to {{ report.endDate | date("j F Y") }}</strong>
                 </li>
                 <li class="{{ report.unSubmitDate ? 'orangeWarning' : '' }}">{{ 'dueDate' | trans() }}:
-                    <span class="bold-small">{{ report.dueDate | date("j F Y") }}</span>
+                    <strong>{{ report.dueDate | date("j F Y") }}</strong>
                 </li>
                 <li>Report status:
-                    <span class="bold-small">{{ ('status.' ~ reportStatus.status) | trans() }}</span>
+                    <strong>{{ ('status.' ~ reportStatus.status) | trans() }}</strong>
                 </li>
             </ul>
         </div>
@@ -49,7 +50,7 @@
 
     <ul id="overview-sections" class="push--bottom">
 
-        <li id="planning-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.decisionsContacts' | trans() }}</h2>
             {% if report.hasSection('decisions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -76,7 +77,7 @@
             {% endif %}
         </li>
 
-        <li id="welfare-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.healthAndWelfare' | trans(transOptions) }}</h2>
             {% if report.hasSection('visitsCare') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -102,7 +103,7 @@
             {% endif %}
         </li>
         {% if report.hasSection('deputyExpenses') or report.hasSection('bankAccounts') %}
-            <li id="finances-section">
+            <li>
                 <h2 class="opg-overview-section__divider">{{ 'heading.propFinance' | trans(transOptions) }}</h2>
 
                 {% if report.hasSection('bankAccounts') %}
@@ -246,7 +247,7 @@
         {% endif %}
 
 
-        <li id="report-submit-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.other' | trans() }}</h2>
             {% if report.hasSection('actions') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -272,7 +273,7 @@
                 } %}
             {% endif %}
 
-        <li id="report-submit-section">
+        <li>
             <h2 class="opg-overview-section__divider">{{ 'heading.caseDocuments' | trans() }}</h2>
             {% if report.hasSection('documents') %}
                 {% include 'AppBundle:Report/Report:_subsection.html.twig' with {
@@ -304,11 +305,11 @@
             <div class="push--top">
                 {{ macros.notification('info', 'previewNotice' | trans()) }}
             </div>
-            <a id="edit-report-preview" class="button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'options.previewReport' | trans() }}</a>
+            <a id="edit-report-preview" class="govuk-button behat-link-edit-report-preview" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'options.previewReport' | trans() }}</a>
 
         {% else %}
 
-            <a id="edit-report-review" class="button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'continue' | trans({}, 'common') }}</a>
+            <a id="edit-report-review" class="govuk-button push--top behat-link-edit-report-review" href="{{ path('report_review', {'reportId': report.id}) }}" data-module="govuk-button">{{ 'continue' | trans({}, 'common') }}</a>
 
         {% endif %}
 

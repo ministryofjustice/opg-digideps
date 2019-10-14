@@ -5,8 +5,7 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report as Report;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,8 +14,7 @@ class AccountController extends RestController
     private $sectionIds = [Report::SECTION_BANK_ACCOUNTS];
 
     /**
-     * @Route("/report/{reportId}/account")
-     * @Method({"POST"})
+     * @Route("/report/{reportId}/account", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAccountAction(Request $request, $reportId)
@@ -42,8 +40,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/report/account/{id}")
-     * @Method({"GET"})
+     * @Route("/report/account/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function getOneById(Request $request, $id)
@@ -59,8 +56,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/account/{id}")
-     * @Method({"PUT"})
+     * @Route("/account/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function editAccountAction(Request $request, $id)
@@ -85,8 +81,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/account/{id}/dependent-records")
-     * @Method({"GET"})
+     * @Route("/account/{id}/dependent-records", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function accountDependentRecords($id)
@@ -130,8 +125,7 @@ class AccountController extends RestController
     }
 
     /**
-     * @Route("/account/{id}")
-     * @Method({"DELETE"})
+     * @Route("/account/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function accountDelete($id)

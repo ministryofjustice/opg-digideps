@@ -10,11 +10,9 @@ use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
 use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
 use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
-use AppBundle\Service\File\Scanner\FileCheckerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends AbstractController

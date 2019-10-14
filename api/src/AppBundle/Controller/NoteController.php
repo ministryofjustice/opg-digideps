@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class NoteController extends RestController
 {
     /**
-     * @Route("{clientId}", requirements={"clientId":"\d+"})
-     * @Method({"POST"})
+     * @Route("{clientId}", requirements={"clientId":"\d+"}, methods={"POST"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function add(Request $request, $clientId)
@@ -42,8 +40,7 @@ class NoteController extends RestController
      * User that created the note is not returned as default, as not currently needed from the CLIENT.
      * Add "user" group if needed
      *
-     * @Route("{id}")
-     * @Method({"GET"})
+     * @Route("{id}", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getOneById(Request $request, $id)
@@ -62,8 +59,7 @@ class NoteController extends RestController
      * Update note
      * Only the creator can update the note
      *
-     * @Route("{id}")
-     * @Method({"PUT"})
+     * @Route("{id}", methods={"PUT"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function updateNote(Request $request, $id)
@@ -90,8 +86,7 @@ class NoteController extends RestController
     /**
      * Delete note.
      *
-     * @Method({"DELETE"})
-     * @Route("{id}")
+     * @Route("{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG')")
      *
      * @param int $id
