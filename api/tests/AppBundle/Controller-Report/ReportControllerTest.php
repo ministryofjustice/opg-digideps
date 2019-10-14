@@ -483,55 +483,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('no', $data['has_debts']);
     }
 
-    public function testGetAll()
-    {
-        /*
-         * This test needs to come before the next test (testPaFeesEditResetAndTotals) as the clients order is altered
-         * and causing this test to fail at line 473
-         */
-        $reportsGetAllRequest = function (array $params) {
-            $url = '/report/get-all?' . http_build_query($params);
-
-            return $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken'   => self::$tokenPa,
-            ])['data'];
-        };
-
-        // assert get
-        $ret = $reportsGetAllRequest(['sort'=>'end_date']);
-
-        //assert results
-        $this->assertCount(3, $ret['reports']);
-        $this->assertEquals('102', $ret['reports'][0]['type']);
-        $this->assertEquals('pa1Client1', $ret['reports'][0]['client']['firstname']);
-        $this->assertArrayHasKey('status', $ret['reports'][0]['status']);
-
-        //test pagination
-        $reportsPaginated = $reportsGetAllRequest([
-            'offset' => 1,
-            'limit'  => '1',
-        ]);
-        $this->assertCount(1, $reportsPaginated['reports']);
-        $this->assertEquals($reportsPaginated['reports'][0]['id'], $ret['reports'][1]['id']);
-
-        //test status
-        $reportsNotStarted = $reportsGetAllRequest([
-            'status' => 'notStarted',
-        ]);
-        $this->assertCount(3, $reportsNotStarted['reports']);
-        $reportsFilteredReadyToSubmit = $reportsGetAllRequest([
-            'status' => 'readyToSubmit',
-        ]);
-        $this->assertCount(0, $reportsFilteredReadyToSubmit['reports']);
-
-        // test search
-        $reportsSearched = $reportsGetAllRequest([
-            'q' => 'pa1Client3',
-        ]);
-        $this->assertCount(1, $reportsSearched['reports']);
-    }
-
     public function testPaFeesEditResetAndTotals()
     {
         $reportId = self::$pa1Client1Report1->getId();
@@ -679,24 +630,6 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals('care_fees', $data['money_short_categories_out'][8]['type_id']);
         $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
-    }
-
-    public function testGetAllAuth()
-    {
-        $url = '/report/get-all';
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
-    }
-
-    public function testGetAllAcl()
-    {
-        $url = '/report/get-all';
-
-        $this->assertEndpointNotAllowedFor('GET', '/report/get-all', self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
-        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPa);
-        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaAdmin);
-        $this->assertEndpointAllowedFor('GET', $url, self::$tokenPaTeamMember);
     }
 
     public function testAddChecklistWithSaveProgress()
