@@ -48,7 +48,7 @@ class OrganisationMemberType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'org-organisation',
             'data_class'         => User::class,
-            'validation_groups'  => ['email_same_domain'],
+            'validation_groups'  => ['org_team_add', 'email_same_domain'],
             'targetUser'         => null
         ]);
     }

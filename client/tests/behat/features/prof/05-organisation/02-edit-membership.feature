@@ -1,13 +1,16 @@
 Feature: Users can edit members of their organisation
 
-  @prof
+  @prof @shaun
   Scenario: Org domains: Users can add existing users to their organisation
     Given the organisation "publicguardian.gov.uk" is active
     And "behat-prof-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
     When I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to "/org/settings/organisation"
     And I follow "Add user"
-    And I fill in "organisation_member_email" with "behat-prof-team-member@publicguardian.gov.uk"
+    When I fill in the following:
+      | organisation_member_firstname | Yvonne                          |
+      | organisation_member_lastname  | Lacasse                         |
+      | organisation_member_email     | behat-prof-team-member@publicguardian.gov.uk |
     And I press "Save"
     Then the URL should match "/org/settings/organisation/\d+"
     And I should see "Professional Team Member"

@@ -76,39 +76,32 @@ class OrganisationController extends AbstractController
 
         $form->handleRequest($request);
 
-        // If the email belong to a prof user, just add the user to the team
-        if ($form->isSubmitted()) {
-            $email = $form->getData()->getEmail();
-            try {
-                $user = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
-
-                if ($user->getId()) {
-                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
-                    return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
-                }
-            } catch (\Throwable $e) {
-
-            }
-        }
-
         if ($form->isValid()) {
-            /** @var $user EntityDir\User */
-            $user = $form->getData();
-
-            if ($this->isGranted(EntityDir\User::ROLE_PA)) {
-                $user->setRoleName(EntityDir\User::ROLE_PA_ADMIN);
-            }
-
-            if ($this->isGranted(EntityDir\User::ROLE_PROF)) {
-                $user->setRoleName(EntityDir\User::ROLE_PROF_ADMIN);
-            }
 
             try {
-                $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
-                $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                $email = $form->getData()->getEmail();
+                $existingUser = $this->getRestClient()->get('user/get-team-names-by-email/' . $email, 'User');
 
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, ['text', 'html']);
+                if ($existingUser->getId()) {
+                    // existing users just get added to tthe organisation
+                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $existingUser->getId(), '');
+                } else {
+                    /** @var $user EntityDir\User */
+                    $user = $form->getData();
+                    if ($this->isGranted(EntityDir\User::ROLE_PA)) {
+                        $user->setRoleName(EntityDir\User::ROLE_PA_ADMIN);
+                    }
+
+                    if ($this->isGranted(EntityDir\User::ROLE_PROF)) {
+                        $user->setRoleName(EntityDir\User::ROLE_PROF_ADMIN);
+                    }
+                    $user = $this->getRestClient()->post('user', $user, ['org_team_add'], 'User');
+                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                    $this->getMailSender()->send($activationEmail, ['text', 'html']);
+
+                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId() . '/user/' . $user->getId(), '');
+                }
+
 
                 return $this->redirectToRoute('org_organisation_view', ['id' => $organisation->getId()]);
             } catch (\Throwable $e) {
