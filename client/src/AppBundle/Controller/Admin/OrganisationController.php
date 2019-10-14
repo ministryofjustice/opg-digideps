@@ -139,7 +139,7 @@ class OrganisationController extends AbstractController
                 ['label' => 'deletePage.summary.emailIdentifier', 'value' => $organisation->getEmailIdentifierDisplay()],
                 [
                     'label' => 'deletePage.summary.active.label',
-                    'value' => 'deletePage.summary.active.' . ($organisation->getIsActivated() ? 'yes' : 'no'),
+                    'value' => 'deletePage.summary.active.' . ($organisation->isActivated() ? 'yes' : 'no'),
                     'format' => 'translate',
                 ],
             ],

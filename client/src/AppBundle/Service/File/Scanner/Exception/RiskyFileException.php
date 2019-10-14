@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\File\Checker\Exception;
+namespace AppBundle\Service\File\Scanner\Exception;
 
 class RiskyFileException extends \RuntimeException
 {
