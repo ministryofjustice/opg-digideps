@@ -48,6 +48,12 @@ addUserForm:
     label: Role
     hint: ""
     defaultOption: Please select ...
+    options:
+      ROLE_ADMIN: OPG Admin
+      ROLE_CASE_MANAGER: Case manager
+      ROLE_LAY_DEPUTY: Lay Deputy
+      ROLE_PA_NAMED: Public Authority (named)
+      ROLE_PROF_NAMED: Professional Deputy (named)
   roleNameDeputy:
     label: Role
   roleNameStaff:

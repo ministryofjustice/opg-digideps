@@ -14,6 +14,9 @@ class AddUserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $deputyRoles = [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED];
+        $staffRoles = [User::ROLE_ADMIN, User::ROLE_CASE_MANAGER];
+
         $builder->add('email', FormTypes\TextType::class)
             ->add('firstname', FormTypes\TextType::class)
             ->add('lastname', FormTypes\TextType::class)
@@ -28,30 +31,29 @@ class AddUserType extends AbstractType
             ])
             ->add('roleName', FormTypes\HiddenType::class)
             ->add('roleNameDeputy', FormTypes\ChoiceType::class, [
-                'choices' => [
-                    'Lay Deputy' => User::ROLE_LAY_DEPUTY,
-                    'Public Authority (named)' => User::ROLE_PA_NAMED,
-                    'Professional Deputy (named)' => User::ROLE_PROF_NAMED,
-                ],
-                'placeholder' => 'Please select...',
+                'choices' => $deputyRoles,
+                'choice_label' => function($choice) {
+                    return 'addUserForm.roleName.options.' . $choice;
+                },
+                'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
             ])
             ->add('roleNameStaff', FormTypes\ChoiceType::class, [
-                'choices' => [
-                    'OPG Admin' => User::ROLE_ADMIN,
-                    'Case manager' => User::ROLE_CASE_MANAGER,
-                ],
-                'placeholder' => 'Please select...',
+                'choices' => $staffRoles,
+                'choice_label' => function($choice) {
+                    return 'addUserForm.roleName.options.' . $choice;
+                },
+                'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
             ])
             ->add('ndrEnabled', FormTypes\CheckboxType::class)
             ->add('save', FormTypes\SubmitType::class);
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($staffRoles) {
             $user = $event->getData();
             $form = $event->getForm();
 
-            if ($user->getRoleName() === User::ROLE_ADMIN || $user->getRoleName() === User::ROLE_CASE_MANAGER) {
+            if (in_array($user->getRoleName(), $staffRoles) || $user->getRoleName() === User::ROLE_AD) {
                 $form->get('roleType')->setData('staff');
                 $form->get('roleNameStaff')->setData($user->getRoleName());
             } else {
