@@ -172,30 +172,30 @@ Feature: PA cannot access other's PA's reports and clients
     Then I go to the URL previously saved as "client-40000042-edit"
     And the response status code should be 500
 
-  Scenario: Admin adds PA org 2 deputy to PA Org 1 but org 1 does not get PA org 2's clients
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    When I go to admin page "/admin/organisations"
-    And I follow "behat-pa-org1@pa-org1.gov.uk"
-    And I follow "Add someone to this organisation"
-    And I fill in "organisation_add_user_email" with "behat-pa-org2@pa-org2.gov.uk"
-    And I press "Find user"
-    And I press "Add user to organisation"
-    # Check org shows org 1's client but does not show org 2's own client
-    And I should see the "org-40000041" region
-    And I should not see the "org-40000042" region
+#  Scenario: Admin adds PA org 2 deputy to PA Org 1 but org 1 does not get PA org 2's clients
+#    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+#    When I go to admin page "/admin/organisations"
+#    And I follow "behat-pa-org1@pa-org1.gov.uk"
+#    And I follow "Add someone to this organisation"
+#    And I fill in "organisation_add_user_email" with "behat-pa-org2@pa-org2.gov.uk"
+#    And I press "Find user"
+#    And I press "Add user to organisation"
+#    # Check org shows org 1's client but does not show org 2's own client
+#    And I should see the "org-40000041" region
+#    And I should not see the "org-40000042" region
 
-  Scenario: PA org 1 deputy logs in and should still only access their own client (from existing team structure)
-    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
-    Then I should see the "client-40000041" region
-    And I should not see the "client-40000042" region
-    Then I go to the report URL "overview" for "40000041-report"
-    And the response status code should be 200
-    Then I go to the URL previously saved as "client-40000041-edit"
-    And the response status code should be 200
-    Then I go to the report URL "overview" for "40000042-report"
-    And the response status code should be 500
-    Then I go to the URL previously saved as "client-40000042-edit"
-    And the response status code should be 500
+#  Scenario: PA org 1 deputy logs in and should still only access their own client (from existing team structure)
+#    Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
+#    Then I should see the "client-40000041" region
+#    And I should not see the "client-40000042" region
+#    Then I go to the report URL "overview" for "40000041-report"
+#    And the response status code should be 200
+#    Then I go to the URL previously saved as "client-40000041-edit"
+#    And the response status code should be 200
+#    Then I go to the report URL "overview" for "40000042-report"
+#    And the response status code should be 500
+#    Then I go to the URL previously saved as "client-40000042-edit"
+#    And the response status code should be 500
 
   Scenario: PA org 1 is activated
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"

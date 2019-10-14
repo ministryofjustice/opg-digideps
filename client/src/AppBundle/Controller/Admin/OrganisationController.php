@@ -167,30 +167,30 @@ class OrganisationController extends AbstractController
                 $atPosition = strpos($email, '@');
                 $domain = substr($email, $atPosition + 1);
 
+                $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
+
+                if (!$user->isDeputyOrg()) {
+                    $errors[] = 'form.email.notOrgUserError';
+                }
+
+                if ($organisation->hasUser($user)) {
+                    $errors[] = 'form.email.alreadyInOrgError';
+                }
+
                 // allow one org user who matches the exact email address for public domains
                 if ($organisation->getIsPublicDomain()) {
                     // public domains allow 1 only and email must match email Identifier
                     if (count($organisation->getUsers()) > 0 || $email !== $organisation->getEmailIdentifier()) {
                         $errors[] = 'form.email.emailInPublicDomainError';
                     }
+
                 } else {
-                    // organisation domains emails mustt match org domain
+                    // organisation domains emails must match org domain
                     if ($organisation->getEmailIdentifier() !== $domain) {
                         $errors[] = 'form.email.notOrgEmailError';
                     }
                 }
 
-                if (empty($errors)) {
-                    $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
-
-                    if (!$user->isDeputyOrg()) {
-                        $errors[] = 'form.email.notOrgUserError';
-                    }
-
-                    if ($organisation->hasUser($user)) {
-                        $errors[] = 'form.email.alreadyInOrgError';
-                    }
-                }
             } catch (RestClientException $e) {
                 $errors[] = 'form.email.notFoundError';
             }
