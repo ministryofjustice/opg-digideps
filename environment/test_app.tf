@@ -157,7 +157,7 @@ EOF
 
   test_integration_container = <<EOF
   {
-    "name": "test_front",
+    "name": "test_integration",
     "image": "${local.images.test}",
     "logConfiguration": {
       "logDriver": "awslogs",
