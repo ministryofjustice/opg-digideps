@@ -1,8 +1,9 @@
 <?php
 
-namespace AppBundle\Service\File\Checker;
+namespace AppBundle\Service\File\Scanner;
 
 use AppBundle\Service\File\Types\UploadableFileInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * ClamAV responses for known files, based on file hash
@@ -70,12 +71,12 @@ class ClamAVMocks
     /**
      * Returns cache response if there is one. Null otherwise
      *
-     * @param  UploadableFileInterface $file
+     * @param UploadedFile $file
      * @return mixed
      */
-    public static function getCachedResponse(UploadableFileInterface $file)
+    public static function getCachedResponse(UploadedFile $file)
     {
-        $uploadedFileHash = hash_file('md5', $file->getUploadedFile()->getPathName());
+        $uploadedFileHash = hash_file('md5', $file->getPathName());
         if (isset(self::$fileHashToResponse[$uploadedFileHash])) {
             return self::$fileHashToResponse[$uploadedFileHash];
         }

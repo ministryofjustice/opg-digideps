@@ -1,11 +1,9 @@
 <?php
 
-namespace AppBundle\Service\File\Checker;
+namespace AppBundle\Service\File\Scanner;
 
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
-use AppBundle\Service\File\Types\Pdf;
-use AppBundle\Service\File\Types\UploadableFileInterface;
+use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
+use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response as GuzzlePsr7Response;
 use Monolog\Logger;
@@ -13,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class ClamAVChecker implements FileCheckerInterface
+class FileScanner
 {
     /**
      * @var ClientInterface
@@ -26,50 +24,36 @@ class ClamAVChecker implements FileCheckerInterface
     private $logger;
 
     /**
-     * @var array
+     * @var ScannerEndpointResolver
      */
-    private $options;
+    private $endpointResolver;
 
     /**
-     * ClamAVChecker constructor.
      * @param ClientInterface $client
      * @param LoggerInterface $logger
-     * @param array           $options
+     * @param ScannerEndpointResolver $endpointResolver
      */
-    public function __construct(ClientInterface $client, LoggerInterface $logger, array $options = [])
+    public function __construct(ClientInterface $client, LoggerInterface $logger, ScannerEndpointResolver $endpointResolver)
     {
-        /** @var GuzzleHttp\Client client */
         $this->client = $client;
         $this->logger = $logger;
-        $this->options = [];
+        $this->endpointResolver = $endpointResolver;
     }
 
     /**
      *
      * Checks file for viruses using ClamAv
      *
-     * @param UploadableFileInterface $uploadedFile
-     *
-     * @throws RuntimeException in case the result is not PASS
-     *
+     * @param UploadedFile $file
      * @return bool
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function checkFile(UploadableFileInterface $file)
+    public function scanFile(UploadedFile $file)
     {
-        // POST body to clamAV
         $response = $this->getScanResults($file);
-
-        $file->setScanResult($response);
-
         $isResultPass = strtoupper(trim($response['file_scanner_result'])) === 'PASS';
 
-        // log results
-        $level = $isResultPass ? Logger::INFO : Logger::ERROR;
-        $this->log($level, 'File scan result', $file->getUploadedFile(), $response);
-
-        if ($file instanceof Pdf && !$isResultPass) { // @shaun STILL NEEDED ? wouldn't this case go in the next "switch"
-            throw new RiskyFileException('PDF file scan failed');
-        }
+        $this->logScanResult($file, $isResultPass, $response);
 
         if ($isResultPass) {
             return true;
@@ -81,18 +65,19 @@ class ClamAVChecker implements FileCheckerInterface
             case 'PDF_INVALID_FILE':
             case 'PDF_BAD_KEYWORD':
                 throw new RiskyFileException();
+            default:
+                throw new RuntimeException('Files scanner FAIL. Unrecognised code. Full response: ' . print_r($response));
         }
-
-        throw new RuntimeException('Files scanner FAIL. Unrecognised code. Full response: ' . print_r($response));
     }
 
     /**
      * POSTS the file body to file scanner, and continually polls until result is returned.
      *
-     * @param  UploadableFileInterface $uploadedFile
+     * @param UploadedFile $file
      * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function getScanResults(UploadableFileInterface $file)
+    private function getScanResults(UploadedFile $file)
     {
         // avoid contacting ClamAV for files with already-known asnwer
         if ($cachedResponse = ClamAVMocks::getCachedResponse($file)) {
@@ -135,15 +120,17 @@ class ClamAVChecker implements FileCheckerInterface
     /**
      * Send file to File Scanner
      *
-     * @param UploadableFileInterface $file
+     * @param UploadedFile $file
      *
      * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function makeScannerRequest(UploadableFileInterface $file)
+    private function makeScannerRequest(UploadedFile $file)
     {
-        $fullFilePath = $file->getUploadedFile()->getPathName();
+        $fullFilePath = $file->getPathName();
 
-        $response = $this->client->request('POST', $file->getScannerEndpoint(), [
+        $scannerEndpoint = $this->endpointResolver->resolve($file);
+        $response = $this->client->request('POST', $scannerEndpoint, [
             'multipart' => [
                [
                    'name'=> 'file',
@@ -195,12 +182,22 @@ class ClamAVChecker implements FileCheckerInterface
         if ($response) {
             $extra += [
             'file_scanner_code' => $response['file_scanner_code'],
-            'file_scanner_result' => $response['file_scanner_result'], //could be omitted
-            'file_scanner_message' => $response['file_scanner_message'],
+            'file_scanner_result' => $response['file_scanner_result'],
             'file_scanner_message' => $response['file_scanner_message']
             ];
         }
 
         $this->logger->log($level, $message, ['extra' => $extra]);
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param bool $isResultPass
+     * @param array $response
+     */
+    private function logScanResult(UploadedFile $file, bool $isResultPass, array $response): void
+    {
+        $level = $isResultPass ? Logger::INFO : Logger::ERROR;
+        $this->log($level, 'File scan result', $file, $response);
     }
 }

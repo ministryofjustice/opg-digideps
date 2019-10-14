@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle\Service\File\Checker;
+namespace AppBundle\Service\File\Scanner;
 
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
+use AppBundle\Service\File\Scanner\Exception\RiskyFileException;
+use AppBundle\Service\File\Scanner\Exception\VirusFoundException;
 use AppBundle\Service\File\Types\Pdf;
 use AppBundle\Service\File\Types\UploadableFileInterface;
 use GuzzleHttp\ClientInterface;
@@ -16,14 +16,14 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class ClamAVCheckerTest
+ * Class FileScannerTest
  *
- * @package AppBundle\Service\File\Checker
+ * @package AppBundle\Service\File\Scanner
  */
-class ClamAVCheckerTest extends MockeryTestCase
+class FileScannerTest extends MockeryTestCase
 {
     /**
-     * @var ClamAVChecker
+     * @var FileScanner
      */
     private $sut;
 
@@ -52,7 +52,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $mockLogger = $this->getMockLogger();
 
-        $this->sut = new ClamAVChecker($mockHttpClient, $mockLogger);
+        $this->sut = new FileScanner($mockHttpClient, $mockLogger);
 
         $mockPostFile = m::mock(UploadableFileInterface::class);
 
@@ -84,7 +84,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $mockLogger = $this->getMockLogger();
 
-        $this->sut = new ClamAVChecker($mockHttpClient, $mockLogger);
+        $this->sut = new FileScanner($mockHttpClient, $mockLogger);
 
         $file = $this->generateFileByType(Pdf::class);
 
@@ -118,7 +118,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $mockLogger = $this->getMockLogger();
 
-        $this->sut = new ClamAVChecker($mockHttpClient, $mockLogger);
+        $this->sut = new FileScanner($mockHttpClient, $mockLogger);
 
         $mockPostFile = m::mock(UploadableFileInterface::class);
 
@@ -158,7 +158,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $mockLogger = $this->getMockLogger();
 
-        $this->sut = new ClamAVChecker($mockHttpClient, $mockLogger);
+        $this->sut = new FileScanner($mockHttpClient, $mockLogger);
 
         $mockPostFile = m::mock(UploadableFileInterface::class);
 
@@ -198,7 +198,7 @@ class ClamAVCheckerTest extends MockeryTestCase
 
         $mockLogger = $this->getMockLogger();
 
-        $this->sut = new ClamAVChecker($mockHttpClient, $mockLogger);
+        $this->sut = new FileScanner($mockHttpClient, $mockLogger);
 
         $mockPostFile = m::mock(UploadableFileInterface::class);
 
