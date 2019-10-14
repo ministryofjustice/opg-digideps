@@ -104,9 +104,8 @@ class UserService
      */
     private function throwExceptionIfUserChangesRoleType(User $originalUser, User $updatedUser)
     {
-        $adminRoles = [User::ROLE_ADMIN, User::ROLE_CASE_MANAGER];
-        $adminBefore = in_array($originalUser->getRoleName(), $adminRoles);
-        $adminAfter  = in_array($updatedUser->getRoleName(), $adminRoles);
+        $adminBefore = in_array($originalUser->getRoleName(), User::$adminRoles);
+        $adminAfter  = in_array($updatedUser->getRoleName(), User::$adminRoles);
 
         if ($adminAfter !== $adminBefore) {
             throw new \RuntimeException('Cannot change realm of user\'s role', 425);
