@@ -126,8 +126,8 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if filters.q and reports |length == 0 %}
-        <p>{{ 'sorryNoResultsFor' | trans({}, 'common') }} "<strong class="bold">{{ filters.q }}</strong>"</p>
+    {% if reports |length == 0 %}
+        <p>{{ 'sorryNoResultsFor' | trans({}, 'common') }}</p>
         <hr>
     {% endif %}
 

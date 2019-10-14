@@ -1,5 +1,6 @@
 Feature: Add PROF users and activate PROF user (journey)
 
+  @prof
   Scenario: add PROF users
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -102,6 +103,69 @@ Feature: Add PROF users and activate PROF user (journey)
     Then the form should be valid
     # check I'm in the dashboard
     And I should see the "client-03000001" region
+    
+  Scenario: Register PROF4 user
+    Given emails are sent from "admin" area
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "send-activation-email" in the "user-behat-prof-org-1org-1couk" region
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    When I click on "save"
+    Then the form should be valid
+    And I fill in the following:
+      | user_details_firstname  | Prof User   |
+      | user_details_lastname   | Three       |
+      | user_details_jobTitle   | Solicitor   |
+      | user_details_phoneMain  | 30000000001 |
+    And I press "user_details_save"
+    Then the form should be valid
+
+  Scenario: Register PROF5 user
+    Given emails are sent from "admin" area
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    When I click on "save"
+    Then the form should be valid
+    And I fill in the following:
+      | user_details_firstname  | Prof User   |
+      | user_details_lastname   | Three       |
+      | user_details_jobTitle   | Solicitor   |
+      | user_details_phoneMain  | 30000000001 |
+    And I press "user_details_save"
+    Then the form should be valid
+
+  Scenario: Register PROF6 user
+    Given emails are sent from "admin" area
+    And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
+    And I go to "/logout"
+    And I open the "/user/activate/" link from the email
+    When I check "agree_terms_agreeTermsUse"
+    And I press "agree_terms_save"
+    Then the form should be valid
+    When I fill in the password fields with "Abcd1234"
+    And I check "set_password_showTermsAndConditions"
+    When I click on "save"
+    Then the form should be valid
+    And I fill in the following:
+      | user_details_firstname  | Prof User   |
+      | user_details_lastname   | Three       |
+      | user_details_jobTitle   | Solicitor   |
+      | user_details_phoneMain  | 30000000001 |
+    And I press "user_details_save"
+    Then the form should be valid
 
   Scenario: Edit PROF2 user
     Given I save the application status into "prof-users-uploaded"

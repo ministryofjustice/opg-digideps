@@ -5,9 +5,11 @@ namespace AppBundle\Controller\Report;
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Entity\Report\Report;
+use AppBundle\Entity\Repository\ReportRepository;
 use AppBundle\Service\ReportService;
 use AppBundle\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\ORM\AbstractQuery;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +23,22 @@ class ReportController extends RestController
     /** @var array */
     private $updateHandlers;
 
+    /** @var EntityDir\Repository\ReportRepository */
+    private $repository;
+
+    /** @var ReportService */
+    private $reportService;
+
     /**
      * @param array $updateHandlers
+     * @param EntityDir\Repository\ReportRepository $repository
+     * @param ReportService $reportService
      */
-    public function __construct(array $updateHandlers)
+    public function __construct(array $updateHandlers, EntityDir\Repository\ReportRepository $repository, ReportService $reportService)
     {
         $this->updateHandlers = $updateHandlers;
+        $this->repository = $repository;
+        $this->reportService = $reportService;
     }
 
     /**
@@ -531,94 +543,119 @@ class ReportController extends RestController
     }
 
     /**
-     * Get list of reports, currently only for PA users
-     *
-     * @Route("/get-all", methods={"GET"})
+     * @Route("/get-all-by-user", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getAll(Request $request)
+    public function getAllByUser(Request $request)
     {
-        /* @var $rs ReportService */
-        $rs = $this->get('opg_digideps.report_service');
-        /**
-         * @var $repo EntityDir\Repository\ReportRepository
-         */
-        $repo = $this->get('em')->getRepository(Report::class);
+        return $this->getReponseByDeterminant($request, $this->getUser()->getId(), ReportRepository::USER_DETERMINANT);
+    }
 
-        $userId = $this->getUser()->getId(); //  take the PA user. Extend/remove when/if needed
-        $offset = $request->get('offset');
-        $q = $request->get('q');
-        $status = $request->get('status');
-        $limit = $request->get('limit', 15);
-        $sort = $request->get('sort');
-        $sortDirection = $request->get('sort_direction');
-        $exclude_submitted = $request->get('exclude_submitted');
+    /**
+     * @Route("/get-all-by-org", methods={"GET"})
+     * @Security("has_role('ROLE_ORG')")
+     *
+     * @param Request $request
+     * @return array
+     * @throws \Exception
+     */
+    public function getAllByOrg(Request $request)
+    {
+        $organisation = $this->getUser()->getOrganisations()->first();
 
-        // Calculate missing report statuses. Needed for the following code
-        $this->updateReportStatusCache($userId);
-
-        // calculate counts, and apply limit/offset
-        $counts = [
-            Report::STATUS_NOT_STARTED => $repo->getAllReportsQb('count', Report::STATUS_NOT_STARTED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
-            Report::STATUS_NOT_FINISHED => $repo->getAllReportsQb('count', Report::STATUS_NOT_FINISHED, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult(),
-            Report::STATUS_READY_TO_SUBMIT => $repo->getAllReportsQb('count', Report::STATUS_READY_TO_SUBMIT, $userId, $exclude_submitted, $q)->getQuery()->getSingleScalarResult()
-        ];
-        $counts['total'] = array_sum($counts);
-
-        // Get reports for the current page, hydrating as array (more efficient) and return the min amount of data needed for the dashboard
-        $qb = $repo->getAllReportsQb('reports', $status, $userId, $exclude_submitted, $q)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-        if ($sort == 'end_date') {
-            $qb->addOrderBy('r.endDate', strtolower($sortDirection) == 'desc' ? 'DESC' : 'ASC');
-            $qb->addOrderBy('c.caseNumber', 'ASC');
+        if (null === $organisation) {
+            throw new NotFoundHttpException('Organisation not found');
         }
 
-        /* @var $records Report[] */
+        return $this->getReponseByDeterminant($request, $organisation->getId(), ReportRepository::ORG_DETERMINANT);
+    }
+
+    /**
+     * @param Request $request
+     * @param $userId
+     * @param int $determinant
+     * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getReponseByDeterminant(Request $request, $id, int $determinant): array
+    {
+        $data = $this->repository->getAllByDeterminant($id, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $this->updateReportStatusCache($this->getUser()->getId());
+
+        $result = [];
+        $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
+        $result['counts'] = $this->getReportCountsByStatus($request, $id, $determinant);
+
+        return $result;
+    }
+
+    /**
+     * @param array $reportData
+     * @return array
+     */
+    private function transformReports(array $reportData): array
+    {
         $reports = [];
-        $reportArrays = $qb->getQuery()->getArrayResult();
-        foreach ($reportArrays as $reportArray) {
+        foreach ($reportData as $reportDatum) {
             $reports[] = [
-                'id' => $reportArray['id'],
-                'type' => $reportArray['type'],
-                'un_submit_date' => $reportArray['unSubmitDate'] instanceof \DateTime ?
-                    $reportArray['unSubmitDate']->format('Y-m-d') : null,
+                'id' => $reportDatum['id'],
+                'type' => $reportDatum['type'],
+                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof \DateTime ?
+                    $reportDatum['unSubmitDate']->format('Y-m-d') : null,
                 'status' => [
                     // adjust report status cached using end date
-                    'status' => $rs->adjustReportStatus($reportArray['reportStatusCached'], $reportArray['endDate'])
+                    'status' => $this->reportService->adjustReportStatus($reportDatum['reportStatusCached'], $reportDatum['endDate'])
                 ],
-                'due_date' => $reportArray['dueDate']->format('Y-m-d'),
+                'due_date' => $reportDatum['dueDate']->format('Y-m-d'),
                 'client' => [
-                    'id' => $reportArray['client']['id'],
-                    'firstname' => $reportArray['client']['firstname'],
-                    'lastname' => $reportArray['client']['lastname'],
-                    'case_number' => $reportArray['client']['caseNumber'],
+                    'id' => $reportDatum['client']['id'],
+                    'firstname' => $reportDatum['client']['firstname'],
+                    'lastname' => $reportDatum['client']['lastname'],
+                    'case_number' => $reportDatum['client']['caseNumber'],
                 ]
             ];
         }
 
-        /**
-         * @to-do the code below is intended to remove all other reports for a given client in the event that their last
-         * report is rejected by a case manager. We need to check that this is still required since currently a client
-         * will show 2 reports in the dashboard for a given client. The one that has been rejected and the current one.
-         * This may be desirable if a deputy is waiting for something before being able to re-submit a previously
-         *  rejected report.
-         */
-//        // if an unsubmitted report is present, delete the other non-unsubmitted client's reports
-//        foreach ($reports as $k => $unsubmittedReport) {
-//            if (!empty($unsubmittedReport['un_submit_date'])) {
-//                foreach ($reports as $k2 => $currentReport) {
-//                    if (($currentReport['client']['id'] == $unsubmittedReport['client']['id'])) {
-//                        unset($reports[$k2]);
-//                    }
-//                }
-//            }
-//        }
+        return $reports;
+    }
 
-        return [
-            'counts' => $counts,
-            'reports' => $reports,
+    /**
+     * @param Request $request
+     * @param $id
+     * @param $determinant
+     * @return array
+     * @throws \Exception
+     */
+    private function getReportCountsByStatus(Request $request, $id, $determinant): array
+    {
+
+        $counts = [
+            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $id, $determinant, $request),
+            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $id, $determinant, $request),
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $id, $determinant, $request)
         ];
+
+        $counts['total'] = array_sum($counts);
+
+        return $counts;
+    }
+
+    /**
+     * @param $status
+     * @param $orgId
+     * @param Request $request
+     * @return array|null
+     * @throws \Exception
+     */
+    private function getCountOfReportsByStatus($status, $id, $determinant, Request $request)
+    {
+        return $this
+            ->repository
+            ->getAllByDeterminant($id, $determinant, $request->query, 'count', $status);
     }
 
     /**
