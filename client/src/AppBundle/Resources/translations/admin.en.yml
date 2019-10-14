@@ -23,8 +23,8 @@ homeForm:
 
 addUser:
   htmlTitle: Administration - Users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Add new
+  supportTitle: Users
 
 addUserForm:
   heading: Add a user
@@ -58,8 +58,8 @@ deleteConfirm:
 
 editUser:
   htmlTitle: Administration - Users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Edit user
+  supportTitle: Users
   clientTable:
     heading: Clients and reports
     header:
