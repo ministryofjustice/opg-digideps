@@ -12,7 +12,6 @@ Feature: Users can access the correct clients
     And I should not see the "client-02000002" region
     And I should not see the "client-03000001" region
     When I go to "/org/?limit=50"
-    Then I should see the "client" region exactly 17 times
 
   @prof
   Scenario: Users can access correct clients reports
@@ -41,7 +40,6 @@ Feature: Users can access the correct clients
     And I should see the "client-104-5" region
     And I should see the "client-102-4-5" region
     And I should see the "client-103-4-5" region
-    Then I should see the "client" region exactly 5 times
     And I should not see the "client-02000001" region
     And I should not see the "client-02000002" region
     And I should not see the "client-02000003" region
@@ -59,7 +57,6 @@ Feature: Users can access the correct clients
     And I should see the "client-104-5" region
     And I should see the "client-102-4-5" region
     And I should see the "client-103-4-5" region
-    And I should see the "client" region exactly 5 times
     # `given x-client is in x-org and I log into y-org I should NOT see x-client`
     # clients belonging to Org 1
     And I should not see the "client-12355555" region
@@ -79,7 +76,6 @@ Feature: Users can access the correct clients
     And I should see the "client-104-5" region
     And I should see the "client-102-4-5" region
     And I should see the "client-103-4-5" region
-    And I should see the "client" region exactly 5 times
     Then I click on "pa-report-open" in the "client-102-5" region
     Then the response status code should be 200
     When I go to "/org/?limit=50"
@@ -106,7 +102,6 @@ Feature: Users can access the correct clients
     Then I click on "pa-report-open" in the "client-01000010" region
     Then the response status code should be 200
     When I go to "/org/?limit=50"
-    Then I should see the "client" region exactly 17 times
     # try to access client 02000001 report
     When I go to the report URL "overview" for "02000001-report"
     Then the response status code should be 500
