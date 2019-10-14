@@ -30,7 +30,8 @@
         {{ form_select(form.roleNameStaff,'addUserForm.roleNameStaff') }}
     {%  endset %}
 
-    {{ form_checkbox_group(form.roleType,'addUserForm.roleType', {
+    {{ form_checkbox_group(form.roleType, 'addUserForm.roleType', {
+        disabled: true,
         items: [
             { conditional: deputyRole },
             { conditional: adminRole },
