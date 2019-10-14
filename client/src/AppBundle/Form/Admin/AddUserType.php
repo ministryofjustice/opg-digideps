@@ -47,6 +47,19 @@ class AddUserType extends AbstractType
             ->add('ndrEnabled', FormTypes\CheckboxType::class)
             ->add('save', FormTypes\SubmitType::class);
 
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+            $user = $event->getData();
+            $form = $event->getForm();
+
+            if ($user->getRoleName() === User::ROLE_ADMIN || $user->getRoleName() === User::ROLE_CASE_MANAGER) {
+                $form->get('roleType')->setData('staff');
+                $form->get('roleNameStaff')->setData($user->getRoleName());
+            } else {
+                $form->get('roleType')->setData('deputy');
+                $form->get('roleNameDeputy')->setData($user->getRoleName());
+            }
+        });
+
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
@@ -64,8 +77,7 @@ class AddUserType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'admin',
             'validation_groups' => ['admin_add_user'],
-        ])
-        ->setRequired(['options']);
+        ]);
     }
 
     public function getBlockPrefix()
