@@ -158,6 +158,10 @@ class IndexController extends AbstractController
                         $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
                         break;
 
+                    case 425:
+                        $form->get('roleType')->addError(new FormError($this->get('translator')->trans('editUserForm.roleType.mismatchError', [], 'admin')));
+                        break;
+
                     default:
                         throw $e;
                 }

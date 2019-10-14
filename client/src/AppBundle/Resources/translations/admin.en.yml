@@ -85,6 +85,8 @@ editUserForm:
     existingError: That email has already been registered with this service.
   submit:
     label: Update user
+  roleType:
+    mismatchError: Cannot change user between staff-type and deputy-type role.
 
 statsPage:
   htmlTitle: Administration - Statistics
