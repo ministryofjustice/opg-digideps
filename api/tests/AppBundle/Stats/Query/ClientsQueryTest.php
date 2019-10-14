@@ -56,7 +56,7 @@ class ClientsQueryTest extends WebTestCase
                     $this->assertEquals(3, $metric['amount']);
                     break;
                 case 'prof':
-                    $this->assertEquals(6, $metric['amount']);
+                    $this->assertEquals(3, $metric['amount']);
                     break;
             }
         }
@@ -77,9 +77,6 @@ class ClientsQueryTest extends WebTestCase
         // Assert correct amount is returned for each report type
         foreach ($result as $metric) {
             switch ($metric['reportType']) {
-                case 'ndr':
-                    $this->assertEquals(2, $metric['amount']);
-                    break;
                 case '102':
                     $this->assertEquals(3, $metric['amount']);
                     break;
@@ -96,7 +93,7 @@ class ClientsQueryTest extends WebTestCase
                     $this->assertEquals(2, $metric['amount']);
                     break;
                 case '103-5':
-                    $this->assertEquals(4, $metric['amount']);
+                    $this->assertEquals(1, $metric['amount']);
                     break;
             }
         }

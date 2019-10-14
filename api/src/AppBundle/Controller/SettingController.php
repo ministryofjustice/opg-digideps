@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SettingController extends RestController
 {
     /**
-     * @Route("/{id}")
-     * @Method({"GET"})
+     * @Route("/{id}", methods={"GET"})
      */
     public function getSetting(Request $request, $id)
     {
@@ -27,8 +25,7 @@ class SettingController extends RestController
     }
 
     /**
-     * @Route("/{id}")
-     * @Method({"PUT"})
+     * @Route("/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_ADMIN')")
      */
     public function upsertSetting(Request $request, $id)

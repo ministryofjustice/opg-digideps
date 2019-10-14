@@ -3,8 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,9 +56,8 @@ class AjaxController extends AbstractController
     }
 
     /**
-     * @Route("/org-chunk-add", name="org_add_ajax")
+     * @Route("/org-chunk-add", name="org_add_ajax", methods={"POST"})
      * @Security("has_role('ROLE_ADMIN') or has_role('ROLE_AD')")
-     * @Method({"POST"})
      */
     public function uploadPaAjaxAction(Request $request)
     {

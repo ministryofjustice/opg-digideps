@@ -9,3 +9,6 @@ services:
   test:
     image: ${AWS_REGISTRY}/digideps/test:${VERSION}
     build: ./behat
+  sync:
+    image: ${AWS_REGISTRY}/digideps/sync:${VERSION}
+    build: ./sync

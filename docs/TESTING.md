@@ -60,3 +60,12 @@ Non-production environments don't send emails to avoid data leakage, confusion a
 Note that the public-facing frontend and the administration area have separate email stores (both accessible at `/behat/emails` of the relevant service URL).
 
 [mockery]: http://docs.mockery.io/en/latest/
+
+## Database Sync
+
+The sync process between production and preproduction is handled as part of the pipeline using AWS tasks. To test locally run the sync service with the following commands:
+
+```
+docker-compose run --rm sync ./backup.sh
+docker-compose run --rm sync ./restore.sh
+```
