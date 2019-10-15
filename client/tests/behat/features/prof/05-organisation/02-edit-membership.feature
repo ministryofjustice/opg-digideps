@@ -1,6 +1,6 @@
 Feature: Users can edit members of their organisation
 
-  @prof @shaun
+  @prof
   Scenario: Org domains: Users can add existing users to their organisation
     Given the organisation "publicguardian.gov.uk" is active
     And "behat-prof-admin@publicguardian.gov.uk" has been added to the "publicguardian.gov.uk" organisation
@@ -16,7 +16,7 @@ Feature: Users can edit members of their organisation
     And I should see "Professional Team Member"
     And I should see "behat-prof-team-member@publicguardian.gov.uk"
 
-  @prof @shaun
+  @prof
   Scenario: Org domains: Users can only add new users if they share the same org domain
     Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     And emails are sent from "deputy" area
