@@ -52,15 +52,15 @@ func main() {
 	for *describeTasksOutput.Tasks[0].LastStatus != "STOPPED" {
 		describeTasksOutput = getTasks(ecsSvc, tasksOutput)
 
-		cloudwatchlogsOutput, err := cloudwatchLogsSvc.GetLogEvents(cloudwatchLogsInput)
-
-		cloudwatchLogsInput.NextToken = cloudwatchlogsOutput.NextForwardToken
+		cloudwatchLogsOutput, err := cloudwatchLogsSvc.GetLogEvents(cloudwatchLogsInput)
 
 		if err != nil {
 			log.Println(err)
 		}
 
-		for _, event := range cloudwatchlogsOutput.Events {
+		cloudwatchLogsInput.NextToken = cloudwatchLogsOutput.NextForwardToken
+
+		for _, event := range cloudwatchLogsOutput.Events {
 			log.Println(*event.Message)
 		}
 
