@@ -14,7 +14,22 @@ import (
 	"time"
 )
 
+
+func (t *Task) IsStopped() bool {
+	return *t.task.LastStatus != "STOPPED"
+}
+
+func (t *Task) Update(ecsSvc *ecs.ECS) {
+	t.task = describeTask(ecsSvc, t.task)
+}
+
+type Task struct {
+	task *ecs.Task
+}
+
 func main() {
+	var task Task
+
 	cluster := "ddpb2944"
 	securityGroups := []string{"sg-0ee40a8bbc67747e3"}
 	subnets := []string{"subnet-d0b880a6", "subnet-a31455fb", "subnet-9ad4d1fe"}
@@ -28,16 +43,15 @@ func main() {
 
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, "arn:aws:iam::248804316466:role/operator")
-
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
-
 	ecsSvc := ecs.New(sess, &awsConfig)
-	tasksOutput := runTask(ecsSvc, cluster, securityGroups, subnets, taskDefinition, command, containerName)
-
-	taskARN := tasksOutput.Tasks[0].TaskArn
-	taskID := regexp.MustCompile("^.*/").ReplaceAllString(*taskARN, "")
-
 	cloudwatchLogsSvc := cloudwatchlogs.New(sess, &awsConfig)
+
+	//run task
+	task.Run(ecsSvc, cluster, securityGroups, subnets, taskDefinition, command, containerName)
+
+	//setup logs
+	taskID := regexp.MustCompile("^.*/").ReplaceAllString(*task.task.TaskArn, "")
 
 	cloudwatchLogsInput := &cloudwatchlogs.GetLogEventsInput{
 		LogGroupName:  aws.String(logGroupName),
@@ -47,11 +61,9 @@ func main() {
 
 	count := 0
 
-	describeTasksOutput := getTasks(ecsSvc, tasksOutput)
-
-	for *describeTasksOutput.Tasks[0].LastStatus != "STOPPED" {
-		describeTasksOutput = getTasks(ecsSvc, tasksOutput)
-
+	task.Update(ecsSvc)
+	for task.IsStopped() {
+		task.Update(ecsSvc)
 		cloudwatchLogsOutput, err := cloudwatchLogsSvc.GetLogEvents(cloudwatchLogsInput)
 
 		if err != nil {
@@ -72,12 +84,12 @@ func main() {
 		count++
 	}
 
-	log.Printf("Container exited with code %d", *describeTasksOutput.Tasks[0].Containers[0].ExitCode)
+	log.Printf("Container exited with code %d", *task.task.Containers[0].ExitCode)
 
-	os.Exit(int(*describeTasksOutput.Tasks[0].Containers[0].ExitCode))
+	os.Exit(int(*task.task.Containers[0].ExitCode))
 }
 
-func runTask(svc *ecs.ECS, cluster string, securityGroups []string, subnets []string, taskDefinition string, command []string, containerName string) *ecs.RunTaskOutput {
+func (t *Task) Run(svc *ecs.ECS, cluster string, securityGroups []string, subnets []string, taskDefinition string, command []string, containerName string) {
 	taskInput := &ecs.RunTaskInput{
 		Cluster:    aws.String(cluster),
 		LaunchType: aws.String("FARGATE"),
@@ -104,13 +116,13 @@ func runTask(svc *ecs.ECS, cluster string, securityGroups []string, subnets []st
 		log.Fatalln(err)
 	}
 
-	return tasksOutput
+	t.task = tasksOutput.Tasks[0]
 }
 
-func getTasks(svc *ecs.ECS, tasksOutput *ecs.RunTaskOutput) *ecs.DescribeTasksOutput {
+func describeTask(svc *ecs.ECS, task *ecs.Task) *ecs.Task {
 	describeTaskInput := &ecs.DescribeTasksInput{
-		Cluster: tasksOutput.Tasks[0].ClusterArn,
-		Tasks:   []*string{tasksOutput.Tasks[0].TaskArn},
+		Cluster: task.ClusterArn,
+		Tasks:   []*string{task.TaskArn},
 	}
 
 	describeTasksOutput, err := svc.DescribeTasks(describeTaskInput)
@@ -119,7 +131,7 @@ func getTasks(svc *ecs.ECS, tasksOutput *ecs.RunTaskOutput) *ecs.DescribeTasksOu
 		log.Fatalln(err)
 	}
 
-	return describeTasksOutput
+	return describeTasksOutput.Tasks[0]
 }
 
 func getEnvInt(name string) int {
