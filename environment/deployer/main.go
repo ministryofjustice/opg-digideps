@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"strconv"
 	"os"
 	"time"
@@ -61,14 +62,13 @@ func main() {
 		cloudwatchLogsInput.NextToken = cloudwatchlogsOutput.NextForwardToken
 
 		if err != nil {
-			fmt.Println(err)
+			log.Fatalln(err)
 		}
 
 		fmt.Println(cloudwatchlogsOutput.Events)
 
 		if count * delay >= timeOut {
-			fmt.Printf("Timed out after %v\n", timeOut)
-			os.Exit(1)
+			log.Fatalf("Timed out after %v\n", timeOut)
 		} 
 
 		time.Sleep(time.Duration(delay) * time.Second)
@@ -104,7 +104,7 @@ func runTask(svc *ecs.ECS, cluster string, securityGroups []string, subnets []st
 	tasksOutput, err := svc.RunTask(taskInput)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 
 	return tasksOutput
@@ -119,7 +119,7 @@ func getTasks(svc *ecs.ECS, tasksOutput *ecs.RunTaskOutput) *ecs.DescribeTasksOu
 	describeTasksOutput, err := svc.DescribeTasks(describeTaskInput)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalln(err)
 	}
 
 	return describeTasksOutput
@@ -129,7 +129,7 @@ func getEnvInt(name string) int {
 	env, err := strconv.Atoi(os.Getenv(name))
 
 	if err != nil {
-		fmt.Printf("Error getting %s: %v", name, err)
+		log.Fatalf("Error getting %s: %v", name, err)
 	}
 
 	return env
