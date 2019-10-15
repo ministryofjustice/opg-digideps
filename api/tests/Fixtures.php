@@ -333,6 +333,7 @@ class Fixtures
             $org->setName(sprintf('Org %d', $i));
             $org->setEmailIdentifier(sprintf('org_email_%d', $i));
             $org->setIsActivated(true);
+            $org->setIsPublicDomain(false);
 
             $this->em->persist($org);
         }
