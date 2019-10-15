@@ -25,13 +25,6 @@ class OrganisationFactory
     {
         $email = strtolower($email);
 
-        if (!$this->isValidEmailAddress($email)) {
-            throw new \InvalidArgumentException(sprintf(
-                "Unable to create organisation from 'name': '%s', 'email': '%s'",
-                $name, $email
-            ));
-        }
-
         if (false === ($atSymbolPosition = strpos($email, '@'))) {
             return $this->create($name, $email, $isActivated);
         }
@@ -87,21 +80,5 @@ class OrganisationFactory
         }
 
         return $emailIdentifier;
-    }
-
-    /**
-     * @param $email
-     * @return bool
-     */
-    private function isValidEmailAddress($email)
-    {
-        $valid = false;
-        $atSymbolArray = explode('@', $email);
-
-        if (!empty($email) && count($atSymbolArray) == 2) {
-            $valid = true;
-        }
-
-        return $valid;
     }
 }

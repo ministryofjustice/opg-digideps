@@ -4,6 +4,7 @@ namespace AppBundle\Form\Org;
 
 use AppBundle\Entity\User;
 use AppBundle\Validator\Constraints\EmailSameDomain;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,6 +33,7 @@ class OrganisationMemberType extends AbstractType
             ->add('email', FormTypes\TextType::class, [
                 'required' => true,
                 'constraints' => [
+                    new Email(),
                     new EmailSameDomain(['message' => '', 'groups' => ['email_same_domain']]),
                 ]
             ])
