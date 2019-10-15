@@ -71,6 +71,8 @@ class OrganisationRestHandler
             ));
         }
 
+        $data['email_identifier'] = strtolower($data['email_identifier']);
+
         if ($this->orgWithEmailIdExists($data['email_identifier'])) {
             throw new OrganisationCreationException('Email identifer already in use');
         }
