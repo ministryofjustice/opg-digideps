@@ -1,17 +1,17 @@
 package main
 
 import (
-	"log"
-	"strconv"
-	"os"
-	"time"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"regexp"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
+	"log"
+	"os"
+	"regexp"
+	"strconv"
+	"time"
 )
 
 func main() {
