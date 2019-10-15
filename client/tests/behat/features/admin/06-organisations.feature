@@ -61,7 +61,7 @@ Feature: Administration of organisations
     And I press "Save organisation"
     Then I should see "Email identifer already in use"
 
-  @admin
+  @admin @gt
   Scenario: Organisations cannot be created as known public email domains
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations/add"
@@ -69,6 +69,9 @@ Feature: Administration of organisations
     And I fill in "organisation_isActivated_0" with "0"
     When I fill in "organisation_emailIdentifierType_0" with "domain"
     And I fill in "organisation_emailDomain" with "gmail.com"
+    And I press "Save organisation"
+    Then I should see "Cannot set up organisation with specified domain"
+    When I fill in "organisation_emailDomain" with "GmAiL.com"
     And I press "Save organisation"
     Then I should see "Cannot set up organisation with specified domain"
 
