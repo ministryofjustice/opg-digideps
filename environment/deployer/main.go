@@ -26,21 +26,16 @@ func main() {
 	delay := 5
 	timeOut := getEnvInt("DEPLOYER_TIMEOUT")
 
-	// Credentials and config
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, "arn:aws:iam::248804316466:role/operator")
 
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
-
-	// Service and tasks
 
 	ecsSvc := ecs.New(sess, &awsConfig)
 	tasksOutput := runTask(ecsSvc, cluster, securityGroups, subnets, taskDefinition, command, containerName)
 
 	taskARN := tasksOutput.Tasks[0].TaskArn
 	taskID := regexp.MustCompile("^.*/").ReplaceAllString(*taskARN, "")
-
-	// Logging
 
 	cloudwatchLogsSvc := cloudwatchlogs.New(sess, &awsConfig)
 
@@ -65,7 +60,7 @@ func main() {
 			log.Fatalln(err)
 		}
 
-		fmt.Println(cloudwatchlogsOutput.Events)
+		log.Println(cloudwatchlogsOutput.Events)
 
 		if count * delay >= timeOut {
 			log.Fatalf("Timed out after %v\n", timeOut)
@@ -75,7 +70,7 @@ func main() {
 		count++
 	}
 
-	fmt.Printf("Container exited with code %d", *describeTasksOutput.Tasks[0].Containers[0].ExitCode)
+	log.Printf("Container exited with code %d", *describeTasksOutput.Tasks[0].Containers[0].ExitCode)
 
 	os.Exit(int(*describeTasksOutput.Tasks[0].Containers[0].ExitCode))
 }
