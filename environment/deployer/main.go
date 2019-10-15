@@ -90,7 +90,7 @@ func runTask(svc *ecs.ECS, cluster string, securityGroups []string, subnets []st
 		TaskDefinition: aws.String(taskDefinition),
 		Overrides: &ecs.TaskOverride{
 			ContainerOverrides: []*ecs.ContainerOverride{
-				&ecs.ContainerOverride{
+				{
 					Command: aws.StringSlice(command),
 					Name:    aws.String(containerName),
 				},
