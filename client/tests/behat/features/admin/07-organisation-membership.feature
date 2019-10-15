@@ -93,17 +93,6 @@ Feature: Organisation membership
     And I press "Find user"
     Then I should see "You cannot add a user to an organisation with a public domain"
 
-
-  @admin
-  Scenario: Admin cannot add users witth different email domain to that of the organisation
-    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I am on admin page "/admin/organisations"
-    And I follow "john.smith@abc-solicitors.example.com"
-    And I follow "Add someone to this organisation"
-    When I fill in "organisation_add_user_email" with "jo.brown@example.com"
-    And I press "Find user"
-    Then I should see "User does not have an email address from this organisation"
-
   @admin
   Scenario: Admin can remove users from an organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
@@ -117,21 +106,3 @@ Feature: Organisation membership
     When I press "Yes, remove user from this organisation"
     Then the URL should match "admin/organisations/\d+"
     And I should not see "PROF Deputy example1 User"
-
-  @admin
-#  Scenario: Users can be in more than one organisation
-#    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-#    And I am on admin page "/admin/organisations"
-#    And I follow "Add a new organisation"
-#    And I fill in "organisation_name" with "Mabey Street Lawyers"
-#    And I fill in "organisation_emailIdentifierType_0" with "address"
-#    And I fill in "organisation_emailAddress" with "mabeystreet@gmail.example"
-#    And I fill in "organisation_isActivated_0" with "1"
-#    And I press "Save organisation"
-#    When I follow "Mabey Street Lawyers"
-#    And I follow "Add someone to this organisation"
-#    And I fill in "organisation_add_user_email" with "behat-prof-deputy-102-5@publicguardian.gov.uk"
-#    And I press "Find user"
-#    And I press "Add user to organisation"
-#    Then the URL should match "admin/organisations/\d+"
-#    And I should see "PROF Deputy 102-5 User"

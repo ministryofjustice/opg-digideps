@@ -19,8 +19,7 @@ class OrganisationTransformerTest extends TestCase
             ->setId(4)
             ->setName('foo')
             ->setEmailIdentifier('bar')
-            ->setIsActivated(true)
-            ->setIsPublicDomain(false);
+            ->setIsActivated(true);
 
         $deputyTransformer = $this
             ->getMockBuilder(DeputyTransformer::class)
@@ -46,7 +45,6 @@ class OrganisationTransformerTest extends TestCase
             ->setName('foo')
             ->setEmailIdentifier('bar')
             ->setIsActivated(true)
-            ->setIsPublicDomain(false)
             ->setUsers([new DeputyDto(), new DeputyDto()]);
 
         $deputyTransformer = $this

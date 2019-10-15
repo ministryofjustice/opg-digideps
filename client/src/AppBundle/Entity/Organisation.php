@@ -43,13 +43,6 @@ class Organisation
     private $isActivated;
 
     /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $isPublicDomain;
-
-    /**
      * @var User[]
      *
      * @JMS\Type("array<AppBundle\Entity\User>")
@@ -195,24 +188,6 @@ class Organisation
     }
 
     /**
-     * @return bool
-     */
-    public function getIsPublicDomain(): bool
-    {
-        return $this->isPublicDomain;
-    }
-
-    /**
-     * @param bool $isPublicDomain
-     * @return Organisation
-     */
-    public function setIsPublicDomain(bool $isPublicDomain)
-    {
-        $this->isPublicDomain = $isPublicDomain;
-        return $this;
-    }
-
-    /**
      * @return User[]
      */
     public function getUsers()
@@ -291,15 +266,5 @@ class Organisation
         $this->clients = $clients;
 
         return $this;
-    }
-
-    /**
-     * Orgs with public domain identifier contain the @ symbol
-     *
-     * @return bool|int
-     */
-    public function hasPublicDomain()
-    {
-        return strpos($this->getEmailIdentifier(), '@');
     }
 }

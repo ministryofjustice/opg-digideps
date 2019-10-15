@@ -178,7 +178,7 @@ class OrganisationController extends AbstractController
                 }
 
                 // allow one org user who matches the exact email address for public domains
-                if ($organisation->getIsPublicDomain()) {
+                if (!$organisation->getIsDomainIdentifier()) {
                     // public domains allow 1 only and email must match email Identifier
                     if (count($organisation->getUsers()) > 0 || $email !== $organisation->getEmailIdentifier()) {
                         $errors[] = 'form.email.emailInPublicDomainError';

@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block pageContent %}
-    {% if organisation.hasPublicDomain %}
+    {% if not organisation.hasDomainIdentifer %}
     <p>{{ 'viewPage.introPublicDomain' | trans }}</p>
     {% else %}
     <p>{{ 'viewPage.intro' | trans }}</p>
@@ -28,7 +28,7 @@
                 <div class="govuk-grid-column-one-half">
                     {{ 'viewPage.tableHeading' | trans }}
                 </div>
-                {% if not organisation.hasPublicDomain %}
+                {% if not organisation.hasDomainIdentifer %}
                 <div class="govuk-grid-column-one-half text--right">
                     <a href="{{ path('org_organisation_add_member', { id: organisation.id }) }}" class="behat-link-add">
                         <strong>

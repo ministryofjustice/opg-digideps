@@ -35,8 +35,7 @@ class OrganisationTransformer
             'id' => $dto->getId(),
             'name' => $dto->getName(),
             'email_identifier' => $dto->getEmailIdentifier(),
-            'is_activated' => $dto->isActivated(),
-            'is_public_domain' => $dto->isPublicDomain()
+            'is_activated' => $dto->isActivated()
         ];
 
         if (!in_array('users', $exclude) && $dto->getUsers()) {

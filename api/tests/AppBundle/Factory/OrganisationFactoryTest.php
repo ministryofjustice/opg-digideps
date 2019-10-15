@@ -29,8 +29,7 @@ class OrganisationFactoryTest extends TestCase
      */
     public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail(
         $fullEmail,
-        $expectedEmailIdentifier,
-        $isPublicDomain
+        $expectedEmailIdentifier
     )
     {
         $organisation = $this->factory->createFromFullEmail('Org Name', $fullEmail, true);
@@ -39,7 +38,6 @@ class OrganisationFactoryTest extends TestCase
         $this->assertEquals('Org Name', $organisation->getName());
         $this->assertEquals($expectedEmailIdentifier, $organisation->getEmailIdentifier());
         $this->assertTrue($organisation->isActivated());
-        $this->assertEquals($isPublicDomain, $organisation->isPublicDomain());
     }
 
     /**
@@ -48,10 +46,10 @@ class OrganisationFactoryTest extends TestCase
     public function getEmailVariations(): array
     {
         return [
-            ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com', 'isPublicDomain' => true],
-            ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk', 'isPublicDomain' => true],
-            ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com', 'isPublicDomain' => false],
-            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com', 'isPublicDomain' => false]
+            ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com'],
+            ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk'],
+            ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com']
         ];
     }
 

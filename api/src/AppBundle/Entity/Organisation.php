@@ -54,15 +54,6 @@ class Organisation implements OrganisationInterface
     private $isActivated;
 
     /**
-     * @var bool
-     *
-     * @JMS\Groups({"user-organisations"})
-     *
-     * @ORM\Column(name="is_public_domain", type="boolean", options={ "default": false}, nullable=false)
-     */
-    private $isPublicDomain;
-
-    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
@@ -154,25 +145,6 @@ class Organisation implements OrganisationInterface
     public function setIsActivated(bool $isActivated): Organisation
     {
         $this->isActivated = $isActivated;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPublicDomain(): bool
-    {
-        return $this->isPublicDomain;
-    }
-
-    /**
-     * @param bool $isPublicDomain
-     * @return Organisation
-     */
-    public function setIsPublicDomain(bool $isPublicDomain)
-    {
-        $this->isPublicDomain = $isPublicDomain;
 
         return $this;
     }

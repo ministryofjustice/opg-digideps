@@ -2,10 +2,8 @@
 
 namespace AppBundle\Form\Org;
 
-use AppBundle\Entity\Organisation;
 use AppBundle\Entity\User;
 use AppBundle\Validator\Constraints\EmailSameDomain;
-use AppBundle\Validator\Constraints\EmailSameDomainValidator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

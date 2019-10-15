@@ -61,7 +61,6 @@ class OrganisationAssembler
         $dto->setName($organisation->getName());
         $dto->setEmailIdentifier($organisation->getEmailIdentifier());
         $dto->setIsActivated($organisation->isActivated());
-        $dto->setIsPublicDomain($organisation->isPublicDomain());
 
         if ($organisation->getUsers()) {
             $dto->setUsers($this->assembleOrganisationUsers($organisation->getUsers()));

@@ -68,15 +68,10 @@ class OrganisationFactory
             ));
         }
 
-        $domain = $this->extractDomain($emailIdentifier);
-
-        $isPublicDomain = in_array($domain, $this->sharedDomains);
-
         return (new Organisation())
             ->setName($name)
             ->setEmailIdentifier($emailIdentifier)
-            ->setIsActivated($isActivated)
-            ->setIsPublicDomain($isPublicDomain);
+            ->setIsActivated($isActivated);
     }
 
     /**
