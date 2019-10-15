@@ -12,8 +12,7 @@ clientSearch:
     discharged: Discharged
 clientDetails:
   htmlTitle: Administration - Clients
-  pageTitle: Admin
-  supportTitle: Client details
+  supportTitle: Clients
   reportsTitle: Submitted reports
   noResults: No reports found
   ndrTitle: NDR report

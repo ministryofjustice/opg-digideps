@@ -49,7 +49,7 @@ address: Address
 phone: Phone
 alternativePhone: Alternative phone
 email: Email
-dueDate: Due date
+dueDate: Due
 section: Section
 in: In
 out: Out
@@ -68,8 +68,8 @@ answer: Answer
 reports: Reports
 period: Period
 reportingPeriod: Reporting period
-submissionDate: Submission date
-unsubmissionDate: Unsubmission date
+submissionDate: Submitted
+unsubmissionDate: Unsubmitted
 bankName: Bank or building society name
 typeOfAccount: Type of account
 sortCode: Sort code

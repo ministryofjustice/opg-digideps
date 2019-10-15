@@ -4,27 +4,13 @@
 {% set page = 'clientDetails' %}
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
-{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
 
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
-
-{# Breadcrumbs #}
-{% block breadcrumbs %}
-    <div class="breadcrumbs hard--bottom">
-        <ol class="group">
-            <li><a href="{{ path('admin_client_search') }}">Clients</a></li>
-        </ol>
-    </div>
-{% endblock %}
-
-{% block helpline %}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ client.fullName }}{% endblock %}
 
 {% block pageContent %}
 
-<dl class="govuk-summary-list">
+<dl class="govuk-summary-list govuk-summary-list--no-border">
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
             {{ 'client' | trans({}, 'common') }}
