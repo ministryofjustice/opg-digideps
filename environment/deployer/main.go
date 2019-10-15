@@ -57,10 +57,12 @@ func main() {
 		cloudwatchLogsInput.NextToken = cloudwatchlogsOutput.NextForwardToken
 
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
 		}
 
-		log.Println(cloudwatchlogsOutput.Events)
+		for _, event := range cloudwatchlogsOutput.Events {
+			log.Println(*event.Message)
+		}
 
 		if count * delay >= timeOut {
 			log.Fatalf("Timed out after %v\n", timeOut)
