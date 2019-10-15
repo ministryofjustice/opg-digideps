@@ -63,7 +63,7 @@ class OrganisationController extends AbstractController
     {
         try {
             $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
-            if (!$organisation->gettIsDomainIdentifier()) {
+            if (!$organisation->getIsDomainIdentifier()) {
                 throw $this->createAccessDeniedException('Organisation not permitted to add users');
             }
         } catch (AccessDeniedException $e) {
