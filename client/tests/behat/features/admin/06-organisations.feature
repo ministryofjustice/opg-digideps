@@ -61,7 +61,7 @@ Feature: Administration of organisations
     And I press "Save organisation"
     Then I should see "Email identifer already in use"
 
-  @admin @gt
+  @admin
   Scenario: Organisations cannot be created as known public email domains
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I am on admin page "/admin/organisations/add"
