@@ -43,3 +43,13 @@ Feature: admin / case manager
     Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "client-detail-102-4-6"
     Then I should see "OPG102-4-6" in the "report-2016-to-2017" region
+
+  Scenario: Client information contains named deputy information
+    Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
+    When I click on "client-detail-102-4-6"
+    Then I should see "PA Deputy 102-4-6"
+    And I should see "Victoria Road" in the "deputy-details" region
+    And I should see "SW1" in the "deputy-details" region
+    And I should see "GB" in the "deputy-details" region
+    And I should see "07911111111111" in the "deputy-details" region
+    And I should see "behat-pa-deputy-102-4-6@publicguardian.gov.uk" in the "deputy-details" region
