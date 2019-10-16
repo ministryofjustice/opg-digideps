@@ -81,7 +81,7 @@
                 {{ (page ~ '.namedDeputy.address') | trans }}
             </h3>
             <p>
-                {{ client.namedDeputy.addressNotEmptyParts | join('<br>') }}
+                {{ client.namedDeputy.addressNotEmptyParts | join('<br>') | raw }}
             </p>
         {% endif %}
         <h3 class="govuk-heading-s">
