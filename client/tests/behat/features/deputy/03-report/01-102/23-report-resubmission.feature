@@ -21,9 +21,8 @@ Feature: Admin unsubmit report (from client page)
     And I go to the URL previously saved as "admin-client-search-client-102"
     # reports page
     Then the URL should match "/admin/client/\d+/details"
-    Then I should see "SUBMITTED" in the "report-2016-label" region
-    # assert active report is not lsited
-    But I should not see the "report-2017" region
+    Then I should see the "report-2016" region in the "report-group-done" region
+    And I should see the "report-2017" region in the "report-group-incomplete" region
     And I should see "25 February 2017" in the "report-2016-due-date" region
     When I click on "manage" in the "report-2016" region
     # unsubmit with custom due date
@@ -75,7 +74,7 @@ Feature: Admin unsubmit report (from client page)
       | unsubmit_report_confirm_confirm_1   |
     When I fill in "unsubmit_report_confirm_confirm_0" with "yes"
     And I press "unsubmit_report_confirm_save"
-    Then I should see "Unsubmitted" in the "report-2016-label" region
+    Then I should see the "report-2016" region in the "report-group-incomplete" region
     And I should see "30 April 2022" in the "report-2016-due-date" region
     When I go to the URL previously saved as "admin-client-search-client-102"
     And I click on "checklist" in the "report-2016" region
@@ -120,7 +119,7 @@ Feature: Admin unsubmit report (from client page)
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     # check report being resubmitted
     And I go to the URL previously saved as "admin-client-search-client-102"
-    Then I should see "SUBMITTED" in the "report-2016-label" region
+    Then I should see the "report-2016" region in the "report-group-done" region
     # check there is a new submission, with all the documents
     When I click on "admin-documents"
     And I should see "John 102-client"
