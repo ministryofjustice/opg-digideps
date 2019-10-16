@@ -5,26 +5,32 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
-{% block pageTitleClass %}heading-large{% endblock %}
-
-{% block supportTitleBottom %}
-    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
-{% endblock %}
-
-{% block helpline %}{% endblock %}
+{% block supportTitleTop %}{{ (page ~ '.supportTitle') | trans }}{% endblock %}
 
 {% block pageContent %}
-
-    <h2 class="heading-medium">{{ 'addUserForm.heading' | trans }}</h2>
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'addUserForm.email') }}
     {{ form_input(form.firstname,'addUserForm.firstname') }}
     {{ form_input(form.lastname,'addUserForm.lastname') }}
-    {{ form_input(form.addressPostcode,'addUserForm.addressPostcode') }}
-    {{ form_select(form.roleName,'addUserForm.roleName') }}
-    {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+    {{ form_input(form.addressPostcode,'addUserForm.addressPostcode', {inputClass: 'govuk-!-width-one-third'}) }}
+
+    {% set deputyRole %}
+        {{ form_select(form.roleNameDeputy,'addUserForm.roleNameDeputy') }}
+        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+    {% endset %}
+
+    {% set adminRole %}
+        {{ form_select(form.roleNameStaff,'addUserForm.roleNameStaff') }}
+    {%  endset %}
+
+    {{ form_checkbox_group(form.roleType,'addUserForm.roleType', {
+        items: [
+            { conditional: deputyRole },
+            { conditional: adminRole },
+        ]
+    }) }}
 
     {{ form_submit(form.save, 'addUserForm.submit', {'buttonClass': 'behat-link-save'}) }}
 

@@ -77,6 +77,7 @@ class UserService
     {
         $this
             ->throwExceptionIfUpdatedEmailExists($originalUser, $updatedUser)
+            ->throwExceptionIfUserChangesRoleType($originalUser, $updatedUser)
             ->handleNdrStatusUpdate($updatedUser);
 
         $this->em->flush();
@@ -91,6 +92,23 @@ class UserService
     {
         if ($originalUser->getEmail() != $updatedUser->getEmail()){
             $this->exceptionIfEmailExist($updatedUser->getEmail());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param User $originalUser
+     * @param User $updatedUser
+     * @return UserService
+     */
+    private function throwExceptionIfUserChangesRoleType(User $originalUser, User $updatedUser)
+    {
+        $adminBefore = in_array($originalUser->getRoleName(), User::$adminRoles);
+        $adminAfter  = in_array($updatedUser->getRoleName(), User::$adminRoles);
+
+        if ($adminAfter !== $adminBefore) {
+            throw new \RuntimeException('Cannot change realm of user\'s role', 425);
         }
 
         return $this;

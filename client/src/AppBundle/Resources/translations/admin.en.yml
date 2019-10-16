@@ -23,8 +23,8 @@ homeForm:
 
 addUser:
   htmlTitle: Administration - Users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Add new
+  supportTitle: Users
 
 addUserForm:
   heading: Add a user
@@ -40,10 +40,24 @@ addUserForm:
   addressPostcode:
     label: Postcode
     hint: ""
+  roleType:
+    label: Role
+    staff: OPG staff user
+    deputy: Deputy user
   roleName:
     label: Role
     hint: ""
     defaultOption: Please select ...
+    options:
+      ROLE_ADMIN: OPG Admin
+      ROLE_CASE_MANAGER: Case manager
+      ROLE_LAY_DEPUTY: Lay Deputy
+      ROLE_PA_NAMED: Public Authority (named)
+      ROLE_PROF_NAMED: Professional Deputy (named)
+  roleNameDeputy:
+    label: Role
+  roleNameStaff:
+    label: Role
   ndrEnabled:
     label: Enable NDR for this user (Lay deputy only)
   submit:
@@ -58,8 +72,8 @@ deleteConfirm:
 
 editUser:
   htmlTitle: Administration - Users
-  pageTitle: Admin
-  supportTitle: User management
+  pageTitle: Edit user
+  supportTitle: Users
   clientTable:
     heading: Clients and reports
     header:
@@ -77,6 +91,8 @@ editUserForm:
     existingError: That email has already been registered with this service.
   submit:
     label: Update user
+  roleType:
+    mismatchError: Cannot change user between staff-type and deputy-type role.
 
 statsPage:
   htmlTitle: Administration - Statistics
