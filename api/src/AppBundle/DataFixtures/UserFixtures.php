@@ -167,8 +167,11 @@ class UserFixtures extends AbstractDataFixture
             ->setLastname($data['id'] . '-client')
             ->setPhone('022222222222222')
             ->setAddress('Victoria road')
-            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'))
-            ->setNamedDeputy($user);
+            ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
+
+        if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
+            $client->setNamedDeputy($user);
+        }
 
         $manager->persist($client);
         $user->addClient($client);
