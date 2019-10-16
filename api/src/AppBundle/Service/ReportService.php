@@ -2,20 +2,27 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\AssetInterface;
+use AppBundle\Entity\BankAccountInterface;
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Asset;
+use AppBundle\Entity\Ndr\Asset as NdrAsset;
+use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
+use AppBundle\Entity\Report\AssetOther as ReportAssetOther;
+use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
+use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
+use AppBundle\Entity\Report\Document;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\Report\ReportSubmission;
+use AppBundle\Entity\ReportInterface;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Internal\Hydration\IterableResult;
-use Doctrine\ORM\QueryBuilder;
 
 class ReportService
 {
@@ -82,7 +89,7 @@ class ReportService
      *
      * @return Report
      */
-    private function createNextYearReport(Report $oldReport)
+    private function createNextYearReport(ReportInterface $oldReport)
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
@@ -90,7 +97,11 @@ class ReportService
 
         $client = $oldReport->getClient();
 
-        $startDate = clone $oldReport->getEndDate();
+        if ($oldReport instanceof Report) {
+            $startDate = clone $oldReport->getEndDate();
+        } else {
+            $startDate = new \DateTime();
+        }
         $startDate->modify('+1 day');
 
         $endDate = clone $startDate;
@@ -124,26 +135,10 @@ class ReportService
         $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
         foreach ($fromReport->getAssets() as $asset) {
             // Check that the target report doesn't already have a matching asset
-            $assetExists = false;
-            foreach ($toReport->getAssets() as $toAsset) {
-                if ($asset->getType() === 'property') {
-                    if ($toAsset->getType() === 'property'
-                        && $toAsset->getAddress() === $asset->getAddress()
-                        && $toAsset->getAddress2() === $asset->getAddress2()
-                        && $toAsset->getPostcode() === $asset->getPostcode()) {
-                        $assetExists = true;
-                        break;
-                    }
-                } else {
-                    if ($toAsset->getType() === 'other' && $toAsset->getDescription() === $asset->getDescription()) {
-                        $assetExists = true;
-                        break;
-                    }
-                }
-            }
+            $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                $newAsset = clone $asset;
+                $newAsset = $this->cloneAsset($asset);
                 $newAsset->setReport($toReport);
                 $this->_em->detach($newAsset);
                 $this->_em->persist($newAsset);
@@ -153,31 +148,115 @@ class ReportService
         // copy bank accounts (opening balance = closing balance, opening date = closing date)
         foreach ($fromReport->getBankAccounts() as $account) {
             // Check that the target report doesn't already have a bank account with that account number
-            $accountExists = false;
-            foreach ($toReport->getBankAccounts() as $toAccount) {
-                if ($toAccount->getAccountType() === $account->getAccountType()
-                    && $toAccount->getBank() === $account->getBank()
-                    && $toAccount->getAccountNumber() === $account->getAccountNumber()
-                    && $toAccount->getSortCode() === $account->getSortCode()) {
-                    $accountExists = true;
-                    break;
-                }
-            }
+            $accountExists = $this->checkBankAccountExists($toReport, $account);
 
-            if (!$account->getIsClosed() && !$accountExists) {
-                $newAccount = new ReportBankAccount();
-                $newAccount->setBank($account->getBank());
-                $newAccount->setAccountType($account->getAccountType());
-                $newAccount->setSortCode($account->getSortCode());
-                $newAccount->setAccountNumber($account->getAccountNumber());
-                $newAccount->setOpeningBalance($account->getClosingBalance());
-                $newAccount->setIsJointAccount($account->getIsJointAccount());
-                $newAccount->setCreatedAt(new \DateTime());
+            if (!$accountExists) {
+                $newAccount = $this->cloneBankAccount($toReport, $account);
                 $newAccount->setReport($toReport);
-
                 $this->_em->persist($newAccount);
             }
         }
+    }
+
+    /**
+     * @param ReportInterface $toReport
+     * @param $asset
+     * @return bool
+     */
+    private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
+    {
+        foreach ($toReport->getAssets() as $toAsset) {
+            if ($toAsset->getType() === 'property'
+                && $toAsset->getAddress() === $asset->getAddress()
+                && $toAsset->getAddress2() === $asset->getAddress2()
+                && $toAsset->getPostcode() === $asset->getPostcode()) {
+                return true;
+            } else {
+                if ($toAsset->getType() === 'other' && $toAsset->getDescription() === $asset->getDescription()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param ReportInterface $toReport
+     * @param BankAccountInterface $account
+     * @return bool
+     */
+    private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
+    {
+        foreach ($toReport->getBankAccounts() as $toAccount) {
+            if ($toAccount->getAccountType() === $account->getAccountType()
+                && $toAccount->getBank() === $account->getBank()
+                && $toAccount->getAccountNumber() === $account->getAccountNumber()
+                && $toAccount->getSortCode() === $account->getSortCode()
+                && !$account->getIsClosed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Convert NDR asset into Report Asset
+     *
+     * @param AssetInterface  $asset
+     * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
+     */
+    private function cloneAsset(AssetInterface $asset)
+    {
+        if ($asset instanceof NdrAssetProperty ||
+            $asset instanceof ReportAssetProperty) {
+            $newAsset = new ReportAssetProperty();
+
+            $newAsset->setAddress($asset->getAddress());
+            $newAsset->setAddress2($asset->getAddress2());
+            $newAsset->setCounty($asset->getCounty());
+            $newAsset->setOccupants($asset->getOccupants());
+            $newAsset->setOwned($asset->getOwned());
+            $newAsset->setOwnedPercentage($asset->getOwnedPercentage());
+            $newAsset->setIsSubjectToEquityRelease($asset->getIsSubjectToEquityRelease());
+            $newAsset->setHasMortgage($asset->getHasMortgage());
+            $newAsset->setMortgageOutstandingAmount($asset->getMortgageOutstandingAmount());
+            $newAsset->setHasCharges($asset->getHasCharges());
+            $newAsset->setIsRentedOut($asset->getIsRentedOut());
+            $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
+            $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
+
+        } else {
+            $newAsset = new ReportAssetOther();
+            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setDescription($asset->getDescription());
+            $newAsset->setValuationDate($asset->getValuationDate());
+        }
+
+        $newAsset->setValue($asset->getValue());
+
+        return $newAsset;
+    }
+
+    /**
+     * Clones instance of ReportInterface and returns new Report Bank Account
+     *
+     * @param ReportInterface $toReport
+     * @param BankAccountInterface $account
+     * @return ReportBankAccount
+     */
+    private function cloneBankAccount(ReportInterface $toReport, BankAccountInterface $account)
+    {
+        $newAccount = new ReportBankAccount();
+
+        $newAccount->setBank($account->getBank());
+        $newAccount->setAccountType($account->getAccountType());
+        $newAccount->setSortCode($account->getSortCode());
+        $newAccount->setAccountNumber($account->getAccountNumber());
+        $newAccount->setOpeningBalance($account->getClosingBalance());
+        $newAccount->setIsJointAccount($account->getIsJointAccount());
+        $newAccount->setCreatedAt(new \DateTime());
+
+        return $newAccount;
     }
 
     /**
@@ -189,7 +268,7 @@ class ReportService
      *
      * @return Report new year's report
      */
-    public function submit($currentReport, User $user, \DateTime $submitDate)
+    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, $ndrDocumentId = null)
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -203,14 +282,20 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        foreach ($currentReport->getDocuments() as $document) {
-            if (!$document->getReportSubmission()) {
-                $document->setReportSubmission($submission);
+        if ($currentReport instanceof Ndr) {
+            $document = $this->_em->getRepository(Document::class)->find($ndrDocumentId);
+            $document->setReportSubmission($submission);
+        } else {
+            foreach ($currentReport->getDocuments() as $document) {
+                if (!$document->getReportSubmission()) {
+                    $document->setReportSubmission($submission);
+                }
             }
         }
+
         $this->_em->persist($submission);
 
-        if ($currentReport->getUnSubmitDate()) {
+        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
             //unsubmitted report
             $currentReport->setUnSubmitDate(null);
             $currentReport->setUnsubmittedSectionsList(null);
