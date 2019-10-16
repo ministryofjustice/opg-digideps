@@ -19,17 +19,21 @@ func (t *Task) IsStopped() bool {
 	return *t.task.LastStatus != "STOPPED"
 }
 
-func (t *Task) Update(ecsSvc *ecs.ECS) {
-	t.task = describeTask(ecsSvc, t.task)
+func (t *Task) Update() {
+	t.task = describeTask(t.svc, t.task)
+}
+
+func (t *Task) GetTaskID() string {
+	return regexp.MustCompile("^.*/").ReplaceAllString(*t.task.TaskArn, "")
 }
 
 type Task struct {
+	svc *ecs.ECS
 	task *ecs.Task
 }
 
 func main() {
 	var task Task
-
 	cluster := "ddpb2944"
 	securityGroups := []string{"sg-0ee40a8bbc67747e3"}
 	subnets := []string{"subnet-d0b880a6", "subnet-a31455fb", "subnet-9ad4d1fe"}
@@ -44,26 +48,26 @@ func main() {
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, "arn:aws:iam::248804316466:role/operator")
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
-	ecsSvc := ecs.New(sess, &awsConfig)
+	task.svc = ecs.New(sess, &awsConfig)
+
 	cloudwatchLogsSvc := cloudwatchlogs.New(sess, &awsConfig)
 
 	//run task
-	task.Run(ecsSvc, cluster, securityGroups, subnets, taskDefinition, command, containerName)
-
-	//setup logs
-	taskID := regexp.MustCompile("^.*/").ReplaceAllString(*task.task.TaskArn, "")
+	task.Run(cluster, securityGroups, subnets, taskDefinition, command, containerName)
 
 	cloudwatchLogsInput := &cloudwatchlogs.GetLogEventsInput{
 		LogGroupName:  aws.String(logGroupName),
-		LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", streamPrefix, containerName, taskID)),
+		LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", streamPrefix, containerName, task.GetTaskID())),
 		StartFromHead: aws.Bool(true),
 	}
 
 	count := 0
 
-	task.Update(ecsSvc)
+	task.Update()
+
 	for task.IsStopped() {
-		task.Update(ecsSvc)
+
+		task.Update()
 		cloudwatchLogsOutput, err := cloudwatchLogsSvc.GetLogEvents(cloudwatchLogsInput)
 
 		if err != nil {
@@ -89,7 +93,7 @@ func main() {
 	os.Exit(int(*task.task.Containers[0].ExitCode))
 }
 
-func (t *Task) Run(svc *ecs.ECS, cluster string, securityGroups []string, subnets []string, taskDefinition string, command []string, containerName string) {
+func (t *Task) Run(cluster string, securityGroups []string, subnets []string, taskDefinition string, command []string, containerName string) {
 	taskInput := &ecs.RunTaskInput{
 		Cluster:    aws.String(cluster),
 		LaunchType: aws.String("FARGATE"),
@@ -110,7 +114,7 @@ func (t *Task) Run(svc *ecs.ECS, cluster string, securityGroups []string, subnet
 		},
 	}
 
-	tasksOutput, err := svc.RunTask(taskInput)
+	tasksOutput, err := t.svc.RunTask(taskInput)
 
 	if err != nil {
 		log.Fatalln(err)
