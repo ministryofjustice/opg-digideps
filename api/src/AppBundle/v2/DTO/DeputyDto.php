@@ -20,7 +20,19 @@ class DeputyDto
     private $roleName;
 
     /** @var string */
+    private $address1;
+
+    /** @var string */
+    private $address2;
+
+    /** @var string */
+    private $address3;
+
+    /** @var string */
     private $addressPostcode;
+
+    /** @var string */
+    private $addressCountry;
 
     /** @var bool */
     private $ndrEnabled;
@@ -80,9 +92,41 @@ class DeputyDto
     /**
      * @return string
      */
+    public function getAddress1(): ?string
+    {
+        return $this->address1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2(): ?string
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress3(): ?string
+    {
+        return $this->address3;
+    }
+
+    /**
+     * @return string
+     */
     public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressCountry(): ?string
+    {
+        return $this->addressCountry;
     }
 
     /**
@@ -176,12 +220,52 @@ class DeputyDto
     }
 
     /**
+     * @param string $address1
+     * @return DeputyDto
+     */
+    public function setAddress1($address1): DeputyDto
+    {
+        $this->address1 = $address1;
+        return $this;
+    }
+
+    /**
+     * @param string $address2
+     * @return DeputyDto
+     */
+    public function setAddress2($address2): DeputyDto
+    {
+        $this->address2 = $address2;
+        return $this;
+    }
+
+    /**
+     * @param string $address3
+     * @return DeputyDto
+     */
+    public function setAddress3($address3): DeputyDto
+    {
+        $this->address3 = $address3;
+        return $this;
+    }
+
+    /**
      * @param string $addressPostcode
      * @return DeputyDto
      */
     public function setAddressPostcode($addressPostcode): DeputyDto
     {
         $this->addressPostcode = $addressPostcode;
+        return $this;
+    }
+
+    /**
+     * @param string $addressPostcode
+     * @return DeputyDto
+     */
+    public function setAddressCountry($addressCountry): DeputyDto
+    {
+        $this->addressCountry = $addressCountry;
         return $this;
     }
 
