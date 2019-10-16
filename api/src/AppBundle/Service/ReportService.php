@@ -100,7 +100,8 @@ class ReportService
         if ($oldReport instanceof Report) {
             $startDate = clone $oldReport->getEndDate();
         } else {
-            $startDate = new \DateTime();
+            // when the previous report is NDR we need to work out the new reporting period
+            $startDate = $oldReport->getClient()->getExpectedReportStartDate();
         }
         $startDate->modify('+1 day');
 
