@@ -2,13 +2,14 @@
 
 namespace AppBundle\Entity\Report;
 
+use AppBundle\Entity\AssetInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
  */
-class AssetOther extends Asset
+class AssetOther extends Asset implements AssetInterface
 {
     /**
      * @var string type of the asset
