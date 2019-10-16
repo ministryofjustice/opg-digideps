@@ -28,9 +28,9 @@ Feature: Admin NDR submitted
   @ndr
   Scenario: Admin client page shows NDR report complete
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
-    And I click on "admin-client-search"
+    When I click on "admin-client-search"
     And I fill in "search_clients_q" with "ndr"
     And I follow "John ndr-client"
     Then the URL should match "/admin/client/\d+/details"
-    Then I should see the "report-ndr" region in the "report-group-done" region
+    And I should see the "report-ndr" region in the "report-group-done" region
     And I should see "NDR" in the "report-ndr" region
