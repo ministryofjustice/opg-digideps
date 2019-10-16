@@ -92,6 +92,15 @@ Feature: deputy / user / add client and report
     And I press "client_save"
     Then the form should be valid
 
+  @ndr
+  Scenario: New NDR report shown in admin panel
+    Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I click on "admin-client-search"
+    And I fill in "search_clients_q" with "33333333"
+    And I follow "Cly3 Hent3"
+    Then the URL should match "/admin/client/\d+/details"
+    And I should see the "report-ndr" region in the "report-group-incomplete" region
+
   @deputy
   Scenario: create report
     Given I am logged in as "behat-user@publicguardian.gov.uk" with password "Abcd1234"

@@ -12,9 +12,8 @@ clientSearch:
     discharged: Discharged
 clientDetails:
   htmlTitle: Administration - Clients
-  pageTitle: Admin
-  supportTitle: Client details
-  reportsTitle: Submitted reports
+  supportTitle: Clients
+  reportsTitle: Reports
   noResults: No reports found
   ndrTitle: NDR report
   organisation: Organisation
