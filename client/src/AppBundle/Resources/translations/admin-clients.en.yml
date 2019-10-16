@@ -13,7 +13,7 @@ clientSearch:
 clientDetails:
   htmlTitle: Administration - Clients
   supportTitle: Clients
-  reportsTitle: Submitted reports
+  reportsTitle: Reports
   noResults: No reports found
   ndrTitle: NDR report
   organisation: Organisation

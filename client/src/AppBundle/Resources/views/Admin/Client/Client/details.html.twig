@@ -64,90 +64,88 @@
     {% endif %}
 </dl>
 
-    {# client NDR #}
+{% set allReports = client.reports|merge([client.ndr]) %}
+{% set reportsByGroup = {
+    incomplete: allReports | filter(r => not r.submitted),
+    done: allReports | filter(r => r.submitted),
+} %}
 
-    {% if client.ndr is not empty %}
-        {% include 'AppBundle:Admin/Client/Client/partials:_ndr-details.html.twig' with {
-            ndr : client.ndr,
-            client: client
-        } %}
-    {% endif %}
+<h2 class="govuk-heading-l">
+    {{ (page ~ '.reportsTitle') | trans }}
+</h2>
 
-    <br />
+{% for type, reports in reportsByGroup if (reports | length) > 0 %}
+    <table class="govuk-table behat-region-report-group-{{ type }}">
+        <caption class="govuk-table__caption">
+            <span class="govuk-tag {{ type | status_to_tag_css }}">
+                {{ type | trans({}, 'common') }}
+            </span>
+        </caption>
 
-    <h2 class="heading-medium flush--ends">{{ (page ~ '.reportsTitle') | trans }}</h2>
-
-    {# client report list #}
-    {% if client.reportsSubmittedAtLeastOnce | length == 0 %}
-        <p>{{ (page ~ '.noResults') | trans }}</p>
-    {% else %}
-        <table class="check-your-answers">
-            <thead>
-            <tr>
-                <th scope="col">{{ 'period' | trans({}, 'common') }}</th>
-                <th scope="col">{{ 'dueDate' | trans({}, 'common') }}</th>
-                <th scope="col">{{ 'submissionDate' | trans({}, 'common') }}</th>
-                <th scope="col">{{ 'unsubmissionDate' | trans({}, 'common') }}</th>
-                <th scope="col">{{ 'reportStatus' | trans({}, 'common') }}</th>
-                <th scope="col">
-                    <span class="visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">{{ 'period' | trans({}, 'common') }}</th>
+                <th scope="col" class="govuk-table__header">{{ 'type' | trans({}, 'common') }}</th>
+                <th scope="col" class="govuk-table__header">{{ 'dueDate' | trans({}, 'common') }}</th>
+                {% if type == 'done' %}
+                    <th scope="col" class="govuk-table__header">{{ 'submitted' | trans({}, 'common') }}</th>
+                {% endif %}
+                <th scope="col" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Actions</span>
                 </th>
             </tr>
-            </thead>
-            <tbody>
-            {% for report in client.reportsSubmittedAtLeastOnce %}
-                {% set isProfReport = report.hasSection('profCurrentFees')  %}
-                {% set enableManageLink = report.submitted %}
-                {% set enableChecklistLink = not isProfReport %}
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for report in reports %}
+                {% if report.type == 'ndr' %}
+                    {% set enableManageLink = false %}
+                    {% set enableChecklistLink = false %}
+                    {% set behatRegionPrefix = 'behat-region-ndr' %}
+                {% else %}
+                    {% set isProfReport = report.hasSection('profCurrentFees')  %}
+                    {% set enableManageLink = report.submitted %}
+                    {% set enableChecklistLink = not isProfReport %}
+                    {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
+                {% endif %}
 
-                {# only show submitted and unsubmitted reports #}
-                {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
-                <tr class="{{ behatRegionPrefix }}">
-                    <td>
-                        {{ report.period | replace({'to': '-'}) }}
+                <tr class="govuk-table__row {{ behatRegionPrefix }}">
+                    <td class="govuk-table__cell">
+                        {% if report.type == 'ndr' %}
+                            NDR
+                        {% else %}
+                            {{ report.period | replace({' to ': '–'}) }}
+                        {% endif %}
                     </td>
-                    <td class="{{ behatRegionPrefix }}-due-date">
+                    <td class="govuk-table__cell">
+                        {% if report.type == 'ndr' %}
+                            NDR
+                        {% else %}
+                            OPG{{ report.type | upper }}
+                        {% endif %}
+                    </td>
+                    <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
                         {{ report.dueDate | date("j F Y") }}
                     </td>
-                    <td>
-                        {# Display submit date regardless of being submitted or not.
-                        # An unsubmitted report still has a submit date from a previous submission
-                        #}
-                        {% if report.submitDate %}
+                    {% if type == 'done' %}
+                        <td class="govuk-table__cell">
                             {{ report.submitDate | date("j F Y") }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if report.unSubmitDate %}
-                            {{ report.unSubmitDate | date("j F Y") }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if report.unSubmitDate %}
-                            {% set status = 'unsubmitted' %}
-                        {% elseif report.submitted %}
-                            {% set status = 'submitted' %}
-                        {% else %}
-                            {% set status = report.status.status %}
-                        {% endif %}
-
-                        <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
-                    </td>
-                    <td class="change-answer width-tenth">
+                        </td>
+                    {% endif %}
+                    <td class="govuk-table__cell text--right">
                         {% if enableChecklistLink %}
                             <a href="{{ path('admin_report_checklist', {'id': report.id}) }}"
-                               class="action-link behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
+                               class="behat-link-checklist">{{ 'checklist' | trans({}, 'common') }}</a>
                             <br />
                         {% endif %}
                         {% if enableManageLink %}
                             <a href="{{ path('admin_report_manage', {'id': report.id}) }}"
-                               class="action-link behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
+                               class="behat-link-manage">{{ 'manage' | trans({}, 'common') }}</a>
                         {% endif %}
                     </td>
                 </tr>
             {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+        </tbody>
+    </table>
+{% endfor %}
 
 {% endblock %}
