@@ -13,7 +13,7 @@ class DeputyTransformer
     /**
      * @param ClientTransformer $clientTransformer
      */
-    public function __construct(ClientTransformer $clientTransformer)
+    public function __construct(ClientTransformer $clientTransformer = null)
     {
         $this->clientTransformer = $clientTransformer;
     }
@@ -38,7 +38,7 @@ class DeputyTransformer
             'phone_main' => $dto->getPhoneMain()
         ];
 
-        if (!in_array('clients', $exclude)) {
+        if (!in_array('clients', $exclude) && $dto->getClients()) {
             $data['clients'] = $this->transformClients($dto->getClients());
         }
 

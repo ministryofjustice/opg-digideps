@@ -23,6 +23,7 @@ services:
       - '@AppBundle\v2\Assembler\Report\ReportSummaryAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
       - '@PlainOrganisationAssembler'
+      - '@PlainDeputyAssembler'
 
   ClientAssemblerFromReportEntity:
     class: AppBundle\v2\Assembler\ClientAssembler
@@ -30,11 +31,15 @@ services:
       - '@AppBundle\v2\Assembler\Report\FullReportAssembler'
       - '@AppBundle\v2\Assembler\NdrAssembler'
       - '@PlainOrganisationAssembler'
+      - '@PlainDeputyAssembler'
 
   AppBundle\v2\Assembler\DeputyAssembler:
     class: AppBundle\v2\Assembler\DeputyAssembler
     arguments:
       - '@AppBundle\v2\Assembler\ClientAssembler'
+
+  PlainDeputyAssembler:
+    class: AppBundle\v2\Assembler\DeputyAssembler
 
   AppBundle\v2\Assembler\OrganisationAssembler:
     class: AppBundle\v2\Assembler\OrganisationAssembler

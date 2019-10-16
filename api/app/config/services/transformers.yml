@@ -16,11 +16,15 @@ services:
       - '@AppBundle\v2\Transformer\ReportTransformer'
       - '@AppBundle\v2\Transformer\NdrTransformer'
       - '@PlainOrganisationTransformer'
+      - '@PlainDeputyTransformer'
 
   AppBundle\v2\Transformer\DeputyTransformer:
     class: AppBundle\v2\Transformer\DeputyTransformer
     arguments:
       - '@AppBundle\v2\Transformer\ClientTransformer'
+
+  PlainDeputyTransformer:
+    class: AppBundle\v2\Transformer\DeputyTransformer
 
   AppBundle\v2\Transformer\OrganisationTransformer:
     class: AppBundle\v2\Transformer\OrganisationTransformer
