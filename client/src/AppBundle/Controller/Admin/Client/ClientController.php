@@ -28,8 +28,14 @@ class ClientController extends AbstractController
     {
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
+        $namedDeputy = null;
+        if (!is_null($client->getNamedDeputy())) {
+            $namedDeputy = $this->getRestClient()->get('user/' . $client->getNamedDeputy()->getId(), 'User');
+        }
+
         return [
-            'client'   => $client,
+            'client'      => $client,
+            'namedDeputy' => $namedDeputy,
         ];
     }
 }

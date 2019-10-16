@@ -56,19 +56,19 @@
         </dd>
     {% endif %}
 
-    {% if client.namedDeputy %}
+    {% if namedDeputy %}
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
             {{ 'namedDeputy' | trans({}, 'common') }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {{ client.namedDeputy.fullName }}
+            {{ namedDeputy.fullName }}
         </dd>
     </div>
     {% endif %}
 </dl>
 
-{% if client.namedDeputy %}
+{% if namedDeputy %}
 <details class="govuk-details" data-module="govuk-details" role="group">
     <summary class="govuk-details__summary" role="button">
         <span class="govuk-details__summary-text">
@@ -76,23 +76,23 @@
         </span>
     </summary>
     <div class="govuk-details__text" id="details-content-fae6acac-1808-4638-bd9d-160b79c21c88" aria-hidden="true">
-        {% if client.namedDeputy.addressNotEmptyParts | length > 0 %}
+        {% if namedDeputy.addressNotEmptyParts | length > 0 %}
             <h3 class="govuk-heading-s">
                 {{ (page ~ '.namedDeputy.address') | trans }}
             </h3>
             <p>
-                {{ client.namedDeputy.addressNotEmptyParts | join('<br>') | raw }}
+                {{ namedDeputy.addressNotEmptyParts | join('<br>') | raw }}
             </p>
         {% endif %}
         <h3 class="govuk-heading-s">
             {{ (page ~ '.namedDeputy.contact') | trans }}
         </h3>
         <p>
-            {% if client.namedDeputy.phoneMain %}
-                {{ 'phone' | trans({}, 'common') }}: {{ client.namedDeputy.phoneMain }}<br>
+            {% if namedDeputy.phoneMain %}
+                {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br>
             {% endif %}
-            {% if client.namedDeputy.email %}
-                {{ 'email' | trans({}, 'common') }}: {{ client.namedDeputy.email }}<br>
+            {% if namedDeputy.email %}
+                {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
             {% endif %}
         </p>
     </div>
