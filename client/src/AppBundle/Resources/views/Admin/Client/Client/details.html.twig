@@ -103,8 +103,8 @@
                     {% set behatRegionPrefix = 'behat-region-report-ndr' %}
                 {% else %}
                     {% set isProfReport = report.hasSection('profCurrentFees')  %}
-                    {% set enableManageLink = report.submitted %}
-                    {% set enableChecklistLink = report.submitted and not isProfReport %}
+                    {% set enableManageLink = (report.submitted or report.submitDate) %}
+                    {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
                     {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
                 {% endif %}
 
