@@ -19,10 +19,6 @@ func (t *Task) IsStopped() bool {
 	return *t.task.LastStatus != "STOPPED"
 }
 
-func (t *Task) Update() {
-	t.task = describeTask(t.svc, t.task)
-}
-
 func (t *Task) GetTaskID() string {
 	return regexp.MustCompile("^.*/").ReplaceAllString(*t.task.TaskArn, "")
 }
@@ -123,19 +119,19 @@ func (t *Task) Run(cluster string, securityGroups []string, subnets []string, ta
 	t.task = tasksOutput.Tasks[0]
 }
 
-func describeTask(svc *ecs.ECS, task *ecs.Task) *ecs.Task {
+func (t *Task) Update() {
 	describeTaskInput := &ecs.DescribeTasksInput{
-		Cluster: task.ClusterArn,
-		Tasks:   []*string{task.TaskArn},
+		Cluster: t.task.ClusterArn,
+		Tasks:   []*string{t.task.TaskArn},
 	}
 
-	describeTasksOutput, err := svc.DescribeTasks(describeTaskInput)
+	describeTasksOutput, err := t.svc.DescribeTasks(describeTaskInput)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	return describeTasksOutput.Tasks[0]
+	t.task = describeTasksOutput.Tasks[0]
 }
 
 func getEnvInt(name string) int {
