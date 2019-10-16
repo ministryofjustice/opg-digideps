@@ -18,6 +18,10 @@ clientDetails:
   ndrTitle: NDR report
   organisation: Organisation
   organisationInactive: (Inactive)
+  namedDeputy:
+    title: Deputy details
+    address: Named deputy address
+    contact: Named deputy contact details
 
 reportManage:
   htmlTitle: Administration - Manage report
