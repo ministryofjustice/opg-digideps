@@ -39,4 +39,7 @@ Feature: admin / case manager
       | /admin/settings/service-notification | 403 |
       | /ad                                  | 403 |
 
-
+  Scenario: Client information contains report type
+    Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
+    When I click on "client-detail-102-4-6"
+    Then I should see "OPG102-4-6" in the "report-2016-to-2017" region

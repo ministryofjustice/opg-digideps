@@ -100,7 +100,7 @@
                 {% if report.type == 'ndr' %}
                     {% set enableManageLink = false %}
                     {% set enableChecklistLink = false %}
-                    {% set behatRegionPrefix = 'behat-region-ndr' %}
+                    {% set behatRegionPrefix = 'behat-region-report-ndr' %}
                 {% else %}
                     {% set isProfReport = report.hasSection('profCurrentFees')  %}
                     {% set enableManageLink = report.submitted %}

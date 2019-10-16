@@ -22,8 +22,11 @@ Feature: Admin unsubmit report (from client page)
     # reports page
     Then the URL should match "/admin/client/\d+/details"
     Then I should see the "report-2016" region in the "report-group-done" region
-    And I should see the "report-2017" region in the "report-group-incomplete" region
     And I should see "25 February 2017" in the "report-2016-due-date" region
+    And I should see "OPG102" in the "report-2016" region
+    And I should see the "report-2017" region in the "report-group-incomplete" region
+    And I should see "25 February 2018" in the "report-2017-due-date" region
+    And I should see "OPG102" in the "report-2017" region
     When I click on "manage" in the "report-2016" region
     # unsubmit with custom due date
     And I fill in the following:
