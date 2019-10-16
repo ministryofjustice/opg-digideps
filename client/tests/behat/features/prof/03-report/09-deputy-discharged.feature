@@ -1,6 +1,5 @@
 Feature: Prof deputy is discharged
 
-  @shaun
   Scenario: Case manager discharges professional deputy from client
     Given I am logged in to admin as "casemanager@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "admin-client-search"
