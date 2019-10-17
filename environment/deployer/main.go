@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
+	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -27,7 +27,9 @@ func (t *Task) GetTaskID() string {
 type Task struct {
 	svc   *ecs.ECS
 	task  *ecs.Task
-	input *ecs.RunTaskInput
+	Sensitive bool
+	Type []interface{}
+	Value *ecs.RunTaskInput
 }
 
 type Log struct {
@@ -41,62 +43,17 @@ type Poll struct {
 	timeOut  int
 }
 
-type Config struct {
-	Sensitive bool
-	Type []interface{}
-	Value struct{
-		AccountID      *string
-		Cluster        *string
-		SecurityGroups []*string
-		Subnets        []*string
-		TaskDefinition *string
-	}
-}
-
-// TF_WORKSPACE must exist - CI
-// Role - default to CI, allow overriding
-// Task Definition Name - Command line or env var
-
-// Terraform output
-
-// Cluster - Terrform output, push to file
-// Security Groups - Terrform output, push to file
-// Subnets - Terrform output, push to file
-// Account ID - terraform.tfvars.json
-
+// inputs:
+// role - TF_DEFAULT_ROLE (default: ci)
+// file - TF_TASKS (default: tasks.json)
+// task - TF_TASK or ARG[0]
 
 func main() {
-	config := NewConfig("output.json", "sync")
-
 	sess, _ := session.NewSession()
-	creds := stscreds.NewCredentials(sess, fmt.Sprintf("arn:aws:iam::%s:role/operator", *config.Value.AccountID))
-
+	creds := stscreds.NewCredentials(sess, fmt.Sprintf("arn:aws:iam::%s:role/operator", "248804316466"))
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 
-	task := Task{
-		svc: ecs.New(sess, &awsConfig),
-		input: &ecs.RunTaskInput{
-			Cluster:    config.Value.Cluster,
-			LaunchType: aws.String("FARGATE"),
-			NetworkConfiguration: &ecs.NetworkConfiguration{
-				AwsvpcConfiguration: &ecs.AwsVpcConfiguration{
-					SecurityGroups: config.Value.SecurityGroups,
-					Subnets:        config.Value.Subnets,
-				},
-			},
-			TaskDefinition: config.Value.TaskDefinition,
-			Overrides: &ecs.TaskOverride{
-				ContainerOverrides: []*ecs.ContainerOverride{
-					{
-						Command: aws.StringSlice([]string{"./backup.sh"}),
-						Name:    aws.String("sync"),
-					},
-				},
-			},
-		},
-	}
-
-	//run task
+	task := NewTask("sync", "output.json", ecs.New(sess, &awsConfig))
 	task.Run()
 
 	logConfigurationOptions := task.GetLogConfigurationOptions()
@@ -136,7 +93,7 @@ func main() {
 }
 
 func (t *Task) Run() {
-	tasksOutput, err := t.svc.RunTask(t.input)
+	tasksOutput, err := t.svc.RunTask(t.Value)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -166,7 +123,7 @@ func (t *Task) GetContainerName() string {
 
 func (t *Task) GetLogConfigurationOptions() map[string]*string {
 	output, err := t.svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
-		TaskDefinition: t.input.TaskDefinition,
+		TaskDefinition: t.Value.TaskDefinition,
 	})
 
 	if err != nil {
@@ -215,15 +172,17 @@ func (p *Poll) Sleep() {
 	p.count++
 }
 
-func NewConfig(fileName, taskName string) Config {
-	byteValue, _ := ioutil.ReadFile(fileName)
+func NewTask(name, configFile string, client *ecs.ECS) Task {
+	byteValue, _ := ioutil.ReadFile(configFile)
 
-	var configs map[string]Config
+	var configs map[string]Task
 	err := json.Unmarshal(byteValue, &configs)
-	
 	if err != nil{
 		log.Fatalln(err)
 	}
 
-	return configs[taskName]
+	task := configs[name]
+	task.svc = client
+
+	return task
 }
