@@ -44,7 +44,7 @@ type Log struct {
 type Poll struct {
 	count    int
 	interval int
-	timeOut  int
+	timeout  int
 }
 
 func main() {
@@ -53,15 +53,21 @@ func main() {
 		flag.PrintDefaults()
 	}
 	var taskName string
+	var timeout int
+	var configFile string
+
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
+	flag.IntVar(&timeout, "timeout", 60, "timeout for the task")
+	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
+
 	flag.Parse()
 	if taskName == "" {
 		fmt.Println("Error: task name not set")
 		flag.Usage()
 	}
 
-	config := LoadConfig()
+	config := LoadConfig(configFile)
 	//TODO: handle this error
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, config.Role.Value)
@@ -84,7 +90,7 @@ func main() {
 	poll := Poll{
 		count:    0,
 		interval: 5,
-		timeOut:  getEnvInt("DEPLOYER_TIMEOUT", "60"),
+		timeout:  timeout,
 	}
 
 	task.Update()
@@ -95,7 +101,7 @@ func main() {
 		cwLog.PrintLogEvents()
 
 		if poll.IsTimedOut() {
-			log.Fatalf("Timed out after %v\n", poll.timeOut)
+			log.Fatalf("Timed out after %v\n", poll.timeout)
 		}
 
 		poll.Sleep()
@@ -155,28 +161,6 @@ func (t *Task) GetLogConfigurationOptions() map[string]*string {
 	return output.TaskDefinition.ContainerDefinitions[0].LogConfiguration.Options
 }
 
-func getEnvInt(name string, defaultVar string) int {
-	env := getEnv(name, defaultVar)
-
-	intEnv, err := strconv.Atoi(env)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return intEnv
-}
-
-func getEnv(name string, defaultVar string) string {
-	env, isSet := os.LookupEnv(name)
-
-	if !isSet {
-		env = defaultVar
-	}
-
-	return env
-}
-
 func (l *Log) PrintLogEvents() {
 	cloudwatchLogsOutput, err := l.svc.GetLogEvents(l.input)
 
@@ -192,7 +176,7 @@ func (l *Log) PrintLogEvents() {
 }
 
 func (p *Poll) IsTimedOut() bool {
-	return p.count*p.interval >= p.timeOut
+	return p.count*p.interval >= p.timeout
 }
 
 func (p *Poll) Sleep() {
@@ -200,8 +184,7 @@ func (p *Poll) Sleep() {
 	p.count++
 }
 
-func LoadConfig() Config {
-	configFile := getEnv("CONFIG_FILE", "terraform.output.json")
+func LoadConfig(configFile string) Config {
 	byteValue, _ := ioutil.ReadFile(configFile)
 	var config Config
 	err := json.Unmarshal(byteValue, &config)
