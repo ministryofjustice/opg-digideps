@@ -85,3 +85,33 @@ locals {
 
 EOF
 }
+
+data "aws_caller_identity" "ci" {}
+
+output "Tasks" {
+  value = {
+    sync = {
+      Cluster    = aws_ecs_cluster.main.name
+      LaunchType = "FARGATE"
+      NetworkConfiguration = {
+        AwsvpcConfiguration = {
+          SecurityGroups = aws_security_group.sync[*].id
+          Subnets        = data.aws_subnet.private[*].id
+        }
+      }
+      TaskDefinition = aws_ecs_task_definition.sync.arn
+      Overrides = {
+        ContainerOverrides = [
+          {
+            Name    = "sync",
+            Command = ["./backup.sh"]
+          }
+        ]
+      }
+    }
+  }
+}
+
+output "Role" {
+  value = data.aws_caller_identity.ci.arn
+}

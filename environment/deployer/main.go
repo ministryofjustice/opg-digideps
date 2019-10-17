@@ -17,20 +17,19 @@ import (
 	"time"
 )
 
-func (t *Task) IsStopped() bool {
-	return *t.task.LastStatus != "STOPPED"
-}
-
-func (t *Task) GetTaskID() string {
-	return regexp.MustCompile("^.*/").ReplaceAllString(*t.task.TaskArn, "")
+type Config struct {
+	Role  string
+	Tasks struct {
+		Sensitive bool
+		Type      []interface{}
+		Value     map[string]*ecs.RunTaskInput
+	}
 }
 
 type Task struct {
 	svc   *ecs.ECS
 	task  *ecs.Task
-	Sensitive bool
-	Type []interface{}
-	Value *ecs.RunTaskInput
+	input *ecs.RunTaskInput
 }
 
 type Log struct {
@@ -44,30 +43,25 @@ type Poll struct {
 	timeOut  int
 }
 
-// inputs:
-// role - TF_DEFAULT_ROLE (default: ci)
-// file - TF_TASKS (default: tasks.json)
-// task - TF_TASK or ARG[0]
-
 func main() {
 	flag.Usage = func() {
 		fmt.Println("Usage: deployer -task <task>")
 		flag.PrintDefaults()
 	}
 	var taskName string
-	flag.StringVar(&taskName, "help","", "this help information")
-	flag.StringVar(&taskName, "task","", "task to run")
+	flag.StringVar(&taskName, "help", "", "this help information")
+	flag.StringVar(&taskName, "task", "", "task to run")
 	flag.Parse()
 	if taskName == "" {
 		fmt.Println("Error: task name not set")
 		flag.Usage()
 	}
 
+	config := LoadConfig()
 	sess, _ := session.NewSession()
-	creds := stscreds.NewCredentials(sess, fmt.Sprintf("arn:aws:iam::%s:role/operator", "248804316466"))
+	creds := stscreds.NewCredentials(sess, config.Role)
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
-
-	task := NewTask(taskName, getEnv("CONFIG_FILE","output.json"), ecs.New(sess, &awsConfig))
+	task := Task{svc: ecs.New(sess, &awsConfig), input: config.Tasks.Value[taskName]}
 	task.Run()
 
 	logConfigurationOptions := task.GetLogConfigurationOptions()
@@ -107,7 +101,7 @@ func main() {
 }
 
 func (t *Task) Run() {
-	tasksOutput, err := t.svc.RunTask(t.Value)
+	tasksOutput, err := t.svc.RunTask(t.input)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -131,13 +125,21 @@ func (t *Task) Update() {
 	t.task = describeTasksOutput.Tasks[0]
 }
 
+func (t *Task) IsStopped() bool {
+	return *t.task.LastStatus != "STOPPED"
+}
+
+func (t *Task) GetTaskID() string {
+	return regexp.MustCompile("^.*/").ReplaceAllString(*t.task.TaskArn, "")
+}
+
 func (t *Task) GetContainerName() string {
 	return *t.task.Containers[0].Name
 }
 
 func (t *Task) GetLogConfigurationOptions() map[string]*string {
 	output, err := t.svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
-		TaskDefinition: t.Value.TaskDefinition,
+		TaskDefinition: t.input.TaskDefinition,
 	})
 
 	if err != nil {
@@ -192,17 +194,13 @@ func (p *Poll) Sleep() {
 	p.count++
 }
 
-func NewTask(name, configFile string, client *ecs.ECS) Task {
+func LoadConfig() Config {
+	configFile := getEnv("CONFIG_FILE", "terraform.output.json")
 	byteValue, _ := ioutil.ReadFile(configFile)
-
-	var configs map[string]Task
-	err := json.Unmarshal(byteValue, &configs)
-	if err != nil{
+	var config Config
+	err := json.Unmarshal(byteValue, &config)
+	if err != nil {
 		log.Fatalln(err)
 	}
-
-	task := configs[name]
-	task.svc = client
-
-	return task
+	return config
 }
