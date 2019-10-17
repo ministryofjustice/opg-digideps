@@ -53,7 +53,7 @@ func main() {
 		flag.PrintDefaults()
 	}
 	var taskName string
-	flag.StringVar(&taskName, "help", "", "this help information")
+	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
 	flag.Parse()
 	if taskName == "" {
@@ -69,6 +69,7 @@ func main() {
 	task := Task{svc: ecs.New(sess, &awsConfig), input: config.Tasks.Value[taskName]}
 	task.Run()
 
+	//TODO: refactor - this log setup feels messy
 	logConfigurationOptions := task.GetLogConfigurationOptions()
 
 	cwLog := Log{
