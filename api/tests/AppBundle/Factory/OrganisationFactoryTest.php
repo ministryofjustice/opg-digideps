@@ -49,7 +49,8 @@ class OrganisationFactoryTest extends TestCase
             ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com'],
             ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk'],
             ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
-            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com']
+            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com']
         ];
     }
 

@@ -66,19 +66,4 @@ class OrganisationFactory
             ->setEmailIdentifier($emailIdentifier)
             ->setIsActivated($isActivated);
     }
-
-    /**
-     * @param $emailIdentifier
-     * @return mixed
-     */
-    private function extractDomain($emailIdentifier)
-    {
-        $atSymbolArray = explode('@', $emailIdentifier);
-
-        if (count($atSymbolArray) == 2) {
-            return $atSymbolArray[1];
-        }
-
-        return $emailIdentifier;
-    }
 }
