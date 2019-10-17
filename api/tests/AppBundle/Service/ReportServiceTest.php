@@ -39,7 +39,9 @@ class ReportServiceTest extends TestCase
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
-        $this->asset1 = (new EntityDir\Report\AssetProperty())->setAddress('SW1');
+        $this->asset1 = (new EntityDir\Report\AssetProperty())
+            ->setAddress('SW1')
+            ->setOwned(EntityDir\Report\AssetProperty::OWNED_FULLY);
         $this->report = new Report($client, Report::TYPE_102, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)

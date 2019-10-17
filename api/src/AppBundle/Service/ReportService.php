@@ -99,9 +99,12 @@ class ReportService
 
         if ($oldReport instanceof Report) {
             $startDate = clone $oldReport->getEndDate();
+            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType();
         } else {
             // when the previous report is NDR we need to work out the new reporting period
             $startDate = $oldReport->getClient()->getExpectedReportStartDate();
+            // set default type as oldReport is ndr
+            $newReportType = $this->getReportTypeBasedOnCasrec($client) ?: Report::TYPE_102;
         }
         $startDate->modify('+1 day');
 
@@ -110,7 +113,7 @@ class ReportService
 
         $newReport = new Report(
             $client,
-            $this->getReportTypeBasedOnCasrec($client) ?: $oldReport->getType(), // report comes from casrec, or last year report, if not found
+            $newReportType, // report comes from casrec, or last year report, if not found
             $startDate,
             $endDate,
             false
