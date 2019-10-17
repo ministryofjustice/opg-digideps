@@ -162,11 +162,6 @@ class OrganisationController extends AbstractController
             try {
                 $errors = [];
                 $email = $form->get('email')->getData();
-
-                // check org can accept user
-                $atPosition = strpos($email, '@');
-                $domain = substr($email, $atPosition + 1);
-
                 $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
 
                 if (!$user->isDeputyOrg()) {
@@ -186,6 +181,10 @@ class OrganisationController extends AbstractController
 
                 } else {
                     // organisation domains emails must match org domain
+                    // check org can accept user
+                    $atPosition = strpos($email, '@');
+                    $domain = substr($email, $atPosition + 1);
+
                     if ($organisation->getEmailIdentifier() !== $domain) {
                         $errors[] = 'form.email.notOrgEmailError';
                     }
