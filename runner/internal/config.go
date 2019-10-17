@@ -1,4 +1,4 @@
-package config
+package internal
 
 import (
 	"log"
@@ -29,3 +29,4 @@ func LoadConfig(configFile string) Config {
 	}
 	return config
 }
+

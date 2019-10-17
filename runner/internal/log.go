@@ -1,0 +1,25 @@
+package internal
+
+import (
+	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
+	"log"
+)
+
+type Log struct {
+	Svc   *cloudwatchlogs.CloudWatchLogs
+	Input *cloudwatchlogs.GetLogEventsInput
+}
+
+func (l *Log) PrintLogEvents() {
+	cloudwatchLogsOutput, err := l.Svc.GetLogEvents(l.Input)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	l.Input.NextToken = cloudwatchLogsOutput.NextForwardToken
+
+	for _, event := range cloudwatchLogsOutput.Events {
+		log.Println(*event.Message)
+	}
+}
