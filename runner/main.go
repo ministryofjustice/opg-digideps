@@ -13,22 +13,9 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"strconv"
 	"time"
+	"github.com/ministryofjustice/opg-digideps/runner/config"
 )
-
-type Config struct {
-	Role  struct {
-		Sensitive bool
-		Type      interface{}
-		Value     string
-	}
-	Tasks struct {
-		Sensitive bool
-		Type      []interface{}
-		Value     map[string]*ecs.RunTaskInput
-	}
-}
 
 type Task struct {
 	svc   *ecs.ECS
