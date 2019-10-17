@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
@@ -49,11 +50,24 @@ type Poll struct {
 // task - TF_TASK or ARG[0]
 
 func main() {
+	flag.Usage = func() {
+		fmt.Println("Usage: deployer -task <task>")
+		flag.PrintDefaults()
+	}
+	var taskName string
+	flag.StringVar(&taskName, "help","", "this help information")
+	flag.StringVar(&taskName, "task","", "task to run")
+	flag.Parse()
+	if taskName == "" {
+		fmt.Println("Error: task name not set")
+		flag.Usage()
+	}
+
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, fmt.Sprintf("arn:aws:iam::%s:role/operator", "248804316466"))
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 
-	task := NewTask("sync", "output.json", ecs.New(sess, &awsConfig))
+	task := NewTask(taskName, getEnv("CONFIG_FILE","output.json"), ecs.New(sess, &awsConfig))
 	task.Run()
 
 	logConfigurationOptions := task.GetLogConfigurationOptions()
@@ -134,11 +148,7 @@ func (t *Task) GetLogConfigurationOptions() map[string]*string {
 }
 
 func getEnvInt(name string, defaultVar string) int {
-	env, isSet := os.LookupEnv(name)
-
-	if !isSet {
-		env = defaultVar
-	}
+	env := getEnv(name, defaultVar)
 
 	intEnv, err := strconv.Atoi(env)
 
@@ -147,6 +157,16 @@ func getEnvInt(name string, defaultVar string) int {
 	}
 
 	return intEnv
+}
+
+func getEnv(name string, defaultVar string) string {
+	env, isSet := os.LookupEnv(name)
+
+	if !isSet {
+		env = defaultVar
+	}
+
+	return env
 }
 
 func (l *Log) PrintLogEvents() {
