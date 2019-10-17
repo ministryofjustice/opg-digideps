@@ -52,7 +52,6 @@ services:
             - redisfront
             - wkhtmltopdf
             - router
-            - file-scanner-api
             - localstack
 
         volumes_from:
@@ -186,38 +185,15 @@ services:
         image: registry.service.opg.digital/opguk/wkhtmlpdf:0.1.209
         restart: always
 
-    file-scanner-api:
-        container_name: file-scanner-api
-        build: ../opg-file-scanner-service
+    file-scanner-server:
+        image: mkodockx/docker-clamav
+
+    file-scanner-rest:
+        image: lokori/clamav-rest
         ports:
-            - 8443:8443
-        depends_on:
-            - file-scanner-broker
-            - file-scanner-worker
-        volumes:
-            - ./docker/log/api:/var/log
+            - 8085:8080
         environment:
-            SERVICE_ENABLE_UWSGI: "yes"
-            SSL_CERT_FILENAME: "/etc/ssl/self-signed.crt"
-            SSL_KEY_FILENAME: "/etc/ssl/self-signed.key"
-            REDIS_URL: "redis://file-scanner-broker:6379/0"
-
-    file-scanner-worker:
-        container_name: file-scanner-worker
-        build: ../opg-file-scanner-service
-        depends_on:
-            - file-scanner-broker
-        volumes:
-            - ./docker/log/worker:/var/log
-        environment:
-            SERVICE_ENABLE_CELERY: "yes"
-            SERVICE_ENABLE_FRESHCLAM: "yes"
-            SERVICE_ENABLE_CLAMD: "yes"
-            REDIS_URL: "redis://file-scanner-broker:6379/0"
-
-    file-scanner-broker:
-        container_name: file-scanner-broker
-        image: redis:3.0.7-alpine
+            CLAMD_HOST: file-scanner-server
 
     npm:
         image: node:8-alpine
