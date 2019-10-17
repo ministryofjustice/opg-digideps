@@ -113,5 +113,5 @@ output "Tasks" {
 }
 
 output "Role" {
-  value = data.aws_caller_identity.ci.arn
+  value = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
 }

@@ -18,7 +18,11 @@ import (
 )
 
 type Config struct {
-	Role  string
+	Role  struct {
+		Sensitive bool
+		Type      interface{}
+		Value     string
+	}
 	Tasks struct {
 		Sensitive bool
 		Type      []interface{}
@@ -58,8 +62,9 @@ func main() {
 	}
 
 	config := LoadConfig()
+	//TODO: handle this error
 	sess, _ := session.NewSession()
-	creds := stscreds.NewCredentials(sess, config.Role)
+	creds := stscreds.NewCredentials(sess, config.Role.Value)
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 	task := Task{svc: ecs.New(sess, &awsConfig), input: config.Tasks.Value[taskName]}
 	task.Run()
