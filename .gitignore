@@ -21,3 +21,5 @@ docker/log
 terraform/to_import\.sh
 
 .certs
+
+runner/terraform.output.json
