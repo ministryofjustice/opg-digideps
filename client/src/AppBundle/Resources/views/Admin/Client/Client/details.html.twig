@@ -99,7 +99,7 @@
 </details>
 {% endif %}
 
-{% set allReports = client.reports|merge([client.ndr]) %}
+{% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
 {% set reportsByGroup = {
     incomplete: allReports | filter(r => not r.submitted),
     done: allReports | filter(r => r.submitted),
