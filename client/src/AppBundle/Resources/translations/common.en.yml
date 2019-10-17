@@ -91,6 +91,7 @@ reportType: Report type
 ndr: NDR
 type: Type
 defaultDateHintText: For example, 18 4 2017
+namedDeputy: Named deputy
 
 # Statuses
 notCreated: Not created
