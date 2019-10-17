@@ -1,5 +1,12 @@
 package config
 
+import (
+	"log"
+	"encoding/json"
+	"io/ioutil"
+	"github.com/aws/aws-sdk-go/service/ecs"
+)
+
 type Config struct {
 	Role  struct {
 		Sensitive bool
@@ -11,4 +18,14 @@ type Config struct {
 		Type      []interface{}
 		Value     map[string]*ecs.RunTaskInput
 	}
+}
+
+func LoadConfig(configFile string) Config {
+	byteValue, _ := ioutil.ReadFile(configFile)
+	var config Config
+	err := json.Unmarshal(byteValue, &config)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return config
 }

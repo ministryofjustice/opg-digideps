@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -9,7 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -54,7 +52,7 @@ func main() {
 		flag.Usage()
 	}
 
-	config := LoadConfig(configFile)
+	config := config.LoadConfig(configFile)
 	//TODO: handle this error
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, config.Role.Value)
@@ -171,12 +169,4 @@ func (p *Poll) Sleep() {
 	p.count++
 }
 
-func LoadConfig(configFile string) Config {
-	byteValue, _ := ioutil.ReadFile(configFile)
-	var config Config
-	err := json.Unmarshal(byteValue, &config)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	return config
-}
+
