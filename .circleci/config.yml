@@ -3,10 +3,10 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - runner:
+      - build-runner:
           name: task runner
           filters: { branches: { ignore: [ master ] } }
-          
+
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ master ] } }
