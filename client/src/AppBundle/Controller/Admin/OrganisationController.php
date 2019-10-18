@@ -192,17 +192,15 @@ class OrganisationController extends AbstractController
                 // allow one org user who matches the exact email address for public domains
                 if (!$organisation->getIsDomainIdentifier()) {
                     // public domains allow 1 only and email must match email Identifier
-                    if (count($organisation->getUsers()) > 0 || $email !== $organisation->getEmailIdentifier()) {
+                    if (count($organisation->getUsers()) > 0 || $user->getEmail() !== $organisation->getEmailIdentifier()) {
                         $errors[] = 'form.email.emailInPublicDomainError';
                     }
 
                 } else {
                     // organisation domains emails must match org domain
                     // check org can accept user
-                    $atPosition = strpos($email, '@');
-                    $domain = substr($email, $atPosition + 1);
-
-                    if ($organisation->getEmailIdentifier() !== $domain) {
+                    $domainArray = explode("@", $user->getEmail());
+                    if (count($domainArray) !== 2 || $organisation->getEmailIdentifier() !== $domainArray[1]) {
                         $errors[] = 'form.email.notOrgEmailError';
                     }
                 }
