@@ -3,10 +3,6 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
-      - build-runner:
-          name: task runner
-          filters: { branches: { ignore: [ master ] } }
-
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ master ] } }
@@ -24,6 +20,11 @@ workflows:
       - stabilize:
           name: stabilize environment
           requires: [ apply environment ]
+          filters: { branches: { ignore: [ master ] } }
+
+      - build-runner:
+          name: task runner
+          requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - client_integration_test:
@@ -351,12 +352,37 @@ jobs:
   build-runner:
     docker:
       - image: circleci/golang:1.12
+    parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
+      tf_tier:
+        description: tier to alter - shared or environment
+        default: environment
+        type: string
+    environment:
+      TF_VERSION: 0.12.9
+      TF_SHA256SUM: 69712c6216cc09b7eca514b9fb137d4b1fead76559c66f338b4185e1c347ace5
+      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+      TF_TIER: << parameters.tf_tier >>
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
+      - terraform/install
+      - run:
+          name: Initialize
+          command: terraform init ${TF_TIER}
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Output
+          command: terraform output -json ${TF_TIER} > terraform.output.json
       - run:
           name: build
           working_directory: ~/project/runner
           command: go install
       - run:
           name: run runner
-          command: runner
+          command: runner -task sync
