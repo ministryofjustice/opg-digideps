@@ -31,21 +31,23 @@
         'labelClass': 'govuk-label--m'
     }) }}
 
-    {% set emailIdentifierDomain %}
-        {{ form_input(form.emailDomain, 'form.emailDomain', { inputPrefix: '@' }) }}
-    {% endset %}
+    {% if not isEditView %}
+        {% set emailIdentifierDomain %}
+            {{ form_input(form.emailDomain, 'form.emailDomain', { inputPrefix: '@' }) }}
+        {% endset %}
 
-    {% set emailIdentifierAddress %}
-        {{ form_input(form.emailAddress, 'form.emailAddress') }}
-    {% endset %}
+        {% set emailIdentifierAddress %}
+            {{ form_input(form.emailAddress, 'form.emailAddress') }}
+        {% endset %}
 
-    {{ form_checkbox_group(form.emailIdentifierType, 'form.emailIdentifierType', {
-        legendClass: 'govuk-label--m',
-        items: [
-            { conditional: emailIdentifierDomain },
-            { conditional: emailIdentifierAddress, description: ('form.emailIdentifierType.domainHint' | trans) },
-        ]
-    }) }}
+        {{ form_checkbox_group(form.emailIdentifierType, 'form.emailIdentifierType', {
+            legendClass: 'govuk-label--m',
+            items: [
+                { conditional: emailIdentifierDomain },
+                { conditional: emailIdentifierAddress, description: ('form.emailIdentifierType.domainHint' | trans) },
+            ]
+        }) }}
+    {% endif %}
 
     {{ form_checkbox_group(form.isActivated, 'form.isActivated', {
         'legendClass': 'govuk-label--m'

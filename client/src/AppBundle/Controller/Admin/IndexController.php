@@ -73,14 +73,7 @@ class IndexController extends AbstractController
             $availableRoles[EntityDir\User::ROLE_CASE_MANAGER] = 'Case manager';
         }
 
-        $form = $this->createForm(FormDir\Admin\AddUserType::class,
-            new EntityDir\User(), [
-                'options' => [
-                    'roleChoices' => $availableRoles,
-                    'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin')
-                ]
-            ]
-        );
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, new EntityDir\User());
 
         $form->handleRequest($request);
         if ($form->isValid()) {
@@ -136,24 +129,7 @@ class IndexController extends AbstractController
             ]);
         }
 
-        // no role editing for current user and PA
-        $roleNameSetTo = null;
-        if ($user->getId() == $this->getUser()->getId() || $user->getRoleName() == EntityDir\User::ROLE_PA_NAMED) {
-            $roleNameSetTo = $user->getRoleName();
-        }
-        $form = $this->createForm(FormDir\Admin\AddUserType::class, $user, ['options' => [
-            'roleChoices'        => [
-                EntityDir\User::ROLE_ADMIN      => 'OPG Admin',
-                EntityDir\User::ROLE_CASE_MANAGER   => 'Case manager',
-                EntityDir\User::ROLE_LAY_DEPUTY => 'Lay Deputy',
-                EntityDir\User::ROLE_AD         => 'Assisted Digital',
-                EntityDir\User::ROLE_PA_NAMED   => 'Public Authority (named)',
-                EntityDir\User::ROLE_PROF_NAMED => 'Professional Deputy (named)',
-            ],
-            'roleNameEmptyValue' => $this->get('translator')->trans('addUserForm.roleName.defaultOption', [], 'admin'),
-            'roleNameSetTo'      => $roleNameSetTo, //can't edit current user's role
-            'ndrEnabledType'     => $user->getRoleName() == EntityDir\User::ROLE_LAY_DEPUTY ? 'checkbox' : 'hidden',
-        ]]);
+        $form = $this->createForm(FormDir\Admin\AddUserType::class, $user);
 
         $clients = $user->getClients();
         $ndr = null;
@@ -167,30 +143,33 @@ class IndexController extends AbstractController
             }
         }
 
-        if ($request->getMethod() == 'POST') {
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
-            if ($form->isValid()) {
-                $updateUser = $form->getData();
+        if ($form->isValid()) {
+            $updateUser = $form->getData();
 
-                try {
-                    $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
+            try {
+                $this->getRestClient()->put('user/' . $user->getId(), $updateUser, ['admin_add_user']);
 
-                    $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
+                $request->getSession()->getFlashBag()->add('notice', 'Your changes were saved');
 
-                    $this->redirect($this->generateUrl('admin_editUser', ['filter' => $user->getId()]));
-                } catch (\Throwable $e) {
-                    switch ((int) $e->getCode()) {
-                        case 422:
-                            $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
-                            break;
+                $this->redirectToRoute('admin_editUser', ['filter' => $user->getId()]);
+            } catch (\Throwable $e) {
+                switch ((int) $e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->get('translator')->trans('editUserForm.email.existingError', [], 'admin')));
+                        break;
 
-                        default:
-                            throw $e;
-                    }
+                    case 425:
+                        $form->get('roleType')->addError(new FormError($this->get('translator')->trans('editUserForm.roleType.mismatchError', [], 'admin')));
+                        break;
+
+                    default:
+                        throw $e;
                 }
             }
         }
+
         $view = [
             'form'          => $form->createView(),
             'action'        => 'edit',

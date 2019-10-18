@@ -15,12 +15,11 @@
     <tbody>
 
         {# only show submitted and unsubmitted reports #}
-        {% set behatRegionPrefix = 'behat-region-ndr-' ~ (ndr.getStartDate() | date("j F Y")) %}
-        <tr class="{{ behatRegionPrefix }}">
+        <tr>
             <td>
                 {{ 'ndr' | trans({}, 'common') }}
             </td>
-            <td class="{{ behatRegionPrefix }}-due-date">
+            <td>
                 {{ ndr.dueDate | date("j F Y") }}
             </td>
             <td>
@@ -38,7 +37,7 @@
                     {% set status = ndr.statusService.status %}
                 {% endif %}
 
-                <span class="govuk-tag {{ status | status_to_tag_css }} {{ behatRegionPrefix }}-label">{{ (status) | trans({}, 'common') }}</span>
+                <span class="govuk-tag {{ status | status_to_tag_css }}">{{ (status) | trans({}, 'common') }}</span>
             </td>
         </tr>
     </tbody>

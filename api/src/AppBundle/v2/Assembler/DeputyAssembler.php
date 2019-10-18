@@ -16,7 +16,7 @@ class DeputyAssembler
     /**
      * @param ClientAssembler $clientDtoAssembler
      */
-    public function __construct(ClientAssembler $clientDtoAssembler)
+    public function __construct(ClientAssembler $clientDtoAssembler = null)
     {
         $this->clientDtoAssembler = $clientDtoAssembler;
     }
@@ -31,7 +31,7 @@ class DeputyAssembler
 
         $this->setPropertiesFromData($dto, $data);
 
-        if (isset($data['clients'])  && is_array($data['clients'])) {
+        if ($this->clientDtoAssembler && isset($data['clients']) && is_array($data['clients'])) {
             $dto->setClients($this->assembleDeputyClients($data['clients']));
         }
 

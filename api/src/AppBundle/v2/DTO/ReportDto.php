@@ -31,6 +31,9 @@ class ReportDto
     /** @var StatusDto */
     private $status;
 
+    /** @var string */
+    private $type;
+
     /**
      * @return int
      */
@@ -101,6 +104,14 @@ class ReportDto
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
@@ -190,6 +201,16 @@ class ReportDto
     public function setStatus(StatusDto $status)
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @param string $type
+     * @return ReportDto
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
         return $this;
     }
 }
