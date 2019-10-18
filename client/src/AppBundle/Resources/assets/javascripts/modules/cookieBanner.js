@@ -1,3 +1,4 @@
+/* globals $ */
 module.exports = function cookieBanner () {
   var $banner = $('[data-module="opg-cookie-banner"]')
   var $acceptAll = $banner.find('[data-js="accept-all"]')
