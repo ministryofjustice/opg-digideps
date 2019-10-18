@@ -357,32 +357,30 @@ jobs:
         description: terraform workspace
         type: string
         default: ""
-      tf_tier:
-        description: tier to alter - shared or environment
-        default: environment
-        type: string
     environment:
       TF_VERSION: 0.12.11
       TF_SHA256SUM: d61f8758a25bc079bb0833b81f998fbc4cf03bb0f41b995e08204cf5978f700e
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
-      TF_TIER: << parameters.tf_tier >>
       WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
       - terraform/install
       - run:
-          name: Initialize
-          command: terraform init ${TF_TIER}
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Output
-          command: terraform output -json ${TF_TIER} > terraform.output.json
-      - run:
-          name: build
+          name: Install Runner
           working_directory: ~/project/runner
           command: go install
       - run:
-          name: run runner
+          name: Initialize Terraform
+          working_directory: ~/project/environment
+          command: terraform init
+      - run:
+          name: Set Environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Output Tasks
+          working_directory: ~/project/environment
+          command: terraform output -json > terraform.output.json
+      - run:
+          name: Run Sync
+          working_directory: ~/project/environment
           command: runner -task sync
