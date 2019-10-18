@@ -355,7 +355,8 @@ jobs:
       - checkout
       - run:
           name: build
-          command: go build -o ./bin/runner runner
+          working_directory: ~/project/runner
+          command: go build -o ./bin/runner .
       - run:
           name: run runner
           command: ./bin/runner
