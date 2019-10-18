@@ -7,13 +7,13 @@ import (
 
 )
 
-type Task struct {
+type Runner struct {
 	Svc   *ecs.ECS
 	Task  *ecs.Task
 	Input *ecs.RunTaskInput
 }
 
-func (t *Task) Run() {
+func (t *Runner) Run() {
 	tasksOutput, err := t.Svc.RunTask(t.Input)
 
 	if err != nil {
@@ -23,7 +23,7 @@ func (t *Task) Run() {
 	t.Task = tasksOutput.Tasks[0]
 }
 
-func (t *Task) Update() {
+func (t *Runner) Update() {
 	describeTaskInput := &ecs.DescribeTasksInput{
 		Cluster: t.Task.ClusterArn,
 		Tasks:   []*string{t.Task.TaskArn},
@@ -38,15 +38,15 @@ func (t *Task) Update() {
 	t.Task = describeTasksOutput.Tasks[0]
 }
 
-func (t *Task) IsStopped() bool {
+func (t *Runner) IsStopped() bool {
 	return *t.Task.LastStatus != "STOPPED"
 }
 
-func (t *Task) GetTaskID() string {
+func (t *Runner) GetTaskID() string {
 	return regexp.MustCompile("^.*/").ReplaceAllString(*t.Task.TaskArn, "")
 }
 
-func (t *Task) GetLogConfigurationOptions() map[string]*string {
+func (t *Runner) GetLogConfigurationOptions() map[string]*string {
 	output, err := t.Svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
 		TaskDefinition: t.Input.TaskDefinition,
 	})
