@@ -33,7 +33,7 @@ trait UserTrait
         }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
 
-        if ($roleName === User::ROLE_LAY_DEPUTY) {
+        if ($roleName === User::ROLE_LAY_DEPUTY || $roleName === User::ROLE_PA_NAMED || $roleName === User::ROLE_PROF_NAMED) {
             $this->fillField('admin_roleType_0', 'deputy');
             $this->fillField('admin_roleNameDeputy', $roleName);
             switch ($ndrType) {
