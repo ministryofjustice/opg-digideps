@@ -356,7 +356,7 @@ jobs:
       - run:
           name: build
           working_directory: ~/project/runner
-          command: go build .
+          command: go install
       - run:
           name: run runner
           command: runner
