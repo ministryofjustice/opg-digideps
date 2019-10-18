@@ -46,10 +46,6 @@ func (t *Task) GetTaskID() string {
 	return regexp.MustCompile("^.*/").ReplaceAllString(*t.Task.TaskArn, "")
 }
 
-func (t *Task) GetContainerName() string {
-	return *t.Task.Containers[0].Name
-}
-
 func (t *Task) GetLogConfigurationOptions() map[string]*string {
 	output, err := t.Svc.DescribeTaskDefinition(&ecs.DescribeTaskDefinitionInput{
 		TaskDefinition: t.Input.TaskDefinition,
