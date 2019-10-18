@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/ecs"
-	app "github.com/ministryofjustice/opg-digideps/runner/internal"
+	. "github.com/ministryofjustice/opg-digideps/runner/internal"
 	"log"
 	"os"
 )
@@ -24,7 +24,7 @@ func main() {
 
 	flag.String("help", "", "this help information")
 	flag.StringVar(&taskName, "task", "", "task to run")
-	flag.IntVar(&timeout, "timeout", 60, "timeout for the task")
+	flag.IntVar(&timeout, "timeout", 120, "timeout for the task")
 	flag.StringVar(&configFile, "config", "terraform.output.json", "config file for tasks")
 
 	flag.Parse()
@@ -33,40 +33,40 @@ func main() {
 		flag.Usage()
 	}
 
-	config := app.LoadConfig(configFile)
+	config := LoadConfig(configFile)
 	//TODO: handle this error
 	sess, _ := session.NewSession()
 	creds := stscreds.NewCredentials(sess, config.Role.Value)
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
-	task := app.Task{Svc: ecs.New(sess, &awsConfig), Input: config.Tasks.Value[taskName]}
-	task.Run()
+	runner := Runner{Svc: ecs.New(sess, &awsConfig), Input: config.Tasks.Value[taskName]}
+	runner.Run()
 
 	//TODO: refactor - this log setup feels messy
-	logConfigurationOptions := task.GetLogConfigurationOptions()
+	logConfigurationOptions := runner.GetLogConfigurationOptions()
 
-	var cwLogs []app.Log
+	var cwLogs []Log
 
-	for _, c := range task.Task.Containers {
-		cwLogs = append(cwLogs, app.Log{
+	for _, c := range runner.Task.Containers {
+		cwLogs = append(cwLogs, Log{
 			Svc: cloudwatchlogs.New(sess, &awsConfig),
 			Input: &cloudwatchlogs.GetLogEventsInput{
 				LogGroupName:  logConfigurationOptions["awslogs-group"],
-				LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", *logConfigurationOptions["awslogs-stream-prefix"], *c.Name, task.GetTaskID())),
+				LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", *logConfigurationOptions["awslogs-stream-prefix"], *c.Name, runner.GetTaskID())),
 				StartFromHead: aws.Bool(true),
 			},
 		})
 	}
 
-	poll := app.Poll{
+	poll := Poll{
 		Count:    0,
 		Interval: 5,
 		Timeout:  timeout,
 	}
 
-	task.Update()
+	runner.Update()
 
-	for task.IsStopped() {
-		task.Update()
+	for runner.IsStopped() {
+		runner.Update()
 
 		for _, l := range cwLogs {
 			l.PrintLogEvents()
@@ -79,7 +79,16 @@ func main() {
 		poll.Sleep()
 	}
 
-	log.Printf("Container exited with code %d", *task.Task.Containers[0].ExitCode)
+	exitCode := 0
 
-	os.Exit(int(*task.Task.Containers[0].ExitCode))
+	log.Printf("%s task stopped with status %s", taskName, *runner.Task.LastStatus)
+
+	for _, c := range runner.Task.Containers {
+		log.Printf("%s container exited with code %d", *c.Name, *c.ExitCode)
+		if *c.ExitCode > 0 {
+			exitCode ++
+		}
+	}
+	
+	os.Exit(exitCode)
 }
