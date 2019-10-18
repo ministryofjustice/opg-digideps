@@ -77,11 +77,11 @@ resource "aws_security_group" "scan" {
   )
 }
 
-resource "aws_security_group_rule" "scan_https_in" {
+resource "aws_security_group_rule" "scan_http_in" {
   type                     = "ingress"
   protocol                 = "tcp"
-  from_port                = 8443
-  to_port                  = 8443
+  from_port                = 8080
+  to_port                  = 8080
   security_group_id        = aws_security_group.scan.id
   source_security_group_id = aws_security_group.front.id
 }

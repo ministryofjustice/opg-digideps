@@ -51,7 +51,7 @@ class ClamFileScanner
         }
 
         if (!$response instanceof Response) {
-            $this->logger->error(sprintf('Scanner service down: %s', $e->getMessage()));
+            $this->logger->critical(sprintf('Scanner service down: %s', $e->getMessage()));
             throw new \RuntimeException('Scanner service not available');
         }
 
