@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"log"
 )
@@ -20,6 +21,6 @@ func (l *Log) PrintLogEvents() {
 	l.Input.NextToken = cloudwatchLogsOutput.NextForwardToken
 
 	for _, event := range cloudwatchLogsOutput.Events {
-		log.Println(*event.Message)
+		log.Println(fmt.Sprintf("%s: %v", *l.Input.LogStreamName, *event.Message))
 	}
 }

@@ -44,13 +44,17 @@ func main() {
 	//TODO: refactor - this log setup feels messy
 	logConfigurationOptions := task.GetLogConfigurationOptions()
 
-	cwLog := app.Log{
-		Svc: cloudwatchlogs.New(sess, &awsConfig),
-		Input: &cloudwatchlogs.GetLogEventsInput{
-			LogGroupName:  logConfigurationOptions["awslogs-group"],
-			LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", *logConfigurationOptions["awslogs-stream-prefix"], task.GetContainerName(), task.GetTaskID())),
-			StartFromHead: aws.Bool(true),
-		},
+	var cwLogs []app.Log
+
+	for _, c := range task.Task.Containers {
+		cwLogs = append(cwLogs, app.Log{
+			Svc: cloudwatchlogs.New(sess, &awsConfig),
+			Input: &cloudwatchlogs.GetLogEventsInput{
+				LogGroupName:  logConfigurationOptions["awslogs-group"],
+				LogStreamName: aws.String(fmt.Sprintf("%s/%s/%s", *logConfigurationOptions["awslogs-stream-prefix"], *c.Name, task.GetTaskID())),
+				StartFromHead: aws.Bool(true),
+			},
+		})
 	}
 
 	poll := app.Poll{
@@ -64,7 +68,9 @@ func main() {
 	for task.IsStopped() {
 		task.Update()
 
-		cwLog.PrintLogEvents()
+		for _, l := range cwLogs {
+			l.PrintLogEvents()
+		}
 
 		if poll.IsTimedOut() {
 			log.Fatalf("Timed out after %v\n", poll.Timeout)
