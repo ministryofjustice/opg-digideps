@@ -3,6 +3,10 @@ version: 2.1
 workflows:
   pull_request:
     jobs:
+      - runner:
+          name: task runner
+          filters: { branches: { ignore: [ master ] } }
+          
       - lint:
           name: lint terraform
           filters: { branches: { ignore: [ master ] } }
@@ -343,3 +347,15 @@ jobs:
       - run:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
+
+  build-runner:
+    docker:
+      - image: circleci/golang:1.12
+    steps:
+      - checkout
+      - run:
+          name: build
+          command: go build -o ./bin/runner runner
+      - run:
+          name: run runner
+          command: ./bin/runner
