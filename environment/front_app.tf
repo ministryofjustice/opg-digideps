@@ -71,7 +71,7 @@ locals {
       { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
       { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
+      { "name": "FRONTEND_FILESCANNER_URL", "value": "http://${local.scan_service_fqdn}:8080" },
       { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "FRONTEND_GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
