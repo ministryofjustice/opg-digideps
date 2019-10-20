@@ -117,6 +117,7 @@ locals {
           "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
         }
       },
+      "links": ["server"],
       "environment": [
         { "name": "CLAMD_HOST", "value": "server" }
       ]
