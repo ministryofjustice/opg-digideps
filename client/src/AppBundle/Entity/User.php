@@ -1174,4 +1174,15 @@ class User implements AdvancedUserInterface
     {
         $this->organisations = $organisations;
     }
+
+    /**
+     * @return bool
+     */
+    public function belongsToActiveOrganisation(): bool
+    {
+        return
+            is_array($this->getOrganisations())
+            && count($this->getOrganisations()) > 0
+            && $this->getOrganisations()[0]->isActivated();
+    }
 }

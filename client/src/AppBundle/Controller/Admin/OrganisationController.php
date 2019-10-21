@@ -52,32 +52,17 @@ class OrganisationController extends AbstractController
 
     /**
      * @Route("/add", name="admin_organisation_add")
-     * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
      * @Security("has_role('ROLE_ADMIN')")
      * @Template("AppBundle:Admin/Organisation:form.html.twig")
      */
-    public function formAction(Request $request, $id = null)
+    public function addAction(Request $request)
     {
-        if (is_null($id)) {
-            $organisation = new Organisation();
-        } else {
-            $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
-        }
+        $organisation = new Organisation();
 
         $form = $this->createForm(
             FormDir\Admin\OrganisationType::class,
             $organisation
         );
-
-        if (!is_null($organisation->getId())) {
-            if ($organisation->getIsDomainIdentifier()) {
-                $form->get('emailIdentifierType')->setData('domain');
-                $form->get('emailDomain')->setData($organisation->getEmailIdentifier());
-            } else {
-                $form->get('emailIdentifierType')->setData('address');
-                $form->get('emailAddress')->setData($organisation->getEmailIdentifier());
-            }
-        }
 
         $form->handleRequest($request);
 
@@ -85,13 +70,8 @@ class OrganisationController extends AbstractController
             $organisation = $form->getData();
 
             try {
-                if (is_null($organisation->getId())) {
-                    $this->getRestClient()->post('v2/organisation', $organisation);
-                    $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
-                } else {
-                    $this->getRestClient()->put('v2/organisation/' . $organisation->getId(), $organisation);
-                    $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
-                }
+                $this->getRestClient()->post('v2/organisation', $organisation);
+                $request->getSession()->getFlashBag()->add('notice', 'The organisation has been created');
 
                 return $this->redirectToRoute('admin_organisation_homepage');
             } catch (RestClientException $e) {
@@ -102,7 +82,44 @@ class OrganisationController extends AbstractController
         return [
             'form'  => $form->createView(),
             'organisation' => $organisation,
-            'isEditView' => !!$organisation->getId(),
+            'isEditView' => false,
+            'backLink' => $this->generateUrl('admin_organisation_homepage')
+        ];
+    }
+
+    /**
+     * @Route("/{id}/edit", name="admin_organisation_edit", requirements={"id":"\d+"})
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Template("AppBundle:Admin/Organisation:form.html.twig")
+     */
+    public function editAction(Request $request, $id = null)
+    {
+        $organisation = $this->getRestClient()->get('v2/organisation/' . $id, 'Organisation');
+
+        $form = $this->createForm(
+            FormDir\Admin\OrganisationEditType::class,
+            $organisation
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $organisation = $form->getData();
+
+            try {
+                $this->getRestClient()->put('v2/organisation/' . $organisation->getId(), $organisation);
+                $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
+
+                return $this->redirectToRoute('admin_organisation_homepage');
+            } catch (RestClientException $e) {
+                $form->addError(new FormError($e->getData()['message']));
+            }
+        }
+
+        return [
+            'form'  => $form->createView(),
+            'organisation' => $organisation,
+            'isEditView' => true,
             'backLink' => $this->generateUrl('admin_organisation_homepage')
         ];
     }
@@ -139,7 +156,7 @@ class OrganisationController extends AbstractController
                 ['label' => 'deletePage.summary.emailIdentifier', 'value' => $organisation->getEmailIdentifierDisplay()],
                 [
                     'label' => 'deletePage.summary.active.label',
-                    'value' => 'deletePage.summary.active.' . ($organisation->getIsActivated() ? 'yes' : 'no'),
+                    'value' => 'deletePage.summary.active.' . ($organisation->isActivated() ? 'yes' : 'no'),
                     'format' => 'translate',
                 ],
             ],

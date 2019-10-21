@@ -40,9 +40,6 @@ services:
     class: AppBundle\Service\File\Scanner\ClamFileScanner
     arguments: [ "@guzzle_file_scanner_client", "@logger"]
 
-  scanner_endpoint_resolver:
-    class: AppBundle\Service\File\Scanner\ScannerEndpointResolver
-
   file_uploader:
     class: AppBundle\Service\File\FileUploader
     arguments: [ "@s3_storage", "@rest_client", "@logger" ]

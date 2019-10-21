@@ -171,7 +171,7 @@ class Organisation
     /**
      * @return string
      */
-    public function getIsActivated()
+    public function isActivated()
     {
         return $this->isActivated;
     }

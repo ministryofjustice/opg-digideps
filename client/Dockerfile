@@ -4,10 +4,15 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
+COPY .sass-lint.yml .
 COPY src src
 
 # Install NPM dependencies
 RUN npm install
+
+# Check linting
+RUN npm run lint
+RUN npm audit
 
 # Build assets
 RUN NODE_ENV=production npm run build
@@ -87,3 +92,6 @@ COPY web web
 COPY --from=webpack /app/web/assets web/assets
 COPY --from=webpack /app/web/images web/images
 COPY docker/confd /etc/confd
+
+# Check for security issues
+RUN su-exec www-data php app/console security:check

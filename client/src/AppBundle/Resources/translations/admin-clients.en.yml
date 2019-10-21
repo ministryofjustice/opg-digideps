@@ -12,13 +12,16 @@ clientSearch:
     discharged: Discharged
 clientDetails:
   htmlTitle: Administration - Clients
-  pageTitle: Admin
-  supportTitle: Client details
-  reportsTitle: Submitted reports
+  supportTitle: Clients
+  reportsTitle: Reports
   noResults: No reports found
   ndrTitle: NDR report
   organisation: Organisation
   organisationInactive: (Inactive)
+  namedDeputy:
+    title: Deputy details
+    address: Named deputy address
+    contact: Named deputy contact details
 
 reportManage:
   htmlTitle: Administration - Manage report

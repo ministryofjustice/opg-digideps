@@ -28,19 +28,24 @@ class OrganisationRestHandler
     /** @var OrganisationFactory */
     private $organisationFactory;
 
+    /** @var array */
+    private $sharedEmailDomains;
+
     /**
      * @param EntityManager $em
      * @param ValidatorInterface $validator
      * @param OrganisationRepository $orgRepository
      * @param UserRepository $userRepository
      * @param OrganisationFactory $organisationFactory
+     * @param array $sharedEmailDomains
      */
     public function __construct(
         EntityManager $em,
         ValidatorInterface $validator,
         OrganisationRepository $orgRepository,
         UserRepository $userRepository,
-        OrganisationFactory $organisationFactory
+        OrganisationFactory $organisationFactory,
+        array $sharedEmailDomains
     )
     {
         $this->em = $em;
@@ -48,6 +53,7 @@ class OrganisationRestHandler
         $this->orgRepository = $orgRepository;
         $this->userRepository = $userRepository;
         $this->organisationFactory = $organisationFactory;
+        $this->sharedEmailDomains = $sharedEmailDomains;
     }
 
     /**
@@ -65,8 +71,14 @@ class OrganisationRestHandler
             ));
         }
 
+        $data['email_identifier'] = strtolower($data['email_identifier']);
+
         if ($this->orgWithEmailIdExists($data['email_identifier'])) {
             throw new OrganisationCreationException('Email identifer already in use');
+        }
+
+        if (in_array($data['email_identifier'], $this->sharedEmailDomains)) {
+            throw new OrganisationCreationException('Cannot set up organisation with specified domain');
         }
 
         $organisation = $this->organisationFactory->createFromEmailIdentifier(

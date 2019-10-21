@@ -37,16 +37,13 @@ Feature: Users can view their organisations
     Then the response status code should be 404
 
   @prof
-  Scenario: Activate organisation
+  Scenario: User can view their active organisation
     Given I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I go to admin page "/admin/organisations"
     When I click on "edit" in the "org-leever-partners" region
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
-
-  @prof
-  Scenario: User can view their active organisation
-    Given I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
+    When I am logged in as "behat-prof-admin@publicguardian.gov.uk" with password "Abcd1234"
     When I go to "/org/settings"
     And I follow "User accounts"
     Then the URL should match "/org/settings/organisation/\d+"

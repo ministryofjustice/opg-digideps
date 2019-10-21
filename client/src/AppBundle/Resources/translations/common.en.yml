@@ -49,7 +49,7 @@ address: Address
 phone: Phone
 alternativePhone: Alternative phone
 email: Email
-dueDate: Due date
+dueDate: Due
 section: Section
 in: In
 out: Out
@@ -68,8 +68,8 @@ answer: Answer
 reports: Reports
 period: Period
 reportingPeriod: Reporting period
-submissionDate: Submission date
-unsubmissionDate: Unsubmission date
+submissionDate: Submitted
+unsubmissionDate: Unsubmitted
 bankName: Bank or building society name
 typeOfAccount: Type of account
 sortCode: Sort code
@@ -89,7 +89,9 @@ firstNames: First names
 lastName: Last name
 reportType: Report type
 ndr: NDR
+type: Type
 defaultDateHintText: For example, 18 4 2017
+namedDeputy: Named deputy
 
 # Statuses
 notCreated: Not created
@@ -121,7 +123,7 @@ backToYourReports: Back to your reports
 # Search
 search: Search
 clearSearch: Clear search
-sorryNoResultsFor: Sorry, no results were found for
+sorryNoResultsFor: No reports found
 
 # Emails
 layDeputySupportEmail: laydeputysupport@publicguardian.gov.uk
