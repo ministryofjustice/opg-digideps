@@ -26,35 +26,35 @@ Feature: Report documents
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | yes |
     # check empty file error
-    When I attach the file "empty-file.pdf" to "report_document_upload_file"
+    When I attach the file "empty-file.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
     # check not a pdf file error
-    When I attach the file "not-a-pdf.pdf" to "report_document_upload_file"
+    When I attach the file "not-a-pdf.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
     # check vba-eicar file error
-    When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_file"
+    When I attach the file "pdf-doc-vba-eicar-dropper.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
     # check good pdf gets uploaded
-    When I attach the file "good.pdf" to "report_document_upload_file"
+    When I attach the file "good.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | good.pdf        | document-list |
 
     # check duplicate file error
-    When I attach the file "good.pdf" to "report_document_upload_file"
+    When I attach the file "good.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
   @deputy
   Scenario: Delete document
@@ -94,24 +94,24 @@ Feature: Report documents
       | document_wishToProvideDocumentation_0 | yes |
 
     # check good png gets uploaded
-    When I attach the file "good.png" to "report_document_upload_file"
+    When I attach the file "good.png" to "report_document_upload_files"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | good.png        | document-list |
 
     # check good jpg gets uploaded
-    When I attach the file "good.jpg" to "report_document_upload_file"
+    When I attach the file "good.jpg" to "report_document_upload_files"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | good.jpg        | document-list |
 
     # check duplicate file error
-    When I attach the file "good.png" to "report_document_upload_file"
+    When I attach the file "good.png" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
   @deputy
     Scenario: Upload file1.pdf
@@ -124,10 +124,10 @@ Feature: Report documents
       And the step with the following values CAN be submitted:
         | document_wishToProvideDocumentation_0 | yes |
     # check empty file error
-      When I attach the file "file1.pdf" to "report_document_upload_file"
+      When I attach the file "file1.pdf" to "report_document_upload_files"
       And I click on "attach-file"
       Then the form should be valid
-      #And I attach the file "file2.pdf" to "report_document_upload_file"
+      #And I attach the file "file2.pdf" to "report_document_upload_files"
       #And I click on "attach-file"
       #Then the form should be valid
       Then each text should be present in the corresponding region:
@@ -139,7 +139,7 @@ Feature: Report documents
     Given I am logged in as "behat-lay-deputy-102@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "reports, report-start, edit-documents"
     When I click on "add"
-    And I attach the file "file2.pdf" to "report_document_upload_file"
+    And I attach the file "file2.pdf" to "report_document_upload_files"
     And I click on "attach-file, continue"
     Then I should see "file2.pdf" in the "document-list" region
     When I click on the first "delete-documents-button" in the "document-list" region

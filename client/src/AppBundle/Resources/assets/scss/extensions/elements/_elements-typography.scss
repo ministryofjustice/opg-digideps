@@ -3,21 +3,21 @@
 
 // Adjusting bottom margin to match distance between breadcrumbs and main heading
 .link-back {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 .text-red {
-	color: $red;
+    color: $red;
 }
 
 .text-secondary {
-	color: $secondary-text-colour;
+    color: $secondary-text-colour;
 }
 
 .text {
-	&.heading-xlarge {
-		max-width: 15em;
-	}
+    &.heading-xlarge {
+        max-width: 15em;
+    }
 }
 
 .text-white {
@@ -26,14 +26,14 @@
 
 // Subheadings within multiple grouped tables (summary page)
 .heading-small--table {
-    @include bold-19();
-
-    margin-top: em(10, 16);
-    margin-bottom: em(5, 16);
+    @include bold-19;
 
     @include media(tablet) {
         margin-top: em(20, 19);
     }
+
+    margin-top: em(10, 16);
+    margin-bottom: em(5, 16);
 
     border-bottom: 2px solid $border-colour;
     color: $secondary-text-colour;

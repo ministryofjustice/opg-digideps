@@ -15,13 +15,7 @@ _Any tips and tricks, blog posts or tools which helped you. Plus anything notabl
 - [ ] I have added tests to prove my work, and they follow our [best practices](https://github.com/ministryofjustice/opg-digi-deps-client/wiki/Testing-best-practices)
 - [ ] The product team have tested these changes
 
-### API
-- [ ] There are no Composer security issues (`docker-compose run api php app/console security:check`)
-
 ### Frontend
-- [ ] There are no new frontend linting errors (`docker-compose run --rm npm run lint`)
-- [ ] There are no NPM security issues (`docker-compose run --rm npm audit`)
-- [ ] There are no Composer security issues (`docker-compose run frontend php app/console security:check`)
 - [ ] I have run an in-browser accessibility test (e.g. WAVE, Lighthouse)
 - [ ] There are no deprecated CSS classes noted in the profiler
 - [ ] Translations are used and the profiler doesn't identify any missing

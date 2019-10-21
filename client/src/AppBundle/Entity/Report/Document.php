@@ -177,10 +177,12 @@ class Document implements DocumentInterface
 
     /**
      * @param UploadedFile $file
+     * @return Document
      */
     public function setFile($file)
     {
         $this->file = $file;
+        return $this;
     }
 
     /**
