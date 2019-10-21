@@ -11,9 +11,6 @@ variable "accounts" {
     object({
       account_id             = string
       admin_whitelist        = list(string)
-      email_feedback_address = string
-      email_report_address   = string
-      email_update_address   = string
       force_destroy_bucket   = bool
       front_whitelist        = list(string)
       ga_default             = string
