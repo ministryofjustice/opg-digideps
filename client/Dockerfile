@@ -74,6 +74,11 @@ RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && chown -R www-data var
 
+CMD confd -onetime -backend env \
+  && waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure \
+  && php-fpm -D \
+  && nginx
+
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY --from=composer /app/app app
@@ -89,9 +94,4 @@ COPY --from=webpack /app/web/images web/images
 COPY docker/confd /etc/confd
 
 # Check for security issues
-RUN php app/console security:check
-
-CMD confd -onetime -backend env \
-  && waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure \
-  && php-fpm -D \
-  && nginx
+RUN su-exec www-data php app/console security:check

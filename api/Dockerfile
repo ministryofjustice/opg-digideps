@@ -54,6 +54,12 @@ RUN mkdir -p var/cache \
   && mkdir -p var/logs \
   && chown -R www-data var
 
+CMD confd -onetime -backend env \
+  && waitforit -address=tcp://$API_DATABASE_HOSTNAME:$API_DATABASE_PORT -timeout=$TIMEOUT \
+  && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
+  && php-fpm -D \
+  && nginx
+
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
@@ -68,10 +74,4 @@ COPY tests tests
 COPY web web
 
 # Check for security issues
-RUN php app/console security:check
-
-CMD confd -onetime -backend env \
-  && waitforit -address=tcp://$API_DATABASE_HOSTNAME:$API_DATABASE_PORT -timeout=$TIMEOUT \
-  && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
-  && php-fpm -D \
-  && nginx
+RUN su-exec www-data php app/console security:check
