@@ -11,9 +11,8 @@ server {
     ## Headers
     add_header Strict-Transport-Security "max-age=31536000; includeSubdomains;";
 
-    {{ if exists "/opg/nginx/clientmaxbodysize" }}
-    client_max_body_size {{ getv "/opg/nginx/clientmaxbodysize" }};
-    {{ end }}
+    # This is handled by PHP
+    client_max_body_size 0;
     {{ if exists "/opg/nginx/clientbodytimeout" }}
     client_body_timeout {{ getv "/opg/nginx/clientbodytimeout" }};
     {{ end }}

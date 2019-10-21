@@ -173,7 +173,6 @@ EOF
       { "name": "FRONTEND_URL_FRONTEND", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "OPG_NGINX_CLIENTBODYTIMEOUT", "value": "240s" },
-      { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${data.aws_route53_zone.public.name} *.${local.environment}.internal ~.*" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
