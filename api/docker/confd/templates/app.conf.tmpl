@@ -8,9 +8,7 @@ server {
     server_name api.digideps.local;
     root /var/www/web;
 
-    {{ if exists "/opg/nginx/clientbodytimeout" }}
-    client_body_timeout {{ getv "/opg/nginx/clientbodytimeout" }};
-    {{ end }}
+    client_body_timeout 240s;
 
     ssl_certificate         /etc/nginx/certs/app.crt;
     ssl_certificate_key     /etc/nginx/certs/app.key;

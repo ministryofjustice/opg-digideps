@@ -129,7 +129,6 @@ locals {
       { "name": "API_SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
       { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
       { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "OPG_NGINX_CLIENTBODYTIMEOUT", "value": "240s" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
       { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" },

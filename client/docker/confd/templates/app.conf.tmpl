@@ -13,9 +13,7 @@ server {
 
     # This is handled by PHP
     client_max_body_size 0;
-    {{ if exists "/opg/nginx/clientbodytimeout" }}
-    client_body_timeout {{ getv "/opg/nginx/clientbodytimeout" }};
-    {{ end }}
+    client_body_timeout 240s;
 
     ssl_certificate         /etc/nginx/certs/app.crt;
     ssl_certificate_key     /etc/nginx/certs/app.key;
