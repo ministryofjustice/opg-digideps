@@ -4,10 +4,14 @@ WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
 COPY webpack.config.js .
+COPY .sass-lint.yml .
 COPY src src
 
 # Install NPM dependencies
 RUN npm install
+
+# Check linting
+RUN npm run lint
 
 # Build assets
 RUN NODE_ENV=production npm run build
