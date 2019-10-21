@@ -51,6 +51,7 @@ class OrganisationFactoryTest extends TestCase
             ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
             ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com'],
             ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com']
+
         ];
     }
 
@@ -69,7 +70,7 @@ class OrganisationFactoryTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getInvalidInputs
+     * @dataProvider getInvalidEmailInputs
      * @param $name
      * @param $emailIdentifier
      */
@@ -82,7 +83,7 @@ class OrganisationFactoryTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getInvalidInputs
+     * @dataProvider getInvalidEmailIdentifierInputs
      * @param $name
      * @param $emailIdentifier
      */
@@ -95,11 +96,26 @@ class OrganisationFactoryTest extends TestCase
     /**
      * @return array
      */
-    public function getInvalidInputs(): array
+    public function getInvalidEmailInputs(): array
+    {
+        return [
+            ['name' => '', 'emailIdentifier' => 'test.com'],
+            ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getInvalidEmailIdentifierInputs(): array
     {
         return [
             ['name' => '', 'emailIdentifier' => 'f@test.com'],
             ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
         ];
     }
+
 }
