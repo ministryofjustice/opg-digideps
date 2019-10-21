@@ -5,7 +5,6 @@ server {
 
 server {
     listen     443 ssl;
-    server_name  {{ getv "/opg/nginx/server/names" }};
     root /var/www/web;
 
     ## Headers
