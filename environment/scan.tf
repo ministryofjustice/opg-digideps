@@ -116,7 +116,7 @@ locals {
           "awslogs-region": "eu-west-1",
           "awslogs-stream-prefix": "${aws_iam_role.scan.name}"
         }
-      }
+      },
       "environment": [
         { "name": "CLAMD_HOST", "value": "127.0.0.1" }
       ]
