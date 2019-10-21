@@ -4,16 +4,17 @@
 
 .opg-button--link {
     background-color: transparent;
-    box-shadow: none;
     color: $govuk-link-colour !important;
     text-decoration: underline !important;
+    box-shadow: none;
 
     &:hover {
         background-color: transparent;
         color: $govuk-link-hover-colour !important;
     }
 
-    &:active, &:focus {
+    &:active,
+    &:focus {
         top: initial;
         background-color: transparent;
         color: $govuk-link-active-colour !important;
@@ -38,14 +39,14 @@
 }
 
 .button-link {
+    @include media(mobile) {
+        margin-left: 0;
+    }
+
     position: relative;
     top: 1px;
     margin-left: 20px;
     line-height: 2.5;
-
-    @include media(mobile) {
-        margin-left: 0;
-    }
 }
 
 .action-link {

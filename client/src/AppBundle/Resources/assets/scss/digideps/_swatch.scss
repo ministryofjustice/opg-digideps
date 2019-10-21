@@ -5,9 +5,6 @@
 .swatch {
     @include border-radius(100%);
 
-    width: 60px;
-    height: 60px;
-
     @include media(mobile) {
         margin-right: $gutter-half;
         margin-bottom: $gutter-half;
@@ -16,9 +13,11 @@
     }
 
     @include media(tablet) {
-        margin: 0 auto $gutter-half auto;
+        margin: 0 auto $gutter-half;
     }
 
+    width: 60px;
+    height: 60px;
 }
 
 // Colour swatch layout
@@ -35,13 +34,12 @@
     }
 
     ul {
-        padding-bottom: $gutter-half;
-
         @include media(mobile) {
             min-height: 50px;
             padding-top: 10px;
         }
 
+        padding-bottom: $gutter-half;
     }
 
     li {
@@ -57,9 +55,9 @@
 
 // Sass list for colour palette
 $palette: (
-        ("east-bay", $east-bay),
-        ("grey-60-percent-white", $grey-60-percent-white),
-        ("grey-75-percent-white", $grey-75-percent-white)
+    ('east-bay', $east-bay),
+    ('grey-60-percent-white', $grey-60-percent-white),
+    ('grey-75-percent-white', $grey-75-percent-white)
 );
 
 @mixin color-swatches {

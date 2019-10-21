@@ -2,7 +2,7 @@ htmlTitle: Supporting documents | GOV.UK
 pageTitle: Supporting documents
 
 form:
-  submitButton: Upload file and attach document
+  submitButton: Upload files and attach documents
   file:
     label: Attach a file
     hint: ""
@@ -24,10 +24,10 @@ removeDocument:
 attachPage:
   pageTitle: Attach documents
   supportingDocuments: Supporting documents
-  selectHeading: 1. Select the file
-  selectHelp: Please select 'Choose file' below to find your file.
+  selectHeading: 1. Select the files
+  selectHelp: Please select 'Choose files' below to find your files.
   selectHint: Currently we only accept PDF, JPG and PNG files, and they can't be larger than 15mb.
-  uploadHeading: 2. Upload the file
+  uploadHeading: 2. Upload the files
   noDocuments: No documents
   documentList: Attached documents
   documentListPrevious: Previously submitted documents

@@ -2,7 +2,7 @@
 module.exports = function (containerSelector) {
   // Show in progress message
   $(containerSelector).on('click', function () {
-    var fileName = $('#report_document_upload_file').val()
+    var fileName = $('#report_document_upload_files').val()
     if (fileName) {
       $('#upload-progress').removeClass('hidden')
     }
@@ -11,7 +11,7 @@ module.exports = function (containerSelector) {
   // Show an error if file is over 15mb
   $('#upload_form').on('submit', function (e) {
     e.preventDefault()
-    var fileElement = $('#report_document_upload_file')
+    var fileElement = $('#report_document_upload_files')
     var actionUrl = $(this).attr('action')
 
     // check whether browser fully supports all File API

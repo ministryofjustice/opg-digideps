@@ -13,12 +13,13 @@
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
-            {{ 'client' | trans({}, 'common') }}
+            {{ 'courtOrderNumber' | trans({}, 'common') }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {{ client.fullName }}
+            {{ client.caseNumber }}
         </dd>
     </div>
+
     {% if client.archivedAt %}
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -30,14 +31,6 @@
     </div>
     {% endif %}
 
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-            {{ 'courtOrderNumber' | trans({}, 'common') }}
-        </dt>
-        <dd class="govuk-summary-list__value">
-            {{ client.caseNumber }}
-        </dd>
-    </div>
     {% if client.deletedAt %}
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
@@ -62,9 +55,51 @@
             <br>
         </dd>
     {% endif %}
+
+    {% if namedDeputy %}
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+            {{ 'namedDeputy' | trans({}, 'common') }}
+        </dt>
+        <dd class="govuk-summary-list__value">
+            {{ namedDeputy.fullName }}
+        </dd>
+    </div>
+    {% endif %}
 </dl>
 
-{% set allReports = client.reports|merge([client.ndr]) %}
+{% if namedDeputy %}
+<details class="govuk-details" data-module="govuk-details" role="group">
+    <summary class="govuk-details__summary" role="button">
+        <span class="govuk-details__summary-text">
+            {{ (page ~ '.namedDeputy.title') | trans }}
+        </span>
+    </summary>
+    <div class="govuk-details__text behat-region-deputy-details">
+        {% if namedDeputy.addressNotEmptyParts | length > 0 %}
+            <h3 class="govuk-heading-s">
+                {{ (page ~ '.namedDeputy.address') | trans }}
+            </h3>
+            <p>
+                {{ namedDeputy.addressNotEmptyParts | join('<br>') | raw }}
+            </p>
+        {% endif %}
+        <h3 class="govuk-heading-s">
+            {{ (page ~ '.namedDeputy.contact') | trans }}
+        </h3>
+        <p>
+            {% if namedDeputy.phoneMain %}
+                {{ 'phone' | trans({}, 'common') }}: {{ namedDeputy.phoneMain }}<br>
+            {% endif %}
+            {% if namedDeputy.email %}
+                {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
+            {% endif %}
+        </p>
+    </div>
+</details>
+{% endif %}
+
+{% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
 {% set reportsByGroup = {
     incomplete: allReports | filter(r => not r.submitted),
     done: allReports | filter(r => r.submitted),

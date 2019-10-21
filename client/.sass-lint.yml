@@ -15,4 +15,4 @@ rules:
         - 0
 
 files:
-    include: './src/**/*.scss'
+    include: 'src/**/*.scss'

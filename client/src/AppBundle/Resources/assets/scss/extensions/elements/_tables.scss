@@ -2,15 +2,12 @@
 // ==========================================================================
 
 table {
-
-  // Allow a qualifying element, only table data cells should use tabular numbers
-  // scss-lint:disable QualifyingElement
-
-  // A 19px numeric option. Using -small for typographic consistency
-  td.numeric-small {
-  	@include core-19($tabular-numbers: true);
-  	text-align: right;
-  }
+    // A 19px numeric option. Using -small for typographic consistency
+    // Allow a qualifying element, only table data cells should use tabular numbers
+    td.numeric-small { // sass-lint:disable-line no-qualifying-elements
+        @include core-19($tabular-numbers: true);
+        text-align: right;
+    }
 }
 
 .table-font-xsmall {
@@ -24,9 +21,9 @@ table {
 }
 
 .grandtotals-border {
-  border-top: 2px solid $border-colour;
+    border-top: 2px solid $border-colour;
 
-  &--transparent {
-    border-top: 2px solid transparent;
-  }
+    &--transparent {
+        border-top: 2px solid transparent;
+    }
 }
