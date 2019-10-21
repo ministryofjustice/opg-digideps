@@ -59,7 +59,7 @@ CMD confd -onetime -backend env \
   && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
   && php-fpm -D \
   && nginx
-  
+
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd
@@ -72,3 +72,6 @@ COPY scripts scripts
 COPY src src
 COPY tests tests
 COPY web web
+
+# Check for security issues
+RUN php app/console security:check

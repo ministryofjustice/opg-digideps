@@ -12,6 +12,7 @@ RUN npm install
 
 # Check linting
 RUN npm run lint
+RUN npm audit
 
 # Build assets
 RUN NODE_ENV=production npm run build
@@ -91,3 +92,6 @@ COPY web web
 COPY --from=webpack /app/web/assets web/assets
 COPY --from=webpack /app/web/images web/images
 COPY docker/confd /etc/confd
+
+# Check for security issues
+RUN php app/console security:check
