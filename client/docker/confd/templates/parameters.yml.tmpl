@@ -45,8 +45,8 @@ parameters:
         to_email: digideps+noop@digital.justice.gov.uk
     {{ end }}
   {{ if lsdir "/frontend/smtp" }}
-    smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" }}
-    smtp_default_port: {{ getv "/frontend/smtp/default/port" }}
+    smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" "email-smtp.eu-west-1.amazonaws.com" }}
+    smtp_default_port: {{ getv "/frontend/smtp/default/port" "587" }}
     smtp_default_user: {{ getv "/frontend/smtp/default/user" }}
     smtp_default_password: {{ getv "/frontend/smtp/default/password" }}
   {{ end }}
