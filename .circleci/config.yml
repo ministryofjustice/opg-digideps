@@ -368,7 +368,7 @@ jobs:
       - run:
           name: Install Runner
           working_directory: ~/project/runner
-          command: go install
+          command: go install -mod vendor
       - run:
           name: Initialize Terraform
           working_directory: ~/project/environment
