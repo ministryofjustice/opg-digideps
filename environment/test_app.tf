@@ -84,9 +84,7 @@ locals {
       { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
       { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_FIXTURES_ENABLE_PLEASE", "value": "True" },
-      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "API_SECURITY_ANONYMOUS", "value": "true" }
+      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 
@@ -119,9 +117,7 @@ EOF
       { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
       { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
       { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_FIXTURES_ENABLE_PLEASE", "value": "True" },
       { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "API_SECURITY_ANONYMOUS", "value": "true" },
       { "name": "API_SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
       { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
@@ -171,27 +167,18 @@ EOF
       { "name": "FRONTEND_ROLE", "value": "front" },
       { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
-      { "name": "FRONTEND_SESSION_MEMCACHE", "value": "memcachefront" },
       { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "FRONTEND_SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
       { "name": "FRONTEND_SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
       { "name": "FRONTEND_SMTP_DEFAULT_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
       { "name": "FRONTEND_SMTP_DEFAULT_PORT", "value": "587" },
-      { "name": "FRONTEND_SMTP_SECURE_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
-      { "name": "FRONTEND_SMTP_SECURE_PORT", "value": "25" },
       { "name": "FRONTEND_URL_ADMIN", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_URL_FRONTEND", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "NGINX_INDEX", "value": "app.php" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
       { "name": "OPG_NGINX_CLIENTBODYTIMEOUT", "value": "240s" },
       { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
       { "name": "OPG_NGINX_INDEX", "value": "app.php" },
-      { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
       { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${data.aws_route53_zone.public.name} *.${local.environment}.internal ~.*" },
-      { "name": "OPG_NGINX_SSL_FORCE_REDIRECT", "value": "1" },
-      { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
-      { "name": "OPG_SERVICE", "value": "front" },
-      { "name": "OPG_STACKNAME", "value": "${local.environment}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }
