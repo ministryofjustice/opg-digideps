@@ -59,7 +59,6 @@ locals {
     },
     "secrets": [
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_api_client_secret.name}" },
-      { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.oauth2_client_secret.name}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "/aws/reference/secretsmanager/${data.aws_secretsmanager_secret.front_frontend_secret.name}" }
     ],
     "environment": [
@@ -75,8 +74,6 @@ locals {
       { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
       { "name": "FRONTEND_GA_GDS", "value": "${local.account.ga_gds}" },
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
-      { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },
       { "name": "FRONTEND_ROLE", "value": "front" },
       { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
       { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
