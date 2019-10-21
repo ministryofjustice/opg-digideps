@@ -16,6 +16,8 @@ node_modules/
 var/
 vendor/
 
+!runner/vendor/
+
 # Repo-specific excludes
 docker/log
 terraform/to_import\.sh
