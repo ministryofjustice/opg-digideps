@@ -74,7 +74,6 @@ locals {
       { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
       { "name": "FRONTEND_ROLE", "value": "front" },
       { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
       { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
       { "name": "FRONTEND_SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
       { "name": "FRONTEND_SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },

@@ -8,7 +8,7 @@ parameters:
     env:  {{ getv "/frontend/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
-    session_cookie_secure: {{ getv "/frontend/session/cookie/secure" }}
+    session_cookie_secure: {{ getv "/frontend/session/cookie/secure" "true" }}
     redis_dsn:  {{ getv "/frontend/session/redis/dsn" }}
     session_prefix: dd_session
     use_redis: true
