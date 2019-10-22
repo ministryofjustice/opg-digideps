@@ -74,17 +74,17 @@ locals {
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "API_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
+      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 
@@ -105,21 +105,21 @@ EOF
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "API_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" },
-      { "name": "API_SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
-      { "name": "API_SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" },
+      { "name": "SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
+      { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "API_SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
-      { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
+      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
+      { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
+      { "name": "SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
   }
 
@@ -140,15 +140,15 @@ EOF
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
       { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
       { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
       { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "true" },

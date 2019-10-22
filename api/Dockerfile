@@ -55,11 +55,11 @@ RUN mkdir -p var/cache \
   && chown -R www-data var
 
 CMD confd -onetime -backend env \
-  && waitforit -address=tcp://$API_DATABASE_HOSTNAME:$API_DATABASE_PORT -timeout=$TIMEOUT \
+  && waitforit -address=tcp://$DATABASE_HOSTNAME:$DATABASE_PORT -timeout=$TIMEOUT \
   && su-exec www-data php app/console doctrine:migrations:migrate --no-interaction \
   && php-fpm -D \
   && nginx
-  
+
 # See this page for directories required
 # https://symfony.com/doc/3.4/quick_tour/the_architecture.html
 COPY docker/confd /etc/confd

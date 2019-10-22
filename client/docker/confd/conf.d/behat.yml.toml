@@ -2,6 +2,6 @@
 src = "behat.yml.tmpl"
 dest = "/var/www/tests/behat/behat.yml"
 keys = [
-    "/api/database/name",
+    "/database/name",
     "/frontend/nonadmin/host",
 ]

@@ -10,8 +10,8 @@ default:
             filters:
                 tags: "@infra"
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }} }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
             {{ end }}
@@ -20,8 +20,8 @@ default:
             description: End to end journey for Admin user
             paths:    [ %paths.base%/features/admin ]
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }} }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }} }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: "api" }]
             {{ end }}
@@ -32,8 +32,8 @@ default:
             filters:
                 tags: "@deputy"
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: "api", sessionName: 'digideps' }]
             {{ end }}
@@ -44,8 +44,8 @@ default:
             filters:
                 tags: "@ndr"
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
@@ -54,8 +54,8 @@ default:
             description: End to end journey for Pub Authority users
             paths:    [ %paths.base%/features/pa ]
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}
@@ -64,8 +64,8 @@ default:
             description: End to end journey for Professional Deputy users
             paths:    [ %paths.base%/features/prof ]
             contexts:
-            {{ if exists "/api/database/name" }}
-                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/api/database/name" }}, sessionName: 'digideps' }]
+            {{ if exists "/database/name" }}
+                - DigidepsBehat\FeatureContext: [{ dbName: {{ getv "/database/name" }}, sessionName: 'digideps' }]
             {{ else }}
                 - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
             {{ end }}

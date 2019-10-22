@@ -6,10 +6,10 @@ set -e
 confd -onetime -backend env
 
 # export database config so psql CLI can be used
-export PGHOST=${API_DATABASE_HOSTNAME:=postgres}
-export PGPASSWORD=${API_DATABASE_PASSWORD:=api}
-export PGDATABASE=${API_DATABASE_NAME:=api}
-export PGUSER=${API_DATABASE_USERNAME:=api}
+export PGHOST=${DATABASE_HOSTNAME:=postgres}
+export PGPASSWORD=${DATABASE_PASSWORD:=api}
+export PGDATABASE=${DATABASE_NAME:=api}
+export PGUSER=${DATABASE_USERNAME:=api}
 
 # wait for frontend to come up
 waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure
