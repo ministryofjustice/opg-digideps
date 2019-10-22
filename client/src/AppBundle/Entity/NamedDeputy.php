@@ -230,6 +230,14 @@ class NamedDeputy
 
     /**
      * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    /**
+     * @return string
      *
      * @return $this
      */
@@ -442,6 +450,19 @@ class NamedDeputy
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getAddressNotEmptyParts()
+    {
+        return array_filter([
+            $this->address1,
+            $this->address2,
+            $this->address3,
+            $this->addressPostcode,
+            $this->addressCountry
+        ]);
+    }
 
     /**
      * @return string
