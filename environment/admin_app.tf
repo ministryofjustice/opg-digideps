@@ -97,7 +97,7 @@ locals {
       { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
       { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "${local.account.test_enabled ? "true" : "false"}" },
       { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.domain}" },
-      { "name": "FRONTEND_EMAIL_SEND_INTERNAL", "value": "${local.account.is_production ? "true" : "false"}" },
+      { "name": "FRONTEND_EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
       { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
       { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
       { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
