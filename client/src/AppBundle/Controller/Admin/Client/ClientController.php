@@ -30,7 +30,7 @@ class ClientController extends AbstractController
 
         $namedDeputy = null;
         if (!is_null($client->getNamedDeputy())) {
-            $namedDeputy = $this->getRestClient()->get('user/' . $client->getNamedDeputy()->getId(), 'User');
+            $namedDeputy = $client->getNamedDeputy();
         } else {
             $clientWithUsers = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
 
