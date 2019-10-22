@@ -31,9 +31,10 @@ class SatisfactionQuery extends Query
             CASE
                 WHEN s.deputy_role LIKE '%_PROF_%' THEN 'prof'
                 WHEN s.deputy_role LIKE '%_PA_%' THEN 'pa'
-                ELSE 'lay'
+                WHEN s.deputy_role LIKE 'ROLE_LAY_DEPUTY' THEN 'lay'
+                ELSE 'none'
             END deputyType,
-            report_type reportType,
+            COALESCE(report_type, 'none') reportType,
             s.score val
         FROM satisfaction s";
     }

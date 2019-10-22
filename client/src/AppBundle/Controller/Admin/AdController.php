@@ -5,8 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,9 +72,8 @@ class AdController extends AbstractController
     }
 
     /**
-     * @Route("/view-user", name="ad_view_user")
+     * @Route("/view-user", name="ad_view_user", methods={"GET", "POST"})
      * @Security("has_role('ROLE_AD')")
-     * @Method({"GET", "POST"})
      * @Template("AppBundle:Admin/Ad:viewUser.html.twig")
      *
      * @param Request $request

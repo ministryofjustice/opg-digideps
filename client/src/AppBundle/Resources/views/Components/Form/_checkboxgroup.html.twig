@@ -1,5 +1,5 @@
 {% if useFormGroup %}
-    <div id="form-group-{{ element.vars.id }}" class="form-group {% if not element.vars.valid %}form-group-error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <div id="form-group-{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 {% endif %}
 
     <fieldset class="govuk-fieldset {{ fieldSetClass }}" {% if hintText %}aria-describedby="{{ element.vars.id }}-hint"{% endif %}>
@@ -13,6 +13,10 @@
 
         {{  form_errors(element) }}
 
+        {% if disabled %}
+            <input type="hidden" name="{{ element.vars.full_name }}" value="{{ element.vars.value }}" />
+        {% endif %}
+
         <div class="govuk-radios {{ classes ?: '' }}" data-module="govuk-radios">
 
         {% for key,choiceElement in element %}
@@ -20,7 +24,7 @@
             {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}
             {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
             {% set description = items[key].description is defined ?  items[key].description : null %}
-            {% set disabled = items[key].disabled is defined and items[key].disabled %}
+            {% set disabled = disabled or (items[key].disabled is defined and items[key].disabled) %}
             {% set conditional = items[key].conditional is defined ? items[key].conditional : '' %}
             {% set labelDataTarget = items[key].dataTarget is defined ? items[key].dataTarget : null %}
 

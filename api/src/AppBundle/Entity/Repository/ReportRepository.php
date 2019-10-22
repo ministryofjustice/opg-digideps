@@ -10,6 +10,7 @@ use AppBundle\Entity\ReportInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * ReportRepository.
@@ -19,6 +20,9 @@ use Doctrine\ORM\QueryBuilder;
  */
 class ReportRepository extends EntityRepository
 {
+    const USER_DETERMINANT = 1;
+    const ORG_DETERMINANT = 2;
+
     /**
      * add empty Debts to Report.
      * Called from doctrine listener.
@@ -104,74 +108,6 @@ class ReportRepository extends EntityRepository
         return $ret;
     }
 
-
-    /**
-     * @param string $select reports|count
-     * @param string $status see Report::STATUS_* constants
-     * @param integer $userId
-     * @param boolean $exclude_submitted
-     * @param string $q search query client firstname/lastname or case number
-     *
-     * @return QueryBuilder
-     */
-    public function getAllReportsQb($select, $status, $userId, $exclude_submitted, $q)
-    {
-        $qb = $this->createQueryBuilder('r');
-
-        if ($select == 'reports') {
-            $qb
-                ->select('r,c,u')
-                ->leftJoin('r.submittedBy', 'sb')
-                ->distinct('c');
-        } elseif ($select == 'count') {
-            $qb->select('COUNT(DISTINCT c)');
-        } else {
-            throw new \InvalidArgumentException(__METHOD__ . ": first must be reports|count");
-        }
-
-        $qb
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('c.users', 'u')
-            ->leftJoin('c.organisation', 'o')
-            ->leftJoin('o.users', 'ou', 'WITH', 'ou.id = ' . $userId)
-            ->where('u.id = ' . $userId)
-            ->orWhere('o.isActivated = true AND ou.id = ' . $userId)
-            ->andWhere('c.archivedAt IS NULL')
-            ->andWhere('c.deletedAt IS NULL')
-        ;
-
-        if ($exclude_submitted) {
-            $qb->andWhere('r.submitted = false OR r.submitted is null');
-        }
-
-        if ($q) {
-            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', $q);
-        }
-
-        // note: reportStatusCached is stored ignoring due date
-        $endOfToday = new \DateTime('today midnight');
-        if ($status == Report::STATUS_READY_TO_SUBMIT) {
-            // reports ready to submit are when reportStatusCached=readyToSubmit AND is also due (enddate < today)
-            $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
-                ->setParameter('status', $status)
-                ->setParameter('endOfToday', $endOfToday);
-        } else if ($status == Report::STATUS_NOT_FINISHED) {
-            // report not finished are report with reportStatusCached=notFinished
-            // OR ready to submit but not yet due
-            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
-                ->setParameter('status', $status)
-                ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
-                ->setParameter('endOfToday', $endOfToday);
-        } else if ($status == Report::STATUS_NOT_STARTED) {
-            $qb->andWhere('r.reportStatusCached = :status')
-                ->setParameter('status', $status);
-        }
-
-        return $qb;
-    }
-
     /**
      * @param array $caseNumbers
      * @param $role
@@ -187,5 +123,68 @@ class ReportRepository extends EntityRepository
             ->setParameter('roleName', $role);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param $id
+     * @param $determinant
+     * @param ParameterBag $query
+     * @param $select
+     * @param null $status
+     * @return array|mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAllByDeterminant($id, $determinant, ParameterBag $query, $select, $status = null)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb
+            ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
+            ->leftJoin('r.client', 'c');
+
+        if ($determinant === self::USER_DETERMINANT) {
+            $qb->leftJoin('c.users', 'u')->where('u.id = ' . $id);
+        } else {
+            $qb->leftJoin('c.organisation', 'o')->where('o.isActivated = true AND o.id = ' . $id);
+        }
+
+        $qb
+            ->andWhere('c.archivedAt IS NULL')
+            ->andWhere('r.submitted = false OR r.submitted is null');
+
+        if ($q = $query->get('q')) {
+            $qb->andWhere('lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike OR c.caseNumber = :q');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
+            $qb->setParameter('q', $q);
+        }
+
+        $endOfToday = new \DateTime('today midnight');
+
+        if ($status === Report::STATUS_READY_TO_SUBMIT) {
+            $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
+                ->setParameter('status', $status)
+                ->setParameter('endOfToday', $endOfToday);
+        } else if ($status === Report::STATUS_NOT_FINISHED) {
+            $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
+                ->setParameter('status', $status)
+                ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
+                ->setParameter('endOfToday', $endOfToday);
+        } else if ($status === Report::STATUS_NOT_STARTED) {
+            $qb->andWhere('r.reportStatusCached = :status')
+                ->setParameter('status', $status);
+        }
+
+        if ($select === 'count') {
+            return $qb->getQuery()->getSingleScalarResult();
+        }
+
+        $qb
+            ->setFirstResult($query->get('offset', 0))
+            ->setMaxResults($query->get('limit', 15))
+            ->addOrderBy('r.endDate', 'ASC')
+            ->addOrderBy('c.caseNumber', 'ASC');
+
+        $result = $qb->getQuery()->getArrayResult();
+
+        return count($result) === 0 ? null : $result;
     }
 }

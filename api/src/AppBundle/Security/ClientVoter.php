@@ -74,7 +74,6 @@ class ClientVoter extends Voter
             return true;
         }
 
-
         if ($client->userBelongsToClientsOrganisation($user)) {
             return true;
         }

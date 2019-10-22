@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\Admin\Client;
 
 use AppBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +28,23 @@ class ClientController extends AbstractController
     {
         $client = $this->getRestClient()->get('v2/client/' . $id, 'Client');
 
+        $namedDeputy = null;
+        if (!is_null($client->getNamedDeputy())) {
+            $namedDeputy = $this->getRestClient()->get('user/' . $client->getNamedDeputy()->getId(), 'User');
+        } else {
+            $clientWithUsers = $this->getRestClient()->get('client/' . $id . '/details', 'Client');
+
+            foreach ($clientWithUsers->getUsers() as $user) {
+                if ($user->isLayDeputy()) {
+                    $namedDeputy = $clientWithUsers->getUsers()[0];
+                    break;
+                }
+            }
+        }
+
         return [
-            'client'   => $client,
+            'client'      => $client,
+            'namedDeputy' => $namedDeputy,
         ];
     }
 }

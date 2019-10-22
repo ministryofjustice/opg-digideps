@@ -124,10 +124,10 @@ Feature: Add PA users and activate PA user (journey)
     When I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I click on "user-behat-pa2publicguardiangovuk" in the "user-behat-pa2publicguardiangovuk" region
     Then the following fields should have the corresponding values:
-      | admin_email      | behat-pa2@publicguardian.gov.uk |
-      | admin_firstname  | Pa User                             |
-      | admin_lastname   | Two                                 |
-      | admin_roleName   | ROLE_PA_NAMED                       |
+      | admin_email          | behat-pa2@publicguardian.gov.uk |
+      | admin_firstname      | Pa User                         |
+      | admin_lastname       | Two                             |
+      | admin_roleNameDeputy | ROLE_PA_NAMED                   |
     When I fill in the following:
       | admin_email      | behat-pa2-edited@publicguardian.gov.uk |
       | admin_firstname  | Edited Pa User                             |

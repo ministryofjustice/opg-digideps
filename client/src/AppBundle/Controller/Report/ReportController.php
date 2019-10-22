@@ -12,7 +12,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
 
 use AppBundle\Service\ReportSubmissionService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;

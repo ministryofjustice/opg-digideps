@@ -74,7 +74,7 @@ Feature: deputy / report / edit client
     #         | client_phone | 0987654321 |
     #     And I press "client_save"
     #     Then I should be on "/deputyship-details/your-client"
-    #     And the last email should have been sent to "digideps+update-contact@digital.justice.gov.uk"
+    #     And the last email should have been sent to "digideps+noop@digital.justice.gov.uk"
     #     And the last email should contain "The contact details of the following client have been updated:"
     #     And the last email should contain "Ulrich Wentz"
     #     And the last email should contain "17 South Parade"

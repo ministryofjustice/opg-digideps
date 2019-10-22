@@ -3,8 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,8 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class TeamController extends RestController
 {
     /**
-     * @Route("/members")
-     * @Method({"GET"})
+     * @Route("/members", methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getMembers(Request $request)
@@ -30,8 +28,7 @@ class TeamController extends RestController
     }
 
     /**
-     * @Route("/member/{id}", requirements={"id":"\d+"})
-     * @Method({"GET"})
+     * @Route("/member/{id}", requirements={"id":"\d+"}, methods={"GET"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function getMemberById(Request $request, $id)
@@ -45,8 +42,7 @@ class TeamController extends RestController
     /**
      * Add the user (retrieved by Id) to the teams the current user belongs to
      *
-     * @Route("/add-to-team/{userId}")
-     * @Method({"PUT"})
+     * @Route("/add-to-team/{userId}", methods={"PUT"})
      * @Security("has_role('ROLE_ORG')")
      */
     public function addToTeam(Request $request, $userId)
@@ -63,8 +59,7 @@ class TeamController extends RestController
     /**
      * Delete Org team membership, and also the user if belonging to no teams
      *
-     * @Route("/delete-membership/{userId}")
-     * @Method({"DELETE"})
+     * @Route("/delete-membership/{userId}", methods={"DELETE"})
      * @Security("has_role('ROLE_ORG_NAMED') or has_role('ROLE_ORG_ADMIN')")
      *
      * @param Request $request

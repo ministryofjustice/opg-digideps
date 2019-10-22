@@ -5,25 +5,23 @@
 // Check your answers (from govuk prototype)
 .check-your-answers {
 
-  &.columns-2 {
-
-    td:first-child {
-      width: 50%;
+    &.columns-2 {
+        td:first-child {
+            width: 50%;
+        }
     }
 
-  }
+    td {
+        @include core-19;
+        vertical-align: top;
+        word-break: break-word;
+        hyphens: auto;
+    }
 
-  td {
-    @include core-19;
-    vertical-align: top;
-    word-break: break-word;
-    hyphens: auto;
-  }
-
-  .change-answer {
-    padding-right: 0;
-    font-weight: bold;
-    text-align: right;
-    white-space: nowrap;
-  }
+    .change-answer {
+        padding-right: 0;
+        font-weight: bold;
+        text-align: right;
+        white-space: nowrap;
+    }
 }

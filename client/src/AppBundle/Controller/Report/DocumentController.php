@@ -4,17 +4,13 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Entity\Report\Document as Document;
 use AppBundle\Form as FormDir;
 use AppBundle\Security\DocumentVoter;
 use AppBundle\Service\DocumentService;
-use AppBundle\Service\File\Checker\Exception\RiskyFileException;
-use AppBundle\Service\File\Checker\Exception\VirusFoundException;
-use AppBundle\Service\File\Checker\FileCheckerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
 class DocumentController extends AbstractController
@@ -106,6 +102,49 @@ class DocumentController extends AbstractController
     public function step2Action(Request $request, $reportId)
     {
         $report = $this->getReport($reportId, self::$jmsGroups);
+        list($nextLink, $backLink) = $this->buildNavigationLinks($report);
+
+        $formAction = $this->generateUrl('report_documents', ['reportId'=>$reportId]);
+        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' =>  $formAction]);
+
+        if ($request->get('error') == 'tooBig') {
+            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
+            $form->get('file')->addError(new FormError($message));
+        }
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $files = $request->files->get('report_document_upload')['files'];
+            $verified = $this->container->get('multi_file_form_upload_verifier')->verify($files, $form, $report);
+
+            if ($verified) {
+                try {
+                    $this->uploadFiles($files, $report);
+                    $request->getSession()->getFlashBag()->add('notice', 'Files uploaded');
+                    return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
+                } catch (\Throwable $e) {
+                    $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
+                }
+            }
+        }
+
+        return [
+            'report'   => $report,
+            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
+            'backLink' => $backLink,
+            'nextLink' => $nextLink,
+            'form'     => $form->createView(),
+        ];
+    }
+
+    /**
+     * @param EntityDir\Report\Report $report
+     * @return array
+     * @throws \Exception
+     */
+    private function buildNavigationLinks(EntityDir\Report\Report $report): array
+    {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
             $backLink = $this->generateUrl('documents_step', ['reportId' => $report->getId(), 'step' => 1]);
@@ -118,68 +157,29 @@ class DocumentController extends AbstractController
             }
         }
 
-        $fileUploader = $this->get('file_uploader');
+        return [$nextLink, $backLink];
+    }
 
-        // fake documents. remove when the upload is implemented
-        $document = new Document();
-        $document->setReport($report);
-        $form = $this->createForm(FormDir\Report\DocumentUploadType::class, $document, [
-            'action' => $this->generateUrl('report_documents', ['reportId'=>$reportId]) //needed to reset possible JS errors
-        ]);
-        if ($request->get('error') == 'tooBig') {
-            $message = $this->get('translator')->trans('document.file.errors.maxSizeMessage', [], 'validators');
-            $form->get('file')->addError(new FormError($message));
+    /**
+     * @param array $files
+     * @param EntityDir\Report\Report $report
+     */
+    private function uploadFiles(array $files, EntityDir\Report\Report $report): void
+    {
+        foreach ($files as $file) {
+            $this->uploadFile($file, $report);
         }
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            /* @var $uploadedFile UploadedFile */
-            $uploadedFile = $document->getFile();
+    }
 
-            /** @var FileCheckerInterface $fileChecker */
-            $fileChecker = $this->get('file_checker_factory')->factory($uploadedFile);
-
-            try {
-                $fileChecker->checkFile();
-                if ($fileChecker->isSafe()) {
-                    $fileUploader->uploadFile(
-                        $report,
-                        file_get_contents($uploadedFile->getPathName()),
-                        $uploadedFile->getClientOriginalName(),
-                        false
-                    );
-                    $request->getSession()->getFlashBag()->add('notice', 'File uploaded');
-
-                } else {
-                    $request->getSession()->getFlashBag()->add('notice', 'File could not be uploaded');
-                }
-
-                return $this->redirectToRoute('report_documents', ['reportId' => $reportId]);
-            } catch (\Throwable $e) {
-                $errorToErrorTranslationKey = [
-                    RiskyFileException::class => 'risky',
-                    VirusFoundException::class => 'virusFound',
-                ];
-                $errorClass = get_class($e);
-                if (isset($errorToErrorTranslationKey[$errorClass])) {
-                    $errorKey = $errorToErrorTranslationKey[$errorClass];
-                } else {
-                    $errorKey = 'generic';
-                }
-                $message = $this->get('translator')->trans("document.file.errors.{$errorKey}", [
-                    '%techDetails%' => $this->getParameter('kernel.debug') ? $e->getMessage() : $request->headers->get('x-request-id'),
-                ], 'validators');
-                $form->get('file')->addError(new FormError($message));
-                $this->get('logger')->error($e->getMessage()); //fully log exceptions
-            }
-        }
-
-        return [
-            'report'   => $report,
-            'step'     => $request->get('step'), // if step is set, this is used to show the save and continue button
-            'backLink' => $backLink,
-            'nextLink' => $nextLink,
-            'form'     => $form->createView(),
-        ];
+    /**
+     * @param UploadedFile $file
+     * @param EntityDir\Report\Report $report
+     */
+    private function uploadFile(UploadedFile $file, EntityDir\Report\Report $report): void
+    {
+        $this
+            ->get('file_uploader')
+            ->uploadFile($report, file_get_contents($file->getPathName()), $file->getClientOriginalName(), false);
     }
 
     /**

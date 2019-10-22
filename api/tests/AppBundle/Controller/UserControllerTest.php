@@ -166,6 +166,25 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('pt.new', $data['pa_team_name']);
     }
 
+    public function testUpdateNotPermittedToChangeType()
+    {
+        $deputyId = self::$deputy1->getId();
+        $url = '/user/' . $deputyId;
+
+        $output = $this->assertJsonRequest('PUT', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'lastname' => self::$deputy1->getLastname(),
+                'email' => self::$deputy1->getEmail(),
+                'address1' => self::$deputy1->getAddress1(),
+                'role_name' => User::ROLE_ADMIN
+            ],
+        ]);
+
+        $this->assertEquals('Cannot change realm of user\'s role', $output['message']);
+    }
+
     public function testIsPasswordCorrectAuth()
     {
         $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';
@@ -364,7 +383,7 @@ class UserControllerTest extends AbstractTestController
     {
         $deputy5 = self::fixtures()->createUser();
         $deputy5->setRoleName(User::ROLE_LAY_DEPUTY);
-        
+
         self::fixtures()->createClient($deputy5);
         self::fixtures()->createClient($deputy5);
 

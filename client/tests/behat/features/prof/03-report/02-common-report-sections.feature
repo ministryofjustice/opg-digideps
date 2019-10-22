@@ -114,26 +114,26 @@ Feature: PROF user edits 102-5 report sections common to ALL report types
     And the step with the following values CAN be submitted:
       | document_wishToProvideDocumentation_0 | yes |
     # check empty file error
-    When I attach the file "empty-file.pdf" to "report_document_upload_file"
+    When I attach the file "empty-file.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
     # check not a pdf file error
-    When I attach the file "not-a-pdf.pdf" to "report_document_upload_file"
+    When I attach the file "not-a-pdf.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
-    When I attach the file "good.pdf" to "report_document_upload_file"
+    When I attach the file "good.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the form should be valid
     And each text should be present in the corresponding region:
       | good.pdf        | document-list |
     # check duplicate file error
-    When I attach the file "good.pdf" to "report_document_upload_file"
+    When I attach the file "good.pdf" to "report_document_upload_files"
     And I click on "attach-file"
     Then the following fields should have an error:
-      | report_document_upload_file   |
+      | report_document_upload_files   |
 
   Scenario: PROF deletes document from 102-5
     Given I am logged in as "behat-prof1@publicguardian.gov.uk" with password "Abcd1234"

@@ -4,8 +4,7 @@ namespace AppBundle\Controller\Report;
 
 use AppBundle\Controller\RestController;
 use AppBundle\Entity as EntityDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -17,8 +16,7 @@ class LifestyleController extends RestController
     private $sectionIds = [EntityDir\Report\Report::SECTION_LIFESTYLE];
 
     /**
-     * @Route("/lifestyle")
-     * @Method({"POST"})
+     * @Route("/lifestyle", methods={"POST"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function addAction(Request $request)
@@ -42,8 +40,7 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/lifestyle/{id}")
-     * @Method({"PUT"})
+     * @Route("/lifestyle/{id}", methods={"PUT"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function updateAction(Request $request, $id)
@@ -63,8 +60,7 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/{reportId}/lifestyle")
-     * @Method({"GET"})
+     * @Route("/{reportId}/lifestyle", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $reportId
@@ -80,8 +76,7 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/lifestyle/{id}")
-     * @Method({"GET"})
+     * @Route("/lifestyle/{id}", methods={"GET"})
      * @Security("has_role('ROLE_DEPUTY')")
      *
      * @param int $id
@@ -99,8 +94,7 @@ class LifestyleController extends RestController
     }
 
     /**
-     * @Route("/lifestyle/{id}")
-     * @Method({"DELETE"})
+     * @Route("/lifestyle/{id}", methods={"DELETE"})
      * @Security("has_role('ROLE_DEPUTY')")
      */
     public function deleteLifestyle($id)

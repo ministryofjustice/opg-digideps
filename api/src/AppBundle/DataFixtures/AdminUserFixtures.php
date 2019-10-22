@@ -19,7 +19,7 @@ class AdminUserFixtures extends AbstractDataFixture
         $adUser = (new User())
             ->setFirstname('AD user')
             ->setLastname('ADsurname')
-            ->setEmail('ad@publicguardian.gov.uk')
+            ->setEmail('behat-ad@publicguardian.gov.uk')
             ->setActive(true)
             ->setRoleName('ROLE_AD');
 

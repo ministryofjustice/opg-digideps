@@ -1,51 +1,61 @@
 parameters:
     locale: en
-    secret: {{ getv "/frontend/secret" }}
-    api_base_url: {{ getv "/frontend/api/url" }}
-    api_client_secret: {{ getv "/frontend/api/client/secret" }}
-    non_admin_host: {{ getv "/frontend/nonadmin/host" }}
-    admin_host: {{ getv "/frontend/admin/host" }}
-    env:  {{ getv "/frontend/role" }}
+    secret: {{ getv "/secret" }}
+    api_base_url: {{ getv "/api/url" }}
+    api_client_secret: {{ getv "/api/client/secret" }}
+    non_admin_host: {{ getv "/nonadmin/host" }}
+    admin_host: {{ getv "/admin/host" }}
+    env:  {{ getv "/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
-    session_cookie_secure: {{ getv "/frontend/session/cookie/secure" }}
-    redis_dsn:  {{ getv "/frontend/session/redis/dsn" }}
+    session_cookie_secure: {{ getv "/session/cookie/secure" "true" }}
+    redis_dsn:  {{ getv "/session/redis/dsn" }}
     session_prefix: dd_session
     use_redis: true
     session_engine: redis
     log_level: notice
     log_path: /var/log/app/application.log
     ga:
-        default: {{ getv "/frontend/ga/default" }}
-        gds: {{ getv "/frontend/ga/gds" }}
+        default: {{ getv "/ga/default" }}
+        gds: {{ getv "/ga/gds" }}
     opg_docker_tag: {{ getv "/opg/docker/tag" }}
-    behat_controller_enabled: {{ getv "/frontend/behat/controller/enabled" }}
+    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
     email_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: -
+    {{ if eq (getv "/email/send/internal") "true" }}
     email_report_submit:
-        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
-        to_email: {{ getv "/frontend/email/report/to" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: deputyshipservice@publicguardian.gov.uk
     email_feedback_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
-        to_email: {{ getv "/frontend/email/feedback/to" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: digideps+feedback@digital.justice.gov.uk
     email_update_send:
-        from_email: noreply-opgdeputyservice@{{ getv "/frontend/email/domain" }}
-        to_email: {{ getv "/frontend/email/update/to" }}
-  {{ if lsdir "/frontend/smtp" }}
-    smtp_default_hostname: {{ getv "/frontend/smtp/default/hostname" }}
-    smtp_default_port: {{ getv "/frontend/smtp/default/port" }}
-    smtp_default_user: {{ getv "/frontend/smtp/default/user" }}
-    smtp_default_password: {{ getv "/frontend/smtp/default/password" }}
-    smtp_secure_hostname: {{ getv "/frontend/smtp/secure/hostname" }}
-    smtp_secure_port: {{ getv "/frontend/smtp/secure/port" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: laydeputysupport@publicguardian.gov.uk
+    {{ else }}
+    email_report_submit:
+        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
+        to_email: digideps+noop@digital.justice.gov.uk
+    email_feedback_send:
+        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
+        to_email: digideps+noop@digital.justice.gov.uk
+    email_update_send:
+        from_email: noreply-opgdeputyservice@digital.justice.gov.uk
+        to_email: digideps+noop@digital.justice.gov.uk
+    {{ end }}
+  {{ if lsdir "/smtp" }}
+    smtp_default_hostname: {{ getv "/smtp/default/hostname" "email-smtp.eu-west-1.amazonaws.com" }}
+    smtp_default_port: {{ getv "/smtp/default/port" "587" }}
+    smtp_default_user: {{ getv "/smtp/default/user" }}
+    smtp_default_password: {{ getv "/smtp/default/password" }}
   {{ end }}
     wkhtmltopdf_address: {{ if exists "/wkhtmltopdf/address" }}{{ getv "/wkhtmltopdf/address" }}{{ else }}'http://wkhtmltopdf'{{ end }}
-    s3_bucket_name: {{ if exists "/frontend/s3/bucketname" }}{{ getv "/frontend/s3/bucketname" }}{{ else }}not_set{{ end }}
+    s3_bucket_name: {{ if exists "/s3/bucketname" }}{{ getv "/s3/bucketname" }}{{ else }}not_set{{ end }}
     s3_client_params:
       version: 'latest'
       region: 'eu-west-1'
-  {{ if exists "/frontend/s3/localstack" }}
+  {{ if exists "/s3/localstack" }}
       endpoint: 'http://localstack:4572'
       use_path_style_endpoint: true
       validate: false
@@ -55,5 +65,5 @@ parameters:
   {{ else }}
       validate: true
   {{ end }}
-    file_scanner_url: {{ if exists "/frontend/filescanner/url" }}{{ getv "/frontend/filescanner/url" }}{{ else }}https://file-scanner-api:8443{{ end }}
-    file_scanner_sslverify: {{ if exists "/frontend/filescanner/sslverify" }}{{ getv "/frontend/filescanner/sslverify" }}{{ else }}true{{ end }}
+    file_scanner_url: {{ if exists "/filescanner/url" }}{{ getv "/filescanner/url" }}{{ else }}https://file-scanner-api:8443{{ end }}
+    file_scanner_sslverify: {{ if exists "/filescanner/sslverify" }}{{ getv "/filescanner/sslverify" }}{{ else }}true{{ end }}

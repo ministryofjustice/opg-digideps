@@ -1,8 +1,8 @@
 .opg-cookie-banner {
     padding: 20px 0;
     background-color: govuk-colour('white');
-    box-sizing: border-box;
     color: govuk-colour('green');
+    box-sizing: border-box;
 
     &__text  {
         color: govuk-colour('green');
@@ -11,8 +11,8 @@
     &__button {
         margin-bottom: 0;
         border-color: govuk-colour('green');
-        color: govuk-colour('green') !important;
         background-color: govuk-colour('white') !important;
+        color: govuk-colour('green') !important;
         box-shadow: none;
     }
 

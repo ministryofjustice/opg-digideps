@@ -41,6 +41,9 @@ services:
     arguments:
       - '@AppBundle\v2\Assembler\ClientAssembler'
 
+  PlainDeputyAssembler:
+    class: AppBundle\v2\Assembler\DeputyAssembler
+
   AppBundle\v2\Assembler\OrganisationAssembler:
     class: AppBundle\v2\Assembler\OrganisationAssembler
     arguments:

@@ -27,6 +27,7 @@ class ClientTransformer
      * @param ReportTransformer $reportTransformer
      * @param NdrTransformer $ndrTransformer
      * @param OrganisationTransformer $organisationTransformer
+     * @param DeputyTransformer $deputyTransformer
      */
     public function __construct(
         ReportTransformer $reportTransformer,

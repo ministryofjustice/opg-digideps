@@ -169,6 +169,10 @@ class UserFixtures extends AbstractDataFixture
             ->setAddress('Victoria road')
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
+        if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
+            $client->setNamedDeputy($user);
+        }
+
         $manager->persist($client);
         $user->addClient($client);
 

@@ -30,7 +30,7 @@
     </div>
 
     {{ form_start(form, {'attr': {'id': 'upload_form', 'class': 'push-double--bottom'}}) }}
-    {{ form_input(form.file,'form.file', {
+    {{ form_input(form.files,'form.files', {
         'labelText':  '' | trans ,
         'labelClass': 'visually-hidden',
         'inputClass': 'no-border behat-link-choose-file' })

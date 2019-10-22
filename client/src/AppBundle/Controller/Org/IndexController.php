@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Org;
 use AppBundle\Controller\AbstractController;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,21 +31,24 @@ class IndexController extends AbstractController
             'offset'            => $request->query->get('offset') ?: 0,
         ];
 
-        $ret = $this->getRestClient()->get(
-            '/report/get-all?' . http_build_query($currentFilters),
-            'array'
+        $endpoint = sprintf(
+            '%s?%s',
+            $this->getUser()->belongsToActiveOrganisation() ?'/report/get-all-by-org' : 'report/get-all-by-user',
+            http_build_query($currentFilters)
         );
-        /* @var $clients EntityDir\Client[] */
-        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $ret['reports']);
+
+        $response = $this->getRestClient()->get($endpoint, 'array');
+
+        $reports = $this->getRestClient()->arrayToEntities(EntityDir\Report\Report::class . '[]', $response['reports']);
 
         return [
             'filters' => $currentFilters,
             'reports' => $reports,
             'counts'  => [
-                'total'         => $ret['counts']['total'],
-                'notStarted'    => $ret['counts']['notStarted'],
-                'notFinished'   => $ret['counts']['notFinished'],
-                'readyToSubmit' => $ret['counts']['readyToSubmit'],
+                'total' => $response['counts']['total'],
+                'notStarted' => $response['counts']['notStarted'],
+                'notFinished' => $response['counts']['notFinished'],
+                'readyToSubmit' => $response['counts']['readyToSubmit'],
             ],
         ];
     }

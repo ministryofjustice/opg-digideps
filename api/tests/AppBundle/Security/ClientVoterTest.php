@@ -17,27 +17,27 @@ use Mockery as m;
 
 class ClientVoterTest extends TestCase
 {
-    public function testClientBelongsToActiveOrg()
-    {
-        $orgMemberUser = new User();
-        $org = new Organisation();
-        $org->addUser($orgMemberUser);
-        $org->setIsActivated(true);
+     public function testClientBelongsToActiveOrg()
+     {
+         $orgMemberUser = new User();
+         $org = new Organisation();
+         $org->addUser($orgMemberUser);
+         $org->setIsActivated(true);
 
-        $subject = new Client();
-        $subject->setOrganisation($org);
+         $subject = new Client();
+         $subject->setOrganisation($org);
 
-        $token = self::prophesize(TokenInterface::class);
-        $token->getUser()->willReturn($orgMemberUser);
+         $token = self::prophesize(TokenInterface::class);
+         $token->getUser()->willReturn($orgMemberUser);
 
-        $security = self::prophesize(Security::class);
-        $sut = new ClientVoter($security->reveal());
+         $security = self::prophesize(Security::class);
+         $sut = new ClientVoter($security->reveal());
 
-        $attributes = [$sut::VIEW, $sut::EDIT];
-        $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
+         $attributes = [$sut::VIEW, $sut::EDIT];
+         $voteResult = $sut->vote($token->reveal(), $subject, $attributes);
 
-        self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
-    }
+         self::assertEquals($sut::ACCESS_GRANTED, $voteResult);
+     }
 
     public function testClientBelongsToInactiveOrgButUserBelongsToClient()
     {

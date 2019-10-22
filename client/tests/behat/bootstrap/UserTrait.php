@@ -33,17 +33,25 @@ trait UserTrait
             $this->fillField('admin_addressPostcode', $postcode);
         }
         $roleName = self::$roleStringToRoleName[strtolower($role)];
-        $this->fillField('admin_roleName', $roleName);
-        switch ($ndrType) {
-            case 'NDR-enabled':
-                $this->checkOption('admin_ndrEnabled');
-                break;
-            case 'NDR-disabled':
-                $this->uncheckOption('admin_ndrEnabled');
-                break;
-            default:
-                throw new \RuntimeException("$ndrType not a valid NDR type");
+
+        if ($roleName === User::ROLE_LAY_DEPUTY) {
+            $this->fillField('admin_roleType_0', 'deputy');
+            $this->fillField('admin_roleNameDeputy', $roleName);
+            switch ($ndrType) {
+                case 'NDR-enabled':
+                    $this->checkOption('admin_ndrEnabled');
+                    break;
+                case 'NDR-disabled':
+                    $this->uncheckOption('admin_ndrEnabled');
+                    break;
+                default:
+                    throw new \RuntimeException("$ndrType not a valid NDR type");
+            }
+        } else {
+            $this->fillField('admin_roleType_1', 'staff');
+            $this->fillField('admin_roleNameStaff', $roleName);
         }
+
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);

@@ -6,8 +6,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,8 +25,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/client/{caseNumber}")
-     * @Method({"PUT"})
+     * @Route("/client/{caseNumber}", methods={"PUT"})
      */
     public function clientEditAction(Request $request, $caseNumber)
     {
@@ -64,8 +62,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/report/{reportId}")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}", methods={"PUT"})
      */
     public function reportEditAction(Request $request, $reportId)
     {
@@ -94,8 +91,7 @@ class BehatController extends RestController
     }
 
     /**
-     * @Route("/user/{email}")
-     * @Method({"PUT"})
+     * @Route("/user/{email}", methods={"PUT"})
      */
     public function editUser(Request $request, $email)
     {

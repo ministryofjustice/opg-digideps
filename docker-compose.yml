@@ -125,11 +125,6 @@ services:
             - ./api/web:/var/www/web
         env_file:
             - ./api/docker/env/api.env
-        environment:
-            NGINX_LOG_LEVEL: warn
-            OPG_NGINX_CLIENTMAXBODYSIZE: 10M
-            OPG_NGINX_CLIENTBODYTIMEOUT: 120s
-            OPG_NGINX_INDEX: app_dev.php
         restart: always
 
     postgres:
@@ -238,3 +233,10 @@ services:
         volumes:
             - ./client/:/app
 
+    sync:
+        build: ./sync
+        depends_on:
+          - localstack
+          - postgres
+        env_file:
+          - sync/sync.env

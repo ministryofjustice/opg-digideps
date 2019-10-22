@@ -210,7 +210,7 @@ Feature: PA cannot access other's PA's reports and clients
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
 
-  Scenario: PA org 1 deputy logs in and should now see their existing client (from existing team structure) but not org 2's client
+  Scenario: PA org 1 deputy logs in and should now only see the clients in their organisation
     # log in shown in PA dashboard
     Given I am logged in as "behat-pa-org1@pa-org1.gov.uk" with password "Abcd1234"
     Then I should see the "client-40000041" region
@@ -220,11 +220,11 @@ Feature: PA cannot access other's PA's reports and clients
     Then I go to the report URL "overview" for "40000042-report"
     And the response status code should be 500
 
-  Scenario: PA org 2 deputy logs in and should now see their existing client (from existing team structure) and new org 1 client
+  Scenario: PA org 2 deputy logs in and should now only see the clients in their organisation
     # log in shown in PA dashboard
     Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
     Then I should see the "client-40000041" region
-    And I should see the "client-40000042" region
+    And I should not see the "client-40000042" region
     Then I go to the report URL "overview" for "40000041-report"
     And the response status code should be 200
     Then I go to the report URL "overview" for "40000042-report"
@@ -253,7 +253,7 @@ Feature: PA cannot access other's PA's reports and clients
     # log in shown in PA dashboard
     Given I am logged in as "behat-pa-org2@pa-org2.gov.uk" with password "Abcd1234"
     Then I should see the "client-40000041" region
-    And I should see the "client-40000042" region
+    And I should not see the "client-40000042" region
     Then I go to the report URL "overview" for "40000041-report"
     And the response status code should be 200
     Then I go to the report URL "overview" for "40000042-report"

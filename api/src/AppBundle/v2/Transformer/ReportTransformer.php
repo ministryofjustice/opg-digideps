@@ -27,6 +27,7 @@ class ReportTransformer
         $transformed = [
             'id' => $dto->getId(),
             'submitted' => $dto->getSubmitted(),
+            'type' => $dto->getType(),
             'due_date' => $this->transformDate($dto, 'dueDate', 'Y-m-d'),
             'submit_date' => $this->transformDate($dto, 'submitDate', 'Y-m-d\TH:i:sP'),
             'un_submit_date' => $this->transformDate($dto, 'unSubmitDate', 'Y-m-d'),
