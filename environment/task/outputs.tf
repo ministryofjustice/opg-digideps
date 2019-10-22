@@ -5,11 +5,14 @@ output "render" {
     NetworkConfiguration = {
       AwsvpcConfiguration = {
         SecurityGroups = [aws_security_group.task.id]
-        Subnets = var.subnets
+        Subnets = var.subnet_ids
       }
     }
     TaskDefinition = aws_ecs_task_definition.task.arn
   }
 }
 
+output "security_group_id" {
+  value = aws_security_group.task.id
+}
 

@@ -1,35 +1,9 @@
-#TODO: add types
-
-variable "vpc_id" {
-
-}
-
-variable "default_tags" {
-
-}
-
-variable "environment" {
-
-}
-
-variable "execution_role_arn" {
-
-}
-
-variable "name" {
-
-}
-
-variable "container_definitions" {
-
-}
-
-variable "cluster_name" {
-
-}
-
-variable "subnets" {
-
-}
-
+variable "vpc_id" { type = string }
+variable "default_tags" { type = map(string) }
+variable "environment" { type = string }
+variable "execution_role_arn" { type = string }
+variable "name" { type = string }
+variable "container_definitions" { type = string }
+variable "cluster_name" { type = string }
+variable "subnet_ids" { type = list(string) }
 variable "task_role_arn" { type = string }

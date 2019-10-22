@@ -20,13 +20,22 @@ resource "aws_security_group_rule" "api_rds_task_in" {
   source_security_group_id = aws_security_group.api_task.id
 }
 
-resource "aws_security_group_rule" "api_rds_sync_in" {
+resource "aws_security_group_rule" "api_rds_backup_in" {
   type                     = "ingress"
   protocol                 = "tcp"
   from_port                = 5432
   to_port                  = 5432
   security_group_id        = aws_security_group.api_rds.id
-  source_security_group_id = aws_security_group.sync.id
+  source_security_group_id = module.backup.security_group_id
+}
+
+resource "aws_security_group_rule" "api_rds_restore_in" {
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = 5432
+  to_port                  = 5432
+  security_group_id        = aws_security_group.api_rds.id
+  source_security_group_id = module.restore.security_group_id
 }
 
 data "aws_kms_key" "rds" {
