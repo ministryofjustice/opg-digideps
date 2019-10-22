@@ -5,6 +5,7 @@ module "backup" {
   default_tags = local.default_tags
   environment = local.environment
   execution_role_arn = aws_iam_role.execution_role.arn
+  task_role_arn = data.aws_iam_role.sync.arn
   vpc_id = data.aws_vpc.vpc.id
   container_definitions = "[${local.backup_container}]"
 }
