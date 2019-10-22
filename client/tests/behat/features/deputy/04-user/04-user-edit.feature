@@ -70,7 +70,7 @@ Feature: deputy / report / edit user
     #        | profile_phoneAlternative | 0131 222 2222 |
     #     And I press "profile_save"
     #     Then I should be on "/deputyship-details/your-details"
-    #     And the last email should have been sent to "digideps+update-contact@digital.justice.gov.uk"
+    #     And the last email should have been sent to "digideps+noop@digital.justice.gov.uk"
     #     And the last email should contain "The contact details of the following deputy have been updated:"
     #     And the last email should contain "Maruxita Alvarez"
     #     And the last email should contain "1 Scotland Street"
