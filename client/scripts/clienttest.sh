@@ -12,7 +12,7 @@ export PGDATABASE=${DATABASE_NAME:=api}
 export PGUSER=${DATABASE_USERNAME:=api}
 
 # wait for frontend to come up
-waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure
+waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure
 
 # create directories used by tests
 mkdir -p /var/log/app

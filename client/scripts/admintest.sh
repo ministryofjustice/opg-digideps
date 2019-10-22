@@ -1,7 +1,7 @@
 #!/bin/bash
 #let's configure environment
 confd -onetime -backend env
-waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure
+waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure
 
 cd /var/www
 mkdir -p /tmp/behat

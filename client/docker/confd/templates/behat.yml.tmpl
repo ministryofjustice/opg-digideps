@@ -86,8 +86,8 @@ default:
                   guzzle_parameters:
                     verify: false
               files_path: %paths.base%/fixtures/
-          {{ if exists "/frontend/nonadmin/host" }}
-              base_url: {{ getv "/frontend/nonadmin/host" }}
+          {{ if exists "/nonadmin/host" }}
+              base_url: {{ getv "/nonadmin/host" }}
           {{ else }}
               base_url: "https://digideps.local/"
           {{ end }}
@@ -191,8 +191,8 @@ headless:
                 guzzle_parameters:
                     verify: false
             files_path: %paths.base%/fixtures/
-        {{ if exists "/frontend/nonadmin/host" }}
-            base_url: {{ getv "/frontend/nonadmin/host" }}
+        {{ if exists "/nonadmin/host" }}
+            base_url: {{ getv "/nonadmin/host" }}
         {{ else }}
             base_url: "https://digideps.local/"
         {{ end }}

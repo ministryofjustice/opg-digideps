@@ -70,7 +70,7 @@ RUN mkdir -p var/cache \
   && chown -R www-data var
 
 CMD confd -onetime -backend env \
-  && waitforit -address=$FRONTEND_API_URL/manage/availability -timeout=$TIMEOUT -insecure \
+  && waitforit -address=$API_URL/manage/availability -timeout=$TIMEOUT -insecure \
   && php-fpm -D \
   && nginx
 
