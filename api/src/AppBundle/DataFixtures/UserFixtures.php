@@ -3,6 +3,7 @@ namespace AppBundle\DataFixtures;
 
 use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\NamedDeputy;
 use AppBundle\Entity\Ndr\Ndr;
 use AppBundle\Entity\Report\Report;
 use AppBundle\Entity\User;
@@ -170,7 +171,20 @@ class UserFixtures extends AbstractDataFixture
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
 
         if ($data['deputyType'] === 'PROF' || $data['deputyType'] === 'PA') {
-            $client->setNamedDeputy($user);
+            $namedDeputy = new NamedDeputy();
+            $namedDeputy
+                ->setFirstname('Named')
+                ->setLastname('Deputy ' . $data['id'])
+                ->setDeputyNo('nd-' . $data['id'])
+                ->setEmail1('behat-nd-' . $data['id'] . '@publicguardian.gov.uk')
+                ->setPhoneMain('07911111111111')
+                ->setAddress1('Victoria Road')
+                ->setAddressPostcode('SW1')
+                ->setAddressCountry('GB');
+
+            $manager->persist($namedDeputy);
+
+            $client->setNamedDeputy($namedDeputy);
         }
 
         $manager->persist($client);
