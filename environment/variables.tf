@@ -9,19 +9,19 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      account_id             = string
-      admin_whitelist        = list(string)
-      force_destroy_bucket   = bool
-      front_whitelist        = list(string)
-      ga_default             = string
-      ga_gds                 = string
-      subdomain_enabled      = bool
-      is_production          = number
-      secrets_prefix         = string
-      task_count             = number
-      test_enabled           = bool
-      db_subnet_group        = string
-      ec_subnet_group        = string
+      account_id           = string
+      admin_whitelist      = list(string)
+      force_destroy_bucket = bool
+      front_whitelist      = list(string)
+      ga_default           = string
+      ga_gds               = string
+      subdomain_enabled    = bool
+      is_production        = number
+      secrets_prefix       = string
+      task_count           = number
+      test_enabled         = bool
+      db_subnet_group      = string
+      ec_subnet_group      = string
     })
   )
 }
