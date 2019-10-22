@@ -1,7 +1,3 @@
-data "aws_iam_role" "task" {
-  name = "task"
-}
-
 resource "aws_security_group" "task" {
   name_prefix = aws_ecs_task_definition.task.family
   vpc_id      = var.vpc_id
@@ -29,7 +25,7 @@ resource "aws_ecs_task_definition" "task" {
   cpu                      = 256
   memory                   = 512
   container_definitions    = var.container_definitions
-  task_role_arn            = data.aws_iam_role.task.arn
+  task_role_arn            = var.task_role_arn
   execution_role_arn       = var.execution_role_arn
   tags                     = var.default_tags
 }

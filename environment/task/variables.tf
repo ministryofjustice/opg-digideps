@@ -1,3 +1,5 @@
+#TODO: add types
+
 variable "vpc_id" {
 
 }
@@ -29,3 +31,5 @@ variable "cluster_name" {
 variable "subnets" {
 
 }
+
+variable "task_role_arn" { type = string }
