@@ -22,10 +22,6 @@ data "aws_secretsmanager_secret" "admin_frontend_secret" {
   name = join("/", compact([local.account.secrets_prefix, "admin-frontend-secret"]))
 }
 
-data "aws_secretsmanager_secret" "oauth2_client_secret" {
-  name = join("/", compact([local.account.secrets_prefix, "oauth2-client-secret"]))
-}
-
 data "aws_secretsmanager_secret" "admin_api_client_secret" {
   name = join("/", compact([local.account.secrets_prefix, "admin-api-client-secret"]))
 }

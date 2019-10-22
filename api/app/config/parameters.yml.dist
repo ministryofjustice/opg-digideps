@@ -11,7 +11,6 @@ parameters:
     locale: en
     secret: setme
     behat_controller_enabled: true
-    anonymous: true
     redis_dsn: redis://localhost
     fixtures:
         ad@publicguardian.gsi.gov.uk:

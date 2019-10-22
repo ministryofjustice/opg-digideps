@@ -1,5 +1,4 @@
 [template]
-prefix = "/api"
 src = "parameters.yml.tmpl"
 dest = "/var/www/app/config/parameters.yml"
 keys = [
