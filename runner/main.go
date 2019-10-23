@@ -34,14 +34,14 @@ func main() {
 	}
 
 	config := LoadConfig(configFile)
-	//TODO: handle this error
-	sess, _ := session.NewSession()
+	sess, err := session.NewSession()
+	if err != nil {
+		log.Fatalln(err)
+	}
 	creds := stscreds.NewCredentials(sess, config.Role.Value)
 	awsConfig := aws.Config{Credentials: creds, Region: aws.String("eu-west-1")}
 	runner := Runner{Svc: ecs.New(sess, &awsConfig), Input: config.Tasks.Value[taskName]}
 	runner.Run()
-
-	//TODO: refactor - this log setup feels messy
 	logConfigurationOptions := runner.GetLogConfigurationOptions()
 
 	var cwLogs []Log
