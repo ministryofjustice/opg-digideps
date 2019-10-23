@@ -20,6 +20,3 @@ Feature: admin uploads csv organisations
        And I should see "behat-prof1@publicguardian.gov.uk"
        And I should see "behat-deputy-email2@publicguardian.gov.uk"
        And I should see "behat-deputy-email3@publicguardian.gov.uk"
-
-
-
