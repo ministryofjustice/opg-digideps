@@ -158,14 +158,14 @@ workflows:
       - run-task:
           name: backup production
           requires: [ stabilize production ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { only: [ master ] } }
           task_name: backup
           tf_workspace: production02
 
       - run-task:
           name: restore production to preproduction
           requires: [ backup production ]
-          filters: { branches: { ignore: [ master ] } }
+          filters: { branches: { only: [ master ] } }
           task_name: restore_from_production
           tf_workspace: preprod
 
