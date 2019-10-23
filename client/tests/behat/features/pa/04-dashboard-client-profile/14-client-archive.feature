@@ -32,4 +32,4 @@ Feature: PA client archive
     Then the form should be valid
       # assert archived is shown in PA dashboard
     Given I am logged in as "behat-pa1@publicguardian.gov.uk" with password "Abcd1234"
-    Then I should not see the "client-009 00009" region
+    Then I should not see the "client-00900009" region
