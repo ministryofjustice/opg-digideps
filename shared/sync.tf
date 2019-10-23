@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "sync" {
       "s3:*Object"
     ]
     resources = [
-      "${data.aws_s3_bucket.sync.arn}/sync/*",
+      "${data.aws_s3_bucket.sync.arn}/*",
     ]
   }
 }
