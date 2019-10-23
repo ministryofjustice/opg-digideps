@@ -8,7 +8,6 @@ use AppBundle\Entity\CasRec;
 use AppBundle\Entity\Report\Asset;
 use AppBundle\Entity\Report\BankAccount;
 use AppBundle\Entity\Report\Report;
-
 use AppBundle\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -38,6 +37,8 @@ class ReportServiceTest extends TestCase
         $client = new EntityDir\Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
+        $client->setCourtDate(new \DateTime('2014-06-06'));
+
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
         $this->asset1 = (new EntityDir\Report\AssetProperty())
             ->setAddress('SW1')
@@ -51,6 +52,7 @@ class ReportServiceTest extends TestCase
 
         $this->document1 = (new EntityDir\Report\Document($this->report))->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
+        $this->ndr = new EntityDir\Ndr\Ndr($client);
 
         // mock em
         $this->reportRepo = m::mock(EntityDir\Repository\ReportRepository::class);
@@ -59,6 +61,7 @@ class ReportServiceTest extends TestCase
         $this->bankAccount = m::mock();
 
         $this->em = m::mock(EntityManager::class);
+        $this->mockNdrDocument = (new EntityDir\Report\Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
             switch ($arg) {
@@ -67,17 +70,19 @@ class ReportServiceTest extends TestCase
                         ->with(['caseNumber' => $client->getCaseNumber()])
                         ->andReturn(null)
                         ->getMock();
-
                 case Report::class:
                     return m::mock(EntityDir\Repository\ReportRepository::class);
-
                 case Asset::class:
                     return m::mock(EntityRepository::class);
-
                 case BankAccount::class:
                     return m::mock(BankAccount::class);
-                default:
-                    throw new \Exception("getRepository($arg) not mocked");
+                case EntityDir\Report\Document::class:
+                    return m::mock(EntityDir\Repository\DocumentRepository::class)
+                        ->shouldReceive('find')
+                        ->zeroOrMoreTimes()
+                        ->with(999)
+                        ->andReturn($this->mockNdrDocument)
+                        ->getMock();
             }
         });
 
@@ -130,6 +135,7 @@ class ReportServiceTest extends TestCase
         $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
     }
 
+
     public function testResubmit()
     {
         $report = $this->report;
@@ -169,6 +175,80 @@ class ReportServiceTest extends TestCase
 
         //assert new year report
         $this->assertEquals($newYearReport, $nextReport);
+    }
+
+    public function testSubmitNotAgreedNdrThrowsException()
+    {
+        $this->expectException(\RuntimeException::class);
+
+        $this->ndr->setAgreedBehalfDeputy(null);
+        $submitDate = new \DateTime('2018-04-05');
+
+        $ndrDoccumentId = 999;
+
+        $this->sut->submit($this->ndr, $this->user, $submitDate, $ndrDoccumentId);
+
+    }
+
+    public function testSubmitValidNdr()
+    {
+        $client = new EntityDir\Client();
+        $client->addUser($this->user);
+        $client->setCaseNumber('12345678');
+        $client->setCourtDate(new \DateTime('2014-06-06'));
+
+        $ndr = new EntityDir\Ndr\Ndr($client);
+
+        $ndrBank = new EntityDir\Ndr\BankAccount();
+        $ndrBank->setAccountNumber('4321')
+            ->setNdr($ndr);
+
+        $ndrAsset = new EntityDir\Ndr\AssetProperty();
+        $ndrAsset->setAddress('SW1')
+            ->setOwned(EntityDir\Report\AssetProperty::OWNED_FULLY)
+            ->setNdr($ndr);
+
+        $ndr->setNoAssetToAdd(false);
+        $ndr->addAsset($ndrAsset);
+        $ndr->setBankAccounts([$ndrBank]);
+        $ndr->setAgreedBehalfDeputy(true);
+        $submitDate = new \DateTime('2018-04-05');
+
+        // assert persists on report and submission record
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($ndr) {
+            return $ndr instanceof EntityDir\Report\ReportSubmission;
+        }));
+        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+            return $report instanceof EntityDir\Report\Report;
+        }));
+        $this->em->shouldReceive('flush')->with()->once(); //last in createNextYearReport
+
+        // Create partial mock of ReportService
+        $reportService = \Mockery::mock(ReportService::class, [$this->em])->makePartial();
+        $this->em->shouldReceive('detach');
+        $this->em->shouldReceive('persist');
+        $this->em->shouldReceive('flush');
+
+        /** @var Report $newYearReport */
+        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, 999);
+
+        // assert current report
+        $this->assertTrue($ndr->getSubmitted());
+
+        //assert new year report
+        $this->assertEquals(Report::TYPE_102, $newYearReport->getType());
+        $this->assertEquals('06-07', $newYearReport->getStartDate()->format('m-d'));
+        $this->assertEquals('06-06', $newYearReport->getEndDate()->format('m-d'));
+
+        // assert assets/accounts added
+        $newAsset = $newYearReport->getAssets()->first();
+        $newAccount = $newYearReport->getBankAccounts()->first();
+
+        $this->assertInstanceOf(Asset::class, $newAsset);
+        $this->assertInstanceOf(BankAccount::class, $newAccount);
+        $this->assertEquals("SW1", $newAsset->getAddress());
+        $this->assertEquals("4321", $newAccount->getAccountNumber());
+
     }
 
     /**

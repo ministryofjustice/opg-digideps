@@ -144,6 +144,7 @@ class ReportService
             if (!$assetExists) {
                 $newAsset = $this->cloneAsset($asset);
                 $newAsset->setReport($toReport);
+                $toReport->addAsset($newAsset);
                 $this->_em->detach($newAsset);
                 $this->_em->persist($newAsset);
             }
@@ -157,6 +158,7 @@ class ReportService
             if (!$accountExists) {
                 $newAccount = $this->cloneBankAccount($toReport, $account);
                 $newAccount->setReport($toReport);
+                $toReport->addAccount($newAccount);
                 $this->_em->persist($newAccount);
             }
         }
