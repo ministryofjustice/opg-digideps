@@ -9,7 +9,7 @@ data "aws_s3_bucket" "backup" {
 
 output "Tasks" {
   value = {
-    backup = module.backup.render
+    backup  = module.backup.render
     restore = module.restore.render
   }
 }
@@ -17,3 +17,5 @@ output "Tasks" {
 output "Role" {
   value = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
 }
+
+
