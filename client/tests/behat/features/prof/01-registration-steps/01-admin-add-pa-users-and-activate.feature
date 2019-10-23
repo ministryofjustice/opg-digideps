@@ -3,6 +3,14 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Activate Prof user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+       # upload PROF users
+    When I click on "admin-upload-pa"
+    When I attach the file "behat-prof.csv" to "admin_upload_file"
+    And I press "admin_upload_upload"
+    Then the form should be valid
+    #Then I should see "Added 1 PROF users"
+      # activate PROF user 1
+    When I click on "admin-homepage"
     And I click on "send-activation-email" in the "user-behat-prof1publicguardiangovuk" region
     Then the response status code should be 200
     And the last email containing a link matching "/user/activate/" should have been sent to "behat-prof1@publicguardian.gov.uk"
@@ -99,6 +107,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
+    And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
     And I click on "send-activation-email" in the "user-behat-prof-org-1org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -121,6 +130,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
+    And "behat-prof-org-2@org-1.co.uk" has been added to the "org-1.co.uk" organisation
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -143,6 +153,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
+    And "behat-prof-org-3@org-2.co.uk" has been added to the "org-2.co.uk" organisation
     And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
