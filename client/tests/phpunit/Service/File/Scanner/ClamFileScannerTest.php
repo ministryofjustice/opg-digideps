@@ -23,6 +23,9 @@ class ClamFileScannerTest extends TestCase
     /** @var LoggerInterface | MockObject */
     private $logger;
 
+    /** @var array */
+    private $badPdfKeywords;
+
     /** @var Client */
     private $client;
 
@@ -32,6 +35,7 @@ class ClamFileScannerTest extends TestCase
     protected function setUp(): void
     {
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->badPdfKeywords = ['AcroForm', 'JavaScript'];
     }
 
     /**
@@ -41,8 +45,19 @@ class ClamFileScannerTest extends TestCase
     {
         $this
             ->ensureFileWillBeClean()
-            ->invokeTest()
+            ->invokeTest('file.pdf')
             ->assertGracefulReturn();
+    }
+
+    /**
+     * @test
+     */
+    public function scanFile_throws_VirusFoundException_onBadKeywordsFoundInPdf()
+    {
+        $this->expectException(VirusFoundException::class);
+
+        $this->client = new Client();
+        $this->invokeTest('contains-form.pdf');
     }
 
     /**
@@ -55,7 +70,7 @@ class ClamFileScannerTest extends TestCase
         $this
             ->ensureVirusWillBeFound()
             ->ensureVirusWillBeLogged()
-            ->invokeTest();
+            ->invokeTest('file.pdf');
     }
 
     /**
@@ -65,7 +80,7 @@ class ClamFileScannerTest extends TestCase
     {
         $this
             ->ensureServiceIsTemporarilyUnavailable()
-            ->invokeTest()
+            ->invokeTest('file.pdf')
             ->assertGracefulReturn();
     }
 
@@ -79,7 +94,7 @@ class ClamFileScannerTest extends TestCase
         $this
             ->ensureServiceIsForeverUnavailable()
             ->ensureCriticalWillBeLogged()
-            ->invokeTest();
+            ->invokeTest('file.pdf');
     }
 
     /**
@@ -163,7 +178,7 @@ class ClamFileScannerTest extends TestCase
             ->logger
             ->expects($this->once())
             ->method('info')
-            ->with('Scan result: virus found in file: file.txt');
+            ->with('Scan result: virus found in file: file.pdf');
 
         return $this;
     }
@@ -186,10 +201,10 @@ class ClamFileScannerTest extends TestCase
      * @return $this
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function invokeTest(): ClamFileScannerTest
+    private function invokeTest($filename): ClamFileScannerTest
     {
-        $this->scanner = new ClamFileScanner($this->client, $this->logger);
-        $this->result = $this->scanner->scanFile(new UploadedFile(__DIR__.'/file.txt', 'file.txt'));
+        $this->scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
+        $this->result = $this->scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
 
         return $this;
     }

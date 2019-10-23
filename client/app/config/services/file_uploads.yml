@@ -1,3 +1,11 @@
+parameters:
+  bad_pdf_keywords:
+    - 'AcroForm'
+    - 'JavaScript'
+    - 'Launch'
+    - 'RichMedia'
+    - 'XFA'
+
 services:
   s3_client:
     class: Aws\S3\S3Client
@@ -38,7 +46,7 @@ services:
 
   clam_file_scanner:
     class: AppBundle\Service\File\Scanner\ClamFileScanner
-    arguments: [ "@guzzle_file_scanner_client", "@logger"]
+    arguments: [ "@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
   file_uploader:
     class: AppBundle\Service\File\FileUploader

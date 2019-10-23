@@ -19,17 +19,22 @@ class ClamFileScanner
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var array */
+    private $badPdfKeywords;
+
     /** @var int */
     const MAX_SCAN_ATTEMPTS = 90;
 
     /**
      * @param ClientInterface $client
      * @param LoggerInterface $logger
+     * @param array $badPdfKeywords
      */
-    public function __construct(ClientInterface $client, LoggerInterface $logger)
+    public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
     {
         $this->client = $client;
         $this->logger = $logger;
+        $this->badPdfKeywords = $badPdfKeywords;
     }
 
     /**
@@ -39,6 +44,11 @@ class ClamFileScanner
      */
     public function scanFile(UploadedFile $file): bool
     {
+        if ($this->fileIsPdf($file) && $this->pdfContainsBadKeywords($file)) {
+            $this->logger->info(sprintf('Scan result: bad keyword found in file: %s', $file->getClientOriginalName()));
+            throw new VirusFoundException();
+        }
+
         $attempts = 0;
         while ($attempts < self::MAX_SCAN_ATTEMPTS) {
             try {
@@ -61,6 +71,27 @@ class ClamFileScanner
         }
 
         return true;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return bool
+     */
+    private function fileIsPdf(UploadedFile $file): bool
+    {
+        return 'pdf' === strtolower($file->getClientOriginalExtension());
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return bool
+     */
+    private function pdfContainsBadKeywords(UploadedFile $file): bool
+    {
+        $regex = sprintf('/<<\s*\/(%s)/', implode('|', $this->badPdfKeywords));
+        $contents = file_get_contents($file->getPathname());
+
+        return (bool) preg_match($regex, $contents);
     }
 
     /**
