@@ -10,15 +10,16 @@ Feature: admin uploads csv organisations
        And I press "admin_upload_upload"
        Then the form should be valid
        Then I click on "admin-client-search"
-       And I click on "client-detail-34350001"
-       And I should see "NAMED_FN NAMED_SN"
-       And I should see "NAMED_ADD1"
-       And I should see "NAMED_ADD2"
-       And I should see "NAMED_ADD3"
-       And I should see "NAMED_ADD4"
-       And I should see "NAMED_ADD5"
-       And I should see "email2@dd-professionals.co.uk"
-       And I should see "email3@dd-professionals.co.uk"
+       And I click on "client-detail-01000010"
+       And I should see "DEP1 SURNAME1"
+       And I should see "ADD1"
+       And I should see "ADD2"
+       And I should see "ADD3"
+       And I should see "ADD4"
+       And I should see "ADD5"
+       And I should see "behat-prof1@publicguardian.gov.uk"
+       And I should see "behat-deputy-email2@publicguardian.gov.uk"
+       And I should see "behat-deputy-email3@publicguardian.gov.uk"
 
 
 
