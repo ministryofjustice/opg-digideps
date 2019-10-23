@@ -180,7 +180,7 @@ jobs:
       - image: circleci/ruby
     environment:
       TF_VERSION: 0.12.12
-      TF_SHA256SUM: 51507dedba7fcc2638c5c2c40206ec604155e2d3067a132b618f4e99ea9f1db9
+      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
       TF_CLI_ARGS_plan: -input=false -lock=false
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
     steps:
@@ -208,7 +208,7 @@ jobs:
         type: string
     environment:
       TF_VERSION: 0.12.12
-      TF_SHA256SUM: 51507dedba7fcc2638c5c2c40206ec604155e2d3067a132b618f4e99ea9f1db9
+      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
       TF_CLI_ARGS_apply: -input=false -auto-approve
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
