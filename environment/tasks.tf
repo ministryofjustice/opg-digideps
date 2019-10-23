@@ -9,8 +9,8 @@ data "aws_s3_bucket" "backup" {
 
 output "Tasks" {
   value = {
-    backup  = module.backup.render
-    restore = module.restore.render
+    backup                  = module.backup.render
+    restore                 = module.restore.render
     restore_from_production = module.restore_from_production.render
   }
 }
