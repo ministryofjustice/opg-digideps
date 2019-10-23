@@ -22,19 +22,26 @@ workflows:
           requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
 
-      - build-runner:
-          name: task runner
+      - run-task:
+          name: run backup task
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+
+      - run-task:
+          name: run restore task
+          requires: [ run backup task ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore
 
       - client_integration_test:
           name: client integration test
-          requires: [ stabilize environment ]
+          requires: [ run restore task ]
           filters: { branches: { ignore: [ master ] } }
 
       - api_unit_test:
           name: api unit test
-          requires: [ stabilize environment ]
+          requires: [ run restore task ]
           filters: { branches: { ignore: [ master ] } }
 
       - cleanup:
@@ -220,6 +227,14 @@ jobs:
       - run:
           name: Apply
           command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+      - run:
+          name: Output Tasks
+          working_directory: ~/project/environment
+          command: terraform output -json > terraform.output.json
+      - persist_to_workspace:
+          root: .
+          paths:
+            - environment/terraform.output.json
 
   client_integration_test:
     docker:
@@ -349,38 +364,21 @@ jobs:
           name: Push images
           command: docker-compose -f docker-compose.ci.yml push
 
-  build-runner:
+  run-task:
     docker:
       - image: circleci/golang:1.12
     parameters:
-      tf_workspace:
-        description: terraform workspace
+      task_name:
+        description: name of task to run
         type: string
-        default: ""
-    environment:
-      TF_VERSION: 0.12.11
-      TF_SHA256SUM: d61f8758a25bc079bb0833b81f998fbc4cf03bb0f41b995e08204cf5978f700e
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
-      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
-      - terraform/install
+      - attach_workspace: { at: . }
       - run:
           name: Install Runner
           working_directory: ~/project/runner
           command: go install -mod vendor
       - run:
-          name: Initialize Terraform
+          name: Run task
           working_directory: ~/project/environment
-          command: terraform init
-      - run:
-          name: Set Environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Output Tasks
-          working_directory: ~/project/environment
-          command: terraform output -json > terraform.output.json
-      - run:
-          name: Run Sync
-          working_directory: ~/project/environment
-          command: runner -task sync
+          command: runner -task << parameters.task_name >>
