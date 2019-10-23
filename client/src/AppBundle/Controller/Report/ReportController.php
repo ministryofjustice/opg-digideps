@@ -205,7 +205,6 @@ class ReportController extends AbstractController
         /** @var EntityDir\Report\Report $report */
         $clientId = $this->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-
         /** @var $client EntityDir\Client */
         $client = $this->generateClient($user, $clientId);
 
