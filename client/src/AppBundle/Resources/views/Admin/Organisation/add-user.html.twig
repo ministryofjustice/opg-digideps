@@ -23,7 +23,7 @@
                 <dt class="govuk-summary-list__key">
                     {{ (page ~ '.summary.name') | trans }}
                 </dt>
-                <dd class="govuk-summary-list__value behat-region-org-found-user-fullname">
+                <dd class="govuk-summary-list__value">
                     {{ user.fullName }}
                 </dd>
             </div>
@@ -31,7 +31,7 @@
                 <dt class="govuk-summary-list__key">
                     {{ (page ~ '.summary.emailAddress') | trans }}
                 </dt>
-                <dd class="govuk-summary-list__value behat-region-org-found-user-email">
+                <dd class="govuk-summary-list__value">
                     {{ user.email }}
                 </dd>
             </div>
@@ -39,7 +39,7 @@
                 <dt class="govuk-summary-list__key">
                     {{ (page ~ '.summary.active') | trans }}
                 </dt>
-                <dd class="govuk-summary-list__value behat-region-org-found-user-active">
+                <dd class="govuk-summary-list__value">
                     {{ (user.active ? 'yes' : 'no') | trans({}, 'common') }}
                 </dd>
             </div>
