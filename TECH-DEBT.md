@@ -26,6 +26,8 @@ If any debt may lead to larger risks, it should be transferred to the risk board
 - Turning off `logout_on_user_change` is deprecated
 - Change Client Users relationship from array to ArrayCollection ?
 - Remove team code from application once organisation has replaced and stabalised.
+- Revise ReportService unit tests. Too much setup making it difficult to manipulate mock objects in tests.
+   testSubmitValidNdr() test needs different CASREC properties to properly test correct report type is generated from NDR
 
 ## Design
 - Status label texts are variously defined in `common.en.yml`, `ndr-overview.en.yml` and `report-overview.en.yml`
