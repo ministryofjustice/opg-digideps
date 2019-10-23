@@ -7,10 +7,10 @@
     A user has left feedback about the service.
 {% endif %}
 <br/>
-{% if response.name is not empty %}Name: {{ response.name }}<br/>{% endif %}
-{% if response.email is not empty %}Email: {{ response.email }}<br/>{% endif %}
-{% if response.phone is not empty %}Phone: {{ response.phone }}<br/>{% endif %}
-{% if response.page is not empty %}Page: {{ response.page }}<br/>{% endif %}
+{% if response.name is defined and response.name is not empty %}Name: {{ response.name }}<br/>{% endif %}
+{% if response.email is defined and response.email is not empty %}Email: {{ response.email }}<br/>{% endif %}
+{% if response.phone is defined and response.phone is not empty %}Phone: {{ response.phone }}<br/>{% endif %}
+{% if response.page is defined and response.page is not empty %}Page: {{ response.page }}<br/>{% endif %}
 <br/>
 Comments:<br />
 {{ response.comments }}
