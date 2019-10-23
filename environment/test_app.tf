@@ -74,19 +74,17 @@ locals {
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "API_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_FIXTURES_ENABLE_PLEASE", "value": "True" },
-      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "API_SECURITY_ANONYMOUS", "value": "true" }
+      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" }
     ]
   }
 
@@ -107,23 +105,21 @@ EOF
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "API_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" },
-      { "name": "API_SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
-      { "name": "API_SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.api_secret.arn}" },
+      { "name": "SECRETS_ADMIN_KEY", "valueFrom": "${data.aws_secretsmanager_secret.admin_api_client_secret.arn}" },
+      { "name": "SECRETS_FRONT_KEY", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "API_FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
-      { "name": "API_FIXTURES_ENABLE_PLEASE", "value": "True" },
-      { "name": "API_REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
-      { "name": "API_SECURITY_ANONYMOUS", "value": "true" },
-      { "name": "API_SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
-      { "name": "API_SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
+      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "FIXTURES_ACCOUNTPASSWORD", "value": "Abcd1234" },
+      { "name": "REDIS_DSN", "value": "redis://${aws_route53_record.api_redis.fqdn}" },
+      { "name": "SECRETS_ADMIN_PERMISSIONS", "value": "[ROLE_ADMIN, ROLE_AD, ROLE_CASE_MANAGER]" },
+      { "name": "SECRETS_FRONT_PERMISSIONS", "value": "[ROLE_LAY_DEPUTY, ROLE_PA, ROLE_PROF, ROLE_PA_ADMIN, ROLE_PA_TEAM_MEMBER]" }
     ]
   }
 
@@ -144,54 +140,31 @@ EOF
       }
     },
     "secrets": [
-      { "name": "API_DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
-      { "name": "FRONTEND_API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
-      { "name": "FRONTEND_OAUTH2_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.oauth2_client_secret.arn}" },
-      { "name": "FRONTEND_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
+      { "name": "DATABASE_PASSWORD", "valueFrom": "${data.aws_secretsmanager_secret.database_password.arn}" },
+      { "name": "API_CLIENT_SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_api_client_secret.arn}" },
+      { "name": "SECRET", "valueFrom": "${data.aws_secretsmanager_secret.front_frontend_secret.arn}" }
     ],
     "environment": [
-      { "name": "API_DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
-      { "name": "API_DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
-      { "name": "API_DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
-      { "name": "API_DATABASE_USERNAME", "value": "digidepsmaster" },
-      { "name": "FRONTEND_ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "FRONTEND_API_URL", "value": "https://${local.api_service_fqdn}" },
-      { "name": "FRONTEND_BEHAT_CONTROLLER_ENABLED", "value": "true" },
-      { "name": "FRONTEND_EMAIL_DOMAIN", "value": "${local.domain}" },
-      { "name": "FRONTEND_EMAIL_FEEDBACK_TO", "value": "${local.account.email_feedback_address}" },
-      { "name": "FRONTEND_EMAIL_REPORT_TO", "value": "${local.account.email_report_address}" },
-      { "name": "FRONTEND_EMAIL_UPDATE_TO", "value": "${local.account.email_update_address}" },
-      { "name": "FRONTEND_FILESCANNER_SSLVERIFY", "value": "False" },
-      { "name": "FRONTEND_FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
-      { "name": "FRONTEND_GA_DEFAULT", "value": "${local.account.ga_default}" },
-      { "name": "FRONTEND_GA_GDS", "value": "${local.account.ga_gds}" },
-      { "name": "FRONTEND_NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "FRONTEND_OAUTH2_CLIENT_ID", "value": "0" },
-      { "name": "FRONTEND_OAUTH2_ENABLED", "value": "false" },
-      { "name": "FRONTEND_ROLE", "value": "front" },
-      { "name": "FRONTEND_S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
-      { "name": "FRONTEND_SESSION_COOKIE_SECURE", "value": "true" },
-      { "name": "FRONTEND_SESSION_MEMCACHE", "value": "memcachefront" },
-      { "name": "FRONTEND_SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
-      { "name": "FRONTEND_SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
-      { "name": "FRONTEND_SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
-      { "name": "FRONTEND_SMTP_DEFAULT_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
-      { "name": "FRONTEND_SMTP_DEFAULT_PORT", "value": "587" },
-      { "name": "FRONTEND_SMTP_SECURE_HOSTNAME", "value": "email-smtp.eu-west-1.amazonaws.com" },
-      { "name": "FRONTEND_SMTP_SECURE_PORT", "value": "25" },
-      { "name": "FRONTEND_URL_ADMIN", "value": "https://${aws_route53_record.admin.fqdn}" },
-      { "name": "FRONTEND_URL_FRONTEND", "value": "https://${aws_route53_record.front.fqdn}" },
-      { "name": "NGINX_INDEX", "value": "app.php" },
+      { "name": "DATABASE_HOSTNAME", "value": "${aws_db_instance.api.address}" },
+      { "name": "DATABASE_NAME", "value": "${aws_db_instance.api.name}" },
+      { "name": "DATABASE_PORT", "value": "${aws_db_instance.api.port}" },
+      { "name": "DATABASE_USERNAME", "value": "digidepsmaster" },
+      { "name": "ADMIN_HOST", "value": "https://${aws_route53_record.admin.fqdn}" },
+      { "name": "API_URL", "value": "https://${local.api_service_fqdn}" },
+      { "name": "BEHAT_CONTROLLER_ENABLED", "value": "true" },
+      { "name": "EMAIL_DOMAIN", "value": "${local.domain}" },
+      { "name": "EMAIL_SEND_INTERNAL", "value": "${local.account.is_production == 1 ? "true" : "false"}" },
+      { "name": "FILESCANNER_SSLVERIFY", "value": "False" },
+      { "name": "FILESCANNER_URL", "value": "https://${local.scan_service_fqdn}:8443" },
+      { "name": "GA_DEFAULT", "value": "${local.account.ga_default}" },
+      { "name": "GA_GDS", "value": "${local.account.ga_gds}" },
+      { "name": "NONADMIN_HOST", "value": "https://${aws_route53_record.front.fqdn}" },
+      { "name": "ROLE", "value": "front" },
+      { "name": "S3_BUCKETNAME", "value": "pa-uploads-${local.environment}" },
+      { "name": "SESSION_REDIS_DSN", "value": "redis://${aws_route53_record.front_redis.fqdn}" },
+      { "name": "SMTP_DEFAULT_PASSWORD", "value": "${aws_iam_access_key.ses.ses_smtp_password}" },
+      { "name": "SMTP_DEFAULT_USER", "value": "${aws_iam_access_key.ses.id}" },
       { "name": "OPG_DOCKER_TAG", "value": "${var.OPG_DOCKER_TAG}" },
-      { "name": "OPG_NGINX_CLIENTBODYTIMEOUT", "value": "240s" },
-      { "name": "OPG_NGINX_CLIENTMAXBODYSIZE", "value": "10M" },
-      { "name": "OPG_NGINX_INDEX", "value": "app.php" },
-      { "name": "OPG_NGINX_ROOT", "value": "/app/web" },
-      { "name": "OPG_NGINX_SERVER_NAMES", "value": "*.${data.aws_route53_zone.public.name} *.${local.environment}.internal ~.*" },
-      { "name": "OPG_NGINX_SSL_FORCE_REDIRECT", "value": "1" },
-      { "name": "OPG_PHP_POOL_CHILDREN_MAX", "value": "12" },
-      { "name": "OPG_SERVICE", "value": "front" },
-      { "name": "OPG_STACKNAME", "value": "${local.environment}" },
       { "name": "WKHTMLTOPDF_ADDRESS", "value": "http://${local.wkhtmltopdf_service_fqdn}" }
     ]
   }

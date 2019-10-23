@@ -57,7 +57,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function getAdminUrl()
     {
-        return getenv('FRONTEND_ADMIN_HOST');
+        return getenv('ADMIN_HOST');
     }
 
     /**
@@ -65,7 +65,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function getSiteUrl()
     {
-        return getenv('FRONTEND_NONADMIN_HOST');
+        return getenv('NONADMIN_HOST');
     }
 
     /**
