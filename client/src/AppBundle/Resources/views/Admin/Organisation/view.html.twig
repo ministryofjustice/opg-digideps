@@ -43,7 +43,7 @@
 
         <tbody class="govuk-table__body">
             {% for user in organisation.users %}
-                <tr class="govuk-table__row behat-region-org-members-list behat-region-org-{{ user.fullName | behat_namify }}">
+                <tr class="govuk-table__row behat-region-org-{{ user.fullName | behat_namify }}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="{{ url('admin_editUser', { filter: user.id }) }}">
                             {{ user.fullName }}
@@ -63,7 +63,7 @@
                 </tr>
             {% else %}
                 <tr class="govuk-table__row">
-                    <td colspan="4" class="govuk-table__cell text--center behat-region-org-members-list">
+                    <td colspan="4" class="govuk-table__cell text--center">
                         {{ (page ~ '.noMembers') | trans }}
                     </td>
                 </tr>
@@ -86,7 +86,7 @@
 
         <tbody class="govuk-table__body">
             {% for client in organisation.clients %}
-                <tr class="govuk-table__row behat-region-org-{{ client.caseNumber | behat_namify }} behat-region-org-client">
+                <tr class="govuk-table__row behat-region-org-{{ client.caseNumber | behat_namify }}">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="{{ url('admin_client_details', { id: client.id }) }}">
                             {{ client.caseNumber }}
