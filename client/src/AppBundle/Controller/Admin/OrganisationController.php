@@ -177,24 +177,45 @@ class OrganisationController extends AbstractController
 
         if ($form->get('email')->getData()) {
             try {
+                $errors = [];
                 $email = $form->get('email')->getData();
                 $user = $this->getRestClient()->get('user/get-one-by/email/' . $email, 'User');
 
                 if (!$user->isDeputyOrg()) {
-                    $error = 'form.email.notOrgUserError';
+                    $errors[] = 'form.email.notOrgUserError';
                 }
 
                 if ($organisation->hasUser($user)) {
-                    $error = 'form.email.alreadyInOrgError';
+                    $errors[] = 'form.email.alreadyInOrgError';
                 }
+
+                // allow one org user who matches the exact email address for public domains
+                if (!$organisation->getIsDomainIdentifier()) {
+                    // public domains allow 1 only and email must match email Identifier
+                    if (count($organisation->getUsers()) > 0 || $user->getEmail() !== $organisation->getEmailIdentifier()) {
+                        $errors[] = 'form.email.emailInPublicDomainError';
+                    }
+
+                } else {
+                    // organisation domains emails must match org domain
+                    // check org can accept user
+                    $domainArray = explode("@", $user->getEmail());
+                    if (count($domainArray) !== 2 || $organisation->getEmailIdentifier() !== $domainArray[1]) {
+                        $errors[] = 'form.email.notOrgEmailError';
+                    }
+                }
+
             } catch (RestClientException $e) {
-                $error = 'form.email.notFoundError';
+                $errors[] = 'form.email.notFoundError';
             }
         }
 
-        if (isset($error)) {
-            $errorMessage = $this->get('translator')->trans($error, [], 'admin-organisation-users');
-            $form->get('email')->addError(new FormError($errorMessage));
+        if (!empty($errors)) {
+            foreach ($errors as $error)
+            {
+                $errorMessage = $this->get('translator')->trans($error, [], 'admin-organisation-users');
+                $form->get('email')->addError(new FormError($errorMessage));
+            }
             $user = new User();
         }
 

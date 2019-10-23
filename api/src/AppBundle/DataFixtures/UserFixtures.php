@@ -115,10 +115,55 @@ class UserFixtures extends AbstractDataFixture
             'reportVariation' => 'L2',
             'codeputyEnabled' => true,
         ],
+        [
+            'id' => 'example1',
+            'email' => 'jo.brown@example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
+            'id' => 'example2',
+            'email' => 'bobby.blue@example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
+            'id' => 'abc-example1',
+            'email' => 'john.smith@abc-solicitors.example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
+            'id' => 'abc-example2',
+            'email' => 'kieth.willis@abc-solicitors.example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+        [
+            'id' => 'abcd-example3',
+            'email' => 'marjorie.watkins@abcd-solicitors.example.com',
+            'deputyType' => 'PROF',
+            'reportType' => 'OPG102',
+            'reportVariation' => 'HW',
+        ],
+//        [
+//            'id' => 'leever-example',
+//            'email' => 'main.contact@leever.example',
+//            'deputyType' => 'PROF',
+//            'reportType' => 'OPG102',
+//            'reportVariation' => 'HW',
+//        ],
     ];
 
     public function doLoad(ObjectManager $manager)
     {
+        $this->orgRepository = $this->container->get('AppBundle\Entity\Repository\OrganisationRepository');
+        $this->orgFactory = $this->container->get('AppBundle\Factory\OrganisationFactory');
+
         // Add users from array
         foreach ($this->userData as $data) {
             $this->addUser($data, $manager);
@@ -132,7 +177,7 @@ class UserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname(ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname('User')
-            ->setEmail('behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
+            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) .  '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(isset($data['ndr']))
@@ -192,6 +237,15 @@ class UserFixtures extends AbstractDataFixture
             $report = new Report($client, $type, $startDate, $endDate);
 
             $manager->persist($report);
+
+            if (isset($data['email'])) {
+                $organisation = $this->orgRepository->findByEmailIdentifier($data['email']);
+                if (null === $organisation) {
+                    $organisation = $this->orgFactory->createFromFullEmail($data['email'], $data['email']);
+                    $manager->persist($organisation);
+                    $manager->flush($organisation);
+                }
+            }
         }
 
         // If codeputy was enabled, add a secondary account

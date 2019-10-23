@@ -25,14 +25,22 @@ class OrganisationFactory
     {
         $email = strtolower($email);
 
-        if (false === ($atSymbolPosition = strpos($email, '@'))) {
-            return $this->create($name, $email, $isActivated);
+        $domainArray = explode('@', $email);
+
+        if (count($domainArray) === 1 && !empty($domainArray[0])) {
+            return $this->createFromEmailIdentifier($name, $domainArray[0], $isActivated);
         }
 
-        $domain = substr($email, $atSymbolPosition + 1);
-        $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
+        if (count($domainArray) === 2 && !empty($domainArray[1])) {
+            $domain = $domainArray[1];
+            $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
+            return $this->create($name, $emailIdentifier, $isActivated);
+        }
 
-        return $this->create($name, $emailIdentifier, $isActivated);
+        throw new \InvalidArgumentException(sprintf(
+            "Unable to create organisation from 'name': '%s', 'emailIdentifier': '%s'",
+            $name, $email
+        ));
     }
 
     /**
@@ -43,7 +51,17 @@ class OrganisationFactory
      */
     public function createFromEmailIdentifier(string $name, string $emailIdentifier, bool $isActivated = false): Organisation
     {
-        return $this->create($name, strtolower($emailIdentifier), $isActivated);
+        $domainArray = explode('@', $emailIdentifier);
+        if ((count($domainArray) == 1 && !empty($domainArray[0])) ||
+            (count($domainArray) == 2 && !empty($domainArray[1]))
+        )   {
+            return $this->create($name, strtolower($emailIdentifier), $isActivated);
+        }
+        throw new \InvalidArgumentException(sprintf(
+            "Unable to create organisation from 'name': '%s', 'emailIdentifier': '%s'",
+            $name, $emailIdentifier
+        ));
+
     }
 
     /**
