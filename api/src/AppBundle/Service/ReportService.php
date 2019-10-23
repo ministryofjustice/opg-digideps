@@ -218,6 +218,7 @@ class ReportService
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
             $newAsset->setCounty($asset->getCounty());
+            $newAsset->setPostcode($asset->getPostcode());
             $newAsset->setOccupants($asset->getOccupants());
             $newAsset->setOwned($asset->getOwned());
             $newAsset->setOwnedPercentage($asset->getOwnedPercentage());
