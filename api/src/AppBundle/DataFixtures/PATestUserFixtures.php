@@ -272,6 +272,6 @@ class PATestUserFixtures extends AbstractDataFixture
 
     protected function getEnvironments()
     {
-        return ['dev', 'test'];
+        return ['dev'];
     }
 }
