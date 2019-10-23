@@ -11,15 +11,14 @@ Feature: admin uploads csv organisations
        Then the form should be valid
        Then I click on "admin-client-search"
        And I click on "client-detail-34350001"
-       And I should see "NAMED_FN NAMED_SN" in the "nd-name" region
-       And each text should be present in the corresponding region:
-        | NAMED_ADD1 | nd-address |
-        | NAMED_ADD2 | nd-address |
-        | NAMED_ADD3 | nd-address |
-        | NAMED_ADD4 | nd-address |
-        | NAMED_ADD5 | nd-address |
-        | email2@dd-professionals.co.uk | nd-contact-details |
-        | email3@dd-professionals.co.uk | nd-contact-details |
+       And I should see "NAMED_FN NAMED_SN"
+       And I should see "NAMED_ADD1"
+       And I should see "NAMED_ADD2"
+       And I should see "NAMED_ADD3"
+       And I should see "NAMED_ADD4"
+       And I should see "NAMED_ADD5"
+       And I should see "email2@dd-professionals.co.uk"
+       And I should see "email3@dd-professionals.co.uk"
 
 
 

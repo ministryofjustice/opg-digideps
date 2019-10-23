@@ -47,12 +47,12 @@ Feature: admin / case manager
   Scenario: Client details contain named deputy information
     Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
     When I click on "client-detail-102-4-6"
-    Then I should see "PA Deputy 102-4-6"
+    Then I should see "Named Deputy 102-4-6"
     And I should see "Victoria Road" in the "deputy-details" region
     And I should see "SW1" in the "deputy-details" region
     And I should see "GB" in the "deputy-details" region
     And I should see "07911111111111" in the "deputy-details" region
-    And I should see "behat-pa-deputy-102-4-6@publicguardian.gov.uk" in the "deputy-details" region
+    And I should see "behat-nd-102-4-6@publicguardian.gov.uk" in the "deputy-details" region
 
   Scenario: Lay client details contain named deputy information
     Given I am logged in to admin as "behat-cm@publicguardian.gov.uk" with password "Abcd1234"
