@@ -98,6 +98,7 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Register PROF4 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
     And I click on "send-activation-email" in the "user-behat-prof-org-1org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -119,6 +120,7 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Register PROF5 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -140,6 +142,7 @@ Feature: Add PROF users and activate PROF user (journey)
   Scenario: Register PROF6 user
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
+    And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
     And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
