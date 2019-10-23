@@ -248,6 +248,7 @@ class ReportServiceTest extends TestCase
         $this->assertInstanceOf(BankAccount::class, $newAccount);
         $this->assertEquals("SW1", $newAsset->getAddress());
         $this->assertEquals("4321", $newAccount->getAccountNumber());
+        $this->assertEquals(Report::TYPE_102, $newYearReport->getType());
 
     }
 
