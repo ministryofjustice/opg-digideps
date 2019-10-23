@@ -227,14 +227,6 @@ jobs:
       - run:
           name: Apply
           command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
-      - run:
-          name: Output Tasks
-          working_directory: ~/project/environment
-          command: terraform output -json > terraform.output.json
-      - persist_to_workspace:
-          root: .
-          paths:
-            - environment/terraform.output.json
 
   client_integration_test:
     docker:
@@ -368,14 +360,34 @@ jobs:
     docker:
       - image: circleci/golang:1.12
     parameters:
+      tf_workspace:
+        description: terraform workspace
+        type: string
+        default: ""
       task_name:
         description: name of task to run
         type: string
+    environment:
+      TF_VERSION: 0.12.12
+      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
+      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+      WORKSPACE: << parameters.tf_workspace >>
     steps:
       - checkout
-      - attach_workspace: { at: . }
+      - terraform/install
       - run:
-          name: Install Runner
+          name: Initialize
+          working_directory: ~/project/environment
+          command: terraform init
+      - run:
+          name: Set environment
+          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
+      - run:
+          name: Output tasks
+          working_directory: ~/project/environment
+          command: terraform output -json > terraform.output.json
+      - run:
+          name: Install runner
           working_directory: ~/project/runner
           command: go install -mod vendor
       - run:
