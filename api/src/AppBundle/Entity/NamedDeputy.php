@@ -226,6 +226,14 @@ class NamedDeputy
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getClients()
+    {
+        return $this->clients;
+    }
+
+    /**
      * @return string
      */
     public function getDeputyNo()

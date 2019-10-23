@@ -431,6 +431,16 @@ class Fixtures
         return $this->getRepo('User')->findOneBy(['email'=>$email]);
     }
 
+    /**
+     * @param $email
+     *
+     * @return EntityDir\User
+     */
+    public function findNamedDeputyByNumber($deputyNo)
+    {
+        return $this->getRepo('NamedDeputy')->findOneBy(['deputyNo' => $deputyNo]);
+    }
+
     public function getConnection()
     {
         return $this->em->getConnection();
