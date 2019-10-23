@@ -94,6 +94,12 @@
             {% if namedDeputy.email %}
                 {{ 'email' | trans({}, 'common') }}: {{ namedDeputy.email }}<br>
             {% endif %}
+            {% if namedDeputy.email2 is defined and namedDeputy.email2 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email2 }}<br>
+            {% endif %}
+            {% if namedDeputy.email3 is defined and namedDeputy.email3 %}
+                {{ 'alternativeEmail' | trans({}, 'common') }}: {{ namedDeputy.email3 }}<br>
+            {% endif %}
         </p>
     </div>
 </details>

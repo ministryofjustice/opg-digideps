@@ -49,6 +49,7 @@ address: Address
 phone: Phone
 alternativePhone: Alternative phone
 email: Email
+alternativeEmail: Alternative email
 dueDate: Due
 section: Section
 in: In

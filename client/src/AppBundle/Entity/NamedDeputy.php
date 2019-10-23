@@ -459,6 +459,8 @@ class NamedDeputy
             $this->address1,
             $this->address2,
             $this->address3,
+            $this->address4,
+            $this->address5,
             $this->addressPostcode,
             $this->addressCountry
         ]);
