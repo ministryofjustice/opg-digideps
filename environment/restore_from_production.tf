@@ -1,6 +1,6 @@
-module "restore" {
+module "restore_from_production" {
   source = "./task"
-  name   = "restore"
+  name   = "restore_from_production"
 
   cluster_name          = aws_ecs_cluster.main.name
   container_definitions = "[${local.restore_container}]"
@@ -36,7 +36,7 @@ locals {
 		},
 		{
 			"name": "S3_PREFIX",
-			"value": "${local.environment}"
+			"value": "production02"
 		},
 		{
 			"name": "POSTGRES_DATABASE",
