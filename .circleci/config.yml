@@ -179,8 +179,8 @@ jobs:
     docker:
       - image: circleci/ruby
     environment:
-      TF_VERSION: 0.12.11
-      TF_SHA256SUM: d61f8758a25bc079bb0833b81f998fbc4cf03bb0f41b995e08204cf5978f700e
+      TF_VERSION: 0.12.12
+      TF_SHA256SUM: 51507dedba7fcc2638c5c2c40206ec604155e2d3067a132b618f4e99ea9f1db9
       TF_CLI_ARGS_plan: -input=false -lock=false
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
     steps:
@@ -207,8 +207,8 @@ jobs:
         default: apply
         type: string
     environment:
-      TF_VERSION: 0.12.11
-      TF_SHA256SUM: d61f8758a25bc079bb0833b81f998fbc4cf03bb0f41b995e08204cf5978f700e
+      TF_VERSION: 0.12.12
+      TF_SHA256SUM: 51507dedba7fcc2638c5c2c40206ec604155e2d3067a132b618f4e99ea9f1db9
       TF_CLI_ARGS_apply: -input=false -auto-approve
       TF_CLI_ARGS_destroy: -input=false -auto-approve
       TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
