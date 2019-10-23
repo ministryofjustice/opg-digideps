@@ -51,8 +51,6 @@ parameters:
     smtp_default_port: 25
     smtp_default_user: setme
     smtp_default_password: setme
-    smtp_secure_hostname: localhost
-    smtp_secure_port: 25
     s3_bucket_name: pa-uploads.local
     s3_client_params:
       version: 'latest'

@@ -5,22 +5,16 @@ server {
 
 server {
     listen     443 ssl;
-    server_name api.digideps.local;
     root /var/www/web;
 
-    {{ if exists "/opg/nginx/clientmaxbodysize" }}
-    client_max_body_size {{ getv "/opg/nginx/clientmaxbodysize" }};
-    {{ end }}
-    {{ if exists "/opg/nginx/clientbodytimeout" }}
-    client_body_timeout {{ getv "/opg/nginx/clientbodytimeout" }};
-    {{ end }}
+    client_body_timeout 240s;
 
     ssl_certificate         /etc/nginx/certs/app.crt;
     ssl_certificate_key     /etc/nginx/certs/app.key;
-    
+
     more_clear_headers X-Powered-By;
     more_clear_headers Server;
-        
+
     location / {
         # try to serve file directly, fallback to app.php or app_dev.php
         try_files $uri /{{ getv "/opg/nginx/index" "app.php" }}$is_args$args;

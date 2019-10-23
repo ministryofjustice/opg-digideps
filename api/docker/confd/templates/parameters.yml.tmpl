@@ -11,7 +11,6 @@ parameters:
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
-    anonymous: {{ getv "/security/anonymous" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
 {{ if ls "/fixtures" }}
     fixtures:
@@ -25,7 +24,7 @@ parameters:
             permissions: {{ getv (printf "/secrets/%s/permissions" .) }}
 {{ end }}
 {{ end }}
-    
+
     behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
 
     log_level: warning
