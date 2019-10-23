@@ -23,25 +23,25 @@ workflows:
           filters: { branches: { ignore: [ master ] } }
 
       - run-task:
-          name: run backup task
+          name: backup environment
           requires: [ stabilize environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: backup
 
       - run-task:
-          name: run restore task
-          requires: [ run backup task ]
+          name: restore environment
+          requires: [ backup environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: restore
 
       - client_integration_test:
           name: client integration test
-          requires: [ run restore task ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - api_unit_test:
           name: api unit test
-          requires: [ run restore task ]
+          requires: [ restore environment ]
           filters: { branches: { ignore: [ master ] } }
 
       - cleanup:
@@ -154,6 +154,20 @@ workflows:
           requires: [ apply production ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
+
+      - run-task:
+          name: backup production
+          requires: [ stabilize production ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: backup
+          tf_workspace: production02
+
+      - run-task:
+          name: restore production to preproduction
+          requires: [ backup production ]
+          filters: { branches: { ignore: [ master ] } }
+          task_name: restore_from_production
+          tf_workspace: preprod
 
 orbs:
   aws-cli: circleci/aws-cli@0.1.13

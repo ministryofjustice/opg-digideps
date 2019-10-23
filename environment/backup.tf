@@ -36,7 +36,7 @@ locals {
 		},
 		{
 			"name": "S3_PREFIX",
-			"value": "sync"
+			"value": "${local.environment}"
 		},
 		{
 			"name": "POSTGRES_DATABASE",
