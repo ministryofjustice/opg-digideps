@@ -3,7 +3,7 @@ module "restore_from_production" {
   name   = "restore_from_production"
 
   cluster_name          = aws_ecs_cluster.main.name
-  container_definitions = "[${local.restore_container}]"
+  container_definitions = "[${local.restore_from_production_container}]"
   default_tags          = local.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
@@ -13,7 +13,7 @@ module "restore_from_production" {
 }
 
 locals {
-  restore_container = <<EOF
+  restore_from_production_container = <<EOF
 {
 	"name": "restore",
 	"image": "${local.images.sync}",
