@@ -16,7 +16,7 @@ class OrganisationFactoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->sharedDomains = ['foo.com', 'bar.co.uk'];
+        $this->sharedDomains = ['foo.com', 'bar.co.uk', 'example.com'];
 
         $this->factory = new OrganisationFactory($this->sharedDomains);
     }
@@ -27,7 +27,10 @@ class OrganisationFactoryTest extends TestCase
      * @param $fullEmail
      * @param $expectedEmailIdentifier
      */
-    public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail($fullEmail, $expectedEmailIdentifier)
+    public function createFromFullEmail_determinesEmailIdentiferFromTheFullGivenEmail(
+        $fullEmail,
+        $expectedEmailIdentifier
+    )
     {
         $organisation = $this->factory->createFromFullEmail('Org Name', $fullEmail, true);
 
@@ -46,7 +49,9 @@ class OrganisationFactoryTest extends TestCase
             ['fullEmail' => 'name@foo.com', 'expectedEmailIdentifier' => 'name@foo.com'],
             ['fullEmail' => 'name@Bar.co.uk', 'expectedEmailIdentifier' => 'name@bar.co.uk'],
             ['fullEmail' => 'name@private.com', 'expectedEmailIdentifier' => 'private.com'],
+            ['fullEmail' => 'main-contact@private.com', 'expectedEmailIdentifier' => 'private.com'],
             ['fullEmail' => 'private.com', 'expectedEmailIdentifier' => 'private.com']
+
         ];
     }
 
@@ -65,7 +70,7 @@ class OrganisationFactoryTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getInvalidInputs
+     * @dataProvider getInvalidEmailInputs
      * @param $name
      * @param $emailIdentifier
      */
@@ -78,7 +83,7 @@ class OrganisationFactoryTest extends TestCase
 
     /**
      * @test
-     * @dataProvider getInvalidInputs
+     * @dataProvider getInvalidEmailIdentifierInputs
      * @param $name
      * @param $emailIdentifier
      */
@@ -91,11 +96,26 @@ class OrganisationFactoryTest extends TestCase
     /**
      * @return array
      */
-    public function getInvalidInputs(): array
+    public function getInvalidEmailInputs(): array
+    {
+        return [
+            ['name' => '', 'emailIdentifier' => 'test.com'],
+            ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getInvalidEmailIdentifierInputs(): array
     {
         return [
             ['name' => '', 'emailIdentifier' => 'f@test.com'],
-            ['name' => 'name', 'emailIdentifier' => '']
+            ['name' => 'name', 'emailIdentifier' => ''],
+            ['name' => 'name', 'emailIdentifier' => '@@private.com'],
         ];
     }
+
 }

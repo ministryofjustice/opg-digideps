@@ -21,6 +21,7 @@ parameters:
     - 'talktalk.net'
     - 'yahoo.com'
     - 'yahoo.co.uk'
+    - 'example.com'
 
 services:
   AppBundle\Factory\OrganisationFactory:

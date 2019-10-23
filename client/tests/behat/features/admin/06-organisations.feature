@@ -21,13 +21,13 @@ Feature: Administration of organisations
     # Fill in proper details
     When I fill in "organisation_name" with "Domain-owning organisation"
     And I fill in "organisation_emailIdentifierType_0" with "domain"
-    And I fill in "organisation_emailDomain" with "example.com"
+    And I fill in "organisation_emailDomain" with "some.example.com"
     And I fill in "organisation_isActivated_0" with "1"
     And I press "Save organisation"
     Then I should be on "/admin/organisations/"
     And each text should be present in the corresponding region:
         | Domain-owning organisation | org-domain-owning-organisation |
-        | *@example.com              | org-domain-owning-organisation |
+        | *@some.example.com          | org-domain-owning-organisation |
         | Active                     | org-domain-owning-organisation |
 
   @admin
@@ -57,7 +57,7 @@ Feature: Administration of organisations
     And I fill in "organisation_name" with "Duplicate organisation"
     And I fill in "organisation_isActivated_0" with "0"
     When I fill in "organisation_emailIdentifierType_0" with "domain"
-    And I fill in "organisation_emailDomain" with "example.com"
+    And I fill in "organisation_emailDomain" with "some.example.com"
     And I press "Save organisation"
     Then I should see "Email identifer already in use"
 
