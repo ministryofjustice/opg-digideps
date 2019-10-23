@@ -108,7 +108,7 @@ Feature: Add PROF users and activate PROF user (journey)
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-1@org-1.co.uk" and postcode "SW1"
     And "behat-prof-org-1@org-1.co.uk" has been added to the "org-1.co.uk" organisation
-    And I click on "send-activation-email" in the "user-behat-prof-org-1org-1couk" region
+    And I add the client with case number "03000025" to be deputised by email "behat-prof-org-1@org-1.co.uk"
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
     When I check "agree_terms_agreeTermsUse"
@@ -130,7 +130,7 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-2@org-1.co.uk" and postcode "SW1"
-    And "behat-prof-org-2@org-1.co.uk" has been added to the "org-1.co.uk" organisation
+    And I add the client with case number "03000026" to be deputised by email "behat-prof-org-2@org-1.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-2org-1couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
@@ -153,7 +153,8 @@ Feature: Add PROF users and activate PROF user (journey)
     Given emails are sent from "admin" area
     And I am logged in to admin as "admin@publicguardian.gov.uk" with password "Abcd1234"
     And I create a new "NDR-disabled" "Prof Named" user "ABC org" "Administrator" with email "behat-prof-org-3@org-2.co.uk" and postcode "SW1"
-    And "behat-prof-org-3@org-2.co.uk" has been added to the "org-2.co.uk" organisation
+    And I add the client with case number "03000027" to be deputised by email "behat-prof-org-3@org-2.co.uk"
+    And I add the client with case number "03000028" to be deputised by email "behat-prof-org-3@org-2.co.uk"
     And I click on "send-activation-email" in the "user-behat-prof-org-3org-2couk" region
     And I go to "/logout"
     And I open the "/user/activate/" link from the email
