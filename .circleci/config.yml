@@ -143,7 +143,30 @@ workflows:
 orbs:
   aws-cli: circleci/aws-cli@0.1.13
   slack: circleci/slack@3.3.0
+  ecs_helper:
+    commands:
+      install:
+        steps:
+          - run:
+              name: Install runner
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/runner
+          - run:
+              name: Install stabilizer
+              working_directory: ~/project/ecs_helper
+              command: go install -mod vendor ./cmd/stabilizer
   terraform:
+    executors:
+      terraform:
+        docker:
+          - image: circleci/golang:1.12
+        environment:
+          TF_VERSION: 0.12.12
+          TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
+          TF_CLI_ARGS_plan: -input=false -lock=false
+          TF_CLI_ARGS_apply: -input=false -auto-approve
+          TF_CLI_ARGS_destroy: -input=false -auto-approve
+          TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
     commands:
       install:
         steps:
@@ -161,13 +184,7 @@ orbs:
               command: sudo unzip terraform_${TF_VERSION}_linux_amd64.zip -d /bin
 jobs:
   lint:
-    docker:
-      - image: circleci/golang:1.12
-    environment:
-      TF_VERSION: 0.12.12
-      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
-      TF_CLI_ARGS_plan: -input=false -lock=false
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
+    executor: terraform/terraform
     steps:
       - checkout
       - terraform/install
@@ -176,8 +193,7 @@ jobs:
           command: terraform fmt -diff -check -recursive
 
   apply:
-    docker:
-      - image: circleci/golang:1.12
+    executor: terraform/terraform
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -192,39 +208,29 @@ jobs:
         default: apply
         type: string
     environment:
-      TF_VERSION: 0.12.12
-      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
-      TF_CLI_ARGS_apply: -input=false -auto-approve
-      TF_CLI_ARGS_destroy: -input=false -auto-approve
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       TF_TIER: << parameters.tf_tier >>
       WORKSPACE: << parameters.tf_workspace >>
+    working_directory: ~/project/<< parameters.tf_tier >>
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - terraform/install
+      - ecs_helper/install
       - attach_workspace: { at: . }
       - run:
           name: Initialize
-          working_directory: ~/project/<< parameters.tf_tier >>
           command: terraform init
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          working_directory: ~/project/<< parameters.tf_tier >>
           command: terraform << parameters.tf_command >>
       - run:
-          name: Output tasks
-          working_directory: ~/project/environment
+          name: Output
           command: terraform output -json > terraform.output.json
       - run:
-          name: Install stabilizer
-          working_directory: ~/project/ecs_helper
-          command: go install -mod vendor ./cmd/stabilizer
-      - run:
-          name: Stabilize services
-          working_directory: ~/project/environment
+          name: Stabilize
           command: stabilizer
 
   client_integration_test:
@@ -330,8 +336,7 @@ jobs:
           command: docker-compose -f docker-compose.ci.yml push
 
   run-task:
-    docker:
-      - image: circleci/golang:1.12
+    executor: terraform/terraform
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -341,29 +346,22 @@ jobs:
         description: name of task to run
         type: string
     environment:
-      TF_VERSION: 0.12.12
-      TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
-      TF_CLI_ARGS_init: -input=false -upgrade=true -reconfigure
       WORKSPACE: << parameters.tf_workspace >>
+    working_directory: ~/project/environment
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - terraform/install
+      - ecs_helper/install
       - run:
           name: Initialize
-          working_directory: ~/project/environment
           command: terraform init
       - run:
           name: Set environment
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
-          name: Output tasks
-          working_directory: ~/project/environment
+          name: Output
           command: terraform output -json > terraform.output.json
       - run:
-          name: Install runner
-          working_directory: ~/project/ecs_helper
-          command: go install -mod vendor ./cmd/runner
-      - run:
           name: Run task
-          working_directory: ~/project/environment
           command: runner -task << parameters.task_name >>
