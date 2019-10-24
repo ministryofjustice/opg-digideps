@@ -235,7 +235,8 @@ jobs:
           command: ~/project/.circleci/set_env.sh >> $BASH_ENV
       - run:
           name: Apply
-          command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+          working_directory: ~/project/<< parameters.tf_tier >>
+          command: terraform << parameters.tf_command >>
       - run:
           name: Output tasks
           working_directory: ~/project/environment
