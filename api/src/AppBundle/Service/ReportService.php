@@ -156,7 +156,7 @@ class ReportService
             $accountExists = $this->checkBankAccountExists($toReport, $account);
 
             if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($toReport, $account);
+                $newAccount = $this->cloneBankAccount($account);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
                 $this->_em->persist($newAccount);
@@ -251,7 +251,7 @@ class ReportService
      * @param BankAccountInterface $account
      * @return ReportBankAccount
      */
-    private function cloneBankAccount(ReportInterface $toReport, BankAccountInterface $account)
+    private function cloneBankAccount(BankAccountInterface $account)
     {
         $newAccount = new ReportBankAccount();
 
