@@ -30,9 +30,9 @@
                     </thead>
                     <tbody class="govuk-table__body">
                         {% for previousAccount in report.previousReportData['financial-summary']['accounts'] %}
-                            <tr>
-                                <td>{{ previousAccount.nameOneLine }}</td>
-                                <td class="numeric-small">£{{ previousAccount.closingBalance | money_format }}</td>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">{{ previousAccount.nameOneLine }}</td>
+                                <td class="govuk-table__cell govuk-table__cell--numeric">£{{ previousAccount.closingBalance | money_format }}</td>
                             </tr>
                         {% endfor %}
                         <tr class="govuk-table__row">
