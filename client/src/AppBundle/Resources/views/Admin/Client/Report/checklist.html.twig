@@ -139,29 +139,18 @@
             {# Declaration #}
             {% include 'AppBundle:Admin/Client/Report/partials:_declaration.html.twig' %}
 
-            {# Lodging summary #}
-            <h3 class="heading-medium underline" id="lodgingSummary">{{ (page ~ '.lodgingSummary.heading') | trans }}</h3>
+            {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary'), {
+                formGroupClass: 'js-auto-size',
+                labelClass: 'govuk-label--m',
+                inputClass: 'govuk-!-width-full',
+                hasHintList: true,
+            }) }}
 
-            <ul class="list list-bullet text">
-                <li>{{ (page ~ '.lodgingSummary.listItem1') | trans }}</li>
-                <li>{{ (page ~ '.lodgingSummary.listItem2') | trans }}</li>
-                <li>{{ (page ~ '.lodgingSummary.listItem3') | trans }}</li>
-                <li>{{ (page ~ '.lodgingSummary.listItem4') | trans }}</li>
-            </ul>
+            {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
+                classes: 'govuk-radios--small',
+                legendClass: 'govuk-fieldset__legend--m',
+            }) }}
 
-            <div class="form-section push--bottom">
-                {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary'), {
-                    formGroupClass: 'explanation js-auto-size',
-                }) }}
-            </div>
-
-            <div class="form-section push--bottom">
-                {{ form_checkbox_group(form.finalDecision, (page ~ '.form.finalDecision'), {
-                    legendClass: 'bold'
-                }) }}
-            </div>
-
-            {# Further information #}
             {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformation'), {
                 formGroupClass: 'js-auto-size',
                 labelClass: 'govuk-label--m',
