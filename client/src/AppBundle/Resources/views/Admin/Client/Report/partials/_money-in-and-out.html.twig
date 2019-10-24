@@ -136,12 +136,10 @@
 
 <hr />
 
-{# Don't show question for professional reports with short money sections #}
-{% if report.type not in ['103-5', '103-4-5'] %}
+{% if form.accountsBalance is defined %}
     {{ checklist_radios(form.accountsBalance) }}
 
-    {# Don't show Account Balance Summary for 103 #}
-    {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+    {% if report.hasSection('moneyTransfers') %}
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">{{ (page ~ '.revealTitle.accountsBalanceSummary') | trans }}</span>
@@ -180,8 +178,8 @@
 
 {{ checklist_radios(form.moneyMovementsAcceptable) }}
 
-{# Don't show money transfers for 103 #}
-{% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
+{# Don't show money transfers for short finance reports #}
+{% if report.hasSection('moneyTransfers') %}
     {% if report.enoughBankAccountForTransfers %}
         <details class="govuk-details" data-module="govuk-details">
             <summary class="govuk-details__summary">
