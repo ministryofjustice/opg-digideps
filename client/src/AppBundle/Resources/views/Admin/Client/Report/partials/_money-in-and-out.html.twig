@@ -1,4 +1,5 @@
 {% import 'AppBundle:Macros:macros.html.twig' as macros %}
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -6,10 +7,7 @@
 
 <h3 class="govuk-heading-m" id="moneyInOut">{{ (page ~ '.heading.money') | trans }}</h3>
 
-{{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{{ checklist_radios(form.openClosingBalancesMatch) }}
 
 <details class="govuk-details" data-module="govuk-details">
     <summary class="govuk-details__summary">
@@ -140,10 +138,7 @@
 
 {# Don't show question for professional reports with short money sections #}
 {% if report.type not in ['103-5', '103-4-5'] %}
-    {{ form_checkbox_group(form.accountsBalance, (page ~ '.form.accountsBalance' ~ nonLayAppend), {
-        'fieldSetClass' : 'inline',
-        'formGroupClass': 'push-half--bottom'
-    }) }}
+    {{ checklist_radios(form.accountsBalance) }}
 
     {# Don't show Account Balance Summary for 103 #}
     {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
@@ -183,10 +178,7 @@
     <hr />
 {% endif %}
 
-{{ form_checkbox_group(form.moneyMovementsAcceptable, (page ~ '.form.moneyMovementsAcceptable'), {
-    'fieldSetClass' : 'inline',
-    'formGroupClass': 'push-half--bottom'
-}) }}
+{{ checklist_radios(form.moneyMovementsAcceptable) }}
 
 {# Don't show money transfers for 103 #}
 {% if report.type not in ['103', '103-4', '103-6', '103-4-6'] %}
