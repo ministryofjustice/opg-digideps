@@ -161,5 +161,6 @@ checklistPage:
         satisfied: |
           I am satisfied with the deputy’s report, no further action is required and I have
           sent an acknowledgment to the deputy(s)
-    furtherInformationReceived:
-      label: Further information received
+    furtherInformation:
+      label: Further information
+      hint: You must complete this section if we have received or requested correspondence following a lodging (incompletes and casework).
