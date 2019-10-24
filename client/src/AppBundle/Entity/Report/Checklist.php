@@ -295,6 +295,13 @@ class Checklist
     protected $buttonClicked;
 
     /**
+     * @var object
+     * @JMS\Type("array")
+     * @JMS\Groups({"report-checklist"})
+     */
+    private $fullReview;
+
+    /**
      * Checklist constructor.
      *
      * @param ReportInterface $report
@@ -906,6 +913,25 @@ class Checklist
     public function setButtonClicked($buttonClicked)
     {
         $this->buttonClicked = $buttonClicked;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullReview(): array
+    {
+        return $this->fullReview;
+    }
+
+    /**
+     * @param string $buttonClicked
+     *
+     * @return $this
+     */
+    public function setFullReview(array $fullReview)
+    {
+        $this->fullReview = $fullReview;
         return $this;
     }
 }

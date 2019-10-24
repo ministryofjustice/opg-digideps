@@ -772,7 +772,8 @@ class ReportController extends RestController
             'next_billing_estimates_satisfactory' => 'setNextBillingEstimatesSatisfactory',
             'lodging_summary' => 'setLodgingSummary',
             'final_decision' => 'setFinalDecision',
-            'button_clicked' => 'setButtonClicked'
+            'button_clicked' => 'setButtonClicked',
+            'full_review' => 'setFullReview',
         ]);
 
         return $checklist;
