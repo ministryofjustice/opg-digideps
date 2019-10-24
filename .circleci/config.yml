@@ -17,14 +17,9 @@ workflows:
           requires: [ build pr, lint terraform ]
           filters: { branches: { ignore: [ master ] } }
 
-      - stabilize:
-          name: stabilize environment
-          requires: [ apply environment ]
-          filters: { branches: { ignore: [ master ] } }
-
       - run-task:
           name: backup environment
-          requires: [ stabilize environment ]
+          requires: [ apply environment ]
           filters: { branches: { ignore: [ master ] } }
           task_name: backup
 
@@ -191,7 +186,7 @@ orbs:
 jobs:
   lint:
     docker:
-      - image: circleci/ruby
+      - image: circleci/golang:1.12
     environment:
       TF_VERSION: 0.12.12
       TF_SHA256SUM: 67bc7a49c0946ad48b14cc6e95482fdd3e7e9f7dc6811f4ce6ff531fc565bd3a
@@ -206,7 +201,7 @@ jobs:
 
   apply:
     docker:
-      - image: circleci/ruby
+      - image: circleci/golang:1.12
     parameters:
       tf_workspace:
         description: terraform workspace
@@ -241,6 +236,18 @@ jobs:
       - run:
           name: Apply
           command: terraform << parameters.tf_command >> -var-file=${TF_TIER}/terraform.tfvars.json ${TF_TIER}
+      - run:
+          name: Output tasks
+          working_directory: ~/project/environment
+          command: terraform output -json > terraform.output.json
+      - run:
+          name: Install stabilizer
+          working_directory: ~/project/ecs_helper
+          command: go install -mod vendor ./cmd/stabilizer
+      - run:
+          name: Stabilize services
+          working_directory: ~/project/environment
+          command: stabilizer
 
   client_integration_test:
     docker:
@@ -402,8 +409,8 @@ jobs:
           command: terraform output -json > terraform.output.json
       - run:
           name: Install runner
-          working_directory: ~/project/runner
-          command: go install -mod vendor
+          working_directory: ~/project/ecs_helper
+          command: go install -mod vendor ./cmd/runner
       - run:
           name: Run task
           working_directory: ~/project/environment
