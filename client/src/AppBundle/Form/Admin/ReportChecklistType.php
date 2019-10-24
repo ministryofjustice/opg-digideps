@@ -29,13 +29,15 @@ class ReportChecklistType extends AbstractType
         $this->report = $options['report'];
 
         $yesNoOptions = [
-            'choices' => ['Yes' => 'yes', 'No' => 'no'],
-            'expanded' => true
+            'choices' => ['yes' => 'yes', 'no' => 'no'],
+            'expanded' => true,
+            'choice_translation_domain' => 'common',
         ];
 
         $yesNoNaOptions = [
-            'choices' => ['Yes' => 'yes', 'No' => 'no', 'Not applicable' => 'na'],
-            'expanded' => true
+            'choices' => ['yes' => 'yes', 'no' => 'no', 'notApplicable' => 'na'],
+            'expanded' => true,
+            'choice_translation_domain' => 'common',
         ];
 
         // HW & PFA
@@ -107,8 +109,8 @@ class ReportChecklistType extends AbstractType
             ])
             ->add('furtherInformationReceived', FormTypes\TextareaType::class)
             ->add('saveFurtherInformation', FormTypes\SubmitType::class)
-            ->add(SAVE_ACTION, FormTypes\SubmitType::class)
-            ->add(SUBMIT_AND_DOWNLOAD_ACTION, FormTypes\SubmitType::class);
+            ->add(self::SAVE_ACTION, FormTypes\SubmitType::class)
+            ->add(self::SUBMIT_AND_DOWNLOAD_ACTION, FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
