@@ -252,16 +252,14 @@
                 <ul class="govuk-list">
                     <li class="govuk-!-margin-top-6">
                         <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-lodging-checklist">
-                            <svg role="presentation" focusable="false" class="govuk-!-margin-right-2" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
-                            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
-                            </svg>Back to top: Lodging checklist
+                            {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
+                            {{ (page ~ '.backToTop') | trans }}: {{ 'checklistPage.heading.lodgingChecklist' | trans }}
                         </a>
                     </li>
                     <li>
                         <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#">
-                            <svg role="presentation" focusable="false" class="govuk-!-margin-right-2" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
-                            <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
-                            </svg>Back to top
+                            {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
+                            {{ (page ~ '.backToTop') | trans }}
                         </a>
                     </li>
                 </ul>
