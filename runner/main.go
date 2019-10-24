@@ -62,22 +62,15 @@ func main() {
 	}
 
 	delay := time.Second * 10
-
-	ctx := aws.BackgroundContext()
-	var cancelFn func()
-
-	ctx, cancelFn = context.WithTimeout(ctx, time.Duration(timeout) * time.Second)
-
+	ctx, cancelFn := context.WithTimeout(aws.BackgroundContext(), time.Duration(timeout) * time.Second)
 	defer cancelFn()
-
-	input := &ecs.DescribeTasksInput{
-		Cluster: runner.Task.ClusterArn,
-		Tasks:   []*string{runner.Task.TaskArn},
-	}
 
 	err = runner.Svc.WaitUntilTasksStoppedWithContext(
 		ctx,
-		input,
+		&ecs.DescribeTasksInput{
+			Cluster: runner.Task.ClusterArn,
+			Tasks:   []*string{runner.Task.TaskArn},
+		},
 		request.WithWaiterRequestOptions(func(r *request.Request) {
 			for _, l := range cwLogs {
 				l.PrintLogEvents()
@@ -99,18 +92,14 @@ func main() {
 		}
 	}
 
-	runner.Update()
+	log.Printf("%s task stopped with status %s", taskName, runner.GetStatus())
 
 	exitCode := 0
-
-	log.Printf("%s task stopped with status %s", taskName, *runner.GetStatus())
-
-	for _, c := range runner.Task.Containers {
-		log.Printf("%s container exited with code %d", *c.Name, *c.ExitCode)
-		if *c.ExitCode > 0 {
+	for _, c := range runner.GetContainerExitCodes() {
+		log.Printf("%s container exited with code %d", c.Name, c.ExitCode)
+		if c.ExitCode > 0 {
 			exitCode++
 		}
 	}
-
 	os.Exit(exitCode)
 }
