@@ -437,10 +437,11 @@ class User implements UserInterface
      * Set registrationToken.
      *
      * @return User
+     * @throws \Exception
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken('digideps' . date('dmY') . time() . rand(17, 999917));
+        $this->setRegistrationToken(bin2hex(random_bytes(16)));
         $this->setTokenDate(new \DateTime());
 
         return $this;
