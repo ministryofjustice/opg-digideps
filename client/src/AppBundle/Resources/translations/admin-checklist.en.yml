@@ -19,16 +19,8 @@ checklistPage:
     profDeputyCostsEstimate: Estimated costs for next reporting period
   lodgingSummary:
     heading: Lodging summary
-    listItem1: Document any concerns
-    listItem2: Explain the decisions you've made and any further action taken
-    listItem3: Include changes made to CASREC details (or referrals to the MDU)
-    listItem4: |
-      Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
   furtherInfo:
     heading: Further information
-    para: |
-      You must complete this section if we have received or requested correspondence following a lodging
-      (incompletes and casework).
     infoProvided: Information provided
     noInfoReceived: No information received
     history: Further information history (%count%)
@@ -151,8 +143,13 @@ checklistPage:
       label: Total estimated costs
     lodgingSummary:
       label: Lodging summary concerns and decisions
+      hintList: |
+        Document any concerns
+        Explain the decisions you've made and any further action taken
+        Include changes made to CASREC details (or referrals to the MDU)
+        Do not repeat statements made by the deputy unless they are relevant to a decision you have made.
     finalDecision:
-      label: Final decision?
+      label: Final decision
       options:
         forReview: I am referring the case for a staff review
         incomplete: The report is incomplete
