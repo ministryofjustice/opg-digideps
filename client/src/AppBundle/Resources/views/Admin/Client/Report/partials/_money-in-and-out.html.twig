@@ -4,7 +4,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 
-<h3 class="heading-medium underline" id="moneyInOut">{{ (page ~ '.heading.money') | trans }}</h3>
+<h3 class="govuk-heading-m" id="moneyInOut">{{ (page ~ '.heading.money') | trans }}</h3>
 
 {{ form_checkbox_group(form.openClosingBalancesMatch, (page ~ '.form.openClosingBalancesMatch'), {
     'fieldSetClass' : 'inline',
