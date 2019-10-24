@@ -138,6 +138,7 @@
             {# Declaration #}
             {% include 'AppBundle:Admin/Client/Report/partials:_declaration.html.twig' %}
 
+            <a name="anchor-lodging-summary"></a>
             {{ form_input(form.lodgingSummary, (page ~ '.form.lodgingSummary'), {
                 formGroupClass: 'js-auto-size',
                 labelClass: 'govuk-label--m',
@@ -150,6 +151,7 @@
                 legendClass: 'govuk-fieldset__legend--m',
             }) }}
 
+            <a name="anchor-further-information"></a>
             {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformation'), {
                 formGroupClass: 'js-auto-size',
                 labelClass: 'govuk-label--m',
