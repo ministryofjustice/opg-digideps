@@ -1,3 +1,5 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
@@ -6,17 +8,12 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.bondAdequate, (page ~ '.form.bondAdequate'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.bondAdequate) }}
     </div>
 </div>
 
 <div class="form-section">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.bondOrderMatchCasrec, (page ~ '.form.bondOrderMatchCasrec'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
+        {{ checklist_radios(form.bondOrderMatchCasrec) }}
     </div>
 </div>

@@ -158,7 +158,7 @@ checklistPage:
       label: |
         Has the deputy charged 20% or more than last years estimated costs for this billing period?
       qid: L9.3
-    satisfiedEstimatesNextBilling:
+    nextBillingEstimatesSatisfactory:
       label: |
         Are you satisfied with the deputy’s estimated costs for the next billing period?
       qid: L10.1

@@ -1,3 +1,5 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios, checklist_checkbox %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
@@ -5,12 +7,7 @@
 <h3 class="govuk-heading-m" id="deputyAndClientInfo">{{ (page ~ '.heading.info') | trans }}</h3>
 
 <div class="form-section push-half--bottom">
-    <div class="form-group-outer">
-        {{ form_checkbox_group(form.reportingPeriodAccurate, (page ~ '.form.reportingPeriodAccurate'), {
-            'fieldSetClass': 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
-    </div>
+    {{ checklist_radios(form.reportingPeriodAccurate) }}
 
     <div class="opg-indented-block push--bottom">
         <p class="flush--bottom behat-region-court-date">
@@ -37,10 +34,7 @@
 
 <div class="form-section push-half--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox(form.contactDetailsUptoDate, (page ~ '.form.contactDetailsUptoDate'), {
-            'labelClass': 'text',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
+        {{ checklist_checkbox(form.contactDetailsUptoDate) }}
     </div>
 
     <details class="push--bottom">
@@ -148,10 +142,7 @@
 {% if form.deputyFullNameAccurateInCasrec is defined %}
 <div class="form-section push-half--bottom">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox(form.deputyFullNameAccurateInCasrec, (page ~ '.form.deputyFullNameAccurateinCasrec'), {
-            'labelClass': 'text',
-            'formGroupClass': 'flush--bottom'
-        }) }}
+        {{ checklist_checkbox(form.deputyFullNameAccurateInCasrec) }}
     </div>
     <div class="opg-indented-block push-half--top">
         <p><strong class="bold">{{ (page ~ '.deputysFullName') | trans }}:</strong> {{ deputy.fullName }}</p>

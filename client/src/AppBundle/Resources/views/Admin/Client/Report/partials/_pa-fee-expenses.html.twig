@@ -1,3 +1,5 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
@@ -6,14 +8,10 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.deputyChargeAllowedByCourt, (page ~ '.form.deputyChargeAllowedByCourt'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.deputyChargeAllowedByCourt) }}
     </div>
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.satisfiedWithPaExpenses, (page ~ '.form.satisfiedWithPaExpenses'), {
-            'fieldSetClass' : 'inline'
-        }) }}
+        {{ checklist_radios(form.satisfiedWithPaExpenses) }}
     </div>
 
     <details>

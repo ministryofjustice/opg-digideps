@@ -1,3 +1,5 @@
+{% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
@@ -6,10 +8,7 @@
 
 <div class="form-section push--bottom">
     <div class="form-group-outer">
-        {{ form_checkbox_group(form.assetsDeclaredAndManaged, (page ~ '.form.assetsDeclaredAndManaged'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
+        {{ checklist_radios(form.assetsDeclaredAndManaged) }}
     </div>
 
     <details class="push--bottom">
@@ -29,10 +28,7 @@
 
 <div class="form-section">
     <div class="form-group-outer border-top soft--top">
-        {{ form_checkbox_group(form.debtsManaged, (page ~ '.form.debtsManaged'), {
-            'fieldSetClass' : 'inline',
-            'formGroupClass': 'push-half--bottom'
-        }) }}
+        {{ checklist_radios(form.debtsManaged) }}
     </div>
 
     <details class="push--bottom">
