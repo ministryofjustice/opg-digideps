@@ -1,0 +1,78 @@
+{% import 'AppBundle:Macros:macros.html.twig' as macros %}
+
+{% set translationDomain = "admin-checklist" %}
+{% trans_default_domain translationDomain %}
+
+{% set page = 'checklistPage' %}
+
+<aside class="js-sidebar">
+    <p class="govuk-body-s">
+        {{ 'lastSaved' | trans({}, 'common') }}:
+        {{ (checklist.lastModifiedOn) ? (checklist.lastModifiedOn | date("j F Y H:i")) : 'Not saved yet' }}
+        <br>
+        {% if (checklist.lastModifiedBy is defined) and (checklist.lastModifiedBy is not empty) %}
+            {{ checklist.lastModifiedBy.fullName}}, {{ checklist.lastModifiedBy.roleFullName }}
+        {% endif %}
+    </p>
+
+    {% if checklist.submittedOn %}
+        <p class="govuk-body-s">
+            {{ 'lastSubmitted' | trans({}, 'common') }}:
+            {{ checklist.submittedOn | date("j F Y H:i") }}
+            <br>
+            {{ checklist.submittedBy.fullName}}, {{ checklist.submittedBy.roleFullName }}
+        </p>
+    {% endif %}
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+
+    <ul class="govuk-list">
+        <li>
+            <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#anchor-lodging-checklist">
+                {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
+                {{ (page ~ '.backToTop') | trans }}: {{ 'checklistPage.heading.lodgingChecklist' | trans }}
+            </a>
+        </li>
+        <li>
+            <a class="govuk-link govuk-body-s govuk-link--no-visited-state" href="#">
+                {{- macros.icon('arrow-up', 'govuk-!-margin-right-2') | spaceless -}}
+                {{ (page ~ '.backToTop') | trans }}
+            </a>
+        </li>
+    </ul>
+
+    <nav role="navigation" aria-labelledby="related-items-title">
+        <ul class="govuk-list govuk-!-font-size-16">
+            <li><a href="#deputyAndClientInfo" class="govuk-link">{{ (page ~ '.heading.info') | trans }}</a></li>
+            <li><a href="#decisionsMade" class="govuk-link">{{ (page ~ '.heading.decisions') | trans }}</a></li>
+            <li><a href="#peopleConsulted" class="govuk-link">{{ (page ~ '.heading.contacts') | trans }}</a></li>
+            <li><a href="#visitsAndCare" class="govuk-link">{{ (page ~ '.heading.visitsAndCare') | trans }}</a></li>
+            {% if report.hasSection('lifestyle') %}
+                <li><a href="#lifestyle" class="govuk-link">{{ (page ~ '.heading.healthAndLifestyle') | trans }}</a></li>
+            {% endif %}
+            {% if report.hasSection('assets') or report.hasSection('debts') %}
+                <li><a href="#assetsAndDebts" class="govuk-link">{{ (page ~ '.heading.assetsAndDebts') | trans }}</a></li>
+            {% endif %}
+            {% if report.hasSection('moneyInShort') or report.hasSection('moneyOutShort') or report.hasSection('gifts') or report.hasSection('deputyExpenses') %}
+                <li><a href="#moneyInOut" class="govuk-link">{{ (page ~ '.heading.money') | trans }}</a></li>
+            {% endif %}
+            {% if report.hasSection('bankAccounts') %}
+                {% if report.hasSection('paDeputyExpenses') %}
+                    <li><a href="#paFeesExpenses" class="govuk-link">{{ (page ~ '.heading.paFeeExpenses') | trans }}</a></li>
+                {% else %}
+                    <li><a href="#bonds" class="govuk-link">{{ (page ~ '.heading.bonds') | trans }}</a></li>
+                {% endif %}
+            {% endif %}
+            {% if report.hasSection('profDeputyCosts') %}
+                <li><a href="#profDeputyCosts" class="govuk-link">{{ (page ~ '.heading.profDeputyCosts') | trans }}</a></li>
+            {% endif %}
+            {% if report.hasSection('profDeputyCostsEstimate') %}
+                <li><a href="#profDeputyCostsEstimate" class="govuk-link">{{ (page ~ '.heading.profDeputyCostsEstimate') | trans }}</a></li>
+            {% endif %}
+            <li><a href="#nextReportingPeriod" class="govuk-link">{{ (page ~ '.heading.nextPeriod') | trans }}</a></li>
+            <li><a href="#declaration" class="govuk-link">{{ (page ~ '.heading.declaration') | trans }}</a></li>
+            <li><a href="#lodgingSummary" class="govuk-link">{{ (page ~ '.lodgingSummary.heading') | trans }}</a></li>
+            <li><a href="#furtherInformation" class="govuk-link">{{ (page ~ '.furtherInfo.heading') | trans }}</a></li>
+        </ul>
+    </nav>
+</aside>
