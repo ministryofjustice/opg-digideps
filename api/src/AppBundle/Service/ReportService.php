@@ -13,6 +13,7 @@ use AppBundle\Entity\Report\AssetProperty as ReportAssetProperty;
 use AppBundle\Entity\Report\AssetOther as ReportAssetOther;
 use AppBundle\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use AppBundle\Entity\Ndr\AssetOther as NdrAssetOther;
+use AppBundle\Entity\Report\AssetProperty;
 use AppBundle\Entity\Report\BankAccount as BankAccountEntity;
 use AppBundle\Entity\Report\BankAccount as ReportBankAccount;
 use AppBundle\Entity\Report\Document;
@@ -130,14 +131,16 @@ class ReportService
     /**
      * Clone resources which cross report periods from one account to another
      *
-     * @param Ndr|Report $toReport
+     * @param Report $toReport
      * @param Ndr|Report $fromReport
      */
     public function clonePersistentResources($toReport, $fromReport)
     {
         // copy assets
         $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
-        foreach ($fromReport->getAssets() as $asset) {
+        $fromAssets = $fromReport->getAssets();
+        foreach ($fromAssets as $asset) {
+
             // Check that the target report doesn't already have a matching asset
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
@@ -171,18 +174,22 @@ class ReportService
      */
     private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
     {
-        foreach ($toReport->getAssets() as $toAsset) {
-            if ($toAsset->getType() === 'property'
-                && $toAsset->getAddress() === $asset->getAddress()
-                && $toAsset->getAddress2() === $asset->getAddress2()
-                && $toAsset->getPostcode() === $asset->getPostcode()) {
-                return true;
-            } else {
-                if ($toAsset->getType() === 'other' && $toAsset->getDescription() === $asset->getDescription()) {
+        $toAssets = $toReport->getAssets();
+
+        foreach ($toAssets as $toAsset) {
+            if ($toAsset->getType() === $asset->getType()) {
+                if (($asset->getType() === 'property'
+                        && $toAsset->getAddress() === $asset->getAddress()
+                        && $toAsset->getAddress2() === $asset->getAddress2()
+                        && $toAsset->getPostcode() === $asset->getPostcode()
+                    ) || ($asset->getType() === 'other' &&
+                        $toAsset->getDescription() === $asset->getDescription())
+                ) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
