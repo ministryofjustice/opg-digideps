@@ -15,6 +15,12 @@ strong {
     font-weight: 600;
 }
 
+// Undo the hr background colour in govuk-elements. Because `govuk-section-break`
+// provides a border, having both makes the <hr>s too tall.
+hr {
+    background-color: transparent;
+}
+
 // .hidden is used in a couple of places to manually hide something from the page
 // .js-hidden is used by some of our JavaScript modules to show/hide content
 .hidden,
