@@ -77,33 +77,21 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
-      - stabilize:
-          name: stabilize master
-          requires: [ apply master ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: master
-
       - client_integration_test:
           name: client integration test
-          requires: [ stabilize master ]
+          requires: [ apply master  ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - api_unit_test:
           name: api unit test
-          requires: [ stabilize master ]
+          requires: [ apply master ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: master
 
       - apply:
           name: apply training
           requires: [ approve release to production ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: training
-
-      - stabilize:
-          name: stabilize training
-          requires: [ apply training ]
           filters: { branches: { only: [ master ] } }
           tf_workspace: training
 
@@ -120,22 +108,16 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: preprod
 
-      - stabilize:
-          name: stabilize preproduction
-          requires: [ apply preproduction ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: preprod
-
       - slack/approval-notification:
           name: approve release to production notification
           message: "Production is ready for release and pending approval"
-          requires: [ stabilize preproduction ]
+          requires: [ apply preproduction ]
           filters: { branches: { only: [ master ] } }
 
       - approve:
           name: approve release to production
           type: approval
-          requires: [ stabilize preproduction ]
+          requires: [ apply preproduction ]
           filters: { branches: { only: [ master ] } }
 
       - apply:
@@ -144,15 +126,9 @@ workflows:
           filters: { branches: { only: [ master ] } }
           tf_workspace: production02
 
-      - stabilize:
-          name: stabilize production
-          requires: [ apply production ]
-          filters: { branches: { only: [ master ] } }
-          tf_workspace: production02
-
       - run-task:
           name: backup production
-          requires: [ stabilize production ]
+          requires: [ apply production ]
           filters: { branches: { only: [ master ] } }
           task_name: backup
           tf_workspace: production02
@@ -302,32 +278,6 @@ jobs:
       - run:
           name: Test API
           command: ruby deployer/run_task.rb test-${TF_WORKSPACE} test-api-${TF_WORKSPACE}
-
-  stabilize:
-    docker:
-      - image: circleci/ruby
-    parameters:
-      tf_workspace:
-        description: terraform workspace
-        type: string
-        default: ""
-    environment:
-      TF_VAR_default_role: digideps-ci
-      WORKSPACE: << parameters.tf_workspace >>
-    working_directory: ~/project/environment
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          name: Bundle install
-          command: bundle install
-      - run:
-          name: Set environment
-          command: ~/project/.circleci/set_env.sh >> $BASH_ENV
-      - run:
-          name: Check deployment
-          command: ruby deployer/check_deployment.rb scan-${TF_WORKSPACE} front-${TF_WORKSPACE} admin-${TF_WORKSPACE} wkhtmltopdf-${TF_WORKSPACE}
-
   build:
     docker:
       - image: circleci/python:2.7
