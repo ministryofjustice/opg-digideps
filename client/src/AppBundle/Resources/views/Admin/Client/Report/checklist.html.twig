@@ -162,16 +162,11 @@
             </div>
 
             {# Further information #}
-            <h3 class="heading-medium underline" id="furtherInformation">{{ (page ~ '.furtherInfo.heading') | trans }}</h3>
-
-            <p class="text">{{ (page ~ '.furtherInfo.para') | trans }}</p>
-
-            <div class="govuk-form-group">
-                {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformationReceived'), {
-                    inputClass: 'govuk-!-width-full',
-                    formGroupClass: 'js-auto-size',
-                }) }}
-            </div>
+            {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformation'), {
+                formGroupClass: 'js-auto-size',
+                labelClass: 'govuk-label--m',
+                inputClass: 'govuk-!-width-full',
+            }) }}
 
             <details class="govuk-details" data-module="govuk-details">
                 <summary class="govuk-details__summary">
