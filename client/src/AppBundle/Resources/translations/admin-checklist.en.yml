@@ -4,19 +4,19 @@ checklistPage:
   supportTitle: Admin
   heading:
     lodgingChecklist: Lodging checklist
-    info: Deputy and client information
-    decisions: Decisions made over the reporting period
-    contacts: People consulted
-    visitsAndCare: Contact with client, care arrangements and care plan
-    assetsAndDebts: Assets and debts
-    money: Money in and money out
-    bonds: Bonds
-    paFeeExpenses: Deputy fees and expenses
-    nextPeriod: Next reporting period
-    declaration: Declaration
-    healthAndLifestyle: Health and lifestyle
-    profDeputyCosts: Deputy costs
-    profDeputyCostsEstimate: Estimated costs for next reporting period
+    info: L1. Deputy and client information
+    decisions: L2. Decisions made over the reporting period
+    contacts: L3. People consulted
+    visitsAndCare: L4. Contact with client, care arrangements and care plan
+    healthAndLifestyle: L5. Health and lifestyle
+    assetsAndDebts: L6. Assets and debts
+    money: L7. Money in and money out
+    bonds: L8. Bonds
+    profDeputyCosts: L9. Deputy costs
+    profDeputyCostsEstimate: L10. Estimated costs for next reporting period
+    paFeeExpenses: L11. Deputy fees and expenses
+    nextPeriod: L12. Next reporting period
+    declaration: L13. Declaration
   lodgingSummary:
     heading: Lodging summary
   furtherInfo:

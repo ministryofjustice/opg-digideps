@@ -4,7 +4,7 @@
 {% trans_default_domain translationDomain %}
 {% set page = 'checklistPage' %}
 
-<h3 class="heading-medium underline" id="declaration">{{ (page ~ '.heading.declaration') | trans }}</h3>
+<h3 class="govuk-heading-m" id="declaration">{{ (page ~ '.heading.declaration') | trans }}</h3>
 
 {{ form_checkbox_group(form.caseWorkerSatisified, (page ~ '.form.caseWorkerSatisified'), {
     'fieldSetClass' : 'inline',
