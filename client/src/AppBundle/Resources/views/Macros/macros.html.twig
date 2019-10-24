@@ -149,7 +149,15 @@
 {% endmacro %}
 
 {% macro icon(type, extraClass = '') %}
-    <span class="opg-icon opg-icon--{{ type }} {{ extraClass }}"></span>
+    {% if type in ['arrow-up'] %}
+        <svg role="presentation" focusable="false" class="opg-icon {{ extraClass }}" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+            {% if type == 'arrow-up' %}
+                <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+            {% endif %}
+        </svg>
+    {% else %}
+        <span class="opg-icon opg-icon--{{ type }} {{ extraClass }}"></span>
+    {% endif %}
 {% endmacro %}
 
 
