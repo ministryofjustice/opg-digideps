@@ -42,7 +42,7 @@ func main() {
 	defer cancelFn()
 
 	start := time.Now()
-	err = ecsSvc.WaitUntilServicesInactiveWithContext(
+	err = ecsSvc.WaitUntilServicesStableWithContext(
 		ctx,
 		config.Services.Value,
 		request.WithWaiterDelay(request.ConstantWaiterDelay(delay)),
