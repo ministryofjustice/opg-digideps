@@ -1,4 +1,5 @@
 {% from 'AppBundle:Admin/Client/Report:macros.html.twig' import checklist_radios %}
+{% from 'AppBundle:Macros:macros.html.twig' import details %}
 
 {% set translationDomain = "admin-checklist" %}
 {% trans_default_domain translationDomain %}
@@ -6,40 +7,31 @@
 
 <h3 class="govuk-heading-m" id="paFeesExpenses">{{ (page ~ '.heading.paFeeExpenses') | trans }}</h3>
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer">
-        {{ checklist_radios(form.deputyChargeAllowedByCourt) }}
-    </div>
-    <div class="form-group-outer">
-        {{ checklist_radios(form.satisfiedWithPaExpenses) }}
-    </div>
+{{ checklist_radios(form.deputyChargeAllowedByCourt, { margin: 6 }) }}
 
-    <details>
-        <summary>
-            <span class="summary">{{ (page ~ '.revealTitle.paDeputyExpenses') | trans }}</span>
-        </summary>
-        <div class="opg-indented-block">
-            <div>
+{{ checklist_radios(form.satisfiedWithPaExpenses) }}
 
-                {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
-                    'report': report,
-                    'transDomain': translationDomain,
-                    'hideEditLink' : true
-                } %}
+{% set contents %}
+    {% include 'AppBundle:Report/PaFeeExpense:_yn_questions.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink' : true
+    } %}
 
-                {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
-                    'report': report,
-                    'transDomain': translationDomain,
-                    'hideEditLink': true
-                } %}
+    {% include 'AppBundle:Report/PaFeeExpense:_fee_list.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink': true
+    } %}
 
-                {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
-                    'report': report,
-                    'transDomain': translationDomain,
-                    'hideEditLink': true
-                } %}
-            </div>
-        </div>
-    </details>
+    {% include 'AppBundle:Report/PaFeeExpense:_other_list.html.twig' with {
+        'report': report,
+        'transDomain': translationDomain,
+        'hideEditLink': true
+    } %}
+{% endset %}
 
-</div>
+{{ details({
+    summaryText: (page ~ '.revealTitle.paDeputyExpenses') | trans,
+    text: contents,
+}) }}

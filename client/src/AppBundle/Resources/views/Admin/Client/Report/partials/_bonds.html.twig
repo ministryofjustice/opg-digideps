@@ -6,14 +6,6 @@
 
 <h3 class="govuk-heading-m" id="bonds">{{ (page ~ '.heading.bonds') | trans }}</h3>
 
-<div class="form-section push--bottom">
-    <div class="form-group-outer">
-        {{ checklist_radios(form.bondAdequate) }}
-    </div>
-</div>
+{{ checklist_radios(form.bondAdequate, { margin: 6 }) }}
 
-<div class="form-section">
-    <div class="form-group-outer border-top soft--top">
-        {{ checklist_radios(form.bondOrderMatchCasrec) }}
-    </div>
-</div>
+{{ checklist_radios(form.bondOrderMatchCasrec, { margin: 6 }) }}
