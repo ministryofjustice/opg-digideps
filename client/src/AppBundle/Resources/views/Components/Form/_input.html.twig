@@ -14,13 +14,14 @@
         <span class="govuk-hint" id="{{ element.vars.id }}-hint">
             {{ hintText }}
         </span>
-        {% if hintListArray is defined and hintListArray is not empty %}
-            <ul class="govuk-hint govuk-list govuk-list--bullet">
-                {% for hintList in hintListArray %}
-                    <li>{{ hintList }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% endif %}
+
+    {% if hintListArray is defined and hintListArray is not empty %}
+        <ul class="govuk-hint govuk-list govuk-list--bullet">
+            {% for hintList in hintListArray %}
+                <li>{{ hintList }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
     {{ form_errors(element) }}
