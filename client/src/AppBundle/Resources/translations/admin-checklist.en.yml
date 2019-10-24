@@ -32,6 +32,7 @@ checklistPage:
     infoProvided: Information provided
     noInfoReceived: No information received
     history: Further information history (%count%)
+  backToTop: Back to top
   backToQuestion: Back to question
   expected: Expected
   submitted: Submitted
